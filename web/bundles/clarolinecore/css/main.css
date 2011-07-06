@@ -1,0 +1,24 @@
+body
+{
+    margin: 0;
+    padding: 0;
+}
+
+#banner
+{
+    height: 30px;
+    padding: 4px;
+    border-bottom : solid #555 3px;
+    background-color: #66c;
+}
+
+#banner h3
+{
+    margin: 2px 0 0 8px;
+    color: #ccc;
+}
+
+#content
+{
+    padding: 16px;
+}

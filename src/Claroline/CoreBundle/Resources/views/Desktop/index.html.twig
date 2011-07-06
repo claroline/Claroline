@@ -1,0 +1,23 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    
+<h4>{{ 'global.desktop'|trans({}, 'ClarolineCoreBundle') }}</h4>
+
+<a href="{{ path('claro_core_new_workspace') }}">{{ 'workspace.create'|trans({}, 'ClarolineCoreBundle') }}</a>
+<a href="{{ path('claro_user_logout') }}">{{ 'security.logout'|trans({}, 'ClarolineUserBundle') }}</a>
+
+<ul id="workspaces" >
+
+    {% for workspace in workspaces %}
+        <li>
+            <a href="">{{ workspace.name }}</a> 
+            <form action="{{ path('claro_core_delete_workspace', {'id': workspace.id}) }}" method="post">   
+                <input type="submit" value="Delete" />
+            </form>
+        </li>
+    {% endfor %}
+
+</ul>
+
+{% endblock %}

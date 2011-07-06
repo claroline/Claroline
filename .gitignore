@@ -1,0 +1,6 @@
+nbproject/*
+vendor/*
+app/config/parameters.ini
+app/cache/*
+app/logs/*
+!placeholder

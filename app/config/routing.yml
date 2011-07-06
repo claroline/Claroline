@@ -1,0 +1,5 @@
+claro_core:
+    resource: "@ClarolineCoreBundle/Resources/config/routing.yml"
+
+claro_user:
+    resource: "@ClarolineUserBundle/Resources/config/routing.yml"

@@ -1,0 +1,8 @@
+global.login: Login
+global.logout: Logout
+global.register: Register
+global.portal: Portal
+global.desktop: Desktop
+global.login_failure: Login has failed. Check your username and password are correct.
+
+workspace.create: Create a new workspace

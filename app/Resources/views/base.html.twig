@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}Symfony{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        {% block favicon %}
+            <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        {% endblock %}
+    </head>
+    <body>
+        {% if app.session.hasFlash('notice') %}
+            <div class="flash-notice">
+                {{ app.session.flash('notice') }}
+            </div>
+        {% endif %}
+        {% if app.session.hasFlash('alert') %}
+            <div class="flash-alert">
+                {{ app.session.flash('alert') }}
+            </div>
+        {% endif %}
+
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

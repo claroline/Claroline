@@ -1,0 +1,25 @@
+claro_core_portal:
+    pattern:  /
+    defaults: { _controller: ClarolineCoreBundle:Portal:index }
+
+claro_core_desktop:
+    pattern: /desktop
+    defaults: { _controller: ClarolineCoreBundle:Desktop:index }
+    
+claro_core_new_workspace:
+    pattern: /workspaces/new
+    defaults: { _controller: ClarolineCoreBundle:Workspace:new }
+    requirements:
+        _method:  GET
+
+claro_core_create_workspace:
+    pattern: /workspace
+    defaults: { _controller: ClarolineCoreBundle:Workspace:create }
+    requirements:
+        _method:  POST
+        
+claro_core_delete_workspace:
+  pattern: /workspace/{id}/delete
+  defaults: { _controller: ClarolineCoreBundle:Workspace:delete }
+  requirements:
+        _method:  POST

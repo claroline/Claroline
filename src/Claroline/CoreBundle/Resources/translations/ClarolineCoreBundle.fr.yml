@@ -1,0 +1,8 @@
+global.login: Connexion
+global.logout: Déconnexion
+global.register: Inscription
+global.portal: Portail
+global.desktop: Bureau
+global.login_failure: La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
+
+workspace.create: Créer un nouveau workspace

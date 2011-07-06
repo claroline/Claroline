@@ -1,0 +1,10 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    
+<h4>{{ 'global.portal'|trans({}, 'ClarolineCoreBundle') }}</h4>
+
+<a href="{{ path('claro_core_desktop') }}"/>{{ 'security.login'|trans({}, 'ClarolineUserBundle') }}</a>
+<a href="{{ path('claro_user_register') }}"/>{{ 'profile.register'|trans({}, 'ClarolineUserBundle') }}</a>
+
+{% endblock content %}
