@@ -1,0 +1,13 @@
+claro_user_login:
+    pattern: /login
+    defaults: { _controller: ClarolineUserBundle:Security:login }
+
+claro_user_login_check:
+    pattern: /login_check
+
+claro_user_logout:
+    pattern: /logout
+
+claro_user_register:
+    pattern: /register
+    defaults: { _controller: ClarolineUserBundle:Profile:register }

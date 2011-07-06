@@ -1,0 +1,15 @@
+security.username: Nom d'utilisateur
+security.password: Mot de passe
+security.login: Connexion
+security.logout: Déconnexion
+security.login_submit: Connexion
+security.login_failure: La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
+
+profile.register: Inscription
+
+#form field labels
+user_firstName: "Prénom :"
+user_lastName: "Nom :"
+user_username: "Nom d'utilisateur :"
+user_plainPassword_first: "Mot de passe :"
+user_plainPassword_second: "Vérification :"

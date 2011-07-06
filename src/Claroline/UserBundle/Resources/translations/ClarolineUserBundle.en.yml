@@ -1,0 +1,15 @@
+security.username: Username
+security.password: Password
+security.login: Login
+security.logout: Logout
+security.login_submit: Login
+security.login_failure: Login has failed. Check your username and password are correct.
+
+profile.register: Register
+
+#form field labels
+user_firstName: "First name :"
+user_lastName: "Last name :"
+user_username: "Username :"
+user_plainPassword_first: "Password :"
+user_plainPassword_second: "Verification :"

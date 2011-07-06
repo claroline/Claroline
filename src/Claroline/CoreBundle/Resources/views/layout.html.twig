@@ -1,0 +1,22 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+    Claroline
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/main.css') }}" />
+{% endblock %}
+
+{% block favicon %}
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/claro_favicon.ico') }}" />
+{% endblock %}
+
+{% block body %}
+    <div id="banner">
+        <h3>Claroline</h3>
+    </div>
+    <div id="content">
+    {% block content %}{% endblock %}
+    </div>
+{% endblock %}
