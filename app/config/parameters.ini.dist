@@ -8,6 +8,12 @@
     database_user     = root
     database_password =
 
+    test_database_driver   = pdo_mysql
+    test_database_host     = localhost
+    test_database_name     = symfony
+    test_database_user     = root
+    test_database_password =
+
     mailer_transport  = smtp
     mailer_host       = localhost
     mailer_user       =
