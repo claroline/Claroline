@@ -10,7 +10,6 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 class AuthenticationTest extends WebTestCase
 {
-
     private $client;
 
     protected function setUp() {
@@ -26,25 +25,20 @@ class AuthenticationTest extends WebTestCase
         $em = $this->client->getContainer()->get('doctrine')->getEntityManager();
         $executor = new ORMExecutor($em, $purger);
         $executor->execute($loader->getFixtures());
-
-
     }
 
     public function test_login_should_redirect_when_valid_credentials()
     {
-
         $crawler = $this->client->request('GET', '/login');
 
         $response = $this->client->getResponse();
         $container = $this->client->getContainer();
         $logger = $container->get('logger');
 
-
-
         $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertTrue($crawler->filter('div#content form input[value=Login]')->count() > 0);
+        $this->assertTrue($crawler->filter('div#content form input[name=_submit]')->count() > 0);
 
-        $form = $crawler->selectButton('Login')->form();
+        $form = $crawler->filter('input[name=_submit]')->form();
         $form['_username'] = 'jdoe';
         $form['_password'] = 'topsecret';
 
@@ -52,8 +46,5 @@ class AuthenticationTest extends WebTestCase
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
         $this->assertRegexp('/desktop/i', $this->client->getResponse()->getContent());
-
-
-
     }
 }

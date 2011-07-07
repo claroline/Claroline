@@ -6,8 +6,8 @@ use Claroline\CoreBundle\Entity\Workspace;
 
 class LoadWorkspaceData implements FixtureInterface
 {
-
-    public function load($manager) {
+    public function load($manager)
+    {
         for($i = 0; $i < 10; ++$i)
         {
             $workspace = new Workspace();
@@ -17,5 +17,4 @@ class LoadWorkspaceData implements FixtureInterface
 
         $manager->flush();
     }
-
 }

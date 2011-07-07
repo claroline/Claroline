@@ -10,14 +10,13 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
-
 class WorkspaceControllerTest extends WebTestCase
 {
     /**@var Client */
     private $client;
 
-    protected function setUp() {
-
+    protected function setUp()
+    {
         $this->prepareClient();
         $this->load_fixtures();
         $this->log_in();
@@ -50,11 +49,10 @@ class WorkspaceControllerTest extends WebTestCase
     {
         //$this->client->request('POST', '/login_check', array('_username' => 'jdoe', '_password' => 'topsecret'));
         $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('input[value=Login]')->form();
+        $form = $crawler->filter('input[name=_submit]')->form();
         $form['_username'] = 'jdoe';
         $form['_password'] = 'topsecret';
         $this->client->submit($form);
-
     }
 
 
@@ -69,6 +67,5 @@ class WorkspaceControllerTest extends WebTestCase
         // do not forget to refresh the crawler or the assert will be done on the previous page
         $crawler = $this->client->getCrawler();
         $this->assertEquals(9, $crawler->filter('#content #workspaces li')->count());
-
     }
 }
