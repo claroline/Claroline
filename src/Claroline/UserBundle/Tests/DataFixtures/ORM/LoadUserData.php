@@ -11,11 +11,13 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     /** @var ContainerInterface $container */
     private $container;
     
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
         $this->container = $container;
     }
     
-    public function load($manager) {
+    public function load($manager)
+    {
         $user = new User();
         $user->setFirstName('John');
         $user->setLastName('Doe');
@@ -27,11 +29,8 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
         
         $user->setPassword($password);
-
-        
-        
+   
         $manager->persist($user);
         $manager->flush();
-    }
-    
+    }  
 }
