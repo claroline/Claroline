@@ -27,11 +27,8 @@ class WorkspaceControllerTest extends WebTestCase
         $user_fixture = new LoadUserData();
         $user_fixture->setContainer($this->client->getContainer());
 
-        $workspace_fixture =  new LoadWorkspaceData();
-
         $loader = new Loader();
         $loader->addFixture($user_fixture);
-        $loader->addFixture($workspace_fixture);
 
         $purger = new ORMPurger();
         $em = $this->client->getContainer()->get('doctrine')->getEntityManager();
@@ -49,7 +46,7 @@ class WorkspaceControllerTest extends WebTestCase
     {
         //$this->client->request('POST', '/login_check', array('_username' => 'jdoe', '_password' => 'topsecret'));
         $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('input[name=_submit]')->form();
+        $form = $crawler->filter('input[id=_submit]')->form();
         $form['_username'] = 'jdoe';
         $form['_password'] = 'topsecret';
         $this->client->submit($form);
@@ -58,14 +55,19 @@ class WorkspaceControllerTest extends WebTestCase
 
     public function test_removal_of_a_workspace()
     {
+        $crawler = $this->client->request('GET', '/workspaces/new');
+        $form = $crawler->filter('input[type=submit]')->form();
+        $form['workspace[name]'] = 'Workspace test';
+        $this->client->submit($form);
+
         $crawler = $this->client->request('GET', '/desktop');
-        $this->assertEquals(10, $crawler->filter('#content #workspaces li')->count());
+        $this->assertEquals(1, $crawler->filter('#content #workspaces li')->count());
 
         $deleteForm = $crawler->filter('#content #workspaces li input')->first()->form();
         $this->client->submit($deleteForm);
 
         // do not forget to refresh the crawler or the assert will be done on the previous page
         $crawler = $this->client->getCrawler();
-        $this->assertEquals(9, $crawler->filter('#content #workspaces li')->count());
+        $this->assertEquals(0, $crawler->filter('#content #workspaces li')->count());
     }
 }

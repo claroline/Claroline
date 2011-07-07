@@ -13,7 +13,7 @@
         <li>
             <a href="">{{ workspace.name }}</a> 
             <form action="{{ path('claro_core_delete_workspace', {'id': workspace.id}) }}" method="post">   
-                <input type="submit" value="Delete" />
+                <input type="submit" value="Delete" {% if not is_granted('DELETE', workspace) %}disabled="true"{% endif %}/>
             </form>
         </li>
     {% endfor %}

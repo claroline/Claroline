@@ -3,12 +3,14 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Entity\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 
 class WorkspaceController extends Controller
 {
-    
     public function newAction()
     {
         $workspace = new Workspace();
@@ -33,6 +35,17 @@ class WorkspaceController extends Controller
             $em->persist($workspace);
             $em->flush();
 
+            $aclProvider = $this->get('security.acl.provider');
+            $objectIdentity = ObjectIdentity::fromDomainObject($workspace);
+            $acl = $aclProvider->createAcl($objectIdentity);
+
+            $securityContext = $this->get('security.context');
+            $user = $securityContext->getToken()->getUser();
+            $securityIdentity = UserSecurityIdentity::fromAccount($user);
+
+            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+            $aclProvider->updateAcl($acl);
+
             return $this->redirect($this->generateUrl('claro_core_desktop'));
         }
 
@@ -44,19 +57,21 @@ class WorkspaceController extends Controller
     public function deleteAction($id)
     {
         $logger = $this->get('logger');
-        
-        
+             
         $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Workspace');
         $workspace = $workspaceRepo->find($id);
         
-        
-        
+        $securityContext = $this->get('security.context');
+
+        if (false === $securityContext->isGranted('DELETE', $workspace))
+        {
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($workspace);
         $em->flush();
-        $this->get('session')->setFlash('notice', 'Workspace successfully deleted');
-        
-            
+        $this->get('session')->setFlash('notice', 'Workspace successfully deleted');            
 
         return $this->redirect($this->generateUrl('claro_core_desktop'));
     }

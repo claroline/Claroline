@@ -36,9 +36,9 @@ class AuthenticationTest extends WebTestCase
         $logger = $container->get('logger');
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertTrue($crawler->filter('div#content form input[name=_submit]')->count() > 0);
+        $this->assertTrue($crawler->filter('div#content form input[id=_submit]')->count() > 0);
 
-        $form = $crawler->filter('input[name=_submit]')->form();
+        $form = $crawler->selectButton('_submit')->form();
         $form['_username'] = 'jdoe';
         $form['_password'] = 'topsecret';
 
