@@ -30,3 +30,6 @@ security:
         - { path: ^/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/.+, role: ROLE_USER }
+
+    acl:
+        connection: default
