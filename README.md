@@ -13,13 +13,7 @@ After having checked out the project :
 
 * do the same in test env : `php app/console --env="test" doctrine:database:create`
 
-* create the tables with : 
-  * `php app/console doctrine:schema:update --force`
-  * `php app/console init:acl`
-
-* do the same in test env : 
-  * `php app/console --env="test" doctrine:schema:update --force`
-  * `php app/console init:acl --env="test"`
+* create the tables with : `php app/console doctrine:schema:update --force`
 
 * make the *app/cache* and *app/logs* directories (and their children) writable from
   the webserver
