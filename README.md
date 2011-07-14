@@ -4,22 +4,22 @@ After having checked out the project :
 
 * make sure the version of PHP you're running is >= 5.3.2 (required)
 
-* launch : `php ./bin/vendors install`
-
 * create an *app/config/parameters.ini* file according to *app/config/parameters.ini.dist*
   (currently only db settings are required)
+
+* launch : `php ./bin/vendors install`
 
 * create the database with : `php app/console doctrine:database:create`
 
 * do the same in test env : `php app/console --env="test" doctrine:database:create`
 
 * create the tables with :
-  * `php app/console doctrine:schema:update --force`
+  * `php app/console doctrine:schema:update --force` or `php app/console doctrine:schema:create`
   * `php app/console init:acl`
 
 * do the same in test dev :
-  * `php app/console doctrine:schema:update --force`
-  * `php app/console init:acl --env="test"`
+  * `php app/console --env="test" doctrine:schema:update --force` or `php app/console --env="test" doctrine:schema:create`
+  * `php app/console --env="test" init:acl`
 
 * make the *app/cache* and *app/logs* directories (and their children) writable from
   the webserver
