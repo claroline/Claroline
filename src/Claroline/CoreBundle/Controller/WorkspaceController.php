@@ -11,6 +11,22 @@ use Claroline\CoreBundle\Form\WorkspaceType;
 
 class WorkspaceController extends Controller
 {
+
+    /**
+     *
+     * @return \Claroline\CoreBundle\Entity\ACLWorkspaceManager
+     */
+    public function getWorkspaceManager()
+    {
+        return $this->get('claroline.core.acl_workspace_manager');
+    }
+
+    public function getUser()
+    {
+        return $this->get('security.context')->getToken()->getUser();
+    }
+
+
     public function newAction()
     {
         $workspace = new Workspace();
@@ -24,27 +40,17 @@ class WorkspaceController extends Controller
     
     public function createAction()
     {
+        $workspace_manager = $this->getWorkspaceManager();
+
         $workspace = new Workspace();
         $form = $this->createForm(new WorkspaceType(), $workspace);
         $request = $this->getRequest();
         $form->bindRequest($request);
+        $workspace->setOwner($this->getUser());
 
         if ($form->isValid())
         {
-            $em = $this->get('doctrine')->getEntityManager();
-            $em->persist($workspace);
-            $em->flush();
-
-            $aclProvider = $this->get('security.acl.provider');
-            $objectIdentity = ObjectIdentity::fromDomainObject($workspace);
-            $acl = $aclProvider->createAcl($objectIdentity);
-
-            $securityContext = $this->get('security.context');
-            $user = $securityContext->getToken()->getUser();
-            $securityIdentity = UserSecurityIdentity::fromAccount($user);
-
-            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-            $aclProvider->updateAcl($acl);
+            $workspace_manager->create($workspace);
 
             return $this->redirect($this->generateUrl('claro_core_desktop'));
         }
@@ -56,21 +62,13 @@ class WorkspaceController extends Controller
     
     public function deleteAction($id)
     {
-        $logger = $this->get('logger');
-             
+        $workspace_manager = $this->getWorkspaceManager();
+
         $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Workspace');
         $workspace = $workspaceRepo->find($id);
+
+        $workspace_manager->delete($workspace);
         
-        $securityContext = $this->get('security.context');
-
-        if (false === $securityContext->isGranted('DELETE', $workspace))
-        {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
-        }
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->remove($workspace);
-        $em->flush();
         $this->get('session')->setFlash('notice', 'Workspace successfully deleted');            
 
         return $this->redirect($this->generateUrl('claro_core_desktop'));
