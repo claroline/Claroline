@@ -1,0 +1,12 @@
+parameters:
+    workspace.class:      Claroline\CoreBundle\Entity\Workspace
+
+services:
+    claroline.core.workspace_manager:
+        class:        Claroline\CoreBundle\Service\Manager\WorkspaceManager
+        arguments:    [@doctrine.orm.entity_manager, %workspace.class%]
+        public: false
+
+    claroline.core.acl_workspace_manager:
+        class:        Claroline\CoreBundle\Service\Manager\ACLWorkspaceManager
+        arguments:    [@claroline.core.workspace_manager, @security.context, @security.acl.provider]

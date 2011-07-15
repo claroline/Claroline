@@ -20,3 +20,6 @@ doctrine:
         dbname:   %test_database_name%
         user:     %test_database_user%
         password: %test_database_password%
+
+parameters:
+    test.client.class: Claroline\CoreBundle\Service\Testing\TransactionalTestClient

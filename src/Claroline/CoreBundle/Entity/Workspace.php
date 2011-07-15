@@ -24,6 +24,10 @@ class Workspace
      */
     protected $name;
 
+    private $owner;
+
+
+
     public function getId()
     {
         return $this->id;
@@ -38,4 +42,17 @@ class Workspace
     {
         $this->name = $name;
     }
+
+    public function getOwner() {
+        return $this->owner;
+    }
+
+        public function setOwner($user)
+    {
+        $this->owner = $user;
+    }
+
+
+
+
 }
