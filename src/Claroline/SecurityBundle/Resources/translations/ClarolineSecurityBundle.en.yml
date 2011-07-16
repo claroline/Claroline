@@ -1,0 +1,6 @@
+security.username: Username
+security.password: Password
+security.login: Login
+security.logout: Logout
+security.login_submit: Login
+security.login_failure: Login has failed. Check your username and password are correct.
