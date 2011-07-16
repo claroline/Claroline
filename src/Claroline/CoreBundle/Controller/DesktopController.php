@@ -8,7 +8,7 @@ class DesktopController extends Controller
 {
     public function indexAction()
     {
-        $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Workspace');
+        $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineWorkspaceBundle:Workspace');
         $workspaces = $workspaceRepo->findAll();
         $assigns  = array(
             'workspaces' => $workspaces,

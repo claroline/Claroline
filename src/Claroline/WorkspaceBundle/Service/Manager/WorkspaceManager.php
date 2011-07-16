@@ -1,33 +1,33 @@
 <?php
 
-namespace Claroline\CoreBundle\Service\Manager;
+namespace Claroline\WorkspaceBundle\Service\Manager;
 
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\WorkspaceBundle\Entity\Workspace;
 use Doctrine\ORM\EntityManager;
 
 class WorkspaceManager
 {
-   /**
-    * @var EntityManager
-    */
-        protected $em;
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     /**
-    * @var EntityRepository
-    */
+     * @var EntityRepository
+     */
     protected $repository;
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     protected $class;
 
     /**
-    * Constructor.
-    *
-    * @param EntityManager $em
-    * @param string $class
-    */
+     * Constructor.
+     *
+     * @param EntityManager $em
+     * @param string $class
+     */
     public function __construct(EntityManager $em, $class)
     {
         $this->em = $em;
@@ -47,8 +47,4 @@ class WorkspaceManager
         $this->em->remove($ws);
         $this->em->flush();
     }
-
-
-
-
 }
