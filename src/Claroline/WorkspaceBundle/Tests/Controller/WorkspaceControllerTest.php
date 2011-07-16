@@ -1,16 +1,13 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\WorkspaceBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadWorkspaceData;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DomCrawler\Crawler;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
+use Claroline\WorkspaceBundle\Tests\DataFixtures\ORM\LoadWorkspaceData;
 
 class WorkspaceControllerTest extends WebTestCase
 {
@@ -61,7 +58,8 @@ class WorkspaceControllerTest extends WebTestCase
         $this->client->submit($form);
     }
 
-    protected function tearDown() {
+    protected function tearDown()
+    {
         $this->client->rollback();
     }
 

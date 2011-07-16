@@ -1,9 +1,9 @@
 <?php
 
-namespace Claroline\CoreBundle\Service\Manager;
+namespace Claroline\WorkspaceBundle\Service\Manager;
 
 
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\WorkspaceBundle\Entity\Workspace;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
@@ -13,21 +13,19 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class ACLWorkspaceManager
 {
-
     /**
-    * The current Security Context.
-    *
-    * @var SecurityContextInterface
-    */
+     * The current Security Context.
+     *
+     * @var SecurityContextInterface
+     */
     private $securityContext;
 
     /**
-    * The AclProvider.
-    *
-    * @var MutableAclProviderInterface
-    */
+     * The AclProvider.
+     *
+     * @var MutableAclProviderInterface
+     */
     private $aclProvider;
-
 
     /** The actual workspace manager
      *
@@ -36,13 +34,13 @@ class ACLWorkspaceManager
     private $real_manager;
 
     /**
-    * Constructor.
-    *
-    * @param SecurityContextInterface $securityContext
-    * @param ObjectIdentityRetrievalStrategyInterface $objectRetrieval
-    * @param MutableAclProviderInterface $aclProvider
-    * @param string $commentClass
-    */
+     * Constructor.
+     *
+     * @param SecurityContextInterface $securityContext
+     * @param ObjectIdentityRetrievalStrategyInterface $objectRetrieval
+     * @param MutableAclProviderInterface $aclProvider
+     * @param string $commentClass
+     */
     public function __construct(
         WorkspaceManager $real_manager,
         SecurityContextInterface $securityContext,
@@ -73,7 +71,6 @@ class ACLWorkspaceManager
 
     public function delete(Workspace $ws)
     {
-
         if (false === $this->securityContext->isGranted('DELETE', $ws))
         {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
@@ -81,8 +78,4 @@ class ACLWorkspaceManager
 
         $this->real_manager->delete($ws);
     }
-
-
-
-
 }

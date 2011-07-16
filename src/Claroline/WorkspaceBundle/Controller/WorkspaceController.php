@@ -1,24 +1,19 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\WorkspaceBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Entity\Workspace;
-use Claroline\CoreBundle\Form\WorkspaceType;
+use Claroline\WorkspaceBundle\Entity\Workspace;
+use Claroline\WorkspaceBundle\Form\WorkspaceType;
 
 class WorkspaceController extends Controller
 {
-
     /**
-     *
-     * @return \Claroline\CoreBundle\Entity\ACLWorkspaceManager
+     * @return \Claroline\WorkspaceBundle\Entity\ACLWorkspaceManager
      */
     public function getWorkspaceManager()
     {
-        return $this->get('claroline.core.acl_workspace_manager');
+        return $this->get('claroline.workspace.acl_workspace_manager');
     }
 
     public function getUser()
@@ -26,17 +21,15 @@ class WorkspaceController extends Controller
         return $this->get('security.context')->getToken()->getUser();
     }
 
-
     public function newAction()
     {
         $workspace = new Workspace();
         $form = $this->createForm(new WorkspaceType(), $workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:form.html.twig', array(
+        return $this->render('ClarolineWorkspaceBundle:Workspace:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }
-    
     
     public function createAction()
     {
@@ -55,7 +48,7 @@ class WorkspaceController extends Controller
             return $this->redirect($this->generateUrl('claro_core_desktop'));
         }
 
-        return $this->render('ClarolineCoreBundle:Workspace:form.html.twig', array(
+        return $this->render('ClarolineWorkspaceBundle:Workspace:form.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -64,7 +57,7 @@ class WorkspaceController extends Controller
     {
         $workspace_manager = $this->getWorkspaceManager();
 
-        $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Workspace');
+        $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineWorkspaceBundle:Workspace');
         $workspace = $workspaceRepo->find($id);
 
         $workspace_manager->delete($workspace);

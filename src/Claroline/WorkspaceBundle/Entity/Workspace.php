@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\WorkspaceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,8 +26,6 @@ class Workspace
 
     private $owner;
 
-
-
     public function getId()
     {
         return $this->id;
@@ -43,16 +41,13 @@ class Workspace
         $this->name = $name;
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return $this->owner;
     }
 
-        public function setOwner($user)
+    public function setOwner($user)
     {
         $this->owner = $user;
     }
-
-
-
-
 }

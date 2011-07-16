@@ -1,9 +1,9 @@
-claro_core_security_login:
+claro_security_login:
     pattern: /login
     defaults: { _controller: ClarolineSecurityBundle:Authentication:login }
 
-claro_core_security_login_check:
+claro_security_login_check:
     pattern: /login_check
 
-claro_core_security_logout:
+claro_security_logout:
     pattern: /logout

@@ -1,11 +1,13 @@
 claro_core:
     resource: "@ClarolineCoreBundle/Resources/config/routing.yml"
 
+
+
 claro_user:
     resource: "@ClarolineUserBundle/Resources/config/routing.yml"
 
+claro_workspace:
+    resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
 
-
-
-claro_core_security:
+claro_security:
     resource: "@ClarolineSecurityBundle/Resources/config/routing.yml"

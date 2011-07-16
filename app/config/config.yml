@@ -2,7 +2,7 @@ imports:
     - { resource: parameters.ini }
     - { resource: security.yml }
     core_bundle:
-        resource: @ClarolineCoreBundle/Resources/config/services.yml
+        resource: @ClarolineWorkspaceBundle/Resources/config/services.yml
 
 
 framework:

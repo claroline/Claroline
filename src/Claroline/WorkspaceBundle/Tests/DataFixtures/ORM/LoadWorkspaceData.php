@@ -1,12 +1,13 @@
 <?php
-namespace Claroline\CoreBundle\Tests\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Claroline\CoreBundle\Entity\Workspace;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+namespace Claroline\WorkspaceBundle\Tests\DataFixtures\ORM;
+
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Claroline\WorkspaceBundle\Entity\Workspace;
 
 class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -18,11 +19,10 @@ class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, Ord
         $this->container = $container;
     }
 
-    
     public function load($manager)
     {
         $admin = $manager->merge($this->getReference('user/admin'));
-        $ws_manager = $this->container->get('claroline.core.acl_workspace_manager');
+        $ws_manager = $this->container->get('claroline.workspace.acl_workspace_manager');
         
         for($i = 0; $i < 10; ++$i)
         {
@@ -34,7 +34,8 @@ class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, Ord
 
     }
 
-    public function getOrder() {
+    public function getOrder()
+    {
         return 11; // the order in which fixtures will be loaded
     }
 }

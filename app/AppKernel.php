@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
             new Claroline\UserBundle\ClarolineUserBundle(),
+            new Claroline\WorkspaceBundle\ClarolineWorkspaceBundle(),
             new Claroline\SecurityBundle\ClarolineSecurityBundle(),
         );
 

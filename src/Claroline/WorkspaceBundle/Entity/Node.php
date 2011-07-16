@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\WorkspaceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
