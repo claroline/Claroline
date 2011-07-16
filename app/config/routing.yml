@@ -3,3 +3,9 @@ claro_core:
 
 claro_user:
     resource: "@ClarolineUserBundle/Resources/config/routing.yml"
+
+
+
+
+claro_core_security:
+    resource: "@ClarolineSecurityBundle/Resources/config/routing.yml"
