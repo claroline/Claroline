@@ -22,6 +22,7 @@ $loader->registerNamespaces(array(
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
     'Twig_'            => __DIR__.'/../vendor/twig/lib',
+    'vfsStream'        => __DIR__.'/../vendor/vfsstream/src/main/php/org/bovigo/vfs',
 ));
 $loader->registerPrefixFallbacks(array(
     __DIR__.'/../vendor/symfony/src/Symfony/Component/Locale/Resources/stubs',
