@@ -1,0 +1,11 @@
+<div id="app_menu">
+    <ul>
+    {% for app in apps %}
+        <li>
+            <a href="{{ path(app.indexRoute) }}">
+                {{ app.nameTranslationKey|trans({}, 'ClaroApp' ~ app.bundleName) }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>

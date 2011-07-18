@@ -1,0 +1,15 @@
+{% extends 'ClarolineGUIBundle::core_layout.html.twig' %}
+
+{% block global_content %}
+    
+    <div id="top_bar">
+    {% render 'ClarolineGUIBundle:Widget:statusBar' %}
+    </div>
+
+    {% render 'ClarolineGUIBundle:Widget:applicationMenu' %}
+
+    <div id="content">
+    {% block content %}{% endblock %}
+    </div>
+
+{% endblock %}

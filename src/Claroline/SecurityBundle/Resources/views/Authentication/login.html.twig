@@ -1,6 +1,6 @@
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends 'ClarolineGUIBundle::core_layout.html.twig' %}
 
-{% block content %}
+{% block global_content %}
 
 {% if error %}
      <span id="login_failure">{{ 'security.login_failure'|trans({}, 'ClarolineSecurityBundle') }}</span>
@@ -16,4 +16,4 @@
     <input type="submit" id="_submit" name="_submit" value="{{ 'security.login_submit'|trans({}, 'ClarolineSecurityBundle') }}" />
 </form>
 
-{% endblock content %}
+{% endblock global_content %}

@@ -1,3 +1,13 @@
+# TODO : Import a generated routing file with the route /
+# (default value = ClarolineGUIBundle:Page:defaultIndex)
+# and the imports of the plugins routing resources.
+
+claro_gui_default_index:
+    pattern: /
+    defaults: { _controller: ClarolineGUIBundle:Page:defaultIndex }
+
+
+
 claro_core:
     resource: "@ClarolineCoreBundle/Resources/config/routing.yml"
 
