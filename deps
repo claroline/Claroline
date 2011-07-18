@@ -71,3 +71,7 @@
 [DoctrineFixturesBundle]
     git=http://github.com/symfony/DoctrineFixturesBundle.git
     target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+
+[vfsStream]
+    git=http://github.com/mikey179/vfsStream.git
+    target=/vfsstream
