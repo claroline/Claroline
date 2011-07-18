@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+    Claroline
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinegui/css/main.css') }}" />
+{% endblock %}
+
+{% block favicon %}
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinegui/images/claro_favicon.ico') }}" />
+{% endblock %}
+
+{% block body %}
+
+    {% render 'ClarolineGUIBundle:Widget:header' %}
+
+    {% block global_content %}{% endblock %}
+
+    {% render 'ClarolineGUIBundle:Widget:footer' %}
+
+{% endblock %}

@@ -1,0 +1,48 @@
+body
+{
+    margin: 0;
+    padding: 0;
+}
+
+#banner
+{
+    height: 30px;
+    padding: 4px;
+    border-bottom : solid #555 3px;
+    background-color: #66c;
+}
+
+#banner h3
+{
+    margin: 2px 0 0 8px;
+    color: #ccc;
+}
+
+#top_bar
+{
+    padding: 2px;
+    border-bottom: solid 1px #bbb;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#status_bar
+{
+    display: inline-block;
+    float: right;
+    margin: 0 12px;
+}
+
+#app_menu
+{
+    float: left;
+    width: 200px;
+    min-height: 400px;
+    border-right: solid 1px #bbb;
+}
+
+#content
+{
+    float: left;
+    padding: 16px;
+}
