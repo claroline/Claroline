@@ -17,7 +17,7 @@ $loader->registerNamespaces(array(
     'Metadata'         => __DIR__.'/../vendor/metadata/src',
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
-    'Claroline'        => __DIR__.'/../src',
+    'Claroline'        => array(__DIR__.'/../src', __DIR__.'/../plugin', __DIR__.'/../src/Claroline/PluginBundle/Tests/stubs/plugin'),
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',

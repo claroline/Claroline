@@ -27,6 +27,7 @@ class AppKernel extends Kernel
             new Claroline\WorkspaceBundle\ClarolineWorkspaceBundle(),
             new Claroline\SecurityBundle\ClarolineSecurityBundle(),
             new Claroline\GUIBundle\ClarolineGUIBundle(),
+            new Claroline\PluginBundle\ClarolinePluginBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
