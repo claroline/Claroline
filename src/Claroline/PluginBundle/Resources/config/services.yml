@@ -1,0 +1,13 @@
+parameters:
+    claroline.plugin.validator.class: Claroline\PluginBundle\Service\PluginManager\Validator
+    claroline.plugin.file_writer.class: Claroline\PluginBundle\Service\PluginManager\FileWriter
+    claroline.plugin.manager.class: Claroline\PluginBundle\Service\PluginManager\Manager
+
+services:
+    claroline.plugin.validator:
+        class: %claroline.plugin.validator.class%
+    claroline.plugin.file_writer:
+        class: %claroline.plugin.file_writer.class%
+    claroline.plugin.manager:
+        class: %claroline.plugin.manager.class%
+        arguments:    [@claroline.plugin.validator, @claroline.plugin.file_writer, @doctrine.orm.entity_manager]
