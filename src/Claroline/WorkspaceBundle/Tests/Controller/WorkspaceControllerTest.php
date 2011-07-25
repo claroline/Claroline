@@ -101,7 +101,7 @@ class WorkspaceControllerTest extends WebTestCase
 
         $this->crawler = $this->client->request('GET', '/workspaces/new');
         $form = $this->crawler->filter('input[type=submit]')->form();
-        $form['workspace[name]'] = 'Workspace test';
+        $form['workspace_form[name]'] = 'Workspace test';
         $this->client->submit($form);
 
         $this->go_to_desktop_and_assert_number_of_listed_workspaces(11);

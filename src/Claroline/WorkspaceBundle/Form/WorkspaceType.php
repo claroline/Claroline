@@ -18,4 +18,9 @@ class WorkspaceType extends AbstractType
         'data_class' => 'Claroline\WorkspaceBundle\Entity\Workspace',
         );
     }
+
+    public function getName()
+    {
+        return 'workspace_form';
+    }
 }
