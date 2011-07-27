@@ -59,8 +59,7 @@ jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
     
-# BROKEN : make test fail
-#stof_doctrine_extensions:
- #   orm:
-  #      default:
-   #         tree: true   # listeners are not enabled by default
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true   # listeners are not enabled by default

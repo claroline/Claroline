@@ -4,7 +4,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 $loader = new UniversalClassLoader();
-$loader->registerNamespaces(array(
+$coreNamespaces = array(
     'Symfony'          => array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),
     'Sensio'           => __DIR__.'/../vendor/bundles',
     'JMS'              => __DIR__.'/../vendor/bundles',
@@ -18,7 +18,10 @@ $loader->registerNamespaces(array(
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
     'Claroline'        => array(__DIR__.'/../src', __DIR__.'/../plugin', __DIR__.'/../src/Claroline/PluginBundle/Tests/stubs/plugin'),
-));
+);
+$pluginNamespaces = array_fill_keys(file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES), __DIR__.'/../plugin');
+$loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));
+
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
     'Twig_'            => __DIR__.'/../vendor/twig/lib',
