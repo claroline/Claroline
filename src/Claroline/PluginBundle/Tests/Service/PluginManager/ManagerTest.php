@@ -8,27 +8,27 @@ use \vfsStream;
 class ManagerTest extends WebTestCase
 {
     private $client;
-    private $writer;
+    private $config;
     private $manager;
 
     public function setUp()
     {
         $this->buildPluginFiles();
         $validator = new Validator(vfsStream::url('virtual/plugin'));
-        $this->writer = new FileWriter(vfsStream::url('virtual/config/namespaces'),
-                                       vfsStream::url('virtual/config/bundles'));
+        $this->config = new ConfigurationHandler(vfsStream::url('virtual/config/namespaces'),
+                                                 vfsStream::url('virtual/config/bundles'));
         $this->client = self::createClient();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->manager = new Manager($validator, $this->writer, $em);
+        $this->manager = new Manager($validator, $this->config, $em);
     }
 
     public function testInstallAValidPluginRegistersItInConfigFiles()
     {
         $this->manager->install('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
 
-        $this->assertEquals(array('VendorX'), $this->writer->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array('VendorX\FirstPluginBundle\VendorXFirstPluginBundle'), 
-                            $this->writer->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }
 
     public function testInstallAnInvalidPluginThrowsAValidationException()
@@ -43,9 +43,9 @@ class ManagerTest extends WebTestCase
         $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
         $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
 
-        $this->assertEquals(array('VendorX'), $this->writer->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array('VendorX\SecondPluginBundle\VendorXSecondPluginBundle'), 
-                            $this->writer->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }
 
     public function testInstallSeveralValidPlugins()
@@ -54,11 +54,11 @@ class ManagerTest extends WebTestCase
         $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
         $this->manager->install('VendorY\ThirdPluginBundle\VendorYThirdPluginBundle');
 
-        $this->assertEquals(array('VendorX', 'VendorY'), $this->writer->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX', 'VendorY'), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array('VendorX\FirstPluginBundle\VendorXFirstPluginBundle',
                                   'VendorX\SecondPluginBundle\VendorXSecondPluginBundle',
                                   'VendorY\ThirdPluginBundle\VendorYThirdPluginBundle'),
-                            $this->writer->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }
 
     public function testRemovePluginRemovesItFromConfigFiles()
@@ -66,8 +66,8 @@ class ManagerTest extends WebTestCase
         $this->manager->install('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
         $this->manager->remove('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
 
-        $this->assertEquals(array(), $this->writer->getRegisteredNamespaces());
-        $this->assertEquals(array(), $this->writer->getRegisteredBundles());
+        $this->assertEquals(array(), $this->config->getRegisteredNamespaces());
+        $this->assertEquals(array(), $this->config->getRegisteredBundles());
     }
 
     public function testRemovePluginPreservesSharedVendorNamespaces()
@@ -76,7 +76,7 @@ class ManagerTest extends WebTestCase
         $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
         $this->manager->remove('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
 
-        $this->assertEquals(array('VendorX'), $this->writer->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
     }
 
     public function testRemoveInexistentPluginThrowsAnException()

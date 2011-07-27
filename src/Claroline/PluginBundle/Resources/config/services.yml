@@ -1,6 +1,6 @@
 parameters:
     claroline.plugin.validator.class: Claroline\PluginBundle\Service\PluginManager\Validator
-    claroline.plugin.file_writer.class: Claroline\PluginBundle\Service\PluginManager\FileWriter
+    claroline.plugin.config_handler.class: Claroline\PluginBundle\Service\PluginManager\ConfigurationHandler
     claroline.plugin.manager.class: Claroline\PluginBundle\Service\PluginManager\Manager
     claroline.plugin.directory: "%kernel.root_dir%/../plugin"
     claroline.plugin.namespaces.config.directory: "%kernel.root_dir%/config/plugin/namespaces"
@@ -10,10 +10,10 @@ services:
     claroline.plugin.validator:
         class: %claroline.plugin.validator.class%
         arguments: [%claroline.plugin.directory%]
-    claroline.plugin.file_writer:
-        class: %claroline.plugin.file_writer.class%
+    claroline.plugin.config_handler:
+        class: %claroline.plugin.config_handler.class%
         arguments: [%claroline.plugin.namespaces.config.directory%, %claroline.plugin.bundles.config.directory%]
         public: false
     claroline.plugin.manager:
         class: %claroline.plugin.manager.class%
-        arguments: [@claroline.plugin.validator, @claroline.plugin.file_writer, @doctrine.orm.entity_manager]
+        arguments: [@claroline.plugin.validator, @claroline.plugin.config_handler, @doctrine.orm.entity_manager]
