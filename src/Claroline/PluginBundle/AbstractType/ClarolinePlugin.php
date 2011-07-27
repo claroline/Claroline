@@ -10,6 +10,18 @@ abstract class ClarolinePlugin extends Bundle
 {
     public function getEntityDirectory(){}
 
+    public function getVendorNamespace()
+    {
+        $namespaceParts = explode('\\', $this->getNamespace());
+
+        if (count($namespaceParts) === 0)
+        {
+            throw new \Exception('Claroline plugin namespace must start with a vendor namespace.');
+        }
+
+        return $namespaceParts[0];
+    }
+
     public function getRoutingResourcesPaths()
     {
         $path = $this->getPath()

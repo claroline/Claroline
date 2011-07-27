@@ -30,6 +30,11 @@ class AppKernel extends Kernel
             new Claroline\PluginBundle\ClarolinePluginBundle(),
         );
 
+        foreach (file(__DIR__.'/config/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
+        {
+            $bundles[] = new $bundle;
+        }
+
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();

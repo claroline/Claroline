@@ -18,14 +18,16 @@ class Manager
         $this->em = $em;
     }
 
-    public function install($pluginDirectory, $pluginFQCN)
+    public function install($pluginFQCN)
     {
-        $this->validator->check($pluginFQCN, $pluginDirectory);
+        $this->validator->check($pluginFQCN);
 
         $plugin = new $pluginFQCN;
 
-        $this->writer->registerNamespace($plugin->getNamespace());
-        $this->writer->registerBundle($plugin->getFQCN());
+        $this->writer->registerNamespace($plugin->getVendorNamespace());
+        $this->writer->addInstantiableBundle($pluginFQCN);
+
+        /*
         $this->writer->importRoutingResource();
 
         $pluginEntity = new Plugin();
@@ -35,16 +37,25 @@ class Manager
         $this->em->flush;
 
         // install plugin tables
-        // load plugin fixtures
+        // load plugin fixtures*/
     }
 
     public function remove($pluginFQCN)
     {
+        $this->validator->check($pluginFQCN);
 
+        $plugin = new $pluginFQCN;
+
+        if (! in_array($plugin->getVendorNamespace(), $this->writer->getSharedVendorNamespaces()))
+        {
+            $this->writer->removeNamespace($plugin->getVendorNamespace());
+        }
+        
+        $this->writer->removeInstantiableBundle($pluginFQCN);
     }
 
     public function isInstalled($pluginFQCN)
     {
-
+        throw new \Exception('Not implemented yet.');
     }
 }
