@@ -2,7 +2,7 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-class FileWriter
+class ConfigurationHandler
 {
     private $pluginNamespacesFile;
     private $pluginBundlesFile;
@@ -60,65 +60,44 @@ class FileWriter
 
     public function registerNamespace($namespace)
     {
-        if (empty($namespace))
-        {
-            throw new \Exception('Namespace argument cannot be empty.');
-        }
-
-        $namespaces = file($this->pluginNamespacesFile, FILE_IGNORE_NEW_LINES);
-        
-        if (! in_array($namespace, $namespaces))
-        {
-            $namespaces[] = $namespace;
-            file_put_contents($this->pluginNamespacesFile, implode("\n", $namespaces));
-        }
+        $this->doAddItem($this->pluginNamespacesFile, $namespace, 'Namespace');
     }
 
     public function removeNamespace($namespace)
     {
-        $namespaces = file($this->pluginNamespacesFile, FILE_IGNORE_NEW_LINES);
-
-        foreach ($namespaces as $key => $namespaceItem)
-        {
-            if ($namespaceItem === $namespace)
-            {
-                unset($namespaces[$key]);
-            }
-        }
-        
-        file_put_contents($this->pluginNamespacesFile, implode("\n", $namespaces));
+        $this->doRemoveItem($this->pluginNamespacesFile, $namespace);
     }
 
     public function addInstantiableBundle($bundleFQCN)
     {
-        if (empty($bundleFQCN))
-        {
-            throw new \Exception('Bundle FQCN argument cannot be empty.');
-        }
-
-        $bundles = file($this->pluginBundlesFile, FILE_IGNORE_NEW_LINES);
-
-        if (! in_array($bundleFQCN, $bundles))
-        {
-            $bundles[] = $bundleFQCN;
-            file_put_contents($this->pluginBundlesFile, implode("\n", $bundles));
-        }
+        $this->doAddItem($this->pluginBundlesFile, $bundleFQCN, 'Bundle FQCN');
     }
 
     public function removeInstantiableBundle($bundleFQCN)
     {
-        $bundles = file($this->pluginBundlesFile, FILE_IGNORE_NEW_LINES);
-
-        foreach ($bundles as $key => $bundle)
-        {
-            if ($bundle === $bundleFQCN)
-            {
-                unset($bundles[$key]);
-            }
-        }
-
-        file_put_contents($this->pluginBundlesFile, implode("\n", $bundles));
+        $this->doRemoveItem($this->pluginBundlesFile, $bundleFQCN);
     }
+
+    public function importRoutingResource()
+    {
+
+    }
+
+
+    
+    // no use, keep plugin config in db
+    public function importServiceConfiguration()
+    {
+
+    }
+
+    // No use, use DependencyInjection directory instead
+    public function importServiceResource()
+    {
+
+    }
+
+
 
     private function checkFile($file)
     {
@@ -133,20 +112,34 @@ class FileWriter
         }
     }
 
-    public function importRoutingResource()
+    private function doAddItem($file, $item, $itemType)
     {
+        if (empty($item))
+        {
+            throw new \Exception("{$itemType} argument cannot be empty.");
+        }
 
+        $items = file($file, FILE_IGNORE_NEW_LINES);
+
+        if (! in_array($item, $items))
+        {
+            $items[] = $item;
+            file_put_contents($file, implode("\n", $items));
+        }
     }
 
-    // no use, keep plugin config in db
-    public function importServiceConfiguration()
+    private function doRemoveItem($file, $item)
     {
-        
-    }
+        $items = file($file, FILE_IGNORE_NEW_LINES);
 
-    // No use, use DependencyInjection directory instead
-    public function importServiceResource()
-    {
+        foreach ($items as $key => $value)
+        {
+            if ($value === $item)
+            {
+                unset($items[$key]);
+            }
+        }
 
+        file_put_contents($file, implode("\n", $items));
     }
 }

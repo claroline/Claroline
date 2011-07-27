@@ -2,12 +2,12 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Claroline\PluginBundle\Service\PluginManager\FileWriter;
+use Claroline\PluginBundle\Service\PluginManager\config;
 use \vfsStream;
 
-class FileWriterTest extends \PHPUnit_Framework_TestCase
+class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
 {
-    private $fileWriter;
+    private $config;
     private $namespacesFile;
     private $bundlesFile;
 
@@ -17,175 +17,175 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
         vfsStream::create(array('namespaces' => '', 'bundles' => ''), 'VirtualDir');
         $this->namespacesFile = vfsStream::url('VirtualDir/namespaces');
         $this->bundlesFile = vfsStream::url('VirtualDir/bundles');
-        $this->fileWriter = new FileWriter($this->namespacesFile, $this->bundlesFile);
+        $this->config = new ConfigurationHandler($this->namespacesFile, $this->bundlesFile);
     }
 
     public function testGetRegisteredNamespacesReturnsExpectedArray()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
         $this->assertEquals(array('VendorX', 'VendorY', 'VendorZ'),
-                            $this->fileWriter->getRegisteredNamespaces());
+                            $this->config->getRegisteredNamespaces());
     }
 
     public function testGetRegisteredBundlesReturnsExpectedArray()
     {
         file_put_contents($this->bundlesFile, "VendorX\ABC\FirstBundle\nVendorY\DEF\SecondBundle");
         $this->assertEquals(array('VendorX\ABC\FirstBundle', 'VendorY\DEF\SecondBundle'),
-                            $this->fileWriter->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }
 
     public function testGetSharedVendorNamespacesReturnsExpectedArray()
     {
         file_put_contents($this->bundlesFile, "VendorX\A\Bundle\nVendorY\B\Bundle\nVendorX\C\Bundle");
-        $this->assertEquals(array('VendorX'), $this->fileWriter->getSharedVendorNamespaces());
+        $this->assertEquals(array('VendorX'), $this->config->getSharedVendorNamespaces());
     }
 
     public function testRegisterNamespaceThrowsExceptionOnEmptyNamespace()
     {
         $this->setExpectedException('\Exception');
-        $this->fileWriter->registerNamespace('');
+        $this->config->registerNamespace('');
     }
 
     public function testRegisterNamespaceWritesNewEntryInNamespacesFile()
     {
-        $this->fileWriter->registerNamespace('Foo');
-        $this->assertTrue(in_array('Foo', $this->fileWriter->getRegisteredNamespaces()));
+        $this->config->registerNamespace('Foo');
+        $this->assertTrue(in_array('Foo', $this->config->getRegisteredNamespaces()));
     }
 
     public function testRegisterNamespacePreservesOtherEntries()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        $this->fileWriter->registerNamespace('Foo');
+        $this->config->registerNamespace('Foo');
         $this->assertEquals(array("VendorX", "VendorY", "VendorZ", 'Foo'), 
-                            $this->fileWriter->getRegisteredNamespaces());
+                            $this->config->getRegisteredNamespaces());
     }
 
     public function testRegisterNamespaceDoesntDuplicateNamespace()
     {
         file_put_contents($this->namespacesFile, 'Bar');
-        $this->fileWriter->registerNamespace('Bar');
-        $this->assertTrue(count($this->fileWriter->getRegisteredNamespaces()) == 1);
+        $this->config->registerNamespace('Bar');
+        $this->assertTrue(count($this->config->getRegisteredNamespaces()) == 1);
     }
 
     public function testRegisterNamespaceCalledSeveralTimes()
     {
         file_put_contents($this->namespacesFile, 'VendorX');
 
-        $this->fileWriter->registerNamespace('ABC');
-        $this->fileWriter->registerNamespace('DEF');
-        $this->fileWriter->registerNamespace('HIJ');
+        $this->config->registerNamespace('ABC');
+        $this->config->registerNamespace('DEF');
+        $this->config->registerNamespace('HIJ');
 
         $this->assertEquals(array('VendorX', 'ABC', 'DEF', 'HIJ'), 
-                            $this->fileWriter->getRegisteredNamespaces());
+                            $this->config->getRegisteredNamespaces());
     }
 
     public function testRemoveNamespaceDeletesEntry()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        $this->fileWriter->removeNamespace("VendorZ");
+        $this->config->removeNamespace("VendorZ");
         $this->assertEquals(array('VendorX', 'VendorY'),
-                            $this->fileWriter->getRegisteredNamespaces());
+                            $this->config->getRegisteredNamespaces());
     }
 
     public function testRemoveUnregisteredNamespaceDoesntProduceError()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY");
-        $this->fileWriter->removeNamespace("UnregisteredVendor");
+        $this->config->removeNamespace("UnregisteredVendor");
         $this->assertEquals(array('VendorX', 'VendorY'), 
-                            $this->fileWriter->getRegisteredNamespaces());
+                            $this->config->getRegisteredNamespaces());
     }
 
     public function testRemoveNamespaceCalledSeveralTimes()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
 
-        $this->fileWriter->removeNamespace("VendorX");
-        $this->fileWriter->removeNamespace("VendorZ");
+        $this->config->removeNamespace("VendorX");
+        $this->config->removeNamespace("VendorZ");
 
         $namespaces = file($this->namespacesFile, FILE_IGNORE_NEW_LINES);
-        $this->assertEquals(array('VendorY'), $this->fileWriter->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorY'), $this->config->getRegisteredNamespaces());
     }
 
     public function testRegisterThenRemoveNamespace()
     {
         file_put_contents($this->namespacesFile, 'VendorX');
 
-        $this->fileWriter->registerNamespace('VendorY');
-        $this->fileWriter->removeNamespace('VendorY');
+        $this->config->registerNamespace('VendorY');
+        $this->config->removeNamespace('VendorY');
 
-        $this->assertEquals(array('VendorX'), $this->fileWriter->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
     }
 
     public function testAddInstantiableBundleThrowsExceptionOnEmptyBundleFQCN()
     {
         $this->setExpectedException('\Exception');
-        $this->fileWriter->addInstantiableBundle('');
+        $this->config->addInstantiableBundle('');
     }
 
     public function testAddInstantiableBundleWritesNewEntryInBundlesFile()
     {
-        $this->fileWriter->addInstantiableBundle('Foo\\Bar');
-        $this->assertTrue(in_array('Foo\\Bar', $this->fileWriter->getRegisteredBundles()));
+        $this->config->addInstantiableBundle('Foo\\Bar');
+        $this->assertTrue(in_array('Foo\\Bar', $this->config->getRegisteredBundles()));
     }
 
     public function testAddInstantiableBundlePreservesOtherEntries()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        $this->fileWriter->addInstantiableBundle('VendorZ\\Test');
+        $this->config->addInstantiableBundle('VendorZ\\Test');
         $this->assertEquals(array("VendorX\\Foo", "VendorY\\Bar", "VendorZ\\Test"), 
-                            $this->fileWriter->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }
 
     public function testAddInstantiableBundleDoesntDuplicateBundle()
     {
         file_put_contents($this->bundlesFile, 'Foo\\Bar');
-        $this->fileWriter->addInstantiableBundle('Foo\\Bar');
-        $this->assertTrue(count($this->fileWriter->getRegisteredBundles()) == 1);
+        $this->config->addInstantiableBundle('Foo\\Bar');
+        $this->assertTrue(count($this->config->getRegisteredBundles()) == 1);
     }
 
     public function testAddInstantiableBundleCalledSeveralTimes()
     {
         file_put_contents($this->bundlesFile, 'VendorX\\Foo');
 
-        $this->fileWriter->addInstantiableBundle('VendorX\\Bar');
-        $this->fileWriter->addInstantiableBundle('VendorY\\Foo');
+        $this->config->addInstantiableBundle('VendorX\\Bar');
+        $this->config->addInstantiableBundle('VendorY\\Foo');
 
         $this->assertEquals(array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'), 
-                            $this->fileWriter->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }
     
     public function testRemoveInstantiableBundleDeletesEntry()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        $this->fileWriter->removeInstantiableBundle('VendorY\\Bar');
-        $this->assertEquals(array('VendorX\\Foo'), $this->fileWriter->getRegisteredBundles());
+        $this->config->removeInstantiableBundle('VendorY\\Bar');
+        $this->assertEquals(array('VendorX\\Foo'), $this->config->getRegisteredBundles());
     }
 
     public function testRemoveUnregisteredBundleDoesntProduceError()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        $this->fileWriter->removeInstantiableBundle('UnregisteredVendor');
+        $this->config->removeInstantiableBundle('UnregisteredVendor');
         $this->assertEquals(array('VendorX\\Foo', 'VendorY\\Bar'), 
-                            $this->fileWriter->getRegisteredBundles());
+                            $this->config->getRegisteredBundles());
     }   
 
     public function testRemoveBundleCalledSeveralTimes()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar\nVendorZ\\Test");
 
-        $this->fileWriter->removeInstantiableBundle('VendorX\\Foo');
-        $this->fileWriter->removeInstantiableBundle('VendorZ\\Test');
+        $this->config->removeInstantiableBundle('VendorX\\Foo');
+        $this->config->removeInstantiableBundle('VendorZ\\Test');
 
-        $this->assertEquals(array('VendorY\\Bar'), $this->fileWriter->getRegisteredBundles());
+        $this->assertEquals(array('VendorY\\Bar'), $this->config->getRegisteredBundles());
     }
 
     public function testAddThenRemoveInstantiableBundle()
     {
         file_put_contents($this->bundlesFile, 'VendorX\\Foo');
 
-        $this->fileWriter->addInstantiableBundle('VendorY\\Bar');
-        $this->fileWriter->removeInstantiableBundle('VendorY\\Bar');
+        $this->config->addInstantiableBundle('VendorY\\Bar');
+        $this->config->removeInstantiableBundle('VendorY\\Bar');
 
-        $this->assertEquals(array('VendorX\\Foo'), $this->fileWriter->getRegisteredBundles());
+        $this->assertEquals(array('VendorX\\Foo'), $this->config->getRegisteredBundles());
     }
 }

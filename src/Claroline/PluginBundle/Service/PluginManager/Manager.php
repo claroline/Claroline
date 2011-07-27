@@ -8,13 +8,13 @@ use Claroline\PluginBundle\Entity\Plugin;
 class Manager
 {
     protected $validator;
-    protected $writer;
+    protected $config;
     protected $em;
 
-    public function __construct(Validator $validator, FileWriter $writer, EntityManager $em)
+    public function __construct(Validator $validator, ConfigurationHandler $configHandler, EntityManager $em)
     {
         $this->validator = $validator;
-        $this->writer = $writer;
+        $this->config = $configHandler;
         $this->em = $em;
     }
 
@@ -24,11 +24,11 @@ class Manager
 
         $plugin = new $pluginFQCN;
 
-        $this->writer->registerNamespace($plugin->getVendorNamespace());
-        $this->writer->addInstantiableBundle($pluginFQCN);
+        $this->config->registerNamespace($plugin->getVendorNamespace());
+        $this->config->addInstantiableBundle($pluginFQCN);
 
         /*
-        $this->writer->importRoutingResource();
+        $this->config->importRoutingResource();
 
         $pluginEntity = new Plugin();
         $pluginEntity->setName($xyz);
@@ -46,12 +46,12 @@ class Manager
 
         $plugin = new $pluginFQCN;
 
-        if (! in_array($plugin->getVendorNamespace(), $this->writer->getSharedVendorNamespaces()))
+        if (! in_array($plugin->getVendorNamespace(), $this->config->getSharedVendorNamespaces()))
         {
-            $this->writer->removeNamespace($plugin->getVendorNamespace());
+            $this->config->removeNamespace($plugin->getVendorNamespace());
         }
         
-        $this->writer->removeInstantiableBundle($pluginFQCN);
+        $this->config->removeInstantiableBundle($pluginFQCN);
     }
 
     public function isInstalled($pluginFQCN)
