@@ -2,13 +2,16 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
 
 class Validator
 {
     private $pluginDirectory;
+    private $yamlParser;
 
-    public function __construct($pluginDirectory)
+    public function __construct($pluginDirectory, Parser $yamlParser)
     {
         if (! is_dir($pluginDirectory))
         {
@@ -16,7 +19,8 @@ class Validator
                                           ValidationException::INVALID_PLUGIN_DIR);
         }
 
-        $this->pluginDirectory = $pluginDirectory;
+        $this->pluginDirectory = $this->resolvePath($pluginDirectory);
+        $this->yamlParser = $yamlParser;
     }
 
     public function check($pluginFQCN)
@@ -114,17 +118,59 @@ class Validator
 
         foreach ((array) $paths as $path)
         {
+            $path = $this->resolvePath($path);
+
             if (! file_exists($path))
             {
-                throw new ValidationException("Cannot find routing file '{$path}'.",
-                                              ValidationException::INVALID_ROUTING_RESOURCES);
+                throw new ValidationException("{$pluginFQCN} : Cannot find routing file '{$path}'.",
+                                              ValidationException::INVALID_ROUTING_PATH);
+            }
+
+            $nameParts = explode('\\', $pluginFQCN);
+            $vendor = $nameParts[0];
+            $bundleName = $nameParts[1];
+            $requiredLocation = "{$this->pluginDirectory}/{$vendor}/{$bundleName}";
+
+            if (substr($path, 0, strlen($requiredLocation)) != $requiredLocation)
+            {
+                throw new ValidationException("{$pluginFQCN} : Invalid routing file '{$path}' "
+                                            . "(must be located within the bundle).",
+                                              ValidationException::INVALID_ROUTING_LOCATION);
             }
 
             if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION))
             {
-                throw new ValidationException("Unsupported '{$ext}' extension (use .yml).",
-                                              ValidationException::INVALID_ROUTING_RESOURCES);
+                throw new ValidationException("{$pluginFQCN} : Unsupported '{$ext}' extension for "
+                                            . "routing file '{$path}'(use .yml).",
+                                              ValidationException::INVALID_ROUTING_EXTENSION);
+            }
+
+            try
+            {
+                $yamlString = file_get_contents($path);
+                $this->yamlParser->parse($yamlString);
+            }
+            catch (ParseException $ex)
+            {
+                throw new ValidationException("{$pluginFQCN} : Unloadable YAML routing file "
+                                            . "(parse exception message : '{$ex->getMessage()}')",
+                                              ValidationException::INVALID_YAML_RESOURCE);
             }
         }
+    }
+
+    // Workaround for https://github.com/mikey179/vfsStream/wiki/KnownIssues
+    // Use of the realpath() function may be necessary for real file paths comparison,
+    // but it'll always return false for "virtual" paths coming from vfsstream.
+    private function resolvePath($path)
+    {
+        $resolvedPath  = realpath($path);
+
+        if ($resolvedPath !== false)
+        {
+            return $resolvedPath;
+        }
+
+        return $path;
     }
 }

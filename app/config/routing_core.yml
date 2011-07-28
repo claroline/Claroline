@@ -1,0 +1,15 @@
+claro_gui_default_index:
+    pattern: /
+    defaults: { _controller: ClarolineGUIBundle:Page:defaultIndex }
+
+claro_core:
+    resource: "@ClarolineCoreBundle/Resources/config/routing.yml"
+
+claro_user:
+    resource: "@ClarolineUserBundle/Resources/config/routing.yml"
+
+claro_workspace:
+    resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
+
+claro_security:
+    resource: "@ClarolineSecurityBundle/Resources/config/routing.yml"

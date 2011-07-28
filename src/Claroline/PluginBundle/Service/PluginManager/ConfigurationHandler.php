@@ -2,17 +2,24 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
+use Symfony\Component\Yaml\Yaml;
+
 class ConfigurationHandler
 {
     private $pluginNamespacesFile;
     private $pluginBundlesFile;
+    private $pluginRoutingFile;
+    private $yamlHandler;
 
-    public function __construct($pluginNamespacesFile, $pluginBundlesFile)
+    public function __construct($pluginNamespacesFile, $pluginBundlesFile, $pluginRoutingFile, Yaml $yamlHandler)
     {
         $this->checkFile($pluginNamespacesFile);
         $this->checkFile($pluginBundlesFile);
+        $this->checkFile($pluginRoutingFile);
         $this->pluginNamespacesFile = $pluginNamespacesFile;
         $this->pluginBundlesFile = $pluginBundlesFile;
+        $this->pluginRoutingFile = $pluginRoutingFile;
+        $this->yamlHandler = $yamlHandler;
     }
 
     public function getRegisteredNamespaces()
@@ -58,6 +65,13 @@ class ConfigurationHandler
         return $sharedVendors;
     }
 
+    public function getRoutingResources()
+    {
+        $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
+        
+        return (array) $resources;
+    }
+
     public function registerNamespace($namespace)
     {
         $this->doAddItem($this->pluginNamespacesFile, $namespace, 'Namespace');
@@ -68,37 +82,58 @@ class ConfigurationHandler
         $this->doRemoveItem($this->pluginNamespacesFile, $namespace);
     }
 
-    public function addInstantiableBundle($bundleFQCN)
+    public function addInstantiableBundle($pluginFQCN)
     {
-        $this->doAddItem($this->pluginBundlesFile, $bundleFQCN, 'Bundle FQCN');
+        $this->doAddItem($this->pluginBundlesFile, $pluginFQCN, 'Plugin FQCN');
     }
 
-    public function removeInstantiableBundle($bundleFQCN)
+    public function removeInstantiableBundle($pluginFQCN)
     {
-        $this->doRemoveItem($this->pluginBundlesFile, $bundleFQCN);
+        $this->doRemoveItem($this->pluginBundlesFile, $pluginFQCN);
     }
 
-    public function importRoutingResource()
+    public function importRoutingResources($pluginFQCN, $paths)
     {
+        $nameParts = explode('\\', $pluginFQCN);
+        $vendor = $nameParts[0];
+        $bundleName = $nameParts[1];
+        $className = $nameParts[2];
+        $resources = array();
 
+        foreach ((array) $paths as $pathKey => $path)
+        {
+            $pattern = "#^(.+)/$vendor/$bundleName/(.+)$#";
+            preg_match($pattern, $path, $matches);
+            $relativePath = '';
+            $key = "{$className}_{$pathKey}";
+            $value = "@{$className}/{$matches[2]}";
+            $resources[$key] = array ('resource' => $value);
+        }
+
+        $resources = array_merge($this->getRoutingResources(), $resources);
+        $yaml = $this->yamlHandler->dump($resources);
+
+        file_put_contents($this->pluginRoutingFile, $yaml);
     }
 
+    public function removeRoutingResources($pluginFQCN)
+    {
+        $nameParts = explode('\\', $pluginFQCN);
+        $className = $nameParts[2];
+        $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
 
+        foreach ($resources as $key => $value)
+        {
+            if (substr($key, 0, strlen($className)) == $className)
+            {
+                unset($resources[$key]);
+            }
+        }
+
+        $yaml = $this->yamlHandler->dump($resources);
+        file_put_contents($this->pluginRoutingFile, $yaml);
+    }
     
-    // no use, keep plugin config in db
-    public function importServiceConfiguration()
-    {
-
-    }
-
-    // No use, use DependencyInjection directory instead
-    public function importServiceResource()
-    {
-
-    }
-
-
-
     private function checkFile($file)
     {
         if (! file_exists($file))
