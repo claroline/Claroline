@@ -26,10 +26,9 @@ class Manager
 
         $this->config->registerNamespace($plugin->getVendorNamespace());
         $this->config->addInstantiableBundle($pluginFQCN);
+        $this->config->importRoutingResources($pluginFQCN, $plugin->getRoutingResourcesPaths());
 
         /*
-        $this->config->importRoutingResource();
-
         $pluginEntity = new Plugin();
         $pluginEntity->setName($xyz);
         // ...
@@ -52,6 +51,7 @@ class Manager
         }
         
         $this->config->removeInstantiableBundle($pluginFQCN);
+        $this->config->removeRoutingResources($pluginFQCN);
     }
 
     public function isInstalled($pluginFQCN)

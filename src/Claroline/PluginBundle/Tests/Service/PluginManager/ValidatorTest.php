@@ -2,9 +2,11 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
+use Symfony\Component\Yaml\Parser;
 use Claroline\PluginBundle\Service\PluginManager\Validator;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
 use \vfsStream;
+use \vfsStreamFile;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,14 +15,14 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         vfsStream::setUp('plugin');
-        $this->validator = new Validator(vfsStream::url('plugin'));
+        $this->validator = new Validator(vfsStream::url('plugin'), new Parser());
     }
 
     public function testConstructorThrowsAnExceptionOnInvalidPluginDirectoryPath()
     {
         try
         {
-            new Validator('/inexistent/path');
+            new Validator('/inexistent/path', new Parser());
             $this->fail("No exception thrown.");
         }
         catch(ValidationException $ex)
@@ -114,14 +116,14 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testCheckThrowsAnExceptionIfGetRoutingResourcesPathsReturnsInvalidPaths()
+    public function testCheckThrowsAnExceptionOnInvalidRoutingResourcePath()
     {
         $this->buildValidPluginStructure('plugin', 'VendorXYZ', 'DummyPluginBundle');
         $class = "<?php namespace VendorXYZ\DummyPluginBundle; "
                . "class VendorXYZDummyPluginBundle extends "
                . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin"
                . "{ public function getRoutingResourcesPaths()"
-               . "{return 'wrong/path/file.foo';} }";
+               . "{return 'wrong/path/file.yml';} }";
         file_put_contents(vfsStream::url('plugin/VendorXYZ/DummyPluginBundle/VendorXYZDummyPluginBundle.php'), $class);
 
         try
@@ -131,7 +133,72 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }
         catch(ValidationException $ex)
         {
-            $this->assertEquals(ValidationException::INVALID_ROUTING_RESOURCES, $ex->getCode());
+            $this->assertEquals(ValidationException::INVALID_ROUTING_PATH, $ex->getCode());
+        }
+    }
+
+    public function testCheckThrowsAnExceptionOnInvalidRoutingResourceLocation()
+    {
+        $dir = $this->buildValidPluginStructure('plugin', 'VendorXYZ123', 'DummyPluginBundle');
+        $dir->addChild(new vfsStreamFile('routing.yml'));
+        $url = vfsStream::url('plugin/routing.yml');
+        $class = "<?php namespace VendorXYZ123\DummyPluginBundle; "
+               . "class VendorXYZ123DummyPluginBundle extends "
+               . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin"
+               . "{ public function getRoutingResourcesPaths()"
+               . "{return '{$url}';} }";
+        file_put_contents(vfsStream::url('plugin/VendorXYZ123/DummyPluginBundle/VendorXYZ123DummyPluginBundle.php'), $class);
+
+        try
+        {
+            $this->validator->check('VendorXYZ123\DummyPluginBundle\VendorXYZ123DummyPluginBundle');
+            $this->fail("No exception thrown.");
+        }
+        catch(ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_ROUTING_LOCATION, $ex->getCode());
+        }
+    }
+
+    public function testCheckThrowsAnExceptionOnNonYamlRoutingFile()
+    {
+        $dir = $this->buildValidPluginStructure('plugin', 'VendorABC123', 'DummyPluginBundle');
+        $dir->getChild('VendorABC123')
+            ->getChild('DummyPluginBundle')
+            ->addChild(new vfsStreamFile('routing.txt'));
+        $url = vfsStream::url('plugin/VendorABC123/DummyPluginBundle/routing.txt');
+        $class = "<?php namespace VendorABC123\DummyPluginBundle; "
+               . "class VendorABC123DummyPluginBundle extends "
+               . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin"
+               . "{ public function getRoutingResourcesPaths()"
+               . "{return '{$url}';} }";
+        file_put_contents(vfsStream::url('plugin/VendorABC123/DummyPluginBundle/VendorABC123DummyPluginBundle.php'), $class);
+        
+        try
+        {
+            $this->validator->check('VendorABC123\DummyPluginBundle\VendorABC123DummyPluginBundle');
+            $this->fail("No exception thrown.");
+        }
+        catch(ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_ROUTING_EXTENSION, $ex->getCode());
+        }
+    }
+
+    public function testCheckThrowsAnExceptionOnUnloadableYamlRoutingFile()
+    {
+        $this->buildValidPluginStructure('plugin', 'Vendor1234', 'DummyPluginBundle');
+        file_put_contents(vfsStream::url('plugin/Vendor1234/DummyPluginBundle/Resources/config/routing.yml'),
+                          "\tInvalidYaml:Foo:\n:Bar\n  :");
+
+        try
+        {
+            $this->validator->check('Vendor1234\DummyPluginBundle\Vendor1234DummyPluginBundle');
+            $this->fail("No exception thrown.");
+        }
+        catch(ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_YAML_RESOURCE, $ex->getCode());
         }
     }
 
@@ -184,11 +251,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $structure = array(
             $vendorName => array(
                 $pluginBundleName => array(
-                    array(
-                        'Resources' => array(
-                            'config' => array(
-                                'routing.yml' => ''
-                            )
+                    'Resources' => array(
+                        'config' => array(
+                            'routing.yml' => ''
                         )
                     ),
                     $vendorName . $pluginBundleName . '.php' => $pluginClass

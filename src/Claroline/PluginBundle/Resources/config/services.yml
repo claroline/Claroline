@@ -3,17 +3,26 @@ parameters:
     claroline.plugin.config_handler.class: Claroline\PluginBundle\Service\PluginManager\ConfigurationHandler
     claroline.plugin.manager.class: Claroline\PluginBundle\Service\PluginManager\Manager
     claroline.plugin.directory: "%kernel.root_dir%/../plugin"
-    claroline.plugin.namespaces.config.directory: "%kernel.root_dir%/config/plugin/namespaces"
-    claroline.plugin.bundles.config.directory: "%kernel.root_dir%/config/plugin/bundles"
+    claroline.plugin.namespaces.config_file: "%kernel.root_dir%/config/plugin/namespaces"
+    claroline.plugin.bundles.config_file: "%kernel.root_dir%/config/plugin/bundles"
+    claroline.plugin.routing.config_file: "%kernel.root_dir%/config/plugin/routing.yml"
 
 services:
     claroline.plugin.validator:
         class: %claroline.plugin.validator.class%
-        arguments: [%claroline.plugin.directory%]
+        arguments: [%claroline.plugin.directory%, @symfony.yaml.parser]
     claroline.plugin.config_handler:
         class: %claroline.plugin.config_handler.class%
-        arguments: [%claroline.plugin.namespaces.config.directory%, %claroline.plugin.bundles.config.directory%]
+        arguments: [%claroline.plugin.namespaces.config_file%, %claroline.plugin.bundles.config_file%, %claroline.plugin.routing.config_file%, @symfony.yaml]
         public: false
     claroline.plugin.manager:
         class: %claroline.plugin.manager.class%
         arguments: [@claroline.plugin.validator, @claroline.plugin.config_handler, @doctrine.orm.entity_manager]
+
+    # symfony classes used as service arguments
+    symfony.yaml.parser:
+        class: Symfony\Component\Yaml\Parser
+        public: false
+    symfony.yaml:
+        class: Symfony\Component\Yaml\Yaml
+        public: false

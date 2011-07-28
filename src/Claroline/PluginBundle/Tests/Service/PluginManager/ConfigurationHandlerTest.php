@@ -2,7 +2,7 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Claroline\PluginBundle\Service\PluginManager\config;
+use Symfony\Component\Yaml\Yaml;
 use \vfsStream;
 
 class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
@@ -10,14 +10,20 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
     private $config;
     private $namespacesFile;
     private $bundlesFile;
+    private $routingFile;
 
     public function setUp()
     {
         vfsStream::setup('VirtualDir');
-        vfsStream::create(array('namespaces' => '', 'bundles' => ''), 'VirtualDir');
+        vfsStream::create(array('namespaces' => '', 'bundles' => '', 'routing.yml' => ''),
+                         'VirtualDir');
         $this->namespacesFile = vfsStream::url('VirtualDir/namespaces');
         $this->bundlesFile = vfsStream::url('VirtualDir/bundles');
-        $this->config = new ConfigurationHandler($this->namespacesFile, $this->bundlesFile);
+        $this->routingFile = vfsStream::url('VirtualDir/routing.yml');
+        $this->config = new ConfigurationHandler($this->namespacesFile, 
+                                                 $this->bundlesFile,
+                                                 $this->routingFile,
+                                                 new Yaml());
     }
 
     public function testGetRegisteredNamespacesReturnsExpectedArray()
@@ -38,6 +44,15 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         file_put_contents($this->bundlesFile, "VendorX\A\Bundle\nVendorY\B\Bundle\nVendorX\C\Bundle");
         $this->assertEquals(array('VendorX'), $this->config->getSharedVendorNamespaces());
+    }
+
+    public function testGetRoutingResourcesReturnsExpectedArray()
+    {
+        file_put_contents($this->routingFile, "VendorXBundle:\n    TestResource");
+        $resources = $this->config->getRoutingResources();        
+        $this->assertEquals(1, count($resources));
+        $this->assertEquals(array('VendorXBundle'), array_keys($resources));
+        $this->assertEquals('TestResource', $resources['VendorXBundle']);
     }
 
     public function testRegisterNamespaceThrowsExceptionOnEmptyNamespace()
@@ -106,7 +121,7 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('VendorY'), $this->config->getRegisteredNamespaces());
     }
 
-    public function testRegisterThenRemoveNamespace()
+    public function testRegisterThenRemoveNamespaceLeftsConfigFileUnchanged()
     {
         file_put_contents($this->namespacesFile, 'VendorX');
 
@@ -187,5 +202,94 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
         $this->config->removeInstantiableBundle('VendorY\\Bar');
 
         $this->assertEquals(array('VendorX\\Foo'), $this->config->getRegisteredBundles());
+    }
+
+    public function testImportRoutingResourcesAddsEntriesInRoutingFile()
+    {
+        $paths = array(
+            'plugin/VendorX/DummyPluginBundle/Resources/routing.yml',
+            'plugin/VendorX/DummyPluginBundle/Resources/routing2.yml',
+            'special' => 'plugin/VendorX/DummyPluginBundle/Resources/More/routing.yml');
+
+        $this->config->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
+
+        $expectedResources = array(
+            'VendorXDummyPluginBundle_0' => array(
+                'resource' => '@VendorXDummyPluginBundle/Resources/routing.yml'
+                ),
+            'VendorXDummyPluginBundle_1' => array(
+                'resource' => '@VendorXDummyPluginBundle/Resources/routing2.yml'
+                ),
+            'VendorXDummyPluginBundle_special' => array(
+                'resource' => '@VendorXDummyPluginBundle/Resources/More/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+    }
+
+    public function testImportRoutingResourcesPreservesExistingEntriesInRoutingFile()
+    {
+        $entry = "VendorXDummyPluginBundle_0:\n    "
+               . "resource: '@VendorXDummyPluginBundle/Resources/routing.yml'";
+        file_put_contents($this->routingFile, $entry);
+
+        $newPath = 'plugin/VendorY/DummyPluginBundle/Resources/routing.yml';
+        $this->config->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($newPath));
+
+        $expectedResources = array(
+            'VendorXDummyPluginBundle_0' => array(
+                'resource' => '@VendorXDummyPluginBundle/Resources/routing.yml'
+                ),
+            'VendorYDummyPluginBundle_0' => array(
+                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+    }
+
+    public function testImportRoutingResourcesDoesntDuplicateEntry()
+    {
+        $path = 'plugin/VendorY/DummyPluginBundle/Resources/routing.yml';
+        $this->config->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
+        $this->config->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
+
+        $expectedResources = array(
+            'VendorYDummyPluginBundle_0' => array(
+                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+    }
+
+    public function testRemoveRoutingResourcesDeletesAllResourcesRelatedToAPlugin()
+    {
+        $entries = "VendorXDummyPluginBundle_1:\n    "
+                 . "resource: '@VendorXDummyPluginBundle/Resources/routing1.yml'\n"
+                 . "VendorXDummyPluginBundle_2:\n    "
+                 . "resource: '@VendorXDummyPluginBundle/Resources/routing2.yml'\n"
+                 . "VendorYDummyPluginBundle_0:\n    "
+                 . "resource: '@VendorYDummyPluginBundle/Resources/routing.yml'\n";
+        file_put_contents($this->routingFile, $entries);
+
+        $this->config->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
+
+        $expectedResources = array(
+            'VendorYDummyPluginBundle_0' => array(
+                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+    }
+
+    public function testImportThenRemoveRoutingResourcesLeftsConfigFileUnchanged()
+    {
+        $paths = array(
+            'plugin/VendorX/DummyPluginBundle/Resources/routing.yml',
+            'plugin/VendorX/DummyPluginBundle/Resources/routing2.yml');
+
+        $this->config->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
+        $this->config->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
+
+        $this->assertEquals(array(), $this->config->getRoutingResources());
     }
 }

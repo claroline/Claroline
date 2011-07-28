@@ -3,6 +3,8 @@
 namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 use \vfsStream;
 
 class ManagerTest extends WebTestCase
@@ -14,9 +16,11 @@ class ManagerTest extends WebTestCase
     public function setUp()
     {
         $this->buildPluginFiles();
-        $validator = new Validator(vfsStream::url('virtual/plugin'));
+        $validator = new Validator(vfsStream::url('virtual/plugin'), new Parser());
         $this->config = new ConfigurationHandler(vfsStream::url('virtual/config/namespaces'),
-                                                 vfsStream::url('virtual/config/bundles'));
+                                                 vfsStream::url('virtual/config/bundles'),
+                                                 vfsStream::url('virtual/config/routing.yml'),
+                                                 new Yaml());
         $this->client = self::createClient();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->manager = new Manager($validator, $this->config, $em);
@@ -29,6 +33,12 @@ class ManagerTest extends WebTestCase
         $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array('VendorX\FirstPluginBundle\VendorXFirstPluginBundle'), 
                             $this->config->getRegisteredBundles());
+        $expectedRouting = array(
+            'VendorXFirstPluginBundle_0' => array(
+                'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
     }
 
     public function testInstallAnInvalidPluginThrowsAValidationException()
@@ -46,6 +56,12 @@ class ManagerTest extends WebTestCase
         $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array('VendorX\SecondPluginBundle\VendorXSecondPluginBundle'), 
                             $this->config->getRegisteredBundles());
+        $expectedRouting = array(
+            'VendorXSecondPluginBundle_0' => array(
+                'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
     }
 
     public function testInstallSeveralValidPlugins()
@@ -59,6 +75,15 @@ class ManagerTest extends WebTestCase
                                   'VendorX\SecondPluginBundle\VendorXSecondPluginBundle',
                                   'VendorY\ThirdPluginBundle\VendorYThirdPluginBundle'),
                             $this->config->getRegisteredBundles());
+        $expectedRouting = array(
+            'VendorXFirstPluginBundle_0' => array(
+                'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
+                ),
+            'VendorXSecondPluginBundle_0' => array(
+                'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
+                )
+            );
+        $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
     }
 
     public function testRemovePluginRemovesItFromConfigFiles()
@@ -68,6 +93,7 @@ class ManagerTest extends WebTestCase
 
         $this->assertEquals(array(), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array(), $this->config->getRegisteredBundles());
+        $this->assertEquals(array(), $this->config->getRoutingResources());
     }
 
     public function testRemovePluginPreservesSharedVendorNamespaces()
@@ -94,7 +120,12 @@ class ManagerTest extends WebTestCase
                 'VendorXFirstPluginBundle.php' => '<?php namespace VendorX\FirstPluginBundle;
                                                    class VendorXFirstPluginBundle extends
                                                    \Claroline\PluginBundle\AbstractType\ClarolinePlugin
-                                                   {}'
+                                                   {}',
+                'Resources' => array(
+                    'config' => array(
+                        'routing.yml' => ''
+                        )
+                    )
                 )
             );
         $secondPlugin = array(
@@ -102,7 +133,12 @@ class ManagerTest extends WebTestCase
                 'VendorXSecondPluginBundle.php' => '<?php namespace VendorX\SecondPluginBundle;
                                                     class VendorXSecondPluginBundle extends
                                                     \Claroline\PluginBundle\AbstractType\ClarolinePlugin
-                                                    {}'
+                                                    {}',
+                'Resources' => array(
+                    'config' => array(
+                        'routing.yml' => ''
+                        )
+                    )
                 )
             );
         $thirdPlugin = array(
@@ -130,7 +166,8 @@ class ManagerTest extends WebTestCase
                 ),
             'config' => array(
                 'namespaces' => '',
-                'bundles' => ''
+                'bundles' => '',
+                'routing.yml' => ''
                 )
             );
 
