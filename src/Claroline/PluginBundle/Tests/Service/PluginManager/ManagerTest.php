@@ -24,57 +24,69 @@ class ManagerTest extends WebTestCase
         $this->client = self::createClient();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->manager = new Manager($validator, $this->config, $em);
+        $this->client->beginTransaction();
     }
 
-    public function testInstallAValidPluginRegistersItInConfigFiles()
+    public function  tearDown()
     {
-        $this->manager->install('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
+        $this->client->rollback();
+    }
+
+    public function testInstallAValidPluginRegistersItInConfig()
+    {
+        $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
+        $this->manager->install($plugin);
 
         $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array('VendorX\FirstPluginBundle\VendorXFirstPluginBundle'), 
-                            $this->config->getRegisteredBundles());
+        $this->assertEquals(array($plugin), $this->config->getRegisteredBundles());
         $expectedRouting = array(
             'VendorXFirstPluginBundle_0' => array(
                 'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
                 )
             );
         $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
+        $this->assertEquals(true, $this->manager->isInstalled($plugin));
     }
 
     public function testInstallAnInvalidPluginThrowsAValidationException()
     {
         $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException');
-        $this->manager->install('VendorY\FourthPluginBundle\VendorYFourthPluginBundle');
+        $plugin = 'VendorY\FourthPluginBundle\VendorYFourthPluginBundle';
+        $this->manager->install($plugin);
+        $this->assertEquals(false, $this->manager->isInstalled($plugin));
     }
 
-    public function testInstallValidPluginCalledSeveralTimesDoesntDuplicateEntryInConfig()
+    public function testInstallAnAlreadyInstalledPluginThrowsAConfigurationException()
     {
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
+        $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationException');
+
+        $plugin = 'VendorX\SecondPluginBundle\VendorXSecondPluginBundle';
+        $this->manager->install($plugin);
+        $this->manager->install($plugin);
 
         $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array('VendorX\SecondPluginBundle\VendorXSecondPluginBundle'), 
-                            $this->config->getRegisteredBundles());
+        $this->assertEquals(array($plugin), $this->config->getRegisteredBundles());
         $expectedRouting = array(
             'VendorXSecondPluginBundle_0' => array(
                 'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
                 )
             );
         $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
+        $this->assertEquals(false, $this->manager->isInstalled($plugin));
     }
 
     public function testInstallSeveralValidPlugins()
     {
-        $this->manager->install('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-        $this->manager->install('VendorY\ThirdPluginBundle\VendorYThirdPluginBundle');
+        $plugin1 = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
+        $plugin2 = 'VendorX\SecondPluginBundle\VendorXSecondPluginBundle';
+        $plugin3 = 'VendorY\ThirdPluginBundle\VendorYThirdPluginBundle';
+        
+        $this->manager->install($plugin1);
+        $this->manager->install($plugin2);
+        $this->manager->install($plugin3);
 
         $this->assertEquals(array('VendorX', 'VendorY'), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array('VendorX\FirstPluginBundle\VendorXFirstPluginBundle',
-                                  'VendorX\SecondPluginBundle\VendorXSecondPluginBundle',
-                                  'VendorY\ThirdPluginBundle\VendorYThirdPluginBundle'),
-                            $this->config->getRegisteredBundles());
+        $this->assertEquals(array($plugin1, $plugin2, $plugin3), $this->config->getRegisteredBundles());
         $expectedRouting = array(
             'VendorXFirstPluginBundle_0' => array(
                 'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
@@ -84,16 +96,21 @@ class ManagerTest extends WebTestCase
                 )
             );
         $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
+        $this->assertEquals(true, $this->manager->isInstalled($plugin1));
+        $this->assertEquals(true, $this->manager->isInstalled($plugin2));
+        $this->assertEquals(true, $this->manager->isInstalled($plugin3));
     }
 
-    public function testRemovePluginRemovesItFromConfigFiles()
+    public function testRemovePluginRemovesItFromConfig()
     {
-        $this->manager->install('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
-        $this->manager->remove('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
+        $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
+        $this->manager->install($plugin);
+        $this->manager->remove($plugin);
 
         $this->assertEquals(array(), $this->config->getRegisteredNamespaces());
         $this->assertEquals(array(), $this->config->getRegisteredBundles());
         $this->assertEquals(array(), $this->config->getRoutingResources());
+        $this->assertEquals(false, $this->manager->isInstalled($plugin));
     }
 
     public function testRemovePluginPreservesSharedVendorNamespaces()
@@ -105,10 +122,19 @@ class ManagerTest extends WebTestCase
         $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
     }
 
-    public function testRemoveInexistentPluginThrowsAnException()
+    public function testRemoveInexistentPluginThrowsAConfigurationException()
     {
-        $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException');
-        $this->manager->install('VendorY\InexistentPluginBundle\VendorYInexistentPluginBundle');
+        $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationException');
+        $this->manager->remove('VendorY\InexistentPluginBundle\VendorYInexistentPluginBundle');
+    }
+    
+    public function testIsInstalledReturnsCorrectValue()
+    {
+        $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
+        $this->assertEquals(false, $this->manager->isInstalled($plugin));
+
+        $this->manager->install($plugin);
+        $this->assertEquals(true, $this->manager->isInstalled($plugin));
     }
 
     private function buildPluginFiles()

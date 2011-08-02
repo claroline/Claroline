@@ -4,22 +4,28 @@ namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\PluginBundle\Entity\Plugin;
+use Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationException;
 
 class Manager
 {
     protected $validator;
     protected $config;
-    protected $em;
+    protected $repository;
 
     public function __construct(Validator $validator, ConfigurationHandler $configHandler, EntityManager $em)
     {
         $this->validator = $validator;
         $this->config = $configHandler;
-        $this->em = $em;
+        $this->repository = $em->getRepository('Claroline\PluginBundle\Entity\Plugin');
     }
 
     public function install($pluginFQCN)
     {
+        if ($this->isInstalled($pluginFQCN))
+        {
+            throw new ConfigurationException("The plugin '{$pluginFQCN}' is already installed.");
+        }
+
         $this->validator->check($pluginFQCN);
 
         $plugin = new $pluginFQCN;
@@ -28,12 +34,10 @@ class Manager
         $this->config->addInstantiableBundle($pluginFQCN);
         $this->config->importRoutingResources($pluginFQCN, $plugin->getRoutingResourcesPaths());
 
-        /*
-        $pluginEntity = new Plugin();
-        $pluginEntity->setName($xyz);
-        // ...
-        $this->em->persist($pluginEntity);
-        $this->em->flush;
+        $this->repository->createPlugin($pluginFQCN,
+                                        $plugin->getVendorNamespace(),
+                                        $plugin->getBundleName(),
+                                        '', '');
 
         // install plugin tables
         // load plugin fixtures*/
@@ -41,7 +45,10 @@ class Manager
 
     public function remove($pluginFQCN)
     {
-        $this->validator->check($pluginFQCN);
+        if (! $this->isInstalled($pluginFQCN))
+        {
+            throw new ConfigurationException("There is no '{$pluginFQCN}' plugin installed.");
+        }
 
         $plugin = new $pluginFQCN;
 
@@ -52,10 +59,18 @@ class Manager
         
         $this->config->removeInstantiableBundle($pluginFQCN);
         $this->config->removeRoutingResources($pluginFQCN);
+        $this->repository->deletePlugin($pluginFQCN);
     }
 
     public function isInstalled($pluginFQCN)
     {
-        throw new \Exception('Not implemented yet.');
+        $plugins = $this->repository->findByBundleFQCN($pluginFQCN);
+
+        if (count($plugins) === 0)
+        {
+            return false;
+        }
+      
+        return true;
     }
 }

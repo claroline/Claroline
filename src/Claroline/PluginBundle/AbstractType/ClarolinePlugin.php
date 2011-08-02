@@ -14,12 +14,14 @@ abstract class ClarolinePlugin extends Bundle
     {
         $namespaceParts = explode('\\', $this->getNamespace());
 
-        if (count($namespaceParts) === 0)
-        {
-            throw new \Exception('Claroline plugin namespace must start with a vendor namespace.');
-        }
-
         return $namespaceParts[0];
+    }
+
+    public function getBundleName()
+    {
+        $namespaceParts = explode('\\', $this->getNamespace());
+
+        return $namespaceParts[1];
     }
 
     public function getRoutingResourcesPaths()
