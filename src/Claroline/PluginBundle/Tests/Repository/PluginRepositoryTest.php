@@ -27,6 +27,7 @@ class PluginRepositoryTest extends WebTestCase
     public function testCreatePluginInsertsNewPluginRecord()
     {
         $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle',
+                                        'ClarolinePlugin',
                                         'VendorX',
                                         'TestBundle',
                                         'Test',
@@ -34,6 +35,7 @@ class PluginRepositoryTest extends WebTestCase
 
         $plugin = $this->repository->findOneByBundleFQCN('VendorX\TestBundle\VendorXTestBundle');
 
+        $this->assertEquals('ClarolinePlugin', $plugin->getType());
         $this->assertEquals('VendorX', $plugin->getVendorName());
         $this->assertEquals('TestBundle', $plugin->getBundleName());
         $this->assertEquals('Test', $plugin->getNameTranslationKey());
@@ -43,13 +45,13 @@ class PluginRepositoryTest extends WebTestCase
     public function testCreatePluginDoesntDuplicateExistingFQCN()
     {
         $this->setExpectedException('Claroline\PluginBundle\Repository\Exception\ModelException');
-        $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle', '', '', '', '');
-        $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle', '', '', '', '');
+        $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
+        $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
     }
 
     public function testDeletePluginRemovesPluginRecord()
     {
-        $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle', '', '', '', '');
+        $this->repository->createPlugin('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
         $this->repository->deletePlugin('VendorX\TestBundle\VendorXTestBundle');
         $plugin = $this->repository->findOneByBundleFQCN('VendorX\TestBundle\VendorXTestBundle');
         $this->assertEquals(null, $plugin);

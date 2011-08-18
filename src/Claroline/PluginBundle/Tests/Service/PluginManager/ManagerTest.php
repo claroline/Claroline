@@ -158,8 +158,8 @@ class ManagerTest extends WebTestCase
             'SecondPluginBundle' => array(
                 'VendorXSecondPluginBundle.php' => '<?php namespace VendorX\SecondPluginBundle;
                                                     class VendorXSecondPluginBundle extends
-                                                    \Claroline\PluginBundle\AbstractType\ClarolinePlugin
-                                                    {}',
+                                                    \Claroline\PluginBundle\AbstractType\ClarolineApplication
+                                                    {public function getIndexRoute(){return "";}}',
                 'Resources' => array(
                     'config' => array(
                         'routing.yml' => ''

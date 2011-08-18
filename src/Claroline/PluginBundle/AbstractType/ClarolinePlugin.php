@@ -3,21 +3,22 @@
 namespace Claroline\PluginBundle\AbstractType;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Finder\Finder;
-use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class ClarolinePlugin extends Bundle
 {
-    public function getEntityDirectory(){}
+    final public function getType()
+    {
+        return get_parent_class($this);
+    }
 
-    public function getVendorNamespace()
+    final public function getVendorNamespace()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
 
         return $namespaceParts[0];
     }
 
-    public function getBundleName()
+    final public function getBundleName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
 
@@ -26,13 +27,7 @@ abstract class ClarolinePlugin extends Bundle
 
     public function getRoutingResourcesPaths()
     {
-        $path = $this->getPath()
-              . DIRECTORY_SEPARATOR
-              . 'Resources'
-              . DIRECTORY_SEPARATOR
-              . 'config'
-              . DIRECTORY_SEPARATOR
-              . 'routing.yml';
+        $path = "{$this->getPath()}/Resources/config/routing.yml";
 
         if (file_exists($path))
         {
@@ -40,5 +35,15 @@ abstract class ClarolinePlugin extends Bundle
         }
         
         return null;
+    }
+
+    public function getNameTranslationKey()
+    {
+        return 'No available translated name';
+    }
+
+    public function getDescriptionTranslationKey()
+    {
+        return 'No available description';
     }
 }
