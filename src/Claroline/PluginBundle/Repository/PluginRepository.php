@@ -9,6 +9,7 @@ use Claroline\PluginBundle\Entity\Plugin;
 class PluginRepository extends EntityRepository
 {
     public function createPlugin($bundleFQCN,
+                                 $type,
                                  $vendorName,
                                  $bundleName,
                                  $nameTranslationKey,
@@ -23,6 +24,7 @@ class PluginRepository extends EntityRepository
         }
 
         $plugin = new Plugin();
+        $plugin->setType($type);
         $plugin->setBundleFQCN($bundleFQCN);
         $plugin->setVendorName($vendorName);
         $plugin->setBundleName($bundleName);

@@ -202,6 +202,36 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider wrongTranslationKeyProvider
+     */
+    public function testCheckThrowsAnExceptionOnInvalidTranslationKey($nameKey, $descriptionKey)
+    {
+        $this->buildValidPluginStructure('plugin', 'Vendor6789', 'DummyPluginBundle');
+        $class = '<?php namespace Vendor6789\DummyPluginBundle; '
+               . 'class Vendor6789DummyPluginBundle extends '
+               . '\Claroline\PluginBundle\AbstractType\ClarolinePlugin {'
+               . "public function getNameTranslationKey() {return {$nameKey};}"
+               . "public function getDescriptionTranslationKey() {return {$descriptionKey};}}";
+        file_put_contents(vfsStream::url('plugin/Vendor6789/DummyPluginBundle/Vendor6789DummyPluginBundle.php'),
+                          $class);
+
+        try
+        {
+            $this->validator->check('Vendor6789\DummyPluginBundle\Vendor6789DummyPluginBundle');
+            $this->fail("No exception thrown.");
+        }
+        catch(ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_TRANSLATION_KEY, $ex->getCode());
+        }
+    }
+/*
+    public function testCheckThrowsAnExceptionOnInvalidEntityClass()
+    {
+        
+    }*/
+
     public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument()
     {
         $this->buildValidPluginStructure('plugin', 'Vendor456', 'DummyPluginBundle');
@@ -239,6 +269,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         return array(
           array('<?php namespace Vendor123\DummyPluginBundle; class Vendor123DummyPluginBundle {}'),
           array('<?php namespace Vendor123\DummyPluginBundle; class Vendor123DummyPluginBundle extends \DOMDocument{}')
+        );
+    }
+
+    public function wrongTranslationKeyProvider()
+    {
+        return array(
+            array('new \DOMDocument', '"OK"'),
+            array('""', '"OK"'),
+            array('"OK"', 'new \DOMDocument'),
+            array('"OK"',  '""')
         );
     }
 

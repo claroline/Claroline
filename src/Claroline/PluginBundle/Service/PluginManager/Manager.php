@@ -35,9 +35,11 @@ class Manager
         $this->config->importRoutingResources($pluginFQCN, $plugin->getRoutingResourcesPaths());
 
         $this->repository->createPlugin($pluginFQCN,
+                                        $plugin->getType(),
                                         $plugin->getVendorNamespace(),
                                         $plugin->getBundleName(),
-                                        '', '');
+                                        $plugin->getNameTranslationKey(),
+                                        $plugin->getDescriptionTranslationKey());
 
         // install plugin tables
         // load plugin fixtures*/

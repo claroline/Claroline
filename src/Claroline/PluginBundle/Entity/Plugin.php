@@ -18,6 +18,11 @@ class Plugin
     protected $id;
 
     /**
+     * @ORM\Column(name="type", type="string", length="255")
+     */
+    protected $type;
+
+    /**
      * @ORM\Column(name="bundle_fqcn", type="string", length="255")
      */
     protected $bundleFQCN;
@@ -45,6 +50,16 @@ class Plugin
     public function getId()
     {
         return $this->bundleFQCN;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     public function getBundleFQCN()

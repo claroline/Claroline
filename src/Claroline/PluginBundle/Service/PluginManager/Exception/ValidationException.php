@@ -14,6 +14,7 @@ class ValidationException extends \Exception
     const INVALID_ROUTING_LOCATION = 7;
     const INVALID_ROUTING_EXTENSION = 8;
     const INVALID_YAML_RESOURCE = 9;
+    const INVALID_TRANSLATION_KEY = 10;
 
     public function __construct($message, $code)
     {

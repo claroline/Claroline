@@ -30,6 +30,7 @@ class Validator
         $this->checkPluginBundleClassIsLoadable($pluginFQCN);
         $this->checkPluginBundleClassExtendsClarolinePlugin($pluginFQCN);
         $this->checkPluginClassReturnsValidRoutingValue($pluginFQCN);
+        $this->checkPluginClassReturnsValidTranslationKeys($pluginFQCN);
     }
 
     private function checkPluginFQCNFollowsConventions($pluginFQCN)
@@ -155,6 +156,29 @@ class Validator
                 throw new ValidationException("{$pluginFQCN} : Unloadable YAML routing file "
                                             . "(parse exception message : '{$ex->getMessage()}')",
                                               ValidationException::INVALID_YAML_RESOURCE);
+            }
+        }
+    }
+
+    private function checkPluginClassReturnsValidTranslationKeys($pluginFQCN)
+    {
+        $plugin = new $pluginFQCN;
+        $keys = array();
+        $keys[] = $plugin->getNameTranslationKey();
+        $keys[] = $plugin->getDescriptionTranslationKey();
+
+        foreach($keys as $key)
+        {
+            if (! is_string($key))
+            {
+                throw new ValidationException("{$pluginFQCN} : translation key must be a string.",
+                                              ValidationException::INVALID_TRANSLATION_KEY);
+            }
+
+            if (empty($key))
+            {
+                throw new ValidationException("{$pluginFQCN} : translation key cannot be empty.",
+                                              ValidationException::INVALID_TRANSLATION_KEY);
             }
         }
     }
