@@ -5,8 +5,9 @@ namespace Claroline\UserBundle\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\SecurityBundle\Entity\Role;
 
-// Implements AdvancedUserInterface
+// TODO: Implements AdvancedUserInterface
 
 /**
  * @ORM\Entity
@@ -54,12 +55,21 @@ class User implements UserInterface
      */
     protected $plainPassword;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\SecurityBundle\Entity\Role", cascade={"persist"})
+     * @ORM\JoinTable(name="claro_user_role",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * )
+     */
     protected $roles;
 
     public function __construct()
     {
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->roles = array();
+        $userRole = new Role();
+        $userRole->setName('ROLE_USER');
+        $this->roles = array($userRole);
     }
 
     public function getId()
@@ -124,10 +134,15 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        // At least one role is required
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles->toArray();
+    }
+    
+    public function addRole(Role $role)
+    {
+        if (! in_array($role, $this->getRoles()))
+        {
+            $this->roles->add($role);
+        }
     }
 
     public function eraseCredentials()
@@ -162,6 +177,7 @@ class User implements UserInterface
         }
     }
 
+    // TODO: use a listener to check unique constraints
     /**
      * @Assert\True(message = "USERNAME ALREADY EXISTS TEST")
      */
