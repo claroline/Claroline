@@ -2,7 +2,7 @@ parameters:
     claroline.plugin.validator.class: Claroline\PluginBundle\Service\PluginManager\Validator
     claroline.plugin.config_handler.class: Claroline\PluginBundle\Service\PluginManager\ConfigurationHandler
     claroline.plugin.manager.class: Claroline\PluginBundle\Service\PluginManager\Manager
-    claroline.plugin.directory: "%kernel.root_dir%/../plugin"
+    claroline.plugin.directory: "%kernel.root_dir%/../src/plugin"
     claroline.plugin.namespaces.config_file: "%kernel.root_dir%/config/plugin/namespaces"
     claroline.plugin.bundles.config_file: "%kernel.root_dir%/config/plugin/bundles"
     claroline.plugin.routing.config_file: "%kernel.root_dir%/config/plugin/routing.yml"
