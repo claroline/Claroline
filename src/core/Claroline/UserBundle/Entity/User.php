@@ -10,7 +10,7 @@ use Claroline\SecurityBundle\Entity\Role;
 // TODO: Implements AdvancedUserInterface
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\UserBundle\Repository\UserRepository")
  * @ORM\Table(name="claro_user")
  */
 class User implements UserInterface

@@ -1,0 +1,3 @@
+claroline_register_index:
+    pattern: /register
+    defaults: { _controller: ClarolineRegisterBundle:Main:index }
