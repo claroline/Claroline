@@ -14,4 +14,9 @@ class UserType extends AbstractType
                 ->add('username', 'text')
                 ->add('plainPassword', 'repeated', array('type' => 'password'));
     }
+
+    public function getName()
+    {
+        return 'user_form';
+    }
 }

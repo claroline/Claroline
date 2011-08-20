@@ -18,17 +18,9 @@ class ProfileController extends Controller
 
             if ($form->isValid())
             {
-                $factory = $this->get('security.encoder_factory');
-                $encoder = $factory->getEncoder($user);
-                $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
+                $this->get('claroline.user.manager')->create($user);
 
-                $user->setPassword($password);
-
-                $em = $this->get('doctrine')->getEntityManager();
-                $em->persist($user);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('claro_core_portal'));
+                return $this->redirect($this->generateUrl('claro_core_desktop'));
             }
         }
 
