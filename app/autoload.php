@@ -17,9 +17,9 @@ $coreNamespaces = array(
     'Metadata'         => __DIR__.'/../vendor/metadata/src',
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
-    'Claroline'        => array(__DIR__.'/../src', __DIR__.'/../plugin', __DIR__.'/../src/Claroline/PluginBundle/Tests/stubs/plugin'),
+    'Claroline'        => array(__DIR__.'/../src/core', __DIR__.'/../src/plugin'),
 );
-$pluginNamespaces = array_fill_keys(file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES), __DIR__.'/../plugin');
+$pluginNamespaces = array_fill_keys(file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES), __DIR__.'/../src/plugin');
 $loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));
 
 $loader->registerPrefixes(array(
