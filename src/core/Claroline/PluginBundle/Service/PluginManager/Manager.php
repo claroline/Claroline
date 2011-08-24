@@ -3,20 +3,31 @@
 namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Doctrine\ORM\EntityManager;
-use Claroline\PluginBundle\Entity\Plugin;
+use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
+use Claroline\PluginBundle\Entity\AbstractPlugin;
+use Claroline\PluginBundle\Entity\BasePlugin;
+use Claroline\PluginBundle\Entity\Application;
+use Claroline\PluginBundle\Entity\Tool;
+use Claroline\PluginBundle\Entity\ApplicationLauncher;
+use Claroline\SecurityBundle\Entity\Role;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationException;
+
+// TODO : put the database registration/unregistration logic into a dedicated object,
+//        injected via the constructor
 
 class Manager
 {
     protected $validator;
     protected $config;
-    protected $repository;
+    protected $pluginRepo;
+    protected $roleRepo;
 
     public function __construct(Validator $validator, ConfigurationHandler $configHandler, EntityManager $em)
     {
         $this->validator = $validator;
         $this->config = $configHandler;
-        $this->repository = $em->getRepository('Claroline\PluginBundle\Entity\Plugin');
+        $this->pluginRepo = $em->getRepository('Claroline\PluginBundle\Entity\AbstractPlugin');
+        $this->roleRepo = $em->getRepository('Claroline\SecurityBundle\Entity\Role');
     }
 
     public function install($pluginFQCN)
@@ -33,16 +44,10 @@ class Manager
         $this->config->registerNamespace($plugin->getVendorNamespace());
         $this->config->addInstantiableBundle($pluginFQCN);
         $this->config->importRoutingResources($pluginFQCN, $plugin->getRoutingResourcesPaths());
-
-        $this->repository->createPlugin($pluginFQCN,
-                                        $plugin->getType(),
-                                        $plugin->getVendorNamespace(),
-                                        $plugin->getBundleName(),
-                                        $plugin->getNameTranslationKey(),
-                                        $plugin->getDescriptionTranslationKey());
+        $this->doDatabaseRegistration($plugin);
 
         // install plugin tables
-        // load plugin fixtures*/
+        // load plugin fixtures
     }
 
     public function remove($pluginFQCN)
@@ -61,12 +66,12 @@ class Manager
         
         $this->config->removeInstantiableBundle($pluginFQCN);
         $this->config->removeRoutingResources($pluginFQCN);
-        $this->repository->deletePlugin($pluginFQCN);
+        $this->pluginRepo->deletePlugin($pluginFQCN);
     }
 
     public function isInstalled($pluginFQCN)
     {
-        $plugins = $this->repository->findByBundleFQCN($pluginFQCN);
+        $plugins = $this->pluginRepo->findByBundleFQCN($pluginFQCN);
 
         if (count($plugins) === 0)
         {
@@ -74,5 +79,78 @@ class Manager
         }
       
         return true;
+    }
+
+    private function doDatabaseRegistration(ClarolinePlugin $plugin)
+    {
+        $pluginEntity = null;
+
+        if (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
+        {
+            $pluginEntity = $this->prepareApplicationEntity($plugin);
+        }
+        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineTool'))
+        {
+            $pluginEntity = $this->prepareToolEntity($plugin);
+        }
+        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolinePlugin'))
+        {
+            $pluginEntity = new BasePlugin();
+        }
+        else
+        {
+            throw new \Exception("Unknown plugin type '" . get_parent_class($plugin) . "'.");
+        }
+
+        $pluginEntity->setBundleFQCN(get_class($plugin));
+        $pluginEntity->setType($plugin->getType());
+        $pluginEntity->setVendorName($plugin->getVendorNamespace());
+        $pluginEntity->setBundleName($plugin->getBundleName());
+        $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
+        $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
+
+        $this->pluginRepo->createPlugin($pluginEntity);
+    }
+
+    private function prepareApplicationEntity($application)
+    {
+        $applicationEntity = new Application();
+        $launchers = $application->getLaunchers();
+
+        foreach ($launchers as $launcher)
+        {
+            $launcherEntity = new ApplicationLauncher();
+            $launcherEntity->setApplication($applicationEntity);
+            $launcherEntity->setRouteId($launcher->getRouteId());
+            $launcherEntity->setTranslationKey($launcher->getTranslationKey());
+
+            foreach ($launcher->getAccessRoles() as $role)
+            {
+                $roleEntity = null;
+                $existingRole = $this->roleRepo->findOneByName($role);
+
+                if ($existingRole == null)
+                {
+                    $roleEntity = new Role();
+                    $roleEntity->setName($role);
+                    $this->roleRepo->create($roleEntity);
+                }
+                else
+                {
+                    $roleEntity = $existingRole;
+                }
+
+                $launcherEntity->addAccessRole($roleEntity);
+            }
+
+            $applicationEntity->addLauncher($launcherEntity);
+        }
+
+        return $applicationEntity;
+    }
+
+    private function prepareToolEntity($tool)
+    {
+        return new Tool();
     }
 }

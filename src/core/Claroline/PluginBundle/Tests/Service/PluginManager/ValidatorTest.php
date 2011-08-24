@@ -226,11 +226,48 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(ValidationException::INVALID_TRANSLATION_KEY, $ex->getCode());
         }
     }
-/*
-    public function testCheckThrowsAnExceptionOnInvalidEntityClass()
+
+    public function testCheckThrowsAnExceptionOnInvalidApplicationLauncher()
     {
-        
-    }*/
+        $this->buildValidPluginStructure('plugin', 'VendorAAA', 'DummyPluginBundle');
+        $class = '<?php namespace VendorAAA\DummyPluginBundle; '
+               . 'class VendorAAADummyPluginBundle extends '
+               . '\Claroline\PluginBundle\AbstractType\ClarolineApplication {'
+               . "public function getLaunchers() {return array('test');}}";
+        file_put_contents(vfsStream::url('plugin/VendorAAA/DummyPluginBundle/VendorAAADummyPluginBundle.php'),
+                          $class);
+
+        try
+        {
+            $this->validator->check('VendorAAA\DummyPluginBundle\VendorAAADummyPluginBundle');
+            $this->fail("No exception thrown.");
+        }
+        catch(ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_APPLICATION_LAUNCHER, $ex->getCode());
+        }
+    }
+
+    public function testCheackThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers()
+    {
+        $this->buildValidPluginStructure('plugin', 'VendorBBB', 'DummyPluginBundle');
+        $class = '<?php namespace VendorBBB\DummyPluginBundle; '
+               . 'class VendorBBBDummyPluginBundle extends '
+               . '\Claroline\PluginBundle\AbstractType\ClarolineApplication {'
+               . "public function getLaunchers() {return array();}}";
+        file_put_contents(vfsStream::url('plugin/VendorBBB/DummyPluginBundle/VendorBBBDummyPluginBundle.php'),
+                          $class);
+
+        try
+        {
+            $this->validator->check('VendorBBB\DummyPluginBundle\VendorBBBDummyPluginBundle');
+            $this->fail("No exception thrown.");
+        }
+        catch(ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_APPLICATION_LAUNCHER, $ex->getCode());
+        }
+    }
 
     public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument()
     {

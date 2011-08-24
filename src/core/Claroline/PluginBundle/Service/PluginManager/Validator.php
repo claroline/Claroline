@@ -31,6 +31,7 @@ class Validator
         $this->checkPluginBundleClassExtendsClarolinePlugin($pluginFQCN);
         $this->checkPluginClassReturnsValidRoutingValue($pluginFQCN);
         $this->checkPluginClassReturnsValidTranslationKeys($pluginFQCN);
+        $this->checkApplicationConstraints($pluginFQCN);
     }
 
     private function checkPluginFQCNFollowsConventions($pluginFQCN)
@@ -179,6 +180,40 @@ class Validator
             {
                 throw new ValidationException("{$pluginFQCN} : translation key cannot be empty.",
                                               ValidationException::INVALID_TRANSLATION_KEY);
+            }
+        }
+    }
+
+    private function checkApplicationConstraints($pluginFQCN)
+    {
+        $application = new $pluginFQCN;
+
+        if (! is_a($application, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
+        {
+            return;
+        }
+
+        $launchers = $application->getLaunchers();
+
+        if (! is_array($launchers))
+        {
+            throw new ValidationException("Method 'getLaunchers' from Application '{$pluginFQCN}' "
+                                        . "must return an array.",
+                                          ValidationException::INVALID_APPLICATION_LAUNCHER);
+        }
+
+        if (count($launchers) == 0)
+        {
+            throw new ValidationException("Application '{$pluginFQCN}' must define at least one launcher.",
+                                          ValidationException::INVALID_APPLICATION_LAUNCHER);
+        }
+
+        foreach ($launchers as $launcher)
+        {
+            if (! is_a($launcher, 'Claroline\GUIBundle\Widget\ApplicationLauncher'))
+            {
+                throw new ValidationException("Application '{$pluginFQCN}' has an invalid launcher.",
+                                              ValidationException::INVALID_APPLICATION_LAUNCHER);
             }
         }
     }

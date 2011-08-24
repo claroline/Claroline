@@ -12,6 +12,7 @@ class ManagerTest extends WebTestCase
     private $client;
     private $config;
     private $manager;
+    private $em;
 
     public function setUp()
     {
@@ -22,8 +23,8 @@ class ManagerTest extends WebTestCase
                                                  vfsStream::url('virtual/config/routing.yml'),
                                                  new Yaml());
         $this->client = self::createClient();
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->manager = new Manager($validator, $this->config, $em);
+        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $this->manager = new Manager($validator, $this->config, $this->em);
         $this->client->beginTransaction();
     }
 
@@ -137,6 +138,41 @@ class ManagerTest extends WebTestCase
         $this->assertEquals(true, $this->manager->isInstalled($plugin));
     }
 
+    public function testInstallApplicationRegistersLaunchersAndRoles()
+    {
+        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
+
+        $appRepo = $this->em->getRepository('Claroline\PluginBundle\Entity\Application');
+        $apps = $appRepo->findByBundleFQCN('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
+
+        $this->assertEquals(1, count($apps));
+
+        $launchers = $apps[0]->getLaunchers();
+        $this->assertEquals(2, count($launchers));
+        $this->assertEquals('route_id_1', $launchers[0]->getRouteId());
+        $this->assertEquals('trans_key_1', $launchers[0]->getTranslationKey());
+        $this->assertEquals('route_id_2', $launchers[1]->getRouteId());
+        $this->assertEquals('trans_key_2', $launchers[1]->getTranslationKey());
+
+        $roles_1 = $launchers[0]->getAccessRoles();
+        $roles_2 = $launchers[1]->getAccessRoles();
+        $this->assertEquals(2, count($roles_1));
+        $this->assertEquals(1, count($roles_2));
+        $this->assertEquals('ROLE_TEST_1', $roles_1[0]->getName());
+        $this->assertEquals('ROLE_TEST_2', $roles_1[1]->getName());
+        $this->assertEquals('ROLE_TEST_1', $roles_2[0]->getName());
+    }
+
+    public function testInstallApplicationDoesntDuplicateExistingRole()
+    {
+        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
+
+        $roleRepo = $this->em->getRepository('Claroline\SecurityBundle\Entity\Role');
+        $roles = $roleRepo->findByName('ROLE_TEST_1');
+
+        $this->assertEquals(1, count($roles));
+    }
+
     private function buildPluginFiles()
     {
         vfsStream::setUp('virtual');
@@ -159,7 +195,15 @@ class ManagerTest extends WebTestCase
                 'VendorXSecondPluginBundle.php' => '<?php namespace VendorX\SecondPluginBundle;
                                                     class VendorXSecondPluginBundle extends
                                                     \Claroline\PluginBundle\AbstractType\ClarolineApplication
-                                                    {public function getIndexRoute(){return "";}}',
+                                                    {public function getLaunchers()
+                                                    {
+                                                        return array(
+                                                            new \Claroline\GUIBundle\Widget\ApplicationLauncher
+                                                            ("route_id_1", "trans_key_1", array("ROLE_TEST_1", "ROLE_TEST_2")),
+                                                            new \Claroline\GUIBundle\Widget\ApplicationLauncher
+                                                            ("route_id_2", "trans_key_2", array("ROLE_TEST_1")),
+                                                        );
+                                                    }}',
                 'Resources' => array(
                     'config' => array(
                         'routing.yml' => ''
