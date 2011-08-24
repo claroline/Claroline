@@ -3,28 +3,31 @@
 namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Parser;
+use Claroline\PluginBundle\Tests\Fixtures\VirtualPlugins;
 use \vfsStream;
 
 class ManagerTest extends WebTestCase
 {
     private $client;
-    private $config;
     private $manager;
+    private $fileHandler;
     private $em;
 
     public function setUp()
     {
-        $this->buildPluginFiles();
-        $validator = new Validator(vfsStream::url('virtual/plugin'), new Parser());
-        $this->config = new ConfigurationHandler(vfsStream::url('virtual/config/namespaces'),
-                                                 vfsStream::url('virtual/config/bundles'),
-                                                 vfsStream::url('virtual/config/routing.yml'),
-                                                 new Yaml());
         $this->client = self::createClient();
+        
+        $fixtures = new VirtualPlugins();
+        $fixtures->buildVirtualPluginFiles();
+
+        $this->manager = $this->client->getContainer()->get('claroline.plugin.manager');
+        $this->manager->setParameters(vfsStream::url('virtual/plugin'),
+                                      vfsStream::url('virtual/config/namespaces'),
+                                      vfsStream::url('virtual/config/bundles'),
+                                      vfsStream::url('virtual/config/routing.yml'));
+        $this->fileHandler = $this->manager->getFileHandler();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->manager = new Manager($validator, $this->config, $this->em);
+
         $this->client->beginTransaction();
     }
 
@@ -38,14 +41,14 @@ class ManagerTest extends WebTestCase
         $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
         $this->manager->install($plugin);
 
-        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array($plugin), $this->config->getRegisteredBundles());
+        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array($plugin), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
             'VendorXFirstPluginBundle_0' => array(
                 'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
                 )
             );
-        $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
+        $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
         $this->assertEquals(true, $this->manager->isInstalled($plugin));
     }
 
@@ -65,14 +68,14 @@ class ManagerTest extends WebTestCase
         $this->manager->install($plugin);
         $this->manager->install($plugin);
 
-        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array($plugin), $this->config->getRegisteredBundles());
+        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array($plugin), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
             'VendorXSecondPluginBundle_0' => array(
                 'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
                 )
             );
-        $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
+        $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
         $this->assertEquals(false, $this->manager->isInstalled($plugin));
     }
 
@@ -86,8 +89,8 @@ class ManagerTest extends WebTestCase
         $this->manager->install($plugin2);
         $this->manager->install($plugin3);
 
-        $this->assertEquals(array('VendorX', 'VendorY'), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array($plugin1, $plugin2, $plugin3), $this->config->getRegisteredBundles());
+        $this->assertEquals(array('VendorX', 'VendorY'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array($plugin1, $plugin2, $plugin3), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
             'VendorXFirstPluginBundle_0' => array(
                 'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
@@ -96,7 +99,7 @@ class ManagerTest extends WebTestCase
                 'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
                 )
             );
-        $this->assertEquals($expectedRouting, $this->config->getRoutingResources());
+        $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
         $this->assertEquals(true, $this->manager->isInstalled($plugin1));
         $this->assertEquals(true, $this->manager->isInstalled($plugin2));
         $this->assertEquals(true, $this->manager->isInstalled($plugin3));
@@ -108,9 +111,9 @@ class ManagerTest extends WebTestCase
         $this->manager->install($plugin);
         $this->manager->remove($plugin);
 
-        $this->assertEquals(array(), $this->config->getRegisteredNamespaces());
-        $this->assertEquals(array(), $this->config->getRegisteredBundles());
-        $this->assertEquals(array(), $this->config->getRoutingResources());
+        $this->assertEquals(array(), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array(), $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(array(), $this->fileHandler->getRoutingResources());
         $this->assertEquals(false, $this->manager->isInstalled($plugin));
     }
 
@@ -120,7 +123,7 @@ class ManagerTest extends WebTestCase
         $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
         $this->manager->remove('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
 
-        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRemoveInexistentPluginThrowsAConfigurationException()
@@ -136,111 +139,5 @@ class ManagerTest extends WebTestCase
 
         $this->manager->install($plugin);
         $this->assertEquals(true, $this->manager->isInstalled($plugin));
-    }
-
-    public function testInstallApplicationRegistersLaunchersAndRoles()
-    {
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-
-        $appRepo = $this->em->getRepository('Claroline\PluginBundle\Entity\Application');
-        $apps = $appRepo->findByBundleFQCN('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-
-        $this->assertEquals(1, count($apps));
-
-        $launchers = $apps[0]->getLaunchers();
-        $this->assertEquals(2, count($launchers));
-        $this->assertEquals('route_id_1', $launchers[0]->getRouteId());
-        $this->assertEquals('trans_key_1', $launchers[0]->getTranslationKey());
-        $this->assertEquals('route_id_2', $launchers[1]->getRouteId());
-        $this->assertEquals('trans_key_2', $launchers[1]->getTranslationKey());
-
-        $roles_1 = $launchers[0]->getAccessRoles();
-        $roles_2 = $launchers[1]->getAccessRoles();
-        $this->assertEquals(2, count($roles_1));
-        $this->assertEquals(1, count($roles_2));
-        $this->assertEquals('ROLE_TEST_1', $roles_1[0]->getName());
-        $this->assertEquals('ROLE_TEST_2', $roles_1[1]->getName());
-        $this->assertEquals('ROLE_TEST_1', $roles_2[0]->getName());
-    }
-
-    public function testInstallApplicationDoesntDuplicateExistingRole()
-    {
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-
-        $roleRepo = $this->em->getRepository('Claroline\SecurityBundle\Entity\Role');
-        $roles = $roleRepo->findByName('ROLE_TEST_1');
-
-        $this->assertEquals(1, count($roles));
-    }
-
-    private function buildPluginFiles()
-    {
-        vfsStream::setUp('virtual');
-
-        $firstPlugin = array(
-            'FirstPluginBundle' => array(
-                'VendorXFirstPluginBundle.php' => '<?php namespace VendorX\FirstPluginBundle;
-                                                   class VendorXFirstPluginBundle extends
-                                                   \Claroline\PluginBundle\AbstractType\ClarolinePlugin
-                                                   {}',
-                'Resources' => array(
-                    'config' => array(
-                        'routing.yml' => ''
-                        )
-                    )
-                )
-            );
-        $secondPlugin = array(
-            'SecondPluginBundle' => array(
-                'VendorXSecondPluginBundle.php' => '<?php namespace VendorX\SecondPluginBundle;
-                                                    class VendorXSecondPluginBundle extends
-                                                    \Claroline\PluginBundle\AbstractType\ClarolineApplication
-                                                    {public function getLaunchers()
-                                                    {
-                                                        return array(
-                                                            new \Claroline\GUIBundle\Widget\ApplicationLauncher
-                                                            ("route_id_1", "trans_key_1", array("ROLE_TEST_1", "ROLE_TEST_2")),
-                                                            new \Claroline\GUIBundle\Widget\ApplicationLauncher
-                                                            ("route_id_2", "trans_key_2", array("ROLE_TEST_1")),
-                                                        );
-                                                    }}',
-                'Resources' => array(
-                    'config' => array(
-                        'routing.yml' => ''
-                        )
-                    )
-                )
-            );
-        $thirdPlugin = array(
-            'ThirdPluginBundle' => array(
-                'VendorYThirdPluginBundle.php' => '<?php namespace VendorY\ThirdPluginBundle;
-                                                   class VendorYThirdPluginBundle extends
-                                                   \Claroline\PluginBundle\AbstractType\ClarolinePlugin
-                                                   {}'
-                )
-            );
-        $fourthPlugin = array(
-            'FourthPluginBundle' => array(
-                'VendorYFourthPluginBundle.php' => '<?php namespace VendorY\FourthPluginBundle;
-                                                   class VendorYFourthPluginBundle extends
-                                                   \Claroline\PluginBundle\AbstractType\ClarolinePlugin
-                                                   { public function getRoutingResourcesPaths()
-                                                   {return "wrong/path/file.foo";}}'
-                )
-            );
-
-        $structure = array(
-            'plugin' => array(
-                'VendorX' => array_merge($firstPlugin, $secondPlugin),
-                'VendorY' => array_merge($thirdPlugin, $fourthPlugin)
-                ),
-            'config' => array(
-                'namespaces' => '',
-                'bundles' => '',
-                'routing.yml' => ''
-                )
-            );
-
-        vfsStream::create($structure, 'virtual');
     }
 }

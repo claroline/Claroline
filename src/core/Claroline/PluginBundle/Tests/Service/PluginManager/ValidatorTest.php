@@ -2,20 +2,24 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Yaml\Parser;
-use Claroline\PluginBundle\Service\PluginManager\Validator;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
 use \vfsStream;
 use \vfsStreamFile;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends WebTestCase
 {
     private $validator;
 
     public function setUp()
     {
+        $client = self::createClient();
+
         vfsStream::setUp('plugin');
-        $this->validator = new Validator(vfsStream::url('plugin'), new Parser());
+
+        $this->validator = $client->getContainer()->get('claroline.plugin.validator');
+        $this->validator->setPluginDirectory(vfsStream::url('plugin'));
     }
 
     public function testConstructorThrowsAnExceptionOnInvalidPluginDirectoryPath()
@@ -25,7 +29,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             new Validator('/inexistent/path', new Parser());
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_PLUGIN_DIR, $ex->getCode());
         }
@@ -41,7 +45,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check($FQCN);
             $this->fail('No exception thrown.');
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_FQCN, $ex->getCode());
         }
@@ -57,7 +61,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check($FQCN);
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_DIRECTORY_STRUCTURE, $ex->getCode());
         }
@@ -72,7 +76,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorY\TestBundle\VendorYTestBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_PLUGIN_CLASS_FILE, $ex->getCode());
         }
@@ -91,7 +95,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorZ\DummyPluginBundle\VendorZDummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_PLUGIN_CLASS, $ex->getCode());
         }
@@ -110,7 +114,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('Vendor123\DummyPluginBundle\Vendor123DummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_PLUGIN_TYPE, $ex->getCode());
         }
@@ -131,7 +135,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorXYZ\DummyPluginBundle\VendorXYZDummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_ROUTING_PATH, $ex->getCode());
         }
@@ -154,7 +158,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorXYZ123\DummyPluginBundle\VendorXYZ123DummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_ROUTING_LOCATION, $ex->getCode());
         }
@@ -179,7 +183,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorABC123\DummyPluginBundle\VendorABC123DummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_ROUTING_EXTENSION, $ex->getCode());
         }
@@ -196,7 +200,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('Vendor1234\DummyPluginBundle\Vendor1234DummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_YAML_RESOURCE, $ex->getCode());
         }
@@ -221,7 +225,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('Vendor6789\DummyPluginBundle\Vendor6789DummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_TRANSLATION_KEY, $ex->getCode());
         }
@@ -242,7 +246,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorAAA\DummyPluginBundle\VendorAAADummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_APPLICATION_LAUNCHER, $ex->getCode());
         }
@@ -263,7 +267,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->validator->check('VendorBBB\DummyPluginBundle\VendorBBBDummyPluginBundle');
             $this->fail("No exception thrown.");
         }
-        catch(ValidationException $ex)
+        catch (ValidationException $ex)
         {
             $this->assertEquals(ValidationException::INVALID_APPLICATION_LAUNCHER, $ex->getCode());
         }

@@ -1,5 +1,5 @@
 services:
-    claroline.role.manager:
+    claroline.security.role_manager:
         class: Claroline\SecurityBundle\Service\RoleManager
         arguments:
             - @doctrine.orm.entity_manager

@@ -1,7 +1,4 @@
 parameters:
-    claroline.plugin.validator.class: Claroline\PluginBundle\Service\PluginManager\Validator
-    claroline.plugin.config_handler.class: Claroline\PluginBundle\Service\PluginManager\ConfigurationHandler
-    claroline.plugin.manager.class: Claroline\PluginBundle\Service\PluginManager\Manager
     claroline.plugin.directory: "%kernel.root_dir%/../src/plugin"
     claroline.plugin.namespaces.config_file: "%kernel.root_dir%/config/plugin/namespaces"
     claroline.plugin.bundles.config_file: "%kernel.root_dir%/config/plugin/bundles"
@@ -9,16 +6,29 @@ parameters:
 
 services:
     claroline.plugin.validator:
-        class: %claroline.plugin.validator.class%
-        arguments: [%claroline.plugin.directory%, @symfony.yaml.parser]
-    claroline.plugin.config_handler:
-        class: %claroline.plugin.config_handler.class%
-        arguments: [%claroline.plugin.namespaces.config_file%, %claroline.plugin.bundles.config_file%, %claroline.plugin.routing.config_file%, @symfony.yaml]
-        public: false
+        class: Claroline\PluginBundle\Service\PluginManager\Validator
+        arguments:
+            - %claroline.plugin.directory%
+            - @symfony.yaml.parser
+    claroline.plugin.file_handler:
+        class: Claroline\PluginBundle\Service\PluginManager\FileHandler
+        arguments:
+            - %claroline.plugin.namespaces.config_file%
+            - %claroline.plugin.bundles.config_file%
+            - %claroline.plugin.routing.config_file%
+            - @symfony.yaml
+    claroline.plugin.database_handler:
+        class: Claroline\PluginBundle\Service\PluginManager\DatabaseHandler
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @claroline.security.role_manager
     claroline.plugin.manager:
-        class: %claroline.plugin.manager.class%
-        arguments: [@claroline.plugin.validator, @claroline.plugin.config_handler, @doctrine.orm.entity_manager]
-
+        class: Claroline\PluginBundle\Service\PluginManager\Manager
+        arguments:
+            - @claroline.plugin.validator
+            - @claroline.plugin.file_handler
+            - @claroline.plugin.database_handler
+            
     # symfony classes used as service arguments
     symfony.yaml.parser:
         class: Symfony\Component\Yaml\Parser
