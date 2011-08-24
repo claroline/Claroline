@@ -3,9 +3,11 @@
 namespace Claroline\UserBundle\Service\UserManager;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Validator\Validator;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\UserBundle\Entity\User;
 use Claroline\UserBundle\Service\UserManager\Exception\UserException;
+use Claroline\SecurityBundle\Service\RoleManager;
 
 class Manager
 {
@@ -20,15 +22,30 @@ class Manager
     private $userRepository;
 
     /**
+     * @var Symfony\Component\Validator\Validator
+     */
+    private $validator;
+
+    /**
      * @var Symfony\Component\Security\Core\Encoder\EncoderFactory
      */
-    private $factory;
+    private $encoderFactory;
 
-    public function __construct(EntityManager $em, EncoderFactory $factory)
+    /**
+     * @var Claroline\SecurityBundle\Service\RoleManager
+     */
+    private $roleManager;
+
+    public function __construct(EntityManager $em,
+                                Validator $validator,
+                                EncoderFactory $encoderFactory,
+                                RoleManager $roleManager)
     {
         $this->em = $em;
         $this->userRepository = $this->em->getRepository('Claroline\UserBundle\Entity\User');
-        $this->factory = $factory;
+        $this->validator = $validator;
+        $this->encoderFactory = $encoderFactory;
+        $this->roleManager = $roleManager;
     }
 
     public function hasUniqueUsername(User $user)
@@ -45,14 +62,18 @@ class Manager
 
     public function create(User $user)
     {
-        if (! $this->hasUniqueUsername($user))
+        $errors = $this->validator->validate($user);
+
+        if (count($errors) > 0)
         {
-            throw new UserException("Username '{$user->getUsername()}' is already registered.");
+            throw new UserException(print_r($errors, true));
         }
 
-        $encoder = $this->factory->getEncoder($user);
+        $encoder = $this->encoderFactory->getEncoder($user);
         $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
         $user->setPassword($password);
+
+        $user->addRole($this->roleManager->getRole('ROLE_USER'));
 
         $this->em->persist($user);
         $this->em->flush();

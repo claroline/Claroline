@@ -26,32 +26,15 @@ class LoadUserData extends AbstractFixture implements FixtureInterface, Containe
         $admin->setUserName('admin');
         $admin->setPlainPassword('USA');
         
-        $factory = $this->container->get('security.encoder_factory');
-        $encoder = $factory->getEncoder($admin);
-        $password = $encoder->encodePassword($admin->getPlainPassword(), $admin->getSalt());
-        
-        $admin->setPassword($password);
-   
-        $manager->persist($admin);
-        
-        
         $jdoe = new User();
         $jdoe->setFirstName('John');
         $jdoe->setLastName('Doe');
         $jdoe->setUserName('jdoe');
         $jdoe->setPlainPassword('topsecret');
-        
-        $factory = $this->container->get('security.encoder_factory');
-        $encoder = $factory->getEncoder($jdoe);
-        $password = $encoder->encodePassword($jdoe->getPlainPassword(), $jdoe->getSalt());
-        
-        $jdoe->setPassword($password);
-   
-        $manager->persist($jdoe);
 
-
-        $manager->flush();
-
+        $userManager = $this->container->get('claroline.user.manager');
+        $userManager->create($admin);
+        $userManager->create($jdoe);
 
         $this->addReference('user/admin', $admin);
         $this->addReference('user/jdoe', $jdoe);

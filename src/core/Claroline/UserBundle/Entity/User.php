@@ -4,14 +4,21 @@ namespace Claroline\UserBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\SecurityBundle\Entity\Role;
 
 // TODO: Implements AdvancedUserInterface
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\UserBundle\Repository\UserRepository")
- * @ORM\Table(name="claro_user")
+ * @ORM\Table
+ * (
+ *     name="claro_user",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="username_idx", columns={"username"})}
+ * )
+ * @DoctrineAssert\UniqueEntity("username")
  */
 class User implements UserInterface
 {
@@ -35,7 +42,7 @@ class User implements UserInterface
     protected $lastName;
 
     /**
-     * @ORM\Column(name="username", type="string", length="255")
+     * @ORM\Column(name="username", type="string", length="255", unique="true")
      * @Assert\NotBlank()
      */
     protected $username;
@@ -66,10 +73,8 @@ class User implements UserInterface
 
     public function __construct()
     {
+        $this->roles = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $userRole = new Role();
-        $userRole->setName('ROLE_USER');
-        $this->roles = array($userRole);
     }
 
     public function getId()
@@ -139,10 +144,23 @@ class User implements UserInterface
     
     public function addRole(Role $role)
     {
-        if (! in_array($role, $this->getRoles()))
+        if (! $this->hasRole($role->getName()))
         {
             $this->roles->add($role);
         }
+    }
+
+    public function hasRole($roleName)
+    {
+        foreach ($this->roles as $role)
+        {
+            if ($role->getName() == $roleName)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function eraseCredentials()
@@ -175,15 +193,5 @@ class User implements UserInterface
         if ($this->getSalt() !== $user->getSalt()) {
             return false;
         }
-    }
-
-    // TODO: use a listener to check unique constraints
-    /**
-     * @Assert\True(message = "USERNAME ALREADY EXISTS TEST")
-     */
-    public function isUsernameUnique()
-    {
-        // search for current username property in db
-        return true;
     }
 }

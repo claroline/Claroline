@@ -46,6 +46,7 @@ class ManagerTest extends WebTestCase
         $users = $this->repository->findByUsername($user->getUsername());
         $this->assertEquals(1, count($users));
         $this->assertEquals($user, $users[0]);
+        $this->assertTrue($users[0]->hasRole('ROLE_USER'));
 
         $this->manager->delete($user);
 
@@ -53,28 +54,14 @@ class ManagerTest extends WebTestCase
         $this->assertEquals(0, count($users));
     }
 
-    public function testNewlyCreatedUserHasUserRole()
-    {
-        $user = $this->buildTestUser();
-        $this->manager->create($user);
-
-        $user = $this->repository->findOneByUsername($user->getUsername());
-        $roles = $user->getRoles();
-
-        $this->assertEquals(1, count($roles));
-        $this->assertEquals('ROLE_USER', $roles[0]->getName());
-    }
-
     public function testCreateAnUserWithExistingUsernameThrowsAnException()
     {
         $this->setExpectedException('Claroline\UserBundle\Service\UserManager\Exception\UserException');
 
         $user1 = $this->buildTestUser();
-        $this->assertTrue($this->manager->hasUniqueUsername($user1));
-        $this->manager->create($user1);
-
         $user2 = $this->buildTestUser();
-        $this->assertFalse($this->manager->hasUniqueUsername($user2));
+
+        $this->manager->create($user1);
         $this->manager->create($user2);
     }
 
