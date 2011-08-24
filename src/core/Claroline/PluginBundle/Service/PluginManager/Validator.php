@@ -13,6 +13,12 @@ class Validator
 
     public function __construct($pluginDirectory, Parser $yamlParser)
     {
+        $this->setPluginDirectory($pluginDirectory);
+        $this->yamlParser = $yamlParser;
+    }
+
+    public function setPluginDirectory($pluginDirectory)
+    {
         if (! is_dir($pluginDirectory))
         {
             throw new ValidationException("'{$pluginDirectory}' is not a valid directory.",
@@ -20,7 +26,6 @@ class Validator
         }
 
         $this->pluginDirectory = $this->resolvePath($pluginDirectory);
-        $this->yamlParser = $yamlParser;
     }
 
     public function check($pluginFQCN)

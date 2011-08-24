@@ -4,22 +4,40 @@ namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Symfony\Component\Yaml\Yaml;
 
-class ConfigurationHandler
+class FileHandler
 {
     private $pluginNamespacesFile;
     private $pluginBundlesFile;
     private $pluginRoutingFile;
     private $yamlHandler;
 
-    public function __construct($pluginNamespacesFile, $pluginBundlesFile, $pluginRoutingFile, Yaml $yamlHandler)
+    public function __construct($pluginNamespacesFile,
+                                $pluginBundlesFile,
+                                $pluginRoutingFile,
+                                Yaml $yamlHandler)
     {
-        $this->checkFile($pluginNamespacesFile);
-        $this->checkFile($pluginBundlesFile);
-        $this->checkFile($pluginRoutingFile);
-        $this->pluginNamespacesFile = $pluginNamespacesFile;
-        $this->pluginBundlesFile = $pluginBundlesFile;
-        $this->pluginRoutingFile = $pluginRoutingFile;
+        $this->setPluginNamespacesFile($pluginNamespacesFile);
+        $this->setPluginBundlesFile($pluginBundlesFile);
+        $this->setPluginRoutingFile($pluginRoutingFile);
         $this->yamlHandler = $yamlHandler;
+    }
+
+    public function setPluginNamespacesFile($filePath)
+    {
+        $this->checkFile($filePath);
+        $this->pluginNamespacesFile = $filePath;
+    }
+
+    public function setPluginBundlesFile($filePath)
+    {
+        $this->checkFile($filePath);
+        $this->pluginBundlesFile = $filePath;
+    }
+
+    public function setPluginRoutingFile($filePath)
+    {
+        $this->checkFile($filePath);
+        $this->pluginRoutingFile = $filePath;
     }
 
     public function getRegisteredNamespaces()
@@ -68,7 +86,7 @@ class ConfigurationHandler
     public function getRoutingResources()
     {
         $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
-        
+
         return (array) $resources;
     }
 
@@ -79,7 +97,10 @@ class ConfigurationHandler
 
     public function removeNamespace($namespace)
     {
-        $this->doRemoveItem($this->pluginNamespacesFile, $namespace);
+        if (! in_array($namespace, $this->getSharedVendorNamespaces()))
+        {
+            $this->doRemoveItem($this->pluginNamespacesFile, $namespace);
+        }
     }
 
     public function addInstantiableBundle($pluginFQCN)
@@ -133,7 +154,7 @@ class ConfigurationHandler
         $yaml = $this->yamlHandler->dump($resources);
         file_put_contents($this->pluginRoutingFile, $yaml);
     }
-    
+
     private function checkFile($file)
     {
         if (! file_exists($file))

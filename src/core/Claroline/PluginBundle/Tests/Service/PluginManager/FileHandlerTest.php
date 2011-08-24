@@ -2,54 +2,57 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use \vfsStream;
 
-class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
+class FileHandlerTest extends WebTestCase
 {
-    private $config;
+    private $fileHandler;
     private $namespacesFile;
     private $bundlesFile;
     private $routingFile;
 
     public function setUp()
     {
+        $client = self::createClient();
+        
         vfsStream::setup('VirtualDir');
         vfsStream::create(array('namespaces' => '', 'bundles' => '', 'routing.yml' => ''),
                          'VirtualDir');
         $this->namespacesFile = vfsStream::url('VirtualDir/namespaces');
         $this->bundlesFile = vfsStream::url('VirtualDir/bundles');
         $this->routingFile = vfsStream::url('VirtualDir/routing.yml');
-        $this->config = new ConfigurationHandler($this->namespacesFile, 
-                                                 $this->bundlesFile,
-                                                 $this->routingFile,
-                                                 new Yaml());
+
+        $this->fileHandler = $client->getContainer()->get('claroline.plugin.file_handler');
+        $this->fileHandler->setPluginNamespacesFile($this->namespacesFile);
+        $this->fileHandler->setPluginBundlesFile($this->bundlesFile);
+        $this->fileHandler->setPluginRoutingFile($this->routingFile);
     }
 
     public function testGetRegisteredNamespacesReturnsExpectedArray()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
         $this->assertEquals(array('VendorX', 'VendorY', 'VendorZ'),
-                            $this->config->getRegisteredNamespaces());
+                            $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testGetRegisteredBundlesReturnsExpectedArray()
     {
         file_put_contents($this->bundlesFile, "VendorX\ABC\FirstBundle\nVendorY\DEF\SecondBundle");
         $this->assertEquals(array('VendorX\ABC\FirstBundle', 'VendorY\DEF\SecondBundle'),
-                            $this->config->getRegisteredBundles());
+                            $this->fileHandler->getRegisteredBundles());
     }
 
     public function testGetSharedVendorNamespacesReturnsExpectedArray()
     {
         file_put_contents($this->bundlesFile, "VendorX\A\Bundle\nVendorY\B\Bundle\nVendorX\C\Bundle");
-        $this->assertEquals(array('VendorX'), $this->config->getSharedVendorNamespaces());
+        $this->assertEquals(array('VendorX'), $this->fileHandler->getSharedVendorNamespaces());
     }
 
     public function testGetRoutingResourcesReturnsExpectedArray()
     {
         file_put_contents($this->routingFile, "VendorXBundle:\n    TestResource");
-        $resources = $this->config->getRoutingResources();        
+        $resources = $this->fileHandler->getRoutingResources();
         $this->assertEquals(1, count($resources));
         $this->assertEquals(array('VendorXBundle'), array_keys($resources));
         $this->assertEquals('TestResource', $resources['VendorXBundle']);
@@ -58,150 +61,150 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
     public function testRegisterNamespaceThrowsExceptionOnEmptyNamespace()
     {
         $this->setExpectedException('\Exception');
-        $this->config->registerNamespace('');
+        $this->fileHandler->registerNamespace('');
     }
 
     public function testRegisterNamespaceWritesNewEntryInNamespacesFile()
     {
-        $this->config->registerNamespace('Foo');
-        $this->assertTrue(in_array('Foo', $this->config->getRegisteredNamespaces()));
+        $this->fileHandler->registerNamespace('Foo');
+        $this->assertTrue(in_array('Foo', $this->fileHandler->getRegisteredNamespaces()));
     }
 
     public function testRegisterNamespacePreservesOtherEntries()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        $this->config->registerNamespace('Foo');
-        $this->assertEquals(array("VendorX", "VendorY", "VendorZ", 'Foo'), 
-                            $this->config->getRegisteredNamespaces());
+        $this->fileHandler->registerNamespace('Foo');
+        $this->assertEquals(array("VendorX", "VendorY", "VendorZ", 'Foo'),
+                            $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRegisterNamespaceDoesntDuplicateNamespace()
     {
         file_put_contents($this->namespacesFile, 'Bar');
-        $this->config->registerNamespace('Bar');
-        $this->assertTrue(count($this->config->getRegisteredNamespaces()) == 1);
+        $this->fileHandler->registerNamespace('Bar');
+        $this->assertTrue(count($this->fileHandler->getRegisteredNamespaces()) == 1);
     }
 
     public function testRegisterNamespaceCalledSeveralTimes()
     {
         file_put_contents($this->namespacesFile, 'VendorX');
 
-        $this->config->registerNamespace('ABC');
-        $this->config->registerNamespace('DEF');
-        $this->config->registerNamespace('HIJ');
+        $this->fileHandler->registerNamespace('ABC');
+        $this->fileHandler->registerNamespace('DEF');
+        $this->fileHandler->registerNamespace('HIJ');
 
-        $this->assertEquals(array('VendorX', 'ABC', 'DEF', 'HIJ'), 
-                            $this->config->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX', 'ABC', 'DEF', 'HIJ'),
+                            $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRemoveNamespaceDeletesEntry()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        $this->config->removeNamespace("VendorZ");
+        $this->fileHandler->removeNamespace("VendorZ");
         $this->assertEquals(array('VendorX', 'VendorY'),
-                            $this->config->getRegisteredNamespaces());
+                            $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRemoveUnregisteredNamespaceDoesntProduceError()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY");
-        $this->config->removeNamespace("UnregisteredVendor");
-        $this->assertEquals(array('VendorX', 'VendorY'), 
-                            $this->config->getRegisteredNamespaces());
+        $this->fileHandler->removeNamespace("UnregisteredVendor");
+        $this->assertEquals(array('VendorX', 'VendorY'),
+                            $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRemoveNamespaceCalledSeveralTimes()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
 
-        $this->config->removeNamespace("VendorX");
-        $this->config->removeNamespace("VendorZ");
+        $this->fileHandler->removeNamespace("VendorX");
+        $this->fileHandler->removeNamespace("VendorZ");
 
         $namespaces = file($this->namespacesFile, FILE_IGNORE_NEW_LINES);
-        $this->assertEquals(array('VendorY'), $this->config->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorY'), $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRegisterThenRemoveNamespaceLeftsConfigFileUnchanged()
     {
         file_put_contents($this->namespacesFile, 'VendorX');
 
-        $this->config->registerNamespace('VendorY');
-        $this->config->removeNamespace('VendorY');
+        $this->fileHandler->registerNamespace('VendorY');
+        $this->fileHandler->removeNamespace('VendorY');
 
-        $this->assertEquals(array('VendorX'), $this->config->getRegisteredNamespaces());
+        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testAddInstantiableBundleThrowsExceptionOnEmptyBundleFQCN()
     {
         $this->setExpectedException('\Exception');
-        $this->config->addInstantiableBundle('');
+        $this->fileHandler->addInstantiableBundle('');
     }
 
     public function testAddInstantiableBundleWritesNewEntryInBundlesFile()
     {
-        $this->config->addInstantiableBundle('Foo\\Bar');
-        $this->assertTrue(in_array('Foo\\Bar', $this->config->getRegisteredBundles()));
+        $this->fileHandler->addInstantiableBundle('Foo\\Bar');
+        $this->assertTrue(in_array('Foo\\Bar', $this->fileHandler->getRegisteredBundles()));
     }
 
     public function testAddInstantiableBundlePreservesOtherEntries()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        $this->config->addInstantiableBundle('VendorZ\\Test');
-        $this->assertEquals(array("VendorX\\Foo", "VendorY\\Bar", "VendorZ\\Test"), 
-                            $this->config->getRegisteredBundles());
+        $this->fileHandler->addInstantiableBundle('VendorZ\\Test');
+        $this->assertEquals(array("VendorX\\Foo", "VendorY\\Bar", "VendorZ\\Test"),
+                            $this->fileHandler->getRegisteredBundles());
     }
 
     public function testAddInstantiableBundleDoesntDuplicateBundle()
     {
         file_put_contents($this->bundlesFile, 'Foo\\Bar');
-        $this->config->addInstantiableBundle('Foo\\Bar');
-        $this->assertTrue(count($this->config->getRegisteredBundles()) == 1);
+        $this->fileHandler->addInstantiableBundle('Foo\\Bar');
+        $this->assertTrue(count($this->fileHandler->getRegisteredBundles()) == 1);
     }
 
     public function testAddInstantiableBundleCalledSeveralTimes()
     {
         file_put_contents($this->bundlesFile, 'VendorX\\Foo');
 
-        $this->config->addInstantiableBundle('VendorX\\Bar');
-        $this->config->addInstantiableBundle('VendorY\\Foo');
+        $this->fileHandler->addInstantiableBundle('VendorX\\Bar');
+        $this->fileHandler->addInstantiableBundle('VendorY\\Foo');
 
-        $this->assertEquals(array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'), 
-                            $this->config->getRegisteredBundles());
+        $this->assertEquals(array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'),
+                            $this->fileHandler->getRegisteredBundles());
     }
-    
+
     public function testRemoveInstantiableBundleDeletesEntry()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        $this->config->removeInstantiableBundle('VendorY\\Bar');
-        $this->assertEquals(array('VendorX\\Foo'), $this->config->getRegisteredBundles());
+        $this->fileHandler->removeInstantiableBundle('VendorY\\Bar');
+        $this->assertEquals(array('VendorX\\Foo'), $this->fileHandler->getRegisteredBundles());
     }
 
     public function testRemoveUnregisteredBundleDoesntProduceError()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        $this->config->removeInstantiableBundle('UnregisteredVendor');
-        $this->assertEquals(array('VendorX\\Foo', 'VendorY\\Bar'), 
-                            $this->config->getRegisteredBundles());
-    }   
+        $this->fileHandler->removeInstantiableBundle('UnregisteredVendor');
+        $this->assertEquals(array('VendorX\\Foo', 'VendorY\\Bar'),
+                            $this->fileHandler->getRegisteredBundles());
+    }
 
     public function testRemoveBundleCalledSeveralTimes()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar\nVendorZ\\Test");
 
-        $this->config->removeInstantiableBundle('VendorX\\Foo');
-        $this->config->removeInstantiableBundle('VendorZ\\Test');
+        $this->fileHandler->removeInstantiableBundle('VendorX\\Foo');
+        $this->fileHandler->removeInstantiableBundle('VendorZ\\Test');
 
-        $this->assertEquals(array('VendorY\\Bar'), $this->config->getRegisteredBundles());
+        $this->assertEquals(array('VendorY\\Bar'), $this->fileHandler->getRegisteredBundles());
     }
 
     public function testAddThenRemoveInstantiableBundle()
     {
         file_put_contents($this->bundlesFile, 'VendorX\\Foo');
 
-        $this->config->addInstantiableBundle('VendorY\\Bar');
-        $this->config->removeInstantiableBundle('VendorY\\Bar');
+        $this->fileHandler->addInstantiableBundle('VendorY\\Bar');
+        $this->fileHandler->removeInstantiableBundle('VendorY\\Bar');
 
-        $this->assertEquals(array('VendorX\\Foo'), $this->config->getRegisteredBundles());
+        $this->assertEquals(array('VendorX\\Foo'), $this->fileHandler->getRegisteredBundles());
     }
 
     public function testImportRoutingResourcesAddsEntriesInRoutingFile()
@@ -211,7 +214,7 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
             'plugin/VendorX/DummyPluginBundle/Resources/routing2.yml',
             'special' => 'plugin/VendorX/DummyPluginBundle/Resources/More/routing.yml');
 
-        $this->config->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
+        $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
 
         $expectedResources = array(
             'VendorXDummyPluginBundle_0' => array(
@@ -224,7 +227,7 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
                 'resource' => '@VendorXDummyPluginBundle/Resources/More/routing.yml'
                 )
             );
-        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+        $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
     public function testImportRoutingResourcesPreservesExistingEntriesInRoutingFile()
@@ -234,7 +237,7 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
         file_put_contents($this->routingFile, $entry);
 
         $newPath = 'plugin/VendorY/DummyPluginBundle/Resources/routing.yml';
-        $this->config->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($newPath));
+        $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($newPath));
 
         $expectedResources = array(
             'VendorXDummyPluginBundle_0' => array(
@@ -244,21 +247,21 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
                 'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
                 )
             );
-        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+        $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
     public function testImportRoutingResourcesDoesntDuplicateEntry()
     {
         $path = 'plugin/VendorY/DummyPluginBundle/Resources/routing.yml';
-        $this->config->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
-        $this->config->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
+        $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
+        $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
 
         $expectedResources = array(
             'VendorYDummyPluginBundle_0' => array(
                 'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
                 )
             );
-        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+        $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
     public function testRemoveRoutingResourcesDeletesAllResourcesRelatedToAPlugin()
@@ -271,25 +274,25 @@ class ConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
                  . "resource: '@VendorYDummyPluginBundle/Resources/routing.yml'\n";
         file_put_contents($this->routingFile, $entries);
 
-        $this->config->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
+        $this->fileHandler->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
 
         $expectedResources = array(
             'VendorYDummyPluginBundle_0' => array(
                 'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
                 )
             );
-        $this->assertEquals($expectedResources, $this->config->getRoutingResources());
+        $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
-    public function testImportThenRemoveRoutingResourcesLeftsConfigFileUnchanged()
+    public function testImportThenRemoveRoutingResourcesKeepsConfigFileUnchanged()
     {
         $paths = array(
             'plugin/VendorX/DummyPluginBundle/Resources/routing.yml',
             'plugin/VendorX/DummyPluginBundle/Resources/routing2.yml');
 
-        $this->config->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
-        $this->config->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
+        $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
+        $this->fileHandler->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
 
-        $this->assertEquals(array(), $this->config->getRoutingResources());
+        $this->assertEquals(array(), $this->fileHandler->getRoutingResources());
     }
 }
