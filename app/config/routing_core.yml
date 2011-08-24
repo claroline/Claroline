@@ -5,9 +5,6 @@ claro_gui_default_index:
 claro_core:
     resource: "@ClarolineCoreBundle/Resources/config/routing.yml"
 
-claro_user:
-    resource: "@ClarolineUserBundle/Resources/config/routing.yml"
-
 claro_workspace:
     resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
 
