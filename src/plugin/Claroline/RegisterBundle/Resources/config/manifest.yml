@@ -1,8 +1,0 @@
-bundleName: RegisterBundle
-FQCName: ClaroApp\RegisterBundle\ClaroAppRegisterBundle
-type: Application
-routingFile: Resources/config/routing.yml
-nameTranslationKey: register.application.name
-indexRoute: claro_app_register_index
-defaultAccessRoles:
-    ROLE_ANONYMOUS: ~

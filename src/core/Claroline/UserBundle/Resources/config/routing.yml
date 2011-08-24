@@ -1,3 +1,0 @@
-claro_user_register:
-    pattern: /register
-    defaults: { _controller: ClarolineUserBundle:Profile:register }

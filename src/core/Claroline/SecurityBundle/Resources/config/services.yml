@@ -1,0 +1,6 @@
+services:
+    claroline.role.manager:
+        class: Claroline\SecurityBundle\Service\RoleManager
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @validator
