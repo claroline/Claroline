@@ -44,15 +44,14 @@ class WidgetController extends Controller
 
     public function applicationMenuAction()
     {
-        /*
         $em = $this->getDoctrine()->getEntityManager();
-        $appRepo = $em->getRepository('ClarolineGUIBundle\Entity\Application');
+        $launcherRepo = $em->getRepository('Claroline\PluginBundle\Entity\ApplicationLauncher');
 
         $user = $this->get('security.context')->getToken()->getUser();
 
         if (! $user instanceof User)
         {
-            $apps = $appRepo->findByRoles(array('ROLE_ANONYMOUS'));
+            $launchers = $launcherRepo->findByAccessRoles(array('ROLE_ANONYMOUS'));
         }
         else
         {
@@ -63,11 +62,9 @@ class WidgetController extends Controller
                 $roles[] = $role->getName();
             }
 
-            $apps = $appRepo->findByRoles($roles);
-        }*/
+            $launchers = $launcherRepo->findByAccessRoles($roles);
+        }
 
-        $apps = array();
-
-        return $this->render('ClarolineGUIBundle:Widget:app_menu.html.twig', array('apps' => $apps));
+        return $this->render('ClarolineGUIBundle:Widget:app_menu.html.twig', array('launchers' => $launchers));
     }
 }

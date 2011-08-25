@@ -8,7 +8,7 @@ use Claroline\PluginBundle\Entity\Application;
 use Claroline\SecurityBundle\Entity\Role;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\PluginBundle\Repository\LauncherRepository")
  * @ORM\Table(name="claro_application_launcher")
  */
 class ApplicationLauncher
