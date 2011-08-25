@@ -8,8 +8,8 @@ security.login_failure: La connexion a échoué. Vérifiez que votre nom d'utili
 profile.register: Inscription
 
 #form field labels
-user_firstName: "Prénom :"
-user_lastName: "Nom :"
-user_username: "Nom d'utilisateur :"
-user_plainPassword_first: "Mot de passe :"
-user_plainPassword_second: "Vérification :"
+user_form_firstName: "Prénom :"
+user_form_lastName: "Nom :"
+user_form_username: "Nom d'utilisateur :"
+user_form_plainPassword_first: "Mot de passe :"
+user_form_plainPassword_second: "Vérification :"
