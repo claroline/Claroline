@@ -2,7 +2,7 @@
 
 ## Installation 
 
-### Claronext install
+### Core install
 
 After having checked out the project :
 
@@ -21,7 +21,7 @@ After having checked out the project :
   * `php app/console doctrine:schema:update --force` or `php app/console doctrine:schema:create`
   * `php app/console init:acl`
 
-* do the same in test dev :
+* do the same in test env :
   * `php app/console --env="test" doctrine:schema:update --force` or `php app/console --env="test" doctrine:schema:create`
   * `php app/console --env="test" init:acl`
 
@@ -51,7 +51,7 @@ In order to run the test suite you must have [phpunit][phpunit_website] installe
 * Running the complete Test Suite
     * `phpunit -c app`
 
-* Running the test for a single directory
-    * `phpunit -c app src/core/Claroline\CoreBundle`
+* Running the tests for a single directory
+    * `phpunit -c app src/core/Claroline/CoreBundle`
 
 
