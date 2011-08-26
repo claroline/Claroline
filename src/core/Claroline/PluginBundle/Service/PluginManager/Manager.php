@@ -67,6 +67,8 @@ class Manager
 
     /**
      * Setter used in automated tests.
+     * @FIXME bad method name, someone reading the API won't know what id does. 
+     * those param smell like a PluginConfig object
      */
     public function setParameters($pluginDirectory,
                                   $pluginNamespacesFile,

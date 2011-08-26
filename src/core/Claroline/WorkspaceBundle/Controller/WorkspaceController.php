@@ -13,6 +13,9 @@ class WorkspaceController extends Controller
      */
     public function getWorkspaceManager()
     {
+        /* TODO Can't this be injected ? 
+         * @see http://symfony2tips.blogspot.com/2011/02/dependencyinjection-for-controllers.html
+         */
         return $this->get('claroline.workspace.acl_workspace_manager');
     }
 

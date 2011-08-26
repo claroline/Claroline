@@ -4,6 +4,7 @@ namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\PluginBundle\Tests\Fixtures\VirtualPlugins;
+use \vfsStream;
 
 class DatabaseHandlerTest extends WebTestCase
 {
@@ -16,10 +17,21 @@ class DatabaseHandlerTest extends WebTestCase
 
         $fixtures = new VirtualPlugins();
         $fixtures->buildVirtualPluginFiles();
+        
+        $this->requireVirtualFiles();
+        
 
         $this->databaseHandler = $this->client->getContainer()->get('claroline.plugin.database_handler');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->beginTransaction();
+    }
+    
+    private function requireVirtualFiles()
+    {
+        require_once vfsStream::url('virtual/plugin/VendorX/FirstPluginBundle/VendorXFirstPluginBundle.php');
+        require_once vfsStream::url('virtual/plugin/VendorX/SecondPluginBundle/VendorXSecondPluginBundle.php');
+        require_once vfsStream::url('virtual/plugin/VendorY/ThirdPluginBundle/VendorYThirdPluginBundle.php');
+        require_once vfsStream::url('virtual/plugin/VendorY/FourthPluginBundle/VendorYFourthPluginBundle.php');
     }
 
     public function tearDown()
