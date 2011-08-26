@@ -2,6 +2,8 @@
 
 ## Installation 
 
+### Claronext install
+
 After having checked out the project :
 
 * make sure the version of PHP you're running is >= 5.3.2 (required)
@@ -30,6 +32,12 @@ After having checked out the project :
   php configuration in order for the profiler to work
 
 * open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
+
+### Plugin install
+
+* install/remove a plugin with :
+  * `php app/console claroline:plugin:install [vendor] [bundle short name]`
+  * `php app/console claroline:plugin:remove [vendor] [bundle short name]`
 
 
 ## Test Suite
