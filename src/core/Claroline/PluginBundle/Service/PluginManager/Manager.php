@@ -66,14 +66,19 @@ class Manager
     }
 
     /**
-     * Setter used in automated tests.
-     * @FIXME bad method name, someone reading the API won't know what id does. 
-     * those param smell like a PluginConfig object
+     * Setter used in automated tests, overwriting directory/file paths
+     * obtained from the DIC by the validator and the file handler.
+     *
+     * @param string $pluginDirectory Path of the directory plugins are living in.
+     * @param string $pluginNamespacesFile Path of the file in which plugins namespaces are listed.
+     * @param string $pluginBundlesFile Path of the file in which plugins FQCNs are listed.
+     * @param string $pluginRoutingFile Path of the yaml file in which plugins routing
+     *                                  resources informations are stored.
      */
-    public function setParameters($pluginDirectory,
-                                  $pluginNamespacesFile,
-                                  $pluginBundlesFile,
-                                  $pluginRoutingFile)
+    public function setFileSystemDependencies($pluginDirectory,
+                                              $pluginNamespacesFile,
+                                              $pluginBundlesFile,
+                                              $pluginRoutingFile)
     {
         $this->validator->setPluginDirectory($pluginDirectory);
         $this->fileHandler->setPluginNamespacesFile($pluginNamespacesFile);

@@ -21,10 +21,10 @@ class ManagerTest extends WebTestCase
         $fixtures->buildVirtualPluginFiles();
 
         $this->manager = $this->client->getContainer()->get('claroline.plugin.manager');
-        $this->manager->setParameters(vfsStream::url('virtual/plugin'),
-                                      vfsStream::url('virtual/config/namespaces'),
-                                      vfsStream::url('virtual/config/bundles'),
-                                      vfsStream::url('virtual/config/routing.yml'));
+        $this->manager->setFileSystemDependencies(vfsStream::url('virtual/plugin'),
+                                                  vfsStream::url('virtual/config/namespaces'),
+                                                  vfsStream::url('virtual/config/bundles'),
+                                                  vfsStream::url('virtual/config/routing.yml'));
         $this->fileHandler = $this->manager->getFileHandler();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
 
