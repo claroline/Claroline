@@ -1,5 +1,9 @@
 # Project setup
 
+## Installation 
+
+### Claronext install
+
 After having checked out the project :
 
 * make sure the version of PHP you're running is >= 5.3.2 (required)
@@ -29,6 +33,25 @@ After having checked out the project :
 
 * open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
+### Plugin install
+
 * install/remove a plugin with :
   * `php app/console claroline:plugin:install [vendor] [bundle short name]`
   * `php app/console claroline:plugin:remove [vendor] [bundle short name]`
+
+
+## Test Suite
+
+In order to run the test suite you must have [phpunit][phpunit_website] installed on your system.
+
+[phpunit_website]: http://www.phpunit.de/manual/current/en/index.html
+
+
+
+* Running the complete Test Suite
+    * `phpunit -c app`
+
+* Running the test for a single directory
+    * `phpunit -c app src/core/Claroline\CoreBundle`
+
+
