@@ -55,4 +55,3 @@ In order to run the test suite you must have [phpunit][phpunit_website] installe
     * `phpunit -c app src/core/Claroline\CoreBundle`
 
 
-[]
