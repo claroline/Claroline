@@ -23,5 +23,3 @@ system("php {$rootDirectory}/app/console init:acl");
 system("php {$rootDirectory}/app/console init:acl --env=test");
 system("php {$rootDirectory}/app/console claroline:plugin:install_all");
 system("php {$rootDirectory}/app/console claroline:plugin:install_all --env=test");
-
-system("phpunit -c {$rootDirectory}/app");
