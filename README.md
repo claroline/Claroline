@@ -60,11 +60,12 @@ In order to run the test suite you must have [phpunit][phpunit_website] installe
 The *app/build/tools* directory gathers configuration files for various php tools (PHPMD,
 PHPCS, PHPUnit with code coverage, etc.). These can be used individually or get called by
 Ant, i.e. within a CIS Job (for a list of relevant tools and a way to use it with Jenkins,
-see http://jenkins-php.org/). Only requirements are :
+see http://jenkins-php.org/). Providing that the tools are correctly installed, the only
+requirements are :
 
 * A valid *app/config/parameters.ini* file (see above).
 
-* A valid *app/build/tools/phpunit.xml* file (see *app/build/tools/phpunit.xml.dist * for
+* A valid *app/build/tools/phpunit.xml* file (see *app/build/tools/phpunit.xml.dist* for
   further instructions).
 
 If you want to launch a build with Ant locally, use :
