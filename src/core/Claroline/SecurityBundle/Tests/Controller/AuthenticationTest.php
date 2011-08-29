@@ -3,8 +3,8 @@
 namespace Claroline\SecurityBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 class AuthenticationTest extends WebTestCase
 {

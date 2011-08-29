@@ -6,9 +6,9 @@ use Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationExceptio
 
 class Manager
 {
-    protected $validator;
-    protected $fileHandler;
-    protected $databaseHandler;
+    private $validator;
+    private $fileHandler;
+    private $databaseHandler;
 
     public function __construct(Validator $validator, 
                                 FileHandler $fileHandler,
@@ -67,7 +67,7 @@ class Manager
 
     /**
      * Setter used in automated tests, overwriting directory/file paths
-     * obtained from the DIC by the validator and the file handler.
+     * injected by the DIC in the validator and the file handler.
      *
      * @param string $pluginDirectory Path of the directory plugins are living in.
      * @param string $pluginNamespacesFile Path of the file in which plugins namespaces are listed.

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Ant build file used for Claronext's Jenkins job. See http://jenkins-php.org/ -->
+
+<project name="Claronext" default="build" basedir=".">
+
+    <property name="appdir" value="${basedir}/.."/>
+    <property name="buildir" value="${basedir}/../"/>
+    <property name="bindir" value="${basedir}/../../../bin"/>
+    <property name="srcdir" value="${basedir}/../../../src"/>
+
+    <target name="build" depends="clean,rawInstall,parallelTasks,phpunit,phpcb"/>
+    <!--<target name="build" depends="clean,parallelTasks,phpunit,phpcb"/>-->
+
+    <target name="clean"
+            description="Clean up and create artifact directories">
+        <delete dir="${buildir}/api"/>
+        <delete dir="${buildir}/code-browser"/>
+        <delete dir="${buildir}/coverage"/>
+        <delete dir="${buildir}/logs"/>
+        <delete dir="${buildir}/pdepend"/>
+
+        <mkdir dir="${buildir}/api"/>
+        <mkdir dir="${buildir}/code-browser"/>
+        <mkdir dir="${buildir}/coverage"/>
+        <mkdir dir="${buildir}/logs"/>
+        <mkdir dir="${buildir}/pdepend"/>
+    </target>
+
+    <target name="rawInstall"
+            description="Install vendors, create database and tables, install plugins">
+        <exec executable="php" failonerror="true">
+            <arg path="${bindir}/CIS_raw_setup" />
+        </exec>
+    </target>
+
+    <target name="phpunit"
+            description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+        <exec executable="phpunit" failonerror="true">
+            <arg value="-c" />
+            <arg path="${basedir}/phpunit.xml" />
+        </exec>
+    </target>
+
+    <target name="parallelTasks"
+            description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc and phploc tasks in parallel using a maximum of 2 threads.">
+        <parallel threadCount="2">
+            <sequential>
+                <antcall target="pdepend"/>
+                <antcall target="phpmd"/>
+            </sequential>
+            <antcall target="phpcpd"/>
+            <antcall target="phpcs"/>
+            <antcall target="phpdoc"/>
+            <antcall target="phploc"/>
+        </parallel>
+    </target>
+
+    <target name="pdepend"
+            description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${buildir}/logs/jdepend.xml" />
+            <arg value="--jdepend-chart=${buildir}/pdepend/dependencies.svg" />
+            <arg value="--overview-pyramid=${buildir}/pdepend/overview-pyramid.svg" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Generate pmd.xml using PHPMD">
+        <exec executable="phpmd">
+            <arg path="${srcdir}" />
+            <arg value="xml" />
+            <arg value="${basedir}/phpmd.xml" />
+            <arg value="--reportfile" />
+            <arg value="${buildir}/logs/pmd.xml" />
+        </exec>
+    </target>
+
+    <target name="phpcpd"
+            description="Generate pmd-cpd.xml using PHPCPD">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd" />
+            <arg value="${buildir}/logs/pmd-cpd.xml" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phploc"
+            description="Generate phploc.csv">
+        <exec executable="phploc">
+            <arg value="--log-csv" />
+            <arg value="${buildir}/logs/phploc.csv" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phpcs"
+            description="Generate checkstyle.xml using PHP_CodeSniffer">
+        <exec executable="phpcs" output="/dev/null">
+            <arg value="--report=checkstyle" />
+            <arg value="--report-file=${buildir}/logs/checkstyle.xml" />
+            <arg value="--standard=${basedir}/phpcs.xml" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phpdoc"
+            description="Generate API documentation using PHPDocumentor">
+        <exec executable="phpdoc">
+            <arg value="--directory" />
+            <arg path="${srcdir}" />
+            <arg value="--target" />
+            <arg path="${buildir}/api" />
+        </exec>
+    </target>
+
+    <target name="phpcb"
+         description="Aggregate tool output with PHP_CodeBrowser">
+        <exec executable="phpcb">
+            <arg value="--log" />
+            <arg path="${buildir}/logs" />
+            <arg value="--source" />
+            <arg path="${srcdir}" />
+            <arg value="--output" />
+            <arg path="${buildir}/code-browser" />
+        </exec>
+    </target>
+
+</project>

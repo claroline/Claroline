@@ -3,10 +3,8 @@
 /*
  * This script can be used as a part of a CIS job.
  *
- * Requirements :
- * - CIS cloned repository must contain a valid 'app/config/parameters.ini' file,
- *   with correct database settings.
- * - 'app/cache' and 'app/logs' directories must be writable.
+ * Requirement : CIS cloned repository must contain a valid 'app/config/parameters.ini'
+ *               file, with appropriate database settings.
  */
 
 $rootDirectory = realpath(__DIR__ . "/..");

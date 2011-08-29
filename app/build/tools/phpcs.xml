@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!-- see http://pear.php.net/manual/en/package.php.php-codesniffer.annotated-ruleset.php -->
+
+<ruleset name="Claronext coding standard">
+    <description>Claronext coding standard</description>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="90"/>
+            <property name="absoluteLineLimit" value="100"/>
+        </properties>
+    </rule>
+</ruleset>
