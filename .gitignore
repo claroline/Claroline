@@ -4,4 +4,10 @@ app/config/parameters.ini
 app/config/plugin/*
 app/cache/*
 app/logs/*
+app/build/api
+app/build/code-browser
+app/build/coverage
+app/build/logs
+app/build/pdepend
+app/build/tools/phpunit.xml
 !placeholder

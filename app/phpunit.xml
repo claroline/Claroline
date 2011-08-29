@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+<!-- see http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+
 <phpunit
     backupGlobals               = "false"
     backupStaticAttributes      = "false"
@@ -14,28 +15,18 @@
     bootstrap                   = "bootstrap.php.cache" >
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>../src/*/*Bundle/Tests</directory>
-            <directory>../src/*/Bundle/*Bundle/Tests</directory>
+        <testsuite name="Claronext test suite">
             <directory>../src/core/*/*Bundle/Tests</directory>
             <directory>../src/plugin/*/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
 
-    <!--
-    <php>
-        <server name="KERNEL_DIR" value="/path/to/your/app/" />
-    </php>
-    -->
-
     <filter>
         <whitelist>
             <directory>../src</directory>
             <exclude>
-                <directory>../src/*/*Bundle/Resources</directory>
-                <directory>../src/*/*Bundle/Tests</directory>
-                <directory>../src/*/Bundle/*Bundle/Resources</directory>
-                <directory>../src/*/Bundle/*Bundle/Tests</directory>
+                <directory>../src/core/*/Bundle/*Bundle/Resources</directory>
+                <directory>../src/plugin/*/Bundle/*Bundle/Tests</directory>
             </exclude>
         </whitelist>
     </filter>
