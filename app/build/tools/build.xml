@@ -4,13 +4,12 @@
 
 <project name="Claronext" default="build" basedir=".">
 
-    <property name="appdir" value="${basedir}/.."/>
+    <property name="appdir" value="${basedir}/../../"/>
     <property name="buildir" value="${basedir}/../"/>
     <property name="bindir" value="${basedir}/../../../bin"/>
     <property name="srcdir" value="${basedir}/../../../src"/>
 
     <target name="build" depends="clean,rawInstall,parallelTasks,phpunit,phpcb"/>
-    <!--<target name="build" depends="clean,parallelTasks,phpunit,phpcb"/>-->
 
     <target name="clean"
             description="Clean up and create artifact directories">
@@ -38,7 +37,13 @@
             description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
         <exec executable="phpunit" failonerror="true">
             <arg value="-c" />
-            <arg path="${basedir}/phpunit.xml" />
+            <arg path="${appdir}/phpunit.xml" />
+            <arg value="--coverage-html" />
+            <arg path="${basedir}/../coverage" />
+            <arg value="--coverage-clover" />
+            <arg path="${basedir}/../logs/clover.xml" />
+            <arg value="--log-junit" />
+            <arg path="${basedir}/../logs/junit.xml" />
         </exec>
     </target>
 
