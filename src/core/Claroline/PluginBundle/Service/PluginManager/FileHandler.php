@@ -123,7 +123,14 @@ class FileHandler
 
         foreach ((array) $paths as $pathKey => $path)
         {
-            $pattern = "#^(.+)/$vendor/$bundleName/(.+)$#";
+            $pattern = 
+                    "#^(.+)" 
+                    . preg_quote(DIRECTORY_SEPARATOR) 
+                    . "$vendor"
+                    . preg_quote(DIRECTORY_SEPARATOR) 
+                    . "$bundleName"
+                    . preg_quote(DIRECTORY_SEPARATOR) 
+                    . "(.+)$#";
             preg_match($pattern, $path, $matches);
             $relativePath = '';
             $key = "{$className}_{$pathKey}";
