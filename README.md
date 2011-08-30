@@ -61,7 +61,7 @@ The *app/build/tools* directory gathers configuration files for various php tool
 PHPCS, PHPUnit with code coverage, etc.). These can be used individually or get called by
 Ant, e.g. within a CIS Job (for a list of relevant tools and a way to use it with Jenkins,
 see http://jenkins-php.org/). Providing that the tools are correctly installed, the only
-requirements is a valid *app/config/parameters.ini* file (see above).
+requirement is a valid *app/config/parameters.ini* file (see above).
 
 If you want to launch a build with Ant locally, use :
 
