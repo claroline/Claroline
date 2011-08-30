@@ -143,11 +143,7 @@ class Validator
             
             
             if (substr($path, 0, strlen($requiredLocation)) != $requiredLocation)
-            {  
-                echo $requiredLocation . " \n";
-                echo substr($path, 0, strlen($requiredLocation)) . " \n";
-                
-                
+            {                
                 throw new ValidationException("{$pluginFQCN} : Invalid routing file '{$path}' "
                                             . "(must be located within the bundle).",
                                               ValidationException::INVALID_ROUTING_LOCATION);
