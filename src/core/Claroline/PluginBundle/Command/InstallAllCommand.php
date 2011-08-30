@@ -46,5 +46,7 @@ class InstallAllCommand extends ContainerAwareCommand
         }
 
         $output->writeln('Done');
+        
+        $this->resetCache($output);
     }
 }
