@@ -26,5 +26,7 @@ class RemoveCommand extends AbstractPluginCommand
         $manager->remove($FQCN);
 
         $output->writeln('Done');
+        $this->resetCache($output);
     }
+    
 }
