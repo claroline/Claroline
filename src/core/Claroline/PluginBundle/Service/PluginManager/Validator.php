@@ -136,10 +136,18 @@ class Validator
             $nameParts = explode('\\', $pluginFQCN);
             $vendor = $nameParts[0];
             $bundleName = $nameParts[1];
-            $requiredLocation = "{$this->pluginDirectory}/{$vendor}/{$bundleName}";
-
+            $requiredLocation = 
+                implode(    DIRECTORY_SEPARATOR, 
+                            array($this->pluginDirectory,$vendor, $bundleName)
+                        );
+            
+            
             if (substr($path, 0, strlen($requiredLocation)) != $requiredLocation)
-            {
+            {  
+                echo $requiredLocation . " \n";
+                echo substr($path, 0, strlen($requiredLocation)) . " \n";
+                
+                
                 throw new ValidationException("{$pluginFQCN} : Invalid routing file '{$path}' "
                                             . "(must be located within the bundle).",
                                               ValidationException::INVALID_ROUTING_LOCATION);

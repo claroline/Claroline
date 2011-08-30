@@ -27,7 +27,13 @@ abstract class ClarolinePlugin extends Bundle
 
     public function getRoutingResourcesPaths()
     {
-        $path = "{$this->getPath()}/Resources/config/routing.yml";
+        $path = "{$this->getPath()}"
+            . DIRECTORY_SEPARATOR
+            . "Resources"
+            . DIRECTORY_SEPARATOR
+            . "config"
+            . DIRECTORY_SEPARATOR
+            . "routing.yml";
 
         if (file_exists($path))
         {
