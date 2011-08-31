@@ -11,8 +11,8 @@ $rootDirectory = realpath(__DIR__ . "/..");
 
 system("php {$rootDirectory}/bin/vendors install");
 
-system("php {$rootDirectory}/app/console doctrine:database:create");
-system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
+#system("php {$rootDirectory}/app/console doctrine:database:create");
+#system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
 system("php {$rootDirectory}/app/console doctrine:schema:drop --force");
 system("php {$rootDirectory}/app/console doctrine:schema:drop --force --env=test");
 system("php {$rootDirectory}/app/console claroline:security:drop_acl");

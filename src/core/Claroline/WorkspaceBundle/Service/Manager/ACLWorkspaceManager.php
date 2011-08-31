@@ -60,8 +60,8 @@ class ACLWorkspaceManager
         $owner = $ws->getOwner();
         $securityIdentity = UserSecurityIdentity::fromAccount($owner);
 
-        $ws_dentity = ObjectIdentity::fromDomainObject($ws);
-        $ws_acl = $this->aclProvider->createAcl($ws_dentity);
+        $ws_identity = ObjectIdentity::fromDomainObject($ws);
+        $ws_acl = $this->aclProvider->createAcl($ws_identity);
 
 
         $ws_acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
@@ -75,6 +75,9 @@ class ACLWorkspaceManager
         {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
+        
+        $ws_identity = ObjectIdentity::fromDomainObject($ws);
+        $this->aclProvider->deleteAcl($ws_identity);
 
         $this->real_manager->delete($ws);
     }
