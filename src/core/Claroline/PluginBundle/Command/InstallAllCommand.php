@@ -49,4 +49,14 @@ class InstallAllCommand extends ContainerAwareCommand
         
         $this->resetCache($output);
     }
+    
+    protected function resetCache(OutputInterface $output)
+    {
+        $command = $this->getApplication()->find('cache:clear');
+        $input = new ArrayInput(array(
+            'command' => 'cache:clear', // strange but doesn't work if removed
+            '--no-warmup' => true,
+        ));
+        $command->run($input, $output);
+    }
 }
