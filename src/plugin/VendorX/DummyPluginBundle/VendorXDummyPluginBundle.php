@@ -8,9 +8,10 @@ class VendorXDummyPluginBundle extends ClarolinePlugin
 {
     public function getRoutingResourcesPaths()
     {
+        $ds = DIRECTORY_SEPARATOR;
         return array(
-            __DIR__.'/Resources/config/special/routing1.yml',
-            __DIR__.'/Resources/config/special/routing2.yml'
+            __DIR__.$ds.'Resources'.$ds.'config'.$ds.'special'.$ds.'routing1.yml',
+            __DIR__.$ds.'Resources'.$ds.'config'.$ds.'special'.$ds.'routing2.yml'
         );
     }
 }
