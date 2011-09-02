@@ -57,6 +57,8 @@ class DatabaseHandlerTest extends PluginBundleTestCase
         $pluginFQCN = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
         $this->requireStubPluginFile($pluginFQCN);
 
+        $this->databaseHandler->install(new $pluginFQCN);
+
         $roleRepo = $this->em->getRepository('Claroline\SecurityBundle\Entity\Role');
         $roles = $roleRepo->findByName('ROLE_TEST_1');
 
