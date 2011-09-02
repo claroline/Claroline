@@ -19,8 +19,17 @@ $coreNamespaces = array(
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
     'Claroline'        => array(__DIR__.'/../src/core', __DIR__.'/../src/plugin'),
 );
-$pluginNamespaces = array_fill_keys(file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES), __DIR__.'/../src/plugin');
+
+
+$pluginNamespaces = array();
+if (file_exists(__DIR__.'/config/plugin/namespaces'))
+{
+    $pluginNamespaces = array_fill_keys(file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES), __DIR__.'/../src/plugin');
+}
+
 $loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));
+
+
 
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
