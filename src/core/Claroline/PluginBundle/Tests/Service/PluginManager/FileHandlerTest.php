@@ -2,33 +2,14 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use \vfsStream;
+use Claroline\PluginBundle\Tests\PluginBundleTestCase;
 
-class FileHandlerTest extends WebTestCase
+/**
+ * Note : All the references to plugin's FQNCs in this test case are arbitrary
+ *        strings (as no validation/existence check is involved)
+ */
+class FileHandlerTest extends PluginBundleTestCase
 {
-    private $fileHandler;
-    private $namespacesFile;
-    private $bundlesFile;
-    private $routingFile;
-
-    public function setUp()
-    {
-        $client = self::createClient();
-        
-        vfsStream::setup('VirtualDir');
-        vfsStream::create(array('namespaces' => '', 'bundles' => '', 'routing.yml' => ''),
-                         'VirtualDir');
-        $this->namespacesFile = vfsStream::url('VirtualDir/namespaces');
-        $this->bundlesFile = vfsStream::url('VirtualDir/bundles');
-        $this->routingFile = vfsStream::url('VirtualDir/routing.yml');
-
-        $this->fileHandler = $client->getContainer()->get('claroline.plugin.file_handler');
-        $this->fileHandler->setPluginNamespacesFile($this->namespacesFile);
-        $this->fileHandler->setPluginBundlesFile($this->bundlesFile);
-        $this->fileHandler->setPluginRoutingFile($this->routingFile);
-    }
-
     public function testGetRegisteredNamespacesReturnsExpectedArray()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
@@ -82,7 +63,7 @@ class FileHandlerTest extends WebTestCase
     {
         file_put_contents($this->namespacesFile, 'Bar');
         $this->fileHandler->registerNamespace('Bar');
-        $this->assertTrue(count($this->fileHandler->getRegisteredNamespaces()) == 1);
+        $this->assertEquals(1, count($this->fileHandler->getRegisteredNamespaces()));
     }
 
     public function testRegisterNamespaceCalledSeveralTimes()

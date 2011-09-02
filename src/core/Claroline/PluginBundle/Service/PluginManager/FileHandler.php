@@ -40,6 +40,21 @@ class FileHandler
         $this->pluginRoutingFile = $filePath;
     }
 
+    public function getPluginNamespacesFile()
+    {
+        return $this->pluginNamespacesFile;
+    }
+
+    public function getPluginBundlesFile()
+    {
+        return $this->pluginBundlesFile;
+    }
+
+    public function getPluginRoutingFile()
+    {
+        return $this->pluginRoutingFile;
+    }
+
     public function getRegisteredNamespaces()
     {
         return file($this->pluginNamespacesFile, FILE_IGNORE_NEW_LINES);
@@ -123,16 +138,15 @@ class FileHandler
 
         foreach ((array) $paths as $pathKey => $path)
         {
-            $pattern = 
-                    "#^(.+)" 
-                    . preg_quote(DIRECTORY_SEPARATOR) 
-                    . "$vendor"
-                    . preg_quote(DIRECTORY_SEPARATOR) 
-                    . "$bundleName"
-                    . preg_quote(DIRECTORY_SEPARATOR) 
-                    . "(.+)$#";
+            $pattern = '#^(.+)'
+                . preg_quote(DIRECTORY_SEPARATOR)
+                . $vendor
+                . preg_quote(DIRECTORY_SEPARATOR) 
+                . $bundleName
+                . preg_quote(DIRECTORY_SEPARATOR)
+                . '(.+)$#';
             preg_match($pattern, $path, $matches);
-            
+
             $key = "{$className}_{$pathKey}";
             $value = "@{$className}/{$matches[2]}";
             $resources[$key] = array ('resource' => $value);
