@@ -30,9 +30,12 @@ class AppKernel extends Kernel
             new Claroline\PluginBundle\ClarolinePluginBundle(),
         );
 
-        foreach (file(__DIR__.'/config/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
+        if(file_exists(__DIR__.'/config/plugin/bundles'))
         {
-            $bundles[] = new $bundle;
+            foreach (file(__DIR__.'/config/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
+            {
+                $bundles[] = new $bundle;
+            }
         }
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
