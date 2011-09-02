@@ -2,32 +2,21 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\PluginBundle\Tests\Fixtures\VirtualPlugins;
-use \vfsStream;
+use Claroline\PluginBundle\Tests\PluginBundleTestCase;
 
-class ManagerTest extends WebTestCase
+/**
+ * Note : Plugin's FQCNs mentionned in this test case refer to stubs living
+ *        in the 'stub/plugin' directory.
+ */
+class ManagerTest extends PluginBundleTestCase
 {
-    private $client;
-    private $manager;
-    private $fileHandler;
     private $em;
 
     public function setUp()
     {
-        $this->client = self::createClient();
-        
-        $fixtures = new VirtualPlugins();
-        $fixtures->buildVirtualPluginFiles();
-
-        $this->manager = $this->client->getContainer()->get('claroline.plugin.manager');
-        $this->manager->setFileSystemDependencies(vfsStream::url('virtual/plugin'),
-                                                  vfsStream::url('virtual/config/namespaces'),
-                                                  vfsStream::url('virtual/config/bundles'),
-                                                  vfsStream::url('virtual/config/routing.yml'));
-        $this->fileHandler = $this->manager->getFileHandler();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-
+        parent::setUp();       
+        $this->em = $this->client->getContainer()
+                                 ->get('doctrine.orm.entity_manager');
         $this->client->beginTransaction();
     }
 
@@ -38,106 +27,108 @@ class ManagerTest extends WebTestCase
 
     public function testInstallAValidPluginRegistersItInConfig()
     {
-        $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
-        $this->manager->install($plugin);
+        $pluginFQCN = 'Valid\Simple\ValidSimple';
+        $this->manager->install($pluginFQCN);
 
-        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
-        $this->assertEquals(array($plugin), $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(array('Valid'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array($pluginFQCN), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
-            'VendorXFirstPluginBundle_0' => array(
-                'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
+            'ValidSimple_0' => array(
+                'resource' => '@ValidSimple/Resources/config/routing.yml'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
-        $this->assertEquals(true, $this->manager->isInstalled($plugin));
+        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN));
     }
 
     public function testInstallAnInvalidPluginThrowsAValidationException()
     {
         $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException');
-        $plugin = 'VendorY\FourthPluginBundle\VendorYFourthPluginBundle';
-        $this->manager->install($plugin);
-        $this->assertEquals(false, $this->manager->isInstalled($plugin));
+        $pluginFQCN = 'Invalid\UnloadableRoutingResource_1';
+        $this->manager->install($pluginFQCN);
+        $this->assertEquals(false, $this->manager->isInstalled($pluginFQCN));
     }
 
     public function testInstallAnAlreadyInstalledPluginThrowsAConfigurationException()
     {
         $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationException');
 
-        $plugin = 'VendorX\SecondPluginBundle\VendorXSecondPluginBundle';
-        $this->manager->install($plugin);
-        $this->manager->install($plugin);
+        $pluginFQCN = 'Valid\Simple\ValidSimple';
+        $this->manager->install($pluginFQCN);
+        $this->manager->install($pluginFQCN);
 
-        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
-        $this->assertEquals(array($plugin), $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(array('Valid'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array($pluginFQCN), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
-            'VendorXSecondPluginBundle_0' => array(
-                'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
+            'ValidSimple_0' => array(
+                'resource' => '@ValidSimple/Resources/config/routing.yml'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
-        $this->assertEquals(false, $this->manager->isInstalled($plugin));
+        $this->assertEquals(false, $this->manager->isInstalled($pluginFQCN));
     }
 
     public function testInstallSeveralValidPlugins()
     {
-        $plugin1 = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
-        $plugin2 = 'VendorX\SecondPluginBundle\VendorXSecondPluginBundle';
-        $plugin3 = 'VendorY\ThirdPluginBundle\VendorYThirdPluginBundle';
+        $pluginFQCN_1 = 'Valid\Minimal\ValidMinimal';
+        $pluginFQCN_2 = 'Valid\Simple\ValidSimple';
+        $pluginFQCN_3 = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
         
-        $this->manager->install($plugin1);
-        $this->manager->install($plugin2);
-        $this->manager->install($plugin3);
+        $this->manager->install($pluginFQCN_1);
+        $this->manager->install($pluginFQCN_2);
+        $this->manager->install($pluginFQCN_3);
 
-        $this->assertEquals(array('VendorX', 'VendorY'), $this->fileHandler->getRegisteredNamespaces());
-        $this->assertEquals(array($plugin1, $plugin2, $plugin3), $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(array('Valid'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+                array($pluginFQCN_1, $pluginFQCN_2, $pluginFQCN_3),
+                $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
-            'VendorXFirstPluginBundle_0' => array(
-                'resource' => '@VendorXFirstPluginBundle/Resources/config/routing.yml'
+            'ValidSimple_0' => array(
+                'resource' => '@ValidSimple/Resources/config/routing.yml'
                 ),
-            'VendorXSecondPluginBundle_0' => array(
-                'resource' => '@VendorXSecondPluginBundle/Resources/config/routing.yml'
+            'ValidTwoLaunchersApplication_0' => array(
+                'resource' => '@ValidTwoLaunchersApplication/Resources/config/routing.yml'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
-        $this->assertEquals(true, $this->manager->isInstalled($plugin1));
-        $this->assertEquals(true, $this->manager->isInstalled($plugin2));
-        $this->assertEquals(true, $this->manager->isInstalled($plugin3));
+        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN_1));
+        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN_2));
+        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN_3));
     }
 
     public function testRemovePluginRemovesItFromConfig()
     {
-        $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
-        $this->manager->install($plugin);
-        $this->manager->remove($plugin);
+        $pluginFQCN = 'Valid\Simple\ValidSimple';
+        $this->manager->install($pluginFQCN);
+        $this->manager->remove($pluginFQCN);
 
         $this->assertEquals(array(), $this->fileHandler->getRegisteredNamespaces());
         $this->assertEquals(array(), $this->fileHandler->getRegisteredBundles());
         $this->assertEquals(array(), $this->fileHandler->getRoutingResources());
-        $this->assertEquals(false, $this->manager->isInstalled($plugin));
+        $this->assertEquals(false, $this->manager->isInstalled($pluginFQCN));
     }
 
     public function testRemovePluginPreservesSharedVendorNamespaces()
     {
-        $this->manager->install('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
-        $this->manager->install('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
-        $this->manager->remove('VendorX\FirstPluginBundle\VendorXFirstPluginBundle');
+        $this->manager->install('Valid\Minimal\ValidMinimal');
+        $this->manager->install('Valid\Simple\ValidSimple');
+        $this->manager->remove('Valid\Minimal\ValidMinimal');
 
-        $this->assertEquals(array('VendorX'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(array('Valid'), $this->fileHandler->getRegisteredNamespaces());
     }
 
     public function testRemoveInexistentPluginThrowsAConfigurationException()
     {
         $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ConfigurationException');
-        $this->manager->remove('VendorY\InexistentPluginBundle\VendorYInexistentPluginBundle');
+        $this->manager->remove('NonExistentVendor\NonExistentPlugin\NonExistentVendorNonExistentPlugin');
     }
-    
+  
     public function testIsInstalledReturnsCorrectValue()
     {
-        $plugin = 'VendorX\FirstPluginBundle\VendorXFirstPluginBundle';
-        $this->assertEquals(false, $this->manager->isInstalled($plugin));
+        $pluginFQCN = 'Valid\Minimal\ValidMinimal';
+        $this->assertEquals(false, $this->manager->isInstalled($pluginFQCN));
 
-        $this->manager->install($plugin);
-        $this->assertEquals(true, $this->manager->isInstalled($plugin));
+        $this->manager->install($pluginFQCN);
+        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN));
     }
 }

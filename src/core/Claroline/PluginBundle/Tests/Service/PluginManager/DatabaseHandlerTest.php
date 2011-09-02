@@ -2,36 +2,21 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\PluginBundle\Tests\Fixtures\VirtualPlugins;
-use \vfsStream;
+use Claroline\PluginBundle\Tests\PluginBundleTestCase;
 
-class DatabaseHandlerTest extends WebTestCase
+/**
+ * Note : Plugin's FQCNs mentionned in this test case refer to stubs living
+ *        in the 'stub/plugin' directory.
+ */
+class DatabaseHandlerTest extends PluginBundleTestCase
 {
-    private $databaseHandler;
     private $em;
 
     public function setUp()
     {
-        $this->client = self::createClient();
-
-        $fixtures = new VirtualPlugins();
-        $fixtures->buildVirtualPluginFiles();
-        
-        $this->requireVirtualFiles();
-        
-
-        $this->databaseHandler = $this->client->getContainer()->get('claroline.plugin.database_handler');
+        parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->beginTransaction();
-    }
-    
-    private function requireVirtualFiles()
-    {
-        require_once vfsStream::url('virtual/plugin/VendorX/FirstPluginBundle/VendorXFirstPluginBundle.php');
-        require_once vfsStream::url('virtual/plugin/VendorX/SecondPluginBundle/VendorXSecondPluginBundle.php');
-        require_once vfsStream::url('virtual/plugin/VendorY/ThirdPluginBundle/VendorYThirdPluginBundle.php');
-        require_once vfsStream::url('virtual/plugin/VendorY/FourthPluginBundle/VendorYFourthPluginBundle.php');
     }
 
     public function tearDown()
@@ -41,11 +26,13 @@ class DatabaseHandlerTest extends WebTestCase
 
     public function testInstallApplicationRegistersLaunchersAndRoles()
     {
-        $virtualPlugin = 'VendorX\SecondPluginBundle\VendorXSecondPluginBundle';
-        $this->databaseHandler->install(new $virtualPlugin);
+        $pluginFQCN = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
+        $this->requireStubPluginFile($pluginFQCN);
+
+        $this->databaseHandler->install(new $pluginFQCN);
 
         $appRepo = $this->em->getRepository('Claroline\PluginBundle\Entity\Application');
-        $apps = $appRepo->findByBundleFQCN('VendorX\SecondPluginBundle\VendorXSecondPluginBundle');
+        $apps = $appRepo->findByBundleFQCN($pluginFQCN);
 
         $this->assertEquals(1, count($apps));
 
@@ -67,12 +54,28 @@ class DatabaseHandlerTest extends WebTestCase
 
     public function testInstallApplicationDoesntDuplicateExistingRole()
     {
-        $virtualPlugin = 'VendorX\SecondPluginBundle\VendorXSecondPluginBundle';
-        $this->databaseHandler->install(new $virtualPlugin);
+        $pluginFQCN = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
+        $this->requireStubPluginFile($pluginFQCN);
 
         $roleRepo = $this->em->getRepository('Claroline\SecurityBundle\Entity\Role');
         $roles = $roleRepo->findByName('ROLE_TEST_1');
 
         $this->assertEquals(1, count($roles));
+    }
+
+    /**
+     * Helper method requiring a plugin file (as the plugin namespace
+     * registration isn't made by the DatabaseHandler)
+     *
+     * @param string $pluginFQCN
+     */
+    private function requireStubPluginFile($pluginFQCN)
+    {
+        $pluginFile = $this->pluginDirectory
+                . DIRECTORY_SEPARATOR
+                . str_replace('\\', DIRECTORY_SEPARATOR, $pluginFQCN)
+                . '.php';
+
+        require_once $pluginFile;
     }
 }
