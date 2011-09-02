@@ -24,19 +24,19 @@ class FileHandler
 
     public function setPluginNamespacesFile($filePath)
     {
-        $this->checkFile($filePath);
+        $this->assertFileIsWriteable($filePath);
         $this->pluginNamespacesFile = $filePath;
     }
 
     public function setPluginBundlesFile($filePath)
     {
-        $this->checkFile($filePath);
+        $this->assertFileIsWriteable($filePath);
         $this->pluginBundlesFile = $filePath;
     }
 
     public function setPluginRoutingFile($filePath)
     {
-        $this->checkFile($filePath);
+        $this->assertFileIsWriteable($filePath);
         $this->pluginRoutingFile = $filePath;
     }
 
@@ -175,11 +175,14 @@ class FileHandler
         file_put_contents($this->pluginRoutingFile, $yaml);
     }
 
-    private function checkFile($file)
+    private function assertFileIsWriteable($file)
     {
         if (! file_exists($file))
         {
-            throw new \Exception("File '{$file}' not found.");
+            if (! touch($file))
+            {
+                throw new \Exception("File '{$file}' not found.");
+            }
         }
 
         if (! is_writable($file))

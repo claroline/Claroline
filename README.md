@@ -11,19 +11,25 @@ After having checked out the project :
 * create an *app/config/parameters.ini* file according to *app/config/parameters.ini.dist*
   (currently only db settings are required)
 
-* launch : `php ./bin/vendors install`
+* Either :
+    * launch : `php ./bin/vendors install`
 
-* create the database with : `php app/console doctrine:database:create`
+    * create the database with : `php app/console doctrine:database:create`
 
-* do the same in test env : `php app/console --env="test" doctrine:database:create`
+    * do the same in test env : `php app/console --env="test" doctrine:database:create`
 
-* create the tables with :
-  * `php app/console doctrine:schema:update --force` or `php app/console doctrine:schema:create`
-  * `php app/console init:acl`
+    * create the tables with :
+          * `php app/console doctrine:schema:update --force` or `php app/console doctrine:schema:create`
+          * `php app/console init:acl`
 
-* do the same in test env :
-  * `php app/console --env="test" doctrine:schema:update --force` or `php app/console --env="test" doctrine:schema:create`
-  * `php app/console --env="test" init:acl`
+    * do the same in test env :
+          * `php app/console --env="test" doctrine:schema:update --force` or `php app/console --env="test" doctrine:schema:create`
+          * `php app/console --env="test" init:acl`
+* Or
+    * use the automatic install scripts (php must be in $PATH ):
+        * `php bin/factory_install`
+        * `php bin/factory_install_test`
+
 
 * make the *app/cache* and *app/logs* directories (and their children) writable from
   the webserver

@@ -1,0 +1,45 @@
+<?php
+
+/*
+ * This script can be used to make a fresh install of Claronext
+ *
+ * Requirements :
+ *    - a valid 'app/config/parameters.ini' file.
+ *    - an empty, writeable app/cache directory
+ *    - an empty, writeable app/logs directory
+ *
+ */
+
+$rootDirectory = realpath(__DIR__ . "/..");
+
+
+system("php {$rootDirectory}/bin/vendors install");
+
+system("php {$rootDirectory}/app/console doctrine:schema:drop --force");
+system("php {$rootDirectory}/app/console claroline:security:drop_acl");
+system("php {$rootDirectory}/app/console doctrine:schema:create");
+system("php {$rootDirectory}/app/console init:acl");
+system("php {$rootDirectory}/app/console claroline:plugin:install_all");
+
+
+function deleteContents($path) {
+    $it = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($path),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($it as $file) {
+        if (in_array($file->getBasename(), array('.', '..'))) {
+            continue;
+        } elseif ($file->isDir()) {
+            rmdir($file->getPathname());
+        } elseif ($file->isFile() || $file->isLink()) {
+            unlink($file->getPathname());
+        }
+    }
+}
+
+deleteContents("{$rootDirectory}/app/cache");
+deleteContents("{$rootDirectory}/app/logs");
+
+chmod("{$rootDirectory}/app/cache", 0777);
+chmod("{$rootDirectory}/app/logs", 0777);
