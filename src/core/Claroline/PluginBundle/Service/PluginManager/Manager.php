@@ -59,11 +59,11 @@ class Manager
 
     /**
      * Getter used in automated tests.
-     */
+     *//*
     public function getFileHandler()
     {
         return $this->fileHandler;
-    }
+    }*/
 
     /**
      * Setter used in automated tests, overwriting directory/file paths
@@ -74,7 +74,7 @@ class Manager
      * @param string $pluginBundlesFile Path of the file in which plugins FQCNs are listed.
      * @param string $pluginRoutingFile Path of the yaml file in which plugins routing
      *                                  resources informations are stored.
-     */
+     *//*
     public function setFileSystemDependencies($pluginDirectory,
                                               $pluginNamespacesFile,
                                               $pluginBundlesFile,
@@ -84,5 +84,5 @@ class Manager
         $this->fileHandler->setPluginNamespacesFile($pluginNamespacesFile);
         $this->fileHandler->setPluginBundlesFile($pluginBundlesFile);
         $this->fileHandler->setPluginRoutingFile($pluginRoutingFile);
-    }
+    }*/
 }

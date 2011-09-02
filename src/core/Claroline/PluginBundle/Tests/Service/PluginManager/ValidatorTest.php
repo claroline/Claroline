@@ -2,31 +2,16 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Yaml\Parser;
+use Claroline\PluginBundle\Tests\PluginBundleTestCase;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
-use \vfsStream;
-use \vfsStreamFile;
 
-class ValidatorTest extends WebTestCase
+class ValidatorTest extends PluginBundleTestCase
 {
-    private $validator;
-
-    public function setUp()
-    {
-        $client = self::createClient();
-
-        vfsStream::setUp('plugin');
-
-        $this->validator = $client->getContainer()->get('claroline.plugin.validator');
-        $this->validator->setPluginDirectory(vfsStream::url('plugin'));
-    }
-
-    public function testConstructorThrowsAnExceptionOnInvalidPluginDirectoryPath()
+    public function testConstructorThrowsAnExceptionOnNonExistentPluginDirectoryPath()
     {
         try
         {
-            new Validator('/inexistent/path', new Parser());
+            new Validator('/non_existent/path', new \Symfony\Component\Yaml\Parser());
             $this->fail("No exception thrown.");
         }
         catch (ValidationException $ex)
@@ -36,250 +21,162 @@ class ValidatorTest extends WebTestCase
     }
 
     /**
-     * @dataProvider badFQCNProvider
+     * @dataProvider nonConventionalFQCNProvider
      */
-    public function testCheckThrowsAnExceptionOnInvalidPluginFQCN($FQCN)
+    public function testCheckThrowsAnExceptionOnNonConventionalPluginFQCN($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_FQCN);
+    }
+
+    /**
+     * @dataProvider nonExistentDirectoryStructureProvider
+     */
+    public function testCheckThrowsAnExceptionOnNonExistentPluginDirectoryStructure($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_DIRECTORY_STRUCTURE);
+    }
+
+    /**
+     * @dataProvider nonExistentBundleClassFileProvider
+     */
+    public function testCheckThrowsAnExceptionOnNonExistentBundleClassFile($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_PLUGIN_CLASS_FILE);
+    }
+
+    /**
+     * @dataProvider unloadableBundleClassProvider
+     */
+    public function testCheckThrowsAnExceptionOnUnloadableBundleClass($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_PLUGIN_CLASS);
+    }
+
+    /**
+     * @dataProvider unexpectedPluginClassTypeProvider
+     */
+    public function testCheckThrowsAnExceptionIfPluginClassDoesntExtendClarolinePlugin($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_PLUGIN_TYPE);
+    }
+
+    /**
+     * @dataProvider nonExistentRoutingResourceTypeProvider
+     */
+    public function testCheckThrowsAnExceptionOnNonExistentRoutingResource($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_ROUTING_PATH);
+    }
+
+    /**
+     * @dataProvider unexpectedRoutingResourceLocationProvider
+     */
+    public function testCheckThrowsAnExceptionOnInvalidRoutingResourceLocation($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_ROUTING_LOCATION);
+    }
+
+    /**
+     * @dataProvider nonYamlRoutingResourceProvider
+     */
+    public function testCheckThrowsAnExceptionOnNonYamlRoutingFile($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_ROUTING_EXTENSION);
+    }
+
+    /**
+     * @dataProvider unloadableYamlRoutingResourceProvider
+     */
+    public function testCheckThrowsAnExceptionOnUnloadableYamlRoutingFile($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_YAML_RESOURCE);
+    }
+
+    /**
+     * @dataProvider unexpectedTranslationKeyProvider
+     */
+    public function testCheckThrowsAnExceptionOnInvalidTranslationKey($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_TRANSLATION_KEY);
+    }
+
+    /**
+     * @dataProvider validPluginProvider
+     */
+    public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument($FQCN)
     {
         try
         {
             $this->validator->check($FQCN);
-            $this->fail('No exception thrown.');
+            $this->assertTrue(true);
         }
         catch (ValidationException $ex)
         {
-            $this->assertEquals(ValidationException::INVALID_FQCN, $ex->getCode());
+            $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
         }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    // TODO : make a clean separation between plugin/application/tool validation testing
+    //        (idem for stubs)
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @dataProvider unexpectedLauncherTypeProvider
+     */
+    public function testCheckThrowsAnExceptionOnUnexpectedApplicationLauncherType($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_APPLICATION_LAUNCHER);
     }
 
     /**
-     * @dataProvider invalidDirectoryStructureProvider
+     * @dataProvider noLauncherProvider
      */
-    public function testCheckThrowsAnExceptionOnInvalidPluginDirectoryStructure($FQCN)
+    public function testCheckThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_APPLICATION_LAUNCHER);
+    }
+
+    private function assertValidationExceptionIsThrown($pluginFQCN, $exceptionCode)
     {
         try
         {
-            $this->validator->check($FQCN);
+            $this->validator->check($pluginFQCN);
             $this->fail("No exception thrown.");
         }
         catch (ValidationException $ex)
         {
-            $this->assertEquals(ValidationException::INVALID_DIRECTORY_STRUCTURE, $ex->getCode());
+            $this->assertEquals($exceptionCode, $ex->getCode());
         }
     }
 
-    public function testCheckThrowsAnExceptionOnNonExistentPluginClassFile()
-    {
-        vfsStream::create(array('VendorY' => array('TestBundle' => array())), 'plugin');
+    /////////////////////////////// Data Providers ///////////////////////////////
 
-        try
-        {
-            $this->validator->check('VendorY\TestBundle\VendorYTestBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_PLUGIN_CLASS_FILE, $ex->getCode());
-        }
-    }
-
-    /**
-     * @dataProvider unloadablePluginClassProvider
-     */
-    public function testCheckThrowsAnExceptionOnUnloadablePluginClass($class)
-    {
-        $this->buildValidPluginStructure('plugin', 'VendorZ', 'DummyPluginBundle');
-        file_put_contents(vfsStream::url('plugin/VendorZ/DummyPluginBundle/VendorZDummyPluginBundle.php'), $class);
-
-        try
-        {
-            $this->validator->check('VendorZ\DummyPluginBundle\VendorZDummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_PLUGIN_CLASS, $ex->getCode());
-        }
-    }
-
-    /**
-     * @dataProvider wrongTypePluginClassProvider
-     */
-    public function testCheckThrowsAnExceptionIfPluginClassDoesntExtendClarolinePlugin($class)
-    {
-        $this->buildValidPluginStructure('plugin', 'Vendor123', 'DummyPluginBundle');
-        file_put_contents(vfsStream::url('plugin/Vendor123/DummyPluginBundle/Vendor123DummyPluginBundle.php'), $class);
-
-        try
-        {
-            $this->validator->check('Vendor123\DummyPluginBundle\Vendor123DummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_PLUGIN_TYPE, $ex->getCode());
-        }
-    }
-
-    public function testCheckThrowsAnExceptionOnInvalidRoutingResourcePath()
-    {
-        $this->buildValidPluginStructure('plugin', 'VendorXYZ', 'DummyPluginBundle');
-        $class = "<?php namespace VendorXYZ\DummyPluginBundle; "
-               . "class VendorXYZDummyPluginBundle extends "
-               . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin"
-               . "{ public function getRoutingResourcesPaths()"
-               . "{return 'wrong/path/file.yml';} }";
-        file_put_contents(vfsStream::url('plugin/VendorXYZ/DummyPluginBundle/VendorXYZDummyPluginBundle.php'), $class);
-
-        try
-        {
-            $this->validator->check('VendorXYZ\DummyPluginBundle\VendorXYZDummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_ROUTING_PATH, $ex->getCode());
-        }
-    }
-
-    public function testCheckThrowsAnExceptionOnInvalidRoutingResourceLocation()
-    {
-        $dir = $this->buildValidPluginStructure('plugin', 'VendorXYZ123', 'DummyPluginBundle');
-        $dir->addChild(new vfsStreamFile('routing.yml'));
-        $url = vfsStream::url('plugin/routing.yml');
-        $class = "<?php namespace VendorXYZ123\DummyPluginBundle; "
-               . "class VendorXYZ123DummyPluginBundle extends "
-               . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin"
-               . "{ public function getRoutingResourcesPaths()"
-               . "{return '{$url}';} }";
-        file_put_contents(vfsStream::url('plugin/VendorXYZ123/DummyPluginBundle/VendorXYZ123DummyPluginBundle.php'), $class);
-
-        try
-        {
-            $this->validator->check('VendorXYZ123\DummyPluginBundle\VendorXYZ123DummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_ROUTING_LOCATION, $ex->getCode());
-        }
-    }
-
-    public function testCheckThrowsAnExceptionOnNonYamlRoutingFile()
-    {
-        $dir = $this->buildValidPluginStructure('plugin', 'VendorABC123', 'DummyPluginBundle');
-        $dir->getChild('VendorABC123')
-            ->getChild('DummyPluginBundle')
-            ->addChild(new vfsStreamFile('routing.txt'));
-        $url = vfsStream::url('plugin/VendorABC123/DummyPluginBundle/routing.txt');
-        $class = "<?php namespace VendorABC123\DummyPluginBundle; "
-               . "class VendorABC123DummyPluginBundle extends "
-               . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin"
-               . "{ public function getRoutingResourcesPaths()"
-               . "{return '{$url}';} }";
-        file_put_contents(vfsStream::url('plugin/VendorABC123/DummyPluginBundle/VendorABC123DummyPluginBundle.php'), $class);
-        
-        try
-        {
-            $this->validator->check('VendorABC123\DummyPluginBundle\VendorABC123DummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_ROUTING_EXTENSION, $ex->getCode());
-        }
-    }
-
-    public function testCheckThrowsAnExceptionOnUnloadableYamlRoutingFile()
-    {
-        $this->buildValidPluginStructure('plugin', 'Vendor1234', 'DummyPluginBundle');
-        file_put_contents(vfsStream::url('plugin/Vendor1234/DummyPluginBundle/Resources/config/routing.yml'),
-                          "\tInvalidYaml:Foo:\n:Bar\n  :");
-
-        try
-        {
-            $this->validator->check('Vendor1234\DummyPluginBundle\Vendor1234DummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_YAML_RESOURCE, $ex->getCode());
-        }
-    }
-
-    /**
-     * @dataProvider wrongTranslationKeyProvider
-     */
-    public function testCheckThrowsAnExceptionOnInvalidTranslationKey($nameKey, $descriptionKey)
-    {
-        $this->buildValidPluginStructure('plugin', 'Vendor6789', 'DummyPluginBundle');
-        $class = '<?php namespace Vendor6789\DummyPluginBundle; '
-               . 'class Vendor6789DummyPluginBundle extends '
-               . '\Claroline\PluginBundle\AbstractType\ClarolinePlugin {'
-               . "public function getNameTranslationKey() {return {$nameKey};}"
-               . "public function getDescriptionTranslationKey() {return {$descriptionKey};}}";
-        file_put_contents(vfsStream::url('plugin/Vendor6789/DummyPluginBundle/Vendor6789DummyPluginBundle.php'),
-                          $class);
-
-        try
-        {
-            $this->validator->check('Vendor6789\DummyPluginBundle\Vendor6789DummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_TRANSLATION_KEY, $ex->getCode());
-        }
-    }
-
-    public function testCheckThrowsAnExceptionOnInvalidApplicationLauncher()
-    {
-        $this->buildValidPluginStructure('plugin', 'VendorAAA', 'DummyPluginBundle');
-        $class = '<?php namespace VendorAAA\DummyPluginBundle; '
-               . 'class VendorAAADummyPluginBundle extends '
-               . '\Claroline\PluginBundle\AbstractType\ClarolineApplication {'
-               . "public function getLaunchers() {return array('test');}}";
-        file_put_contents(vfsStream::url('plugin/VendorAAA/DummyPluginBundle/VendorAAADummyPluginBundle.php'),
-                          $class);
-
-        try
-        {
-            $this->validator->check('VendorAAA\DummyPluginBundle\VendorAAADummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_APPLICATION_LAUNCHER, $ex->getCode());
-        }
-    }
-
-    public function testCheackThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers()
-    {
-        $this->buildValidPluginStructure('plugin', 'VendorBBB', 'DummyPluginBundle');
-        $class = '<?php namespace VendorBBB\DummyPluginBundle; '
-               . 'class VendorBBBDummyPluginBundle extends '
-               . '\Claroline\PluginBundle\AbstractType\ClarolineApplication {'
-               . "public function getLaunchers() {return array();}}";
-        file_put_contents(vfsStream::url('plugin/VendorBBB/DummyPluginBundle/VendorBBBDummyPluginBundle.php'),
-                          $class);
-
-        try
-        {
-            $this->validator->check('VendorBBB\DummyPluginBundle\VendorBBBDummyPluginBundle');
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals(ValidationException::INVALID_APPLICATION_LAUNCHER, $ex->getCode());
-        }
-    }
-
-    public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument()
-    {
-        $this->buildValidPluginStructure('plugin', 'Vendor456', 'DummyPluginBundle');
-        $this->validator->check('Vendor456\DummyPluginBundle\Vendor456DummyPluginBundle');
-    }
-
-    public function badFQCNProvider()
+    public function nonConventionalFQCNProvider()
     {
         return array(
           array('VendorX\DummyPluginBundle\BadNamespace\VendorXDummyPluginBundle'),
@@ -288,60 +185,100 @@ class ValidatorTest extends WebTestCase
         );
     }
 
-    public function invalidDirectoryStructureProvider()
+    public function nonExistentDirectoryStructureProvider()
     {
         return array(
           array('NonExistentVendor\TestBundle\NonExistentVendorTestBundle'),
-          array('VendorX\NonExistentBundle\VendorXNonExistentBundle'),
+          array('Invalid\NonExistentBundle\InvalidNonExistentBundle'),
         );
     }
 
-    public function unloadablePluginClassProvider()
+
+    // All the providers below refer to real stubs
+
+
+    public function nonExistentBundleClassFileProvider()
     {
         return array(
-          array('<?php '),
-          array('<?php namespace WrongNamespace; class VendorXDummyPluginBundle {}'),
-          array('<?php namespace VendorX\DummyPluginBundle; class WrongClassName {}')
+            array('Invalid\NoBundleClassFile\InvalidNoBundleClassFile')
         );
     }
 
-    public function wrongTypePluginClassProvider()
+    public function unloadableBundleClassProvider()
     {
         return array(
-          array('<?php namespace Vendor123\DummyPluginBundle; class Vendor123DummyPluginBundle {}'),
-          array('<?php namespace Vendor123\DummyPluginBundle; class Vendor123DummyPluginBundle extends \DOMDocument{}')
+          array('Invalid\UnloadableBundleClass_1\InvalidUnloadableBundleClass_1'),
+          array('Invalid\UnloadableBundleClass_2\InvalidUnloadableBundleClass_2'),
+          array('Invalid\UnloadableBundleClass_3\InvalidUnloadableBundleClass_3'),
+          array('Invalid\UnloadableBundleClass_4\InvalidUnloadableBundleClass_4')
         );
     }
 
-    public function wrongTranslationKeyProvider()
+    public function unexpectedPluginClassTypeProvider()
     {
         return array(
-            array('new \DOMDocument', '"OK"'),
-            array('""', '"OK"'),
-            array('"OK"', 'new \DOMDocument'),
-            array('"OK"',  '""')
+          array('Invalid\UnexpectedBundleClassType_1\InvalidUnexpectedBundleClassType_1'),
+          array('Invalid\UnexpectedBundleClassType_2\InvalidUnexpectedBundleClassType_2')
         );
     }
 
-    private function buildValidPluginStructure($pluginDirectory, $vendorName, $pluginBundleName)
+    public function nonExistentRoutingResourceTypeProvider()
     {
-        $pluginClass = "<?php namespace {$vendorName}\\{$pluginBundleName}; "
-                     . "class {$vendorName}{$pluginBundleName} extends "
-                     . "\Claroline\PluginBundle\AbstractType\ClarolinePlugin {}";
-
-        $structure = array(
-            $vendorName => array(
-                $pluginBundleName => array(
-                    'Resources' => array(
-                        'config' => array(
-                            'routing.yml' => ''
-                        )
-                    ),
-                    $vendorName . $pluginBundleName . '.php' => $pluginClass
-                )
-            )
+        return array(
+            array('Invalid\NonExistentRoutingResource_1\InvalidNonExistentRoutingResource_1'),
+            array('Invalid\NonExistentRoutingResource_2\InvalidNonExistentRoutingResource_2')
         );
+    }
 
-        return vfsStream::create($structure, $pluginDirectory);
+    public function unexpectedRoutingResourceLocationProvider()
+    {
+        return array(
+            array('Invalid\UnexpectedRoutingResourceLocation_1\InvalidUnexpectedRoutingResourceLocation_1')
+        );
+    }
+
+    public function nonYamlRoutingResourceProvider()
+    {
+        return array(
+            array('Invalid\NonYamlRoutingResource_1\InvalidNonYamlRoutingResource_1')
+        );
+    }
+
+    public function unloadableYamlRoutingResourceProvider()
+    {
+        return array(
+            array('Invalid\UnloadableRoutingResource_1\InvalidUnloadableRoutingResource_1')
+        );
+    }
+
+    public function unexpectedTranslationKeyProvider()
+    {
+        return array(
+            array('Invalid\UnexpectedTranslationKey_1\InvalidUnexpectedTranslationKey_1'),
+            array('Invalid\UnexpectedTranslationKey_2\InvalidUnexpectedTranslationKey_2'),
+            array('Invalid\UnexpectedTranslationKey_3\InvalidUnexpectedTranslationKey_3'),
+            array('Invalid\UnexpectedTranslationKey_4\InvalidUnexpectedTranslationKey_4')
+        );
+    }
+
+    public function validPluginProvider()
+    {
+        return array(
+            array('Valid\Minimal\ValidMinimal')
+        );
+    }
+
+    public function noLauncherProvider()
+    {
+        return array(
+            array('Invalid\NoLauncher\InvalidNoLauncher')
+        );
+    }
+
+    public function unexpectedLauncherTypeProvider()
+    {
+        return array(
+            array('Invalid\UnexpectedLauncherType_1\InvalidUnexpectedLauncherType_1')
+        );
     }
 }
