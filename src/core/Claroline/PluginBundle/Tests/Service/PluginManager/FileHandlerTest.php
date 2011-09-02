@@ -120,7 +120,6 @@ class FileHandlerTest extends WebTestCase
         $this->fileHandler->removeNamespace("VendorX");
         $this->fileHandler->removeNamespace("VendorZ");
 
-        $namespaces = file($this->namespacesFile, FILE_IGNORE_NEW_LINES);
         $this->assertEquals(array('VendorY'), $this->fileHandler->getRegisteredNamespaces());
     }
 
