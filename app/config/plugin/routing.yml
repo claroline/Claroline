@@ -1,2 +1,0 @@
-ClarolineRegisterBundle_0:
-  resource: '@ClarolineRegisterBundle/Resources\config\routing.yml'
