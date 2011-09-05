@@ -2,20 +2,26 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
+use Claroline\PluginBundle\Service\PluginManager\ApplicationValidator;
+use Claroline\PluginBundle\Service\PluginManager\ToolValidator;
 
 class Validator
 {
     // Dependencies
     private $pluginDirectory;
     private $yamlParser;
+    private $applicationValidator;
+    private $toolValidator;
 
-    // Attributes storing values between private checks
+    // Attributes caching values between private checks
     private $pluginFQCNParts;
     private $pluginInstance;
+    
+    // FQCN of the plugin currently being checked
+    private $pluginFQCN;
 
     public function __construct($pluginDirectory, Parser $yamlParser)
     {
@@ -34,17 +40,28 @@ class Validator
 
         $this->pluginDirectory = $pluginDirectory;
     }
+    
+    public function setApplicationValidator(ApplicationValidator $validator)
+    {
+        $this->applicationValidator = $validator;
+    }
 
+    public function setToolValidator(ToolValidator $validator)
+    {
+        $this->toolValidator = $validator;
+    }
+    
     public function check($pluginFQCN)
     {
+        $this->pluginFQCN = $pluginFQCN;
         $this->resetCachedValues();
-        $this->checkFQCNConvention($pluginFQCN);
-        $this->checkDirectoryStructure($pluginFQCN);
-        $this->checkIsLoadable($pluginFQCN);
-        $this->checkExtendsClarolinePlugin($pluginFQCN);
-        $this->checkRoutingResources($pluginFQCN);
-        $this->checkTranslationKeys($pluginFQCN);
-        $this->checkApplicationConstraints($pluginFQCN);
+        $this->checkFQCNConvention();
+        $this->checkDirectoryStructure();
+        $this->checkIsLoadable();
+        $this->checkExtendsClarolinePlugin();
+        $this->checkRoutingResources();
+        $this->checkTranslationKeys();
+        $this->checkSubType();
     }
 
     private function resetCachedValues()
@@ -72,51 +89,49 @@ class Validator
         return false;
     }
 
-    private function getPluginFQCNParts($pluginFQCN)
+    private function getPluginFQCNParts()
     {
         if ($this->pluginFQCNParts === null)
         {
-            $this->checkFQCNConvention($pluginFQCN);
-
-            // Should be done yet in the check above (but what if its implementation
-            // changes ? Subsequent checks rely on this getter...)
-            $this->pluginFQCNParts = $this->explodeFQCN($pluginFQCN);
+            // This will initialize the pluginFQCNParts
+            // attribute if no exception is thrown
+            $this->checkFQCNConvention();
         }
         
         return $this->pluginFQCNParts;
     }
 
-    private function getPluginInstance($pluginFQCN)
+    private function getPluginInstance()
     {
         if ($this->pluginInstance === null)
         {
-            $this->checkIsLoadable($pluginFQCN);
-
-            // Should be done yet (same remark as in previous method)
-            $this->pluginInstance = new $pluginFQCN;
+            // This will initialize the pluginInstance
+            // attribute if no exception is thrown
+            $this->checkIsLoadable();
         }
-
+        
         return $this->pluginInstance;
     }
 
-    private function checkFQCNConvention($pluginFQCN)
+    private function checkFQCNConvention()
     {
-        $nameParts = $this->explodeFQCN($pluginFQCN);
+        $nameParts = $this->explodeFQCN($this->pluginFQCN);
 
         if ($nameParts === false)
         {
             throw new ValidationException(
-                    "Plugin FQCN '{$pluginFQCN}' doesn't follow the "
+                    "Plugin FQCN '{$this->pluginFQCN}' doesn't follow the "
                   . "'Vendor\BundleName\VendorBundleName' convention.",
                     ValidationException::INVALID_FQCN);
         }
 
+        // Caches FQCN parts for subsequent checks
         $this->pluginFQCNParts = $nameParts;
     }
 
-    private function checkDirectoryStructure($pluginFQCN)
+    private function checkDirectoryStructure()
     {
-        $nameParts = $this->getPluginFQCNParts($pluginFQCN);
+        $nameParts = $this->getPluginFQCNParts();
 
         $expectedVendorDir = $this->pluginDirectory
                 . DIRECTORY_SEPARATOR
@@ -128,7 +143,7 @@ class Validator
         if (! is_dir($expectedVendorDir))
         {
             throw new ValidationException(
-                    "No vendor directory matches FQCN '{$pluginFQCN}' "
+                    "No vendor directory matches FQCN '{$this->pluginFQCN}' "
                   . "(expected directory : {$expectedVendorDir}).",
                     ValidationException::INVALID_DIRECTORY_STRUCTURE);
         }
@@ -136,15 +151,15 @@ class Validator
         if (! is_dir($expectedPluginBundleDir))
         {
             throw new ValidationException(
-                    "No bundle directory matches FQCN '{$pluginFQCN}' "
+                    "No bundle directory matches FQCN '{$this->pluginFQCN}' "
                   . "(expected directory : {$expectedPluginBundleDir}).",
                     ValidationException::INVALID_DIRECTORY_STRUCTURE);
         }
     }
 
-    private function checkIsLoadable($pluginFQCN)
+    private function checkIsLoadable()
     {
-        $nameParts = $this->getPluginFQCNParts($pluginFQCN);
+        $nameParts = $this->getPluginFQCNParts();
 
         $expectedClassFile = $this->pluginDirectory 
                 . DIRECTORY_SEPARATOR
@@ -158,39 +173,40 @@ class Validator
         if (! file_exists($expectedClassFile))
         {
             throw new ValidationException(
-                    "No plugin class file matches FQCN '{$pluginFQCN}' "
+                    "No plugin class file matches FQCN '{$this->pluginFQCN}' "
                   . "(expected class file : {$expectedClassFile})",
                     ValidationException::INVALID_PLUGIN_CLASS_FILE);
         }
 
         require_once $expectedClassFile;
 
-        if (! class_exists($pluginFQCN))
+        if (! class_exists($this->pluginFQCN))
         {
             throw new ValidationException(
-                    "Class '{$pluginFQCN}' not found in '{$expectedClassFile}'.",
+                    "Class '{$this->pluginFQCN}' not found in '{$expectedClassFile}'.",
                     ValidationException::INVALID_PLUGIN_CLASS);
         }
 
-        $this->pluginInstance = new $pluginFQCN;
+        // Caches plugin instance for subsequent checks
+        $this->pluginInstance = new $this->pluginFQCN;
     }
 
-    private function checkExtendsClarolinePlugin($pluginFQCN)
+    private function checkExtendsClarolinePlugin()
     {
-        $pluginInstance = $this->getPluginInstance($pluginFQCN);
+        $pluginInstance = $this->getPluginInstance();
         $claroPluginClass = 'Claroline\PluginBundle\AbstractType\ClarolinePlugin';
         
         if (! is_a($pluginInstance, $claroPluginClass))
         {
             throw new ValidationException(
-                    "Class '{$pluginFQCN}' doesn't extend '{$claroPluginClass}'.",
+                    "Class '{$this->pluginFQCN}' doesn't extend '{$claroPluginClass}'.",
                     ValidationException::INVALID_PLUGIN_TYPE);
         }
     }
  
-    private function checkRoutingResources($pluginFQCN)
+    private function checkRoutingResources()
     {
-        $plugin = $this->getPluginInstance($pluginFQCN);
+        $plugin = $this->getPluginInstance();
         $paths = $plugin->getRoutingResourcesPaths();
 
         if ($paths === null)
@@ -205,7 +221,7 @@ class Validator
             if (! file_exists($path))
             {
                 throw new ValidationException(
-                        "{$pluginFQCN} : Cannot find routing file '{$path}'.",
+                        "{$this->pluginFQCN} : Cannot find routing file '{$path}'.",
                         ValidationException::INVALID_ROUTING_PATH);
             }
 
@@ -216,7 +232,7 @@ class Validator
             if (substr($path, 0, strlen($requiredLocation)) != $requiredLocation)
             {                
                 throw new ValidationException(
-                        "{$pluginFQCN} : Invalid routing file '{$path}' "
+                        "{$this->pluginFQCN} : Invalid routing file '{$path}' "
                       . "(must be located within the bundle).",
                         ValidationException::INVALID_ROUTING_LOCATION);
             }
@@ -224,7 +240,7 @@ class Validator
             if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION))
             {
                 throw new ValidationException(
-                        "{$pluginFQCN} : Unsupported '{$ext}' extension for "
+                        "{$this->pluginFQCN} : Unsupported '{$ext}' extension for "
                       . "routing file '{$path}'(use .yml).",
                         ValidationException::INVALID_ROUTING_EXTENSION);
             }
@@ -237,16 +253,16 @@ class Validator
             catch (ParseException $ex)
             {
                 throw new ValidationException(
-                        "{$pluginFQCN} : Unloadable YAML routing file "
+                        "{$this->pluginFQCN} : Unloadable YAML routing file "
                       . "(parse exception message : '{$ex->getMessage()}')",
                         ValidationException::INVALID_YAML_RESOURCE);
             }
         }
     }
 
-    private function checkTranslationKeys($pluginFQCN)
+    private function checkTranslationKeys()
     {
-        $plugin = $this->getPluginInstance($pluginFQCN);
+        $plugin = $this->getPluginInstance();
         $keys = array();
         $keys['name'] = $plugin->getNameTranslationKey();
         $keys['description'] = $plugin->getDescriptionTranslationKey();
@@ -256,55 +272,30 @@ class Validator
             if (! is_string($key))
             {
                 throw new ValidationException(
-                        "{$pluginFQCN} : {$type} translation key must be a string.",
+                        "{$this->pluginFQCN} : {$type} translation key must be a string.",
                         ValidationException::INVALID_TRANSLATION_KEY);
             }
 
             if (empty($key))
             {
                 throw new ValidationException(
-                        "{$pluginFQCN} : {$type} translation key cannot be empty.",
+                        "{$this->pluginFQCN} : {$type} translation key cannot be empty.",
                         ValidationException::INVALID_TRANSLATION_KEY);
             }
         }
     }
 
-    // TODO : move this into a dedicated application validator
-    private function checkApplicationConstraints($pluginFQCN)
+    private function checkSubType()
     {
-        $application = $this->getPluginInstance($pluginFQCN);
+        $plugin = $this->getPluginInstance();
 
-        if (! is_a($application, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
+        if (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
         {
-            return;
+            $this->applicationValidator->check($plugin);
         }
-
-        $launchers = $application->getLaunchers();
-
-        // TODO : is it really necessary that getLaunchers() returns an array ? (No)
-        if (! is_array($launchers))
+        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineTool'))
         {
-            throw new ValidationException(
-                    "Method 'getLaunchers' from Application '{$pluginFQCN}' "
-                  . "must return an array.",
-                    ValidationException::INVALID_APPLICATION_LAUNCHER);
-        }
-
-        if (count($launchers) == 0)
-        {
-            throw new ValidationException(
-                    "Application '{$pluginFQCN}' must define at least one launcher.",
-                    ValidationException::INVALID_APPLICATION_LAUNCHER);
-        }
-
-        foreach ($launchers as $launcher)
-        {
-            if (! is_a($launcher, 'Claroline\GUIBundle\Widget\ApplicationLauncher'))
-            {
-                throw new ValidationException(
-                        "Application '{$pluginFQCN}' has an invalid launcher.",
-                        ValidationException::INVALID_APPLICATION_LAUNCHER);
-            }
+            $this->toolValidator->check($plugin);
         }
     }
 }

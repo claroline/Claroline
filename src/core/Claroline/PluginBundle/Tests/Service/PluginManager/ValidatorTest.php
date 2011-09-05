@@ -5,8 +5,35 @@ namespace Claroline\PluginBundle\Service\PluginManager;
 use Claroline\PluginBundle\Tests\PluginBundleTestCase;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
 
+/**
+ * Note : Unless otherwise specified, all the data providers of this test case
+ *        refer to actual stub plugins living in the "stub/plugin" directory.
+ */
 class ValidatorTest extends PluginBundleTestCase
 {
+    /**
+     * Helper method.
+     * 
+     * @param string $pluginFQCN The plugin's FQCN 
+     * @param integer $exceptionCode A ValidationException class constant
+     */
+    private function assertValidationExceptionIsThrown($pluginFQCN, $exceptionCode)
+    {
+        try
+        {
+            $this->validator->check($pluginFQCN);
+            $this->fail("No exception thrown.");
+        }
+        catch (ValidationException $ex)
+        {
+            $this->assertEquals($exceptionCode, $ex->getCode());
+        }
+    }
+    
+    /***********************************************************************************/
+    /*                              Base plugin tests                                  */
+    /***********************************************************************************/
+    
     public function testConstructorThrowsAnExceptionOnNonExistentPluginDirectoryPath()
     {
         try
@@ -135,67 +162,25 @@ class ValidatorTest extends PluginBundleTestCase
             $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
         }
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    // TODO : make a clean separation between plugin/application/tool validation testing
-    //        (idem for stubs)
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @dataProvider unexpectedLauncherTypeProvider
-     */
-    public function testCheckThrowsAnExceptionOnUnexpectedApplicationLauncherType($FQCN)
-    {
-        $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_APPLICATION_LAUNCHER);
-    }
-
-    /**
-     * @dataProvider noLauncherProvider
-     */
-    public function testCheckThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers($FQCN)
-    {
-        $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_APPLICATION_LAUNCHER);
-    }
-
-    private function assertValidationExceptionIsThrown($pluginFQCN, $exceptionCode)
-    {
-        try
-        {
-            $this->validator->check($pluginFQCN);
-            $this->fail("No exception thrown.");
-        }
-        catch (ValidationException $ex)
-        {
-            $this->assertEquals($exceptionCode, $ex->getCode());
-        }
-    }
-
-    /////////////////////////////// Data Providers ///////////////////////////////
-
+    
     public function nonConventionalFQCNProvider()
     {
+        // Arbitrary strings
         return array(
           array('VendorX\DummyPluginBundle\BadNamespace\VendorXDummyPluginBundle'),
           array('VendorX\DummyPluginBundle\BadNamePluginBundle'),
           array('VendorX\VendorXDummyPluginBundle')
         );
     }
-
+    
     public function nonExistentDirectoryStructureProvider()
     {
+        // Arbitrary strings
         return array(
           array('NonExistentVendor\TestBundle\NonExistentVendorTestBundle'),
           array('Invalid\NonExistentBundle\InvalidNonExistentBundle'),
         );
     }
-
-
-    // All the providers below refer to real stubs
-
 
     public function nonExistentBundleClassFileProvider()
     {
@@ -267,18 +252,65 @@ class ValidatorTest extends PluginBundleTestCase
             array('Valid\Minimal\ValidMinimal')
         );
     }
+    
+    /***********************************************************************************/
+    /*                            Application plugin tests                             */
+    /***********************************************************************************/
 
+    /**
+     * @dataProvider unexpectedLauncherTypeProvider
+     */
+    public function testCheckThrowsAnExceptionOnUnexpectedApplicationLauncherType($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_APPLICATION_LAUNCHER);
+    }
+
+    /**
+     * @dataProvider noLauncherProvider
+     */
+    public function testCheckThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers($FQCN)
+    {
+        $this->assertValidationExceptionIsThrown(
+                $FQCN,
+                ValidationException::INVALID_APPLICATION_LAUNCHER);
+    }
+
+    /**
+     * @dataProvider validApplicationProvider
+     */
+    public function testCheckDoesntThrowAnyExceptionOnValidApplicationArgument($FQCN)
+    {
+        try
+        {
+            $this->validator->check($FQCN);
+            $this->assertTrue(true);
+        }
+        catch (ValidationException $ex)
+        {
+            $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
+        }
+    }
+    
     public function noLauncherProvider()
     {
         return array(
-            array('Invalid\NoLauncher\InvalidNoLauncher')
+            array('InvalidApplication\NoLauncher\InvalidApplicationNoLauncher')
         );
     }
 
     public function unexpectedLauncherTypeProvider()
     {
         return array(
-            array('Invalid\UnexpectedLauncherType_1\InvalidUnexpectedLauncherType_1')
+            array('InvalidApplication\UnexpectedLauncherType_1\InvalidApplicationUnexpectedLauncherType_1')
+        );
+    }
+    
+    public function validApplicationProvider()
+    {
+        return array(
+            array('ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers')
         );
     }
 }

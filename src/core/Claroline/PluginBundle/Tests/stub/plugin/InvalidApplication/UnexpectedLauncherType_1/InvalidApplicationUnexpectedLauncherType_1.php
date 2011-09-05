@@ -1,10 +1,10 @@
 <?php
 
-namespace Invalid\UnexpectedLauncherType_1;
+namespace InvalidApplication\UnexpectedLauncherType_1;
 
 use Claroline\PluginBundle\AbstractType\ClarolineApplication;
 
-class InvalidUnexpectedLauncherType_1 extends ClarolineApplication
+class InvalidApplicationUnexpectedLauncherType_1 extends ClarolineApplication
 {
     public function getLaunchers()
     {
