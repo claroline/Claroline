@@ -5,11 +5,20 @@ parameters:
     claroline.plugin.routing.config_file: "%kernel.root_dir%/config/plugin/routing.yml"
 
 services:
+    claroline.plugin.application_validator:
+        class: Claroline\PluginBundle\Service\PluginManager\ApplicationValidator
+        public: false
+    claroline.plugin.tool_validator:
+        class: Claroline\PluginBundle\Service\PluginManager\ToolValidator
+        public: false
     claroline.plugin.validator:
         class: Claroline\PluginBundle\Service\PluginManager\Validator
         arguments:
             - %claroline.plugin.directory%
             - @symfony.yaml.parser
+        calls:
+            - [setApplicationValidator, [@claroline.plugin.application_validator]]
+            - [setToolValidator, [@claroline.plugin.tool_validator]]
     claroline.plugin.file_handler:
         class: Claroline\PluginBundle\Service\PluginManager\FileHandler
         arguments:

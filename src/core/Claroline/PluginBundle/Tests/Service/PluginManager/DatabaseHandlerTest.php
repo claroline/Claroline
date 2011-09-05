@@ -26,7 +26,7 @@ class DatabaseHandlerTest extends PluginBundleTestCase
 
     public function testInstallApplicationRegistersLaunchersAndRoles()
     {
-        $pluginFQCN = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
+        $pluginFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
         $this->requireStubPluginFile($pluginFQCN);
 
         $this->databaseHandler->install(new $pluginFQCN);
@@ -54,7 +54,7 @@ class DatabaseHandlerTest extends PluginBundleTestCase
 
     public function testInstallApplicationDoesntDuplicateExistingRole()
     {
-        $pluginFQCN = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
+        $pluginFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
         $this->requireStubPluginFile($pluginFQCN);
 
         $this->databaseHandler->install(new $pluginFQCN);

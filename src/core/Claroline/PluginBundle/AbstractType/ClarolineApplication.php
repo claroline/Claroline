@@ -4,7 +4,10 @@ namespace Claroline\PluginBundle\AbstractType;
 
 abstract class ClarolineApplication extends ClarolinePlugin
 {
-    // Must return an array of Claroline\GUIBundle\Widget\ApplicationLauncher instances
+    /**
+     * This method must return an instance or an array of instances 
+     * of Claroline\GUIBundle\Widget\ApplicationLauncher
+     */
     abstract public function getLaunchers();
 
     public function isEligibleForPlatformIndex()

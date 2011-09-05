@@ -1,11 +1,11 @@
 <?php
 
-namespace Valid\TwoLaunchersApplication;
+namespace ValidApplication\TwoLaunchers;
 
 use Claroline\PluginBundle\AbstractType\ClarolineApplication;
 use Claroline\GUIBundle\Widget\ApplicationLauncher;
 
-class ValidTwoLaunchersApplication extends ClarolineApplication
+class ValidApplicationTwoLaunchers extends ClarolineApplication
 {
     public function getLaunchers()
     {

@@ -72,13 +72,15 @@ class ManagerTest extends PluginBundleTestCase
     {
         $pluginFQCN_1 = 'Valid\Minimal\ValidMinimal';
         $pluginFQCN_2 = 'Valid\Simple\ValidSimple';
-        $pluginFQCN_3 = 'Valid\TwoLaunchersApplication\ValidTwoLaunchersApplication';
+        $pluginFQCN_3 = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
         
         $this->manager->install($pluginFQCN_1);
         $this->manager->install($pluginFQCN_2);
         $this->manager->install($pluginFQCN_3);
 
-        $this->assertEquals(array('Valid'), $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+                array('Valid', 'ValidApplication'), 
+                $this->fileHandler->getRegisteredNamespaces());
         $this->assertEquals(
                 array($pluginFQCN_1, $pluginFQCN_2, $pluginFQCN_3),
                 $this->fileHandler->getRegisteredBundles());
@@ -86,8 +88,8 @@ class ManagerTest extends PluginBundleTestCase
             'ValidSimple_0' => array(
                 'resource' => '@ValidSimple/Resources/config/routing.yml'
                 ),
-            'ValidTwoLaunchersApplication_0' => array(
-                'resource' => '@ValidTwoLaunchersApplication/Resources/config/routing.yml'
+            'ValidApplicationTwoLaunchers_0' => array(
+                'resource' => '@ValidApplicationTwoLaunchers/Resources/config/routing.yml'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
