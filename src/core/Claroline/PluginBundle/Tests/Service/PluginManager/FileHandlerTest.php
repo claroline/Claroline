@@ -189,10 +189,11 @@ class FileHandlerTest extends PluginBundleTestCase
 
     public function testImportRoutingResourcesAddsEntriesInRoutingFile()
     {
+        $ds = DIRECTORY_SEPARATOR;
         $paths = array(
-            'plugin/VendorX/DummyPluginBundle/Resources/routing.yml',
-            'plugin/VendorX/DummyPluginBundle/Resources/routing2.yml',
-            'special' => 'plugin/VendorX/DummyPluginBundle/Resources/More/routing.yml');
+            'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml',
+            'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing2.yml',
+            'special' => 'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'More'.$ds.'routing.yml');
 
         $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
 
@@ -212,11 +213,12 @@ class FileHandlerTest extends PluginBundleTestCase
 
     public function testImportRoutingResourcesPreservesExistingEntriesInRoutingFile()
     {
+        $ds = DIRECTORY_SEPARATOR;
         $entry = "VendorXDummyPluginBundle_0:\n    "
                . "resource: '@VendorXDummyPluginBundle/Resources/routing.yml'";
         file_put_contents($this->routingFile, $entry);
 
-        $newPath = 'plugin/VendorY/DummyPluginBundle/Resources/routing.yml';
+        $newPath = 'plugin'.$ds.'VendorY'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml';
         $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($newPath));
 
         $expectedResources = array(
@@ -232,7 +234,8 @@ class FileHandlerTest extends PluginBundleTestCase
 
     public function testImportRoutingResourcesDoesntDuplicateEntry()
     {
-        $path = 'plugin/VendorY/DummyPluginBundle/Resources/routing.yml';
+        $ds = DIRECTORY_SEPARATOR;
+        $path = 'plugin'.$ds.'VendorY'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml';
         $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
         $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
 
@@ -266,9 +269,10 @@ class FileHandlerTest extends PluginBundleTestCase
 
     public function testImportThenRemoveRoutingResourcesKeepsConfigFileUnchanged()
     {
+        $ds = DIRECTORY_SEPARATOR;
         $paths = array(
-            'plugin/VendorX/DummyPluginBundle/Resources/routing.yml',
-            'plugin/VendorX/DummyPluginBundle/Resources/routing2.yml');
+            'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml',
+            'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing2.yml');
 
         $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
         $this->fileHandler->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
