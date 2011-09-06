@@ -138,6 +138,7 @@ class FileHandler
 
         foreach ((array) $paths as $pathKey => $path)
         {
+            
             $pattern = '#^(.+)'
                 . preg_quote(DIRECTORY_SEPARATOR)
                 . $vendor
@@ -146,9 +147,10 @@ class FileHandler
                 . preg_quote(DIRECTORY_SEPARATOR)
                 . '(.+)$#';
             preg_match($pattern, $path, $matches);
-
+            $relative_path = $matches[2];
+            $normalized_path = str_replace(DIRECTORY_SEPARATOR, '/', $relative_path);
             $key = "{$className}_{$pathKey}";
-            $value = "@{$className}/{$matches[2]}";
+            $value = "@{$className}/{$normalized_path}";
             $resources[$key] = array ('resource' => $value);
         }
 
