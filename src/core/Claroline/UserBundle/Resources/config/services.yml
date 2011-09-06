@@ -2,7 +2,7 @@ services:
     claroline.user.manager:
         class: Claroline\UserBundle\Service\UserManager\Manager
         arguments:
-            - @doctrine.orm.entity_manager
-            - @validator
-            - @security.encoder_factory
-            - @claroline.security.role_manager
+            - "@doctrine.orm.entity_manager"
+            - "@validator"
+            - "@security.encoder_factory"
+            - "@claroline.security.role_manager"
