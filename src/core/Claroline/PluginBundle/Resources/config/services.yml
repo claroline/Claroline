@@ -15,28 +15,28 @@ services:
         class: Claroline\PluginBundle\Service\PluginManager\Validator
         arguments:
             - %claroline.plugin.directory%
-            - @symfony.yaml.parser
+            - "@symfony.yaml.parser"
         calls:
-            - [setApplicationValidator, [@claroline.plugin.application_validator]]
-            - [setToolValidator, [@claroline.plugin.tool_validator]]
+            - [setApplicationValidator, ["@claroline.plugin.application_validator"]]
+            - [setToolValidator, ["@claroline.plugin.tool_validator"]]
     claroline.plugin.file_handler:
         class: Claroline\PluginBundle\Service\PluginManager\FileHandler
         arguments:
             - %claroline.plugin.namespaces.config_file%
             - %claroline.plugin.bundles.config_file%
             - %claroline.plugin.routing.config_file%
-            - @symfony.yaml
+            - "@symfony.yaml"
     claroline.plugin.database_handler:
         class: Claroline\PluginBundle\Service\PluginManager\DatabaseHandler
         arguments:
-            - @doctrine.orm.entity_manager
-            - @claroline.security.role_manager
+            - "@doctrine.orm.entity_manager"
+            - "@claroline.security.role_manager"
     claroline.plugin.manager:
         class: Claroline\PluginBundle\Service\PluginManager\Manager
         arguments:
-            - @claroline.plugin.validator
-            - @claroline.plugin.file_handler
-            - @claroline.plugin.database_handler
+            - "@claroline.plugin.validator"
+            - "@claroline.plugin.file_handler"
+            - "@claroline.plugin.database_handler"
             
     # symfony classes used as service arguments
     symfony.yaml.parser:
