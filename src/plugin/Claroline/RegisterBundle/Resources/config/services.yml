@@ -1,0 +1,11 @@
+services:
+    # controllers
+    claroline.register.main:
+        class: Claroline\RegisterBundle\Controller\MainController
+        scope: request
+        arguments:
+            - "@request"
+            - "@router"
+            - "@form.factory"
+            - "@templating.engine.twig"
+            - "@claroline.user.manager"

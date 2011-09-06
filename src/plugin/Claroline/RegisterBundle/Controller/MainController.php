@@ -2,32 +2,57 @@
 
 namespace Claroline\RegisterBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Claroline\UserBundle\Service\UserManager\Manager;
 use Claroline\UserBundle\Entity\User;
 use Claroline\UserBundle\Form\UserType;
 
-class MainController extends Controller
+class MainController
 {
+    private $request;
+    private $router;
+    private $formFactory;
+    private $twigEngine;
+    private $userManager;
+    
+    public function __construct(Request $request, 
+                                Router $router,
+                                FormFactory $factory,
+                                TwigEngine $engine,
+                                Manager $userManager)
+    {
+        $this->request = $request;
+        $this->router = $router;
+        $this->formFactory = $factory;
+        $this->twigEngine = $engine;
+        $this->userManager = $userManager;
+    }
+    
     public function indexAction()
     {
         $user = new User();
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->formFactory->create(new UserType(), $user);
 
-        $request = $this->get('request');
-        if ($request->getMethod() == 'POST')
+        if ($this->request->getMethod() == 'POST')
         {
-            $form->bindRequest($request);
+            $form->bindRequest($this->request);
 
             if ($form->isValid())
             {
-                $this->get('claroline.user.manager')->create($user);
-
-                return $this->redirect($this->generateUrl('claro_core_desktop'));
+                $this->userManager->create($user);
+                $route = $this->router->generate('claro_core_desktop');
+                
+                return new RedirectResponse($route);
             }
         }
 
-        return $this->render('ClarolineRegisterBundle:Main:form.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->twigEngine->renderResponse(
+                'ClarolineRegisterBundle:Main:form.html.twig', 
+                array('form' => $form->createView()));
     }
 }
