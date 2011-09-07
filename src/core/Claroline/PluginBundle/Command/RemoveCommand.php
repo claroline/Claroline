@@ -18,12 +18,12 @@ class RemoveCommand extends AbstractPluginCommand
     {
         $vendor = $input->getArgument('vendor_name');
         $bundle = $input->getArgument('bundle_name');
-        $FQCN = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
+        $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
 
         $output->writeln('Launching plugin manager...');
 
         $manager = $this->getContainer()->get('claroline.plugin.manager');
-        $manager->remove($FQCN);
+        $manager->remove($fqcn);
 
         $output->writeln('Done');
         $this->resetCache($output);

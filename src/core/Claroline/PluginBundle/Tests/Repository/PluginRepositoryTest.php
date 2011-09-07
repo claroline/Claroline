@@ -26,12 +26,13 @@ class PluginRepositoryTest extends WebTestCase
 
     public function testCreatePluginInsertsNewPluginRecord()
     {
-        $plugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle',
-                                               'ClarolinePlugin',
-                                               'VendorX',
-                                               'TestBundle',
-                                               'Test',
-                                               'Test description');
+        $plugin = $this->buildBasePluginEntity(
+                'VendorX\TestBundle\VendorXTestBundle',
+               'ClarolinePlugin',
+               'VendorX',
+               'TestBundle',
+               'Test',
+               'Test description');
         $this->repository->createPlugin($plugin);
 
         $plugin = $this->repository->findOneByBundleFQCN('VendorX\TestBundle\VendorXTestBundle');

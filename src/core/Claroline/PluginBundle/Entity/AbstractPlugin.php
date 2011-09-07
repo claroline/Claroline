@@ -72,9 +72,9 @@ abstract class AbstractPlugin
         return $this->bundleFQCN;
     }
 
-    public function setBundleFQCN($FQCN)
+    public function setBundleFQCN($fqcn)
     {
-        $this->bundleFQCN = $FQCN;
+        $this->bundleFQCN = $fqcn;
     }
 
     public function getVendorName()

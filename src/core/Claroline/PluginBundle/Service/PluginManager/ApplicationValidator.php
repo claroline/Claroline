@@ -25,8 +25,8 @@ class ApplicationValidator
         if (count($launchers) == 0)
         {
             throw new ValidationException(
-                    "Application '{$this->appFQCN}' must define at least one launcher.",
-                    ValidationException::INVALID_APPLICATION_LAUNCHER);
+                "Application '{$this->appFQCN}' must define at least one launcher.",
+                ValidationException::INVALID_APPLICATION_LAUNCHER);
         }
 
         foreach ($launchers as $launcher)
@@ -34,8 +34,8 @@ class ApplicationValidator
             if (! is_a($launcher, 'Claroline\GUIBundle\Widget\ApplicationLauncher'))
             {
                 throw new ValidationException(
-                        "Application '{$this->appFQCN}' has an invalid launcher.",
-                        ValidationException::INVALID_APPLICATION_LAUNCHER);
+                    "Application '{$this->appFQCN}' has an invalid launcher.",
+                    ValidationException::INVALID_APPLICATION_LAUNCHER);
             }
         }
     }

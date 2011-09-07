@@ -38,9 +38,9 @@ class InstallAllCommand extends ContainerAwareCommand
                     if ($plugin->isDir() && ! $plugin->isDot())
                     {
                         $bundleName = $plugin->getBasename();
-                        $FQCN = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-                        $output->writeln("Installing plugin '{$FQCN}'...");
-                        $pluginManager->install($FQCN);
+                        $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
+                        $output->writeln("Installing plugin '{$fqcn}'...");
+                        $pluginManager->install($fqcn);
                     }
                 }
             }
