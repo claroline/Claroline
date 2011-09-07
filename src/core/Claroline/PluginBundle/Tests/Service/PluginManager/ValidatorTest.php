@@ -50,111 +50,111 @@ class ValidatorTest extends PluginBundleTestCase
     /**
      * @dataProvider nonConventionalFQCNProvider
      */
-    public function testCheckThrowsAnExceptionOnNonConventionalPluginFQCN($FQCN)
+    public function testCheckThrowsAnExceptionOnNonConventionalPluginFQCN($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_FQCN);
+            $fqcn,
+            ValidationException::INVALID_FQCN);
     }
 
     /**
      * @dataProvider nonExistentDirectoryStructureProvider
      */
-    public function testCheckThrowsAnExceptionOnNonExistentPluginDirectoryStructure($FQCN)
+    public function testCheckThrowsAnExceptionOnNonExistentPluginDirectoryStructure($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_DIRECTORY_STRUCTURE);
+            $fqcn,
+            ValidationException::INVALID_DIRECTORY_STRUCTURE);
     }
 
     /**
      * @dataProvider nonExistentBundleClassFileProvider
      */
-    public function testCheckThrowsAnExceptionOnNonExistentBundleClassFile($FQCN)
+    public function testCheckThrowsAnExceptionOnNonExistentBundleClassFile($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_PLUGIN_CLASS_FILE);
+            $fqcn,
+            ValidationException::INVALID_PLUGIN_CLASS_FILE);
     }
 
     /**
      * @dataProvider unloadableBundleClassProvider
      */
-    public function testCheckThrowsAnExceptionOnUnloadableBundleClass($FQCN)
+    public function testCheckThrowsAnExceptionOnUnloadableBundleClass($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_PLUGIN_CLASS);
+            $fqcn,
+            ValidationException::INVALID_PLUGIN_CLASS);
     }
 
     /**
      * @dataProvider unexpectedPluginClassTypeProvider
      */
-    public function testCheckThrowsAnExceptionIfPluginClassDoesntExtendClarolinePlugin($FQCN)
+    public function testCheckThrowsAnExceptionIfPluginClassDoesntExtendClarolinePlugin($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_PLUGIN_TYPE);
+            $fqcn,
+            ValidationException::INVALID_PLUGIN_TYPE);
     }
 
     /**
      * @dataProvider nonExistentRoutingResourceTypeProvider
      */
-    public function testCheckThrowsAnExceptionOnNonExistentRoutingResource($FQCN)
+    public function testCheckThrowsAnExceptionOnNonExistentRoutingResource($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_ROUTING_PATH);
+            $fqcn,
+            ValidationException::INVALID_ROUTING_PATH);
     }
 
     /**
      * @dataProvider unexpectedRoutingResourceLocationProvider
      */
-    public function testCheckThrowsAnExceptionOnInvalidRoutingResourceLocation($FQCN)
+    public function testCheckThrowsAnExceptionOnInvalidRoutingResourceLocation($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_ROUTING_LOCATION);
+            $fqcn,
+            ValidationException::INVALID_ROUTING_LOCATION);
     }
 
     /**
      * @dataProvider nonYamlRoutingResourceProvider
      */
-    public function testCheckThrowsAnExceptionOnNonYamlRoutingFile($FQCN)
+    public function testCheckThrowsAnExceptionOnNonYamlRoutingFile($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_ROUTING_EXTENSION);
+            $fqcn,
+            ValidationException::INVALID_ROUTING_EXTENSION);
     }
 
     /**
      * @dataProvider unloadableYamlRoutingResourceProvider
      */
-    public function testCheckThrowsAnExceptionOnUnloadableYamlRoutingFile($FQCN)
+    public function testCheckThrowsAnExceptionOnUnloadableYamlRoutingFile($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_YAML_RESOURCE);
+            $fqcn,
+            ValidationException::INVALID_YAML_RESOURCE);
     }
 
     /**
      * @dataProvider unexpectedTranslationKeyProvider
      */
-    public function testCheckThrowsAnExceptionOnInvalidTranslationKey($FQCN)
+    public function testCheckThrowsAnExceptionOnInvalidTranslationKey($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_TRANSLATION_KEY);
+            $fqcn,
+            ValidationException::INVALID_TRANSLATION_KEY);
     }
 
     /**
      * @dataProvider validPluginProvider
      */
-    public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument($FQCN)
+    public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument($fqcn)
     {
         try
         {
-            $this->validator->check($FQCN);
+            $this->validator->check($fqcn);
             $this->assertTrue(true);
         }
         catch (ValidationException $ex)
@@ -260,31 +260,31 @@ class ValidatorTest extends PluginBundleTestCase
     /**
      * @dataProvider unexpectedLauncherTypeProvider
      */
-    public function testCheckThrowsAnExceptionOnUnexpectedApplicationLauncherType($FQCN)
+    public function testCheckThrowsAnExceptionOnUnexpectedApplicationLauncherType($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_APPLICATION_LAUNCHER);
+            $fqcn,
+            ValidationException::INVALID_APPLICATION_LAUNCHER);
     }
 
     /**
      * @dataProvider noLauncherProvider
      */
-    public function testCheckThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers($FQCN)
+    public function testCheckThrowsAnExceptionIfAnApplicationDoesntProvideLaunchers($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
-                $FQCN,
-                ValidationException::INVALID_APPLICATION_LAUNCHER);
+            $fqcn,
+            ValidationException::INVALID_APPLICATION_LAUNCHER);
     }
 
     /**
      * @dataProvider validApplicationProvider
      */
-    public function testCheckDoesntThrowAnyExceptionOnValidApplicationArgument($FQCN)
+    public function testCheckDoesntThrowAnyExceptionOnValidApplicationArgument($fqcn)
     {
         try
         {
-            $this->validator->check($FQCN);
+            $this->validator->check($fqcn);
             $this->assertTrue(true);
         }
         catch (ValidationException $ex)

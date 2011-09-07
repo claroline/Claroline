@@ -166,7 +166,7 @@ class FileHandler
         $className = $nameParts[2];
         $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
 
-        foreach (array_keys($resources) as $key )
+        foreach (array_keys($resources) as $key)
         {
             if (substr($key, 0, strlen($className)) == $className)
             {

@@ -79,11 +79,11 @@ class ManagerTest extends PluginBundleTestCase
         $this->manager->install($pluginFQCN_3);
 
         $this->assertEquals(
-                array('Valid', 'ValidApplication'), 
-                $this->fileHandler->getRegisteredNamespaces());
+            array('Valid', 'ValidApplication'), 
+            $this->fileHandler->getRegisteredNamespaces());
         $this->assertEquals(
-                array($pluginFQCN_1, $pluginFQCN_2, $pluginFQCN_3),
-                $this->fileHandler->getRegisteredBundles());
+            array($pluginFQCN_1, $pluginFQCN_2, $pluginFQCN_3),
+            $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
             'ValidSimple_0' => array(
                 'resource' => '@ValidSimple/Resources/config/routing.yml'

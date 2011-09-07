@@ -13,15 +13,19 @@ class FileHandlerTest extends PluginBundleTestCase
     public function testGetRegisteredNamespacesReturnsExpectedArray()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        $this->assertEquals(array('VendorX', 'VendorY', 'VendorZ'),
-                            $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+            array('VendorX', 'VendorY', 'VendorZ'),
+            $this->fileHandler->getRegisteredNamespaces()
+        );
     }
 
     public function testGetRegisteredBundlesReturnsExpectedArray()
     {
         file_put_contents($this->bundlesFile, "VendorX\ABC\FirstBundle\nVendorY\DEF\SecondBundle");
-        $this->assertEquals(array('VendorX\ABC\FirstBundle', 'VendorY\DEF\SecondBundle'),
-                            $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(
+            array('VendorX\ABC\FirstBundle', 'VendorY\DEF\SecondBundle'),
+            $this->fileHandler->getRegisteredBundles()
+        );
     }
 
     public function testGetSharedVendorNamespacesReturnsExpectedArray()
@@ -55,8 +59,10 @@ class FileHandlerTest extends PluginBundleTestCase
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
         $this->fileHandler->registerNamespace('Foo');
-        $this->assertEquals(array("VendorX", "VendorY", "VendorZ", 'Foo'),
-                            $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+            array("VendorX", "VendorY", "VendorZ", 'Foo'),
+            $this->fileHandler->getRegisteredNamespaces()
+        );
     }
 
     public function testRegisterNamespaceDoesntDuplicateNamespace()
@@ -74,24 +80,30 @@ class FileHandlerTest extends PluginBundleTestCase
         $this->fileHandler->registerNamespace('DEF');
         $this->fileHandler->registerNamespace('HIJ');
 
-        $this->assertEquals(array('VendorX', 'ABC', 'DEF', 'HIJ'),
-                            $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+            array('VendorX', 'ABC', 'DEF', 'HIJ'),
+            $this->fileHandler->getRegisteredNamespaces()
+        );
     }
 
     public function testRemoveNamespaceDeletesEntry()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
         $this->fileHandler->removeNamespace("VendorZ");
-        $this->assertEquals(array('VendorX', 'VendorY'),
-                            $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+            array('VendorX', 'VendorY'),
+            $this->fileHandler->getRegisteredNamespaces()
+        );
     }
 
     public function testRemoveUnregisteredNamespaceDoesntProduceError()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY");
         $this->fileHandler->removeNamespace("UnregisteredVendor");
-        $this->assertEquals(array('VendorX', 'VendorY'),
-                            $this->fileHandler->getRegisteredNamespaces());
+        $this->assertEquals(
+            array('VendorX', 'VendorY'),
+            $this->fileHandler->getRegisteredNamespaces()
+        );
     }
 
     public function testRemoveNamespaceCalledSeveralTimes()
@@ -130,8 +142,10 @@ class FileHandlerTest extends PluginBundleTestCase
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
         $this->fileHandler->addInstantiableBundle('VendorZ\\Test');
-        $this->assertEquals(array("VendorX\\Foo", "VendorY\\Bar", "VendorZ\\Test"),
-                            $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(
+            array("VendorX\\Foo", "VendorY\\Bar", "VendorZ\\Test"),
+            $this->fileHandler->getRegisteredBundles()
+        );
     }
 
     public function testAddInstantiableBundleDoesntDuplicateBundle()
@@ -148,8 +162,10 @@ class FileHandlerTest extends PluginBundleTestCase
         $this->fileHandler->addInstantiableBundle('VendorX\\Bar');
         $this->fileHandler->addInstantiableBundle('VendorY\\Foo');
 
-        $this->assertEquals(array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'),
-                            $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(
+            array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'),
+            $this->fileHandler->getRegisteredBundles()
+        );
     }
 
     public function testRemoveInstantiableBundleDeletesEntry()
@@ -163,8 +179,10 @@ class FileHandlerTest extends PluginBundleTestCase
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
         $this->fileHandler->removeInstantiableBundle('UnregisteredVendor');
-        $this->assertEquals(array('VendorX\\Foo', 'VendorY\\Bar'),
-                            $this->fileHandler->getRegisteredBundles());
+        $this->assertEquals(
+            array('VendorX\\Foo', 'VendorY\\Bar'),
+            $this->fileHandler->getRegisteredBundles()
+        );
     }
 
     public function testRemoveBundleCalledSeveralTimes()
@@ -193,7 +211,8 @@ class FileHandlerTest extends PluginBundleTestCase
         $paths = array(
             'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml',
             'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing2.yml',
-            'special' => 'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'More'.$ds.'routing.yml');
+            'special' => 'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'More'.$ds.'routing.yml'
+        );
 
         $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
 
@@ -250,11 +269,11 @@ class FileHandlerTest extends PluginBundleTestCase
     public function testRemoveRoutingResourcesDeletesAllResourcesRelatedToAPlugin()
     {
         $entries = "VendorXDummyPluginBundle_1:\n    "
-                 . "resource: '@VendorXDummyPluginBundle/Resources/routing1.yml'\n"
-                 . "VendorXDummyPluginBundle_2:\n    "
-                 . "resource: '@VendorXDummyPluginBundle/Resources/routing2.yml'\n"
-                 . "VendorYDummyPluginBundle_0:\n    "
-                 . "resource: '@VendorYDummyPluginBundle/Resources/routing.yml'\n";
+            . "resource: '@VendorXDummyPluginBundle/Resources/routing1.yml'\n"
+            . "VendorXDummyPluginBundle_2:\n    "
+            . "resource: '@VendorXDummyPluginBundle/Resources/routing2.yml'\n"
+            . "VendorYDummyPluginBundle_0:\n    "
+            . "resource: '@VendorYDummyPluginBundle/Resources/routing.yml'\n";
         file_put_contents($this->routingFile, $entries);
 
         $this->fileHandler->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
