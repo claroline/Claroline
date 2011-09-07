@@ -35,17 +35,17 @@ class WorkspaceControllerTest extends WebTestCase
     protected function load_fixtures()
     {
         $em = $this->client->getContainer()->get('doctrine')->getEntityManager();
-        $ref_repo = new ReferenceRepository($em);
+        $refRepo = new ReferenceRepository($em);
 
-        $user_fixture = new LoadUserData();
-        $user_fixture->setContainer($this->client->getContainer());
-        $user_fixture->setReferenceRepository($ref_repo);
-        $user_fixture->load($em);
+        $userFixture = new LoadUserData();
+        $userFixture->setContainer($this->client->getContainer());
+        $userFixture->setReferenceRepository($refRepo);
+        $userFixture->load($em);
 
-        $ws_fixture = new LoadWorkspaceData();
-        $ws_fixture->setContainer($this->client->getContainer());
-        $ws_fixture->setReferenceRepository($ref_repo);
-        $ws_fixture->load($em);
+        $wsFixture = new LoadWorkspaceData();
+        $wsFixture->setContainer($this->client->getContainer());
+        $wsFixture->setReferenceRepository($refRepo);
+        $wsFixture->load($em);
     }    
 
     protected function log_in($username = 'admin', $password = 'USA')

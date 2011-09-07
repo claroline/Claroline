@@ -31,7 +31,7 @@ class ACLWorkspaceManager
      *
      * @var WorkspaceManager
      */
-    private $real_manager;
+    private $realManager;
 
     /**
      * Constructor.
@@ -42,12 +42,12 @@ class ACLWorkspaceManager
      * @param string $commentClass
      */
     public function __construct(
-        WorkspaceManager $real_manager,
+        WorkspaceManager $realManager,
         SecurityContextInterface $securityContext,
         MutableAclProviderInterface $aclProvider
     )
     {
-        $this->real_manager = $real_manager;
+        $this->realManager = $realManager;
         $this->securityContext = $securityContext;
         $this->aclProvider = $aclProvider;
     
@@ -55,17 +55,17 @@ class ACLWorkspaceManager
 
     public function create(Workspace $ws)
     {
-        $this->real_manager->create($ws);
+        $this->realManager->create($ws);
         
         $owner = $ws->getOwner();
         $securityIdentity = UserSecurityIdentity::fromAccount($owner);
 
-        $ws_identity = ObjectIdentity::fromDomainObject($ws);
-        $ws_acl = $this->aclProvider->createAcl($ws_identity);
+        $wsIdentity = ObjectIdentity::fromDomainObject($ws);
+        $wsAcl = $this->aclProvider->createAcl($wsIdentity);
 
 
-        $ws_acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-        $this->aclProvider->updateAcl($ws_acl);
+        $wsAcl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $this->aclProvider->updateAcl($wsAcl);
         
     }
 
@@ -76,9 +76,9 @@ class ACLWorkspaceManager
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
         
-        $ws_identity = ObjectIdentity::fromDomainObject($ws);
-        $this->aclProvider->deleteAcl($ws_identity);
+        $wsIdentity = ObjectIdentity::fromDomainObject($ws);
+        $this->aclProvider->deleteAcl($wsIdentity);
 
-        $this->real_manager->delete($ws);
+        $this->realManager->delete($ws);
     }
 }

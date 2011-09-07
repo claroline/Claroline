@@ -12,7 +12,8 @@ class ClarolineRegisterBundle extends ClarolineApplication
         $launcher = new ApplicationLauncher(
             'claroline_register_index', 
             'register.application.name',
-            array('ROLE_ANONYMOUS'));
+            array('ROLE_ANONYMOUS')
+        );
 
         return array($launcher);
     }

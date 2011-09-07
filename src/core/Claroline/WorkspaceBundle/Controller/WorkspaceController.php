@@ -36,7 +36,7 @@ class WorkspaceController extends Controller
     
     public function createAction()
     {
-        $workspace_manager = $this->getWorkspaceManager();
+        $workspaceManager = $this->getWorkspaceManager();
 
         $workspace = new Workspace();
         $form = $this->createForm(new WorkspaceType(), $workspace);
@@ -46,7 +46,7 @@ class WorkspaceController extends Controller
 
         if ($form->isValid())
         {
-            $workspace_manager->create($workspace);
+            $workspaceManager->create($workspace);
 
             return $this->redirect($this->generateUrl('claro_core_desktop'));
         }
@@ -58,12 +58,12 @@ class WorkspaceController extends Controller
     
     public function deleteAction($id)
     {
-        $workspace_manager = $this->getWorkspaceManager();
+        $workspaceManager = $this->getWorkspaceManager();
 
         $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineWorkspaceBundle:Workspace');
         $workspace = $workspaceRepo->find($id);
 
-        $workspace_manager->delete($workspace);
+        $workspaceManager->delete($workspace);
         
         $this->get('session')->setFlash('notice', 'Workspace successfully deleted');            
 

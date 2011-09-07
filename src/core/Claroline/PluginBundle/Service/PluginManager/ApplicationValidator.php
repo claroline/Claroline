@@ -26,7 +26,8 @@ class ApplicationValidator
         {
             throw new ValidationException(
                 "Application '{$this->appFQCN}' must define at least one launcher.",
-                ValidationException::INVALID_APPLICATION_LAUNCHER);
+                ValidationException::INVALID_APPLICATION_LAUNCHER
+            );
         }
 
         foreach ($launchers as $launcher)
@@ -35,7 +36,8 @@ class ApplicationValidator
             {
                 throw new ValidationException(
                     "Application '{$this->appFQCN}' has an invalid launcher.",
-                    ValidationException::INVALID_APPLICATION_LAUNCHER);
+                    ValidationException::INVALID_APPLICATION_LAUNCHER
+                );
             }
         }
     }
