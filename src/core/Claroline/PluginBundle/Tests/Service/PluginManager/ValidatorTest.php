@@ -54,7 +54,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_FQCN);
+            ValidationException::INVALID_FQCN
+        );
     }
 
     /**

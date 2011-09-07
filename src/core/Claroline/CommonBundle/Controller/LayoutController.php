@@ -13,7 +13,7 @@ use Claroline\UserBundle\Entity\User;
  *        work only with the symfony Controller class).
  */
 class LayoutController extends Controller
-{    
+{
     public function headerAction()
     {
         return $this->render('ClarolineCommonBundle:Layout:header.html.twig');
@@ -43,12 +43,13 @@ class LayoutController extends Controller
         }
 
         return $this->render(
-                'ClarolineCommonBundle:Layout:status_bar.html.twig', 
-                array(
-                    'connected' => $connected,
-                    'username' => $username,
-                    'login_target' => $loginTarget)
-                );
+            'ClarolineCommonBundle:Layout:status_bar.html.twig', 
+            array(
+                'connected' => $connected,
+                'username' => $username,
+                'login_target' => $loginTarget
+            )
+        );
     }
 
     public function applicationMenuAction()
@@ -77,7 +78,8 @@ class LayoutController extends Controller
         }
 
         return $this->render(
-                'ClarolineCommonBundle:Layout:app_menu.html.twig', 
-                array('launchers' => $launchers));
+            'ClarolineCommonBundle:Layout:app_menu.html.twig', 
+            array('launchers' => $launchers)
+        );
     }
 }
