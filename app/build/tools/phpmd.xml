@@ -1,11 +1,33 @@
 <?xml version="1.0"?>
 
 <!-- see http://phpmd.org/documentation/creating-a-ruleset.html -->
+<!-- see https://github.com/phpmd/phpmd for default rulesets -->
 
 <ruleset name="Claronext PHPMD rule set" xmlns="http://pmd.sf.net/ruleset/1.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
          xsi:noNamespaceSchemaLocation=" http://pmd.sf.net/ruleset_xml_schema.xsd">
     <description> Claronext code checks</description>
-    <rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/unusedcode.xml" >
+        <!-- removed this rule because it gives false positive when implementing an interface -->
+        <exclude name="UnusedFormalParameter" />
+    </rule>
+    
+    <rule ref="rulesets/naming.xml" >
+        <!-- Don't be paranoid -->
+        <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
+    </rule>
+    
+    <rule ref="rulesets/design.xml" >
+        
+    </rule>
+    
+    
+    <rule ref="rulesets/codesize.xml" >
+    
+    </rule>
+        
+        
+    </rule>
 </ruleset>
