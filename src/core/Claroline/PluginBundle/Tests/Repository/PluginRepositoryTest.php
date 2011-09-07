@@ -65,10 +65,10 @@ class PluginRepositoryTest extends WebTestCase
         $this->assertEquals(null, $plugin);
     }
 
-    private function buildBasePluginEntity($FQCN, $type, $vendor, $bundle, $name, $desc)
+    private function buildBasePluginEntity($fqcn, $type, $vendor, $bundle, $name, $desc)
     {
         $pluginEntity = new BasePlugin();
-        $pluginEntity->setBundleFQCN($FQCN);
+        $pluginEntity->setBundleFQCN($fqcn);
         $pluginEntity->setType($type);
         $pluginEntity->setVendorName($vendor);
         $pluginEntity->setBundleName($bundle);

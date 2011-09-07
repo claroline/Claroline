@@ -27,7 +27,4 @@
     <rule ref="rulesets/codesize.xml" >
     
     </rule>
-        
-        
-    </rule>
 </ruleset>
