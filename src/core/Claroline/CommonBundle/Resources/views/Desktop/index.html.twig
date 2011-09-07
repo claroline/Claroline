@@ -1,8 +1,8 @@
-{% extends 'ClarolineGUIBundle::app_layout.html.twig' %}
+{% extends 'ClarolineCommonBundle::app_layout.html.twig' %}
 
 {% block content %}
     
-<h4>{{ 'global.desktop'|trans({}, 'ClarolineCoreBundle') }}</h4>
+<h4>{{ 'global.desktop'|trans({}, 'ClarolineCommonBundle') }}</h4>
 
 <a href="{{ path('claro_workspace_new_workspace') }}">{{ 'workspace.create'|trans({}, 'ClarolineWorkspaceBundle') }}</a>
 <a href="{{ path('claro_security_logout') }}">{{ 'security.logout'|trans({}, 'ClarolineSecurityBundle') }}</a>

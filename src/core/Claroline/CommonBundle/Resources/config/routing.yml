@@ -1,0 +1,7 @@
+claro_common_default_index:
+    pattern: /
+    defaults: { _controller: ClarolineCommonBundle:Page:defaultIndex }
+
+claro_core_desktop:
+    pattern: /desktop
+    defaults: { _controller: ClarolineCommonBundle:Desktop:index }
