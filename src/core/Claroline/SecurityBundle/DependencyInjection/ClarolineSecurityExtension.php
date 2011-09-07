@@ -11,12 +11,8 @@ class ClarolineSecurityExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $locator = new FileLocator(__DIR__ . '/../Resources/config');
+        $loader = new YamlFileLoader($container, $locator);
         $loader->load('services.yml');
-    }
-
-    public function getAlias()
-    {
-        return 'claroline_security';
     }
 }

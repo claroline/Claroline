@@ -4,3 +4,10 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@validator"
+    #controller
+    claroline.security.authentication:
+        class: Claroline\SecurityBundle\Controller\AuthenticationController
+        scope: request
+        arguments:
+            - "@request"
+            - "@templating.engine.twig"
