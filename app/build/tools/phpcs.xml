@@ -40,7 +40,9 @@
     <rule ref="Generic.Functions.CallTimePassByReference"/>
     <rule ref="Generic.PHP.LowerCaseConstant"/>
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-    <rule ref="Squiz.ControlStructures.ControlSignature"/>
+    <!-- next is disabled because it doesn't fit our rule :
+    opening and closing braces are alone on their line --> 
+    <!-- <rule ref="Squiz.ControlStructures.ControlSignature"/> -->
     <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration"/>
     <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>

@@ -19,12 +19,12 @@ class InstallCommand extends AbstractPluginCommand
     {
         $vendor = $input->getArgument('vendor_name');
         $bundle = $input->getArgument('bundle_name');
-        $FQCN = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
+        $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
 
         $output->writeln('Launching installer...');
 
         $manager = $this->getContainer()->get('claroline.plugin.manager');
-        $manager->install($FQCN);
+        $manager->install($fqcn);
 
         $output->writeln('Done');
         

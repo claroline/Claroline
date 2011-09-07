@@ -34,8 +34,9 @@ class Validator
         if (! is_dir($pluginDirectory))
         {
             throw new ValidationException(
-                    "'{$pluginDirectory}' is not a valid directory.",
-                    ValidationException::INVALID_PLUGIN_DIR);
+                "'{$pluginDirectory}' is not a valid directory.",
+                ValidationException::INVALID_PLUGIN_DIR
+            );
         }
 
         $this->pluginDirectory = $pluginDirectory;
@@ -120,9 +121,10 @@ class Validator
         if ($nameParts === false)
         {
             throw new ValidationException(
-                    "Plugin FQCN '{$this->pluginFQCN}' doesn't follow the "
-                  . "'Vendor\BundleName\VendorBundleName' convention.",
-                    ValidationException::INVALID_FQCN);
+                "Plugin FQCN '{$this->pluginFQCN}' doesn't follow the "
+                . "'Vendor\BundleName\VendorBundleName' convention.",
+                ValidationException::INVALID_FQCN
+            );
         }
 
         // Caches FQCN parts for subsequent checks
@@ -143,17 +145,19 @@ class Validator
         if (! is_dir($expectedVendorDir))
         {
             throw new ValidationException(
-                    "No vendor directory matches FQCN '{$this->pluginFQCN}' "
-                  . "(expected directory : {$expectedVendorDir}).",
-                    ValidationException::INVALID_DIRECTORY_STRUCTURE);
+                "No vendor directory matches FQCN '{$this->pluginFQCN}' "
+                . "(expected directory : {$expectedVendorDir}).",
+                ValidationException::INVALID_DIRECTORY_STRUCTURE
+            );
         }
 
         if (! is_dir($expectedPluginBundleDir))
         {
             throw new ValidationException(
-                    "No bundle directory matches FQCN '{$this->pluginFQCN}' "
-                  . "(expected directory : {$expectedPluginBundleDir}).",
-                    ValidationException::INVALID_DIRECTORY_STRUCTURE);
+                "No bundle directory matches FQCN '{$this->pluginFQCN}' "
+                . "(expected directory : {$expectedPluginBundleDir}).",
+                ValidationException::INVALID_DIRECTORY_STRUCTURE
+            );
         }
     }
 
@@ -173,9 +177,10 @@ class Validator
         if (! file_exists($expectedClassFile))
         {
             throw new ValidationException(
-                    "No plugin class file matches FQCN '{$this->pluginFQCN}' "
-                  . "(expected class file : {$expectedClassFile})",
-                    ValidationException::INVALID_PLUGIN_CLASS_FILE);
+                "No plugin class file matches FQCN '{$this->pluginFQCN}' "
+                . "(expected class file : {$expectedClassFile})",
+                ValidationException::INVALID_PLUGIN_CLASS_FILE
+            );
         }
 
         require_once $expectedClassFile;
@@ -183,8 +188,9 @@ class Validator
         if (! class_exists($this->pluginFQCN))
         {
             throw new ValidationException(
-                    "Class '{$this->pluginFQCN}' not found in '{$expectedClassFile}'.",
-                    ValidationException::INVALID_PLUGIN_CLASS);
+                "Class '{$this->pluginFQCN}' not found in '{$expectedClassFile}'.",
+                ValidationException::INVALID_PLUGIN_CLASS
+            );
         }
 
         // Caches plugin instance for subsequent checks
@@ -199,8 +205,9 @@ class Validator
         if (! is_a($pluginInstance, $claroPluginClass))
         {
             throw new ValidationException(
-                    "Class '{$this->pluginFQCN}' doesn't extend '{$claroPluginClass}'.",
-                    ValidationException::INVALID_PLUGIN_TYPE);
+                "Class '{$this->pluginFQCN}' doesn't extend '{$claroPluginClass}'.",
+                ValidationException::INVALID_PLUGIN_TYPE
+            );
         }
     }
  
@@ -221,8 +228,9 @@ class Validator
             if (! file_exists($path))
             {
                 throw new ValidationException(
-                        "{$this->pluginFQCN} : Cannot find routing file '{$path}'.",
-                        ValidationException::INVALID_ROUTING_PATH);
+                    "{$this->pluginFQCN} : Cannot find routing file '{$path}'.",
+                    ValidationException::INVALID_ROUTING_PATH
+                );
             }
 
             $requiredLocation = realpath($plugin->getPath());
@@ -232,17 +240,19 @@ class Validator
             if (substr($path, 0, strlen($requiredLocation)) != $requiredLocation)
             {                
                 throw new ValidationException(
-                        "{$this->pluginFQCN} : Invalid routing file '{$path}' "
-                      . "(must be located within the bundle).",
-                        ValidationException::INVALID_ROUTING_LOCATION);
+                    "{$this->pluginFQCN} : Invalid routing file '{$path}' "
+                    . "(must be located within the bundle).",
+                    ValidationException::INVALID_ROUTING_LOCATION
+                );
             }
             
             if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION))
             {
                 throw new ValidationException(
-                        "{$this->pluginFQCN} : Unsupported '{$ext}' extension for "
-                      . "routing file '{$path}'(use .yml).",
-                        ValidationException::INVALID_ROUTING_EXTENSION);
+                    "{$this->pluginFQCN} : Unsupported '{$ext}' extension for "
+                    . "routing file '{$path}'(use .yml).",
+                    ValidationException::INVALID_ROUTING_EXTENSION
+                );
             }
 
             try
@@ -253,9 +263,10 @@ class Validator
             catch (ParseException $ex)
             {
                 throw new ValidationException(
-                        "{$this->pluginFQCN} : Unloadable YAML routing file "
-                      . "(parse exception message : '{$ex->getMessage()}')",
-                        ValidationException::INVALID_YAML_RESOURCE);
+                    "{$this->pluginFQCN} : Unloadable YAML routing file "
+                    . "(parse exception message : '{$ex->getMessage()}')",
+                    ValidationException::INVALID_YAML_RESOURCE
+                );
             }
         }
     }
@@ -272,15 +283,17 @@ class Validator
             if (! is_string($key))
             {
                 throw new ValidationException(
-                        "{$this->pluginFQCN} : {$type} translation key must be a string.",
-                        ValidationException::INVALID_TRANSLATION_KEY);
+                    "{$this->pluginFQCN} : {$type} translation key must be a string.",
+                    ValidationException::INVALID_TRANSLATION_KEY
+                );
             }
 
             if (empty($key))
             {
                 throw new ValidationException(
-                        "{$this->pluginFQCN} : {$type} translation key cannot be empty.",
-                        ValidationException::INVALID_TRANSLATION_KEY);
+                    "{$this->pluginFQCN} : {$type} translation key cannot be empty.",
+                    ValidationException::INVALID_TRANSLATION_KEY
+                );
             }
         }
     }
