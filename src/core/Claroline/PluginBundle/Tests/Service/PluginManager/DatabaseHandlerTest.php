@@ -45,8 +45,8 @@ class DatabaseHandlerTest extends PluginBundleTestCase
 
         $firstLauncherRoles = $launchers[0]->getAccessRoles();
         $secondLauncherRoles = $launchers[1]->getAccessRoles();
-        $this->assertEquals(2, count($roles_1));
-        $this->assertEquals(1, count($roles_2));
+        $this->assertEquals(2, count($firstLauncherRoles));
+        $this->assertEquals(1, count($secondLauncherRoles));
         $this->assertEquals('ROLE_TEST_1', $firstLauncherRoles[0]->getName());
         $this->assertEquals('ROLE_TEST_2', $firstLauncherRoles[1]->getName());
         $this->assertEquals('ROLE_TEST_1', $secondLauncherRoles[0]->getName());
