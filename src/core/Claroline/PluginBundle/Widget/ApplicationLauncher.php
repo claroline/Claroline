@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\GUIBundle\Widget;
+namespace Claroline\PluginBundle\Widget;
 
 class ApplicationLauncher
 {

@@ -6,7 +6,7 @@ abstract class ClarolineApplication extends ClarolinePlugin
 {
     /**
      * This method must return an instance or an array of instances 
-     * of Claroline\GUIBundle\Widget\ApplicationLauncher
+     * of Claroline\PluginBundle\Widget\ApplicationLauncher
      */
     abstract public function getLaunchers();
 

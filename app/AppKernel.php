@@ -22,11 +22,10 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Claroline\CoreBundle\ClarolineCoreBundle(),
+            new Claroline\CommonBundle\ClarolineCommonBundle(),
             new Claroline\UserBundle\ClarolineUserBundle(),
             new Claroline\WorkspaceBundle\ClarolineWorkspaceBundle(),
             new Claroline\SecurityBundle\ClarolineSecurityBundle(),
-            new Claroline\GUIBundle\ClarolineGUIBundle(),
             new Claroline\PluginBundle\ClarolinePluginBundle(),
         );
 

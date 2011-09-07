@@ -1,5 +1,5 @@
 <?php
-namespace Claroline\CoreBundle\Service\Testing;
+namespace Claroline\CommonBundle\Service\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Client as BaseClient;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
