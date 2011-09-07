@@ -3,7 +3,7 @@
 namespace Claroline\RegisterBundle;
 
 use Claroline\PluginBundle\AbstractType\ClarolineApplication;
-use Claroline\GUIBundle\Widget\ApplicationLauncher;
+use Claroline\PluginBundle\Widget\ApplicationLauncher;
 
 class ClarolineRegisterBundle extends ClarolineApplication
 {
