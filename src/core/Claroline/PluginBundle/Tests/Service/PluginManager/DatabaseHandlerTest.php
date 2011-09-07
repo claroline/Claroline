@@ -43,13 +43,13 @@ class DatabaseHandlerTest extends PluginBundleTestCase
         $this->assertEquals('route_id_2', $launchers[1]->getRouteId());
         $this->assertEquals('trans_key_2', $launchers[1]->getTranslationKey());
 
-        $roles_1 = $launchers[0]->getAccessRoles();
-        $roles_2 = $launchers[1]->getAccessRoles();
-        $this->assertEquals(2, count($roles_1));
-        $this->assertEquals(1, count($roles_2));
-        $this->assertEquals('ROLE_TEST_1', $roles_1[0]->getName());
-        $this->assertEquals('ROLE_TEST_2', $roles_1[1]->getName());
-        $this->assertEquals('ROLE_TEST_1', $roles_2[0]->getName());
+        $firstLauncherRoles = $launchers[0]->getAccessRoles();
+        $secondLauncherRoles = $launchers[1]->getAccessRoles();
+        $this->assertEquals(2, count($firstLauncherRoles));
+        $this->assertEquals(1, count($secondLauncherRoles));
+        $this->assertEquals('ROLE_TEST_1', $firstLauncherRoles[0]->getName());
+        $this->assertEquals('ROLE_TEST_2', $firstLauncherRoles[1]->getName());
+        $this->assertEquals('ROLE_TEST_1', $secondLauncherRoles[0]->getName());
     }
 
     public function testInstallApplicationDoesntDuplicateExistingRole()

@@ -58,11 +58,11 @@ class ManagerTest extends WebTestCase
     {
         $this->setExpectedException('Claroline\UserBundle\Service\UserManager\Exception\UserException');
 
-        $user1 = $this->buildTestUser();
-        $user2 = $this->buildTestUser();
+        $jdoe = $this->buildTestUser();
+        $copiedJdoe = $this->buildTestUser();
 
-        $this->manager->create($user1);
-        $this->manager->create($user2);
+        $this->manager->create($jdoe);
+        $this->manager->create($copiedJdoe);
     }
 
     private function buildTestUser()

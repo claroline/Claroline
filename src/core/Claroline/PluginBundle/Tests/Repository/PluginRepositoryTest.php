@@ -26,12 +26,14 @@ class PluginRepositoryTest extends WebTestCase
 
     public function testCreatePluginInsertsNewPluginRecord()
     {
-        $plugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle',
-                                               'ClarolinePlugin',
-                                               'VendorX',
-                                               'TestBundle',
-                                               'Test',
-                                               'Test description');
+        $plugin = $this->buildBasePluginEntity(
+            'VendorX\TestBundle\VendorXTestBundle',
+            'ClarolinePlugin',
+            'VendorX',
+            'TestBundle',
+            'Test',
+            'Test description'
+        );
         $this->repository->createPlugin($plugin);
 
         $plugin = $this->repository->findOneByBundleFQCN('VendorX\TestBundle\VendorXTestBundle');
@@ -47,11 +49,11 @@ class PluginRepositoryTest extends WebTestCase
     {
         $this->setExpectedException('Claroline\PluginBundle\Repository\Exception\ModelException');
 
-        $plugin1 = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
-        $plugin2 = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
+        $dummyPlugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
+        $sameFQCNPlugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
 
-        $this->repository->createPlugin($plugin1);
-        $this->repository->createPlugin($plugin2);
+        $this->repository->createPlugin($dummyPlugin);
+        $this->repository->createPlugin($sameFQCNPlugin);
     }
 
     public function testDeletePluginRemovesPluginRecord()
@@ -64,10 +66,10 @@ class PluginRepositoryTest extends WebTestCase
         $this->assertEquals(null, $plugin);
     }
 
-    private function buildBasePluginEntity($FQCN, $type, $vendor, $bundle, $name, $desc)
+    private function buildBasePluginEntity($fqcn, $type, $vendor, $bundle, $name, $desc)
     {
         $pluginEntity = new BasePlugin();
-        $pluginEntity->setBundleFQCN($FQCN);
+        $pluginEntity->setBundleFQCN($fqcn);
         $pluginEntity->setType($type);
         $pluginEntity->setVendorName($vendor);
         $pluginEntity->setBundleName($bundle);

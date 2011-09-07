@@ -51,7 +51,8 @@ class MainController
         }
 
         return $this->twigEngine->renderResponse(
-                'ClarolineRegisterBundle:Main:form.html.twig', 
-                array('form' => $form->createView()));
+            'ClarolineRegisterBundle:Main:form.html.twig', 
+            array('form' => $form->createView())
+        );
     }
 }

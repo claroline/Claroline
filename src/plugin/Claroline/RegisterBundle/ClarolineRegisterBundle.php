@@ -9,9 +9,11 @@ class ClarolineRegisterBundle extends ClarolineApplication
 {
     public function getLaunchers()
     {
-        $launcher = new ApplicationLauncher('claroline_register_index', 
-                                            'register.application.name',
-                                            array('ROLE_ANONYMOUS'));
+        $launcher = new ApplicationLauncher(
+            'claroline_register_index', 
+            'register.application.name',
+            array('ROLE_ANONYMOUS')
+        );
 
         return array($launcher);
     }
