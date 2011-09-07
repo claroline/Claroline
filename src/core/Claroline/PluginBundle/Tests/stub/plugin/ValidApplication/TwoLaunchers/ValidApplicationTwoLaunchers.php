@@ -3,7 +3,7 @@
 namespace ValidApplication\TwoLaunchers;
 
 use Claroline\PluginBundle\AbstractType\ClarolineApplication;
-use Claroline\GUIBundle\Widget\ApplicationLauncher;
+use Claroline\PluginBundle\Widget\ApplicationLauncher;
 
 class ValidApplicationTwoLaunchers extends ClarolineApplication
 {
