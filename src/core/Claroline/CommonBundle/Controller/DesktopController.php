@@ -1,9 +1,14 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CommonBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+/**
+ * To be removed ASAP...
+ * 
+ * @todo Create a dedicated desktop application
+ */
 class DesktopController extends Controller
 {
     public function indexAction()
@@ -13,6 +18,6 @@ class DesktopController extends Controller
         $assigns  = array(
             'workspaces' => $workspaces,
         );
-        return $this->render('ClarolineCoreBundle:Desktop:index.html.twig', $assigns);
+        return $this->render('ClarolineCommonBundle:Desktop:index.html.twig', $assigns);
     }
 }
