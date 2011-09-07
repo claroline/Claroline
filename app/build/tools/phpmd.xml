@@ -19,11 +19,6 @@
         <exclude name="LongVariable" />
     </rule>
     
-    <rule ref="rulesets/design.xml" >
-        
-    </rule>
-    
-    
     <rule ref="rulesets/codesize.xml" >
     
     </rule>

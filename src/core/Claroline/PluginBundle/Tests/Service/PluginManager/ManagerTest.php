@@ -70,32 +70,34 @@ class ManagerTest extends PluginBundleTestCase
 
     public function testInstallSeveralValidPlugins()
     {
-        $pluginFQCN_1 = 'Valid\Minimal\ValidMinimal';
-        $pluginFQCN_2 = 'Valid\Simple\ValidSimple';
-        $pluginFQCN_3 = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
+        $validMinimalFQCN = 'Valid\Minimal\ValidMinimal';
+        $validSimpleFQCN = 'Valid\Simple\ValidSimple';
+        $twoLaunchersFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
         
-        $this->manager->install($pluginFQCN_1);
-        $this->manager->install($pluginFQCN_2);
-        $this->manager->install($pluginFQCN_3);
+        $this->manager->install($validMinimalFQCN);
+        $this->manager->install($validSimpleFQCN);
+        $this->manager->install($twoLaunchersFQCN);
 
         $this->assertEquals(
             array('Valid', 'ValidApplication'), 
-            $this->fileHandler->getRegisteredNamespaces());
+            $this->fileHandler->getRegisteredNamespaces()
+        );
         $this->assertEquals(
-            array($pluginFQCN_1, $pluginFQCN_2, $pluginFQCN_3),
-            $this->fileHandler->getRegisteredBundles());
+            array($validMinimalFQCN, $validSimpleFQCN, $twoLaunchersFQCN),
+            $this->fileHandler->getRegisteredBundles()
+        );
         $expectedRouting = array(
             'ValidSimple_0' => array(
                 'resource' => '@ValidSimple/Resources/config/routing.yml'
-                ),
+            ),
             'ValidApplicationTwoLaunchers_0' => array(
                 'resource' => '@ValidApplicationTwoLaunchers/Resources/config/routing.yml'
-                )
-            );
+            )
+        );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
-        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN_1));
-        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN_2));
-        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN_3));
+        $this->assertEquals(true, $this->manager->isInstalled($validMinimalFQCN));
+        $this->assertEquals(true, $this->manager->isInstalled($validSimpleFQCN));
+        $this->assertEquals(true, $this->manager->isInstalled($twoLaunchersFQCN));
     }
 
     public function testRemovePluginRemovesItFromConfig()

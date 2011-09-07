@@ -22,14 +22,14 @@ class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, Ord
     public function load($manager)
     {
         $admin = $manager->merge($this->getReference('user/admin'));
-        $ws_manager = $this->container->get('claroline.workspace.acl_workspace_manager');
+        $wsManager = $this->container->get('claroline.workspace.acl_workspace_manager');
         
         for($i = 0; $i < 10; ++$i)
         {
             $workspace = new Workspace();
             $workspace->setName("test workspace #{$i}");
             $workspace->setOwner($admin);
-            $ws_manager->create($workspace);
+            $wsManager->create($workspace);
         }
 
     }

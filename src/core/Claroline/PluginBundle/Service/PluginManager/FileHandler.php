@@ -147,8 +147,8 @@ class FileHandler
                 . preg_quote(DIRECTORY_SEPARATOR)
                 . '(.+)$#';
             preg_match($pattern, $path, $matches);
-            $relative_path = $matches[2];
-            $normalized_path = str_replace(DIRECTORY_SEPARATOR, '/', $relative_path);
+            $relativePath = $matches[2];
+            $normalizedPath = str_replace(DIRECTORY_SEPARATOR, '/', $relative_path);
             $key = "{$className}_{$pathKey}";
             $value = "@{$className}/{$normalized_path}";
             $resources[$key] = array ('resource' => $value);

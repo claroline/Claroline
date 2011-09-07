@@ -64,7 +64,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_DIRECTORY_STRUCTURE);
+            ValidationException::INVALID_DIRECTORY_STRUCTURE
+        );
     }
 
     /**
@@ -74,7 +75,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_PLUGIN_CLASS_FILE);
+            ValidationException::INVALID_PLUGIN_CLASS_FILE
+        );
     }
 
     /**
@@ -84,7 +86,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_PLUGIN_CLASS);
+            ValidationException::INVALID_PLUGIN_CLASS
+        );
     }
 
     /**
@@ -94,7 +97,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_PLUGIN_TYPE);
+            ValidationException::INVALID_PLUGIN_TYPE
+        );
     }
 
     /**
@@ -104,7 +108,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_ROUTING_PATH);
+            ValidationException::INVALID_ROUTING_PATH
+        );
     }
 
     /**
@@ -114,7 +119,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_ROUTING_LOCATION);
+            ValidationException::INVALID_ROUTING_LOCATION
+        );
     }
 
     /**
@@ -124,7 +130,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_ROUTING_EXTENSION);
+            ValidationException::INVALID_ROUTING_EXTENSION
+        );
     }
 
     /**
@@ -134,7 +141,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_YAML_RESOURCE);
+            ValidationException::INVALID_YAML_RESOURCE
+        );
     }
 
     /**
@@ -144,7 +152,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_TRANSLATION_KEY);
+            ValidationException::INVALID_TRANSLATION_KEY
+        );
     }
 
     /**
@@ -264,7 +273,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_APPLICATION_LAUNCHER);
+            ValidationException::INVALID_APPLICATION_LAUNCHER
+        );
     }
 
     /**
@@ -274,7 +284,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_APPLICATION_LAUNCHER);
+            ValidationException::INVALID_APPLICATION_LAUNCHER
+        );
     }
 
     /**
