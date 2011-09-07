@@ -1,7 +1,3 @@
-#claro_core_portal:
-#    pattern:  /
- #   defaults: { _controller: ClarolineCoreBundle:Portal:index }
-
 claro_core_desktop:
     pattern: /desktop
     defaults: { _controller: ClarolineCoreBundle:Desktop:index }
