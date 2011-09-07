@@ -150,7 +150,7 @@ class FileHandler
             $relativePath = $matches[2];
             $normalizedPath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
             $key = "{$className}_{$pathKey}";
-            $value = "@{$className}/{$normalized_path}";
+            $value = "@{$className}/{$normalizedPath}";
             $resources[$key] = array ('resource' => $value);
         }
 
