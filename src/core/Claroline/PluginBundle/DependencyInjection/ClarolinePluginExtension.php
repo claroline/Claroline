@@ -15,9 +15,4 @@ class ClarolinePluginExtension extends Extension
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('services.yml');
     }
-
-    public function getAlias()
-    {
-        return 'claroline_plugin';
-    }
 }
