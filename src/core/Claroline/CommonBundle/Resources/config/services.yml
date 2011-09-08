@@ -1,8 +1,0 @@
-services:
-    #controller
-    claroline.common.layout:
-        class: Claroline\CommonBundle\Controller\LayoutController
-        arguments:
-            - "@security.context"
-            - "@doctrine.orm.entity_manager"
-            - "@templating.engine.twig"
