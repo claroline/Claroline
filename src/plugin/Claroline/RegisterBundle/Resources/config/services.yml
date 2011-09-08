@@ -1,6 +1,6 @@
 services:
-    # controllers
-    claroline.register.main:
+    # controller
+    claroline.register.main_controller:
         class: Claroline\RegisterBundle\Controller\MainController
         scope: request
         arguments:
