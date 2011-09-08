@@ -5,7 +5,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@validator"
     #controller
-    claroline.security.authentication:
+    claroline.security.authentication_controller:
         class: Claroline\SecurityBundle\Controller\AuthenticationController
         scope: request
         arguments:
