@@ -1,17 +1,17 @@
 claro_workspace_new_workspace:
     pattern: /workspaces/new
-    defaults: { _controller: ClarolineWorkspaceBundle:Workspace:new }
+    defaults: { _controller: claroline.workspace.workspace_controller:newAction }
     requirements:
-        _method:  GET
+        _method: GET
 
 claro_workspace_create_workspace:
     pattern: /workspace
-    defaults: { _controller: ClarolineWorkspaceBundle:Workspace:create }
+    defaults: { _controller: claroline.workspace.workspace_controller:createAction }
     requirements:
-        _method:  POST
+        _method: POST
         
 claro_workspace_delete_workspace:
-  pattern: /workspace/{id}/delete
-  defaults: { _controller: ClarolineWorkspaceBundle:Workspace:delete }
-  requirements:
-        _method:  POST
+    pattern: /workspace/{id}/delete
+    defaults: { _controller: claroline.workspace.workspace_controller:deleteAction }
+    requirements:
+        _method: POST

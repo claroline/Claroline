@@ -11,3 +11,16 @@ services:
             - "@claroline.workspace.workspace_manager"
             - "@security.context"
             - "@security.acl.provider"
+    # controller
+    claroline.workspace.workspace_controller:
+        class: Claroline\WorkspaceBundle\Controller\WorkspaceController
+        scope: request
+        arguments:
+            - "@request"
+            - "@session"
+            - "@security.context"
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@form.factory"
+            - "@templating.engine.twig"
+            - "@claroline.workspace.acl_workspace_manager"
