@@ -11,23 +11,12 @@ class ValidCustom extends ClarolinePlugin
 {
     public function getRoutingResourcesPaths()
     {
-        $commonPath = $this->getPath()
-            . DIRECTORY_SEPARATOR
-            . 'Resources'
-            . DIRECTORY_SEPARATOR
-            . 'config';
-        $path_1 = $commonPath
-            . DIRECTORY_SEPARATOR
-            . 'routing'
-            . DIRECTORY_SEPARATOR
-            . 'routing.yml';
-        $path_2 = $commonPath
-            . DIRECTORY_SEPARATOR
-            . 'special_routing'
-            . DIRECTORY_SEPARATOR
-            . 'routing.yml';
+        $ds = DIRECTORY_SEPARATOR;
+        $commonPath = $this->getPath().$ds.'Resources'.$ds.'config';
+        $path1 = $commonPath.$ds.'routing'.$ds.'routing.yml';
+        $path2 = $commonPath.$ds.'special_routing'.$ds.'routing.yml';
         
-        return array($path_1, $path_2);
+        return array($path1, $path2);
     }
 
     public function getRoutingPrefix()
