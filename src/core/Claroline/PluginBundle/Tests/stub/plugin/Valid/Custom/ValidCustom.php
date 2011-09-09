@@ -13,10 +13,10 @@ class ValidCustom extends ClarolinePlugin
     {
         $ds = DIRECTORY_SEPARATOR;
         $commonPath = $this->getPath().$ds.'Resources'.$ds.'config';
-        $path1 = $commonPath.$ds.'routing'.$ds.'routing.yml';
-        $path2 = $commonPath.$ds.'special_routing'.$ds.'routing.yml';
+        $firstPath = $commonPath.$ds.'routing'.$ds.'routing.yml';
+        $secondPath = $commonPath.$ds.'special_routing'.$ds.'routing.yml';
         
-        return array($path1, $path2);
+        return array($firstPath, $secondPath);
     }
 
     public function getRoutingPrefix()
