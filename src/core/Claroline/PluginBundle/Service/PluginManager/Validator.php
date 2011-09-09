@@ -2,6 +2,7 @@
 
 namespace Claroline\PluginBundle\Service\PluginManager;
 
+use \ArrayObject;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException;
@@ -13,6 +14,7 @@ class Validator
     // Dependencies
     private $pluginDirectory;
     private $yamlParser;
+    private $registeredRoutingPrefixes;
     private $applicationValidator;
     private $toolValidator;
 
@@ -23,9 +25,12 @@ class Validator
     // FQCN of the plugin currently being checked
     private $pluginFQCN;
 
-    public function __construct($pluginDirectory, Parser $yamlParser)
+    public function __construct($pluginDirectory, 
+                                ArrayObject $registeredRoutingPrefixes,
+                                Parser $yamlParser)
     {
         $this->setPluginDirectory($pluginDirectory);
+        $this->registeredRoutingPrefixes = $registeredRoutingPrefixes;
         $this->yamlParser = $yamlParser;
     }
 
@@ -41,6 +46,11 @@ class Validator
 
         $this->pluginDirectory = $pluginDirectory;
     }
+
+    public function setRegisteredRoutingPrefixes(ArrayObject $prefixes)
+    {
+        $this->registeredRoutingPrefixes = $prefixes;
+    }
     
     public function setApplicationValidator(ApplicationValidator $validator)
     {
@@ -51,7 +61,7 @@ class Validator
     {
         $this->toolValidator = $validator;
     }
-    
+
     public function check($pluginFQCN)
     {
         $this->pluginFQCN = $pluginFQCN;
@@ -60,6 +70,7 @@ class Validator
         $this->checkDirectoryStructure();
         $this->checkIsLoadable();
         $this->checkExtendsClarolinePlugin();
+        $this->checkRoutingPrefix();
         $this->checkRoutingResources();
         $this->checkTranslationKeys();
         $this->checkSubType();
@@ -211,6 +222,44 @@ class Validator
         }
     }
  
+    private function checkRoutingPrefix()
+    {
+        $plugin = $this->getPluginInstance();
+        $prefix = $plugin->getRoutingPrefix();
+        
+        if (! is_string($prefix))
+        {
+            throw new ValidationException(
+                "{$this->pluginFQCN} : routing prefix must be a string.",
+                ValidationException::INVALID_ROUTING_PREFIX
+            );
+        }
+        
+        if (empty($prefix))
+        {
+            throw new ValidationException(
+                "{$this->pluginFQCN} : routing prefix cannot be empty.",
+                ValidationException::INVALID_ROUTING_PREFIX
+            );
+        }
+        
+        if (preg_match('#\s#', $prefix))
+        {
+            throw new ValidationException(
+                "{$this->pluginFQCN} : routing prefix cannot contain white spaces.",
+                ValidationException::INVALID_ROUTING_PREFIX
+            );
+        }
+        
+        if (in_array($prefix, (array) $this->registeredRoutingPrefixes))
+        {
+            throw new ValidationException(
+                "{$this->pluginFQCN} : routing prefix '{$prefix}' is already registered.",
+                ValidationException::INVALID_ROUTING_PREFIX
+            );
+        }
+    }
+    
     private function checkRoutingResources()
     {
         $plugin = $this->getPluginInstance();

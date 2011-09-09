@@ -38,7 +38,11 @@ class ValidatorTest extends PluginBundleTestCase
     {
         try
         {
-            new Validator('/non_existent/path', new \Symfony\Component\Yaml\Parser());
+            new Validator(
+                '/non_existent/path', 
+                new \ArrayObject(),
+                new \Symfony\Component\Yaml\Parser()
+            );
             $this->fail("No exception thrown.");
         }
         catch (ValidationException $ex)
@@ -103,6 +107,35 @@ class ValidatorTest extends PluginBundleTestCase
     }
 
     /**
+     * @dataProvider unexpectedRoutingPrefixProvider
+     */
+    public function testCheckThrowsAnExceptionOnUnexpectedRoutingPrefix($fqcn)
+    {
+        $this->assertValidationExceptionIsThrown(
+            $fqcn,
+            ValidationException::INVALID_ROUTING_PREFIX
+        );
+    }
+    
+    public function testCheckThrowsAnExceptionOnAlreadyRegisteredRoutingPrefix()
+    {
+        $this->client->beginTransaction();
+        $this->manager->install('Valid\Custom\ValidCustom');
+            
+        try
+        {
+            $this->validator->check('Incompatible\ConflictWithValidCustom_1\IncompatibleConflictWithValidCustom_1');
+            $this->fail("No exception thrown.");
+        }
+        catch (ValidationException $ex)
+        {
+            $this->assertEquals(ValidationException::INVALID_ROUTING_PREFIX, $ex->getCode());
+        }
+        
+        $this->client->rollback();
+    }
+    
+    /**
      * @dataProvider nonExistentRoutingResourceTypeProvider
      */
     public function testCheckThrowsAnExceptionOnNonExistentRoutingResource($fqcn)
@@ -116,7 +149,7 @@ class ValidatorTest extends PluginBundleTestCase
     /**
      * @dataProvider unexpectedRoutingResourceLocationProvider
      */
-    public function testCheckThrowsAnExceptionOnInvalidRoutingResourceLocation($fqcn)
+    public function testCheckThrowsAnExceptionOnUnexpectedRoutingResourceLocation($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
@@ -177,9 +210,9 @@ class ValidatorTest extends PluginBundleTestCase
     {
         // Arbitrary strings
         return array(
-          array('VendorX\DummyPluginBundle\BadNamespace\VendorXDummyPluginBundle'),
-          array('VendorX\DummyPluginBundle\BadNamePluginBundle'),
-          array('VendorX\VendorXDummyPluginBundle')
+            array('VendorX\DummyPluginBundle\BadNamespace\VendorXDummyPluginBundle'),
+            array('VendorX\DummyPluginBundle\BadNamePluginBundle'),
+            array('VendorX\VendorXDummyPluginBundle')
         );
     }
     
@@ -187,8 +220,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         // Arbitrary strings
         return array(
-          array('NonExistentVendor\TestBundle\NonExistentVendorTestBundle'),
-          array('Invalid\NonExistentBundle\InvalidNonExistentBundle'),
+            array('NonExistentVendor\TestBundle\NonExistentVendorTestBundle'),
+            array('Invalid\NonExistentBundle\InvalidNonExistentBundle'),
         );
     }
 
@@ -202,21 +235,30 @@ class ValidatorTest extends PluginBundleTestCase
     public function unloadableBundleClassProvider()
     {
         return array(
-          array('Invalid\UnloadableBundleClass_1\InvalidUnloadableBundleClass_1'),
-          array('Invalid\UnloadableBundleClass_2\InvalidUnloadableBundleClass_2'),
-          array('Invalid\UnloadableBundleClass_3\InvalidUnloadableBundleClass_3'),
-          array('Invalid\UnloadableBundleClass_4\InvalidUnloadableBundleClass_4')
+            array('Invalid\UnloadableBundleClass_1\InvalidUnloadableBundleClass_1'),
+            array('Invalid\UnloadableBundleClass_2\InvalidUnloadableBundleClass_2'),
+            array('Invalid\UnloadableBundleClass_3\InvalidUnloadableBundleClass_3'),
+            array('Invalid\UnloadableBundleClass_4\InvalidUnloadableBundleClass_4')
         );
     }
 
     public function unexpectedPluginClassTypeProvider()
     {
         return array(
-          array('Invalid\UnexpectedBundleClassType_1\InvalidUnexpectedBundleClassType_1'),
-          array('Invalid\UnexpectedBundleClassType_2\InvalidUnexpectedBundleClassType_2')
+            array('Invalid\UnexpectedBundleClassType_1\InvalidUnexpectedBundleClassType_1'),
+            array('Invalid\UnexpectedBundleClassType_2\InvalidUnexpectedBundleClassType_2')
         );
     }
 
+    public function unexpectedRoutingPrefixProvider()
+    {
+        return array(
+            array('Invalid\UnexpectedRoutingPrefix_1\InvalidUnexpectedRoutingPrefix_1'),
+            array('Invalid\UnexpectedRoutingPrefix_2\InvalidUnexpectedRoutingPrefix_2'),
+            array('Invalid\UnexpectedRoutingPrefix_3\InvalidUnexpectedRoutingPrefix_3')
+        );
+    }
+    
     public function nonExistentRoutingResourceTypeProvider()
     {
         return array(
@@ -259,7 +301,9 @@ class ValidatorTest extends PluginBundleTestCase
     public function validPluginProvider()
     {
         return array(
-            array('Valid\Minimal\ValidMinimal')
+            array('Valid\Minimal\ValidMinimal'),
+            array('Valid\Simple\ValidSimple'),
+            array('Valid\Custom\ValidCustom')
         );
     }
     

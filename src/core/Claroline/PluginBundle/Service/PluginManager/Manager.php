@@ -32,8 +32,15 @@ class Manager
 
         $this->fileHandler->registerNamespace($plugin->getVendorNamespace());
         $this->fileHandler->addInstantiableBundle($pluginFQCN);
-        $this->fileHandler->importRoutingResources($pluginFQCN, $plugin->getRoutingResourcesPaths());
+        $this->fileHandler->importRoutingResources(
+            $pluginFQCN, 
+            $plugin->getRoutingResourcesPaths(),
+            $plugin->getRoutingPrefix()
+        );
         $this->databaseHandler->install($plugin);
+        $this->validator->setRegisteredRoutingPrefixes(
+            $this->fileHandler->getRegisteredRoutingPrefixes()
+        );
     }
 
     public function remove($pluginFQCN)
