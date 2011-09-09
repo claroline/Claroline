@@ -10,12 +10,13 @@ class ValidationException extends \Exception
     const INVALID_PLUGIN_CLASS_FILE = 3;
     const INVALID_PLUGIN_CLASS = 4;
     const INVALID_PLUGIN_TYPE = 5;
-    const INVALID_ROUTING_PATH = 6;
-    const INVALID_ROUTING_LOCATION = 7;
-    const INVALID_ROUTING_EXTENSION = 8;
-    const INVALID_YAML_RESOURCE = 9;
-    const INVALID_TRANSLATION_KEY = 10;
-    const INVALID_APPLICATION_LAUNCHER = 11;
+    const INVALID_ROUTING_PREFIX = 6;
+    const INVALID_ROUTING_PATH = 7;
+    const INVALID_ROUTING_LOCATION = 8;
+    const INVALID_ROUTING_EXTENSION = 9;
+    const INVALID_YAML_RESOURCE = 10;
+    const INVALID_TRANSLATION_KEY = 11;
+    const INVALID_APPLICATION_LAUNCHER = 12;
 
     public function __construct($message, $code)
     {

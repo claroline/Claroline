@@ -43,6 +43,21 @@ abstract class ClarolinePlugin extends Bundle
         return null;
     }
 
+    public function getRoutingPrefix()
+    {
+        $prefix = $this->getBundleName();
+        $pattern = '#^(.+)Bundle$#';
+        
+        if (preg_match($pattern, $prefix, $matches))
+        {
+            $prefix = $matches[1];
+        }
+        
+        $prefix = strtolower($prefix);
+        
+        return $prefix;
+    }
+    
     public function getNameTranslationKey()
     {
         return 'No available translated name';

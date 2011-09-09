@@ -34,7 +34,8 @@ class ManagerTest extends PluginBundleTestCase
         $this->assertEquals(array($pluginFQCN), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
             'ValidSimple_0' => array(
-                'resource' => '@ValidSimple/Resources/config/routing.yml'
+                'resource' => '@ValidSimple/Resources/config/routing.yml',
+                'prefix' => 'simple'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
@@ -61,7 +62,8 @@ class ManagerTest extends PluginBundleTestCase
         $this->assertEquals(array($pluginFQCN), $this->fileHandler->getRegisteredBundles());
         $expectedRouting = array(
             'ValidSimple_0' => array(
-                'resource' => '@ValidSimple/Resources/config/routing.yml'
+                'resource' => '@ValidSimple/Resources/config/routing.yml',
+                'prefix' => 'simple'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
@@ -88,10 +90,12 @@ class ManagerTest extends PluginBundleTestCase
         );
         $expectedRouting = array(
             'ValidSimple_0' => array(
-                'resource' => '@ValidSimple/Resources/config/routing.yml'
+                'resource' => '@ValidSimple/Resources/config/routing.yml',
+                'prefix' => 'simple'
             ),
             'ValidApplicationTwoLaunchers_0' => array(
-                'resource' => '@ValidApplicationTwoLaunchers/Resources/config/routing.yml'
+                'resource' => '@ValidApplicationTwoLaunchers/Resources/config/routing.yml',
+                'prefix' => 'twolaunchers'
             )
         );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());

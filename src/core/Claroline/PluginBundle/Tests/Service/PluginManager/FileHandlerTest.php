@@ -214,19 +214,26 @@ class FileHandlerTest extends PluginBundleTestCase
             'special' => 'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'More'.$ds.'routing.yml'
         );
 
-        $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
+        $this->fileHandler->importRoutingResources(
+            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle', 
+            $paths,
+            'dummy_prefix'
+        );
 
         $expectedResources = array(
             'VendorXDummyPluginBundle_0' => array(
-                'resource' => '@VendorXDummyPluginBundle/Resources/routing.yml'
-                ),
+                'resource' => '@VendorXDummyPluginBundle/Resources/routing.yml',
+                'prefix' => 'dummy_prefix'
+            ),
             'VendorXDummyPluginBundle_1' => array(
-                'resource' => '@VendorXDummyPluginBundle/Resources/routing2.yml'
-                ),
+                'resource' => '@VendorXDummyPluginBundle/Resources/routing2.yml',
+                'prefix' => 'dummy_prefix'
+            ),
             'VendorXDummyPluginBundle_special' => array(
-                'resource' => '@VendorXDummyPluginBundle/Resources/More/routing.yml'
-                )
-            );
+                'resource' => '@VendorXDummyPluginBundle/Resources/More/routing.yml',
+                'prefix' => 'dummy_prefix'
+            )
+        );
         $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
@@ -234,20 +241,26 @@ class FileHandlerTest extends PluginBundleTestCase
     {
         $ds = DIRECTORY_SEPARATOR;
         $entry = "VendorXDummyPluginBundle_0:\n    "
-               . "resource: '@VendorXDummyPluginBundle/Resources/routing.yml'";
+            . "resource: '@VendorXDummyPluginBundle/Resources/routing.yml'\n    "
+            . "prefix: dummy_prefix";
         file_put_contents($this->routingFile, $entry);
 
         $newPath = 'plugin'.$ds.'VendorY'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml';
-        $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($newPath));
+        $this->fileHandler->importRoutingResources(
+            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
+            array($newPath),
+            'dummy_prefix');
 
         $expectedResources = array(
             'VendorXDummyPluginBundle_0' => array(
-                'resource' => '@VendorXDummyPluginBundle/Resources/routing.yml'
-                ),
+                'resource' => '@VendorXDummyPluginBundle/Resources/routing.yml',
+                'prefix' => 'dummy_prefix'
+            ),
             'VendorYDummyPluginBundle_0' => array(
-                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
-                )
-            );
+                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml',
+                'prefix' => 'dummy_prefix'
+            )
+        );
         $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
@@ -255,12 +268,21 @@ class FileHandlerTest extends PluginBundleTestCase
     {
         $ds = DIRECTORY_SEPARATOR;
         $path = 'plugin'.$ds.'VendorY'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml';
-        $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
-        $this->fileHandler->importRoutingResources('VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path));
+        $this->fileHandler->importRoutingResources(
+            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
+            array($path),
+            'dummy_prefix'
+        );
+        $this->fileHandler->importRoutingResources(
+            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
+            array($path),
+            'dummy_prefix'
+        );
 
         $expectedResources = array(
             'VendorYDummyPluginBundle_0' => array(
-                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
+                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml',
+                'prefix' => 'dummy_prefix'
                 )
             );
         $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
@@ -269,20 +291,25 @@ class FileHandlerTest extends PluginBundleTestCase
     public function testRemoveRoutingResourcesDeletesAllResourcesRelatedToAPlugin()
     {
         $entries = "VendorXDummyPluginBundle_1:\n    "
-            . "resource: '@VendorXDummyPluginBundle/Resources/routing1.yml'\n"
+            . "resource: '@VendorXDummyPluginBundle/Resources/routing1.yml'\n    "
+            . "prefix: dummy_prefix\n"
             . "VendorXDummyPluginBundle_2:\n    "
-            . "resource: '@VendorXDummyPluginBundle/Resources/routing2.yml'\n"
+            . "resource: '@VendorXDummyPluginBundle/Resources/routing2.yml'\n    "
+            . "prefix: dummy_prefix\n"
             . "VendorYDummyPluginBundle_0:\n    "
-            . "resource: '@VendorYDummyPluginBundle/Resources/routing.yml'\n";
+            . "resource: '@VendorYDummyPluginBundle/Resources/routing.yml'\n    "
+            . "prefix: y_dummy_prefix";
         file_put_contents($this->routingFile, $entries);
 
         $this->fileHandler->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
 
         $expectedResources = array(
             'VendorYDummyPluginBundle_0' => array(
-                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml'
-                )
-            );
+                'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml',
+                'prefix' => 'y_dummy_prefix'
+            )
+        );
+        
         $this->assertEquals($expectedResources, $this->fileHandler->getRoutingResources());
     }
 
@@ -293,8 +320,14 @@ class FileHandlerTest extends PluginBundleTestCase
             'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing.yml',
             'plugin'.$ds.'VendorX'.$ds.'DummyPluginBundle'.$ds.'Resources'.$ds.'routing2.yml');
 
-        $this->fileHandler->importRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths);
-        $this->fileHandler->removeRoutingResources('VendorX\DummyPluginBundle\VendorXDummyPluginBundle');
+        $this->fileHandler->importRoutingResources(
+            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle', 
+            $paths,
+            'dummy_prefix'
+        );
+        $this->fileHandler->removeRoutingResources(
+            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle'
+        );
 
         $this->assertEquals(array(), $this->fileHandler->getRoutingResources());
     }

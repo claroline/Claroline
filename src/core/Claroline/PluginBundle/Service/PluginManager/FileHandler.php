@@ -98,6 +98,26 @@ class FileHandler
         return $sharedVendors;
     }
 
+    public function getRegisteredRoutingPrefixes()
+    {
+        $prefixes = array();
+        
+        foreach ($this->getRoutingResources() as $resource)
+        {
+            if (! array_key_exists('prefix', $resource))
+            {
+                throw new \RuntimeException(
+                    "A non-prefixed routing resource was found "
+                    . "in '{$this->pluginRoutingFile}'."
+                );
+            }
+            
+            $prefixes[] = $resource['prefix'];
+        }
+        
+        return new \ArrayObject($prefixes);
+    }
+    
     public function getRoutingResources()
     {
         $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
@@ -127,8 +147,8 @@ class FileHandler
     {
         $this->doRemoveItem($this->pluginBundlesFile, $pluginFQCN);
     }
-
-    public function importRoutingResources($pluginFQCN, $paths)
+    
+    public function importRoutingResources($pluginFQCN, $paths, $prefix)
     {
         $nameParts = explode('\\', $pluginFQCN);
         $vendor = $nameParts[0];
@@ -151,7 +171,10 @@ class FileHandler
             $normalizedPath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
             $key = "{$className}_{$pathKey}";
             $value = "@{$className}/{$normalizedPath}";
-            $resources[$key] = array ('resource' => $value);
+            $resources[$key] = array (
+                'resource' => $value,
+                'prefix' => $prefix
+            );
         }
 
         $resources = array_merge($this->getRoutingResources(), $resources);

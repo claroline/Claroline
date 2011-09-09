@@ -5,6 +5,17 @@ parameters:
     claroline.plugin.routing.config_file: "%kernel.root_dir%/config/plugin/routing.yml"
 
 services:
+    claroline.plugin.file_handler:
+        class: Claroline\PluginBundle\Service\PluginManager\FileHandler
+        arguments:
+            - %claroline.plugin.namespaces.config_file%
+            - %claroline.plugin.bundles.config_file%
+            - %claroline.plugin.routing.config_file%
+            - "@symfony.yaml"
+    claroline.plugin.routing_prefixes:
+        class: ArrayObject
+        factory_service: claroline.plugin.file_handler
+        factory_method: getRegisteredRoutingPrefixes
     claroline.plugin.application_validator:
         class: Claroline\PluginBundle\Service\PluginManager\ApplicationValidator
         public: false
@@ -15,17 +26,11 @@ services:
         class: Claroline\PluginBundle\Service\PluginManager\Validator
         arguments:
             - %claroline.plugin.directory%
+            - "@claroline.plugin.routing_prefixes"
             - "@symfony.yaml.parser"
         calls:
             - [setApplicationValidator, ["@claroline.plugin.application_validator"]]
             - [setToolValidator, ["@claroline.plugin.tool_validator"]]
-    claroline.plugin.file_handler:
-        class: Claroline\PluginBundle\Service\PluginManager\FileHandler
-        arguments:
-            - %claroline.plugin.namespaces.config_file%
-            - %claroline.plugin.bundles.config_file%
-            - %claroline.plugin.routing.config_file%
-            - "@symfony.yaml"
     claroline.plugin.database_handler:
         class: Claroline\PluginBundle\Service\PluginManager\DatabaseHandler
         arguments:
