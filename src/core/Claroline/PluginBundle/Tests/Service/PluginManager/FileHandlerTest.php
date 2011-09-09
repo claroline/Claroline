@@ -249,7 +249,8 @@ class FileHandlerTest extends PluginBundleTestCase
         $this->fileHandler->importRoutingResources(
             'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
             array($newPath),
-            'dummy_prefix');
+            'dummy_prefix'
+        );
 
         $expectedResources = array(
             'VendorXDummyPluginBundle_0' => array(
