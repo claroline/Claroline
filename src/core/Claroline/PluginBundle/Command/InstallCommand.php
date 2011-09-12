@@ -5,8 +5,7 @@ namespace Claroline\PluginBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
-class InstallCommand extends AbstractPluginCommand
+class InstallCommand extends SinglePluginCommand
 {
     protected function configure()
     {
