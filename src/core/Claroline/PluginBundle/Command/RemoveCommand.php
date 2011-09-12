@@ -5,7 +5,7 @@ namespace Claroline\PluginBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RemoveCommand extends AbstractPluginCommand
+class RemoveCommand extends SinglePluginCommand
 {
     protected function configure()
     {
@@ -28,5 +28,4 @@ class RemoveCommand extends AbstractPluginCommand
         $output->writeln('Done');
         $this->resetCache($output);
     }
-    
 }
