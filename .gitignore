@@ -1,5 +1,6 @@
 nbproject/*
 vendor/*
+app/DoctrineMigrations
 app/config/parameters.ini
 app/config/plugin/*
 app/cache/*
