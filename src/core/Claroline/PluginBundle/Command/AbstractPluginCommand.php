@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
 abstract class AbstractPluginCommand extends ContainerAwareCommand
-{    
+{
     protected function resetCache(OutputInterface $output)
     {
         $command = $this->getApplication()->find('cache:clear');
