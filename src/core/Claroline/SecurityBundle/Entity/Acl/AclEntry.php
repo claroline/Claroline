@@ -90,4 +90,59 @@ class AclEntry
      * })
      */
     private $class;
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getFieldName()
+    {
+        return $this->fieldName;
+    }
+
+    public function getAceOrder()
+    {
+        return $this->aceOrder;
+    }
+
+    public function getMask()
+    {
+        return $this->mask;
+    }
+
+    public function getGranting()
+    {
+        return $this->granting;
+    }
+
+    public function getGrantingStrategy()
+    {
+        return $this->grantingStrategy;
+    }
+
+    public function getAuditSuccess()
+    {
+        return $this->auditSuccess;
+    }
+
+    public function getAuditFailure()
+    {
+        return $this->auditFailure;
+    }
+
+    public function getObjectIdentity()
+    {
+        return $this->objectIdentity;
+    }
+
+    public function getSecurityIdentity()
+    {
+        return $this->securityIdentity;
+    }
+
+    public function getClass()
+    {
+        return $this->class;
+    }
 }

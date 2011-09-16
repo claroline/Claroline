@@ -35,4 +35,19 @@ class AclSecurityIdentity
      * @ORM\Column(name="username", type="boolean", nullable=false)
      */
     private $username;
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
 }
