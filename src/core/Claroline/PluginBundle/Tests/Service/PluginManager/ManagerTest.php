@@ -154,5 +154,9 @@ class ManagerTest extends PluginBundleTestCase
         $this->assertTrue($table->hasColumn('id'));
         $this->assertTrue($table->hasColumn('name'));
         $this->assertTrue($table->hasColumn('last_modified'));
+        
+        // DDL cannot be encapsulated in a transaction with MYSQL
+        $this->manager->remove('Valid\WithMigrations\ValidWithMigrations');
+        
     }
 }
