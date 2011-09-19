@@ -9,7 +9,7 @@ use Doctrine\DBAL\Migrations\Migration;
 
 class MigrationsHandler
 {
-    private $dbal_connection;
+    private $connection;
     
     public function __construct(Connection $connection)
     {
@@ -18,7 +18,7 @@ class MigrationsHandler
     
     public function setConnection(Connection $connection)
     {
-        $this->dbal_connection = $connection;
+        $this->connection = $connection;
     }
 
 
@@ -34,22 +34,27 @@ class MigrationsHandler
     
     public function migrate(ClarolinePlugin $plugin, $to)
     {
-        $config = new Configuration($this->dbal_connection);
+        $config = new Configuration($this->connection);
         $config->setName("{$plugin->getName()} Migration");
-        $migration_path_pieces = array(
+        $migrationPathPieces = array(
             $plugin->getPath(),
             'Migrations'
         );
-        $migration_path = implode(DIRECTORY_SEPARATOR, $migration_path_pieces);
-        $config->setMigrationsDirectory($migration_path);        
+        $migrationPath = implode(DIRECTORY_SEPARATOR, $migrationPathPieces);
+        $config->setMigrationsDirectory($migrationPath);        
         $config->setMigrationsNamespace($plugin->getNamespace() . '\\Migrations');
-        $config->registerMigrationsFromDirectory($migration_path);
-        //FIXME next line is a hack fixing this bug 
+        $config->registerMigrationsFromDirectory($migrationPath);
+        
+        //FIXME next lines are a hack fixing this bug 
         //@see https://github.com/doctrine/migrations/issues/47
         // hopefully we'll be able to remove the fix soon
-        if( count($config->getMigrations()) == 0) return;
+        if( count($config->getMigrations()) == 0)
+        {
+            return;
+        }
         $config->setMigrationsTableName(
-            $plugin->getPrefix() . '_doctrine_migration_versions');
+            $plugin->getPrefix() . '_doctrine_migration_versions'
+        );
         
         $migration = new Migration($config);
         
