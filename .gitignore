@@ -12,3 +12,4 @@ app/build/logs
 app/build/pdepend
 app/build/tools/phpunit.xml
 !placeholder
+catalog.xml

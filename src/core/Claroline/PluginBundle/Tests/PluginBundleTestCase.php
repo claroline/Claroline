@@ -22,11 +22,18 @@ use \vfsStream;
  */
 class PluginBundleTestCase extends WebTestCase
 {
+    /** @var \Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
     protected $client;
+    /** @var \Claroline\PluginBundle\Service\PluginManager\Manager*/
     protected $manager;
+    /** @var \Claroline\PluginBundle\Service\PluginManager\Validator*/
     protected $validator;
+    /** @var \Claroline\PluginBundle\Service\PluginManager\FileHandler */
     protected $fileHandler;
+    /** @var \Claroline\PluginBundle\Service\PluginManager\DatabaseHandler */
     protected $databaseHandler;
+    /** @var \Claroline\PluginBundle\Service\PluginManager\MigrationsHandler */
+    protected $migrationsHandler;
 
     protected $pluginDirectory;
     protected $namespacesFile;
@@ -41,7 +48,8 @@ class PluginBundleTestCase extends WebTestCase
         $this->validator = $container->get('claroline.plugin.validator');
         $this->fileHandler = $container->get('claroline.plugin.file_handler');
         $this->databaseHandler = $container->get('claroline.plugin.database_handler');
-
+        $this->migrationsHandler = $container->get('claroline.plugin.migrations_handler');
+        
         vfsStream::setup('virtual');
         $structure = array('namespaces' => '', 'bundles' => '', 'routing.yml' => '');
         vfsStream::create($structure, 'virtual');
@@ -59,5 +67,22 @@ class PluginBundleTestCase extends WebTestCase
         $this->fileHandler->setPluginNamespacesFile($this->namespacesFile);
         $this->fileHandler->setPluginBundlesFile($this->bundlesFile);
         $this->fileHandler->setPluginRoutingFile($this->routingFile);
+    }
+    
+    /**
+     * Helper method building a stubbed plugin.
+     *
+     * @param string $pluginFQCN
+     * @return \Claroline\PluginBundle\Entity\AbstractPlugin the plugin object
+     */
+    protected function build_plugin($pluginFQCN)
+    {
+        $pluginFile = $this->pluginDirectory
+                . DIRECTORY_SEPARATOR
+                . str_replace('\\', DIRECTORY_SEPARATOR, $pluginFQCN)
+                . '.php';
+
+        require_once $pluginFile;
+        return new $pluginFQCN;
     }
 }

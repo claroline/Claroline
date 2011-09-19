@@ -27,6 +27,7 @@
             <exclude>
                 <directory>../src/core/*/Bundle/*Bundle/Resources</directory>
                 <directory>../src/plugin/*/Bundle/*Bundle/Tests</directory>
+                <directory>../src/plugin/*/Bundle/*Bundle/Command</directory>
             </exclude>
         </whitelist>
     </filter>
