@@ -68,4 +68,34 @@ class AclObjectIdentity
     {
         $this->ancestor = new ArrayCollection();
     }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getClassId()
+    {
+        return $this->classId;
+    }
+
+    public function getObjectIdentifier()
+    {
+        return $this->objectIdentifier;
+    }
+
+    public function getEntriesInheriting()
+    {
+        return $this->entriesInheriting;
+    }
+
+    public function getAncestor()
+    {
+        return $this->ancestor;
+    }
+
+    public function getParentObjectIdentity()
+    {
+        return $this->parentObjectIdentity;
+    }
 }

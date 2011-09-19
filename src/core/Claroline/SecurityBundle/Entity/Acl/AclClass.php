@@ -22,4 +22,14 @@ class AclClass
      * @ORM\Column(name="class_type", type="string", length=200, nullable=false, unique=true)
      */
     private $classType;
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function getClassType()
+    {
+        return $this->classType;
+    }
 }
