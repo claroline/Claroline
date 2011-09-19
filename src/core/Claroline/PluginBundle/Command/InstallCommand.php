@@ -24,7 +24,7 @@ class InstallCommand extends SinglePluginCommand
 
         $manager = $this->getContainer()->get('claroline.plugin.manager');
         $manager->install($fqcn);
-
+        
         $output->writeln('Done');
         
         $this->resetCache($output);

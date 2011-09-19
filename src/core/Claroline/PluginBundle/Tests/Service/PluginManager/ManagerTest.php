@@ -35,7 +35,7 @@ class ManagerTest extends PluginBundleTestCase
         $expectedRouting = array(
             'ValidSimple_0' => array(
                 'resource' => '@ValidSimple/Resources/config/routing.yml',
-                'prefix' => 'simple'
+                'prefix' => 'valid_simple'
                 )
             );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
@@ -91,11 +91,11 @@ class ManagerTest extends PluginBundleTestCase
         $expectedRouting = array(
             'ValidSimple_0' => array(
                 'resource' => '@ValidSimple/Resources/config/routing.yml',
-                'prefix' => 'simple'
+                'prefix' => 'valid_simple'
             ),
             'ValidApplicationTwoLaunchers_0' => array(
                 'resource' => '@ValidApplicationTwoLaunchers/Resources/config/routing.yml',
-                'prefix' => 'twolaunchers'
+                'prefix' => 'validapplication_twolaunchers'
             )
         );
         $this->assertEquals($expectedRouting, $this->fileHandler->getRoutingResources());
@@ -134,9 +134,25 @@ class ManagerTest extends PluginBundleTestCase
     public function testIsInstalledReturnsCorrectValue()
     {
         $pluginFQCN = 'Valid\Minimal\ValidMinimal';
-        $this->assertEquals(false, $this->manager->isInstalled($pluginFQCN));
+        $this->assertFalse($this->manager->isInstalled($pluginFQCN));
 
         $this->manager->install($pluginFQCN);
-        $this->assertEquals(true, $this->manager->isInstalled($pluginFQCN));
+        $this->assertTrue($this->manager->isInstalled($pluginFQCN));
+    }
+    
+    public function testInstallDelegatesToMigrationsHandler()
+    {
+        $this->manager->install('Valid\WithMigrations\ValidWithMigrations');
+        
+        $schema = 
+            $this
+            ->client
+            ->getConnection()
+            ->getSchemaManager()
+            ->createSchema();
+        $table = $schema->getTable('valid_withmigrations_stuffs');
+        $this->assertTrue($table->hasColumn('id'));
+        $this->assertTrue($table->hasColumn('name'));
+        $this->assertTrue($table->hasColumn('last_modified'));
     }
 }

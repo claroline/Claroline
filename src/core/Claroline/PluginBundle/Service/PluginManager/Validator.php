@@ -225,7 +225,7 @@ class Validator
     private function checkRoutingPrefix()
     {
         $plugin = $this->getPluginInstance();
-        $prefix = $plugin->getRoutingPrefix();
+        $prefix = $plugin->getPrefix();
         
         if (! is_string($prefix))
         {

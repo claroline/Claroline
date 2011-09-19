@@ -27,9 +27,9 @@ class DatabaseHandlerTest extends PluginBundleTestCase
     public function testInstallApplicationRegistersLaunchersAndRoles()
     {
         $pluginFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
-        $this->requireStubPluginFile($pluginFQCN);
+        $plugin = $this->build_plugin($pluginFQCN);
 
-        $this->databaseHandler->install(new $pluginFQCN);
+        $this->databaseHandler->install($plugin);
 
         $appRepo = $this->em->getRepository('Claroline\PluginBundle\Entity\Application');
         $apps = $appRepo->findByBundleFQCN($pluginFQCN);
@@ -55,9 +55,9 @@ class DatabaseHandlerTest extends PluginBundleTestCase
     public function testInstallApplicationDoesntDuplicateExistingRole()
     {
         $pluginFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
-        $this->requireStubPluginFile($pluginFQCN);
+        $plugin = $this->build_plugin($pluginFQCN);
 
-        $this->databaseHandler->install(new $pluginFQCN);
+        $this->databaseHandler->install($plugin);
 
         $roleRepo = $this->em->getRepository('Claroline\SecurityBundle\Entity\Role');
         $roles = $roleRepo->findByName('ROLE_TEST_1');
@@ -65,19 +65,5 @@ class DatabaseHandlerTest extends PluginBundleTestCase
         $this->assertEquals(1, count($roles));
     }
 
-    /**
-     * Helper method requiring a plugin file (as the plugin namespace
-     * registration isn't made by the DatabaseHandler)
-     *
-     * @param string $pluginFQCN
-     */
-    private function requireStubPluginFile($pluginFQCN)
-    {
-        $pluginFile = $this->pluginDirectory
-                . DIRECTORY_SEPARATOR
-                . str_replace('\\', DIRECTORY_SEPARATOR, $pluginFQCN)
-                . '.php';
-
-        require_once $pluginFile;
-    }
+    
 }

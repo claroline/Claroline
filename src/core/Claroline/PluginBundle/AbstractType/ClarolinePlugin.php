@@ -43,8 +43,9 @@ abstract class ClarolinePlugin extends Bundle
         return null;
     }
 
-    public function getRoutingPrefix()
+    public function getPrefix()
     {
+        $vendor = $this->getVendorNamespace();
         $prefix = $this->getBundleName();
         $pattern = '#^(.+)Bundle$#';
         
@@ -53,7 +54,7 @@ abstract class ClarolinePlugin extends Bundle
             $prefix = $matches[1];
         }
         
-        $prefix = strtolower($prefix);
+        $prefix = strtolower("{$vendor}_{$prefix}");
         
         return $prefix;
     }

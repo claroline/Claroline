@@ -9,14 +9,17 @@ class Manager
     private $validator;
     private $fileHandler;
     private $databaseHandler;
+    private $migrationsHandler;
 
     public function __construct(Validator $validator, 
                                 FileHandler $fileHandler,
-                                DatabaseHandler $databaseHandler)
+                                DatabaseHandler $databaseHandler,
+                                MigrationsHandler $migrationsHandler)
     {
         $this->validator = $validator;
         $this->fileHandler = $fileHandler;
         $this->databaseHandler = $databaseHandler;
+        $this->migrationsHandler = $migrationsHandler;
     }
     
     public function install($pluginFQCN)
@@ -29,14 +32,17 @@ class Manager
         $this->validator->check($pluginFQCN);
 
         $plugin = new $pluginFQCN;
-
+        
+                
         $this->fileHandler->registerNamespace($plugin->getVendorNamespace());
         $this->fileHandler->addInstantiableBundle($pluginFQCN);
         $this->fileHandler->importRoutingResources(
             $pluginFQCN, 
             $plugin->getRoutingResourcesPaths(),
-            $plugin->getRoutingPrefix()
+            $plugin->getPrefix()
         );
+        
+        $this->migrationsHandler->install($plugin);
         $this->databaseHandler->install($plugin);
         $this->validator->setRegisteredRoutingPrefixes(
             $this->fileHandler->getRegisteredRoutingPrefixes()
@@ -55,6 +61,7 @@ class Manager
         $this->fileHandler->removeNamespace($plugin->getVendorNamespace());
         $this->fileHandler->removeInstantiableBundle($pluginFQCN);
         $this->fileHandler->removeRoutingResources($pluginFQCN);
+        $this->migrationsHandler->remove($plugin);
         $this->databaseHandler->remove($pluginFQCN);
     }
 
