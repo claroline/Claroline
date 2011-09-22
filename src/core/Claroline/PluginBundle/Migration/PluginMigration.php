@@ -9,15 +9,15 @@ abstract class PluginMigration extends AbstractMigration
     {
         $klass = new \ReflectionClass((get_called_class()));
         $namespace = $klass->getNamespaceName();
-        $namespace_parts = explode("\\", $namespace);
+        $namespaceParts = explode("\\", $namespace);
         
-        array_pop($namespace_parts); // remove the Migrations part
-        $bundle = array_pop($namespace_parts);
-        $vendor = array_pop($namespace_parts);
+        array_pop($namespaceParts); // remove the Migrations part
+        $bundle = array_pop($namespaceParts);
+        $vendor = array_pop($namespaceParts);
         
-        $plugin_klass = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
+        $pluginClass = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
         
-        $plugin = new $plugin_klass();
+        $plugin = new $pluginClass();
         return $plugin->getPrefix();
         
     }
