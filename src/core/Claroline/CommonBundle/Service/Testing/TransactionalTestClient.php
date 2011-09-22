@@ -1,13 +1,13 @@
 <?php
 namespace Claroline\CommonBundle\Service\Testing;
 
-use Symfony\Bundle\FrameworkBundle\Client as BaseClient;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\BrowserKit\History;
 use Symfony\Component\BrowserKit\CookieJar;
 
 /* @SEE http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests */
-class TransactionalTestClient extends BaseClient
+class TransactionalTestClient extends Client
 {
     
     protected $connection;
