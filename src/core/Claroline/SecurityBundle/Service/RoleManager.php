@@ -9,6 +9,8 @@ use Claroline\SecurityBundle\Service\Exception\RoleException;
 
 class RoleManager
 {
+    const CREATE_IF_NOT_EXISTS = true;
+    
     /**
      * @var Doctrine\ORM\EntityManager
      */
@@ -31,11 +33,11 @@ class RoleManager
         $this->roleRepository = $em->getRepository('Claroline\SecurityBundle\Entity\Role');
     }
 
-    public function getRole($roleName)
+    public function getRole($roleName, $createIfNotExists = false)
     {
         $role = $this->roleRepository->findOneByName($roleName);
 
-        if ($role === null)
+        if ($role === null && $createIfNotExists === true)
         {
             $role = new Role();
             $role->setName($roleName);

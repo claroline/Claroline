@@ -89,7 +89,7 @@ class DatabaseHandler
 
             foreach ($launcherWidget->getAccessRoles() as $roleName)
             {
-                $role = $this->roleManager->getRole($roleName);
+                $role = $this->roleManager->getRole($roleName, RoleManager::CREATE_IF_NOT_EXISTS);
                 $launcher->addAccessRole($role);
             }
 
