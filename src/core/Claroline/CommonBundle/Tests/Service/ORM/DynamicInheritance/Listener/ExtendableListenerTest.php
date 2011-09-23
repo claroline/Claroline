@@ -47,7 +47,13 @@ class ExtendableListenerTest extends WebTestCase
         $firstChild = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstChild();
         $secondChild = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondChild();
         $firstDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant();
-        $secondDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant();        
+        $secondDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant();     
+        
+        $this->em->persist($ancestor);
+        $this->em->persist($firstChild);
+        $this->em->persist($secondChild);
+        $this->em->persist($firstDescendant);
+        $this->em->persist($secondDescendant);
         
     }
     
