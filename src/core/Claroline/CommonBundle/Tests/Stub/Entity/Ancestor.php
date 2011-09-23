@@ -7,6 +7,7 @@ use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="stub_common_ancestor")
  * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class Ancestor
@@ -19,7 +20,7 @@ class Ancestor
     private $id;
     
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=255)
      */
     private $ancestorField;
     
@@ -38,7 +39,7 @@ class Ancestor
         return $this->ancestorField;
     }
 
-    public function setName($value)
+    public function setAncestorField($value)
     {
         $this->ancestorField = $value;
     }
