@@ -54,12 +54,12 @@ class ExtendableListenerTest extends WebTestCase
         $firstDescendant = new FirstDescendant();
         $secondDescendant = new SecondDescendant();
         
-        $firstDescendant->setAncestorField('ancestor_first');
-        $firstDescendant->setFirstChildField('first_child_first');
-        $firstDescendant->setFirstDescendantField('firstDescendant_first');
-        $secondDescendant->setAncestorField('ancestor_second');
-        $secondDescendant->setFirstChildField('first_child_second');
-        $secondDescendant->setSecondDescendantField('secondDescendant_second');
+        $firstDescendant->setAncestorField('FirstDescendant Ancestor field');
+        $firstDescendant->setFirstChildField('FirstDescendant FirstChild field');
+        $firstDescendant->setFirstDescendantField('FirstDescendant own field');
+        $secondDescendant->setAncestorField('SecondDescendant Ancestor field');
+        $secondDescendant->setFirstChildField('SecondDescendant FirstChild field');
+        $secondDescendant->setSecondDescendantField('SecondDescendant own field');
         
         $this->em->persist($firstDescendant);
         $this->em->persist($secondDescendant);
@@ -67,53 +67,52 @@ class ExtendableListenerTest extends WebTestCase
         
         $firstLoaded = $this->em->createQueryBuilder()
             ->select('f')
-            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant', 'f')
+            ->from('Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant', 'f')
             ->getQuery()
             ->getSingleResult();
-        
         
         $secondLoaded = $this->em->createQueryBuilder()
             ->select('s')
-            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant', 's')
+            ->from('Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant', 's')
             ->getQuery()
             ->getSingleResult();
         
-        $this->assertEquals('ancestor_first', $firstLoaded->getAncestorField());
-        $this->assertEquals('ancestor_second', $secondLoaded->getAncestorField());
+        $this->assertEquals('FirstDescendant Ancestor field', $firstLoaded->getAncestorField());
+        $this->assertEquals('SecondDescendant Ancestor field', $secondLoaded->getAncestorField());
         $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());        
     }
-   
-    public function testHierarchyCanBeFlushedAndRetrievedAsExpected()
-    {
+    
+    public function testRetrievingAncestorsDoNotLoadDescendants()
+    {   
         $ancestor = new Ancestor();
-        $ancestor->setAncestorField('Ancestor');
-        $firstChild = new FirstChild();
-        $firstChild->setAncestorField('FirstChild Ancestor field');
-        $firstChild->setFirstChildField('FirstChild own field');
-        $secondChild = new SecondChild();
-        $secondChild->setAncestorField('SecondChild Ancestor field');
-        $secondChild->setSecondChildField('SecondChild own field');
-        $firstDescendant = new FirstDescendant();
-        $firstDescendant->setAncestorField('FirstDescendant Ancestor field');
-        $firstDescendant->setFirstChildField('FirstDescendant FirstChield field');
-        $firstDescendant->setFirstDescendantField('FirstDescendant own field');
-        $secondDescendant = new SecondDescendant();
-        $secondDescendant->setAncestorField('SecondDescendant');
-        $secondDescendant->setFirstChildField('SecondDescendant FirstChild field');
-        $secondDescendant->setSecondDescendantField('SecondDescendant own field');
+        $descendant = new FirstDescendant();
+        
+        $ancestor->setAncestorField('Ancestor own field');
+        
+        $descendant->setAncestorField('FirstDescendant Ancestor field');
+        $descendant->setFirstChildField('FirstDescendant FirstChild field');
+        $descendant->setFirstDescendantField('FirstDescendant own field');
         
         $this->em->persist($ancestor);
-        $this->em->persist($firstChild);
-        $this->em->persist($secondChild);
-        $this->em->persist($firstDescendant);
-        $this->em->persist($secondDescendant);
-        
+        $this->em->persist($descendant);
         $this->em->flush();
         
-        $stubEntities = $this->em
-            ->getRepository('\\Claroline\\CommonBundle\\Tests\\Stub\\Entity\\Ancestor')
+        $allAncestorsAndDescendant = $this->em
+            ->getRepository('Claroline\CommonBundle\Tests\Stub\Entity\Ancestor')
             ->findAll();
         
-        $this->assertEquals(5, count($stubEntities));
+        $allAncestors = $this->em
+            ->createQuery(
+                "SELECT a "
+                ."FROM Claroline\CommonBundle\Tests\Stub\Entity\Ancestor a "
+                ."WHERE a INSTANCE OF Claroline\CommonBundle\Tests\Stub\Entity\Ancestor"
+            )
+            ->getResult();
+        
+        $loadedAncestor = $allAncestors[0];
+                
+        $this->assertEquals(2, count($allAncestorsAndDescendant));
+        $this->assertEquals(1, count($allAncestors));
+        $this->assertEquals('Ancestor own field', $loadedAncestor->getAncestorField());
     }
 }
