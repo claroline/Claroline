@@ -56,7 +56,7 @@ class ExtendableListener extends ContainerAware implements EventSubscriber
         
         foreach ($this->extendables as $extendableClassMetadata)
         {
-            if (get_parent_class($className) === $extendableClassMetadata->getName())
+            if (is_subclass_of($className, $extendableClassMetadata->getName()))
             {
                 // the entity is a child of an @extendable entity
                 $classMetadata->discriminatorValue = $classDiscriminator;           
@@ -64,7 +64,7 @@ class ExtendableListener extends ContainerAware implements EventSubscriber
                 $extendableClassMetadata->discriminatorMap[$classDiscriminator] = $className;
                 $extendableClassMetadata->subClasses[] = $className;
             }
-        }  
+        }
     }
     
     /**
