@@ -64,7 +64,7 @@ class ExtendableListener extends ContainerAware implements EventSubscriber
                 $extendableClassMetadata->discriminatorMap[$classDiscriminator] = $className;
                 $extendableClassMetadata->subClasses[] = $className;
             }
-        }  
+        }
     }
     
     /**

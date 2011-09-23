@@ -4,6 +4,11 @@ namespace Claroline\CommonBundle\Service\ORM\DynamicInheritance\Listener;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\ORM\Events;
+use Claroline\CommonBundle\Tests\Stub\Entity\Ancestor;
+use Claroline\CommonBundle\Tests\Stub\Entity\FirstChild;
+use Claroline\CommonBundle\Tests\Stub\Entity\SecondChild;
+use Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant;
+use Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant;
 
 class ExtendableListenerTest extends WebTestCase
 {
@@ -15,13 +20,13 @@ class ExtendableListenerTest extends WebTestCase
 
     public function setUp()
     {
-        parent::setUp();
         $this->client = self::createClient();
         $this->client->beginTransaction();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $this->client->beginTransaction();
     }
     
-    protected function tearDown()
+    public function tearDown()
     {
         $this->client->rollback();
     }
@@ -41,6 +46,7 @@ class ExtendableListenerTest extends WebTestCase
         $this->fail('The ExtendableListener is not attached to the default EntityManager.');
     }
     
+
     public function testEntityManagerCanLoadStubEntitiesWithDynamicMapping()
     {
         $ancestor = new \Claroline\CommonBundle\Tests\Stub\Entity\Ancestor();
@@ -57,18 +63,21 @@ class ExtendableListenerTest extends WebTestCase
         
     }
     
+
     public function testEntityManagerCanPersistAndFindEntitiesWithDynamicMapping()
     {
+        $ancestor = new Ancestor();
+        $firstChild = new FirstChild();
+        $secondChild = new SecondChild();
+        $firstDescendant = new FirstDescendant();
+        $secondDescendant = new SecondDescendant();
         
-        $firstDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant();
-        $secondDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant();
-        
-        $firstDescendant->setAncestorField('ancestor_first');
-        $firstDescendant->setFirstChildField('first_child_first');
-        $firstDescendant->setFirstDescendantField('firstDescendant_first');
-        $secondDescendant->setAncestorField('ancestor_second');
-        $secondDescendant->setFirstChildField('first_child_second');
-        $secondDescendant->setSecondDescendantField('secondDescendant_second');
+        $firstDescendant->setAncestorField('FirstDescendant Ancestor field');
+        $firstDescendant->setFirstChildField('FirstDescendant FirstChild field');
+        $firstDescendant->setFirstDescendantField('FirstDescendant own field');
+        $secondDescendant->setAncestorField('SecondDescendant Ancestor field');
+        $secondDescendant->setFirstChildField('SecondDescendant FirstChild field');
+        $secondDescendant->setSecondDescendantField('SecondDescendant own field');
         
         $this->em->persist($firstDescendant);
         $this->em->persist($secondDescendant);
@@ -76,41 +85,38 @@ class ExtendableListenerTest extends WebTestCase
         
         $firstLoaded = $this->em->createQueryBuilder()
             ->select('f')
-            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant', 'f')
+            ->from('Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant', 'f')
             ->getQuery()
             ->getSingleResult();
-        
         
         $secondLoaded = $this->em->createQueryBuilder()
             ->select('s')
-            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant', 's')
+            ->from('Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant', 's')
             ->getQuery()
             ->getSingleResult();
         
-        $this->assertEquals('ancestor_first', $firstLoaded->getAncestorField());
-        $this->assertEquals('ancestor_second', $secondLoaded->getAncestorField());
-        $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());
-        
+        $this->assertEquals('FirstDescendant Ancestor field', $firstLoaded->getAncestorField());
+        $this->assertEquals('SecondDescendant Ancestor field', $secondLoaded->getAncestorField());
+        $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());        
     }
     
     public function testRetrievingAncestorsDoNotLoadDescendants()
-    {
+    {   
+        $ancestor = new Ancestor();
+        $descendant = new FirstDescendant();
         
-        $ancestor = new \Claroline\CommonBundle\Tests\Stub\Entity\Ancestor();
-        $descendant = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant();
+        $ancestor->setAncestorField('Ancestor own field');
         
-        $ancestor->setAncestorField('ancestor_ancestor');
-        
-        $descendant->setAncestorField('ancestor_descendant');
-        $descendant->setFirstChildField('child_descendant');
-        $descendant->setFirstDescendantField('firstDescendant_descendant');
+        $descendant->setAncestorField('FirstDescendant Ancestor field');
+        $descendant->setFirstChildField('FirstDescendant FirstChild field');
+        $descendant->setFirstDescendantField('FirstDescendant own field');
         
         $this->em->persist($ancestor);
         $this->em->persist($descendant);
         $this->em->flush();
         
         $allAncestorsAndDescendant = $this->em
-            ->getRepository('\\Claroline\\CommonBundle\\Tests\\Stub\\Entity\\Ancestor')
+            ->getRepository('Claroline\CommonBundle\Tests\Stub\Entity\Ancestor')
             ->findAll();
         
         $allAncestors = $this->em
@@ -121,12 +127,10 @@ class ExtendableListenerTest extends WebTestCase
             )
             ->getResult();
         
-        
         $loadedAncestor = $allAncestors[0];
                 
         $this->assertEquals(2, count($allAncestorsAndDescendant));
         $this->assertEquals(1, count($allAncestors));
-        $this->assertEquals('ancestor_ancestor', $loadedAncestor->getAncestorField());
-        
+        $this->assertEquals('Ancestor own field', $loadedAncestor->getAncestorField());
     }
 }
