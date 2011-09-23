@@ -46,6 +46,24 @@ class AuthenticationTest extends WebTestCase
         $this->assertRegexp('/login_failure/i', $this->client->getResponse()->getContent());
     }
 
+    public function testADirectCallToCheckMethodThrowsAnException()
+    {
+        $this->setExpectedException('RuntimeException');
+        $this->client
+            ->getContainer()
+            ->get('claroline.security.authentication_controller')
+            ->checkAction();
+    }
+    
+    public function testADirectCallToLogoutMethodThrowsAnException()
+    {
+        $this->setExpectedException('RuntimeException');
+        $this->client
+            ->getContainer()
+            ->get('claroline.security.authentication_controller')
+            ->logoutAction();
+    }
+    
     private function submitLoginForm($username, $password)
     {
         $crawler = $this->client->request('GET', '/login');
