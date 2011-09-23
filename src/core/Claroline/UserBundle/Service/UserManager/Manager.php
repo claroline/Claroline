@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\UserBundle\Entity\User;
 use Claroline\UserBundle\Service\UserManager\Exception\UserException;
 use Claroline\SecurityBundle\Service\RoleManager;
+use Claroline\SecurityBundle\Entity\Role;
 
 class Manager
 {
@@ -73,7 +74,8 @@ class Manager
         $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
         $user->setPassword($password);
 
-        $user->addRole($this->roleManager->getRole('ROLE_USER'));
+        $userRole = $this->roleManager->getRole('ROLE_USER', RoleManager::CREATE_IF_NOT_EXISTS);
+        $user->addRole($userRole);
 
         $this->em->persist($user);
         $this->em->flush();

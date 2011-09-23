@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\SecurityBundle\Repository\RoleRepository")
+ * @ORM\Entity
  * @ORM\Table(
  *     name="claro_role",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="role_idx", columns={"name"})}
@@ -45,6 +45,11 @@ class Role implements RoleInterface
         $this->name = $name;
     }
 
+    /**
+     * Alias of getName().
+     * 
+     * @return string The role name.
+     */
     public function getRole()
     {
         return $this->getName();
