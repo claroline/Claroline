@@ -44,7 +44,11 @@ class ExtendableListener extends ContainerAware implements EventSubscriber
             $discriminatorColumn = $extendableAnnotation->discriminatorColumn;
             $classMetadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_JOINED);
             $classMetadata->setDiscriminatorColumn(
-                array('name' => $discriminatorColumn, 'length' => 255)
+                array(
+                    'name' => $discriminatorColumn, 
+                    'type' => 'string',
+                    'length' => 255
+                )
             );
             $classMetadata->setDiscriminatorMap(array($classDiscriminator => $className));
             $this->extendables[$className] = $classMetadata;
