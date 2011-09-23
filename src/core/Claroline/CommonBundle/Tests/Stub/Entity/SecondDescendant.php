@@ -6,11 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="stub_common_second_descendant")
  */
 class SecondDescendant extends FirstChild
 {
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=255)
      */
     private $secondDescendantField;
         
@@ -19,8 +20,8 @@ class SecondDescendant extends FirstChild
         return $this->secondDescendantField;
     }
 
-    public function setFirstDescendantField($secondDescendantField)
+    public function setSecondDescendantField($value)
     {
-        $this->secondDescendantField = $secondDescendantField;
+        $this->secondDescendantField = $value;
     }
 }

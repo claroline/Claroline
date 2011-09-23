@@ -7,12 +7,13 @@ use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="stub_common_second_child")
  * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class SecondChild extends Ancestor
 {
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=255)
      */
     private $secondChildField;
 
