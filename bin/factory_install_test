@@ -15,6 +15,7 @@ $rootDirectory = realpath(__DIR__ . "/..");
 
 system("php {$rootDirectory}/bin/vendors install");
 
+system("php {$rootDirectory}/app/console claroline:plugin:remove_all --env=test");
 system("php {$rootDirectory}/app/console doctrine:schema:drop --force --env=test");
 system("php {$rootDirectory}/app/console claroline:security:drop_acl --env=test");
 system("php {$rootDirectory}/app/console doctrine:schema:create --env=test");

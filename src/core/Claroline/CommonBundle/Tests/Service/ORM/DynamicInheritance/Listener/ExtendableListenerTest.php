@@ -17,7 +17,13 @@ class ExtendableListenerTest extends WebTestCase
     {
         parent::setUp();
         $this->client = self::createClient();
+        $this->client->beginTransaction();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+    }
+    
+    protected function tearDown()
+    {
+        $this->client->rollback();
     }
     
     public function testExtendableListenerIsSubscribed()
@@ -41,12 +47,43 @@ class ExtendableListenerTest extends WebTestCase
         $firstChild = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstChild();
         $secondChild = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondChild();
         $firstDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant();
+        $secondDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant();        
+        
+    }
+    
+    public function testEntityManagerCanPersistAndFindEntitiesWithDynamicMapping()
+    {
+        
+        $firstDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant();
         $secondDescendant = new \Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant();
         
-        $this->em->persist($ancestor);
-        $this->em->persist($firstChild);
-        $this->em->persist($secondChild);
+        $firstDescendant->setAncestorField('ancestor_first');
+        $firstDescendant->setFirstChildField('first_child_first');
+        $firstDescendant->setFirstDescendantField('firstDescendant_first');
+        $secondDescendant->setAncestorField('ancestor_second');
+        $secondDescendant->setFirstChildField('first_child_second');
+        $secondDescendant->setSecondDescendantField('secondDescendant_second');
+        
         $this->em->persist($firstDescendant);
         $this->em->persist($secondDescendant);
+        $this->em->flush();
+        
+        $firstLoaded = $this->em->createQueryBuilder()
+            ->select('f')
+            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant', 'f')
+            ->getQuery()
+            ->getSingleResult();
+        
+        
+        $secondLoaded = $this->em->createQueryBuilder()
+            ->select('s')
+            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant', 's')
+            ->getQuery()
+            ->getSingleResult();
+        
+        $this->assertEquals('ancestor_first', $firstLoaded->getAncestorField());
+        $this->assertEquals('ancestor_second', $secondLoaded->getAncestorField());
+        $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());
+        
     }
 }

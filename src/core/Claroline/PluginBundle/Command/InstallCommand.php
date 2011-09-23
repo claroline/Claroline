@@ -27,7 +27,7 @@ class InstallCommand extends SinglePluginCommand
         
         $output->writeln('Done');
         
-        $this->resetCache($output);
+        $this->resetCache($input, $output);
     }
     
     

@@ -7,6 +7,10 @@ use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
 /**
  * @ORM\Entity
+ *  * @ORM\Table
+ * (
+ *     name="claro_test_firstchild"
+ * )
  * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class FirstChild extends Ancestor

@@ -8,12 +8,12 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class InstallAllCommand extends AbstractPluginCommand
+class RemoveAllCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:plugin:install_all')
-             ->setDescription('Registers all the plugins within "src/plugin".');
+        $this->setName('claroline:plugin:remove_all')
+             ->setDescription('UnRegisters all the plugins within "src/plugin".');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -38,8 +38,12 @@ class InstallAllCommand extends AbstractPluginCommand
                     {
                         $bundleName = $plugin->getBasename();
                         $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-                        $output->writeln("Installing plugin '{$fqcn}'...");
-                        $pluginManager->install($fqcn);
+                        if(!$pluginManager->isInstalled($fqcn))
+                        {
+                            continue;
+                        }
+                        $output->writeln("Uninstalling plugin '{$fqcn}'...");
+                        $pluginManager->remove($fqcn);
                     }
                 }
             }

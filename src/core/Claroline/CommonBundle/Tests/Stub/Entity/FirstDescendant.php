@@ -6,6 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *  * @ORM\Table
+ * (
+ *     name="claro_test_firstdescendant"
+ * )
  */
 class FirstDescendant extends FirstChild
 {

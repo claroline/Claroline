@@ -7,6 +7,10 @@ use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
 /**
  * @ORM\Entity
+ * @ORM\Table
+ * (
+ *     name="claro_test_ancestor"
+ * )
  * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class Ancestor
@@ -38,7 +42,7 @@ class Ancestor
         return $this->ancestorField;
     }
 
-    public function setName($value)
+    public function setAncestorField($value)
     {
         $this->ancestorField = $value;
     }
