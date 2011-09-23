@@ -86,4 +86,41 @@ class ExtendableListenerTest extends WebTestCase
         $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());
         
     }
+    
+    public function testRetrievingAncestorsDoNotLoadDescendants()
+    {
+        
+        $ancestor = new \Claroline\CommonBundle\Tests\Stub\Entity\Ancestor();
+        $descendant = new \Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant();
+        
+        $ancestor->setAncestorField('ancestor_ancestor');
+        
+        $descendant->setAncestorField('ancestor_descendant');
+        $descendant->setFirstChildField('child_descendant');
+        $descendant->setFirstDescendantField('firstDescendant_descendant');
+        
+        $this->em->persist($ancestor);
+        $this->em->persist($descendant);
+        $this->em->flush();
+        
+        $allAncestorsAndDescendant = $this->em
+            ->getRepository('\\Claroline\\CommonBundle\\Tests\\Stub\\Entity\\Ancestor')
+            ->findAll();
+        
+        $allAncestors = $this->em
+            ->createQuery(
+                "SELECT a "
+                ."FROM Claroline\CommonBundle\Tests\Stub\Entity\Ancestor a "
+                ."WHERE a INSTANCE OF Claroline\CommonBundle\Tests\Stub\Entity\Ancestor"
+            )
+            ->getResult();
+        
+        
+        $loadedAncestor = $allAncestors[0];
+                
+        $this->assertEquals(2, count($allAncestorsAndDescendant));
+        $this->assertEquals(1, count($allAncestors));
+        $this->assertEquals('ancestor_ancestor', $loadedAncestor->getAncestorField());
+        
+    }
 }
