@@ -21,6 +21,7 @@ class ExtendableListenerTest extends WebTestCase
     public function setUp()
     {
         $this->client = self::createClient();
+        $this->client->beginTransaction();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->beginTransaction();
     }
@@ -45,7 +46,7 @@ class ExtendableListenerTest extends WebTestCase
         $this->fail('The ExtendableListener is not attached to the default EntityManager.');
     }
     
-    public function testEntityManagerCanLoadStubEntitiesWithDynamicMapping()
+    public function testEntityManagerCanPersistAndFindEntitiesWithDynamicMapping()
     {
         $ancestor = new Ancestor();
         $firstChild = new FirstChild();
@@ -53,13 +54,35 @@ class ExtendableListenerTest extends WebTestCase
         $firstDescendant = new FirstDescendant();
         $secondDescendant = new SecondDescendant();
         
-        $this->em->persist($ancestor);
-        $this->em->persist($firstChild);
-        $this->em->persist($secondChild);
+        $firstDescendant->setAncestorField('ancestor_first');
+        $firstDescendant->setFirstChildField('first_child_first');
+        $firstDescendant->setFirstDescendantField('firstDescendant_first');
+        $secondDescendant->setAncestorField('ancestor_second');
+        $secondDescendant->setFirstChildField('first_child_second');
+        $secondDescendant->setSecondDescendantField('secondDescendant_second');
+        
         $this->em->persist($firstDescendant);
         $this->em->persist($secondDescendant);
+        $this->em->flush();
+        
+        $firstLoaded = $this->em->createQueryBuilder()
+            ->select('f')
+            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\FirstDescendant', 'f')
+            ->getQuery()
+            ->getSingleResult();
+        
+        
+        $secondLoaded = $this->em->createQueryBuilder()
+            ->select('s')
+            ->from('\Claroline\CommonBundle\Tests\Stub\Entity\SecondDescendant', 's')
+            ->getQuery()
+            ->getSingleResult();
+        
+        $this->assertEquals('ancestor_first', $firstLoaded->getAncestorField());
+        $this->assertEquals('ancestor_second', $secondLoaded->getAncestorField());
+        $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());        
     }
-    
+   
     public function testHierarchyCanBeFlushedAndRetrievedAsExpected()
     {
         $ancestor = new Ancestor();
@@ -88,7 +111,7 @@ class ExtendableListenerTest extends WebTestCase
         $this->em->flush();
         
         $stubEntities = $this->em
-            ->getRepository('Claroline\\CommonBundle\\Tests\\Stub\\Entity\\Ancestor')
+            ->getRepository('\\Claroline\\CommonBundle\\Tests\\Stub\\Entity\\Ancestor')
             ->findAll();
         
         $this->assertEquals(5, count($stubEntities));

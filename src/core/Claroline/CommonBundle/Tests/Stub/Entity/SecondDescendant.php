@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="stub_common_second_descendant")
+ * @ORM\Table(name="claro_test_seconddescendant")
  */
 class SecondDescendant extends FirstChild
 {
@@ -19,7 +19,7 @@ class SecondDescendant extends FirstChild
     {
         return $this->secondDescendantField;
     }
-
+    
     public function setSecondDescendantField($value)
     {
         $this->secondDescendantField = $value;

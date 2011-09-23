@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="stub_common_first_descendant")
+ * @ORM\Table(name="claro_test_firstdescendant")
  */
 class FirstDescendant extends FirstChild
 {
