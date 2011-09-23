@@ -25,9 +25,10 @@
         <whitelist>
             <directory>../src</directory>
             <exclude>
-                <directory>../src/core/*/Bundle/*Bundle/Resources</directory>
-                <directory>../src/plugin/*/Bundle/*Bundle/Tests</directory>
-                <directory>../src/plugin/*/Bundle/*Bundle/Command</directory>
+                <directory>../src/core/*/*Bundle/Resources</directory>
+                <directory>../src/core/*/*Bundle/Tests</directory>
+                <directory>../src/plugin/*/*Bundle/Tests</directory>
+                <directory>../src/plugin/*/*Bundle/Command</directory>
             </exclude>
         </whitelist>
     </filter>

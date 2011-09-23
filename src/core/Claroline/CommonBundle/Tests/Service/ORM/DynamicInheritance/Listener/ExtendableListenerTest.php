@@ -66,9 +66,7 @@ class ExtendableListenerTest extends WebTestCase
 
     public function testEntityManagerCanPersistAndFindEntitiesWithDynamicMapping()
     {
-        $ancestor = new Ancestor();
-        $firstChild = new FirstChild();
-        $secondChild = new SecondChild();
+        
         $firstDescendant = new FirstDescendant();
         $secondDescendant = new SecondDescendant();
         
