@@ -23,7 +23,7 @@
 
     <filter>
         <whitelist>
-            <directory>../src</directory>
+            <directory>../src/core</directory>
             <directory>../src/plugin/Claroline</directory>
             <exclude>
                 <directory>../src/core/*/*Bundle/Command</directory>
