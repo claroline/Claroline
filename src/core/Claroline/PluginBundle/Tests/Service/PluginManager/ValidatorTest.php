@@ -124,7 +124,7 @@ class ValidatorTest extends PluginBundleTestCase
             
         try
         {
-            $this->validator->check('Incompatible\ConflictWithValidCustom_1\IncompatibleConflictWithValidCustom_1');
+            $this->validator->check('Incompatible\ConflictWithValidCustom1\IncompatibleConflictWithValidCustom1');
             $this->fail("No exception thrown.");
         }
         catch (ValidationException $ex)
@@ -235,66 +235,66 @@ class ValidatorTest extends PluginBundleTestCase
     public function unloadableBundleClassProvider()
     {
         return array(
-            array('Invalid\UnloadableBundleClass_1\InvalidUnloadableBundleClass_1'),
-            array('Invalid\UnloadableBundleClass_2\InvalidUnloadableBundleClass_2'),
-            array('Invalid\UnloadableBundleClass_3\InvalidUnloadableBundleClass_3'),
-            array('Invalid\UnloadableBundleClass_4\InvalidUnloadableBundleClass_4')
+            array('Invalid\UnloadableBundleClass1\InvalidUnloadableBundleClass1'),
+            array('Invalid\UnloadableBundleClass2\InvalidUnloadableBundleClass2'),
+            array('Invalid\UnloadableBundleClass3\InvalidUnloadableBundleClass3'),
+            array('Invalid\UnloadableBundleClass4\InvalidUnloadableBundleClass4')
         );
     }
 
     public function unexpectedPluginClassTypeProvider()
     {
         return array(
-            array('Invalid\UnexpectedBundleClassType_1\InvalidUnexpectedBundleClassType_1'),
-            array('Invalid\UnexpectedBundleClassType_2\InvalidUnexpectedBundleClassType_2')
+            array('Invalid\UnexpectedBundleClassType1\InvalidUnexpectedBundleClassType1'),
+            array('Invalid\UnexpectedBundleClassType2\InvalidUnexpectedBundleClassType2')
         );
     }
 
     public function unexpectedRoutingPrefixProvider()
     {
         return array(
-            array('Invalid\UnexpectedRoutingPrefix_1\InvalidUnexpectedRoutingPrefix_1'),
-            array('Invalid\UnexpectedRoutingPrefix_2\InvalidUnexpectedRoutingPrefix_2'),
-            array('Invalid\UnexpectedRoutingPrefix_3\InvalidUnexpectedRoutingPrefix_3')
+            array('Invalid\UnexpectedRoutingPrefix1\InvalidUnexpectedRoutingPrefix1'),
+            array('Invalid\UnexpectedRoutingPrefix2\InvalidUnexpectedRoutingPrefix2'),
+            array('Invalid\UnexpectedRoutingPrefix3\InvalidUnexpectedRoutingPrefix3')
         );
     }
     
     public function nonExistentRoutingResourceTypeProvider()
     {
         return array(
-            array('Invalid\NonExistentRoutingResource_1\InvalidNonExistentRoutingResource_1'),
-            array('Invalid\NonExistentRoutingResource_2\InvalidNonExistentRoutingResource_2')
+            array('Invalid\NonExistentRoutingResource1\InvalidNonExistentRoutingResource1'),
+            array('Invalid\NonExistentRoutingResource2\InvalidNonExistentRoutingResource2')
         );
     }
 
     public function unexpectedRoutingResourceLocationProvider()
     {
         return array(
-            array('Invalid\UnexpectedRoutingResourceLocation_1\InvalidUnexpectedRoutingResourceLocation_1')
+            array('Invalid\UnexpectedRoutingResourceLocation1\InvalidUnexpectedRoutingResourceLocation1')
         );
     }
 
     public function nonYamlRoutingResourceProvider()
     {
         return array(
-            array('Invalid\NonYamlRoutingResource_1\InvalidNonYamlRoutingResource_1')
+            array('Invalid\NonYamlRoutingResource1\InvalidNonYamlRoutingResource1')
         );
     }
 
     public function unloadableYamlRoutingResourceProvider()
     {
         return array(
-            array('Invalid\UnloadableRoutingResource_1\InvalidUnloadableRoutingResource_1')
+            array('Invalid\UnloadableRoutingResource1\InvalidUnloadableRoutingResource1')
         );
     }
 
     public function unexpectedTranslationKeyProvider()
     {
         return array(
-            array('Invalid\UnexpectedTranslationKey_1\InvalidUnexpectedTranslationKey_1'),
-            array('Invalid\UnexpectedTranslationKey_2\InvalidUnexpectedTranslationKey_2'),
-            array('Invalid\UnexpectedTranslationKey_3\InvalidUnexpectedTranslationKey_3'),
-            array('Invalid\UnexpectedTranslationKey_4\InvalidUnexpectedTranslationKey_4')
+            array('Invalid\UnexpectedTranslationKey1\InvalidUnexpectedTranslationKey1'),
+            array('Invalid\UnexpectedTranslationKey2\InvalidUnexpectedTranslationKey2'),
+            array('Invalid\UnexpectedTranslationKey3\InvalidUnexpectedTranslationKey3'),
+            array('Invalid\UnexpectedTranslationKey4\InvalidUnexpectedTranslationKey4')
         );
     }
 
@@ -359,7 +359,7 @@ class ValidatorTest extends PluginBundleTestCase
     public function unexpectedLauncherTypeProvider()
     {
         return array(
-            array('InvalidApplication\UnexpectedLauncherType_1\InvalidApplicationUnexpectedLauncherType_1')
+            array('InvalidApplication\UnexpectedLauncherType1\InvalidApplicationUnexpectedLauncherType1')
         );
     }
     
