@@ -49,19 +49,33 @@ class AuthenticationTest extends WebTestCase
     public function testADirectCallToCheckMethodThrowsAnException()
     {
         $this->setExpectedException('RuntimeException');
-        $this->client
-            ->getContainer()
-            ->get('claroline.security.authentication_controller')
-            ->checkAction();
+        $mockedRequest = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockedTwig = $this->getMockBuilder('Symfony\Bundle\TwigBundle\TwigEngine')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $controller = new \Claroline\SecurityBundle\Controller\AuthenticationController(
+            $mockedRequest,
+            $mockedTwig
+        );
+        $controller->checkAction();
     }
     
     public function testADirectCallToLogoutMethodThrowsAnException()
     {
         $this->setExpectedException('RuntimeException');
-        $this->client
-            ->getContainer()
-            ->get('claroline.security.authentication_controller')
-            ->logoutAction();
+        $mockedRequest = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockedTwig = $this->getMockBuilder('Symfony\Bundle\TwigBundle\TwigEngine')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $controller = new \Claroline\SecurityBundle\Controller\AuthenticationController(
+            $mockedRequest,
+            $mockedTwig
+        );
+        $controller->logoutAction();
     }
     
     private function submitLoginForm($username, $password)
