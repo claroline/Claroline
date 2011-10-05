@@ -1,16 +1,23 @@
 <?php
 
-namespace Claroline\CommonBundle\Tests\Stub\Entity;
+namespace Claroline\CommonBundle\Tests\Stub\Entity\InvalidMapping;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
+// Disabled -> @ORM\Entity
+
 /**
- * @ORM\Entity
- * @ORM\Table(name="claro_test_ancestor")
+ * Conflictual because you can't have an "@InheritanceType" along with 
+ * an "@Extendable" annotation (it'll always be a class table inheritance
+ * under the hood).
+ * 
+ * 
+ * @ORM\Table(name="claro_test_conflictual_mapping_1")
  * @ORMExt\Extendable(discriminatorColumn="discr")
+ * @ORM\InheritanceType("JOINED")
  */
-class Ancestor
+class ConflictualMapping1
 {
     /**
      * @ORM\Id
@@ -18,11 +25,6 @@ class Ancestor
      * @ORM\generatedValue(strategy="AUTO")
      */
     private $id;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $ancestorField;
     
     public function getId()
     {
@@ -32,15 +34,5 @@ class Ancestor
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    public function getAncestorField()
-    {
-        return $this->ancestorField;
-    }
-
-    public function setAncestorField($value)
-    {
-        $this->ancestorField = $value;
     }
 }
