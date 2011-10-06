@@ -2,6 +2,6 @@
 
 namespace Claroline\CommonBundle\Exception;
 
-class ClarolineException extends \Exception 
+class ClarolineException extends \Exception
 {
 }
