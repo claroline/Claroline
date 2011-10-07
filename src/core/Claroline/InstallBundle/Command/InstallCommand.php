@@ -19,9 +19,8 @@ class InstallCommand extends ContainerAwareCommand
         $this->addOption(
             'with-plugins', 
             'w', 
-            InputOption::VALUE_OPTIONAL, 
-            "When set to true, available plugins will be installed", 
-            false
+            InputOption::VALUE_NONE, 
+            "When set to true, available plugins will be installed"
         );
     }
 
@@ -36,8 +35,7 @@ class InstallCommand extends ContainerAwareCommand
         $command = $this->getApplication()->find('init:acl');        
         $command->run($delegateInput, $output);
         
-        $options = $input->getOptions();
-        if(isset($options['with-plugins']))
+        if($input->getOption('with-plugins'))
         {            
             $pluginInstaller = $this->getApplication()->find('claroline:plugin:install_all');
             $pluginInstaller->run($delegateInput, $output);

@@ -32,20 +32,21 @@ abstract class BundleMigration extends AbstractMigration
             'id',
             'integer',
             array(
-                'notnull' => true,
                 'autoincrement' => $generated,
             )
         );
-        $table->addUniqueIndex(array('id'));
+        $table->setPrimaryKey(array('id'));
     }
     
     /** helper function to add a reference column to a table */
-    protected function addReference(Table $table, $ref)
+    protected function addReference(Table $table, $ref, $nullable= false)
     {
         $table->addColumn(
             $ref . '_id',
-            'integer'
-            
+            'integer',
+            array(
+                'notnull' => !$nullable
+            )
         );
     }
     
