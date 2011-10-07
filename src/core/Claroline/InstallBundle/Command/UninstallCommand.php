@@ -19,9 +19,8 @@ class UninstallCommand extends ContainerAwareCommand
         $this->addOption(
             'with-plugins', 
             'w', 
-            InputOption::VALUE_OPTIONAL, 
-            "When set to true, available plugins will be installed", 
-            false
+            InputOption::VALUE_NONE, 
+            "When set to true, available plugins will be installed"
         );
     }
 
@@ -31,8 +30,7 @@ class UninstallCommand extends ContainerAwareCommand
         
         $delegateInput = new ArrayInput($input->getArguments());
         
-        $options = $input->getOptions();
-        if(isset($options['with-plugins']))
+        if($input->getOption('with-plugins'))
         {
             
                         
