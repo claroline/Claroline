@@ -1,21 +1,18 @@
 <?php
 
 /*
- * This script can be used to make a fresh install of Claronext
+ * This script can be used as a part of a CIS job.
  *
- * Requirements :
+  * Requirements :
  *    - a valid 'app/config/parameters.ini' file.
- *    - an empty, writeable app/cache directory
- *    - an empty, writeable app/logs directory
+ *    - a writeable app/cache directory
+ *    - a writeable app/logs directory
  *
  */
 
 $rootDirectory = realpath(__DIR__ . "/..");
 
-
-system("php {$rootDirectory}/bin/vendors install");
-
-system("php {$rootDirectory}/app/console claroline:plugin:install_all --with-plugins");
+system("php {$rootDirectory}/app/console claroline:uninstall --with-plugins");
 
 
 function deleteContents($path) {
@@ -37,5 +34,4 @@ function deleteContents($path) {
 deleteContents("{$rootDirectory}/app/cache");
 deleteContents("{$rootDirectory}/app/logs");
 
-chmod("{$rootDirectory}/app/cache", 0777);
-chmod("{$rootDirectory}/app/logs", 0777);
+
