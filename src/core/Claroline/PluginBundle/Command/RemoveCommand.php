@@ -26,6 +26,6 @@ class RemoveCommand extends SinglePluginCommand
         $manager->remove($fqcn);
 
         $output->writeln('Done');
-        $this->resetCache($input, $output);
+        $this->resetCache($output);
     }
 }

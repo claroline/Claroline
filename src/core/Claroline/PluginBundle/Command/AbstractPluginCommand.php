@@ -9,18 +9,15 @@ use \Symfony\Component\Console\Input\InputInterface;
 
 abstract class AbstractPluginCommand extends ContainerAwareCommand
 {
-    protected function resetCache(InputInterface $input, OutputInterface $output)
+    protected function resetCache(OutputInterface $output)
     {
         $command = $this->getApplication()->find('cache:clear');
-        $input = new ArrayInput(
-            array_merge(
-                array(
-                    'command' => 'cache:clear', // strange but doesn't work if removed
-                    '--no-warmup' => true,
-                ),
-                $input->getArguments()
-            )
-        );
+        
+        $input = new ArrayInput(array(
+            'command' => 'cache:clear', // strange but doesn't work if removed
+            '--no-warmup' => true,
+        ));
+        
         $command->run($input, $output);
     }
 }

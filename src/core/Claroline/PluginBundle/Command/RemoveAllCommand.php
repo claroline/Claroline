@@ -51,6 +51,6 @@ class RemoveAllCommand extends AbstractPluginCommand
 
         $output->writeln('Done');
         
-        $this->resetCache($input, $output);
+        $this->resetCache($output);
     }
 }
