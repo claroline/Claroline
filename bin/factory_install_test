@@ -15,8 +15,8 @@ $rootDirectory = realpath(__DIR__ . "/..");
 
 system("php {$rootDirectory}/bin/vendors install");
 
-system("php app/console doctrine:database:drop --force --env=test");
-system("php app/console doctrine:database:create --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
 
 system("php {$rootDirectory}/app/console claroline:install --env=test --with-plugins");
 
