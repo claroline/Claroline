@@ -29,3 +29,4 @@ doctrine:
 
 parameters:
     test.client.class: Claroline\CommonBundle\Service\Testing\TransactionalTestClient
+    claroline.install.bundle_migrator_class: "Claroline\InstallBundle\Service\TestEnvBundleMigrator"

@@ -91,7 +91,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         $plugin = $this->build_plugin($pluginFQCN);
 
         $this->migrationsHandler->migrate($plugin, '00000000000001');
-        
+                
         $query = "SELECT * FROM valid_withmigrations_doctrine_migration_versions";
         $result = $this->getConnection()->fetchAll($query);        
         $this->assertEquals(1, count($result));

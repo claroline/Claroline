@@ -1,10 +1,10 @@
 <?php
 namespace Valid\WithMigrations\Migrations;
 
-use Claroline\PluginBundle\Migration\PluginMigration;
+use Claroline\InstallBundle\Library\Migration\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version00000000000001 extends PluginMigration
+class Version00000000000001 extends BundleMigration
 {
     
     public function up(Schema $schema)

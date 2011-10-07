@@ -15,7 +15,7 @@ services:
     claroline.plugin.migrations_handler:
         class: Claroline\PluginBundle\Service\PluginManager\MigrationsHandler
         arguments:
-            - "@doctrine.dbal.default_connection"
+            - "@claroline.install.bundle_migrator"
     claroline.plugin.routing_prefixes:
         class: ArrayObject
         factory_service: claroline.plugin.file_handler
