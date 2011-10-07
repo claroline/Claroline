@@ -45,7 +45,7 @@ class ManagerTest extends PluginBundleTestCase
     public function testInstallAnInvalidPluginThrowsAValidationException()
     {
         $this->setExpectedException('Claroline\PluginBundle\Service\PluginManager\Exception\ValidationException');
-        $pluginFQCN = 'Invalid\UnloadableRoutingResource_1';
+        $pluginFQCN = 'Invalid\UnloadableRoutingResource1';
         $this->manager->install($pluginFQCN);
         $this->assertEquals(false, $this->manager->isInstalled($pluginFQCN));
     }
