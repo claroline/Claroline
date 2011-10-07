@@ -13,11 +13,11 @@ class MigrationsHandler
     /* @var BundleMigrator */
     private $migrator;
     
-    public function __construct(BundleMigrator $migrator) {
+    public function __construct(BundleMigrator $migrator) 
+    {
         $this->migrator = $migrator;
     }
     
-
     public function install(ClarolinePlugin $plugin)
     {
         $this->migrator->createSchemaForBundle($plugin);
@@ -31,6 +31,5 @@ class MigrationsHandler
     public function migrate(ClarolinePlugin $plugin, $version)
     {        
         $this->migrator->migrateBundle($plugin, $version);
-    }
-    
+    }  
 }
