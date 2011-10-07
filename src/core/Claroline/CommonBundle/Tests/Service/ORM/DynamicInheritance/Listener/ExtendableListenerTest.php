@@ -54,9 +54,6 @@ class ExtendableListenerTest extends WebTestCase
      */
     public function testLoadingAnEntityWithBothExtendableAndDoctrineInheritanceAnnotationsThrowsAnException($entityFqcn)
     {
-        // Corresponding (invalid) entities are also disabled
-        $this->markTestSkipped();
-        
         $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
         
         $entity = new $entityFqcn();
@@ -68,9 +65,6 @@ class ExtendableListenerTest extends WebTestCase
      */
     public function testLoadingAnExtendableEntityWithInvalidDiscriminatorColumnNameThrowsAnException($entityFqcn)
     {
-        // Corresponding (invalid) entities are also disabled
-        $this->markTestSkipped();
-        
         $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
         
         $entity = new $entityFqcn();
