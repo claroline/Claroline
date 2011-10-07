@@ -5,14 +5,12 @@ namespace Claroline\CommonBundle\Tests\Stub\Entity\InvalidMapping;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
-// Disabled -> @ORM\Entity
-
 /**
  * Conflictual because you can't have a "@DiscriminatorMap" along with 
  * an "@Extendable" annotation (the discriminator map will always be 
  * built dynamically).
  * 
- * 
+ * @ORM\Entity
  * @ORM\Table(name="claro_test_conflictual_mapping_3")
  * @ORMExt\Extendable(discriminatorColumn="discr")
  * @ORM\DiscriminatorMap({"child_1" = "Foo", "child_2" = "Bar"})
