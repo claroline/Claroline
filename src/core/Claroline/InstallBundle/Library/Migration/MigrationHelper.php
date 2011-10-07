@@ -13,8 +13,8 @@ class MigrationHelper
         $namespaceParts = explode('\\', $namespace);
         $bundleName = array_pop($namespaceParts); //remove bundle name
         $vendor = array_pop($namespaceParts);
-        
-        return "{$vendor}_{$bundleName}";
+       
+        return strtolower("{$vendor}_{$bundleName}");
     }
     
     public function getTablePrefixForMigration(BundleMigration $migration)
