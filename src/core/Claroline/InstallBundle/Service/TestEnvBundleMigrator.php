@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\InstallBundle\Service;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -55,10 +56,7 @@ class TestEnvBundleMigrator extends BundleMigrator
             return;
         }
         $prefix = $this->migrationHelper->getTablePrefixForBundle($bundle);
-        $config->setMigrationsTableName(
-              $prefix  . '_tests_doctrine_migration_versions'
-        );
+        $config->setMigrationsTableName($prefix . '_tests_doctrine_migration_versions');
         return new Migration($config);
-    }
-    
+    }   
 }

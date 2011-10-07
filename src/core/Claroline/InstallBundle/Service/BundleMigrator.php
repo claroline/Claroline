@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\InstallBundle\Service;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -55,15 +56,13 @@ class BundleMigrator
         //FIXME next lines are a hack fixing this bug 
         //@see https://github.com/doctrine/migrations/issues/47
         // hopefully we'll be able to remove the fix soon
-        if( count($config->getMigrations()) == 0)
+        if ( count($config->getMigrations()) == 0)
         {
             return;
         }
         $prefix = $this->migrationHelper->getTablePrefixForBundle($bundle);
-        $config->setMigrationsTableName(
-              $prefix  . '_doctrine_migration_versions'
-        );
+        $config->setMigrationsTableName($prefix . '_doctrine_migration_versions');
+        
         return new Migration($config);
     }
-    
 }

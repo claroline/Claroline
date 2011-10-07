@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\InstallBundle\Service;
 
 use Symfony\Component\HttpKernel\Kernel;
@@ -11,9 +12,7 @@ class CoreInstaller
     
     /* @var BundleMigrator */
     private $migrator;
-    
-    
-    
+       
     public function __construct(Kernel $kernel, BundleMigrator $migrator)
     {
         $this->kernel = $kernel;
@@ -42,8 +41,8 @@ class CoreInstaller
     private function dropCoreSchema()
     {
         $bundles = $this->getRegisteredCoreBundles();
-        $bundles_reversed = array_reverse($bundles);
-        foreach($bundles_reversed as $bundle)
+        $bundlesReversed = array_reverse($bundles);
+        foreach($bundlesReversed as $bundle)
         {            
             $this->migrator->dropSchemaForBundle($bundle);
         }
@@ -54,10 +53,8 @@ class CoreInstaller
         $allBundles = $this->kernel->getBundles();
         $keepCoreBundles = function($bundle)
         {
-            return strpos($bundle->getPath(), 'plugin') === FALSE;
+            return strpos($bundle->getPath(), 'plugin') === false;
         };
         return array_filter($allBundles, $keepCoreBundles);
-    }
-    
-    
+    }   
 }
