@@ -15,6 +15,9 @@ $rootDirectory = realpath(__DIR__ . "/..");
 
 system("php {$rootDirectory}/bin/vendors install");
 
+
+system("php app/console doctrine:database:drop --force");
+system("php app/console doctrine:database:create");
 system("php {$rootDirectory}/app/console claroline:plugin:install_all --with-plugins");
 
 
