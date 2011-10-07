@@ -32,7 +32,7 @@ class CoreInstaller
     
     private function createCoreSchema()
     {
-        $bundles = $this->getRegisteredBundles();
+        $bundles = $this->getRegisteredCoreBundles();
         foreach($bundles as $bundle)
         {
             $this->migrator->createSchemaForBundle($bundle);
@@ -41,17 +41,22 @@ class CoreInstaller
     
     private function dropCoreSchema()
     {
-        $bundles = $this->getRegisteredBundles();
+        $bundles = $this->getRegisteredCoreBundles();
         $bundles_reversed = array_reverse($bundles);
         foreach($bundles_reversed as $bundle)
-        {
+        {            
             $this->migrator->dropSchemaForBundle($bundle);
         }
     }
     
-    private function getRegisteredBundles()
+    private function getRegisteredCoreBundles()
     {
-        return $this->kernel->getBundles();
+        $allBundles = $this->kernel->getBundles();
+        $keepCoreBundles = function($bundle)
+        {
+            return strpos($bundle->getPath(), 'plugin') === FALSE;
+        };
+        return array_filter($allBundles, $keepCoreBundles);
     }
     
     

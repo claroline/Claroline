@@ -15,9 +15,7 @@ $rootDirectory = realpath(__DIR__ . "/..");
 
 system("php {$rootDirectory}/bin/vendors install");
 
-system("php {$rootDirectory}/app/console claroline:plugin:remove_all --env=test");
-system("php {$rootDirectory}/app/console claroline:reinstall --env=test");
-system("php {$rootDirectory}/app/console claroline:plugin:install_all --env=test");
+system("php {$rootDirectory}/app/console claroline:install --env=test --with-plugins");
 
 
 
@@ -37,8 +35,8 @@ function deleteContents($path) {
     }
 }
 
-#deleteContents("{$rootDirectory}/app/cache");
-#deleteContents("{$rootDirectory}/app/logs");
+deleteContents("{$rootDirectory}/app/cache");
+deleteContents("{$rootDirectory}/app/logs");
 
 chmod("{$rootDirectory}/app/cache", 0777);
 chmod("{$rootDirectory}/app/logs", 0777);
