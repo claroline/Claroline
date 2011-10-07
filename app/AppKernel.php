@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Claroline\CommonBundle\ClarolineCommonBundle(),
+            new Claroline\InstallBundle\ClarolineInstallBundle(),
             new Claroline\UserBundle\ClarolineUserBundle(),
             new Claroline\WorkspaceBundle\ClarolineWorkspaceBundle(),
             new Claroline\SecurityBundle\ClarolineSecurityBundle(),
