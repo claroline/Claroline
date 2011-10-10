@@ -2,6 +2,7 @@
 
 namespace Claroline\WorkspaceBundle\Controller;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -43,7 +44,10 @@ class WorkspaceController
         $this->twigEngine = $engine;
         $this->workspaceAclManager = $aclManager;
     }
-
+    
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
     public function newAction()
     {
         $workspace = new Workspace();
@@ -55,6 +59,9 @@ class WorkspaceController
         );
     }
     
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
     public function createAction()
     {
         $workspace = new Workspace();
@@ -77,6 +84,9 @@ class WorkspaceController
         );
     }
     
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
     public function deleteAction($id)
     {
         $workspaceEntity = 'ClarolineWorkspaceBundle:Workspace';

@@ -55,7 +55,7 @@ swiftmailer:
     password:  %mailer_password%
 
 jms_security_extra:
-    secure_controllers:  true
+    secure_controllers:  true   # set to false when all controllers are services (see jms doc)
     secure_all_services: false
     
 stof_doctrine_extensions:
