@@ -3,6 +3,7 @@
 namespace Claroline\CommonBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * To be removed ASAP...
@@ -11,6 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class DesktopController extends Controller
 {
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
     public function indexAction()
     {
         $workspaceRepo = $this->getDoctrine()->getRepository('ClarolineWorkspaceBundle:Workspace');
