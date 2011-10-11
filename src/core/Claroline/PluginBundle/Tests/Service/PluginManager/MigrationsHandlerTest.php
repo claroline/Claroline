@@ -23,6 +23,18 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         return $this->getConnection()->getSchemaManager();
     }
     
+    protected function tearDown() {
+        parent::tearDown();
+        
+        $table = $this->getTableFromSchema('valid_withmigrations_stuffs');
+        if($table)
+        {
+            $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
+            $plugin = $this->build_plugin($pluginFQCN);
+            $this->migrationsHandler->remove($plugin);
+        }
+    }
+    
     public function testVersionsTableIsCreatedAndPopulatedOnInstall()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
@@ -35,8 +47,6 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         
         $this->assertEquals(2, count($result));
         
-        // unfortuntaly create table are not rollback-able
-        $this->migrationsHandler->remove($plugin);
     }
     
     public function testMigrationsAreEffectivelyRunOnInstall()
@@ -53,8 +63,6 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         $this->assertTrue($table->hasColumn('name'));
         $this->assertTrue($table->hasColumn('last_modified'));
         
-        // unfortuntaly create table are not rollback-able
-        $this->migrationsHandler->remove($plugin);
         
     }
     
@@ -101,8 +109,6 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         $result = $this->getConnection()->fetchAll($query);        
         $this->assertEquals(2, count($result));
         
-        // unfortuntaly create table are not rollback-able
-        $this->migrationsHandler->remove($plugin);
     }
     
     public function testMigrationsAreEffectivelyRunInRightOrderOnUpgrade()
@@ -123,7 +129,5 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         $table = $schema->getTable('valid_withmigrations_stuffs');
         $this->assertTrue($table->hasColumn('last_modified'));
         
-        // unfortuntaly create table are not rollback-able
-        $this->migrationsHandler->remove($plugin);
     }
 }

@@ -142,21 +142,28 @@ class ManagerTest extends PluginBundleTestCase
     
     public function testInstallDelegatesToMigrationsHandler()
     {
-        $this->manager->install('Valid\WithMigrations\ValidWithMigrations');
-        
-        $schema = 
-            $this
-            ->client
-            ->getConnection()
-            ->getSchemaManager()
-            ->createSchema();
-        $table = $schema->getTable('valid_withmigrations_stuffs');
-        $this->assertTrue($table->hasColumn('id'));
-        $this->assertTrue($table->hasColumn('name'));
-        $this->assertTrue($table->hasColumn('last_modified'));
-        
-        // DDL cannot be encapsulated in a transaction with MYSQL
+        try
+        {
+            $this->manager->install('Valid\WithMigrations\ValidWithMigrations');
+            
+            $table = $this->getTableFromSchema('valid_withmigrations_stuffs');
+            
+            $this->assertTrue($table->hasColumn('id'));
+            $this->assertTrue($table->hasColumn('name'));
+            $this->assertTrue($table->hasColumn('last_modified'));
+        }
+        catch(Exception $e)
+        {
+            // DDL cannot be encapsulated in a transaction with MYSQL
+            $table = $this->getTableFromSchema('valid_withmigrations_stuffs');
+            if($table)
+            {
+                $this->manager->remove('Valid\WithMigrations\ValidWithMigrations');
+            }
+            throw $e;            
+        }
         $this->manager->remove('Valid\WithMigrations\ValidWithMigrations');
-        
     }
+    
+ 
 }
