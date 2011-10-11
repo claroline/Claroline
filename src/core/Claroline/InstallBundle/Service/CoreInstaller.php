@@ -53,7 +53,7 @@ class CoreInstaller
         $allBundles = $this->kernel->getBundles();
         $keepCoreBundles = function($bundle)
         {
-            return strpos($bundle->getPath(), 'plugin') === false;
+            return strpos($bundle->getPath(), 'core') !== false;
         };
         return array_filter($allBundles, $keepCoreBundles);
     }   
