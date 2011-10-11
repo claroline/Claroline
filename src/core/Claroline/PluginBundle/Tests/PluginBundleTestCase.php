@@ -85,4 +85,20 @@ class PluginBundleTestCase extends WebTestCase
         require_once $pluginFile;
         return new $pluginFQCN;
     }
+    
+    /** helper function which returns the table definition from schema */
+    protected function getTableFromSchema($tableName)
+    {
+        $schema = 
+            $this
+            ->client
+            ->getConnection()
+            ->getSchemaManager()
+            ->createSchema();
+        if($schema->hasTable($tableName))
+        {
+            return $schema->getTable($tableName);
+        }
+        return null;
+    }
 }
