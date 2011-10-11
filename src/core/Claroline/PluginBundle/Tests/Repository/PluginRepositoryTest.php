@@ -3,7 +3,7 @@
 namespace Claroline\PluginBundle\Repository;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\PluginBundle\Entity\BasePlugin;
+use Claroline\PluginBundle\Entity\Plugin;
 
 class PluginRepositoryTest extends WebTestCase
 {
@@ -15,7 +15,7 @@ class PluginRepositoryTest extends WebTestCase
     {
         $this->client = self::createClient();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->repository = $em->getRepository('Claroline\PluginBundle\Entity\AbstractPlugin');
+        $this->repository = $em->getRepository('Claroline\PluginBundle\Entity\Plugin');
         $this->client->beginTransaction();
     }
 
@@ -26,7 +26,7 @@ class PluginRepositoryTest extends WebTestCase
 
     public function testCreatePluginInsertsNewPluginRecord()
     {
-        $plugin = $this->buildBasePluginEntity(
+        $plugin = $this->buildPluginEntity(
             'VendorX\TestBundle\VendorXTestBundle',
             'ClarolinePlugin',
             'VendorX',
@@ -49,8 +49,8 @@ class PluginRepositoryTest extends WebTestCase
     {
         $this->setExpectedException('Claroline\PluginBundle\Repository\Exception\ModelException');
 
-        $dummyPlugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
-        $sameFQCNPlugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
+        $dummyPlugin = $this->buildPluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
+        $sameFQCNPlugin = $this->buildPluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
 
         $this->repository->createPlugin($dummyPlugin);
         $this->repository->createPlugin($sameFQCNPlugin);
@@ -58,7 +58,7 @@ class PluginRepositoryTest extends WebTestCase
 
     public function testDeletePluginRemovesPluginRecord()
     {
-        $plugin = $this->buildBasePluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
+        $plugin = $this->buildPluginEntity('VendorX\TestBundle\VendorXTestBundle', '', '', '', '', '');
         $this->repository->createPlugin($plugin);
         $this->repository->deletePlugin('VendorX\TestBundle\VendorXTestBundle');
 
@@ -66,9 +66,9 @@ class PluginRepositoryTest extends WebTestCase
         $this->assertEquals(null, $plugin);
     }
 
-    private function buildBasePluginEntity($fqcn, $type, $vendor, $bundle, $name, $desc)
+    private function buildPluginEntity($fqcn, $type, $vendor, $bundle, $name, $desc)
     {
-        $pluginEntity = new BasePlugin();
+        $pluginEntity = new Plugin();
         $pluginEntity->setBundleFQCN($fqcn);
         $pluginEntity->setType($type);
         $pluginEntity->setVendorName($vendor);

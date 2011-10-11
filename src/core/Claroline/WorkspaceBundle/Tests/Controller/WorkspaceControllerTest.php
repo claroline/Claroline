@@ -85,6 +85,8 @@ class WorkspaceControllerTest extends WebTestCase
         $this->go_to_desktop_and_assert_number_of_listed_workspaces(9);
     }
 
+    
+    
     public function test_removal_of_a_workspace_by_someone_else()
     {
         $this->log_in('jdoe', 'topsecret');

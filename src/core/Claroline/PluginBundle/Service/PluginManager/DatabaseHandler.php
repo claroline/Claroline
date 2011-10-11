@@ -7,7 +7,7 @@ use Claroline\SecurityBundle\Service\RoleManager;
 use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
 use Claroline\PluginBundle\AbstractType\ClarolineApplication;
 use Claroline\PluginBundle\AbstractType\ClarolineTool;
-use Claroline\PluginBundle\Entity\BasePlugin;
+use Claroline\PluginBundle\Entity\Plugin;
 use Claroline\PluginBundle\Entity\Application;
 use Claroline\PluginBundle\Entity\Tool;
 use Claroline\PluginBundle\Entity\ApplicationLauncher;
@@ -20,7 +20,7 @@ class DatabaseHandler
 
     public function __construct(EntityManager $em, RoleManager $roleManager)
     {
-        $this->pluginRepo = $em->getRepository('Claroline\PluginBundle\Entity\AbstractPlugin');
+        $this->pluginRepo = $em->getRepository('Claroline\PluginBundle\Entity\Plugin');
         $this->roleManager = $roleManager;
     }
 
@@ -50,7 +50,7 @@ class DatabaseHandler
         }
         elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolinePlugin'))
         {
-            $pluginEntity = new BasePlugin();
+            $pluginEntity = new Plugin();
         }
         else
         {

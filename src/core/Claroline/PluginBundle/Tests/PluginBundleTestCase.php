@@ -73,7 +73,7 @@ class PluginBundleTestCase extends WebTestCase
      * Helper method building a stubbed plugin.
      *
      * @param string $pluginFQCN
-     * @return \Claroline\PluginBundle\Entity\AbstractPlugin the plugin object
+     * @return \Claroline\PluginBundle\AbstractType\ClarolinePlugin the plugin object
      */
     protected function build_plugin($pluginFQCN)
     {

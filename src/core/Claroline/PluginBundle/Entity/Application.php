@@ -10,7 +10,7 @@ use Claroline\PluginBundle\Entity\ApplicationLauncher;
  * @ORM\Entity(repositoryClass="Claroline\PluginBundle\Repository\PluginRepository")
  * @ORM\Table(name="claro_application")
  */
-class Application extends AbstractPlugin
+class Application extends Plugin
 {
     /**
      * @ORM\OneToMany(targetEntity="ApplicationLauncher", mappedBy="application", cascade={"persist", "remove"})

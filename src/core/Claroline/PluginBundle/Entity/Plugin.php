@@ -6,14 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\PluginBundle\Repository\PluginRepository")
- * @ORM\Table(name="claro_abstract_plugin")
- * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\Table(name="claro_plugin")
+ * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"base_plugin" = "BasePlugin",
+ * @ORM\DiscriminatorMap({"base_plugin" = "Plugin",
  *                        "application" = "Application",
  *                        "tool" = "Tool"})
  */
-abstract class AbstractPlugin
+class Plugin
 {
     /**
      * @ORM\Id

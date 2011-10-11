@@ -3,12 +3,12 @@
 namespace Claroline\PluginBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\PluginBundle\Entity\AbstractPlugin;
+use Claroline\PluginBundle\Entity\Plugin;
 use Claroline\PluginBundle\Repository\Exception\ModelException;
 
 class PluginRepository extends EntityRepository
 {
-    public function createPlugin(AbstractPlugin $plugin)
+    public function createPlugin(Plugin $plugin)
     {     
         $bundleFQCN = $plugin->getBundleFQCN();
         $plugins = $this->findByBundleFQCN($bundleFQCN);
