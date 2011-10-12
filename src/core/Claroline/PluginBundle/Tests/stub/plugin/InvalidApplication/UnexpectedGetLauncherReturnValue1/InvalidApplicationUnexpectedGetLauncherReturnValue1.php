@@ -14,4 +14,9 @@ class InvalidApplicationUnexpectedGetLauncherReturnValue1 extends ClarolineAppli
     {
         return new ApplicationLauncher('route_test', 'translation_test', array('ROLE_TEST'));
     }
+    
+    public function getIndexRoute()
+    {
+        return 'route_test';
+    }
 }

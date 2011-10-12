@@ -318,7 +318,7 @@ class ValidatorTest extends PluginBundleTestCase
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_GET_LAUNCHER_METHOD
+            ValidationException::INVALID_APPLICATION_GET_LAUNCHER_METHOD
         );
     }
     
@@ -344,6 +344,28 @@ class ValidatorTest extends PluginBundleTestCase
         );
     }
 
+    /**
+     * @dataProvider unexpectedIndexRouteProvider
+     */
+    public function testCheckThrowsAnExceptionIfAnApplicationReturnsAnUnexpectedIndexRoute($fqcn)
+    {
+        $this->assertValidationExceptionIsThrown(
+            $fqcn,
+            ValidationException::INVALID_APPLICATION_INDEX
+        );
+    }
+    
+    /**
+     * @dataProvider unexpectedIsEligibleReturnTypeProvider
+     */
+    public function testCheckThrowsAnExceptionIfAnApplicationDoesntReturnABooleanInTheIsEligibleForIndexMethod($fqcn)
+    {
+        $this->assertValidationExceptionIsThrown(
+            $fqcn,
+            ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_METHOD
+        );
+    }
+    
     /**
      * @dataProvider validApplicationProvider
      */
@@ -378,6 +400,22 @@ class ValidatorTest extends PluginBundleTestCase
     {
         return array(
             array('InvalidApplication\UnexpectedLauncherType1\InvalidApplicationUnexpectedLauncherType1')
+        );
+    }
+    
+    public function unexpectedIndexRouteProvider()
+    {
+        return array(
+            array('InvalidApplication\UnexpectedIndexRoute1\InvalidApplicationUnexpectedIndexRoute1'),
+            array('InvalidApplication\UnexpectedIndexRoute2\InvalidApplicationUnexpectedIndexRoute2'),
+            array('InvalidApplication\UnexpectedIndexRoute3\InvalidApplicationUnexpectedIndexRoute3')
+        );
+    }
+    
+    public function unexpectedIsEligibleReturnTypeProvider()
+    {
+        return array(
+            array('InvalidApplication\UnexpectedIsEligibleForPlatformIndexReturnType1\InvalidApplicationUnexpectedIsEligibleForPlatformIndexReturnType1')
         );
     }
     

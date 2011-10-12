@@ -78,6 +78,10 @@ class DatabaseHandler
     private function prepareApplicationEntity(ClarolineApplication $application)
     {
         $applicationEntity = new Application();
+        $applicationEntity->setIndexRoute($application->getIndexRoute());
+        $applicationEntity->setEligibleForPlatformIndex(
+            $application->isEligibleForPlatformIndex()
+        );
         $launchers = $application->getLaunchers();
 
         foreach ($launchers as $launcherWidget)

@@ -9,25 +9,27 @@ abstract class ClarolineApplication extends ClarolinePlugin
     /**
      * This method must return an array of instances (at least one)
      * of Claroline\PluginBundle\Widget\ApplicationLauncher
+     * 
+     * @return array
      */
     abstract public function getLaunchers();
 
+    /**
+     * This method must return the string identifier of the index route
+     * of the application.
+     * 
+     * @return string
+     */
+    abstract public function getIndexRoute();
+    
+    /**
+     * If this method is overriden and returns true, the platform could be configured 
+     * to let the application run when the site index is requested.
+     *
+     * @return boolean
+     */
     public function isEligibleForPlatformIndex()
     {
-        $indexRoute = $this->getPlatformIndexRoute();
-        
-        if (! is_string($indexRoute) || empty($indexRoute))
-        {
-            // the method getPlatformIndexRoute() hasn't been 
-            // overriden, or in a incorrect manner.
-            return false;
-        }
-        
-        return true;
-    }
-    
-    public function getPlatformIndexRoute()
-    {
-        return null;
+        return false;
     }
 }

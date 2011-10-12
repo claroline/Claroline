@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\PluginBundle\Migrations;
 
 use Claroline\InstallBundle\Library\Migration\BundleMigration;
@@ -33,6 +34,10 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_application');
         $this->addId($table);
+        
+        $table->addColumn('index_route', 'string', array('length' => 255));
+        $table->addColumn('is_eligible_for_platform_index', 'boolean');
+        $table->addColumn('is_platform_index', 'boolean');
     }
     
     private function createApplicationLauncherTable(Schema $schema)
