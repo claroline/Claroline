@@ -29,9 +29,11 @@
                 <directory>../src/core/*/*Bundle/Command</directory>
                 <directory>../src/core/*/*Bundle/Resources</directory>
                 <directory>../src/core/*/*Bundle/Tests</directory>
+                <directory>../src/core/*/*Bundle/Migrations</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Tests</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Resources</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Command</directory>
+                <directory>../src/plugin/Claroline/*Bundle/Migrations</directory>
             </exclude>
         </whitelist>
     </filter>

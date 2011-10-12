@@ -9,7 +9,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 
 class MigrationsHandlerTest extends PluginBundleTestCase
-{    
+{
     /** @return Connection */
     public function getConnection()
     {
@@ -26,7 +26,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     {
         $table = $this->getTableFromSchema('valid_withmigrations_stuffs');
         
-        if($table)
+        if ($table)
         {
             $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
             $plugin = $this->build_plugin($pluginFQCN);
