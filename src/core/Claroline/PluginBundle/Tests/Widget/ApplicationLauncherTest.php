@@ -9,19 +9,12 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
     private $validRouteId;
     private $validTranslationKey;
     private $validAccessControl;
-    private $tooLongString;
     
     public function setUp()
     {
         $this->validRouteId = 'route_test';
         $this->validTranslationKey = 'translation_test';
         $this->validAccessControl = array('ROLE_TEST');
-        $this->tooLongString = '';
-        
-        for ($i = 0; $i < 100; ++$i)
-        {
-            $this->tooLongString .= 'XXXX';
-        }
     }
     
     public function testNoExceptionIsThrownWithValidArguments()
@@ -68,7 +61,7 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
         return array(
             array(123),
             array(''),
-            array($this->tooLongString),
+            array($this->getTooLongString()),
         );
     }
     
@@ -77,7 +70,7 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
         return array(
             array(null),
             array(''),
-            array($this->tooLongString),
+            array($this->getTooLongString()),
         );
     }
     
@@ -86,5 +79,17 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
         return array(
             array(array())
         );
+    }
+    
+    private function getTooLongString()
+    {
+        $tooLongString = '';
+        
+        for ($i = 0; $i < 100; ++$i)
+        {
+            $tooLongString .= 'XXXX';
+        }
+        
+        return $tooLongString;
     }
 }
