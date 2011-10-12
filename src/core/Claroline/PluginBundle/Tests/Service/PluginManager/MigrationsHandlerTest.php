@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\PluginBundle\Service\PluginManager;
 
 use Claroline\PluginBundle\Tests\PluginBundleTestCase;
@@ -7,10 +8,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 
-
 class MigrationsHandlerTest extends PluginBundleTestCase
-{
-    
+{    
     /** @return Connection */
     public function getConnection()
     {
@@ -23,10 +22,10 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         return $this->getConnection()->getSchemaManager();
     }
     
-    protected function tearDown() {
-        parent::tearDown();
-        
+    protected function tearDown() 
+    {
         $table = $this->getTableFromSchema('valid_withmigrations_stuffs');
+        
         if($table)
         {
             $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
@@ -61,9 +60,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         
         $this->assertTrue($table->hasColumn('id'));
         $this->assertTrue($table->hasColumn('name'));
-        $this->assertTrue($table->hasColumn('last_modified'));
-        
-        
+        $this->assertTrue($table->hasColumn('last_modified'));      
     }
     
     public function testVersionsTableIsCreatedAndEmptiedOnRemove()
@@ -89,8 +86,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         $this->migrationsHandler->remove($plugin);
         
         $schema = $this->getSchemaManager()->createSchema();
-        $this->assertFalse($schema->hasTable('valid_withmigrations_stuffs'));
-                
+        $this->assertFalse($schema->hasTable('valid_withmigrations_stuffs'));               
     }
     
     public function testVersionsTableIsPopulatedOnUpgrade()
@@ -107,8 +103,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         $this->migrationsHandler->install($plugin);
         
         $result = $this->getConnection()->fetchAll($query);        
-        $this->assertEquals(2, count($result));
-        
+        $this->assertEquals(2, count($result));       
     }
     
     public function testMigrationsAreEffectivelyRunInRightOrderOnUpgrade()
@@ -127,7 +122,6 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         
         $schema = $this->getSchemaManager()->createSchema();
         $table = $schema->getTable('valid_withmigrations_stuffs');
-        $this->assertTrue($table->hasColumn('last_modified'));
-        
+        $this->assertTrue($table->hasColumn('last_modified'));       
     }
 }
