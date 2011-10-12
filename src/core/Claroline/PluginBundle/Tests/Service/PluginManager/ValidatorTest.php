@@ -312,6 +312,17 @@ class ValidatorTest extends PluginBundleTestCase
     /***********************************************************************************/
 
     /**
+     * @dataProvider unexpectedGetLauncherReturnValueProvider
+     */
+    public function testCheckThrowsAnExceptionOnUnexpectedApplicationGetLauncherReturnValue($fqcn)
+    {
+        $this->assertValidationExceptionIsThrown(
+            $fqcn,
+            ValidationException::INVALID_GET_LAUNCHER_METHOD
+        );
+    }
+    
+    /**
      * @dataProvider unexpectedLauncherTypeProvider
      */
     public function testCheckThrowsAnExceptionOnUnexpectedApplicationLauncherType($fqcn)
@@ -348,6 +359,13 @@ class ValidatorTest extends PluginBundleTestCase
             $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
         }
     }
+
+    public function unexpectedGetLauncherReturnValueProvider()
+    {
+        return array(
+            array('InvalidApplication\UnexpectedGetLauncherReturnValue1\InvalidApplicationUnexpectedGetLauncherReturnValue1')
+        );
+    }
     
     public function noLauncherProvider()
     {
@@ -355,7 +373,7 @@ class ValidatorTest extends PluginBundleTestCase
             array('InvalidApplication\NoLauncher\InvalidApplicationNoLauncher')
         );
     }
-
+    
     public function unexpectedLauncherTypeProvider()
     {
         return array(
@@ -366,6 +384,7 @@ class ValidatorTest extends PluginBundleTestCase
     public function validApplicationProvider()
     {
         return array(
+            array('ValidApplication\Minimal\ValidApplicationMinimal'),
             array('ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers')
         );
     }
