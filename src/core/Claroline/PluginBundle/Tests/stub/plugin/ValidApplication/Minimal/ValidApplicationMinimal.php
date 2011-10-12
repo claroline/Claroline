@@ -13,4 +13,9 @@ class ValidApplicationMinimal extends ClarolineApplication
             new ApplicationLauncher('route_test', 'translation_test', array('ROLE_USER'))
         );
     }
+    
+    public function getIndexRoute()
+    {
+        return 'valid_minimal_index';
+    }
 }

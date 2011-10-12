@@ -16,6 +16,8 @@ class ApplicationValidator
         $this->appFQCN = get_class($application);
         
         $this->checkLaunchers();
+        $this->checkIndexRoute();
+        $this->checkIsEligibleForPlatformIndex();
     }
     
     public function checkLaunchers()
@@ -26,7 +28,7 @@ class ApplicationValidator
         {
             throw new ValidationException(
                 "'{$this->appFQCN}::getLaunchers() must return an array.",
-                ValidationException::INVALID_GET_LAUNCHER_METHOD
+                ValidationException::INVALID_APPLICATION_GET_LAUNCHER_METHOD
             );
         }
         
@@ -47,6 +49,51 @@ class ApplicationValidator
                     ValidationException::INVALID_APPLICATION_LAUNCHER
                 );
             }
+        }
+    }
+    
+    private function checkIndexRoute()
+    {
+        $indexRoute = $this->application->getIndexRoute();
+        
+        if (! is_string($indexRoute))
+        {
+            throw new ValidationException(
+                "{$this->appFQCN}::getRouteIndex() must return a string, " 
+                . gettype($indexRoute) . ' given.',
+                ValidationException::INVALID_APPLICATION_INDEX
+            );
+        }
+        
+        if (empty($indexRoute))
+        {
+            throw new ValidationException(
+                "String value returned by {$this->appFQCN}::getRouteIndex() cannot be empty.",
+                ValidationException::INVALID_APPLICATION_INDEX
+            );
+        }
+        
+        if (strlen($indexRoute) > 255)
+        {
+            throw new ValidationException(
+                "String value returned by {$this->appFQCN}::getRouteIndex() "
+                . 'exceeds the 255 characters limit.',
+                ValidationException::INVALID_APPLICATION_INDEX
+            );
+        }
+    }
+    
+    private function checkIsEligibleForPlatformIndex()
+    {
+        $isEligible = $this->application->isEligibleForPlatformIndex();
+        
+        if (!is_bool($isEligible))
+        {
+            throw new ValidationException(
+                "{$this->appFQCN}::isEligibleForPlatformIndex() must return a boolean, " 
+                . gettype($isEligible) . ' given.',
+                ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_METHOD
+            );
         }
     }
 }

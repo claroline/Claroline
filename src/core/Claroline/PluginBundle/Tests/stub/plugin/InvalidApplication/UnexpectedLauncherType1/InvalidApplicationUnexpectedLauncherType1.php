@@ -10,4 +10,9 @@ class InvalidApplicationUnexpectedLauncherType1 extends ClarolineApplication
     {
         return array('not_a_launcher_instance');
     }
+    
+    public function getIndexRoute()
+    {
+        return 'bad_launcher_type_index';
+    }
 }

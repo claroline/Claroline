@@ -17,6 +17,21 @@ class Application extends Plugin
      */
     private $launchers;
 
+    /**
+     * @ORM\Column(name="index_route", type="string", length="255", nullable=true)
+     */
+    private $indexRoute;
+    
+    /**
+     * @ORM\Column(name="is_eligible_for_platform_index", type="boolean")
+     */
+    private $isEligibleForPlatformIndex = false;
+    
+    /**
+     * @ORM\Column(name="is_platform_index", type="boolean")
+     */
+    private $isPlatformIndex = false;
+    
     public function __construct()
     {
         $this->launchers = new ArrayCollection();
@@ -30,5 +45,35 @@ class Application extends Plugin
     public function addLauncher(ApplicationLauncher $launcher)
     {
         $this->launchers->add($launcher);
+    }
+
+    public function getIndexRoute()
+    {
+        return $this->indexRoute;
+    }
+
+    public function setIndexRoute($indexRoute)
+    {
+        $this->indexRoute = $indexRoute;
+    }
+
+    public function isEligibleForPlatformIndex()
+    {
+        return $this->isEligibleForPlatformIndex;
+    }
+
+    public function setEligibleForPlatformIndex($isEligibleForPlatformIndex)
+    {
+        $this->isEligibleForPlatformIndex = $isEligibleForPlatformIndex;
+    }
+    
+    public function isPlatformIndex()
+    {
+        return $this->isPlatformIndex;
+    }
+
+    public function setIsPlatformIndex($isPlatformIndex)
+    {
+        $this->isPlatformIndex = $isPlatformIndex;
     }
 }

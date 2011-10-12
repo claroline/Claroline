@@ -23,4 +23,9 @@ class ValidApplicationTwoLaunchers extends ClarolineApplication
 
         return array($firstLauncher, $secondLauncher);
     }
+    
+    public function getIndexRoute()
+    {
+        return 'valid_two_lauchers_index';
+    }
 }
