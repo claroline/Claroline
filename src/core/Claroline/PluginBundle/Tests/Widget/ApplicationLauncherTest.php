@@ -1,0 +1,90 @@
+<?php
+
+namespace Claroline\PluginBundle\Repository;
+
+use Claroline\PluginBundle\Widget\ApplicationLauncher;
+
+class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
+{
+    private $validRouteId;
+    private $validTranslationKey;
+    private $validAccessControl;
+    private $tooLongString;
+    
+    public function setUp()
+    {
+        $this->validRouteId = 'route_test';
+        $this->validTranslationKey = 'translation_test';
+        $this->validAccessControl = array('ROLE_TEST');
+        $this->tooLongString = '';
+        
+        for ($i = 0; $i < 100; ++$i)
+        {
+            $this->tooLongString .= 'XXXX';
+        }
+    }
+    
+    public function testNoExceptionIsThrownWithValidArguments()
+    {
+        new ApplicationLauncher(
+            $this->validRouteId,
+            $this->validTranslationKey,
+            $this->validAccessControl
+        );
+    }
+    
+    /**
+     * @dataProvider invalidRouteIdProvider
+     */
+    public function testInvalidThrowsAnExceptionOnInvalidRouteIdArgument($routeId)
+    {
+        $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
+        
+        new ApplicationLauncher($routeId, $this->validTranslationKey, $this->validAccessControl);
+    }
+    
+    /**
+     * @dataProvider invalidTranslationKeyProvider
+     */
+    public function testInvalidThrowsAnExceptionOnInvalidTranslationKeyArgument($key)
+    {
+        $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
+        
+        new ApplicationLauncher($this->validRouteId, $key, $this->validAccessControl);
+    }
+    
+    /**
+     * @dataProvider invalidAccessControlProvider
+     */
+    public function testInvalidThrowsAnExceptionOnInvalidAccessControlArgument($accessControl)
+    {
+        $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
+        
+        new ApplicationLauncher($this->validRouteId, $this->validTranslationKey, $accessControl);
+    }
+    
+    public function invalidRouteIdProvider()
+    {
+        return array(
+            array(123),
+            array(''),
+            array($this->tooLongString),
+        );
+    }
+    
+    public function invalidTranslationKeyProvider()
+    {
+        return array(
+            array(null),
+            array(''),
+            array($this->tooLongString),
+        );
+    }
+    
+    public function invalidAccessControlProvider()
+    {
+        return array(
+            array(array())
+        );
+    }
+}

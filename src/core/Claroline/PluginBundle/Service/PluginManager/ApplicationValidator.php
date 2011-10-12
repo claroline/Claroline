@@ -20,8 +20,16 @@ class ApplicationValidator
     
     public function checkLaunchers()
     {
-        $launchers = (array) $this->application->getLaunchers();
+        $launchers = $this->application->getLaunchers();
 
+        if (! is_array($launchers))
+        {
+            throw new ValidationException(
+                "'{$this->appFQCN}::getLaunchers() must return an array.",
+                ValidationException::INVALID_GET_LAUNCHER_METHOD
+            );
+        }
+        
         if (count($launchers) == 0)
         {
             throw new ValidationException(
