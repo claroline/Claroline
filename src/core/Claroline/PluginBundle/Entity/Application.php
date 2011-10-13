@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\PluginBundle\Entity\ApplicationLauncher;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\PluginBundle\Repository\PluginRepository")
+ * @ORM\Entity(repositoryClass="Claroline\PluginBundle\Repository\ApplicationRepository")
  * @ORM\Table(name="claro_application")
  */
 class Application extends Plugin

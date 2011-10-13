@@ -29,7 +29,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
         if ($table)
         {
             $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-            $plugin = $this->build_plugin($pluginFQCN);
+            $plugin = $this->buildPlugin($pluginFQCN);
             $this->migrationsHandler->remove($plugin);
         }
     }
@@ -37,7 +37,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     public function testVersionsTableIsCreatedAndPopulatedOnInstall()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->migrationsHandler->install($plugin);
         
@@ -51,7 +51,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     public function testMigrationsAreEffectivelyRunOnInstall()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->migrationsHandler->install($plugin);
         
@@ -66,7 +66,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     public function testVersionsTableIsCreatedAndEmptiedOnRemove()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->migrationsHandler->install($plugin);
         $this->migrationsHandler->remove($plugin);
@@ -80,7 +80,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     public function testMigrationsAreEffectivelyRunOnRemove()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->migrationsHandler->install($plugin);
         $this->migrationsHandler->remove($plugin);
@@ -92,7 +92,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     public function testVersionsTableIsPopulatedOnUpgrade()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->migrationsHandler->migrate($plugin, '00000000000001');
                 
@@ -109,7 +109,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
     public function testMigrationsAreEffectivelyRunInRightOrderOnUpgrade()
     {
         $pluginFQCN = 'Valid\WithMigrations\ValidWithMigrations';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->migrationsHandler->migrate($plugin, '00000000000001');
         $schema = $this->getSchemaManager()->createSchema();

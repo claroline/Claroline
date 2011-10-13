@@ -27,7 +27,7 @@ class DatabaseHandlerTest extends PluginBundleTestCase
     public function testInstallApplicationRegistersLaunchersAndRoles()
     {
         $pluginFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->databaseHandler->install($plugin);
 
@@ -55,7 +55,7 @@ class DatabaseHandlerTest extends PluginBundleTestCase
     public function testInstallApplicationDoesntDuplicateExistingRole()
     {
         $pluginFQCN = 'ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers';
-        $plugin = $this->build_plugin($pluginFQCN);
+        $plugin = $this->buildPlugin($pluginFQCN);
 
         $this->databaseHandler->install($plugin);
 
@@ -65,5 +65,18 @@ class DatabaseHandlerTest extends PluginBundleTestCase
         $this->assertEquals(1, count($roles));
     }
 
-    
+    public function testInstallApplicationEligibleForIndexInsertsExpectedValues()
+    {
+        $pluginFQCN = 'ValidApplication\EligibleForIndex1\ValidApplicationEligibleForIndex1';
+        $plugin = $this->buildPlugin($pluginFQCN);
+
+        $this->databaseHandler->install($plugin);
+        
+        $appRepo = $this->em->getRepository('Claroline\PluginBundle\Entity\Application');
+        $app = $appRepo->findOneByBundleFQCN($pluginFQCN);
+        
+        $this->assertEquals('valid_eligible_index_1', $app->getIndexRoute());
+        $this->assertEquals(true, $app->isEligibleForPlatformIndex());
+        $this->assertEquals(false, $app->isPlatformIndex());
+    }
 }

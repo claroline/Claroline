@@ -75,7 +75,20 @@ class PluginBundleTestCase extends WebTestCase
      * @param string $pluginFQCN
      * @return \Claroline\PluginBundle\AbstractType\ClarolinePlugin the plugin object
      */
-    protected function build_plugin($pluginFQCN)
+    protected function buildPlugin($pluginFQCN)
+    {
+        $this->requirePlugin($pluginFQCN);
+        
+        return new $pluginFQCN;
+    }
+    
+    /**
+     * Helper method requiring the plugin file (as the autoloader doesn't
+     * know the stubs namespaces).
+     * 
+     * @param string $pluginFQCN 
+     */
+    protected function requirePlugin($pluginFQCN)
     {
         $pluginFile = $this->pluginDirectory
                 . DIRECTORY_SEPARATOR
@@ -83,7 +96,6 @@ class PluginBundleTestCase extends WebTestCase
                 . '.php';
 
         require_once $pluginFile;
-        return new $pluginFQCN;
     }
     
     /** helper function which returns the table definition from schema */
