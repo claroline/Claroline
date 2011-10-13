@@ -423,7 +423,8 @@ class ValidatorTest extends PluginBundleTestCase
     {
         return array(
             array('ValidApplication\Minimal\ValidApplicationMinimal'),
-            array('ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers')
+            array('ValidApplication\TwoLaunchers\ValidApplicationTwoLaunchers'),
+            array('ValidApplication\EligibleForIndex1\ValidApplicationEligibleForIndex1')
         );
     }
 }

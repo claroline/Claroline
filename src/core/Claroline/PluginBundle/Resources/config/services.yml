@@ -47,6 +47,10 @@ services:
             - "@claroline.plugin.file_handler"
             - "@claroline.plugin.database_handler"
             - "@claroline.plugin.migrations_handler"
+    claroline.plugin.application_manager:
+        class: Claroline\PluginBundle\Service\ApplicationManager\Manager
+        arguments:
+            - "@doctrine.orm.entity_manager"
             
     # symfony classes used as service arguments
     symfony.yaml.parser:

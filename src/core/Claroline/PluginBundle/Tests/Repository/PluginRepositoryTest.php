@@ -7,6 +7,7 @@ use Claroline\PluginBundle\Entity\Plugin;
 
 class PluginRepositoryTest extends WebTestCase
 {
+    /** @var \Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
     private $client;
     /** @var Claroline\PluginBundle\Repository\PluginRepository */
     private $repository;
