@@ -29,11 +29,6 @@ class Role implements RoleInterface
      * @Assert\NotBlank()
      */
     protected $name;
-    
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function getName()
     {

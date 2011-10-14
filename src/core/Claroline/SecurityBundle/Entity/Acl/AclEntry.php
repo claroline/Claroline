@@ -1,12 +1,11 @@
 <?php
 
-namespace Claroline\SecurityBundle\Entity;
+namespace Claroline\SecurityBundle\Entity\Acl;
 
 use Doctrine\ORM\Mapping as ORM;
 
-// Add the @ORM\Entity annotation to the class docblock to make this class an entity
-
 /**
+ * @ORM\Entity
  * @ORM\Table(
  *      name="acl_entries",
  *      uniqueConstraints={
@@ -30,42 +29,42 @@ class AclEntry
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="field_name", type="string", length=50, nullable=true)
      */
-    private $fieldName;
+    protected $fieldName;
 
     /**
      * @ORM\Column(name="ace_order", type="smallint", nullable=false)
      */
-    private $aceOrder;
+    protected $aceOrder;
 
     /**
      * @ORM\Column(name="mask", type="integer", nullable=false)
      */
-    private $mask;
+    protected $mask;
 
     /**
      * @ORM\Column(name="granting", type="boolean", nullable=false)
      */
-    private $granting;
+    protected $granting;
 
     /**
      * @ORM\Column(name="granting_strategy", type="string", length=30, nullable=false)
      */
-    private $grantingStrategy;
+    protected $grantingStrategy;
 
     /**
      * @ORM\Column(name="audit_success", type="boolean", nullable=false)
      */
-    private $auditSuccess;
+    protected $auditSuccess;
 
     /**
      * @ORM\Column(name="audit_failure", type="boolean", nullable=false)
      */
-    private $auditFailure;
+    protected $auditFailure;
 
     /**
      * @ORM\ManyToOne(targetEntity="AclObjectIdentity")
@@ -73,7 +72,7 @@ class AclEntry
      *   @ORM\JoinColumn(name="object_identity_id", referencedColumnName="id", onUpdate="CASCADE", onDelete="CASCADE")
      * })
      */
-    private $objectIdentity;
+    protected $objectIdentity;
 
     /**
      * @ORM\ManyToOne(targetEntity="AclSecurityIdentity")
@@ -81,7 +80,7 @@ class AclEntry
      *   @ORM\JoinColumn(name="security_identity_id", referencedColumnName="id", nullable=false, onUpdate="CASCADE", onDelete="CASCADE")
      * })
      */
-    private $securityIdentity;
+    protected $securityIdentity;
 
     /**
      * @ORM\ManyToOne(targetEntity="AclClass")
@@ -89,60 +88,5 @@ class AclEntry
      *   @ORM\JoinColumn(name="class_id", referencedColumnName="id", nullable=false, onUpdate="CASCADE", onDelete="CASCADE")
      * })
      */
-    private $class;
-    
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getFieldName()
-    {
-        return $this->fieldName;
-    }
-
-    public function getAceOrder()
-    {
-        return $this->aceOrder;
-    }
-
-    public function getMask()
-    {
-        return $this->mask;
-    }
-
-    public function getGranting()
-    {
-        return $this->granting;
-    }
-
-    public function getGrantingStrategy()
-    {
-        return $this->grantingStrategy;
-    }
-
-    public function getAuditSuccess()
-    {
-        return $this->auditSuccess;
-    }
-
-    public function getAuditFailure()
-    {
-        return $this->auditFailure;
-    }
-
-    public function getObjectIdentity()
-    {
-        return $this->objectIdentity;
-    }
-
-    public function getSecurityIdentity()
-    {
-        return $this->securityIdentity;
-    }
-
-    public function getClass()
-    {
-        return $this->class;
-    }
+    protected $class;
 }

@@ -11,9 +11,7 @@ class NoIndexApplicationCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('claroline:application:no_index')
-             ->setDescription(
-                 'Unmarks the current index application as platform index, if any.'
-        );
+             ->setDescription('Unsets the index flag of the current index application.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
