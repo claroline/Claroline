@@ -5,4 +5,11 @@ services:
           - [setContainer, ["@service_container"]] 
           - [setAnnotationReader, ["@annotation_reader"]]
         tags:
-            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }
+            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }          
+    # controller
+    claroline.common.platform_index_controller:
+        class: Claroline\CommonBundle\Controller\PlatformIndexController
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@templating.engine.twig"

@@ -37,7 +37,7 @@ body
 {
     float: left;
     width: 200px;
-    min-height: 400px;
+    min-height: 600px;
     border-right: solid 1px #bbb;
 }
 
@@ -45,4 +45,19 @@ body
 {
     float: left;
     padding: 16px;
+}
+
+#claro_default_index_content
+{
+    width: 350px;
+    height: 350px;
+    margin-left: 200px;
+    background-image: url("../images/claroline_logo_bg.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#claro_home_content
+{
+    width: 800px;
 }

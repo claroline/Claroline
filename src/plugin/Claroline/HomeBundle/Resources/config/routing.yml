@@ -1,0 +1,3 @@
+claroline_home_index:
+    pattern: /home
+    defaults: { _controller: claroline.home.main_controller:indexAction }

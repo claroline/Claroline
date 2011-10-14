@@ -20,6 +20,6 @@ class ClarolineRegisterBundle extends ClarolineApplication
     
     public function getIndexRoute()
     {
-        return 'claro_register_index';
+        return 'claroline_register_index';
     }
 }
