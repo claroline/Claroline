@@ -1,13 +1,12 @@
 <?php
 
-namespace Claroline\SecurityBundle\Entity;
+namespace Claroline\SecurityBundle\Entity\Acl;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-// Add the @ORM\Entity annotation to the class docblock to make this class an entity
-
 /**
+ * @ORM\Entity
  * @ORM\Table(
  *      name="acl_object_identities",
  *      uniqueConstraints={
@@ -25,22 +24,22 @@ class AclObjectIdentity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="class_id", type="integer", nullable=false)
      */
-    private $classId;
+    protected $classId;
 
     /**
      * @ORM\Column(name="object_identifier", type="string", length=100, nullable=false)
      */
-    private $objectIdentifier;
+    protected $objectIdentifier;
 
     /**
      * @ORM\Column(name="entries_inheriting", type="boolean", nullable=false)
      */
-    private $entriesInheriting;
+    protected $entriesInheriting;
 
     /**
      * @ORM\ManyToMany(targetEntity="AclObjectIdentity", inversedBy="objectIdentity")
@@ -54,7 +53,7 @@ class AclObjectIdentity
      *      }
      * )
      */
-    private $ancestor;
+    protected $ancestor;
 
     /**
      * @ORM\ManyToOne(targetEntity="AclObjectIdentity")
@@ -62,40 +61,5 @@ class AclObjectIdentity
      *   @ORM\JoinColumn(name="parent_object_identity_id", referencedColumnName="id")
      * })
      */
-    private $parentObjectIdentity;
-
-    public function __construct()
-    {
-        $this->ancestor = new ArrayCollection();
-    }
-    
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getClassId()
-    {
-        return $this->classId;
-    }
-
-    public function getObjectIdentifier()
-    {
-        return $this->objectIdentifier;
-    }
-
-    public function getEntriesInheriting()
-    {
-        return $this->entriesInheriting;
-    }
-
-    public function getAncestor()
-    {
-        return $this->ancestor;
-    }
-
-    public function getParentObjectIdentity()
-    {
-        return $this->parentObjectIdentity;
-    }
+    protected $parentObjectIdentity;
 }

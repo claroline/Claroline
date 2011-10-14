@@ -187,6 +187,7 @@ class ExtendableListenerTest extends WebTestCase
         $this->assertEquals(0, count($secondChildren));
         $this->assertEquals(0, count($firstDescendants));
         $this->assertEquals(0, count($firstDescendants));
+        $this->assertEquals(0, count($secondDescendants));
     }
     
     public function testDeletingDescendantEntityDeletesParentsRecords()
@@ -251,7 +252,9 @@ class ExtendableListenerTest extends WebTestCase
         $connection = $this->em->getConnection();
         $firstChildren = $connection->query('SELECT * FROM claro_test_node_first_child')->fetchAll();    
         $deletedChildren = $connection->query('SELECT * FROM claro_test_node_first_child WHERE firstChildField="FFC"')->fetchAll();    
+        
         $this->assertEquals(1, count($firstChildren));
+        $this->assertEquals(0, count($deletedChildren));
         
         $this->performRealEntityDeletion($ancestors);
     }

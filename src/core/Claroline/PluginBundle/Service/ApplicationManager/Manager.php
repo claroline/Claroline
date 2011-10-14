@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\PluginBundle\Service\ApplicationManager\Exception\ApplicationException;
 
 class Manager
-{    
+{
     private $em;
     private $appRepository;
     

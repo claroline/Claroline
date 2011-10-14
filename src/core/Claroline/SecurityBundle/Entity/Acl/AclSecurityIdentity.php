@@ -1,12 +1,11 @@
 <?php
 
-namespace Claroline\SecurityBundle\Entity;
+namespace Claroline\SecurityBundle\Entity\Acl;
 
 use Doctrine\ORM\Mapping as ORM;
 
-// Add the @ORM\Entity annotation to the class docblock to make this class an entity
-
 /**
+ * @ORM\Entity
  * @ORM\Table(
  *      name="acl_security_identities", 
  *      uniqueConstraints={
@@ -24,30 +23,15 @@ class AclSecurityIdentity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="identifier", type="string", length=200, nullable=false)
      */
-    private $identifier;
+    protected $identifier;
 
     /**
      * @ORM\Column(name="username", type="boolean", nullable=false)
      */
-    private $username;
-    
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
-    }
+    protected $username;
 }
