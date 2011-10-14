@@ -3,6 +3,7 @@
 namespace Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
 
@@ -62,7 +63,7 @@ class TreeAncestor
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     protected $children;
-
+    
     public function getTreeAncestorField()
     {
         return $this->treeAncestorField;

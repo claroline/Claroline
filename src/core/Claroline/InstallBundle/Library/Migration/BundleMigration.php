@@ -1,27 +1,51 @@
 <?php
+
 namespace Claroline\InstallBundle\Library\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Table;
+use Claroline\CommonBundle\Exception\ClarolineException;
 
 abstract class BundleMigration extends AbstractMigration
 {
-    /* @var MigrationHelper */
+    /** MigrationHelper */
     private $helper;
     
+    /** array of Doctrine\DBAL\Schema\Table */
+    private $storedTables = array();
     
-    private function getHelper()
+    /**
+     * Helper method storing a table in a private attribute to facilitate
+     * its retrieval in another context (helps for relationships).
+     * 
+     * @param Table $table
+     */
+    protected function storeTable(Table $table)
     {
-        if($this->helper === null)
+        $this->storedTables[$table->getName()] = $table;
+    }
+    
+    /**
+     * Helper method returning a table previously stored using
+     * the BundleMigration::storeTable() method.
+     * 
+     * @param string $tableName
+     * @return Table 
+     */
+    protected function getStoredTable($tableName)
+    {
+        if (! isset($this->storedTables[$tableName]))
         {
-            $this->helper = new MigrationHelper(); 
+            throw new ClarolineException("Unknown table '{$tableName}'.");
         }
-        return $this->helper;
+        
+        return $this->storedTables[$tableName];
     }
     
     protected function prefix()
     {        
         $helper = $this->getHelper();
+        
         return $helper->getTablePrefixForMigration($this);        
     }
     
@@ -39,7 +63,7 @@ abstract class BundleMigration extends AbstractMigration
     }
     
     /** helper function to add a reference column to a table */
-    protected function addReference(Table $table, $ref, $nullable= false)
+    protected function addReference(Table $table, $ref, $nullable = false)
     {
         $table->addColumn(
             $ref . '_id',
@@ -58,5 +82,15 @@ abstract class BundleMigration extends AbstractMigration
             'string',
             array('length' => 255)            
         );
+    }
+      
+    private function getHelper()
+    {
+        if ($this->helper === null)
+        {
+            $this->helper = new MigrationHelper(); 
+        }
+        
+        return $this->helper;
     }
 }
