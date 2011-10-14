@@ -15,16 +15,15 @@ use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\SecondChild as TreeSe
 
 class ExtendableListenerTest extends WebTestCase
 {
-    /** @var \Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
+    /** Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
     private $client;
-
-    /** @var \Doctrine\ORM\EntityManager */
+    
+    /** Doctrine\ORM\EntityManager */
     private $em;
 
     public function setUp()
     {
         $this->client = self::createClient();
-        $this->client->beginTransaction();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->beginTransaction();
     }
@@ -163,32 +162,59 @@ class ExtendableListenerTest extends WebTestCase
         $this->assertInstanceOf('Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\SecondDescendant', $secondDescendants[0]);
     }
     
+    public function testDeletingAncestorsDeletesChildrenJoinedRecords()
+    {
+        $this->flushTheWholeValidHierarchy();
+        
+        $ancestors = $this->em
+            ->getRepository('Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor')
+            ->findAll();
+            
+        foreach ($ancestors as $ancestor)
+        {
+            $this->em->remove($ancestor);
+        }
+        
+        $this->em->flush();
+        
+        $connection = $this->em->getConnection();
+        $firstChildren = $connection->query('SELECT * FROM claro_test_firstchild')->fetchAll();
+        $secondChildren = $connection->query('SELECT * FROM claro_test_secondchild')->fetchAll();
+        $firstDescendants = $connection->query('SELECT * FROM claro_test_firstdescendant')->fetchAll();
+        $secondDescendants = $connection->query('SELECT * FROM claro_test_seconddescendant')->fetchAll();
+        
+        $this->assertEquals(0, count($firstChildren));
+        $this->assertEquals(0, count($secondChildren));
+        $this->assertEquals(0, count($firstDescendants));
+        $this->assertEquals(0, count($firstDescendants));
+    }
+    
+    public function testDeletingDescendantEntityDeletesParentsRecords()
+    {
+        $this->flushTheWholeValidHierarchy();
+        
+        $firstDescendants = $this->requestExactType('ValidHierarchy\FirstDescendant');
+        
+        foreach ($firstDescendants as $descendant)
+        {
+            $this->em->remove($descendant);
+        }
+        
+        $this->em->flush();
+        
+        $connection = $this->em->getConnection();
+        $ancestors = $connection->query('SELECT * FROM claro_test_ancestor')->fetchAll();
+        $firstChildren = $connection->query('SELECT * FROM claro_test_firstchild')->fetchAll();
+        $firstDescendants = $connection->query('SELECT * FROM claro_test_firstdescendant')->fetchAll();
+        
+        $this->assertEquals(4, count($ancestors));
+        $this->assertEquals(2, count($firstChildren));
+        $this->assertEquals(0, count($firstDescendants));
+    }
+    
     public function testExtendableMappingDoesntConflictWithDoctrineTreeExtension()
     {
-        $firstTreeAncestor = new TreeAncestor(); // will be a root node (no parent)
-        $secondTreeAncestor = new TreeAncestor();
-        $firstFirstChild = new TreeFirstChild();
-        $secondFirstChild = new TreeFirstChild(); // will be a root node (no parent)
-        $secondChild = new TreeSecondChild();
-        
-        $firstTreeAncestor->setTreeAncestorField('FTA');
-        $secondTreeAncestor->setTreeAncestorField('STA');
-        $secondTreeAncestor->setParent($firstTreeAncestor); // child of firstTreeAncestor
-        $firstFirstChild->setTreeAncestorField('FFCA');
-        $firstFirstChild->setFirstChildField('FFC');
-        $firstFirstChild->setParent($firstTreeAncestor); // child of firstTreeAncestor
-        $secondFirstChild->setTreeAncestorField('SFCA');
-        $secondFirstChild->setFirstChildField('SFC');
-        $secondChild->setTreeAncestorField('SCA');
-        $secondChild->setSecondChildField('SC');
-        $secondChild->setParent($secondTreeAncestor); // child of second-firstTreeAncestor
-        
-        $this->em->persist($firstTreeAncestor);
-        $this->em->persist($secondTreeAncestor);
-        $this->em->persist($firstFirstChild);
-        $this->em->persist($secondFirstChild);
-        $this->em->persist($secondChild);       
-        $this->em->flush();
+        $this->flushTheWholeNodeHierarchy();
         
         $ancestorRepo = $this->em->getRepository('Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor');
         
@@ -202,23 +228,32 @@ class ExtendableListenerTest extends WebTestCase
         $this->assertEquals(3, count($rootAncestorChildNodes));
         $this->assertEquals(0, count($rootFirstChildChildNodes));
                
-        // The gedmo-doctrine tree extension alters transactional mode by creating 
-        // temporary tables for its calculations. The code below "manually" deletes 
-        // the records that were inserted in this test.
+        $this->performRealEntityDeletion($ancestors);
+    }
+    
+    public function testDeletingAChildNodeDeletesItsChildrenJoinedRecords()
+    {
+        $this->flushTheWholeNodeHierarchy();
         
-        // The following two lines explicitly close the opened transaction (which must be done
-        // for the entity manager connection AND for the client connection, don't ask me why : 
-        // it seems there's a nested transaction involved here...).
-        $this->em->getConnection()->rollback();
-        $this->client->rollback();
+        $ancestorRepo = $this->em->getRepository('Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor');
+        $ancestors = $ancestorRepo->findAll();
+        $firstTreeAncestor = $ancestorRepo->findOneByTreeAncestorField('FTA');
+        $firstFirstChild = $ancestorRepo->findOneByTreeAncestorField('FFCA');
         
-        foreach ($ancestors as $ancestor)
-        {
-            $this->em->remove($ancestor);
-        }
+        $this->assertEquals($firstTreeAncestor, $firstFirstChild->getParent());
+        $this->assertEquals(3, count($ancestorRepo->children($firstTreeAncestor)));
         
+        $this->em->remove($firstFirstChild);
         $this->em->flush();
-        $this->client->beginTransaction();
+
+        $this->assertEquals(2, count($ancestorRepo->children($firstTreeAncestor)));
+        
+        $connection = $this->em->getConnection();
+        $firstChildren = $connection->query('SELECT * FROM claro_test_node_first_child')->fetchAll();    
+        $deletedChildren = $connection->query('SELECT * FROM claro_test_node_first_child WHERE firstChildField="FFC"')->fetchAll();    
+        $this->assertEquals(1, count($firstChildren));
+        
+        $this->performRealEntityDeletion($ancestors);
     }
     
     public function conflictualMappingEntityProvider()
@@ -264,6 +299,56 @@ class ExtendableListenerTest extends WebTestCase
         $this->em->persist($firstDescendant);
         $this->em->persist($secondDescendant);
         $this->em->flush();
+    }
+    
+    private function flushTheWholeNodeHierarchy()
+    {
+        $firstTreeAncestor = new TreeAncestor(); // will be a root node (no parent)
+        $secondTreeAncestor = new TreeAncestor();
+        $firstFirstChild = new TreeFirstChild();
+        $secondFirstChild = new TreeFirstChild(); // will be a root node (no parent)
+        $secondChild = new TreeSecondChild();
+        
+        $firstTreeAncestor->setTreeAncestorField('FTA');
+        $secondTreeAncestor->setTreeAncestorField('STA');
+        $secondTreeAncestor->setParent($firstTreeAncestor); // child of firstTreeAncestor
+        $firstFirstChild->setTreeAncestorField('FFCA');
+        $firstFirstChild->setFirstChildField('FFC');
+        $firstFirstChild->setParent($firstTreeAncestor); // child of firstTreeAncestor
+        $secondFirstChild->setTreeAncestorField('SFCA');
+        $secondFirstChild->setFirstChildField('SFC');
+        $secondChild->setTreeAncestorField('SCA');
+        $secondChild->setSecondChildField('SC');
+        $secondChild->setParent($secondTreeAncestor); // child of second-firstTreeAncestor
+        
+        $this->em->persist($firstTreeAncestor);
+        $this->em->persist($secondTreeAncestor);
+        $this->em->persist($firstFirstChild);
+        $this->em->persist($secondFirstChild);
+        $this->em->persist($secondChild);       
+        $this->em->flush();
+    }
+    
+    /**
+     * The gedmo-doctrine tree extension alters transactional mode by creating 
+     * temporary tables for its calculations, and thus prevents a clean rollback 
+     * of the data inserted during the transaction. This method leaves the 
+     * transactional mode, effectively deletes the entities passed as argument 
+     * and opens the transaction again.
+     * 
+     * @param array entities An array of managed entities
+     */
+    private function performRealEntityDeletion(array $entities)
+    {
+        $this->client->rollback();
+        
+        foreach ($entities as $entity)
+        {
+            $this->em->remove($entity);
+        }
+        
+        $this->em->flush();
+        $this->client->beginTransaction();
     }
     
     private function requestExactType($className)
