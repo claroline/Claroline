@@ -43,6 +43,14 @@ class Manager
             );
         }
             
+        $this->unsetCurrentIndexApplication(false);      
+        $targetApp->setIsPlatformIndex(true);
+        
+        $this->em->flush();
+    }
+    
+    public function unsetCurrentIndexApplication($flush = true)
+    {
         $indexApp = $this->appRepository->getIndexApplication();
         
         if ($indexApp !== false)
@@ -50,8 +58,9 @@ class Manager
             $indexApp->setIsPlatformIndex(false);
         }
         
-        $targetApp->setIsPlatformIndex(true);
-        
-        $this->em->flush();
+        if ($flush === true)
+        {
+            $this->em->flush();
+        }
     }
 }

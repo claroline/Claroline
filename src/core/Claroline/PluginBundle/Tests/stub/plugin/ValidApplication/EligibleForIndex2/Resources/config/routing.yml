@@ -1,0 +1,4 @@
+valid_eligible_index_2:
+    pattern: /
+    defaults: { _controller: ValidApplicationEligibleForIndex2Bundle:Main:index }
+

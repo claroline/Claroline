@@ -1,0 +1,6 @@
+services:
+    #controller
+    claroline.home.main_controller:
+        class: Claroline\HomeBundle\Controller\MainController
+        arguments:
+            - "@templating.engine.twig"
