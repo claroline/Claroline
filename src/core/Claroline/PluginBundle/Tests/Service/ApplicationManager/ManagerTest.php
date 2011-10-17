@@ -53,7 +53,7 @@ class ManagerTest extends PluginBundleTestCase
         }
         catch (ApplicationException $ex)
         {
-            $this->assertEquals(ApplicationException::NOT_ELIGIBLE_APPLICATION, $ex->getCode());
+            $this->assertEquals(ApplicationException::NOT_ELIGIBLE_FOR_PLATFORM_INDEX, $ex->getCode());
         }
     }
     
@@ -93,5 +93,71 @@ class ManagerTest extends PluginBundleTestCase
         
         $this->appManager->markAsPlatformIndex($eligibleAppFqcn);
         $this->appManager->markAsPlatformIndex($eligibleAppFqcn);
+    }
+    
+    public function testMarkAsConnectionTargetThrowsExceptionOnNonExistentApplicationArgument()
+    {
+        try
+        {
+            $this->appManager->markAsConnectionTarget('NonExistentApplicationFQCN');
+            $this->fail("No exception thrown.");
+        }
+        catch (ApplicationException $ex)
+        {
+            $this->assertEquals(ApplicationException::NON_EXISTENT_APPLICATION, $ex->getCode());
+        }
+    }
+    
+    public function testMarkAsConnectionTargetThrowsExceptionIfApplicationIsNotEligible()
+    {
+        try
+        {
+            $appFqcn = 'ValidApplication\Minimal\ValidApplicationMinimal';
+            $this->manager->install($appFqcn);
+            $this->appManager->markAsConnectionTarget($appFqcn);
+            $this->fail("No exception thrown.");
+        }
+        catch (ApplicationException $ex)
+        {
+            $this->assertEquals(ApplicationException::NOT_ELIGIBLE_FOR_CONNECTION_TARGET, $ex->getCode());
+        }
+    }
+    
+    public function testMarkAsConnectionTargetElectsApplicationEvenIfNoPriorTargetIsSet()
+    {
+        $nonEligibleAppFqcn = 'ValidApplication\Minimal\ValidApplicationMinimal';
+        $eligibleAppFqcn = 'ValidApplication\EligibleForConnectionTarget1\ValidApplicationEligibleForConnectionTarget1';
+        $this->manager->install($nonEligibleAppFqcn);
+        $this->manager->install($eligibleAppFqcn);
+        
+        $this->appManager->markAsConnectionTarget($eligibleAppFqcn);
+        
+        $targetApp = $this->appRepo->getConnectionTargetApplication();
+        $this->assertEquals($eligibleAppFqcn, $targetApp->getBundleFQCN());
+    }
+    
+    public function testMarkAsConnectionTargetUnsetsPriorTargetApplication()
+    {
+        $firstEligibleAppFqcn = 'ValidApplication\EligibleForConnectionTarget1\ValidApplicationEligibleForConnectionTarget1';
+        $secondEligibleAppFqcn = 'ValidApplication\EligibleForConnectionTarget2\ValidApplicationEligibleForConnectionTarget2';
+        $this->manager->install($firstEligibleAppFqcn);
+        $this->manager->install($secondEligibleAppFqcn);
+        
+        $this->appManager->markAsConnectionTarget($firstEligibleAppFqcn);
+        $this->appManager->markAsConnectionTarget($secondEligibleAppFqcn);
+        
+        $targetApp = $this->appRepo->getConnectionTargetApplication();
+        $this->assertEquals($secondEligibleAppFqcn, $targetApp->getBundleFQCN());
+        $oldTargetApp = $this->appRepo->findOneByBundleFQCN($firstEligibleAppFqcn);
+        $this->assertFalse($oldTargetApp->isConnectionTarget());
+    }
+        
+    public function testMarkAsConnectionTargetCanSafelyBeCalledSeveralTimesOnSameApplication()
+    {
+        $eligibleAppFqcn = 'ValidApplication\EligibleForConnectionTarget1\ValidApplicationEligibleForConnectionTarget1';
+        $this->manager->install($eligibleAppFqcn);
+        
+        $this->appManager->markAsConnectionTarget($eligibleAppFqcn);
+        $this->appManager->markAsConnectionTarget($eligibleAppFqcn);
     }
 }

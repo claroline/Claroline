@@ -6,9 +6,11 @@
             {{ 'security.logout'|trans({}, 'ClarolineSecurityBundle') }}
         </a>
     {% else %}
+        {% if login_target %}
         <a href="{{ path(login_target) }}">
             {{ 'security.login'|trans({}, 'ClarolineSecurityBundle') }}
         </a>
+        {% endif %}
     {% endif %}
     </div>
 {% endblock %}

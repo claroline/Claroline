@@ -356,13 +356,24 @@ class ValidatorTest extends PluginBundleTestCase
     }
     
     /**
-     * @dataProvider unexpectedIsEligibleReturnTypeProvider
+     * @dataProvider unexpectedIsEligibleIndexReturnTypeProvider
      */
     public function testCheckThrowsAnExceptionIfAnApplicationDoesntReturnABooleanInTheIsEligibleForIndexMethod($fqcn)
     {
         $this->assertValidationExceptionIsThrown(
             $fqcn,
-            ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_METHOD
+            ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_INDEX_METHOD
+        );
+    }
+    
+    /**
+     * @dataProvider unexpectedIsEligibleTargetReturnTypeProvider
+     */
+    public function testCheckThrowsAnExceptionIfAnApplicationDoesntReturnABooleanInTheIsEligibleForConnectionTargetMethod($fqcn)
+    {
+        $this->assertValidationExceptionIsThrown(
+            $fqcn,
+            ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_TARGET_METHOD
         );
     }
     
@@ -412,10 +423,17 @@ class ValidatorTest extends PluginBundleTestCase
         );
     }
     
-    public function unexpectedIsEligibleReturnTypeProvider()
+    public function unexpectedIsEligibleIndexReturnTypeProvider()
     {
         return array(
             array('InvalidApplication\UnexpectedIsEligibleForPlatformIndexReturnType1\InvalidApplicationUnexpectedIsEligibleForPlatformIndexReturnType1')
+        );
+    }
+    
+    public function unexpectedIsEligibleTargetReturnTypeProvider()
+    {
+        return array(
+            array('InvalidApplication\UnexpectedIsEligibleForConnectionTargetReturnType1\InvalidApplicationUnexpectedIsEligibleForConnectionTargetReturnType1')
         );
     }
     

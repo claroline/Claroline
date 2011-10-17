@@ -19,7 +19,8 @@ class ValidationException extends \Exception
     const INVALID_APPLICATION_GET_LAUNCHER_METHOD = 12;
     const INVALID_APPLICATION_LAUNCHER = 13;
     const INVALID_APPLICATION_INDEX = 14;
-    const INVALID_APPLICATION_IS_ELIGIBLE_METHOD = 15;
+    const INVALID_APPLICATION_IS_ELIGIBLE_INDEX_METHOD = 15;
+    const INVALID_APPLICATION_IS_ELIGIBLE_TARGET_METHOD = 16;
 
     public function __construct($message, $code)
     {

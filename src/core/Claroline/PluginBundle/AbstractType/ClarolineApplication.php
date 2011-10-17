@@ -2,8 +2,6 @@
 
 namespace Claroline\PluginBundle\AbstractType;
 
-use Claroline\CommonBundle\Exception\ClarolineException;
-
 abstract class ClarolineApplication extends ClarolinePlugin
 {
     /**
@@ -29,6 +27,18 @@ abstract class ClarolineApplication extends ClarolinePlugin
      * @return boolean
      */
     public function isEligibleForPlatformIndex()
+    {
+        return false;
+    }
+    
+    /**
+     * If this method is overriden and returns true, the platform could be configured 
+     * to make the application the target of the connection button/link. It only makes
+     * sense if the application index route is reserved to authenticated users.
+     *
+     * @return boolean
+     */
+    public function isEligibleForConnectionTarget()
     {
         return false;
     }

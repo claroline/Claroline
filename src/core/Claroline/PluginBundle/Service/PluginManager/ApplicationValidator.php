@@ -18,6 +18,7 @@ class ApplicationValidator
         $this->checkLaunchers();
         $this->checkIndexRoute();
         $this->checkIsEligibleForPlatformIndex();
+        $this->checkIsEligibleForConnectionTarget();
     }
     
     public function checkLaunchers()
@@ -87,12 +88,26 @@ class ApplicationValidator
     {
         $isEligible = $this->application->isEligibleForPlatformIndex();
         
-        if (!is_bool($isEligible))
+        if (! is_bool($isEligible))
         {
             throw new ValidationException(
                 "{$this->appFQCN}::isEligibleForPlatformIndex() must return a boolean, " 
                 . gettype($isEligible) . ' given.',
-                ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_METHOD
+                ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_INDEX_METHOD
+            );
+        }
+    }
+    
+    private function checkIsEligibleForConnectionTarget()
+    {
+        $isEligible = $this->application->isEligibleForConnectionTarget();
+        
+        if (! is_bool($isEligible))
+        {
+            throw new ValidationException(
+                "{$this->appFQCN}::isEligibleForConnectionTarget() must return a boolean, " 
+                . gettype($isEligible) . ' given.',
+                ValidationException::INVALID_APPLICATION_IS_ELIGIBLE_TARGET_METHOD
             );
         }
     }

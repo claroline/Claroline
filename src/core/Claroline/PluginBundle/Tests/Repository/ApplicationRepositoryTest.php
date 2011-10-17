@@ -29,6 +29,20 @@ class ApplicationRepositoryTest extends WebTestCase
         $this->client->rollback();
     }
     
+    public function testGetIndexApplicationReturnsExpectedApplication()
+    {
+        $apps = $this->getTwoApplicationEntities();
+        $apps[0]->setIsPlatformIndex(true);
+        
+        $this->em->persist($apps[0]);    
+        $this->em->flush();
+        
+        $indexApp = $this->appRepo->getIndexApplication();
+        
+        $this->assertEquals($apps[0]->getId(), $indexApp->getId());
+        $this->assertEquals($apps[0]->getBundleName(), $indexApp->getBundleName());
+    }
+    
     public function testGetIndexApplicationReturnsFalseIfNoIndexApplicationIsSet()
     {
         $this->assertFalse($this->appRepo->getIndexApplication());
@@ -36,28 +50,12 @@ class ApplicationRepositoryTest extends WebTestCase
     
     public function testGetIndexApplicationThrowsAnExceptionIfMultiplesIndexApplicationsAreSet()
     {        
-        $firstApp = new Application();
-        $firstApp->setType('App');
-        $firstApp->setBundleFQCN('VendorX\FirstAppBundle\VendorXFirstAppBundle');
-        $firstApp->setVendorName('VendorX');
-        $firstApp->setBundleName('FirstAppBundle');
-        $firstApp->setNameTranslationKey('name_key_1');
-        $firstApp->setDescriptionTranslationKey('desc_key_1');
-        $firstApp->setIndexRoute('index_route_1');
-        $firstApp->setIsPlatformIndex(true);
+        $apps = $this->getTwoApplicationEntities();
+        $apps[0]->setIsPlatformIndex(true);
+        $apps[1]->setIsPlatformIndex(true);
         
-        $secondApp = new Application();
-        $secondApp->setType('App');
-        $secondApp->setBundleFQCN('VendorX\SecondAppBundle\VendorXSecondAppBundle');
-        $secondApp->setVendorName('VendorX');
-        $secondApp->setBundleName('SecondAppBundle');
-        $secondApp->setNameTranslationKey('name_key_2');
-        $secondApp->setDescriptionTranslationKey('desc_key_2');
-        $secondApp->setIndexRoute('index_route_2');
-        $secondApp->setIsPlatformIndex(true);
-        
-        $this->em->persist($firstApp);
-        $this->em->persist($secondApp);      
+        $this->em->persist($apps[0]);
+        $this->em->persist($apps[1]);      
         $this->em->flush();
         
         try
@@ -72,12 +70,69 @@ class ApplicationRepositoryTest extends WebTestCase
             $this->assertEquals(ApplicationException::MULTIPLES_INDEX_APPLICATIONS, $ex->getCode());
         }
     }
-    
-    public function testGetIndexApplicationRethrowsOthersException()
+      
+    public function testGetConnectionTargetApplicationReturnsExpectedApplication()
     {
-        $this->setExpectedException('\Exception');
+        $apps = $this->getTwoApplicationEntities();
+        $apps[0]->setIsConnectionTarget(true);
         
-        $this->em->persist(new Application());
-        $this->em->flush(); // should throw a PDOException (not null fields aren't set)
+        $this->em->persist($apps[0]);    
+        $this->em->flush();
+        
+        $indexApp = $this->appRepo->getConnectionTargetApplication();
+        
+        $this->assertEquals($apps[0]->getId(), $indexApp->getId());
+        $this->assertEquals($apps[0]->getBundleName(), $indexApp->getBundleName());
+    }
+    
+    public function testGetConnectionTargetApplicationReturnsFalseIfNoTargetApplicationIsSet()
+    {
+        $this->assertFalse($this->appRepo->getConnectionTargetApplication());
+    }
+    
+    public function testGetConnectionTargetApplicationThrowsAnExceptionIfMultiplesTargetsAreSet()
+    {        
+        $apps = $this->getTwoApplicationEntities();
+        $apps[0]->setIsConnectionTarget(true);
+        $apps[1]->setIsConnectionTarget(true);
+        
+        $this->em->persist($apps[0]);
+        $this->em->persist($apps[1]);      
+        $this->em->flush();
+        
+        try
+        {
+            $this->appRepo->getConnectionTargetApplication();
+            $this->fail('No exception thrown');
+        }
+        catch (ApplicationException $ex)
+        {
+            // Note: using the application manager to mark an application
+            // as connection target prevents this situation. 
+            $this->assertEquals(ApplicationException::MULTIPLES_INDEX_APPLICATIONS, $ex->getCode());
+        }
+    }
+    
+    private function getTwoApplicationEntities()
+    {
+        $firstApp = new Application();
+        $firstApp->setType('App');
+        $firstApp->setBundleFQCN('VendorX\FirstAppBundle\VendorXFirstAppBundle');
+        $firstApp->setVendorName('VendorX');
+        $firstApp->setBundleName('FirstAppBundle');
+        $firstApp->setNameTranslationKey('name_key_1');
+        $firstApp->setDescriptionTranslationKey('desc_key_1');
+        $firstApp->setIndexRoute('index_route_1');
+        
+        $secondApp = new Application();
+        $secondApp->setType('App');
+        $secondApp->setBundleFQCN('VendorX\SecondAppBundle\VendorXSecondAppBundle');
+        $secondApp->setVendorName('VendorX');
+        $secondApp->setBundleName('SecondAppBundle');
+        $secondApp->setNameTranslationKey('name_key_2');
+        $secondApp->setDescriptionTranslationKey('desc_key_2');
+        $secondApp->setIndexRoute('index_route_2');
+        
+        return array($firstApp, $secondApp);
     }
 }

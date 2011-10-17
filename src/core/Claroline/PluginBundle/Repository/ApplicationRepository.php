@@ -32,4 +32,28 @@ class ApplicationRepository extends PluginRepository
             );
         }
     }
+    
+    public function getConnectionTargetApplication()
+    {
+        $dql = 'SELECT a FROM Claroline\PluginBundle\Entity\Application a '
+            . 'WHERE a.isConnectionTarget = true';
+        
+        try
+        {
+            $app = $this->_em->createQuery($dql)->getSingleResult();
+            
+            return $app;
+        }
+        catch (NoResultException $ex)
+        {
+            return false;
+        }
+        catch (NonUniqueResultException $ex)
+        {
+            throw new ApplicationException(
+                'Multiples application are set as connection targets.',
+                ApplicationException::MULTIPLES_CONNECTION_TARGET_APPLICATIONS
+            );
+        }
+    }
 }

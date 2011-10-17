@@ -38,8 +38,12 @@ class LayoutController extends Controller
         }
         else
         {
-            // TODO: look into configuration : connection target
-            $loginTarget = 'claro_core_desktop';
+            $applicationEntity = 'Claroline\PluginBundle\Entity\Application';
+            $appRepo = $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository($applicationEntity);
+            $targetApp = $appRepo->getConnectionTargetApplication();            
+            $loginTarget = $targetApp ? $targetApp->getIndexRoute() : null;
         }
 
         return $this->render(
@@ -56,9 +60,8 @@ class LayoutController extends Controller
     {
         $launcherEntity = 'Claroline\PluginBundle\Entity\ApplicationLauncher';
         $launcherRepo = $this->getDoctrine()
-                             ->getEntityManager()
-                             ->getRepository($launcherEntity);
-
+            ->getEntityManager()
+            ->getRepository($launcherEntity);
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if (! $user instanceof User)

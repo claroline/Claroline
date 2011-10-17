@@ -30,6 +30,7 @@ body
 {
     display: inline-block;
     float: right;
+    height: 20px;
     margin: 0 12px;
 }
 
