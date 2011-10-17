@@ -43,7 +43,7 @@ class LayoutController extends Controller
                 ->getEntityManager()
                 ->getRepository($applicationEntity);
             $targetApp = $appRepo->getConnectionTargetApplication();            
-            $loginTarget = $targetApp ? $targetApp->getIndexRoute() : null;
+            $loginTarget = $targetApp ? $targetApp->getIndexRoute() : 'claro_security_login';
         }
 
         return $this->render(

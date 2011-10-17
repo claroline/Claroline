@@ -1,0 +1,3 @@
+claroline_desktop_index:
+    pattern: /desktop
+    defaults: { _controller: claroline.desktop.main_controller:indexAction }
