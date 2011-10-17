@@ -17,12 +17,11 @@ class WorkspaceControllerTest extends WebTestCase
     /**@var Crawler */
     private $crawler;
 
-
     protected function setUp()
     {
         $this->prepareClient();
-        $this->load_fixtures();
-        $this->log_in();
+        $this->loadFixtures();
+        $this->logIn();
     }
 
     protected function prepareClient()
@@ -32,7 +31,7 @@ class WorkspaceControllerTest extends WebTestCase
         $this->client->beginTransaction();
     }
 
-    protected function load_fixtures()
+    protected function loadFixtures()
     {
         $em = $this->client->getContainer()->get('doctrine')->getEntityManager();
         $refRepo = new ReferenceRepository($em);
@@ -48,7 +47,7 @@ class WorkspaceControllerTest extends WebTestCase
         $wsFixture->load($em);
     }    
 
-    protected function log_in($username = 'admin', $password = 'USA')
+    protected function logIn($username = 'admin', $password = 'USA')
     {
         $this->client->request('GET', '/logout');
         $this->crawler = $this->client->request('GET', '/login');
@@ -63,18 +62,17 @@ class WorkspaceControllerTest extends WebTestCase
         $this->client->rollback();
     }
 
-    protected function go_to_desktop_and_assert_number_of_listed_workspaces($number)
+    protected function goToDesktopAndAssertNumberOfListedWorkspaces($number)
     {
-        $this->crawler = $this->client->request('GET', '/desktop');
+        $this->crawler = $this->client->request('GET', '/claroline_desktop/desktop');
         $this->assertEquals($number, $this->crawler->filter('#content #workspaces li')->count());
     }
 
-
-    public function test_removal_of_a_workspace_by_the_owner()
+    public function testRemovalOfAWorkspaceByTheOwner()
     {
         $this->markTestSkipped();
         
-        $this->go_to_desktop_and_assert_number_of_listed_workspaces(10);
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
         $deleteForm = $this->crawler->filter('#content #workspaces li input')->first()->form();
         $this->client->submit($deleteForm);
@@ -82,30 +80,31 @@ class WorkspaceControllerTest extends WebTestCase
         // Authenticated user is lost after for submission (?)
         //$this->client->getContainer()->get('security.context')->getToken()->getUser();
         
-        $this->go_to_desktop_and_assert_number_of_listed_workspaces(9);
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(9);
     }
-
-    
-    
-    public function test_removal_of_a_workspace_by_someone_else()
-    {
-        $this->log_in('jdoe', 'topsecret');
-        $this->go_to_desktop_and_assert_number_of_listed_workspaces(10);
-
-        $this->crawler = $this->client->request('GET', '/desktop');
-        $deleteForm = $this->crawler->filter('#content #workspaces li input')->first()->form();
-        $this->client->submit($deleteForm);
-
-        $this->client->getContainer()->get('logger')->debug($this->client->getContainer()->get('security.context')->getToken()->getUser()->getUsername());
-        $this->client->getContainer()->get('logger')->debug($this->client->getResponse()->getContent());
-        $this->assertRegExp('/Access Denied/', $this->client->getResponse()->getContent());
-    }
-
-    public function test_creation_of_a_workspace()
+  
+    public function testRemovalOfAWorkspaceBySomeoneElse()
     {
         $this->markTestSkipped();
         
-        $this->go_to_desktop_and_assert_number_of_listed_workspaces(10);
+        $this->logIn('jdoe', 'topsecret');
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
+
+        $this->crawler = $this->client->request('GET', '/claroline_desktop/desktop');
+        $deleteForm = $this->crawler->filter('#content #workspaces li input')->first()->form();
+        $this->client->submit($deleteForm);
+        
+        // Authenticated user is lost after for submission (?)
+        //$this->client->getContainer()->get('security.context')->getToken()->getUser();
+
+        $this->assertRegExp('/Access Denied/', $this->client->getResponse()->getContent());
+    }
+
+    public function testCreationOfAWorkspace()
+    {
+        $this->markTestSkipped();
+        
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
         $this->crawler = $this->client->request('GET', '/workspaces/new');
         $form = $this->crawler->filter('input[type=submit]')->form();
@@ -115,6 +114,6 @@ class WorkspaceControllerTest extends WebTestCase
         // Authenticated user is lost after for submission (?)
         //$this->client->getContainer()->get('security.context')->getToken()->getUser();
         
-        $this->go_to_desktop_and_assert_number_of_listed_workspaces(11);
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(11);
     }
 }
