@@ -65,8 +65,6 @@ class DatabaseHandler
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
 
         $this->pluginRepo->createPlugin($pluginEntity);
-
-        // TODO : add a method call for tables installation and fixtures loading
     }
 
     public function remove($pluginFQCN)
@@ -81,6 +79,9 @@ class DatabaseHandler
         $applicationEntity->setIndexRoute($application->getIndexRoute());
         $applicationEntity->setEligibleForPlatformIndex(
             $application->isEligibleForPlatformIndex()
+        );
+        $applicationEntity->setEligibleForConnectionTarget(
+            $application->isEligibleForConnectionTarget()
         );
         $launchers = $application->getLaunchers();
 

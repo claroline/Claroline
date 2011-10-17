@@ -41,6 +41,8 @@ class Version20111004102700 extends BundleMigration
         $table->addColumn('index_route', 'string', array('length' => 255));
         $table->addColumn('is_eligible_for_platform_index', 'boolean');
         $table->addColumn('is_platform_index', 'boolean');
+        $table->addColumn('is_eligible_for_connection_target', 'boolean');
+        $table->addColumn('is_connection_target', 'boolean');
         $table->setPrimaryKey(array('id'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), 

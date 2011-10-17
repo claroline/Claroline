@@ -32,6 +32,16 @@ class Application extends Plugin
      */
     private $isPlatformIndex = false;
     
+    /**
+     * @ORM\Column(name="is_eligible_for_connection_target", type="boolean")
+     */
+    private $isEligibleForConnectionTarget = false;
+    
+    /**
+     * @ORM\Column(name="is_connection_target", type="boolean")
+     */
+    private $isConnectionTarget = false;
+    
     public function __construct()
     {
         $this->launchers = new ArrayCollection();
@@ -75,5 +85,25 @@ class Application extends Plugin
     public function setIsPlatformIndex($isPlatformIndex)
     {
         $this->isPlatformIndex = $isPlatformIndex;
+    }
+    
+    public function isEligibleForConnectionTarget()
+    {
+        return $this->isEligibleForConnectionTarget;
+    }
+    
+    public function setEligibleForConnectionTarget($isEligibleForConnectionTarget)
+    {
+        $this->isEligibleForConnectionTarget = $isEligibleForConnectionTarget;
+    }
+    
+    public function isConnectionTarget()
+    {
+        return $this->isConnectionTarget;
+    }
+    
+    public function setIsConnectionTarget($isConnectionTarget)
+    {
+        $this->isConnectionTarget = $isConnectionTarget;
     }
 }
