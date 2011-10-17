@@ -1,8 +1,10 @@
 {% extends 'ClarolineCommonBundle::app_layout.html.twig' %}
 
 {% block content %}
-    
-<h4>{{ 'global.desktop'|trans({}, 'ClarolineCommonBundle') }}</h4>
+
+<div id="claro_desktop_content">
+
+<h4>{{ 'desktop.application_name'|trans({}, 'ClarolineDesktopBundle') }}</h4>
 
 <a href="{{ path('claro_workspace_new_workspace') }}">{{ 'workspace.create'|trans({}, 'ClarolineWorkspaceBundle') }}</a>
 <a href="{{ path('claro_security_logout') }}">{{ 'security.logout'|trans({}, 'ClarolineSecurityBundle') }}</a>
@@ -19,5 +21,7 @@
     {% endfor %}
 
 </ul>
+
+</div>
 
 {% endblock %}
