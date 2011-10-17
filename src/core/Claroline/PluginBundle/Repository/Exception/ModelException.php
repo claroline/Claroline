@@ -2,7 +2,8 @@
 
 namespace Claroline\PluginBundle\Repository\Exception;
 
-class ModelException extends \Exception
+use Claroline\CommonBundle\Exception\ClarolineException;
+
+class ModelException extends ClarolineException
 {
-    
 }
