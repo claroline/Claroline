@@ -20,21 +20,16 @@ class ApplicationRepository extends PluginRepository
             
             return $app;
         }
-        catch (ORMException $ex)
+        catch (NoResultException $ex)
         {
-           if ($ex instanceof NoResultException)
-           {
-               return false;
-           }
-           elseif ($ex instanceof NonUniqueResultException)
-           {
-               throw new ApplicationException(
-                   'Multiples application are set as platform index targets.',
-                   ApplicationException::MULTIPLES_INDEX_APPLICATIONS
-               );
-           }
-           
-           throw $ex;
+            return false;
+        }
+        catch (NonUniqueResultException $ex)
+        {
+            throw new ApplicationException(
+                'Multiples application are set as platform index targets.',
+                ApplicationException::MULTIPLES_INDEX_APPLICATIONS
+            );
         }
     }
 }
