@@ -20,6 +20,11 @@ class ClarolineDesktopBundle extends ClarolineApplication
         return $launchers;
     }
     
+    public function getRoutingPrefix()
+    {
+        return 'desktop';
+    }
+    
     public function getIndexRoute()
     {
         return 'claroline_desktop_index';

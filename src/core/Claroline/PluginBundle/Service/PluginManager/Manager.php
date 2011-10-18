@@ -39,7 +39,7 @@ class Manager
         $this->fileHandler->importRoutingResources(
             $pluginFQCN, 
             $plugin->getRoutingResourcesPaths(),
-            $plugin->getPrefix()
+            $plugin->getRoutingPrefix()
         );
         
         $this->migrationsHandler->install($plugin);

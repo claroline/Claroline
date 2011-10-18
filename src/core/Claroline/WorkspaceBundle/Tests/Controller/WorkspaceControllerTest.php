@@ -64,7 +64,7 @@ class WorkspaceControllerTest extends WebTestCase
 
     protected function goToDesktopAndAssertNumberOfListedWorkspaces($number)
     {
-        $this->crawler = $this->client->request('GET', '/claroline_desktop/desktop');
+        $this->crawler = $this->client->request('GET', '/desktop');
         $this->assertEquals($number, $this->crawler->filter('#content #workspaces li')->count());
     }
 
@@ -90,7 +90,7 @@ class WorkspaceControllerTest extends WebTestCase
         $this->logIn('jdoe', 'topsecret');
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
-        $this->crawler = $this->client->request('GET', '/claroline_desktop/desktop');
+        $this->crawler = $this->client->request('GET', '/desktop');
         $deleteForm = $this->crawler->filter('#content #workspaces li input')->first()->form();
         $this->client->submit($deleteForm);
         

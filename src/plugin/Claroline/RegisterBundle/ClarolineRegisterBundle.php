@@ -18,6 +18,11 @@ class ClarolineRegisterBundle extends ClarolineApplication
         return array($launcher);
     }
     
+    public function getRoutingPrefix()
+    {
+        return 'register';
+    }
+    
     public function getIndexRoute()
     {
         return 'claroline_register_index';

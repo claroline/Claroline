@@ -10,7 +10,7 @@ use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
  */
 class IncompatibleConflictWithValidCustom1 extends ClarolinePlugin
 {
-    public function getPrefix()
+    public function getRoutingPrefix()
     {
         return 'custom_routing_prefix';
     }
