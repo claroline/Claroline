@@ -19,7 +19,7 @@ class ValidCustom extends ClarolinePlugin
         return array($firstPath, $secondPath);
     }
 
-    public function getPrefix()
+    public function getRoutingPrefix()
     {
         return 'custom_routing_prefix';
     }

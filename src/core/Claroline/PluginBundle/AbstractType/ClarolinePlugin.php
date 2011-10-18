@@ -27,13 +27,8 @@ abstract class ClarolinePlugin extends Bundle
 
     public function getRoutingResourcesPaths()
     {
-        $path = $this->getPath()
-            . DIRECTORY_SEPARATOR
-            . 'Resources'
-            . DIRECTORY_SEPARATOR
-            . 'config'
-            . DIRECTORY_SEPARATOR
-            . 'routing.yml';
+        $ds = DIRECTORY_SEPARATOR;
+        $path = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'routing.yml';
 
         if (file_exists($path))
         {
@@ -43,7 +38,7 @@ abstract class ClarolinePlugin extends Bundle
         return null;
     }
 
-    public function getPrefix()
+    public function getRoutingPrefix()
     {
         $vendor = $this->getVendorNamespace();
         $prefix = $this->getBundleName();

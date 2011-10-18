@@ -6,7 +6,7 @@ use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
 
 class InvalidUnexpectedRoutingPrefix1 extends ClarolinePlugin
 {
-    public function getPrefix()
+    public function getRoutingPrefix()
     {
         return array();
     }

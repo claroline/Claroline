@@ -6,7 +6,7 @@ use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
 
 class VendorXDummyPluginBundle extends ClarolinePlugin
 {
-    public function getPrefix()
+    public function getRoutingPrefix()
     {
         return 'vendor_x_dummy';
     }

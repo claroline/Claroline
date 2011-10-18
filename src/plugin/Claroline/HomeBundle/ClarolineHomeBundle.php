@@ -20,6 +20,11 @@ class ClarolineHomeBundle extends ClarolineApplication
         return $launchers;
     }
     
+    public function getRoutingPrefix()
+    {
+        return 'home';
+    }
+    
     public function getIndexRoute()
     {
         return 'claroline_home_index';
