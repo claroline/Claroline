@@ -75,12 +75,20 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_launcher_role');
         
-        // TODO : use real foreign keys instead of just relying on doctrine
-        // (that will suppose to get a Table object for the role table via
-        // the schema manager, but we must ensure the SecurityBundle migration
-        // is executed *before* this migration -> dependency management...)
         $table->addColumn('launcher_id', 'integer', array('notnull' => true));
         $table->addColumn('role_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_application_launcher'),
+            array('launcher_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_role'),
+            array('role_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
     }
     
     private function createToolTable(Schema $schema)
