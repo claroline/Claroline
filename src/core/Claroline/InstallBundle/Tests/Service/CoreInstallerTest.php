@@ -30,10 +30,10 @@ class CoreInstallerTest extends TestCase
                      ->getMock();
             
         $bundles = array(
-            new Stubs\DummyBundle('core/FirstCoreBundle'),
-            new Stubs\DummyBundle('core/SecondCoreBundle'),
-            new Stubs\DummyBundle('plugin/FirstPluginBundle'),
-            new Stubs\DummyBundle('foo/FirstFoOBundle'),
+            new Stubs\DummyBundle('core/FirstCoreBundle', 1),
+            new Stubs\DummyBundle('core/SecondCoreBundle', 2),
+            new Stubs\DummyBundle('plugin/FirstPluginBundle', 3),
+            new Stubs\DummyBundle('foo/FirstFoOBundle', 4),
         );
         
         // Configure the stub.
@@ -65,14 +65,21 @@ namespace Claroline\InstallBundle\Service\Stubs;
 class DummyBundle extends \Symfony\Component\HttpKernel\Bundle\Bundle
 {
     private $path;
+    private $installationIndex;
     
-    public function __construct($path) 
+    public function __construct($path, $installationIndex) 
     {
         $this->path = $path;
+        $this->installationIndex = $installationIndex;
     }
     
     public function getPath()
     {
         return $this->path;
+    }
+    
+    public function getInstallationIndex()
+    {
+        return $this->installationIndex;
     }
 }

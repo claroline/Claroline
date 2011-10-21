@@ -7,10 +7,10 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class CoreInstaller
 {
-    /* @var Kernel */
+    /** @var Kernel */
     private $kernel;
     
-    /* @var BundleMigrator */
+    /** @var BundleMigrator */
     private $migrator;
        
     public function __construct(Kernel $kernel, BundleMigrator $migrator)
@@ -32,7 +32,8 @@ class CoreInstaller
     private function createCoreSchema()
     {
         $bundles = $this->getRegisteredCoreBundles();
-        foreach($bundles as $bundle)
+        
+        foreach ($bundles as $bundle)
         {
             $this->migrator->createSchemaForBundle($bundle);
         }
@@ -42,7 +43,8 @@ class CoreInstaller
     {
         $bundles = $this->getRegisteredCoreBundles();
         $bundlesReversed = array_reverse($bundles);
-        foreach($bundlesReversed as $bundle)
+        
+        foreach ($bundlesReversed as $bundle)
         {            
             $this->migrator->dropSchemaForBundle($bundle);
         }
@@ -51,10 +53,18 @@ class CoreInstaller
     private function getRegisteredCoreBundles()
     {
         $allBundles = $this->kernel->getBundles();
-        $keepCoreBundles = function($bundle)
+        $indexedCoreBundles = array();
+        
+        foreach ($allBundles as $bundle)
         {
-            return strpos($bundle->getPath(), 'core') !== false;
-        };
-        return array_filter($allBundles, $keepCoreBundles);
-    }   
+            if (strpos($bundle->getPath(), 'core') !== false)
+            {
+                $indexedCoreBundles[$bundle->getInstallationIndex()] = $bundle;
+            }
+        }
+        
+        ksort($indexedCoreBundles);
+        
+        return $indexedCoreBundles;
+    }
 }
