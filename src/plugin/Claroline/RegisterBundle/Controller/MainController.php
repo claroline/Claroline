@@ -44,7 +44,7 @@ class MainController
             if ($form->isValid())
             {
                 $this->userManager->create($user);
-                $route = $this->router->generate('claro_core_desktop');
+                $route = $this->router->generate('claro_common_default_index');
                 
                 return new RedirectResponse($route);
             }
