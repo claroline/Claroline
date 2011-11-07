@@ -4,7 +4,17 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@validator"
-    #controller
+    claroline.security.right_manager:
+        class: Claroline\SecurityBundle\Service\RightManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.acl.provider"
+            - class_table_name: %security.acl.dbal.class_table_name%
+              entry_table_name: %security.acl.dbal.entry_table_name%
+              oid_table_name: %security.acl.dbal.oid_table_name%
+              oid_ancestors_table_name: %security.acl.dbal.oid_ancestors_table_name%
+              sid_table_name: %security.acl.dbal.sid_table_name%    
+    # controller
     claroline.security.authentication_controller:
         class: Claroline\SecurityBundle\Controller\AuthenticationController
         scope: request
