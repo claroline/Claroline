@@ -27,11 +27,12 @@ class AppKernel extends Kernel
             new Claroline\InstallBundle\ClarolineInstallBundle(),
             new Claroline\UserBundle\ClarolineUserBundle(),
             new Claroline\WorkspaceBundle\ClarolineWorkspaceBundle(),
+            new Claroline\ResourceBundle\ClarolineResourceBundle(),
             new Claroline\SecurityBundle\ClarolineSecurityBundle(),
             new Claroline\PluginBundle\ClarolinePluginBundle(),
         );
 
-        if(file_exists(__DIR__.'/config/plugin/bundles'))
+        if (file_exists(__DIR__.'/config/plugin/bundles'))
         {
             foreach (file(__DIR__.'/config/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
             {

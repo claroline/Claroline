@@ -1,13 +1,13 @@
 <?php
 
-namespace Claroline\PluginBundle;
+namespace Claroline\ResourceBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ClarolinePluginBundle extends Bundle
+class ClarolineResourceBundle extends Bundle
 {
     public function getInstallationIndex()
     {
-        return 5;
+        return 7;
     }
 }
