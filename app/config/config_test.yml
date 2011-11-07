@@ -26,6 +26,10 @@ doctrine:
                 type: annotation
                 dir: %kernel.root_dir%/../src/core/Claroline/CommonBundle/Tests/Stub/Entity
                 prefix: Claroline\CommonBundle\Tests\Stub\Entity
+            claroline_security_stubs:
+                type: annotation
+                dir: %kernel.root_dir%/../src/core/Claroline/SecurityBundle/Tests/Stub/Entity
+                prefix: Claroline\SecurityBundle\Tests\Stub\Entity
 
 parameters:
     test.client.class: Claroline\CommonBundle\Service\Testing\TransactionalTestClient
