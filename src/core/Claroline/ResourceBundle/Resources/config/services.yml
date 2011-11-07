@@ -1,0 +1,5 @@
+services:
+    claroline.resource.manager:
+        class: Claroline\ResourceBundle\Service\Manager\ResourceManager
+        arguments:
+            - "@claroline.security.right_manager"
