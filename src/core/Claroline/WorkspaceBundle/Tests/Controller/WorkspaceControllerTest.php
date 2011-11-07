@@ -78,9 +78,9 @@ class WorkspaceControllerTest extends WebTestCase
         $this->client->submit($deleteForm);
 
         // Authenticated user is lost after for submission (?)
-        //$this->client->getContainer()->get('security.context')->getToken()->getUser();
+        //var_dump($this->client->getContainer()->get('security.context')->getToken()->getUser();
         
-        $this->goToDesktopAndAssertNumberOfListedWorkspaces(9);
+        //$this->goToDesktopAndAssertNumberOfListedWorkspaces(9);
     }
   
     public function testRemovalOfAWorkspaceBySomeoneElse()

@@ -3,7 +3,10 @@
 namespace Claroline\WorkspaceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\UserBundle\Entity\User;
+use Claroline\PluginBundle\Entity\Tool;
 
 /**
  * @ORM\Entity
@@ -24,8 +27,21 @@ class Workspace
      */
     protected $name;
 
-    private $owner;
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\PluginBundle\Entity\Tool")
+     * @ORM\JoinTable(
+     *      name="claro_workspace_tool",
+     *      joinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tool_id", referencedColumnName="id")}
+     * )
+     */
+    protected $tools;
 
+    public function __construct()
+    {
+        $this->tools = new ArrayCollection();
+    }
+    
     public function getId()
     {
         return $this->id;
@@ -40,14 +56,14 @@ class Workspace
     {
         $this->name = $name;
     }
-
-    public function getOwner()
+    
+    public function getTools()
     {
-        return $this->owner;
+        return $this->tools->toArray();
     }
 
-    public function setOwner($user)
+    public function addTool(Tool $tool)
     {
-        $this->owner = $user;
+        $this->tools->add($tool);
     }
 }
