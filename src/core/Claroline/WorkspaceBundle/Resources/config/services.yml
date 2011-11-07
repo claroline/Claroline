@@ -24,3 +24,4 @@ services:
             - "@form.factory"
             - "@templating.engine.twig"
             - "@claroline.workspace.acl_workspace_manager"
+            - "@claroline.security.right_manager"

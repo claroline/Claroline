@@ -11,7 +11,11 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManager;
+
 use Claroline\WorkspaceBundle\Service\Manager\ACLWorkspaceManager;
+
+use Claroline\SecurityBundle\Service\RightManager;
+
 use Claroline\WorkspaceBundle\Entity\Workspace;
 use Claroline\WorkspaceBundle\Form\WorkspaceType;
 
@@ -26,6 +30,8 @@ class WorkspaceController
     private $twigEngine;
     private $workspaceAclManager;
     
+    private $rightManager;
+    
     public function __construct(Request $request,
                                 Session $session,
                                 SecurityContext $context,
@@ -33,7 +39,9 @@ class WorkspaceController
                                 Router $router,
                                 FormFactory $factory,
                                 TwigEngine $engine,
-                                ACLWorkspaceManager $aclManager)
+                                ACLWorkspaceManager $aclManager,
+                                RightManager $rightManager
+                                )
     {
         $this->request = $request;
         $this->session = $session;
@@ -42,7 +50,11 @@ class WorkspaceController
         $this->router = $router;
         $this->formFactory = $factory;
         $this->twigEngine = $engine;
+        
+        
         $this->workspaceAclManager = $aclManager;
+        
+        $this->rightManager = $rightManager;
     }
     
     /**
@@ -68,12 +80,12 @@ class WorkspaceController
         $form = $this->formFactory->create(new WorkspaceType(), $workspace);
         $form->bindRequest($this->request);
         $user = $this->securityContext->getToken()->getUser();
-        $workspace->setOwner($user);
 
         if ($form->isValid())
         {
-            $this->workspaceAclManager->create($workspace);
-            $route = $this->router->generate('claro_core_desktop');
+            $this->rightManager->createEntityWithOwner($workspace, $user);
+            
+            $route = $this->router->generate('claroline_desktop_index');
             
             return new RedirectResponse($route);
         }
@@ -90,13 +102,18 @@ class WorkspaceController
     public function deleteAction($id)
     {
         $workspaceEntity = 'ClarolineWorkspaceBundle:Workspace';
-        $workspaceRepo = $this->entityManager->getRepository($workspaceEntity);
-        $workspace = $workspaceRepo->find($id);
-        $this->workspaceAclManager->delete($workspace);
+        $workspace = $this->entityManager->find($workspaceEntity, $id);
+        
+        if (false === $this->securityContext->isGranted('DELETE', $workspace))
+        {
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+        
+        $this->rightManager->deleteEntityAndPermissions($workspace);
         
         $this->session->setFlash('notice', 'Workspace successfully deleted');            
-        $route = $this->router->generate('claro_core_desktop');
-        
+        $route = $this->router->generate('claroline_desktop_index');
+       
         return new RedirectResponse($route);
     }
 }
