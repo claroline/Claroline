@@ -52,7 +52,7 @@ class PluginBundleTestCase extends WebTestCase
         
         vfsStream::setup('virtual');
         $structure = array('namespaces' => '', 'bundles' => '', 'routing.yml' => '');
-        vfsStream::replace($structure, 'virtual');
+        vfsStream::setup('virtual', null, $structure);
 
         $this->pluginDirectory = __DIR__ 
                 . DIRECTORY_SEPARATOR
