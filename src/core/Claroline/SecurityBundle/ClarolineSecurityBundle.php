@@ -8,6 +8,6 @@ class ClarolineSecurityBundle extends Bundle
 {
     public function getInstallationIndex()
     {
-        return 3;
+        return 4;
     }
 }
