@@ -6,7 +6,7 @@ use Claroline\InstallBundle\Library\Migration\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20111004102700 extends BundleMigration
-{    
+{
     public function up(Schema $schema)
     {
         $this->createWorkspaceTable($schema);
