@@ -70,49 +70,34 @@ class WorkspaceControllerTest extends WebTestCase
 
     public function testRemovalOfAWorkspaceByTheOwner()
     {
-        $this->markTestSkipped();
-        
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
-        $deleteForm = $this->crawler->filter('#content #workspaces li input')->first()->form();
+        $deleteForm = $this->crawler->filter('#claro_desktop_content #workspaces li form input')->first()->form();
         $this->client->submit($deleteForm);
-
-        // Authenticated user is lost after for submission (?)
-        //var_dump($this->client->getContainer()->get('security.context')->getToken()->getUser();
         
-        //$this->goToDesktopAndAssertNumberOfListedWorkspaces(9);
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(9);
     }
-  
+ 
     public function testRemovalOfAWorkspaceBySomeoneElse()
     {
-        $this->markTestSkipped();
-        
         $this->logIn('jdoe', 'topsecret');
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
         $this->crawler = $this->client->request('GET', '/desktop');
-        $deleteForm = $this->crawler->filter('#content #workspaces li input')->first()->form();
+        $deleteForm = $this->crawler->filter('#claro_desktop_content #workspaces li form input')->first()->form();
         $this->client->submit($deleteForm);
         
-        // Authenticated user is lost after for submission (?)
-        //$this->client->getContainer()->get('security.context')->getToken()->getUser();
-
         $this->assertRegExp('/Access Denied/', $this->client->getResponse()->getContent());
     }
 
     public function testCreationOfAWorkspace()
     {
-        $this->markTestSkipped();
-        
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
         $this->crawler = $this->client->request('GET', '/workspaces/new');
         $form = $this->crawler->filter('input[type=submit]')->form();
         $form['workspace_form[name]'] = 'Workspace test';
         $this->client->submit($form);
-        
-        // Authenticated user is lost after for submission (?)
-        //$this->client->getContainer()->get('security.context')->getToken()->getUser();
         
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(11);
     }
