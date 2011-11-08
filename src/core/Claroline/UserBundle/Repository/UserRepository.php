@@ -8,7 +8,13 @@ class UserRepository extends EntityRepository
 {
     public function getUsersByUsernameList(array $usernames)
     {
-        $nameList = array_map(function($name){ return "'{$name}'"; }, $usernames);
+        $nameList = array_map(
+            function($name)
+            { 
+                return "'{$name}'"; 
+            }, 
+            $usernames
+        );
         $nameList = implode(', ', $nameList);
         $dql = "
             SELECT u FROM Claroline\UserBundle\Entity\User u
