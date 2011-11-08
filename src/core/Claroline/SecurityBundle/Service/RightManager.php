@@ -63,17 +63,24 @@ class RightManager
         return count($owners) > 0 ? $owners[0] : false;
     }
     
-    public function setEntityOwner($managedEntity, User $user, $oldOwnerNewPermissionMask = 0)
+    public function setEntityOwner($managedEntity, User $user, $oldOwnerNewPermissionMask = null)
     {
         $oldOwner = $this->getEntityOwner($managedEntity);
          
         if ($oldOwner !== false)
         {
-            $this->setEntityPermissionsForUser(
-                $managedEntity, 
-                $oldOwnerNewPermissionMask,
-                $oldOwner
-            );
+            if ($oldOwnerNewPermissionMask === null)
+            {
+                $this->deleteEntityPermissionsForUser($managedEntity, $oldOwner);
+            }
+            else
+            {
+                $this->setEntityPermissionsForUser(
+                    $managedEntity, 
+                    $oldOwnerNewPermissionMask,
+                    $oldOwner
+                );
+            }
         }
         
         $this->setEntityPermissionsForUser($managedEntity, MaskBuilder::MASK_OWNER, $user);
@@ -132,7 +139,31 @@ class RightManager
     
     public function deleteEntityPermissionsForUser($managedEntity, User $user)
     {
-        $this->setEntityPermissionsForUser($managedEntity, 0, $user);
+        $this->checkEntityState($managedEntity, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($user, UnitOfWork::STATE_MANAGED);
+        
+        $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
+        $userIdentity = UserSecurityIdentity::fromAccount($user);
+        
+        try
+        {
+            $acl = $this->aclProvider->findAcl($objectIdentity);
+            $aces = $acl->getObjectAces();
+        
+            foreach ($aces as $aceIndex => $ace)
+            {
+                if ($ace->getSecurityIdentity() == $userIdentity)
+                {
+                    $acl->deleteObjectAce($aceIndex);
+                }
+            }
+            
+            $this->aclProvider->updateAcl($acl);
+        }
+        catch (AclNotFoundException $ex)
+        {
+            return;
+        }
     }
     
     public function deleteEntityAndPermissions($managedEntity)
@@ -272,11 +303,6 @@ class RightManager
      */
     private function checkPermissionMask($mask)
     {
-        if ($mask === 0) // meaning no permission
-        {
-            return;
-        }
-        
         try
         {
             MaskBuilder::getCode($mask);
