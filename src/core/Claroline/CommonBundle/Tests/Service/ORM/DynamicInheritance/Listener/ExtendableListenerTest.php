@@ -31,6 +31,7 @@ class ExtendableListenerTest extends WebTestCase
     public function tearDown()
     {
         $this->client->rollback();
+        parent :: tearDown();
     }
     
     public function testExtendableListenerIsSubscribed()

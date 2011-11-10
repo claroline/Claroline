@@ -26,6 +26,7 @@ class ResourceManagerTest extends WebTestCase
     public function tearDown()
     {
         $this->client->rollback();
+        parent :: tearDown();
     }
     
     public function testCreateResourceGivesPassedInUserOwnerPermissions()
