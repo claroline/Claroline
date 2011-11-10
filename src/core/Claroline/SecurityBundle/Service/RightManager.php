@@ -160,7 +160,7 @@ class RightManager
         return $this->doGetAllowedUsersOnEntity($entity, $lowestMatchingMask, false);
     }
     
-    /*
+    
     public function setClassPermissionsForUser($entityFQCN, $permissionMask, User $user)
     {
         $this->checkEntityState($user, UnitOfWork::STATE_MANAGED);
@@ -191,7 +191,7 @@ class RightManager
         
         $this->aclProvider->updateAcl($acl);
     }
-    
+    /*
     public function setEntityPermissionsForRole($managedEntity, $permissionMask, Role $role)
     {
         
