@@ -63,22 +63,8 @@ class LayoutController extends Controller
             ->getEntityManager()
             ->getRepository($launcherEntity);
         $user = $this->container->get('security.context')->getToken()->getUser();
-
-        if (! $user instanceof User)
-        {
-            $launchers = $launcherRepo->findByAccessRoles(array('ROLE_ANONYMOUS'));
-        }
-        else
-        {
-            $roles = array();
-            
-            foreach ($user->getRoles() as $role)
-            {
-                $roles[] = $role->getName();
-            }
-
-            $launchers = $launcherRepo->findByAccessRoles($roles);
-        }
+        $user instanceof User ? $roles = $user->getRoles() : $roles = array('ROLE_ANONYMOUS');
+        $launchers = $launcherRepo->findByAccessRoles($roles);
 
         return $this->render(
             'ClarolineCommonBundle:Layout:app_menu.html.twig', 

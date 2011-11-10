@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Claroline\UserBundle\Entity\User;
+use Claroline\SecurityBundle\Entity\Role;
 use Claroline\SecurityBundle\Acl\Domain\ClassIdentity;
 use Claroline\SecurityBundle\Service\Exception\RightManagerException;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
@@ -26,6 +27,9 @@ class RightManagerTest extends WebTestCase
     /** @var Claroline\UserBundle\Service\UserManager\Manager */
     private $userManager;
     
+    /** @var RoleManager */
+    private $roleManager;
+    
     /** @var Symfony\Component\Security\Acl\Dbal\AclProvider */
     private $aclProvider;
     
@@ -37,6 +41,7 @@ class RightManagerTest extends WebTestCase
         $this->client = self::createClient();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.right_manager');
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
+        $this->roleManager = $this->client->getContainer()->get('claroline.security.role_manager');
         $this->aclProvider = $this->client->getContainer()->get('security.acl.provider');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         
@@ -389,9 +394,142 @@ class RightManagerTest extends WebTestCase
         $this->aclProvider->findAcl($entityIdentity);
     }
     
+    public function testSetEntityPermissionsForRoleThrowsAnExceptionOnInvalidEntityState()
+    {
+        try
+        {
+            $entity = new FirstEntity();
+            $entity->setFirstEntityField('First entity field');
+            $role = $this->createRole('ROLE_TEST');
+            $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_DELETE, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testSetEntityPermissionsForRoleThrowsAnExceptionOnInvalidRoleState()
+    {
+        try
+        {
+            $entity = $this->createFirstEntityInstance();
+            $role = new Role();
+            $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_DELETE, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ROLE_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testSetEntityPermissionsForRoleThrowsAnExceptionOnMaskOwnerArgument()
+    {
+        try
+        {
+            $entity = $this->createFirstEntityInstance();
+            $role = $this->createRole('ROLE_TEST');
+            $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_OWNER, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
+        }
+    }
+    
+    public function testSetEntityPermissionsForRoleGrantsPermissionsToAllUsersWhoHaveThatRole()
+    {
+        $entity = $this->createFirstEntityInstance();
+        $role = $this->createRole('ROLE_SPECIAL');
+        $john = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        $suze = $this->createUser('Suze', 'Doe', 'sdoe', '123', $role);
+        $bill = $this->createUser('Bill', 'Doe', 'bdoe', '123');
+        
+        $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_VIEW, $role);
+        
+        $this->logUser($john);
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
+        $this->logUser($suze);
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
+        $this->logUser($bill);
+        $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
+    }
+    
+    public function testSetEntityPermissionsForRoleCanUpdateCurrentPermissions()
+    {
+        $entity = $this->createFirstEntityInstance();
+        $role = $this->createRole('ROLE_SPECIAL');
+        $user = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        
+        $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_DELETE, $role);  
+        $this->logUser($user);
+        $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $entity));
+        
+        $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_VIEW, $role);  
+        $this->logUser($user);
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('DELETE', $entity));
+    }
+    
+    public function testDeleteEntityPermissionsForRoleThrowsAnExceptionOnInvalidEntityState()
+    {
+        try
+        {
+            $entity = new FirstEntity();
+            $entity->setFirstEntityField('First entity field');
+            $role = $this->createRole('ROLE_TEST');
+            $this->rightManager->deleteEntityPermissionsForRole($entity, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testDeleteEntityPermissionsForRoleThrowsAnExceptionOnInvalidRoleState()
+    {
+        try
+        {
+            $entity = $this->createFirstEntityInstance();
+            $role = new Role();
+            $this->rightManager->deleteEntityPermissionsForRole($entity, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ROLE_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testDeleteEntityPermissionsForRoleRemovesPermissionsForAllUsersWhoHaveThatRole()
+    {
+        $entity = $this->createFirstEntityInstance();
+        $role = $this->createRole('ROLE_SPECIAL');
+        $john = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        $suze = $this->createUser('Suze', 'Doe', 'sdoe', '123', $role);
+        
+        $this->rightManager->setEntityPermissionsForRole($entity, MaskBuilder::MASK_OPERATOR, $role);
+        $this->logUser($john);
+        $this->assertTrue($this->getSecurityContext()->isGranted('OPERATOR', $entity));
+        $this->logUser($suze);
+        $this->assertTrue($this->getSecurityContext()->isGranted('OPERATOR', $entity));
+        
+        $this->rightManager->deleteEntityPermissionsForRole($entity, $role);
+        $this->logUser($john);
+        $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $entity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
+        $this->logUser($suze);
+        $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $entity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
+    }
+    
     /**
      * @dataProvider invalidMaskProvider
-     *
+     *//*
     public function testSetClassPermissionsForUserThrowsAnExceptionOnInvalidPermissionMask($mask)
     {
         try
@@ -515,13 +653,23 @@ class RightManagerTest extends WebTestCase
         return $entity;
     }
     
-    private function createUser($firstName, $lastName, $username, $password)
+    private function createRole($roleName)
+    {
+        $role = new Role();
+        $role->setName($roleName);
+        $this->roleManager->create($role);
+        
+        return $role;
+    }
+    
+    private function createUser($firstName, $lastName, $username, $password, $additionalRole = false)
     {
         $user = new User();
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
         $user->setUserName($username);
         $user->setPlainPassword($password);
+        $additionalRole ? $user->addRole($additionalRole) : null;
         
         $this->userManager->create($user);
         
