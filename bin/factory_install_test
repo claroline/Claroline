@@ -20,7 +20,7 @@ system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
 
 system("php {$rootDirectory}/app/console claroline:install --env=test --with-plugins");
 
-
+system("php {$rootDirectory}/app/console cache:clear");
 
 function deleteContents($path) {
     $it = new RecursiveIteratorIterator(
@@ -38,7 +38,6 @@ function deleteContents($path) {
     }
 }
 
-deleteContents("{$rootDirectory}/app/cache");
 deleteContents("{$rootDirectory}/app/logs");
 
 chmod("{$rootDirectory}/app/cache", 0777);
