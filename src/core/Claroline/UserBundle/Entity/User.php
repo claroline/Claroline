@@ -137,7 +137,29 @@ class User implements UserInterface
         $this->plainPassword = $plainPassword;
     }
 
+    /**
+     * Returns the user's roles string values (needed for Symfony security checks).
+     * 
+     * @return array
+     */
     public function getRoles()
+    {
+        $roleNames = array();
+        
+        foreach ($this->roles->toArray() as $role)
+        {
+            $roleNames[] = $role->getName();
+        }
+        
+        return $roleNames;
+    }
+    
+    /**
+     * Returns the user's role object representations.
+     * 
+     * @return array
+     */
+    public function getRoleObjects()
     {
         return $this->roles->toArray();
     }

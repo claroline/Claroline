@@ -5,7 +5,9 @@ namespace Claroline\SecurityBundle\Service;
 use Symfony\Component\Security\Acl\Dbal\AclProvider;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Permission\BasicPermissionMap;
 use Doctrine\ORM\EntityManager;
@@ -115,26 +117,8 @@ class RightManager
         
         $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
         $userIdentity = UserSecurityIdentity::fromAccount($user);
-        $acl = $this->createAclIfNotExists($objectIdentity);        
-        $aces = $acl->getObjectAces();
-        $aclKnowsUserIdentity = false;
         
-        foreach ($aces as $aceIndex => $ace)
-        {
-            if ($ace->getSecurityIdentity() == $userIdentity)
-            {
-                $aclKnowsUserIdentity = true; 
-                $acl->updateObjectAce($aceIndex, $permissionMask);
-                break;
-            }
-        }
-        
-        if (count($aces) == 0 || ! $aclKnowsUserIdentity)
-        {
-            $acl->insertObjectAce($userIdentity, $permissionMask);
-        }       
-        
-        $this->aclProvider->updateAcl($acl);
+        $this->doSetAcl($userIdentity, $objectIdentity, $permissionMask, 'object');
     }
     
     public function deleteEntityPermissionsForUser($managedEntity, User $user)
@@ -145,25 +129,7 @@ class RightManager
         $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
         $userIdentity = UserSecurityIdentity::fromAccount($user);
         
-        try
-        {
-            $acl = $this->aclProvider->findAcl($objectIdentity);
-            $aces = $acl->getObjectAces();
-        
-            foreach ($aces as $aceIndex => $ace)
-            {
-                if ($ace->getSecurityIdentity() == $userIdentity)
-                {
-                    $acl->deleteObjectAce($aceIndex);
-                }
-            }
-            
-            $this->aclProvider->updateAcl($acl);
-        }
-        catch (AclNotFoundException $ex)
-        {
-            return;
-        }
+        $this->doDeleteAces($userIdentity, $objectIdentity, 'object');
     }
     
     public function deleteEntityAndPermissions($managedEntity)
@@ -189,6 +155,30 @@ class RightManager
         $lowestMatchingMask = $this->getLowestMaskForPermission($permission);
         
         return $this->doGetAllowedUsersOnEntity($entity, $lowestMatchingMask, false);
+    }
+    
+    public function setEntityPermissionsForRole($managedEntity, $permissionMask, Role $managedRole)
+    {
+        $this->checkEntityState($managedEntity, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($managedRole, UnitOfWork::STATE_MANAGED);
+        $this->checkPermissionMask($permissionMask);
+        $this->checkIsNotOwnerMask($permissionMask);
+  
+        $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
+        $roleIdentity = new RoleSecurityIdentity($managedRole->getName());
+        
+        $this->doSetAcl($roleIdentity, $objectIdentity, $permissionMask, 'object');
+    }
+    
+    public function deleteEntityPermissionsForRole($managedEntity, Role $managedRole)
+    {
+        $this->checkEntityState($managedEntity, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($managedRole, UnitOfWork::STATE_MANAGED);
+        
+        $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
+        $roleIdentity = new RoleSecurityIdentity($managedRole->getName());
+        
+        $this->doDeleteAces($roleIdentity, $objectIdentity, 'object');
     }
     
     /*
@@ -221,11 +211,6 @@ class RightManager
         }
         
         $this->aclProvider->updateAcl($acl);
-    }
-    
-    public function setEntityPermissionsForRole($managedEntity, $permissionMask, Role $role)
-    {
-        
     }
     
     public function setClassPermissionsForRole($entityFQCN, $permissionMask, Role $role)
@@ -284,9 +269,19 @@ class RightManager
         if ($entityState !== $expectedState)
         {
             $entityType = get_class($entity);
-            $entityType == 'Claroline\UserBundle\Entity\User' ? 
-                $exceptionCode = RightManagerException::INVALID_USER_STATE :
-                $exceptionCode = RightManagerException::INVALID_ENTITY_STATE;
+            
+            switch ($entityType)
+            {
+                case 'Claroline\UserBundle\Entity\User':
+                    $exceptionCode = RightManagerException::INVALID_USER_STATE;
+                    break;
+                case 'Claroline\SecurityBundle\Entity\Role':
+                    $exceptionCode = RightManagerException::INVALID_ROLE_STATE;
+                    break;
+                default:
+                    $exceptionCode = RightManagerException::INVALID_ENTITY_STATE;
+                    break;
+            }
             
             throw new RightManagerException(
                 "The expected entity state for {$entityType} "
@@ -300,8 +295,9 @@ class RightManager
      * Helper method checking that a given mask is part of the Symfony built-in map.
      * 
      * @param integer $mask 
+     * @param boolean $checkIsNotOwner 
      */
-    private function checkPermissionMask($mask)
+    private function checkPermissionMask($mask, $checkIsNotOwner = false)
     {
         try
         {
@@ -309,10 +305,23 @@ class RightManager
         }
         catch (\Exception $ex)
         {
+            unset($ex);
+            
             throw new RightManagerException(
                 "Invalid permission mask '{$mask}'. Use the built-in "
                 . 'mask list defined in the MaskBuilder class.',
                 RightManagerException::INVALID_PERMISSION_MASK
+            );
+        }
+    }
+
+    private function checkIsNotOwnerMask($mask)
+    {
+        if ($mask === MaskBuilder::MASK_OWNER)
+        {
+            throw new RightManagerException(
+                "Permission mask 'OWNER' is not allowed in this context.", 
+                RightManagerException::NOT_ALLOWED_OWNER_MASK
             );
         }
     }
@@ -325,6 +334,7 @@ class RightManager
         }
         catch (AclNotFoundException $ex)
         {
+            unset($ex);
             $acl = $this->aclProvider->createAcl($objectIdentity);
         }
         
@@ -363,6 +373,79 @@ class RightManager
         }
         
         return false;
+    }
+    
+    private function getAceMethods($scope)
+    {
+        $methods = array();
+        
+        switch ($scope)
+        {
+            case 'object':
+                $methods['get'] = 'getObjectAces';
+                $methods['insert'] = 'insertObjectAce';
+                $methods['update'] = 'updateObjectAce';
+                $methods['delete'] = 'deleteObjectAce';
+                return $methods;
+            case 'class':
+                $methods['get'] = 'getClassAces';
+                $methods['insert'] = 'insertClassAce';
+                $methods['update'] = 'updateClassAce';
+                $methods['delete'] = 'deleteClassAce';
+                return $methods;
+            default:
+                return false;
+        }
+    }
+    
+    private function doSetAcl(SecurityIdentityInterface $sid, ObjectIdentity $oid, $mask, $scope)
+    {
+        $acl = $this->createAclIfNotExists($oid);
+        $aceMethods = $this->getAceMethods($scope);
+        $aces = $acl->$aceMethods['get']();
+        $aclKnowsSecurityIdentity = false;
+        
+        foreach ($aces as $aceIndex => $ace)
+        {
+            if ($ace->getSecurityIdentity() == $sid)
+            {
+                $aclKnowsSecurityIdentity = true; 
+                $acl->$aceMethods['update']($aceIndex, $mask);
+                break;
+            }
+        }
+        
+        if (count($aces) == 0 || ! $aclKnowsSecurityIdentity)
+        {
+            $acl->$aceMethods['insert']($sid, $mask);
+        }       
+        
+        $this->aclProvider->updateAcl($acl);
+    }
+    
+    private function doDeleteAces(SecurityIdentityInterface $sid, ObjectIdentity $oid, $scope)
+    {
+        try
+        {
+            $acl = $this->aclProvider->findAcl($oid);
+            $aceMethods = $this->getAceMethods($scope);
+            $aces = $acl->$aceMethods['get']();
+        
+            foreach ($aces as $aceIndex => $ace)
+            {
+                if ($ace->getSecurityIdentity() == $sid)
+                {
+                    $acl->$aceMethods['delete']($aceIndex);
+                }
+            }
+            
+            $this->aclProvider->updateAcl($acl);
+        }
+        catch (AclNotFoundException $ex)
+        {
+            unset($ex);
+            return;
+        }
     }
     
     private function doGetAllowedUsersOnEntity($entity, $permissionMask, $isMaskEqualitySearch)
