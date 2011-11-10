@@ -23,6 +23,7 @@ class PluginRepositoryTest extends WebTestCase
     public function tearDown()
     {
         $this->client->rollback();
+        parent :: tearDown();
     }
 
     public function testCreatePluginInsertsNewPluginRecord()
