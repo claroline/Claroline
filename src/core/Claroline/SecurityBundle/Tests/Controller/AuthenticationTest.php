@@ -28,6 +28,7 @@ class AuthenticationTest extends WebTestCase
     protected function tearDown()
     {
        $this->client->rollBack();
+       parent :: tearDown();
     }
 
     public function test_login_with_valid_credentials_doesnt_return_failure_msg()

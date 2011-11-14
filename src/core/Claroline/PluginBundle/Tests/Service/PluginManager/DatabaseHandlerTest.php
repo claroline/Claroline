@@ -22,6 +22,7 @@ class DatabaseHandlerTest extends PluginBundleTestCase
     public function tearDown()
     {
         $this->client->rollback();
+        parent :: tearDown();
     }
 
     public function testInstallApplicationRegistersLaunchersAndRoles()

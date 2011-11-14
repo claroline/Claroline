@@ -60,6 +60,7 @@ class WorkspaceControllerTest extends WebTestCase
     protected function tearDown()
     {
         $this->client->rollback();
+        parent :: tearDown();
     }
 
     protected function goToDesktopAndAssertNumberOfListedWorkspaces($number)
