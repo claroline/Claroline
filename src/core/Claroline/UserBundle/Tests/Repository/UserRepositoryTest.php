@@ -4,11 +4,10 @@ namespace Claroline\UserBundle\Repository;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\UserBundle\Entity\User;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class UserRepositoryTest extends WebTestCase
+class UserRepositoryTest extends TransactionalTestCase
 {
-    /** @var Claroline\CommonBundle\Service\Testing\TransactionalClient */
-    private $client;
     
     /** @var Doctrine\ORM\EntityManager */
     private $em;
@@ -21,18 +20,11 @@ class UserRepositoryTest extends WebTestCase
     
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
         $this->userRepo = $this->em->getRepository('Claroline\UserBundle\Entity\User');
         
-        $this->client->beginTransaction();
-    }
-    
-    public function tearDown()
-    {
-        $this->client->rollback();
-        parent :: tearDown();
     }
     
     public function testGetUsersByUsernameListReturnsExpectedResults()

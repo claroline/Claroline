@@ -3,16 +3,11 @@
 namespace Claroline\CommonBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class PlatformIndexControllerTest extends WebTestCase
+class PlatformIndexControllerTest extends TransactionalTestCase
 {
-    private $client;
-    
-    public function setUp()
-    {
-        $this->client = self::createClient();
-    }
-    
+        
     public function testControllerRendersDefaultTemplateIfNoIndexApplicationIsSet()
     {
         $crawler = $this->client->request('GET', '/');
