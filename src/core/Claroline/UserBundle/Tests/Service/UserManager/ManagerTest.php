@@ -2,30 +2,25 @@
 
 namespace Claroline\UserBundle\Service\UserManager;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\UserBundle\Entity\User;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class ManagerTest extends TransactionalTestCase
 {
-
-    /**
-     * @var Claroline\UserBundle\Service\UserManager\Manager
-     */
+    /** @var Claroline\UserBundle\Service\UserManager\Manager */
     private $manager;
 
-    /**
-     * @var Doctrine\ORM\EntityRepository
-     */
+    /** @var Doctrine\ORM\EntityRepository */
     private $repository;
 
     public function setUp()
     {
         parent :: setUp();
         $this->manager = $this->client->getContainer()->get('claroline.user.manager');
-        $this->repository = $this->client->getContainer()
-                                         ->get('doctrine.orm.entity_manager')
-                                         ->getRepository('Claroline\UserBundle\Entity\User');
+        $this->repository = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\UserBundle\Entity\User');
     }
 
     public function testCreateThenDeleteAnUser()

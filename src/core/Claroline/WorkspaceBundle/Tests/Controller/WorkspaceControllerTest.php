@@ -2,13 +2,12 @@
 
 namespace Claroline\WorkspaceBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Claroline\WorkspaceBundle\Tests\DataFixtures\ORM\LoadWorkspaceData;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class WorkspaceControllerTest extends TransactionalTestCase
 {

@@ -2,13 +2,11 @@
 
 namespace Claroline\UserBundle\Repository;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\UserBundle\Entity\User;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class UserRepositoryTest extends TransactionalTestCase
 {
-    
     /** @var Doctrine\ORM\EntityManager */
     private $em;
     

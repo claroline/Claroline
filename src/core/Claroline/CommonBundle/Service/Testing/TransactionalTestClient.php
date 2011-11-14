@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CommonBundle\Service\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -8,8 +9,7 @@ use Symfony\Component\BrowserKit\CookieJar;
 
 /* @SEE http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests */
 class TransactionalTestClient extends Client
-{
-    
+{  
     /* @var \Doctrine\DBAL\Connection */
     protected $connection;
     
@@ -31,8 +31,7 @@ class TransactionalTestClient extends Client
     {
        $this->connection->rollback(); 
     }
-
-
+    
     public function getConnection()
     {
         return $this->connection;
@@ -46,8 +45,6 @@ class TransactionalTestClient extends Client
         }
         $this->connection->close();
     }
-
-
 
     protected function doRequest($request)
     {
@@ -66,5 +63,4 @@ class TransactionalTestClient extends Client
     {
         $this->getContainer()->set('doctrine.dbal.default_connection', $this->connection);
     }
-    
 }

@@ -24,7 +24,6 @@ class WorkspaceController
     private $router;
     private $formFactory;
     private $twigEngine;
-    private $workspaceAclManager;
     
     private $rightManager;
     

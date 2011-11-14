@@ -2,9 +2,8 @@
 
 namespace Claroline\PluginBundle\Repository;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\PluginBundle\Entity\Plugin;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class PluginRepositoryTest extends TransactionalTestCase
 {

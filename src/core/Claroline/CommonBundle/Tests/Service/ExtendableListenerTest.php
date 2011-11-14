@@ -1,9 +1,9 @@
 <?php
 
-namespace Claroline\CommonBundle\Service\ORM\DynamicInheritance\Listener;
+namespace Claroline\CommonBundle\Service\ORM;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\ORM\Events;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor;
 use Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\FirstChild;
 use Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\SecondChild;
@@ -12,11 +12,9 @@ use Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\SecondDescendant;
 use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor;
 use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\FirstChild as TreeFirstChild;
 use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\SecondChild as TreeSecondChild;
-use Claroline\Lib\Testing\TransactionalTestCase;
 
 class ExtendableListenerTest extends TransactionalTestCase
 {
-    
     /** Doctrine\ORM\EntityManager */
     private $em;
 
@@ -25,7 +23,6 @@ class ExtendableListenerTest extends TransactionalTestCase
         parent :: setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
-    
     
     public function testExtendableListenerIsSubscribed()
     {
@@ -109,7 +106,7 @@ class ExtendableListenerTest extends TransactionalTestCase
         
         $this->assertEquals('FirstDescendant Ancestor field', $firstLoaded->getAncestorField());
         $this->assertEquals('SecondDescendant Ancestor field', $secondLoaded->getAncestorField());
-        $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());        
+        $this->assertNotEquals($firstLoaded->getId(), $secondLoaded->getId());
     }
     
     public function testRetrievingParentsBringsBackParentsAndChildren()
@@ -213,7 +210,7 @@ class ExtendableListenerTest extends TransactionalTestCase
         
         $ancestorRepo = $this->em->getRepository('Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor');
         
-        $ancestors = $ancestorRepo->findAll();        
+        $ancestors = $ancestorRepo->findAll();
         $rootAncestor = $ancestorRepo->findOneByTreeAncestorField('FTA');
         $rootAncestorChildNodes = $ancestorRepo->children($rootAncestor);
         $rootFirstChild = $ancestorRepo->findOneByTreeAncestorField('SFCA');
@@ -244,8 +241,8 @@ class ExtendableListenerTest extends TransactionalTestCase
         $this->assertEquals(2, count($ancestorRepo->children($firstTreeAncestor)));
         
         $connection = $this->em->getConnection();
-        $firstChildren = $connection->query('SELECT * FROM claro_test_node_first_child')->fetchAll();    
-        $deletedChildren = $connection->query('SELECT * FROM claro_test_node_first_child WHERE firstChildField="FFC"')->fetchAll();    
+        $firstChildren = $connection->query('SELECT * FROM claro_test_node_first_child')->fetchAll();
+        $deletedChildren = $connection->query('SELECT * FROM claro_test_node_first_child WHERE firstChildField="FFC"')->fetchAll();
         
         $this->assertEquals(1, count($firstChildren));
         $this->assertEquals(0, count($deletedChildren));
@@ -322,17 +319,17 @@ class ExtendableListenerTest extends TransactionalTestCase
         $this->em->persist($secondTreeAncestor);
         $this->em->persist($firstFirstChild);
         $this->em->persist($secondFirstChild);
-        $this->em->persist($secondChild);       
+        $this->em->persist($secondChild);
         $this->em->flush();
     }
     
     /**
-     * The gedmo-doctrine tree extension alters transactional mode by creating 
-     * temporary tables for its calculations, and thus prevents a clean rollback 
-     * of the data inserted during the transaction. This method leaves the 
-     * transactional mode, effectively deletes the entities passed as argument 
+     * The gedmo-doctrine tree extension alters transactional mode by creating
+     * temporary tables for its calculations, and thus prevents a clean rollback
+     * of the data inserted during the transaction. This method leaves the
+     * transactional mode, effectively deletes the entities passed as argument
      * and opens the transaction again.
-     * 
+     *
      * @param array entities An array of managed entities
      */
     private function performRealEntityDeletion(array $entities)
