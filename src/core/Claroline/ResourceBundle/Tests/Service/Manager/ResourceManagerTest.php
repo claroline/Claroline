@@ -5,10 +5,10 @@ namespace Claroline\ResourceBundle\Service\Manager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\ResourceBundle\Entity\Resource;
 use Claroline\UserBundle\Entity\User;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class ResourceManagerTest extends WebTestCase
+class ResourceManagerTest extends TransactionalTestCase
 {
-    private $client;
     /** @var Doctrine\ORM\EntityManager */
     private $em;
     private $resourceManager;
@@ -16,17 +16,10 @@ class ResourceManagerTest extends WebTestCase
     
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
-        $this->client->beginTransaction();
-    }
-    
-    public function tearDown()
-    {
-        $this->client->rollback();
-        parent :: tearDown();
     }
     
     public function testCreateResourceGivesPassedInUserOwnerPermissions()

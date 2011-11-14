@@ -4,6 +4,7 @@ namespace Claroline\PluginBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use \vfsStream;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
 /**
  * Note : Many ways were explored to get the tests of this bundle running on fake
@@ -20,7 +21,7 @@ use \vfsStream;
  *        - Test plugins are stored as real directory structures in the 'stub/plugin'
  *          directory.
  */
-class PluginBundleTestCase extends WebTestCase
+class PluginBundleTestCase extends TransactionalTestCase
 {
     /** @var \Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
     protected $client;
@@ -42,7 +43,7 @@ class PluginBundleTestCase extends WebTestCase
 
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $container = $this->client->getContainer();
         $this->manager = $container->get('claroline.plugin.manager');
         $this->validator = $container->get('claroline.plugin.validator');

@@ -10,6 +10,7 @@ use Symfony\Component\BrowserKit\CookieJar;
 class TransactionalTestClient extends Client
 {
     
+    /* @var \Doctrine\DBAL\Connection */
     protected $connection;
     
     protected $requested;
@@ -25,15 +26,25 @@ class TransactionalTestClient extends Client
     {
         $this->connection->beginTransaction();
     }
-
+    
     public function rollback()
     {
-        $this->connection->rollback();
+       $this->connection->rollback(); 
     }
+
 
     public function getConnection()
     {
         return $this->connection;
+    }
+    
+    public function shutdown()
+    {
+        if ($this->connection->isTransactionActive())
+        {            
+            $this->rollback();
+        }
+        $this->connection->close();
     }
 
 

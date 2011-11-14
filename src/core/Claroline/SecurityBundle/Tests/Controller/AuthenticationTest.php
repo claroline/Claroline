@@ -5,16 +5,15 @@ namespace Claroline\SecurityBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class AuthenticationTest extends WebTestCase
+class AuthenticationTest extends TransactionalTestCase
 {
-    private $client;
 
     protected function setUp()
     {
-        $this->client = self :: createClient();
+        parent :: setUp();
         $this->client->followRedirects();
-        $this->client->beginTransaction();
 
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $refRepo = new ReferenceRepository($em);
@@ -25,11 +24,6 @@ class AuthenticationTest extends WebTestCase
         $fixture->load($em);
     }
 
-    protected function tearDown()
-    {
-       $this->client->rollBack();
-       parent :: tearDown();
-    }
 
     public function test_login_with_valid_credentials_doesnt_return_failure_msg()
     {

@@ -5,11 +5,11 @@ namespace Claroline\PluginBundle\Repository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\PluginBundle\Entity\Application;
 use Claroline\PluginBundle\Service\ApplicationManager\Exception\ApplicationException;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class ApplicationRepositoryTest extends WebTestCase
+class ApplicationRepositoryTest extends TransactionalTestCase
 {
-    /** Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
-    private $client;
+
     /** Doctrine\ORM\Entity */
     private $em;
     /** Claroline\PluginBundle\Repository\ApplicationRepository */
@@ -17,17 +17,10 @@ class ApplicationRepositoryTest extends WebTestCase
     
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $container = $this->client->getContainer();
         $this->em = $container->get('doctrine.orm.entity_manager');
         $this->appRepo = $this->em->getRepository('Claroline\PluginBundle\Entity\Application');
-        $this->client->beginTransaction();
-    }
-    
-    public function tearDown()
-    {
-        $this->client->rollback();
-        parent :: tearDown();
     }
     
     public function testGetIndexApplicationReturnsExpectedApplication()

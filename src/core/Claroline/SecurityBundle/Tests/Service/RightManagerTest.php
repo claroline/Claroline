@@ -15,12 +15,10 @@ use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntityChild;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\SecondEntity;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\ThirdEntity;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class RightManagerTest extends WebTestCase
-{
-    /** @var Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
-    private $client;
-   
+class RightManagerTest extends TransactionalTestCase
+{   
     /** @var Claroline\SecurityBundle\Service\RightManager */
     private $rightManager;
     
@@ -38,21 +36,15 @@ class RightManagerTest extends WebTestCase
     
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.right_manager');
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
         $this->roleManager = $this->client->getContainer()->get('claroline.security.role_manager');
         $this->aclProvider = $this->client->getContainer()->get('security.acl.provider');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        
-        $this->client->beginTransaction();
     }
     
-    public function tearDown()
-    {
-        $this->client->rollback();
-        parent::tearDown();
-    }
+   
     
     public function testSetEntityPermissionsForUserThrowsAnExceptionOnInvalidEntityState()
     {

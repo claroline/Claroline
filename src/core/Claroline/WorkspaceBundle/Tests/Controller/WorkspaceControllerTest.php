@@ -8,17 +8,17 @@ use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Claroline\WorkspaceBundle\Tests\DataFixtures\ORM\LoadWorkspaceData;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class WorkspaceControllerTest extends WebTestCase
+class WorkspaceControllerTest extends TransactionalTestCase
 {
-    /**@var Client */
-    private $client;
 
     /**@var Crawler */
     private $crawler;
 
     protected function setUp()
     {
+        parent :: setUp();
         $this->prepareClient();
         $this->loadFixtures();
         $this->logIn();
@@ -26,9 +26,7 @@ class WorkspaceControllerTest extends WebTestCase
 
     protected function prepareClient()
     {
-        $this->client = self :: createClient();
         $this->client->followRedirects();
-        $this->client->beginTransaction();
     }
 
     protected function loadFixtures()
@@ -57,15 +55,10 @@ class WorkspaceControllerTest extends WebTestCase
         $this->client->submit($form);
     }
 
-    protected function tearDown()
-    {
-        $this->client->rollback();
-        parent :: tearDown();
-    }
-
+  
     protected function goToDesktopAndAssertNumberOfListedWorkspaces($number)
     {
-        $this->crawler = $this->client->request('GET', '/desktop');
+        $this->crawler = $this->client->request('GET', '/desktop');  
         $this->assertEquals($number, $this->crawler->filter('#content #workspaces li')->count());
     }
 
