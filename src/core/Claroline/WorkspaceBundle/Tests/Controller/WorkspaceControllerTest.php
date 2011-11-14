@@ -12,7 +12,6 @@ use Claroline\Lib\Testing\TransactionalTestCase;
 
 class WorkspaceControllerTest extends TransactionalTestCase
 {
-
     /**@var Crawler */
     private $crawler;
 
@@ -55,7 +54,6 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $this->client->submit($form);
     }
 
-  
     protected function goToDesktopAndAssertNumberOfListedWorkspaces($number)
     {
         $this->crawler = $this->client->request('GET', '/desktop');  
