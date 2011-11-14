@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation;
+namespace Claroline\CommonBundle\Library\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 

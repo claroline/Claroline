@@ -2,10 +2,9 @@
 
 namespace Claroline\ResourceBundle\Service\Manager;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\ResourceBundle\Entity\Resource;
 use Claroline\UserBundle\Entity\User;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class ResourceManagerTest extends TransactionalTestCase
 {

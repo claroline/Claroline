@@ -2,8 +2,7 @@
 
 namespace Claroline\SecurityBundle\Entity\Acl;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class AclTest extends TransactionalTestCase
 {
@@ -14,7 +13,6 @@ class AclTest extends TransactionalTestCase
         parent :: setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
-    
     
     public function testAclEntitiesAreLoadableAndPersistable()
     {

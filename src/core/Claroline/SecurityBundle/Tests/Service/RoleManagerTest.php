@@ -2,9 +2,8 @@
 
 namespace Claroline\SecurityBundle\Service;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\SecurityBundle\Entity\Role;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class RoleManagerTest extends TransactionalTestCase
 {
@@ -17,7 +16,6 @@ class RoleManagerTest extends TransactionalTestCase
             ->getContainer()
             ->get("claroline.security.role_manager");
     }
- 
     
     public function testANewRoleCanbeCreatedAndRetrieved()
     {

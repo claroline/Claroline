@@ -3,7 +3,7 @@
 namespace Claroline\CommonBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class PlatformIndexControllerTest extends TransactionalTestCase
 {

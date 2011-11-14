@@ -2,9 +2,8 @@
 
 namespace Claroline\PluginBundle\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use \vfsStream;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 /**
  * Note : Many ways were explored to get the tests of this bundle running on fake
@@ -55,11 +54,8 @@ class PluginBundleTestCase extends TransactionalTestCase
         $structure = array('namespaces' => '', 'bundles' => '', 'routing.yml' => '');
         vfsStream::setup('virtual', null, $structure);
 
-        $this->pluginDirectory = __DIR__ 
-                . DIRECTORY_SEPARATOR
-                . 'stub'
-                . DIRECTORY_SEPARATOR
-                . 'plugin';
+        $ds = DIRECTORY_SEPARATOR;
+        $this->pluginDirectory = __DIR__.$ds.'stub'.$ds.'plugin';
         $this->namespacesFile = vfsStream::url('virtual/namespaces');
         $this->bundlesFile = vfsStream::url('virtual/bundles');
         $this->routingFile = vfsStream::url('virtual/routing.yml');

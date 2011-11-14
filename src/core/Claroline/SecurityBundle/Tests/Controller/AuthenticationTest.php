@@ -2,14 +2,12 @@
 
 namespace Claroline\SecurityBundle\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class AuthenticationTest extends TransactionalTestCase
 {
-
     protected function setUp()
     {
         parent :: setUp();
@@ -24,8 +22,7 @@ class AuthenticationTest extends TransactionalTestCase
         $fixture->load($em);
     }
 
-
-    public function test_login_with_valid_credentials_doesnt_return_failure_msg()
+    public function testLoginWithValidCredentialsDoesntReturnFailureMsg()
     {
         $this->submitLoginForm('jdoe', 'topsecret');
 
@@ -33,7 +30,7 @@ class AuthenticationTest extends TransactionalTestCase
         $this->assertRegexp('/[^login_failure]/i', $this->client->getResponse()->getContent());
     }
 
-    public function test_login_with_wrong_credentials_returns_failure_msg()
+    public function testLoginWithWrongCredentialsReturnsFailureMsg()
     {
         $this->submitLoginForm('jdoe', 'BadPassword');
 

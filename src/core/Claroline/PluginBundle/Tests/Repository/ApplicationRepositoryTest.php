@@ -2,14 +2,12 @@
 
 namespace Claroline\PluginBundle\Repository;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\PluginBundle\Entity\Application;
 use Claroline\PluginBundle\Service\ApplicationManager\Exception\ApplicationException;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class ApplicationRepositoryTest extends TransactionalTestCase
 {
-
     /** Doctrine\ORM\Entity */
     private $em;
     /** Claroline\PluginBundle\Repository\ApplicationRepository */

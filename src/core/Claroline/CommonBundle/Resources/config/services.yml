@@ -1,6 +1,6 @@
 services:
     claroline.common.doctrine_load_metadata_subscriber:
-        class: Claroline\CommonBundle\Service\ORM\DynamicInheritance\Listener\ExtendableListener
+        class: Claroline\CommonBundle\Service\ORM\ExtendableListener
         calls:
           - [setContainer, ["@service_container"]] 
           - [setAnnotationReader, ["@annotation_reader"]]

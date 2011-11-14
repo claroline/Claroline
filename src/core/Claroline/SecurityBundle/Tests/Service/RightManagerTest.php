@@ -2,7 +2,6 @@
 
 namespace Claroline\SecurityBundle\Service;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -15,7 +14,7 @@ use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntityChild;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\SecondEntity;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\ThirdEntity;
-use Claroline\Lib\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
 
 class RightManagerTest extends TransactionalTestCase
 {
@@ -794,7 +793,7 @@ class RightManagerTest extends TransactionalTestCase
         $this->em->flush();
         
         $objectIdentity = ObjectIdentity::fromDomainObject($entity);
-        $acl = $this->aclProvider->createAcl($objectIdentity);
+        $this->aclProvider->createAcl($objectIdentity);
         
         return $entity;
     }

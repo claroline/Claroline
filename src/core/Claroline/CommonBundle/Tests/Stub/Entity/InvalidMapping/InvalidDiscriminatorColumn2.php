@@ -3,7 +3,7 @@
 namespace Claroline\CommonBundle\Tests\Stub\Entity\InvalidMapping;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation as ORMExt;
+use Claroline\CommonBundle\Library\Annotation as ORMExt;
 
 /**
  * Invalid because the "discriminatorColumn" attribute of the "@Extendable"

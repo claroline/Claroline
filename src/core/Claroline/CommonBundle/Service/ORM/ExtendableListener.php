@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CommonBundle\Service\ORM\DynamicInheritance\Listener;
+namespace Claroline\CommonBundle\Service\ORM;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Doctrine\Common\EventSubscriber;
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Claroline\CommonBundle\Exception\ClarolineException;
-use Claroline\CommonBundle\Service\ORM\DynamicInheritance\Annotation\Extendable;
+use Claroline\CommonBundle\Library\Annotation\Extendable;
 
 class ExtendableListener extends ContainerAware implements EventSubscriber
 {
