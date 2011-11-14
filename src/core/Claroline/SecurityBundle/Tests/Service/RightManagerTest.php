@@ -529,7 +529,7 @@ class RightManagerTest extends WebTestCase
     
     /**
      * @dataProvider invalidMaskProvider
-     *//*
+     */
     public function testSetClassPermissionsForUserThrowsAnExceptionOnInvalidPermissionMask($mask)
     {
         try
@@ -564,16 +564,14 @@ class RightManagerTest extends WebTestCase
         $user = $this->createUser('John', 'Doe', 'jdoe', '123');
         $classIdentity = ClassIdentity::fromDomainClass($fqcn);
         $firstEntity = $this->createFirstEntityInstance();
-        $secondEntity = $this->createFirstEntityInstance();
-        $thirdEntity = $this->createFirstEntityInstance();
         
-        $this->rightManager->setClassPermissionsForUser($fqcn, MaskBuilder::MASK_DELETE, $user);
+        $this->rightManager->setClassPermissionsForUser($fqcn, MaskBuilder::MASK_EDIT, $user);
         $this->logUser($user);
         
-        $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $classIdentity));        
-        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $firstEntity)); // fails
-        $this->assertTrue($this->getSecurityContext()->isGranted('CREATE', $secondEntity)); // fails      
-        $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $thirdEntity)); // fails
+        $this->assertTrue($this->getSecurityContext()->isGranted('EDIT', $classIdentity));        
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $firstEntity)); 
+        $this->assertTrue($this->getSecurityContext()->isGranted('EDIT', $firstEntity));       
+        $this->assertFalse($this->getSecurityContext()->isGranted('DELETE', $firstEntity));
     }
     
     public function testSetClassPermissionsForUserCanUpdatePreviousPermissions()
@@ -589,7 +587,6 @@ class RightManagerTest extends WebTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('OWNER', $classIdentity));        
         $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $classIdentity));
     }
-    */
     
     /*********************************************************************************************/
     /************************************** Data providers ***************************************/
@@ -649,6 +646,9 @@ class RightManagerTest extends WebTestCase
         
         $this->em->persist($entity);
         $this->em->flush();
+        
+        $objectIdentity = ObjectIdentity::fromDomainObject($entity);
+        $acl = $this->aclProvider->createAcl($objectIdentity);
         
         return $entity;
     }
