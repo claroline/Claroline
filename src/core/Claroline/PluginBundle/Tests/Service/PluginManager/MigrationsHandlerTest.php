@@ -32,6 +32,7 @@ class MigrationsHandlerTest extends PluginBundleTestCase
             $plugin = $this->buildPlugin($pluginFQCN);
             $this->migrationsHandler->remove($plugin);
         }
+        parent :: tearDown();
     }
     
     public function testVersionsTableIsCreatedAndPopulatedOnInstall()
