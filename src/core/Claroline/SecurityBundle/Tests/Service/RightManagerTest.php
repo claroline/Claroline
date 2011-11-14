@@ -411,6 +411,24 @@ class RightManagerTest extends WebTestCase
         }
     }
     
+    /**
+     * @dataProvider invalidMaskProvider
+     */
+    public function testSetEntityPermissionsForRoleThrowsAnExceptionOnInvalidPermissionMask($mask)
+    {
+        try
+        {
+            $entity = $this->createFirstEntityInstance();
+            $role = $this->createRole('ROLE_TEST');
+            $this->rightManager->setEntityPermissionsForRole($entity, $mask, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_PERMISSION_MASK, $ex->getCode());
+        }
+    }
+    
     public function testSetEntityPermissionsForRoleThrowsAnExceptionOnInvalidRoleState()
     {
         try
@@ -587,6 +605,143 @@ class RightManagerTest extends WebTestCase
         
         $this->assertFalse($this->getSecurityContext()->isGranted('OWNER', $classIdentity));        
         $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $classIdentity));
+    }
+    
+    public function testDeleteClassPermissionsForUserOnInvalidUserState()
+    {
+        try
+        {
+            $user = new User();
+            $this->rightManager->deleteClassPermissionsForUser('Dummy\Class\FQCN', $user);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_USER_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testDeleteClassPermissionsForUserRemovesExistingPermissions()
+    {
+        $fqcn = 'Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity';
+        $user = $this->createUser('John', 'Doe', 'jdoe', '123');
+        $classIdentity = ClassIdentity::fromDomainClass($fqcn);
+        $firstEntity = $this->createFirstEntityInstance();
+        
+        $this->rightManager->setClassPermissionsForUser($fqcn, MaskBuilder::MASK_MASTER, $user);
+        $this->rightManager->deleteClassPermissionsForUser($fqcn, $user);
+        $this->logUser($user);
+        
+        $this->assertFalse($this->getSecurityContext()->isGranted('MASTER', $classIdentity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('MASTER', $firstEntity));
+    }
+    
+    /**
+     * @dataProvider invalidMaskProvider
+     */
+    public function testSetClassPermissionsForRoleThrowsAnExceptionOnInvalidPermissionMask($mask)
+    {
+        try
+        {
+            $role = $this->createRole('ROLE_TEST');
+            $this->rightManager->setClassPermissionsForRole('Class\FQCN', $mask, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_PERMISSION_MASK, $ex->getCode());
+        }
+    }
+    
+    public function testSetClassPermissionsForRoleThrowsAnExceptionOnMaskOwnerArgument()
+    {
+        try
+        {
+            $role = $this->createRole('ROLE_TEST');
+            $this->rightManager->setClassPermissionsForRole('Class\FQCN', MaskBuilder::MASK_OWNER, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
+        }
+    }
+    
+    public function testSetClassPermissionsForRoleThrowsAnExceptionOnInvalidRoleState()
+    {
+        try
+        {
+            $role = new Role();
+            $this->rightManager->setClassPermissionsForRole('Class/FQCN', MaskBuilder::MASK_DELETE, $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ROLE_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testSetClassPermissionsForRoleGrantsPermissionsOnEachInstanceToAllUsersWhoHaveThatRole()
+    {
+        $fqcn = 'Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity';
+        $role = $this->createRole('ROLE_SPECIAL');
+        $user = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        $classIdentity = ClassIdentity::fromDomainClass($fqcn);
+        $firstEntity = $this->createFirstEntityInstance();
+        
+        $this->rightManager->setClassPermissionsForRole($fqcn, MaskBuilder::MASK_DELETE, $role);
+        $this->logUser($user);
+        
+        $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $classIdentity));
+        $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $firstEntity));
+    }
+    
+    public function testSetClassPermissionsForRoleCanUpdatePreviousPermissions()
+    {
+        $fqcn = 'Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity';
+        $role = $this->createRole('ROLE_SPECIAL');
+        $user = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        $classIdentity = ClassIdentity::fromDomainClass($fqcn);
+        $firstEntity = $this->createFirstEntityInstance();
+        
+        $this->rightManager->setClassPermissionsForRole($fqcn, MaskBuilder::MASK_OPERATOR, $role);
+        $this->rightManager->setClassPermissionsForRole($fqcn, MaskBuilder::MASK_VIEW, $role);
+        $this->logUser($user);
+        
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $classIdentity));
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $firstEntity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $classIdentity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $firstEntity));
+    }
+    
+    public function testDeleteClassPermissionsForRoleThrowsAnExceptionOnInvalidRoleState()
+    {
+        try
+        {
+            $role = new Role();
+            $this->rightManager->deleteClassPermissionsForRole('Class/FQCN', $role);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ROLE_STATE, $ex->getCode());
+        }
+    }
+    
+    public function testDeleteClassPermissionsForRoleRemovesExistingPermissions()
+    {
+        $fqcn = 'Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity';
+        $role = $this->createRole('ROLE_SPECIAL');
+        $user = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        $classIdentity = ClassIdentity::fromDomainClass($fqcn);
+        $firstEntity = $this->createFirstEntityInstance();
+        
+        $this->rightManager->setClassPermissionsForRole($fqcn, MaskBuilder::MASK_MASTER, $role);
+        $this->rightManager->deleteClassPermissionsForRole($fqcn, $role);
+        $this->logUser($user);
+        
+        $this->assertFalse($this->getSecurityContext()->isGranted('MASTER', $classIdentity));
+        $this->assertFalse($this->getSecurityContext()->isGranted('MASTER', $firstEntity));
     }
     
     /*********************************************************************************************/

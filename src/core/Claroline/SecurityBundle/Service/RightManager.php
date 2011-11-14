@@ -35,15 +35,15 @@ class RightManager
         $this->permissionMap = new BasicPermissionMap(); // not a public service
     }
     
-    public function createEntityWithOwner($newEntity, User $owner)
+    public function createEntityWithOwner($newEntity, User $managedOwner)
     {
         $this->checkEntityState($newEntity, UnitOfWork::STATE_NEW);
-        $this->checkEntityState($owner, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($managedOwner, UnitOfWork::STATE_MANAGED);
         
         $this->em->persist($newEntity);
         $this->em->flush();
         
-        $this->setEntityPermissionsForUser($newEntity, MaskBuilder::MASK_OWNER, $owner);
+        $this->setEntityPermissionsForUser($newEntity, MaskBuilder::MASK_OWNER, $managedOwner);
     }
     
     public function getEntityOwner($entity)
@@ -62,7 +62,7 @@ class RightManager
         return count($owners) > 0 ? $owners[0] : false;
     }
     
-    public function setEntityOwner($managedEntity, User $user, $oldOwnerNewPermissionMask = null)
+    public function setEntityOwner($managedEntity, User $managedUser, $oldOwnerNewPermissionMask = null)
     {
         $oldOwner = $this->getEntityOwner($managedEntity);
          
@@ -82,13 +82,13 @@ class RightManager
             }
         }
         
-        $this->setEntityPermissionsForUser($managedEntity, MaskBuilder::MASK_OWNER, $user);
+        $this->setEntityPermissionsForUser($managedEntity, MaskBuilder::MASK_OWNER, $managedUser);
     }
     
-    public function setEntityPermissionsForUser($managedEntity, $permissionMask, User $user)
+    public function setEntityPermissionsForUser($managedEntity, $permissionMask, User $managedUser)
     {
         $this->checkEntityState($managedEntity, UnitOfWork::STATE_MANAGED);
-        $this->checkEntityState($user, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($managedUser, UnitOfWork::STATE_MANAGED);
         $this->checkPermissionMask($permissionMask);
         
         if ($permissionMask === MaskBuilder::MASK_OWNER)
@@ -97,7 +97,7 @@ class RightManager
             
             if ($owner !== false)
             {
-                if ($owner == $user)
+                if ($owner == $managedUser)
                 {
                     return;
                 }
@@ -113,18 +113,18 @@ class RightManager
         }
         
         $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
-        $userIdentity = UserSecurityIdentity::fromAccount($user);
+        $userIdentity = UserSecurityIdentity::fromAccount($managedUser);
         
         $this->doSetAcl($userIdentity, $objectIdentity, $permissionMask, 'object');
     }
     
-    public function deleteEntityPermissionsForUser($managedEntity, User $user)
+    public function deleteEntityPermissionsForUser($managedEntity, User $managedUser)
     {
         $this->checkEntityState($managedEntity, UnitOfWork::STATE_MANAGED);
-        $this->checkEntityState($user, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($managedUser, UnitOfWork::STATE_MANAGED);
         
         $objectIdentity = ObjectIdentity::fromDomainObject($managedEntity);
-        $userIdentity = UserSecurityIdentity::fromAccount($user);
+        $userIdentity = UserSecurityIdentity::fromAccount($managedUser);
         
         $this->doDeleteAces($userIdentity, $objectIdentity, 'object');
     }
@@ -178,41 +178,54 @@ class RightManager
         $this->doDeleteAces($roleIdentity, $objectIdentity, 'object');
     }
     
-    public function setClassPermissionsForUser($entityFQCN, $permissionMask, User $user)
+    public function setClassPermissionsForUser($entityFQCN, $permissionMask, User $managedUser)
     {
-        $this->checkEntityState($user, UnitOfWork::STATE_MANAGED);
+        $this->checkEntityState($managedUser, UnitOfWork::STATE_MANAGED);
         $this->checkPermissionMask($permissionMask);
 
-        $userIdentity = UserSecurityIdentity::fromAccount($user);
+        $userIdentity = UserSecurityIdentity::fromAccount($managedUser);
         $objectIdentity = ClassIdentity::fromDomainClass($entityFQCN);
         
         $this->doSetAcl($userIdentity, $objectIdentity, $permissionMask, 'class');
     }
+  
+    public function deleteClassPermissionsForUser($entityFQCN, User $managedUser) 
+    {
+        $this->checkEntityState($managedUser, UnitOfWork::STATE_MANAGED);
 
-    
-    /*
-    public function deleteClassPermissionsForUser($entityFQCN, User $user) 
-    {
+        $userIdentity = UserSecurityIdentity::fromAccount($managedUser);
+        $objectIdentity = ClassIdentity::fromDomainClass($entityFQCN);
         
-    }
-    
-    public function setClassPermissionsForRole($entityFQCN, $permissionMask, Role $role)
-    {
-        
+        $this->doDeleteAces($userIdentity, $objectIdentity, 'class');
     }
  
-    public function deleteClassPermissionsForRole($entityFQCN, Role $role) 
+    public function setClassPermissionsForRole($entityFQCN, $permissionMask, Role $managedRole)
     {
+        $this->checkEntityState($managedRole, UnitOfWork::STATE_MANAGED);
+        $this->checkPermissionMask($permissionMask);
+        $this->checkIsNotOwnerMask($permissionMask);
+  
+        $objectIdentity = ClassIdentity::fromDomainClass($entityFQCN);
+        $roleIdentity = new RoleSecurityIdentity($managedRole->getName());
         
+        $this->doSetAcl($roleIdentity, $objectIdentity, $permissionMask, 'class');
     }
-    
-    public function getAllowedEntitiesIdsByRoles($entityFQCN, array $roles, $permissionMask = null)
+
+    public function deleteClassPermissionsForRole($entityFQCN, Role $managedRole) 
     {
+        $this->checkEntityState($managedRole, UnitOfWork::STATE_MANAGED);
         
+        $objectIdentity = ClassIdentity::fromDomainClass($entityFQCN);
+        $roleIdentity = new RoleSecurityIdentity($managedRole->getName());
+        
+        $this->doDeleteAces($roleIdentity, $objectIdentity, 'class');
     }
-    */
-    
-    
+
+    /*
+     * Untested...
+     * 
+     * TODO : add user's roles (or totally remove this method)
+     *
     public function getAllowedEntitiesIdsByUser($entityFQCN, User $user, $permissionMask = null)
     {
         $sql = "
@@ -242,6 +255,7 @@ class RightManager
         
         return $statement->fetchAll(\PDO::FETCH_ASSOC);
     }
+    */
     
     /**
      * Helper method checking that a given entity is in a particular state regarding the
