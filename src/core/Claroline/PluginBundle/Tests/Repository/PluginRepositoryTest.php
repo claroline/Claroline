@@ -4,26 +4,18 @@ namespace Claroline\PluginBundle\Repository;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\PluginBundle\Entity\Plugin;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class PluginRepositoryTest extends WebTestCase
+class PluginRepositoryTest extends TransactionalTestCase
 {
-    /** @var \Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
-    private $client;
     /** @var Claroline\PluginBundle\Repository\PluginRepository */
     private $repository;
 
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->repository = $em->getRepository('Claroline\PluginBundle\Entity\Plugin');
-        $this->client->beginTransaction();
-    }
-
-    public function tearDown()
-    {
-        $this->client->rollback();
-        parent :: tearDown();
     }
 
     public function testCreatePluginInsertsNewPluginRecord()
