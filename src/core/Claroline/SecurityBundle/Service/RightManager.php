@@ -4,8 +4,9 @@ namespace Claroline\SecurityBundle\Service;
 
 use Symfony\Component\Security\Acl\Dbal\AclProvider;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
@@ -16,10 +17,6 @@ use Claroline\UserBundle\Entity\User;
 use Claroline\SecurityBundle\Entity\Role;
 use Claroline\SecurityBundle\Acl\Domain\ClassIdentity;
 use Claroline\SecurityBundle\Service\Exception\RightManagerException;
-
-// TODO : 
-// - solve class permissions issuess
-// - implement instance/class field permissions methods for users and roles
 
 class RightManager
 {
@@ -181,36 +178,22 @@ class RightManager
         $this->doDeleteAces($roleIdentity, $objectIdentity, 'object');
     }
     
-    /*
     public function setClassPermissionsForUser($entityFQCN, $permissionMask, User $user)
     {
         $this->checkEntityState($user, UnitOfWork::STATE_MANAGED);
         $this->checkPermissionMask($permissionMask);
-        
-        $fqcnParts = explode('\\', $entityFQCN);
-        $identifier = array_pop($fqcnParts);
+
         $userIdentity = UserSecurityIdentity::fromAccount($user);
         $objectIdentity = ClassIdentity::fromDomainClass($entityFQCN);
-        $acl = $this->createAclIfNotExists($objectIdentity);        
-        $aces = $acl->getClassAces();
-        $aclKnowsUserIdentity = false;
         
-        foreach ($aces as $aceIndex => $ace)
-        {
-            if ($ace->getSecurityIdentity() == $userIdentity)
-            {
-                $aclKnowsUserIdentity = true; 
-                $acl->updateClassAce($aceIndex, $permissionMask);
-                break;
-            }
-        }
+        $this->doSetAcl($userIdentity, $objectIdentity, $permissionMask, 'class');
+    }
+
+    
+    /*
+    public function deleteClassPermissionsForUser($entityFQCN, User $user) 
+    {
         
-        if (count($aces) == 0 || ! $aclKnowsUserIdentity)
-        {
-            $acl->insertClassAce($userIdentity, $permissionMask);
-        }
-        
-        $this->aclProvider->updateAcl($acl);
     }
     
     public function setClassPermissionsForRole($entityFQCN, $permissionMask, Role $role)
@@ -218,6 +201,18 @@ class RightManager
         
     }
  
+    public function deleteClassPermissionsForRole($entityFQCN, Role $role) 
+    {
+        
+    }
+    
+    public function getAllowedEntitiesIdsByRoles($entityFQCN, array $roles, $permissionMask = null)
+    {
+        
+    }
+    */
+    
+    
     public function getAllowedEntitiesIdsByUser($entityFQCN, User $user, $permissionMask = null)
     {
         $sql = "
@@ -247,12 +242,6 @@ class RightManager
         
         return $statement->fetchAll(\PDO::FETCH_ASSOC);
     }
-    
-    public function getAllowedEntitiesIdsByRoles($entityFQCN, array $roles, $permissionMask = null)
-    {
-        
-    }
-    */
     
     /**
      * Helper method checking that a given entity is in a particular state regarding the
@@ -398,7 +387,7 @@ class RightManager
         }
     }
     
-    private function doSetAcl(SecurityIdentityInterface $sid, ObjectIdentity $oid, $mask, $scope)
+    private function doSetAcl(SecurityIdentityInterface $sid, ObjectIdentityInterface $oid, $mask, $scope)
     {
         $acl = $this->createAclIfNotExists($oid);
         $aceMethods = $this->getAceMethods($scope);
@@ -423,7 +412,7 @@ class RightManager
         $this->aclProvider->updateAcl($acl);
     }
     
-    private function doDeleteAces(SecurityIdentityInterface $sid, ObjectIdentity $oid, $scope)
+    private function doDeleteAces(SecurityIdentityInterface $sid, ObjectIdentityInterface $oid, $scope)
     {
         try
         {

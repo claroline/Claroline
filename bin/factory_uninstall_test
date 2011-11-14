@@ -15,8 +15,9 @@ $rootDirectory = realpath(__DIR__ . "/..");
 
 
 
-system("php {$rootDirectory}/app/console claroline:plugin:remove_all --env=test --with-plugins");
+system("php {$rootDirectory}/app/console claroline:uninstall --env=test --with-plugins");
 
+system("php {$rootDirectory}/app/console cache:clear --env=test ");
 
 function deleteContents($path) {
     $it = new RecursiveIteratorIterator(
@@ -34,7 +35,6 @@ function deleteContents($path) {
     }
 }
 
-deleteContents("{$rootDirectory}/app/cache");
 deleteContents("{$rootDirectory}/app/logs");
 
 

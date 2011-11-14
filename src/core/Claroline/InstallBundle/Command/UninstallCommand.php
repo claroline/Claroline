@@ -20,7 +20,7 @@ class UninstallCommand extends ContainerAwareCommand
             'with-plugins', 
             'w', 
             InputOption::VALUE_NONE, 
-            "When set to true, available plugins will be installed"
+            "When set, available plugins will be uninstalled"
         );
     }
 
@@ -31,9 +31,7 @@ class UninstallCommand extends ContainerAwareCommand
         $delegateInput = new ArrayInput($input->getArguments());
         
         if($input->getOption('with-plugins'))
-        {
-            
-                        
+        {               
             $pluginRemover = $this->getApplication()->find('claroline:plugin:remove_all');
             $pluginRemover->run($delegateInput, $output);
         }
