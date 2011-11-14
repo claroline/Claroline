@@ -11,11 +11,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManager;
-
-use Claroline\WorkspaceBundle\Service\Manager\ACLWorkspaceManager;
-
 use Claroline\SecurityBundle\Service\RightManager;
-
 use Claroline\WorkspaceBundle\Entity\Workspace;
 use Claroline\WorkspaceBundle\Form\WorkspaceType;
 
@@ -32,16 +28,16 @@ class WorkspaceController
     
     private $rightManager;
     
-    public function __construct(Request $request,
-                                Session $session,
-                                SecurityContext $context,
-                                EntityManager $em,
-                                Router $router,
-                                FormFactory $factory,
-                                TwigEngine $engine,
-                                ACLWorkspaceManager $aclManager,
-                                RightManager $rightManager
-                                )
+    public function __construct(
+        Request $request,
+        Session $session,
+        SecurityContext $context,
+        EntityManager $em,
+        Router $router,
+        FormFactory $factory,
+        TwigEngine $engine,
+        RightManager $rightManager
+    )
     {
         $this->request = $request;
         $this->session = $session;
@@ -50,10 +46,6 @@ class WorkspaceController
         $this->router = $router;
         $this->formFactory = $factory;
         $this->twigEngine = $engine;
-        
-        
-        $this->workspaceAclManager = $aclManager;
-        
         $this->rightManager = $rightManager;
     }
     

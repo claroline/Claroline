@@ -18,7 +18,7 @@ use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\ThirdEntity;
 use Claroline\Lib\Testing\TransactionalTestCase;
 
 class RightManagerTest extends TransactionalTestCase
-{   
+{
     /** @var Claroline\SecurityBundle\Service\RightManager */
     private $rightManager;
     
@@ -43,8 +43,6 @@ class RightManagerTest extends TransactionalTestCase
         $this->aclProvider = $this->client->getContainer()->get('security.acl.provider');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
-    
-   
     
     public function testSetEntityPermissionsForUserThrowsAnExceptionOnInvalidEntityState()
     {
