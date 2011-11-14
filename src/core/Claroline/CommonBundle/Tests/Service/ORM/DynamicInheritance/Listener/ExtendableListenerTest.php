@@ -12,27 +12,20 @@ use Claroline\CommonBundle\Tests\Stub\Entity\ValidHierarchy\SecondDescendant;
 use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor;
 use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\FirstChild as TreeFirstChild;
 use Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy\SecondChild as TreeSecondChild;
+use Claroline\Lib\Testing\TransactionalTestCase;
 
-class ExtendableListenerTest extends WebTestCase
+class ExtendableListenerTest extends TransactionalTestCase
 {
-    /** Claroline\CommonBundle\Service\Testing\TransactionalTestClient */
-    private $client;
     
     /** Doctrine\ORM\EntityManager */
     private $em;
 
     public function setUp()
     {
-        $this->client = self::createClient();
+        parent :: setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->client->beginTransaction();
     }
     
-    public function tearDown()
-    {
-        $this->client->rollback();
-        parent :: tearDown();
-    }
     
     public function testExtendableListenerIsSubscribed()
     {
