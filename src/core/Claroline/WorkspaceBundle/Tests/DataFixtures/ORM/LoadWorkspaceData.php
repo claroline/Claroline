@@ -8,6 +8,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Claroline\WorkspaceBundle\Entity\Workspace;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -22,13 +23,19 @@ class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, Ord
     public function load($manager)
     {
         $admin = $manager->merge($this->getReference('user/admin'));
-        $rightManager = $this->container->get('claroline.security.right_manager');
-        
+        $rightManager = $this->container->get('claroline.security.restricted_owner_right_manager');
+        $workspaces = array();
         for($i = 0; $i < 10; ++$i)
         {
             $workspace = new Workspace();
             $workspace->setName("test workspace #{$i}");
-            $rightManager->createEntityWithOwner($workspace, $admin);
+            $workspaces[] = $workspace;
+            $manager->persist($workspace);
+        }
+        $manager->flush();
+        foreach($workspaces as $workspace)
+        {            
+            $rightManager->addRight($workspace, $admin, MaskBuilder::MASK_OWNER);
         }
 
     }

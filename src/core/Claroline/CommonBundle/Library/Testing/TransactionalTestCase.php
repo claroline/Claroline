@@ -11,8 +11,8 @@ class TransactionalTestCase extends WebTestCase
       
     protected function setUp()
     {        
-        parent::setUp();
-        $this->client = self::createClient();
+        parent::setUp();        
+        $this->client = self::createClient();        
         $this->client->beginTransaction();
     }
   
