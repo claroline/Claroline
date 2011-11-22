@@ -63,9 +63,9 @@ class WorkspaceControllerTest extends TransactionalTestCase
     {
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
 
+        
         $deleteForm = $this->crawler->filter('#claro_desktop_content #workspaces li form input')->first()->form();
         $this->client->submit($deleteForm);
-        
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(9);
     }
  

@@ -4,16 +4,45 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@validator"
-    claroline.security.right_manager:
-        class: Claroline\SecurityBundle\Service\RightManager
+            
+    claroline.security.acl_persister:
+        class: Claroline\SecurityBundle\Service\AclPersister
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+            - { name: doctrine.event_subscriber, event: preRemove}
+            - { name: doctrine.event_subscriber, event: postPersist}
+            
+    claroline.security.right_manager.delegate.entity:
+        class: Claroline\SecurityBundle\Service\RightManager\Delegate\EntityDelegate
+    claroline.security.right_manager.delegate.class:
+        class: Claroline\SecurityBundle\Service\RightManager\Delegate\ClassDelegate
+    claroline.security.right_manager.delegate.user:
+        class: Claroline\SecurityBundle\Service\RightManager\Delegate\UserDelegate
         arguments:
             - "@doctrine.orm.entity_manager"
+    claroline.security.right_manager.delegate.role:
+        class: Claroline\SecurityBundle\Service\RightManager\Delegate\RoleDelegate
+        arguments:
+            - "@doctrine.orm.entity_manager"
+    claroline.security.right_manager.strategy_chooser:
+        class: Claroline\SecurityBundle\Service\RightManager\Delegate\StrategyChooser
+        arguments:
+            - "@claroline.security.right_manager.delegate.entity"
+            - "@claroline.security.right_manager.delegate.class"
+            - "@claroline.security.right_manager.delegate.user"
+            - "@claroline.security.right_manager.delegate.role"
+    claroline.security.right_manager:
+        class: Claroline\SecurityBundle\Service\RightManager\RightManager
+        arguments:
             - "@security.acl.provider"
-            - class_table_name: %security.acl.dbal.class_table_name%
-              entry_table_name: %security.acl.dbal.entry_table_name%
-              oid_table_name: %security.acl.dbal.oid_table_name%
-              oid_ancestors_table_name: %security.acl.dbal.oid_ancestors_table_name%
-              sid_table_name: %security.acl.dbal.sid_table_name%    
+            - "@claroline.security.right_manager.strategy_chooser"
+    claroline.security.restricted_owner_right_manager:
+        class: Claroline\SecurityBundle\Service\RightManager\RestrictedOwnerRightManager
+        arguments:
+            - "@claroline.security.right_manager"
+            
+
     # controller
     claroline.security.authentication_controller:
         class: Claroline\SecurityBundle\Controller\AuthenticationController

@@ -64,6 +64,12 @@ class TreeAncestor
      */
     protected $children;
     
+    public function getId()
+    {
+        return $this->id;
+    }
+
+        
     public function getTreeAncestorField()
     {
         return $this->treeAncestorField;
