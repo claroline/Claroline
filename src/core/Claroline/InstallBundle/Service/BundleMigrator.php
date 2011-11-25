@@ -32,7 +32,7 @@ class BundleMigrator
     public function dropSchemaForBundle(Bundle $bundle)
     {
         $migration = $this->buildMigrationForBundle($bundle); 
-        $migration && $migration->migrate('');
+        $migration && $migration->migrate('0');
     }
     
     public function migrateBundle(Bundle $bundle, $version = null)
@@ -56,6 +56,7 @@ class BundleMigrator
         //FIXME next lines are a hack fixing this bug 
         //@see https://github.com/doctrine/migrations/issues/47
         // hopefully we'll be able to remove the fix soon
+        // ADDENDUM : this is fixed in PHP 5.4.0, should this fix be removed ?
         if ( count($config->getMigrations()) == 0)
         {
             return;
