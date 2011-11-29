@@ -76,7 +76,7 @@ class WorkspaceController
         {
             $this->entityManager->persist($workspace);
             $this->entityManager->flush();
-            $this->rightManager->setOwner($target, $subject);
+            $this->rightManager->setOwner($workspace, $user);
             
             $route = $this->router->generate('claroline_desktop_index');
             
