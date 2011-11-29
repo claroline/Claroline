@@ -76,9 +76,14 @@ class RightManager implements RightManagerInterface
     private function doRecursiveRemoveRight(Acl $acl, $sid, $mask, $startIndex)
     {
         $aces = $this->currentTargetStrategy->getAces($acl);
-        if(count($aces) == 0) return;
-        if($startIndex < 0) return;
-        
+        if(count($aces) == 0) 
+        {
+            return;
+        }
+        if($startIndex < 0)
+        {
+            return;
+        }
         for($aceIndex = $startIndex; $aceIndex < count($aces); ++$aceIndex)
         {
             $ace = $aces[$aceIndex];
@@ -91,7 +96,7 @@ class RightManager implements RightManagerInterface
                 $mb = new MaskBuilder($currentMask);
                 $mb->remove($mask);
                 $updatedMask = $mb->get();     
-                 if($updatedMask == 0 || $mask == 0)
+                if($updatedMask == 0 || $mask == 0)
                 {
                     $this->currentTargetStrategy->deleteAce($acl, $aceIndex);
                     $this->doRecursiveRemoveRight($acl, $sid, $mask, $aceIndex);
@@ -129,7 +134,7 @@ class RightManager implements RightManagerInterface
         
         
         $res = array();
-        foreach($aces as $aceIndex => $ace)
+        foreach($aces as $ace)
         {
             $compatibleAce = $this->isCompatibleMask($ace->getMask(), $rightMask);
             if ($compatibleAce)
@@ -154,6 +159,7 @@ class RightManager implements RightManagerInterface
         }
         catch(NoAceFoundException $ex)
         {
+            unset($ex);
             return false;
         }
     }

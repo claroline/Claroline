@@ -5,7 +5,7 @@ use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 
- class EntityDelegate implements TargetDelegateInterface
+class EntityDelegate implements TargetDelegateInterface
 {
     public function getAces(Acl $acl)
     {

@@ -56,7 +56,7 @@ class AclPersisterTest extends TransactionalTestCase
         
         
         
-        $acl = $this->aclProvider->findAcl($entityIdentity);
+        $this->aclProvider->findAcl($entityIdentity);
     }
     
     
