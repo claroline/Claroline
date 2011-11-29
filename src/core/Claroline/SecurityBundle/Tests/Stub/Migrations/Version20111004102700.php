@@ -19,10 +19,9 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_security_first_entity');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('firstEntityField', 'string', array('length' => 255));
         $table->addColumn('discr', 'string', array('length' => 255));       
-        $table->setPrimaryKey(array('id'));
         
         $this->storeTable($table);  
     }
@@ -31,7 +30,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_security_first_entity_child');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('firstEntityChildField', 'string', array('length' => 255));        
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_security_first_entity'), 
@@ -45,7 +44,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_security_second_entity');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('secondChildField', 'string', array('length' => 255));  
         $table->setPrimaryKey(array('id'));
     }
@@ -54,9 +53,9 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_security_third_entity');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('thirdChildField', 'string', array('length' => 255));  
-        $table->setPrimaryKey(array('id'));
+        
     }
     
     public function down(Schema $schema)
