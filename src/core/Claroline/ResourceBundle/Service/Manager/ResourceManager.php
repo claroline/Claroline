@@ -14,6 +14,7 @@ class ResourceManager
     
     private $em;
     
+    /** @var RightManagerInterface */
     private $rightManager;
 
     public function __construct(EntityManager $em, RightManagerInterface $rightManager)
