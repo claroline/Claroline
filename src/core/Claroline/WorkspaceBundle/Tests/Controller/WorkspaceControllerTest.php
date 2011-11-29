@@ -55,7 +55,8 @@ class WorkspaceControllerTest extends TransactionalTestCase
 
     protected function goToDesktopAndAssertNumberOfListedWorkspaces($number)
     {
-        $this->crawler = $this->client->request('GET', '/desktop');  
+        $this->crawler = $this->client->request('GET', '/desktop');
+        
         $this->assertEquals($number, $this->crawler->filter('#content #workspaces li')->count());
     }
 
@@ -91,5 +92,22 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $this->client->submit($form);
         
         $this->goToDesktopAndAssertNumberOfListedWorkspaces(11);
+    }
+    
+    public function testCreatorOfWSCanDeleteIt()
+    {
+        $this->logIn('jdoe', 'topsecret');
+        $this->crawler = $this->client->request('GET', '/workspaces/new');
+        $form = $this->crawler->filter('input[type=submit]')->form();
+        $form['workspace_form[name]'] = 'Workspace test';
+        $this->client->submit($form);
+        
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(11);
+        
+        $deleteForm = $this->crawler->filter('#claro_desktop_content #workspaces li form input')->eq(10)->form();
+        $this->client->submit($deleteForm);
+        
+        
+        $this->goToDesktopAndAssertNumberOfListedWorkspaces(10);
     }
 }
