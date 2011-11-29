@@ -20,7 +20,7 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
     {
         parent :: setUp();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.restricted_owner_right_manager');
-     }
+    }
     
    public function testThereCanOnlyBeOneOwnerMaximum()
    {
