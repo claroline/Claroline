@@ -19,11 +19,10 @@ class Version20111004102700 extends BundleMigration
     private function createAncestorTable(Schema $schema)
     {
         $table = $schema->createTable('claro_test_ancestor');
-        
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('ancestorField', 'string', array('length' => 255));
         $table->addColumn('discr', 'string', array('length' => 255));       
-        $table->setPrimaryKey(array('id'));
+        
         
         $this->storeTable($table);       
     }
@@ -32,7 +31,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_firstchild');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('firstChildField', 'string', array('length' => 255));        
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_ancestor'), 
@@ -46,7 +45,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_secondchild');
 
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('secondChildField', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_ancestor'), 
@@ -60,7 +59,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_firstdescendant');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('firstDescendantField', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_ancestor'), 
@@ -74,7 +73,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_seconddescendant');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('secondDescendantField', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_ancestor'), 

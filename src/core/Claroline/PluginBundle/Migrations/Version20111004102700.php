@@ -21,7 +21,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_plugin');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('type', 'string', array('length' => 255));
         $table->addColumn('bundle_fqcn', 'string', array('length' => 255));
         $table->addColumn('vendor_name', 'string', array('length' => 50));
@@ -29,7 +29,6 @@ class Version20111004102700 extends BundleMigration
         $table->addColumn('name_translation_key', 'string', array('length' => 255));
         $table->addColumn('description', 'string', array('length' => 255));
         $table->addColumn('discr', 'string', array('length' => 255));       
-        $table->setPrimaryKey(array('id'));
         
         $this->storeTable($table);
     }
@@ -52,13 +51,12 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_application');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('index_route', 'string', array('length' => 255));
         $table->addColumn('is_eligible_for_platform_index', 'boolean');
         $table->addColumn('is_platform_index', 'boolean');
         $table->addColumn('is_eligible_for_connection_target', 'boolean');
         $table->addColumn('is_connection_target', 'boolean');
-        $table->setPrimaryKey(array('id'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), 
             array('id'), 
@@ -73,11 +71,10 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_application_launcher');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('application_id', 'integer', array('notnull' => true));
         $table->addColumn('route_id', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255));
-        $table->setPrimaryKey(array('id'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_application'),
             array('application_id'), 
@@ -110,8 +107,7 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_tool');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
-        $table->setPrimaryKey(array('id'));
+        $this->addId($table);
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), 
             array('id'), 
