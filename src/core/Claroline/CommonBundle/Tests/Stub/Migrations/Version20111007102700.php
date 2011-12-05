@@ -18,7 +18,7 @@ class Version20111007102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_tree_ancestor');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('treeAncestorField', 'string', array('length' => 255));
         $table->addColumn('lft', 'integer');
         $table->addColumn('rgt', 'integer');
@@ -26,7 +26,6 @@ class Version20111007102700 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => true));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('discr', 'string', array('length' => 255));       
-        $table->setPrimaryKey(array('id'));
         
         $this->storeTable($table);
     }
@@ -35,7 +34,7 @@ class Version20111007102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_node_first_child');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('firstChildField', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_tree_ancestor'), 
@@ -49,7 +48,7 @@ class Version20111007102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_test_node_second_child');
         
-        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $this->addId($table);
         $table->addColumn('secondChildField', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_test_tree_ancestor'), 

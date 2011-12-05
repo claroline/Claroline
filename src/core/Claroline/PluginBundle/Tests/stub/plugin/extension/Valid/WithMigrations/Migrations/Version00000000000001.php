@@ -10,14 +10,7 @@ class Version00000000000001 extends BundleMigration
     public function up(Schema $schema)
     {
         $table = $schema->createTable($this->prefix() . '_stuffs');
-        $table->addColumn(
-            'id',
-            'integer',
-            array(
-                'notnull' => true,
-                'autoincrement' => true,
-            )
-        );
+        $this->addId($table);
         
         $table->addColumn(
             'name', 
@@ -26,8 +19,6 @@ class Version00000000000001 extends BundleMigration
                 'length' => 50
             )
         );
-        
-        $table->addUniqueIndex(array('id'));
         
     }
 

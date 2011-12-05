@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManager;
-use Claroline\SecurityBundle\Service\RightManager;
+use Claroline\SecurityBundle\Service\RightManager\RightManagerInterface;
 use Claroline\WorkspaceBundle\Entity\Workspace;
 use Claroline\WorkspaceBundle\Form\WorkspaceType;
 
@@ -35,7 +35,7 @@ class WorkspaceController
         Router $router,
         FormFactory $factory,
         TwigEngine $engine,
-        RightManager $rightManager
+        RightManagerInterface $rightManager
     )
     {
         $this->request = $request;
@@ -74,7 +74,9 @@ class WorkspaceController
 
         if ($form->isValid())
         {
-            $this->rightManager->createEntityWithOwner($workspace, $user);
+            $this->entityManager->persist($workspace);
+            $this->entityManager->flush();
+            $this->rightManager->setOwner($workspace, $user);
             
             $route = $this->router->generate('claroline_desktop_index');
             
@@ -100,7 +102,8 @@ class WorkspaceController
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
         
-        $this->rightManager->deleteEntityAndPermissions($workspace);
+        $this->entityManager->remove($workspace);
+        $this->entityManager->flush();
         
         $this->session->setFlash('notice', 'Workspace successfully deleted');            
         $route = $this->router->generate('claroline_desktop_index');
