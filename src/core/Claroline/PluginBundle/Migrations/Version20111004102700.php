@@ -10,6 +10,7 @@ class Version20111004102700 extends BundleMigration
     public function up(Schema $schema)
     {
         $this->createPluginTable($schema);
+        $this->createExtensionTable($schema);
         $this->createToolTable($schema);
         $this->createApplicationTable($schema);
         $this->createApplicationLauncherTable($schema);
@@ -31,6 +32,20 @@ class Version20111004102700 extends BundleMigration
         $table->setPrimaryKey(array('id'));
         
         $this->storeTable($table);
+    }
+    
+    private function createExtensionTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_extension');
+        
+        $table->addColumn('id', 'integer', array('autoincrement' => true));
+        $table->setPrimaryKey(array('id'));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_plugin'), 
+            array('id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
     }
     
     private function createApplicationTable(Schema $schema)
@@ -111,6 +126,7 @@ class Version20111004102700 extends BundleMigration
         $schema->dropTable('claro_application_launcher');
         $schema->dropTable('claro_application');
         $schema->dropTable('claro_tool');
+        $schema->dropTable('claro_extension');
         $schema->dropTable('claro_plugin');
     }
 }

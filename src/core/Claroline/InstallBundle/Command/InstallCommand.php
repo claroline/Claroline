@@ -26,10 +26,10 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Launching installer...');
         $delegateInput = new ArrayInput($input->getArguments());
-
         $manager = $this->getContainer()->get('claroline.install.core_installer');
+        
+        $output->writeln('Installing the platform...');
         $manager->install();
         
         $command = $this->getApplication()->find('init:acl');        

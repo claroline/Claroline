@@ -18,33 +18,48 @@ class InstallAllCommand extends AbstractPluginCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $pluginManager = $this->getContainer()->get('claroline.plugin.manager');
-        $pluginPath = $this->getContainer()->getParameter('claroline.plugin.directory');
+        $pluginInstaller = $this->getContainer()->get('claroline.plugin.installer');
+        $pluginDirs = array(
+            $this->getContainer()->getParameter('claroline.plugin.extension_directory'),
+            $this->getContainer()->getParameter('claroline.plugin.application_directory'),
+            $this->getContainer()->getParameter('claroline.plugin.tool_directory')
+        );
         
-        $output->writeln("Scanning plugin directory ('{$pluginPath}')...");
-
-        $pluginVendors = new \DirectoryIterator($pluginPath);
-
-        foreach ($pluginVendors as $vendor)
+        foreach ($pluginDirs as $pluginDir)
         {
-            if ($vendor->isDir() && ! $vendor->isDot())
-            {
-                $vendorName = $vendor->getBasename();
-                $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
+            $output->writeln("Scanning plugin directory ('{$pluginDir}')...");
 
-                foreach ($vendorPlugins as $plugin)
+            $pluginVendors = new \DirectoryIterator($pluginDir);
+
+            foreach ($pluginVendors as $vendor)
+            {
+                if ($vendor->isDir() && !$vendor->isDot())
                 {
-                    if ($plugin->isDir() && ! $plugin->isDot())
+                    $vendorName = $vendor->getBasename();
+                    $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
+
+                    foreach ($vendorPlugins as $plugin)
                     {
-                        $bundleName = $plugin->getBasename();
-                        $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-                        $output->writeln("Installing plugin '{$fqcn}'...");
-                        $pluginManager->install($fqcn);
+                        if ($plugin->isDir() && !$plugin->isDot())
+                        {
+                            $bundleName = $plugin->getBasename();
+                            $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
+                            
+                            if (! $pluginInstaller->isInstalled($fqcn))
+                            {
+                                $output->writeln("Installing plugin '{$fqcn}'...");
+                                $pluginInstaller->install($fqcn);
+                            }
+                            else
+                            {
+                                $output->writeln("Plugin '{$fqcn}' is already installed. Aborting.");
+                            }
+                        }
                     }
                 }
             }
         }
-
+        
         $output->writeln('Done');
         
         $this->resetCache($output);

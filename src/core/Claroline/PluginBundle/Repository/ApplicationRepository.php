@@ -2,12 +2,13 @@
 
 namespace Claroline\PluginBundle\Repository;
 
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
-use Claroline\PluginBundle\Service\ApplicationManager\Exception\ApplicationException;
+use Claroline\PluginBundle\Exception\ApplicationException;
 
-class ApplicationRepository extends PluginRepository
+class ApplicationRepository extends EntityRepository
 {
     public function getIndexApplication()
     {

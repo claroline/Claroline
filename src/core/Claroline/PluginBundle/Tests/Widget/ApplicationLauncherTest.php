@@ -29,7 +29,7 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidRouteIdProvider
      */
-    public function testInvalidThrowsAnExceptionOnInvalidRouteIdArgument($routeId)
+    public function testConstructorThrowsAnExceptionOnInvalidRouteIdArgument($routeId)
     {
         $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
         
@@ -39,7 +39,7 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidTranslationKeyProvider
      */
-    public function testInvalidThrowsAnExceptionOnInvalidTranslationKeyArgument($key)
+    public function testConstructorThrowsAnExceptionOnInvalidTranslationKeyArgument($key)
     {
         $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
         
@@ -49,7 +49,7 @@ class ApplicationLauncherTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidAccessControlProvider
      */
-    public function testInvalidThrowsAnExceptionOnInvalidAccessControlArgument($accessControl)
+    public function testConstructorThrowsAnExceptionOnInvalidAccessControlArgument($accessControl)
     {
         $this->setExpectedException('Claroline\CommonBundle\Exception\ClarolineException');
         
