@@ -9,7 +9,7 @@ use Symfony\Component\BrowserKit\CookieJar;
 
 /* @SEE http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests */
 class TransactionalTestClient extends Client
-{  
+{
     /* @var \Doctrine\DBAL\Connection */
     protected $connection;
     

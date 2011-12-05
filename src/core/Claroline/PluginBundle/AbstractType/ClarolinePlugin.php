@@ -11,7 +11,7 @@ abstract class ClarolinePlugin extends Bundle
         return get_parent_class($this);
     }
 
-    final public function getVendorNamespace()
+    final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
 
@@ -40,7 +40,7 @@ abstract class ClarolinePlugin extends Bundle
 
     public function getRoutingPrefix()
     {
-        $vendor = $this->getVendorNamespace();
+        $vendor = $this->getVendorName();
         $prefix = $this->getBundleName();
         $pattern = '#^(.+)Bundle$#';
         

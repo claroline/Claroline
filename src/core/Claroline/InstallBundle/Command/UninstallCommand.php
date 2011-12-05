@@ -14,7 +14,7 @@ class UninstallCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:uninstall')
-             ->setDescription('uninstall the platform to a clear state.');
+             ->setDescription('Uninstalls the platform to a clear state.');
         
         $this->addOption(
             'with-plugins', 
@@ -26,13 +26,13 @@ class UninstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Launching uninstaller...');
+        $output->writeln('Uninstalling the platform...');
         
         $delegateInput = new ArrayInput($input->getArguments());
         
-        if($input->getOption('with-plugins'))
+        if ($input->getOption('with-plugins'))
         {               
-            $pluginRemover = $this->getApplication()->find('claroline:plugin:remove_all');
+            $pluginRemover = $this->getApplication()->find('claroline:plugin:uninstall_all');
             $pluginRemover->run($delegateInput, $output);
         }
         

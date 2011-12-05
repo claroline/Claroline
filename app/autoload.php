@@ -18,18 +18,30 @@ $coreNamespaces = array(
     'Metadata'         => __DIR__.'/../vendor/metadata/src',
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
-    'Claroline'        => array(__DIR__.'/../src/core', __DIR__.'/../src/plugin'),
+    'Claroline'        => array(
+        __DIR__.'/../src/core', 
+        __DIR__.'/../src/plugin/extension', 
+        __DIR__.'/../src/plugin/application', 
+        __DIR__.'/../src/plugin/tool'
+    ),
 );
 
 $pluginNamespaces = array();
+
 if (file_exists(__DIR__.'/config/plugin/namespaces'))
 {
-    $pluginNamespaces = array_fill_keys(file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES), __DIR__.'/../src/plugin');
+    $namespaceValues = file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES);
+    $pluginNamespaces = array_fill_keys(
+        $namespaceValues, 
+        array(
+            __DIR__.'/../src/plugin/extension',
+            __DIR__.'/../src/plugin/application', 
+            __DIR__.'/../src/plugin/tool'
+        )
+    );
 }
 
 $loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));
-
-
 
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',

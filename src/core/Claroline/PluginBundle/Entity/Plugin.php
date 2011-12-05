@@ -3,17 +3,22 @@
 namespace Claroline\PluginBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\PluginBundle\Repository\PluginRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_plugin")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"base_plugin" = "Plugin",
- *                        "application" = "Application",
- *                        "tool" = "Tool"})
+ * @ORM\DiscriminatorMap({
+ *      "extension" = "Extension",
+ *      "application" = "Application",
+ *      "tool" = "Tool"
+ * })
+ * @UniqueEntity("bundleFQCN")
  */
-class Plugin
+abstract class Plugin
 {
     /**
      * @ORM\Id
@@ -24,31 +29,43 @@ class Plugin
 
     /**
      * @ORM\Column(name="type", type="string", length="255")
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
      */
     protected $type;
 
     /**
      * @ORM\Column(name="bundle_fqcn", type="string", length="255")
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
      */
     protected $bundleFQCN;
 
     /**
      * @ORM\Column(name="vendor_name", type="string", length="50")
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(50)
      */
     protected $vendorName;
 
     /**
      * @ORM\Column(name="short_name", type="string", length="50")
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(50)
      */
     protected $bundleName;
 
     /**
      * @ORM\Column(name="name_translation_key", type="string", length="255")
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
      */
     protected $nameTranslationKey;
 
     /**
      * @ORM\Column(name="description", type="string", length="255")
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
      */
     protected $descriptionTranslationKey;
 
