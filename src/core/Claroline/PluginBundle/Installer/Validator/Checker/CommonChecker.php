@@ -94,8 +94,8 @@ class CommonChecker
             $expectedDirectory = $this->pluginDirectories['tool'];
         }
         
-        $expectedDirectory = realpath($expectedDirectory);
-        $expectedDirectoryEscaped = preg_quote($expectedDirectory);
+        $expectedDirectory = realpath($expectedDirectory);       
+        $expectedDirectoryEscaped = preg_quote($expectedDirectory, '/');
         $pluginPath = realpath($this->plugin->getPath());
         
         if (preg_match("/^{$expectedDirectoryEscaped}/", $pluginPath) === 0)
@@ -175,7 +175,7 @@ class CommonChecker
                 );
             }
 
-            $bundlePath = preg_quote(realpath($this->plugin->getPath()));
+            $bundlePath = preg_quote(realpath($this->plugin->getPath()), '/');
             
             if (preg_match("/^{$bundlePath}/", $path) === 0)
             {                
