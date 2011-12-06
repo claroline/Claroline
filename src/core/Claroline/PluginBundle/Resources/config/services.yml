@@ -17,6 +17,7 @@ services:
             - "@claroline.plugin.validator"
             - "@claroline.plugin.migrator"
             - "@claroline.plugin.recorder"
+            - "@kernel"
     
     claroline.plugin.loader:
         class: Claroline\PluginBundle\Installer\Loader
@@ -41,6 +42,7 @@ services:
               application: %claroline.plugin.application_directory%
               tool: %claroline.plugin.tool_directory%
             - "@symfony.yaml"
+            - "@file_locator"
     
     claroline.plugin.extension_checker:
         class: Claroline\PluginBundle\Installer\Validator\Checker\ExtensionChecker
