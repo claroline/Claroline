@@ -52,15 +52,15 @@ class Validator
     {
         $this->commonChecker->check($plugin);
         
-        if (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineExtension'))
+        if ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineExtension)
         {
             $this->extensionChecker->check($plugin);
         }
-        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
+        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineApplication)
         {
             $this->applicationChecker->check($plugin);
         }
-        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineTool'))
+        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineTool)
         {
             $this->toolChecker->check($plugin);
         }

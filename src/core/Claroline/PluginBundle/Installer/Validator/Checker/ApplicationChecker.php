@@ -43,7 +43,7 @@ class ApplicationChecker
 
         foreach ($launchers as $launcher)
         {
-            if (! is_a($launcher, 'Claroline\PluginBundle\Widget\ApplicationLauncher'))
+            if (! $launcher instanceof \Claroline\PluginBundle\Widget\ApplicationLauncher)
             {
                 throw new ValidationException(
                     "Application '{$this->appFQCN}' has an invalid launcher.",

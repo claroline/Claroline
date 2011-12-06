@@ -31,15 +31,15 @@ class DatabaseWriter
 
     public function insert(ClarolinePlugin $plugin)
     {
-        if (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineExtension'))
+        if ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineExtension)
         {
             $pluginEntity = $this->prepareExtensionEntity($plugin);
         }
-        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
+        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineApplication)
         {
             $pluginEntity = $this->prepareApplicationEntity($plugin);
         }
-        elseif (is_a($plugin, 'Claroline\PluginBundle\AbstractType\ClarolineTool'))
+        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineTool)
         {
             $pluginEntity = $this->prepareToolEntity($plugin);
         }
