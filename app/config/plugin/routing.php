@@ -1,8 +1,5 @@
 <?php
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
-
 
 if(file_exists(__DIR__ . '/routing.yml'))
 {
