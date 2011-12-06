@@ -18,20 +18,11 @@ class UninstallCommand extends SinglePluginCommand
     {
         $vendor = $input->getArgument('vendor_name');
         $bundle = $input->getArgument('bundle_name');
-        $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";        
-        $installer = $this->getContainer()->get('claroline.plugin.installer');
+        $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";   
         
-        if ($installer->isInstalled($fqcn))
+        if ($this->uninstallPlugin($fqcn, $output))
         {
-            $output->writeln("Uninstalling plugin '{$fqcn}'...");
-            $installer->uninstall($fqcn);
-            $output->writeln('Done');
+            $this->resetCache($output);
         }
-        else
-        {
-            $output->writeln("Plugin '{$fqcn}' is not installed. Aborting.");
-        }
-        
-        $this->resetCache($output);
     }
 }
