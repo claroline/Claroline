@@ -1,0 +1,41 @@
+<?php
+
+/*
+ * This script can be used to make a fresh install of Claronext
+ * for a developper. it will initialize dev and test environments
+ *
+ * Requirements :
+ *    - a valid 'app/config/parameters.ini' file.
+ *    - an empty, writeable app/cache directory
+ *    - an empty, writeable app/logs directory
+ *
+ */
+
+$rootDirectory = realpath(__DIR__ . "/..");
+
+function deleteIfExists($file)
+{
+    if(file_exists($file))
+    {
+        unlink($file);
+    }
+}
+
+deleteIfExists("{$rootDirectory}/app/config/plugin/bundles");
+deleteIfExists("{$rootDirectory}/app/config/plugin/namespaces");
+deleteIfExists("{$rootDirectory}/app/config/plugin/routing.yml");
+touch("{$rootDirectory}/app/config/plugin/routing.yml");
+
+system("php {$rootDirectory}/bin/vendors install");
+
+system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
+system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
+system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
+system("php {$rootDirectory}/app/console claroline:install --with-plugins --env=dev");
+
+
+
+system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
+system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
+system("php {$rootDirectory}/app/console claroline:install --with-plugins --env=test");

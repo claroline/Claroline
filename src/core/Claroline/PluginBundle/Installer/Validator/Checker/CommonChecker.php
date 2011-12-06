@@ -6,6 +6,7 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
 use Claroline\PluginBundle\Exception\ValidationException;
+use Symfony\Component\Config\FileLocatorInterface;
 
 class CommonChecker
 {
@@ -14,12 +15,16 @@ class CommonChecker
     private $routingFilePath;
     private $pluginDirectories;
     private $yamlParser;
+    /** @var FileLocatorInterface */
+    private $fileLocator;
     
-    public function __construct($pluginRoutingFilePath, array $pluginDirectories, Yaml $yamlParser)
+    public function __construct($pluginRoutingFilePath, array $pluginDirectories, 
+            Yaml $yamlParser, FileLocatorInterface $fileLocator)
     {        
         $this->setPluginRoutingFilePath($pluginRoutingFilePath);
         $this->setPluginDirectories($pluginDirectories);
         $this->yamlParser = $yamlParser;
+        $this->fileLocator = $fileLocator;
     }
 
     public function setPluginDirectories(array $directories)
@@ -32,6 +37,11 @@ class CommonChecker
         $this->routingFilePath = $path;
     }
     
+    public function setFileLocator($fileLocator) {
+        $this->fileLocator = $fileLocator;
+    }
+
+        
     public function check(ClarolinePlugin $plugin)
     {
         $this->plugin = $plugin;
@@ -135,18 +145,42 @@ class CommonChecker
     private function checkRoutingPrefixIsNotAlreadyRegistered()
     {
         $prefix = $this->plugin->getRoutingPrefix();
+        $routingPaths = $this->plugin->getRoutingResourcesPaths();
         $routingResources = (array) $this->yamlParser->parse($this->routingFilePath);
         
         foreach ($routingResources as $resource)
         {
-            if ($resource['prefix'] === $prefix)
+            $isConflicting = !$this->isOneOfTheFiles($resource['resource'], $routingPaths);
+            if ($resource['prefix'] === $prefix &&  $isConflicting )
             {
                 throw new ValidationException(
-                    "{$this->pluginFQCN} : routing prefix '{$prefix}' is already registered.",
+                    "{$this->pluginFQCN} : routing prefix '{$prefix}' is already registered in another plugin.",
                     ValidationException::INVALID_ALREADY_REGISTERED_PREFIX
                 );
             }
         }
+    }
+    
+    private function isOneOfTheFiles($resource, $paths)
+    {
+        if(!is_array($paths))
+        {
+            $paths = array($paths);
+        }
+        
+        $realpath = $this->fileLocator->locate($resource);
+        $realpath = str_replace('\\', '/', $realpath);
+        
+        foreach($paths as $path)
+        {
+            $path = str_replace('\\', '/', $path);
+            
+            if($path == $realpath)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
     private function checkRoutingResourcesAreLoadable()

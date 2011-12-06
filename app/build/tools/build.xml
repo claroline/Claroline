@@ -29,7 +29,7 @@
     <target name="rawInstall"
             description="Install vendors, create database and tables, install plugins">
         <exec executable="php" failonerror="true">
-            <arg path="${bindir}/factory_install_test" />
+            <arg path="${bindir}/factory_install_ci" />
         </exec>
     </target>
 
