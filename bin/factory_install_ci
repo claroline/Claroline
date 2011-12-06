@@ -10,7 +10,7 @@
  *
  */
 
-
+$rootDirectory = realpath(__DIR__ . "/..");
 system("php {$rootDirectory}/bin/vendors install");
 
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
