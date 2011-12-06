@@ -19,19 +19,10 @@ class InstallCommand extends SinglePluginCommand
         $vendor = $input->getArgument('vendor_name');
         $bundle = $input->getArgument('bundle_name');
         $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
-        $installer = $this->getContainer()->get('claroline.plugin.installer');
         
-        if (! $installer->isInstalled($fqcn))
+        if ($this->installPlugin($fqcn, $output))
         {
-            $output->writeln("Installing plugin '{$fqcn}'...");
-            $installer->install($fqcn);
-            $output->writeln('Done');
+            $this->resetCache($output);      
         }
-        else
-        {
-            $output->writeln("Plugin '{$fqcn}' is already installed. Aborting.");
-        }
-              
-        $this->resetCache($output);
     }
 }
