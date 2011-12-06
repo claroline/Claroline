@@ -65,6 +65,16 @@ class CommonCheckerTest extends WebTestCase
             . "    prefix: sharedPrefix\n";
         vfsStream::setup('virtual', null, array('routing.yml' => $pluginRoutingEntry));
         $this->checker->setPluginRoutingFilePath(vfsStream::url('virtual/routing.yml'));
+       
+        $locator = $this->getMockBuilder('\Symfony\Component\HttpKernel\Config\FileLocator')
+                ->disableOriginalConstructor()
+                ->getMock();
+        
+        $locator->expects($this->once())
+                ->method('locate')
+                ->with($this->equalTo("@FakePluginBundle/Resources/config/routing.yml"))
+                ->will($this->returnValue("Fake/PluginBundle/Resources/Resources/config/routing.yml"));
+        $this->checker->setFileLocator($locator);
         
         $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_ALREADY_REGISTERED_PREFIX);
     }

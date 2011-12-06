@@ -7,6 +7,7 @@ use Claroline\PluginBundle\Installer\Validator\Validator;
 use Claroline\PluginBundle\Installer\Migrator;
 use Claroline\PluginBundle\Installer\Recorder\Recorder;
 use Claroline\PluginBundle\Exception\InstallationException;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class Installer
 {
@@ -14,13 +15,18 @@ class Installer
     private $validator;
     private $recorder;
     private $migrator;
+    /** @var KernelInterface */
+    private $kernel;
 
-    public function __construct(Loader $loader, Validator $validator, Migrator $migrator, Recorder $recorder)
+    public function __construct(Loader $loader, Validator $validator, 
+            Migrator $migrator, Recorder $recorder, KernelInterface $kernel)
     {
         $this->loader = $loader;
         $this->validator = $validator;
         $this->migrator = $migrator;
         $this->recorder = $recorder;
+        
+        $this->kernel = $kernel;
     }
     
     public function setLoader(Loader $loader)
@@ -50,6 +56,8 @@ class Installer
         $this->validator->validate($plugin);
         $this->migrator->install($plugin);
         $this->recorder->register($plugin);
+        $this->kernel->shutdown();
+        $this->kernel->boot();
     }
 
     public function uninstall($pluginFQCN)
@@ -58,6 +66,8 @@ class Installer
         $plugin = $this->loader->load($pluginFQCN);
         $this->recorder->unregister($plugin);
         $this->migrator->remove($plugin);
+        $this->kernel->shutdown();
+        $this->kernel->boot();
     }
     
     public function isInstalled($pluginFQCN)
