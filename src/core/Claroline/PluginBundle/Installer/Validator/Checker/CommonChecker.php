@@ -72,18 +72,13 @@ class CommonChecker
     
     private function checkPluginExtendsClarolinePluginSubType()
     {
-        $pluginClass =  'Claroline\PluginBundle\AbstractType\ClarolinePlugin';
-        $extensionClass = 'Claroline\PluginBundle\AbstractType\ClarolineExtension';
-        $applicationClass = 'Claroline\PluginBundle\AbstractType\ClarolineApplication';
-        $toolClass = 'Claroline\PluginBundle\AbstractType\ClarolineTool';
-        
-        if (! is_a($this->plugin, $extensionClass)
-            && ! is_a($this->plugin, $applicationClass)
-            && ! is_a($this->plugin, $toolClass))
+        if (! $this->plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineExtension
+            && ! $this->plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineApplication
+            && ! $this->plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineTool)
         {
             throw new ValidationException(
-                "Class '{$this->pluginFQCN}' must inherit one of the '{$pluginClass}' "
-                . "sub-types ('{$extensionClass}', '{$applicationClass}', '{$toolClass}').",
+                "Class '{$this->pluginFQCN}' must inherit one of the ClarolinePlugin "
+                . "sub-types (ClarolineExtension, ClarolineApplication or ClarolineTool).",
                 ValidationException::INVALID_PLUGIN_TYPE
             );
         }
@@ -91,15 +86,15 @@ class CommonChecker
     
     private function checkPluginIsInTheRightSubDirectory()
     {        
-        if (is_a($this->plugin, 'Claroline\PluginBundle\AbstractType\ClarolineExtension'))
+        if ($this->plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineExtension)
         {
             $expectedDirectory = $this->pluginDirectories['extension'];
         }
-        elseif (is_a($this->plugin, 'Claroline\PluginBundle\AbstractType\ClarolineApplication'))
+        elseif ($this->plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineApplication)
         {
             $expectedDirectory = $this->pluginDirectories['application'];
         }
-        elseif (is_a($this->plugin, 'Claroline\PluginBundle\AbstractType\ClarolineTool'))
+        elseif ($this->plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineTool)
         {
             $expectedDirectory = $this->pluginDirectories['tool'];
         }
