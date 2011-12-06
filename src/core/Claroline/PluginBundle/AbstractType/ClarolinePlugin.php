@@ -35,7 +35,7 @@ abstract class ClarolinePlugin extends Bundle
             return array($path);
         }
         
-        return null;
+        return array();
     }
 
     public function getRoutingPrefix()
