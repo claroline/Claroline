@@ -37,7 +37,8 @@ class CommonChecker
         $this->routingFilePath = $path;
     }
     
-    public function setFileLocator($fileLocator) {
+    public function setFileLocator($fileLocator) 
+    {
         $this->fileLocator = $fileLocator;
     }
 

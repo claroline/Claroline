@@ -63,40 +63,41 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             );
         }
         
-        $pluginDirs = array(
-            $this->getContainer()->getParameter('claroline.plugin.extension_directory'),
-            $this->getContainer()->getParameter('claroline.plugin.application_directory'),
-            $this->getContainer()->getParameter('claroline.plugin.tool_directory')
-        );
+        
+        
+        $extPath = $this->getContainer()->getParameter('claroline.plugin.extension_directory');
+        $appPath = $this->getContainer()->getParameter('claroline.plugin.application_directory');
+        $toolPath = $this->getContainer()->getParameter('claroline.plugin.tool_directory');
         
         $hasEffect = false;
         
-        foreach ($pluginDirs as $pluginDir)
+        $pluginVendors = new \AppendIterator();
+        $pluginVendors->append(new \DirectoryIterator($extPath));
+        $pluginVendors->append(new \DirectoryIterator($appPath));
+        $pluginVendors->append(new \DirectoryIterator($toolPath));
+        
+        
+        foreach ($pluginVendors as $vendor)
         {
-            $output->writeln("Scanning plugin directory ('{$pluginDir}')...");
-
-            $pluginVendors = new \DirectoryIterator($pluginDir);
-
-            foreach ($pluginVendors as $vendor)
+            if (!$vendor->isDir() || $vendor->isDot())
             {
-                if ($vendor->isDir() && !$vendor->isDot())
-                {
-                    $vendorName = $vendor->getBasename();
-                    $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
+                continue;
+            }
+            $vendorName = $vendor->getBasename();
+            $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
 
-                    foreach ($vendorPlugins as $plugin)
-                    {
-                        if ($plugin->isDir() && !$plugin->isDot())
-                        {
-                            $bundleName = $plugin->getBasename();
-                            $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-                            
-                            if ($this->{$methodName}($fqcn, $output))
-                            {
-                                $hasEffect = true;
-                            }
-                        }
-                    }
+            foreach ($vendorPlugins as $plugin)
+            {
+                if (!$plugin->isDir() || $plugin->isDot())
+                {
+                    continue;
+                }
+                $bundleName = $plugin->getBasename();
+                $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
+
+                if ($this->{$methodName}($fqcn, $output))
+                {
+                    $hasEffect = true;
                 }
             }
         }
