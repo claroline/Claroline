@@ -12,13 +12,16 @@ After having cloned the project :
 * use the automatic install script (php must be in $PATH ) : `php bin/factory_install_dev`
 
 * make the *app/cache* and *app/logs* directories (and their children) writable from
-  the webserver
+  the webserver (for further explanation on common permissions issues and solutions with Symfony, 
+  read [this][symfony_doc_install])
 
 * *For dev* : check that either the SQLite3 or PDO_SQLite extension are enabled in your
   PHP configuration in order for the profiler to work
 
 * open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
+[symfony_doc_install]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
+  
 ### Quick update
 
 To update your installation to the last development state, you can use the installation script 
