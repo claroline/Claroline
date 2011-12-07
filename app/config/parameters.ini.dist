@@ -2,23 +2,23 @@
 ; Currently only the db parameters are required.
 
 [parameters]
-    database_driver   = pdo_mysql
-    database_host     = localhost
-    database_name     = symfony
-    database_user     = root
-    database_password =
+    database_driver = pdo_mysql
+    database_host = localhost
+    database_name = claronext_prod
+    database_user = root
+    database_password = 
 
-    test_database_driver   = pdo_mysql
-    test_database_host     = localhost
-    test_database_name     = symfony
-    test_database_user     = root
-    test_database_password =
+    test_database_driver = pdo_mysql
+    test_database_host = localhost
+    test_database_name = claronext_test
+    test_database_user = root
+    test_database_password = 
 
-    mailer_transport  = smtp
-    mailer_host       = localhost
-    mailer_user       =
-    mailer_password   =
+    mailer_transport = smtp
+    mailer_host = localhost
+    mailer_user =
+    mailer_password =
 
-    locale            = en
+    locale = en
 
-    secret            = ThisTokenIsNotSoSecretChangeIt
+    secret = ThisTokenIsNotSoSecretChangeIt

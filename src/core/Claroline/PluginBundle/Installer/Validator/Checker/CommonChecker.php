@@ -41,7 +41,6 @@ class CommonChecker
     {
         $this->fileLocator = $fileLocator;
     }
-
         
     public function check(ClarolinePlugin $plugin)
     {
@@ -151,8 +150,9 @@ class CommonChecker
         
         foreach ($routingResources as $resource)
         {
-            $isConflicting = !$this->isOneOfTheFiles($resource['resource'], $routingPaths);
-            if ($resource['prefix'] === $prefix &&  $isConflicting )
+            $isConflicting = ! $this->isOneOfTheFiles($resource['resource'], $routingPaths);
+            
+            if ($resource['prefix'] === $prefix &&  $isConflicting)
             {
                 throw new ValidationException(
                     "{$this->pluginFQCN} : routing prefix '{$prefix}' is already registered in another plugin.",
@@ -164,7 +164,7 @@ class CommonChecker
     
     private function isOneOfTheFiles($resource, $paths)
     {
-        if(!is_array($paths))
+        if (! is_array($paths))
         {
             $paths = array($paths);
         }
@@ -172,15 +172,16 @@ class CommonChecker
         $realpath = $this->fileLocator->locate($resource);
         $realpath = str_replace('\\', '/', $realpath);
         
-        foreach($paths as $path)
+        foreach ($paths as $path)
         {
             $path = str_replace('\\', '/', $path);
             
-            if($path == $realpath)
+            if ($path == $realpath)
             {
                 return true;
             }
         }
+        
         return false;
     }
     

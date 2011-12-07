@@ -71,31 +71,22 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         
         $hasEffect = false;
         
-        $pluginVendors = new \AppendIterator();
-        $pluginVendors->append(new \DirectoryIterator($extPath));
-        $pluginVendors->append(new \DirectoryIterator($appPath));
-        $pluginVendors->append(new \DirectoryIterator($toolPath));
+        $pluginDirs = array(
+            $extPath,
+            $appPath,
+            $toolPath
+        );
         
         
-        foreach ($pluginVendors as $vendor)
+        foreach ($pluginDirs as $pluginDir)
         {
-            if (!$vendor->isDir() || $vendor->isDot())
+            $output->writeln("Scanning plugin directory ('{$pluginDir}')...");
+            
+            $pluginFQCNs = $this->getAvailablePluginFQCNs($pluginDir);
+            
+            foreach ($pluginFQCNs as $pluginFQCN)
             {
-                continue;
-            }
-            $vendorName = $vendor->getBasename();
-            $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
-
-            foreach ($vendorPlugins as $plugin)
-            {
-                if (!$plugin->isDir() || $plugin->isDot())
-                {
-                    continue;
-                }
-                $bundleName = $plugin->getBasename();
-                $fqcn = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-
-                if ($this->{$methodName}($fqcn, $output))
+                if ($this->{$methodName}($pluginFQCN, $output))
                 {
                     $hasEffect = true;
                 }
@@ -115,5 +106,33 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         ));
         
         $command->run($input, $output);
+    }
+    
+    private function getAvailablePluginFQCNs($pluginDirectory)
+    {
+        $fqcns = array();
+        $pluginVendors = new \DirectoryIterator($pluginDirectory);
+
+        foreach ($pluginVendors as $vendor)
+        {
+            if (!$vendor->isDir() || $vendor->isDot())
+            {
+                continue;
+            }
+            $vendorName = $vendor->getBasename();
+            $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
+
+            foreach ($vendorPlugins as $plugin)
+            {
+                if (!$plugin->isDir() ||$plugin->isDot())
+                {
+                    continue;
+                }
+                $bundleName = $plugin->getBasename();
+                $fqcns[] = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
+            }
+        }
+        
+        return $fqcns;
     }
 }
