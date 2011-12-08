@@ -31,7 +31,6 @@ class ResourceManagerTest extends TransactionalTestCase
         $this->userManager->create($user);
         
         $resource = new Resource();
-        $resource->setContent('Test content');
         $this->resourceManager->createResource($resource, $user);
 
         $crawler = $this->client->request('GET', '/login');
@@ -54,7 +53,6 @@ class ResourceManagerTest extends TransactionalTestCase
         $this->userManager->create($user);
         
         $resource = new Resource();
-        $resource->setContent('Test content');
         $this->resourceManager->createResource($resource, $user);
         
         $conn = $this->em->getConnection();

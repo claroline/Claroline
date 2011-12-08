@@ -3,11 +3,13 @@
 namespace Claroline\ResourceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\UserBundle\Entity\User;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CommonBundle\Library\Annotation as ORMExt;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_resource")
+ * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class Resource
 {
@@ -19,22 +21,29 @@ class Resource
     protected $id;
     
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
-    protected $content; // TEMPORARY -> will use @extendable to define resource types
+    private $created;
+     
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updated;
     
     public function getId()
     {
         return $this->id;
     }
     
-    public function getContent()
+    public function getCreationDate()
     {
-        return $this->content;
+        return $this->created;
     }
 
-    public function setContent($content)
+    public function getModificationDate()
     {
-        $this->content = $content;
+        return $this->updated;
     }
 }

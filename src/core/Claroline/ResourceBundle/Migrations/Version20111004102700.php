@@ -16,8 +16,10 @@ class Version20111004102700 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource');
         
-        $this->addId($table);       
-        $table->addColumn('content', 'string', array('length' => 255));
+        $this->addId($table);
+        $this->addDiscriminator($table);
+        $table->addColumn('created', 'datetime');
+        $table->addColumn('updated', 'datetime');
     }
     
     public function down(Schema $schema)
