@@ -62,3 +62,4 @@ stof_doctrine_extensions:
     orm:
         default:
             tree: true   # listeners are not enabled by default
+            timestampable: true
