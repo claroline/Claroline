@@ -8,6 +8,6 @@ class ClarolineWorkspaceBundle extends Bundle
 {
     public function getInstallationIndex()
     {
-        return 6;
+        return 5;
     }
 }

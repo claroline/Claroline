@@ -11,10 +11,11 @@ class Version20111004102700 extends BundleMigration
     {
         $this->createPluginTable($schema);
         $this->createExtensionTable($schema);
-        $this->createToolTable($schema);
         $this->createApplicationTable($schema);
         $this->createApplicationLauncherTable($schema);
         $this->createLauncherRoleJoinTable($schema);
+        $this->createToolTable($schema);
+        $this->createToolInstanceTable($schema);
     }
     
     private function createPluginTable(Schema $schema)
@@ -114,14 +115,38 @@ class Version20111004102700 extends BundleMigration
             array('id'),
             array("onDelete" => "CASCADE")
         );
+        
+        $this->storeTable($table);
+    }
+    
+    private function createToolInstanceTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_tool_instance');
+        
+        $this->addId($table);
+        $table->addColumn('tool_id', 'integer', array('notnull' => true));
+        $table->addColumn('workspace_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_tool'), 
+            array('tool_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_workspace'),
+            array('workspace_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
     }
     
     public function down(Schema $schema)
     {
+        $schema->dropTable('claro_tool_instance');
+        $schema->dropTable('claro_tool');
         $schema->dropTable('claro_launcher_role');
         $schema->dropTable('claro_application_launcher');
         $schema->dropTable('claro_application');
-        $schema->dropTable('claro_tool');
         $schema->dropTable('claro_extension');
         $schema->dropTable('claro_plugin');
     }

@@ -11,4 +11,10 @@ use Claroline\PluginBundle\Entity\Plugin;
  */
 class Extension extends Plugin
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\generatedValue(strategy="AUTO")
+     */
+    protected $id;
 }

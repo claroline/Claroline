@@ -4,10 +4,12 @@ namespace Claroline\ResourceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\ResourceBundle\Entity\Resource;
+use Claroline\CommonBundle\Library\Annotation as ORMExt;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_text")
+ * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class Text extends Resource
 {

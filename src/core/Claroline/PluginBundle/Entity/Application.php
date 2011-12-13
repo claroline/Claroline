@@ -13,6 +13,13 @@ use Claroline\PluginBundle\Entity\ApplicationLauncher;
 class Application extends Plugin
 {
     /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\generatedValue(strategy="AUTO")
+     */
+    protected $id;
+    
+    /**
      * @ORM\OneToMany(targetEntity="ApplicationLauncher", mappedBy="application", cascade={"persist", "remove"})
      */
     private $launchers;
