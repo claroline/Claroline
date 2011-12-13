@@ -63,13 +63,20 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             );
         }
         
-        $pluginDirs = array(
-            $this->getContainer()->getParameter('claroline.plugin.extension_directory'),
-            $this->getContainer()->getParameter('claroline.plugin.application_directory'),
-            $this->getContainer()->getParameter('claroline.plugin.tool_directory')
-        );
+        
+        
+        $extPath = $this->getContainer()->getParameter('claroline.plugin.extension_directory');
+        $appPath = $this->getContainer()->getParameter('claroline.plugin.application_directory');
+        $toolPath = $this->getContainer()->getParameter('claroline.plugin.tool_directory');
         
         $hasEffect = false;
+        
+        $pluginDirs = array(
+            $extPath,
+            $appPath,
+            $toolPath
+        );
+        
         
         foreach ($pluginDirs as $pluginDir)
         {
@@ -108,19 +115,21 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
 
         foreach ($pluginVendors as $vendor)
         {
-            if ($vendor->isDir() && !$vendor->isDot())
+            if (!$vendor->isDir() || $vendor->isDot())
             {
-                $vendorName = $vendor->getBasename();
-                $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
+                continue;
+            }
+            $vendorName = $vendor->getBasename();
+            $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
 
-                foreach ($vendorPlugins as $plugin)
+            foreach ($vendorPlugins as $plugin)
+            {
+                if (!$plugin->isDir() ||$plugin->isDot())
                 {
-                    if ($plugin->isDir() && !$plugin->isDot())
-                    {
-                        $bundleName = $plugin->getBasename();
-                        $fqcns[] = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-                    }
+                    continue;
                 }
+                $bundleName = $plugin->getBasename();
+                $fqcns[] = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
             }
         }
         

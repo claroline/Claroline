@@ -24,7 +24,6 @@ function deleteIfExists($file)
 deleteIfExists("{$rootDirectory}/app/config/plugin/bundles");
 deleteIfExists("{$rootDirectory}/app/config/plugin/namespaces");
 deleteIfExists("{$rootDirectory}/app/config/plugin/routing.yml");
-touch("{$rootDirectory}/app/config/plugin/routing.yml");
 
 system("php {$rootDirectory}/bin/vendors install");
 
