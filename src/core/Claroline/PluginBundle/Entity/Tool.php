@@ -10,4 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tool extends Plugin
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\generatedValue(strategy="AUTO")
+     */
+    protected $id;
 }

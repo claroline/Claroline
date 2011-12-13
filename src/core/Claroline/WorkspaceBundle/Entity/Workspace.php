@@ -28,11 +28,9 @@ class Workspace
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\PluginBundle\Entity\Tool")
-     * @ORM\JoinTable(
-     *      name="claro_workspace_tool",
-     *      joinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tool_id", referencedColumnName="id")}
+     * @ORM\OneToMany(
+     *  targetEntity="Claroline\PluginBundle\Entity\ToolInstance", 
+     *  mappedBy="hostWorkspace"
      * )
      */
     protected $tools;
