@@ -6,7 +6,7 @@ After having cloned the project :
 
 * make sure the version of PHP you're running is >= 5.3.2 (required)
 
-* create an *app/config/parameters.ini* file according to *app/config/parameters.ini.dist*
+* create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
   (currently only db settings are required)
 
 * use the automatic install script (php must be in $PATH ) : `php bin/factory_install_dev`
