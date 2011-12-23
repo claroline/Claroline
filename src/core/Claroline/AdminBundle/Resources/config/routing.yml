@@ -1,0 +1,3 @@
+claro_admin_index:
+    pattern: /
+    defaults: { _controller: claroline.admin.admin_controller:indexAction }

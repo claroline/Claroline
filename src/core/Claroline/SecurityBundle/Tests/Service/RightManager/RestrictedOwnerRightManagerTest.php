@@ -2,17 +2,15 @@
 
 namespace Claroline\SecurityBundle\Tests\Service\RightManager;
 
-
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\SecurityBundle\Tests\FunctionalTestCase;
 use Claroline\SecurityBundle\Service\RightManager\RightManager;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\SecurityBundle\Service\Exception\RightManagerException;
 use Claroline\SecurityBundle\Service\RightManager\RestrictedOwnerRightManager;
 
 class RestrictedOwnerManagerTest extends FunctionalTestCase
 {
-
     /** @var RestrictedOwnerRightManager */
     private $rightManager;
 
@@ -22,8 +20,8 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
         $this->rightManager = $this->client->getContainer()->get('claroline.security.restricted_owner_right_manager');
     }
     
-   public function testThereCanOnlyBeOneOwnerMaximum()
-   {
+    public function testThereCanOnlyBeOneOwnerMaximum()
+    {
         try
         {
             $john = $this->createUser('John', 'Doe', 'jdoe', '123');
@@ -38,7 +36,7 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
         {
             $this->assertEquals(RightManagerException::MULTIPLE_OWNERS_ATTEMPT, $ex->getCode());
         }
-   }
+    }
     
     public function testSameOwnerCanBeDefinedAgainAndAgain()
     {
@@ -98,5 +96,4 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
             $this->assertEquals(RightManagerException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
         }
     }
-
 }

@@ -7,7 +7,7 @@ use Claroline\UserBundle\Entity\User;
 
 /**
  * Note : Actions of this controller are not routed. They're intended to be
- *        rendered directly in the "core_layout" and "app_layout" templates.
+ *        rendered directly in the "common_layout" and "content_layout" templates.
  *        Note that defining this controller as a service is incompatible
  *        with this technique (the twig/symfony "render" statement seems to 
  *        work only with the symfony Controller class).
@@ -24,7 +24,7 @@ class LayoutController extends Controller
         return $this->render('ClarolineCommonBundle:Layout:footer.html.twig');
     }
 
-    public function statusBarAction()
+    public function topBarAction()
     {
         $connected = false;
         $username = null;
@@ -38,37 +38,17 @@ class LayoutController extends Controller
         }
         else
         {
-            $applicationEntity = 'Claroline\PluginBundle\Entity\Application';
-            $appRepo = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository($applicationEntity);
-            $targetApp = $appRepo->getConnectionTargetApplication();            
-            $loginTarget = $targetApp ? $targetApp->getIndexRoute() : 'claro_security_login';
+            // TODO : use a configuration option (-> admin)
+            $loginTarget = 'claro_desktop_index';
         }
 
         return $this->render(
-            'ClarolineCommonBundle:Layout:status_bar.html.twig', 
+            'ClarolineCommonBundle:Layout:top_bar.html.twig', 
             array(
                 'connected' => $connected,
                 'username' => $username,
                 'login_target' => $loginTarget
             )
-        );
-    }
-
-    public function applicationMenuAction()
-    {
-        $launcherEntity = 'Claroline\PluginBundle\Entity\ApplicationLauncher';
-        $launcherRepo = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository($launcherEntity);
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $user instanceof User ? $roles = $user->getRoles() : $roles = array('ROLE_ANONYMOUS');
-        $launchers = $launcherRepo->findByAccessRoles($roles);
-
-        return $this->render(
-            'ClarolineCommonBundle:Layout:app_menu.html.twig', 
-            array('launchers' => $launchers)
         );
     }
 }

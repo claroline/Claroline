@@ -1,3 +1,0 @@
-claroline_register_index:
-    pattern: /
-    defaults: { _controller: claroline.register.main_controller:indexAction }

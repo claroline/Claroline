@@ -110,7 +110,6 @@ class LoaderTest extends WebTestCase
         $loader->setPluginDirectories(
             array(
                 'extension' => $this->extensionPath,
-                'application' => "{$pluginDir}application",
                 'tool' =>"{$pluginDir}tool"
             )
         );

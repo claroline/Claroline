@@ -17,7 +17,6 @@ class ValidatorTest extends WebTestCase
         $checkers = $this->getMockedCheckers();
         $this->validator->setCommonChecker($checkers['common']);
         $this->validator->setExtensionChecker($checkers['extension']);
-        $this->validator->setApplicationChecker($checkers['application']);
         $this->validator->setToolChecker($checkers['tool']);
     }
 
@@ -57,7 +56,6 @@ class ValidatorTest extends WebTestCase
         
         return array(
             array($plugins['extension']),
-            array($plugins['application']),
             array($plugins['tool'])
         );
     }
@@ -68,7 +66,6 @@ class ValidatorTest extends WebTestCase
         
         return array(
             array('extension', $plugins['extension']),
-            array('application', $plugins['application']),
             array('tool', $plugins['tool'])
         );
     }
@@ -82,9 +79,6 @@ class ValidatorTest extends WebTestCase
         $checkers['extension'] = $this->getMockBuilder('Claroline\PluginBundle\Installer\Validator\Checker\ExtensionChecker')
             ->disableOriginalConstructor()
             ->getMock();
-        $checkers['application'] = $this->getMockBuilder('Claroline\PluginBundle\Installer\Validator\Checker\ApplicationChecker')
-            ->disableOriginalConstructor()
-            ->getMock();
         $checkers['tool'] = $this->getMockBuilder('Claroline\PluginBundle\Installer\Validator\Checker\ToolChecker')
             ->disableOriginalConstructor()
             ->getMock();
@@ -96,7 +90,6 @@ class ValidatorTest extends WebTestCase
     {
         $plugins = array();
         $plugins['extension'] = $this->getMock('Claroline\PluginBundle\AbstractType\ClarolineExtension');
-        $plugins['application'] = $this->getMock('Claroline\PluginBundle\AbstractType\ClarolineApplication');
         $plugins['tool'] = $this->getMock('Claroline\PluginBundle\AbstractType\ClarolineTool');
         
         return $plugins;

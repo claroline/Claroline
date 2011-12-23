@@ -15,11 +15,14 @@ class CommonChecker
     private $routingFilePath;
     private $pluginDirectories;
     private $yamlParser;
-    /** @var FileLocatorInterface */
     private $fileLocator;
     
-    public function __construct($pluginRoutingFilePath, array $pluginDirectories, 
-            Yaml $yamlParser, FileLocatorInterface $fileLocator)
+    public function __construct(
+        $pluginRoutingFilePath,
+        array $pluginDirectories,
+        Yaml $yamlParser,
+        FileLocatorInterface $fileLocator
+    )
     {        
         $this->setPluginRoutingFilePath($pluginRoutingFilePath);
         $this->setPluginDirectories($pluginDirectories);

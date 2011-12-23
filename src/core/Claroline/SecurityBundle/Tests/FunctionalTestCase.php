@@ -1,7 +1,8 @@
 <?php
+
 namespace Claroline\SecurityBundle\Tests;
 
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 use Claroline\SecurityBundle\Service\RightManager\RestrictedOwnerRightManager;
 use Claroline\UserBundle\Service\UserManagerManager as UserManager;
 use Claroline\SecurityBundle\Service\RoleManager;
@@ -10,8 +11,7 @@ use Claroline\SecurityBundle\Entity\Role;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 
 abstract class FunctionalTestCase extends TransactionalTestCase
-{
-    
+{ 
     /** @var UserManager */
     private $userManager;
     
@@ -23,13 +23,11 @@ abstract class FunctionalTestCase extends TransactionalTestCase
 
     public function setUp()
     {
-        parent :: setUp();
+        parent::setUp();
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
         $this->roleManager = $this->client->getContainer()->get('claroline.security.role_manager');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-    }
-
-    
+    } 
     
     protected function createUser
     (
@@ -74,7 +72,7 @@ abstract class FunctionalTestCase extends TransactionalTestCase
     {
         $this->client->request('GET', '/logout');
         $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('input[id=_submit]')->form();
+        $form = $crawler->filter('#login_form input[type=submit]')->form();
         $form['_username'] = $user->getUsername();
         $form['_password'] = $user->getPlainPassword();
         $this->client->submit($form);
@@ -85,5 +83,4 @@ abstract class FunctionalTestCase extends TransactionalTestCase
     {
         return $this->client->getContainer()->get('security.context');
     }
-    
 }

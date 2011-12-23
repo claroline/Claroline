@@ -3,7 +3,7 @@
 namespace Claroline\SecurityBundle\Service;
 
 use Claroline\SecurityBundle\Entity\Role;
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 
 class RoleManagerTest extends TransactionalTestCase
 {

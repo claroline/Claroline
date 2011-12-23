@@ -1,7 +1,0 @@
-services:
-    #controller
-    claroline.desktop.main_controller:
-        class: Claroline\DesktopBundle\Controller\MainController
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@templating.engine.twig"

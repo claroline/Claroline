@@ -61,22 +61,14 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
                 "First parameter must be either 'installPlugin' "
                 . " or 'uninstallPlugin', {$methodName} given."
             );
-        }
-        
-        
-        
-        $extPath = $this->getContainer()->getParameter('claroline.plugin.extension_directory');
-        $appPath = $this->getContainer()->getParameter('claroline.plugin.application_directory');
-        $toolPath = $this->getContainer()->getParameter('claroline.plugin.tool_directory');
-        
-        $hasEffect = false;
-        
+        }     
+   
         $pluginDirs = array(
-            $extPath,
-            $appPath,
-            $toolPath
+            $this->getContainer()->getParameter('claroline.plugin.extension_directory'),
+            $this->getContainer()->getParameter('claroline.plugin.tool_directory')
         );
         
+        $hasEffect = false;
         
         foreach ($pluginDirs as $pluginDir)
         {
@@ -105,6 +97,17 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             '--no-warmup' => true,
         ));
         
+        $command->run($input, $output);
+    }
+    
+    protected function installAssets(OutputInterface $output)
+    {
+        $command = $this->getApplication()->find('assets:install');
+        $input = new ArrayInput(array(
+            'command' => 'assets:install',
+            'target' => 'web',
+            '--symlink'=> false
+        ));
         $command->run($input, $output);
     }
     

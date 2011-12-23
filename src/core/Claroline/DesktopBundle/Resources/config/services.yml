@@ -1,0 +1,6 @@
+services:
+    #controller
+    claroline.desktop.desktop_controller:
+        class: Claroline\DesktopBundle\Controller\DesktopController
+        arguments:
+            - "@templating.engine.twig"
