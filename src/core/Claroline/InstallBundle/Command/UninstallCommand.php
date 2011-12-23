@@ -42,11 +42,6 @@ class UninstallCommand extends ContainerAwareCommand
         $manager = $this->getContainer()->get('claroline.install.core_installer');
         $manager->uninstall();
         
-        
-        
-        $output->writeln('Done');
-        
+        $output->writeln('Done');   
     }
-    
-    
 }
