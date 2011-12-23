@@ -11,7 +11,7 @@ use Claroline\SecurityBundle\Entity\Role;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 
 abstract class FunctionalTestCase extends TransactionalTestCase
-{ 
+{
     /** @var UserManager */
     private $userManager;
     
