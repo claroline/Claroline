@@ -1,0 +1,6 @@
+services:
+    #controller
+    claroline.admin.admin_controller:
+        class: Claroline\AdminBundle\Controller\AdminController
+        arguments:
+            - "@templating.engine.twig"

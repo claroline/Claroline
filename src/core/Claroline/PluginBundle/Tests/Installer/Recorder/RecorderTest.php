@@ -81,7 +81,7 @@ class RecorderTest extends WebTestCase
     
     private function initMockObjects()
     {
-        $this->mockedPlugin = $this->getMock('Claroline\PluginBundle\AbstractType\ClarolineApplication');
+        $this->mockedPlugin = $this->getMock('Claroline\PluginBundle\AbstractType\ClarolineExtension');
         $this->mockedConfigWriter = $this->getMockBuilder('Claroline\PluginBundle\Installer\Recorder\Writer\ConfigurationFileWriter')
             ->disableOriginalConstructor()
             ->getMock();

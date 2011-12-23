@@ -3,7 +3,7 @@
 namespace Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CommonBundle\Library\Annotation as ORMExt;
+use Claroline\CommonBundle\Annotation\ORM as ORMExt;
 
 /**
  * @ORM\Entity

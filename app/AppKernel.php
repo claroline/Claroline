@@ -30,6 +30,9 @@ class AppKernel extends Kernel
             new Claroline\ResourceBundle\ClarolineResourceBundle(),
             new Claroline\SecurityBundle\ClarolineSecurityBundle(),
             new Claroline\PluginBundle\ClarolinePluginBundle(),
+            new Claroline\HomeBundle\ClarolineHomeBundle(),
+            new Claroline\DesktopBundle\ClarolineDesktopBundle(),
+            new Claroline\AdminBundle\ClarolineAdminBundle(),
         );
 
         if (file_exists(__DIR__.'/config/plugin/bundles'))

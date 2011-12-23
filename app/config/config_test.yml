@@ -36,5 +36,5 @@ doctrine:
                 prefix: Claroline\ResourceBundle\Tests\Stub\Entity
 
 parameters:
-    test.client.class: Claroline\CommonBundle\Service\Testing\TransactionalTestClient
+    test.client.class: Claroline\CommonBundle\Test\TransactionalTestClient
     claroline.install.bundle_migrator_class: "Claroline\InstallBundle\Service\TestEnvBundleMigrator"

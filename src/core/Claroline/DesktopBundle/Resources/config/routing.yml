@@ -1,0 +1,3 @@
+claro_desktop_index:
+    pattern: /
+    defaults: { _controller: claroline.desktop.desktop_controller:indexAction }

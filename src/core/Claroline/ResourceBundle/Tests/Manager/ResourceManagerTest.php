@@ -4,7 +4,7 @@ namespace Claroline\ResourceBundle\Manager;
 
 use Claroline\ResourceBundle\Entity\Resource;
 use Claroline\UserBundle\Entity\User;
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 
 class ResourceManagerTest extends TransactionalTestCase
 {
@@ -38,7 +38,7 @@ class ResourceManagerTest extends TransactionalTestCase
         $this->resourceManager->createResource($resource, $user);
 
         $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('input[id=_submit]')->form();
+        $form = $crawler->filter('#login_form input[type=submit]')->form();
         $form['_username'] = 'jdoe';
         $form['_password'] = '123';
         $this->client->submit($form);

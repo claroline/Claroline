@@ -6,42 +6,32 @@ use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\EntityManager;
 use Claroline\SecurityBundle\Service\RoleManager;
 use Claroline\PluginBundle\AbstractType\ClarolinePlugin;
-use Claroline\PluginBundle\AbstractType\ClarolineExtension;
-use Claroline\PluginBundle\AbstractType\ClarolineApplication;
 use Claroline\PluginBundle\AbstractType\ClarolineTool;
-use Claroline\PluginBundle\Entity\Extension;
-use Claroline\PluginBundle\Entity\Application;
+use Claroline\PluginBundle\AbstractType\ClarolineExtension;
 use Claroline\PluginBundle\Entity\Tool;
-use Claroline\PluginBundle\Entity\ApplicationLauncher;
-use Claroline\SecurityBundle\Entity\Role;
+use Claroline\PluginBundle\Entity\Extension;
 use Claroline\PluginBundle\Exception\InstallationException;
 
 class DatabaseWriter
 {
     private $validator;
     private $em;
-    private $roleManager;    
     
-    public function __construct(Validator $validator, EntityManager $em, RoleManager $roleManager)
+    public function __construct(Validator $validator, EntityManager $em)
     {
         $this->validator = $validator;
         $this->em = $em;
-        $this->roleManager = $roleManager;
     }
 
     public function insert(ClarolinePlugin $plugin)
     {
-        if ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineExtension)
-        {
-            $pluginEntity = $this->prepareExtensionEntity($plugin);
-        }
-        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineApplication)
-        {
-            $pluginEntity = $this->prepareApplicationEntity($plugin);
-        }
-        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineTool)
+        if ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineTool)
         {
             $pluginEntity = $this->prepareToolEntity($plugin);
+        }
+        elseif ($plugin instanceof \Claroline\PluginBundle\AbstractType\ClarolineExtension)
+        {
+            $pluginEntity = $this->prepareExtensionEntity($plugin);
         }
         
         $pluginEntity->setBundleFQCN(get_class($plugin));
@@ -85,46 +75,15 @@ class DatabaseWriter
         
         return false;
     }
+    
+    private function prepareToolEntity(ClarolineTool $tool)
+    {
+        return new Tool();
+    }
 
     private function prepareExtensionEntity(ClarolineExtension $extension)
     {
         return new Extension();
-    }
-    
-    private function prepareApplicationEntity(ClarolineApplication $application)
-    {
-        $applicationEntity = new Application();
-        $applicationEntity->setIndexRoute($application->getIndexRoute());
-        $applicationEntity->setEligibleForPlatformIndex(
-            $application->isEligibleForPlatformIndex()
-        );
-        $applicationEntity->setEligibleForConnectionTarget(
-            $application->isEligibleForConnectionTarget()
-        );
-        $launchers = $application->getLaunchers();
-
-        foreach ($launchers as $launcherWidget)
-        {
-            $launcher = new ApplicationLauncher();
-            $launcher->setApplication($applicationEntity);
-            $launcher->setRouteId($launcherWidget->getRouteId());
-            $launcher->setTranslationKey($launcherWidget->getTranslationKey());
-
-            foreach ($launcherWidget->getAccessRoles() as $roleName)
-            {
-                $role = $this->roleManager->getRole($roleName, RoleManager::CREATE_IF_NOT_EXISTS);
-                $launcher->addAccessRole($role);
-            }
-
-            $applicationEntity->addLauncher($launcher);
-        }
-
-        return $applicationEntity;
-    }
-
-    private function prepareToolEntity(ClarolineTool $tool)
-    {
-        return new Tool();
     }
     
     private function getPluginEntity($pluginFQCN)

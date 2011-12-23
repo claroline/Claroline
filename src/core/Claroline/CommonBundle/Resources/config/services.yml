@@ -1,15 +1,8 @@
 services:
     claroline.common.doctrine_load_metadata_subscriber:
-        class: Claroline\CommonBundle\Service\ORM\ExtendableListener
+        class: Claroline\CommonBundle\Listener\ExtendableListener
         calls:
           - [setContainer, ["@service_container"]] 
           - [setAnnotationReader, ["@annotation_reader"]]
         tags:
-            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }          
-    # controller
-    claroline.common.platform_index_controller:
-        class: Claroline\CommonBundle\Controller\PlatformIndexController
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@router"
-            - "@templating.engine.twig"
+            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }

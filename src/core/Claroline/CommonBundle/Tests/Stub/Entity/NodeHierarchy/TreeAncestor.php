@@ -5,7 +5,7 @@ namespace Claroline\CommonBundle\Tests\Stub\Entity\NodeHierarchy;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CommonBundle\Library\Annotation as ORMExt;
+use Claroline\CommonBundle\Annotation\ORM as ORMExt;
 
 /**
  * @Gedmo\Tree(type="nested")

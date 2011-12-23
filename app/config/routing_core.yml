@@ -1,8 +1,23 @@
-claro_common:
-    resource: "@ClarolineCommonBundle/Resources/config/routing.yml"
-
-claro_workspace:
-    resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
+claro_index:
+    pattern: /
+    defaults: { _controller: claroline.home.home_controller:indexAction }
 
 claro_security:
     resource: "@ClarolineSecurityBundle/Resources/config/routing.yml"
+    
+claro_home:
+    resource: "@ClarolineHomeBundle/Resources/config/routing.yml"
+    prefix: home
+    
+claro_desktop:
+    resource: "@ClarolineDesktopBundle/Resources/config/routing.yml"
+    prefix: desktop
+    
+claro_workspace:
+    resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
+    prefix: workspaces
+    
+claro_admin:
+    resource: "@ClarolineAdminBundle/Resources/config/routing.yml"
+    prefix: admin
+    

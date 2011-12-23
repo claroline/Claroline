@@ -16,11 +16,4 @@ services:
         class: Claroline\WorkspaceBundle\Controller\WorkspaceController
         scope: request
         arguments:
-            - "@request"
-            - "@session"
-            - "@security.context"
-            - "@doctrine.orm.entity_manager"
-            - "@router"
-            - "@form.factory"
             - "@templating.engine.twig"
-            - "@claroline.security.restricted_owner_right_manager"

@@ -13,7 +13,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
  *      "extension" = "Extension",
- *      "application" = "Application",
  *      "tool" = "Tool"
  * })
  * @UniqueEntity("bundleFQCN")

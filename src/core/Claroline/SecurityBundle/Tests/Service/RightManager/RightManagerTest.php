@@ -2,11 +2,10 @@
 
 namespace Claroline\SecurityBundle\Tests\Service\RightManager;
 
-
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\SecurityBundle\Tests\FunctionalTestCase;
 use Claroline\SecurityBundle\Service\RightManager\RightManager;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\SecurityBundle\Service\RightManager\RightManagerException;
 use Claroline\SecurityBundle\Acl\Domain\ClassIdentity;
 use Claroline\UserBundle\Entity\User;
@@ -16,11 +15,10 @@ class RightManagerTest extends FunctionalTestCase
 {
     /** @var Claroline\SecurityBundle\Service\RightManager\RightManagerInterface */
     private $rightManager;
-    
-     
+      
     public function setUp()
     {
-        parent :: setUp();
+        parent::setUp();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.right_manager');
     }
     
@@ -32,8 +30,7 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertFalse($isAllowed);
         $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
         $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
-        $this->assertTrue($isAllowed);
-        
+        $this->assertTrue($isAllowed);      
     }
     
     public function testAddingViewAndDeleteRightGrantViewRight()
@@ -50,8 +47,7 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertFalse($isAllowed);
         $this->rightManager->addRight($someEntity, $jdoe, $rightMask);
         $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
-        $this->assertTrue($isAllowed);
-        
+        $this->assertTrue($isAllowed);   
     }
     
     public function testCannotDefineRightOnUnsavedEntity()
@@ -76,8 +72,7 @@ class RightManagerTest extends FunctionalTestCase
         $entity = $this->createEntity();
         $role = $this->createRole();
         $user = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
-        
-        
+           
         $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_DELETE);
         $this->rightManager->addRight($entity, $user, MaskBuilder::MASK_VIEW);
            
@@ -108,20 +103,17 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $entity));
         $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
     }
-        
-    
+          
     /**
      * @dataProvider invalidMaskProvider
      */
-    public function testPermissionMaskMusBeValid($mask)
+    public function testPermissionMaskMustBeValid($mask)
     {
         $this->setExpectedException('Exception');
         $jdoe = $this->createUser();
         $someEntity = $this->createEntity();
         $this->rightManager->addRight($someEntity, $jdoe, $mask);       
-    }
-    
-    
+    } 
     
     public function testRemoveRightsForbidAccess()
     {
@@ -192,8 +184,7 @@ class RightManagerTest extends FunctionalTestCase
         $this->logUser($jdoe);
         
         $this->assertTrue($this->getSecurityContext()->isGranted($allowedPermission, $someEntity));
-    }
-    
+    }   
     
     public function testCannotGetSubjectAboutUnidentifiableEntities()
     {
@@ -292,7 +283,6 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $classIdentity));
     }
     
-    
     public function invalidMaskProvider()
     {
         return array(
@@ -312,5 +302,4 @@ class RightManagerTest extends FunctionalTestCase
             array(MaskBuilder::MASK_MASTER, 'EDIT'),
         );
     }
-    
 }

@@ -1,0 +1,78 @@
+body
+{
+    margin: 0;
+    padding: 0;
+}
+
+#banner
+{
+    height: 30px;
+    padding: 4px;
+    border-bottom : solid #555 3px;
+    background-color: #66c;
+}
+
+#banner h3
+{
+    margin: 2px 0 0 8px;
+    color: #ccc;
+}
+
+#top_bar
+{
+    height: 20px;
+    padding: 2px 8px;
+    border-bottom: solid 1px #bbb;
+}
+
+#section_menu
+{
+    display: inline;
+}
+
+#status_box
+{
+    display: inline;
+    float: right;
+}
+
+#content
+{
+    padding: 16px;
+}
+
+#login_form
+{
+    width: 380px;
+    margin: 50px auto;
+    padding: 20px;
+    border: solid 1px #bbb;
+    text-align: center;
+}
+
+#login_form label, #login_form input[type=text], #login_form input[type=password]
+{
+    display: inline-block;
+    width: 200px;
+    margin-bottom: 8px;
+}
+
+#login_form label
+{
+    width: 160px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+#login_form input[type=submit]
+{
+    margin-top: 10px;
+}
+
+#login_form .failure_msg
+{
+    margin-bottom: 10px;
+    text-align: justify;
+    font-size: 11px;
+    color: #922;
+}

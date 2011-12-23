@@ -3,7 +3,7 @@
 namespace Claroline\UserBundle\Repository;
 
 use Claroline\UserBundle\Entity\User;
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 
 class UserRepositoryTest extends TransactionalTestCase
 {
@@ -18,11 +18,10 @@ class UserRepositoryTest extends TransactionalTestCase
     
     public function setUp()
     {
-        parent :: setUp();
+        parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
         $this->userRepo = $this->em->getRepository('Claroline\UserBundle\Entity\User');
-        
     }
     
     public function testGetUsersByUsernameListReturnsExpectedResults()

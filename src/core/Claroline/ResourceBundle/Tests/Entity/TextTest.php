@@ -2,7 +2,7 @@
 
 namespace Claroline\ResourceBundle\Entity;
 
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 
 class TextTest extends TransactionalTestCase
 {

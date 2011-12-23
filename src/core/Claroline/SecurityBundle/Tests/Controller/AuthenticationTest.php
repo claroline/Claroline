@@ -2,15 +2,15 @@
 
 namespace Claroline\SecurityBundle\Tests\Controller;
 
-use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\UserBundle\Tests\DataFixtures\ORM\LoadUserData;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 
 class AuthenticationTest extends TransactionalTestCase
 {
     protected function setUp()
     {
-        parent :: setUp();
+        parent::setUp();
         $this->client->followRedirects();
 
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
@@ -24,18 +24,14 @@ class AuthenticationTest extends TransactionalTestCase
 
     public function testLoginWithValidCredentialsDoesntReturnFailureMsg()
     {
-        $this->submitLoginForm('jdoe', 'topsecret');
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertRegexp('/[^login_failure]/i', $this->client->getResponse()->getContent());
+        $crawler = $this->logUser('user', '123');
+        $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
 
     public function testLoginWithWrongCredentialsReturnsFailureMsg()
     {
-        $this->submitLoginForm('jdoe', 'BadPassword');
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertRegexp('/login_failure/i', $this->client->getResponse()->getContent());
+        $crawler = $this->logUser('jdoe', 'BadPassword');        
+        $this->assertEquals(1, $crawler->filter('#login_form .failure_msg')->count());
     }
 
     public function testADirectCallToCheckMethodThrowsAnException()
@@ -70,13 +66,13 @@ class AuthenticationTest extends TransactionalTestCase
         $controller->logoutAction();
     }
     
-    private function submitLoginForm($username, $password)
+    private function logUser($username, $password)
     {
         $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->selectButton('_submit')->form();
+        $form = $crawler->filter('#login_form input[type=submit]')->form();
         $form['_username'] = $username;
         $form['_password'] = $password;
-
+        
         return $this->client->submit($form);
     }
 }

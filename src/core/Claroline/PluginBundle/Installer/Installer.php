@@ -15,17 +15,20 @@ class Installer
     private $validator;
     private $recorder;
     private $migrator;
-    /** @var KernelInterface */
     private $kernel;
 
-    public function __construct(Loader $loader, Validator $validator, 
-            Migrator $migrator, Recorder $recorder, KernelInterface $kernel)
+    public function __construct(
+        Loader $loader,
+        Validator $validator,
+        Migrator $migrator,
+        Recorder $recorder,
+        KernelInterface $kernel
+    )
     {
         $this->loader = $loader;
         $this->validator = $validator;
         $this->migrator = $migrator;
-        $this->recorder = $recorder;
-        
+        $this->recorder = $recorder;  
         $this->kernel = $kernel;
     }
     

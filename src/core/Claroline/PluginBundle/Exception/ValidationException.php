@@ -16,12 +16,6 @@ class ValidationException extends InstallationException
     const INVALID_ROUTING_EXTENSION = 7;
     const INVALID_YAML_RESOURCE = 8;
     const INVALID_TRANSLATION_KEY = 9;
-    
-    const INVALID_APPLICATION_GET_LAUNCHER_METHOD = 10;
-    const INVALID_APPLICATION_LAUNCHER = 11;
-    const INVALID_APPLICATION_INDEX = 12;
-    const INVALID_APPLICATION_IS_ELIGIBLE_INDEX_METHOD = 13;
-    const INVALID_APPLICATION_IS_ELIGIBLE_TARGET_METHOD = 14;
 
     public function __construct($message, $code)
     {

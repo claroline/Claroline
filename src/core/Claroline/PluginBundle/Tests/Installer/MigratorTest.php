@@ -2,7 +2,7 @@
 
 namespace Claroline\PluginBundle\Installer;
 
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 use Claroline\PluginBundle\Installer\Loader;
 
 class MigratorTest extends TransactionalTestCase
@@ -34,7 +34,7 @@ class MigratorTest extends TransactionalTestCase
             $this->migrator->remove($plugin);
         }
         
-        parent :: tearDown();
+        parent::tearDown();
     }
     
     public function testVersionsTableIsCreatedAndPopulatedOnInstall()
@@ -159,7 +159,6 @@ class MigratorTest extends TransactionalTestCase
         $loader->setPluginDirectories(
             array(
                 'extension' => "{$stubDir}extension",
-                'application' => "{$stubDir}application",
                 'tool' => "{$stubDir}tool"
             )
         );

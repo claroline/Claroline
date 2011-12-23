@@ -4,7 +4,7 @@ namespace Claroline\ResourceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\ResourceBundle\Entity\Resource;
-use Claroline\CommonBundle\Library\Annotation as ORMExt;
+use Claroline\CommonBundle\Annotation\ORM as ORMExt;
 
 /**
  * @ORM\Entity

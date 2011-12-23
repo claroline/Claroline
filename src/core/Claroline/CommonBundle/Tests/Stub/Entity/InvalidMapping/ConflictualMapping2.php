@@ -3,7 +3,7 @@
 namespace Claroline\CommonBundle\Tests\Stub\Entity\InvalidMapping;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CommonBundle\Library\Annotation as ORMExt;
+use Claroline\CommonBundle\Annotation\ORM as ORMExt;
 
 /**
  * Conflictual because you can't have a "@DiscriminatorColumn" along with 

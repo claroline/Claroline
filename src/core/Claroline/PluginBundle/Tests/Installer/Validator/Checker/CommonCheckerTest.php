@@ -229,7 +229,6 @@ class CommonCheckerTest extends WebTestCase
         $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}stub{$ds}plugin{$ds}";
         $pluginDirs = array(
             'extension' => "{$stubDir}extension",
-            'application' => "{$stubDir}application",
             'tool' => "{$stubDir}tool"
         );
         

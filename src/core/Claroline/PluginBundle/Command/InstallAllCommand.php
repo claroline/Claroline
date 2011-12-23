@@ -21,6 +21,7 @@ class InstallAllCommand extends AbstractPluginCommand
         if ($this->walkPluginDirectories('installPlugin', $output))
         {
             $this->resetCache($output);
+            $this->installAssets($output);
         }
         
         $output->writeln('Done');

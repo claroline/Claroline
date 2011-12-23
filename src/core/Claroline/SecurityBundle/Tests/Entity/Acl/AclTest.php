@@ -2,7 +2,7 @@
 
 namespace Claroline\SecurityBundle\Entity\Acl;
 
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 
 class AclTest extends TransactionalTestCase
 {

@@ -1,0 +1,33 @@
+{% block log_action %}
+{% if connected %}
+    <div id="section_menu">
+        <a href="{{ path('claro_home_index') }}">
+            {{ 'home.home'|trans({}, 'ClarolineHomeBundle') }}
+        </a> |
+        <a href="{{ path('claro_desktop_index') }}">
+            {{ 'desktop.desktop'|trans({}, 'ClarolineDesktopBundle') }}
+        </a> | 
+        <a href="{{ path('claro_workspaces_index') }}">
+            {{ 'workspace.workspaces'|trans({}, 'ClarolineWorkspaceBundle') }}
+        </a>
+    {% if is_granted('ROLE_ADMIN') %}
+             |
+        <a href="{{ path('claro_admin_index') }}">
+            {{ 'admin.administration'|trans({}, 'ClarolineAdminBundle') }}
+        </a>
+    {% endif %}    
+    </div>
+{% endif %}
+    <div id="status_box">
+    {% if connected %}
+        <span>{{ username }}</span>
+        <a href="{{ path('claro_security_logout') }}">
+            {{ 'security.logout'|trans({}, 'ClarolineSecurityBundle') }}
+        </a>
+    {% else %}
+        <a href="{{ path(login_target) }}">
+            {{ 'security.login'|trans({}, 'ClarolineSecurityBundle') }}
+        </a>
+    {% endif %}
+    </div>
+{% endblock %}

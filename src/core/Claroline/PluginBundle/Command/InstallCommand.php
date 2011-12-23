@@ -23,6 +23,7 @@ class InstallCommand extends SinglePluginCommand
         if ($this->installPlugin($fqcn, $output))
         {
             $this->resetCache($output);      
+            $this->installAssets($output);
         }
     }
 }

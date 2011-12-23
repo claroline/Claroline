@@ -2,7 +2,7 @@
 
 namespace Claroline\ResourceBundle\Entity;
 
-use Claroline\CommonBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CommonBundle\Test\TransactionalTestCase;
 use Claroline\ResourceBundle\Tests\Stub\Entity\SpecificResource;
 
 class ResourceTest extends TransactionalTestCase
