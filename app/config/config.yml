@@ -1,6 +1,6 @@
 imports:
-    - { resource: parameters.ini }
     - { resource: security.yml }
+    - { resource: local/parameters.yml }
 
 framework:
     secret:          %secret%
