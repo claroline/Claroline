@@ -2,4 +2,4 @@ _core:
     resource: routing_core.yml
 
 _plugin:
-    resource: plugin/routing.php
+    resource: routing_plug.php

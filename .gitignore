@@ -1,6 +1,6 @@
 nbproject/*
 app/config/local/parameters.yml
-app/config/plugin/*
+app/config/local/plugin/*
 app/cache/*
 app/logs/*
 app/build/api

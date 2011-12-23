@@ -3,9 +3,9 @@ parameters:
     claroline.plugin.directory: "%kernel.root_dir%/../src/plugin"
     claroline.plugin.tool_directory: "%claroline.plugin.directory%/tool"
     claroline.plugin.extension_directory: "%claroline.plugin.directory%/extension"
-    claroline.plugin.namespaces_config_file: "%kernel.root_dir%/config/plugin/namespaces"
-    claroline.plugin.bundles_config_file: "%kernel.root_dir%/config/plugin/bundles"
-    claroline.plugin.routing_config_file: "%kernel.root_dir%/config/plugin/routing.yml"
+    claroline.plugin.namespaces_config_file: "%kernel.root_dir%/config/local/plugin/namespaces"
+    claroline.plugin.bundles_config_file: "%kernel.root_dir%/config/local/plugin/bundles"
+    claroline.plugin.routing_config_file: "%kernel.root_dir%/config/local/plugin/routing.yml"
     
 services:
     

@@ -11,7 +11,7 @@ After having cloned the project :
 
 * use the automatic install script (php must be in $PATH ) : `php bin/factory_install_dev`
 
-* make the *app/cache* and *app/logs* directories (and their children) writable from
+* make the *app/cache*, *app/logs* and *app/config/local* directories (and their children) writable from
   the webserver (for further explanation on common permissions issues and solutions with Symfony, 
   read [this][symfony_doc_install])
 
