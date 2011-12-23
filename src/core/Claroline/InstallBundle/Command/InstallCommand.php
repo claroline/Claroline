@@ -26,24 +26,28 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $delegateInput = new ArrayInput($input->getArguments());
         $manager = $this->getContainer()->get('claroline.install.core_installer');
         
         $output->writeln('Installing the platform...');
         $manager->install();
         
-        $command = $this->getApplication()->find('init:acl');        
-        $command->run($delegateInput, $output);
+        $aclCommand = $this->getApplication()->find('init:acl');        
+        $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
         
-        if($input->getOption('with-plugins'))
+        if ($input->getOption('with-plugins'))
         {            
-            $pluginInstaller = $this->getApplication()->find('claroline:plugin:install_all');
-            $pluginInstaller->run($delegateInput, $output);
+            $pluginCommand = $this->getApplication()->find('claroline:plugin:install_all');
+            $pluginCommand->run(new ArrayInput(array('command' => 'claroline:plugin:install_all')), $output);
         }
         
-        $output->writeln('Done');
+        $assetCommand = $this->getApplication()->find('assets:install');
+        $input = new ArrayInput(array(
+            'command' => 'assets:install',
+            'target' => 'web',
+            '--symlink'=> false
+        ));
+        $assetCommand->run($input, $output);        
         
+        $output->writeln('Done');
     }
-    
-    
 }

@@ -1,5 +1,4 @@
 nbproject/*
-vendor/*
 app/config/parameters.ini
 app/config/plugin/*
 app/cache/*
@@ -10,5 +9,7 @@ app/build/coverage
 app/build/logs
 app/build/pdepend
 app/build/tools/phpunit.xml
+vendor/*
+web/bundles
 !placeholder
 catalog.xml
