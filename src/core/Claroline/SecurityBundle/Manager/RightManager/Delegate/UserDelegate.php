@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\SecurityBundle\Exception\RightManagerException;
 
 class UserDelegate implements SubjectDelegateInterface
-{   
+{
     /** @var EntityManager */
     private $em;
     
