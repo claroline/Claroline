@@ -105,7 +105,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         $command = $this->getApplication()->find('assets:install');
         $input = new ArrayInput(array(
             'command' => 'assets:install',
-            'target' => 'web',
+            'target' => __DIR__ . '/../../../../../web',
             '--symlink'=> false
         ));
         $command->run($input, $output);
