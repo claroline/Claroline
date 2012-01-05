@@ -43,7 +43,7 @@ class InstallCommand extends ContainerAwareCommand
         $assetCommand = $this->getApplication()->find('assets:install');
         $input = new ArrayInput(array(
             'command' => 'assets:install',
-            'target' => __DIR__ . '/../../../../../web',
+            'target' => realpath(__DIR__ . '/../../../../../web'),
             '--symlink'=> false
         ));
         $assetCommand->run($input, $output);        
