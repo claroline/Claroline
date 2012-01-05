@@ -34,7 +34,7 @@ class RegistrationTest extends TransactionalTestCase
     public function testUserCannotBeRegisteredByUnauthorizedUser()
     {
         $this->logUser('user', '123');
-        $crawler = $this->client->request('GET', '/user/register');
+        $this->client->request('GET', '/user/register');
         $this->assertRegExp('/403/', $this->client->getResponse()->getContent());
     }
     
@@ -98,8 +98,7 @@ class RegistrationTest extends TransactionalTestCase
             ->getMock();
         $mockedContext->expects($this->any())
             ->method('isGranted')
-            ->will($this->returnValue(false));
-        
+            ->will($this->returnValue(false));        
         $mockedContext->expects($this->any())
             ->method('getToken')
             ->will($this->returnValue($mockedToken));
