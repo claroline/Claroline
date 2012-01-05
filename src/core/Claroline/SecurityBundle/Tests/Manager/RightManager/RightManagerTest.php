@@ -12,7 +12,7 @@ use Claroline\SecurityBundle\Entity\Role;
 
 class RightManagerTest extends FunctionalTestCase
 {
-    /** @var Claroline\SecurityBundle\Service\RightManager\RightManagerInterface */
+    /** @var Claroline\SecurityBundle\Manager\RightManager\RightManagerInterface */
     private $rightManager;
       
     public function setUp()
@@ -58,9 +58,9 @@ class RightManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
         }
-        catch (\Exception $ex)
+        catch (RightManagerException $ex)
         {
-            $this->assertEquals('$identifier cannot be empty.', $ex->getMessage());
+            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
         }
     }
     
@@ -190,27 +190,40 @@ class RightManagerTest extends FunctionalTestCase
     public function testRightManagerIscompatibleWithSecurityContext($mask, $allowedPermission)
     {
         $jdoe = $this->createUser();
-        $someEntity = $this->createEntity();
-        
+        $someEntity = $this->createEntity();       
         $this->rightManager->addRight($someEntity, $jdoe, $mask);
         
         $this->logUser($jdoe);
         
         $this->assertTrue($this->getSecurityContext()->isGranted($allowedPermission, $someEntity));
     }   
-    
+ 
     public function testCannotGetSubjectAboutUnidentifiableEntities()
     {
-        $this->setExpectedException('Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException');
-        $entity = new \stdClass();
-        $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);        
+        try
+        {
+            $entity = new \stdClass();
+            $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+        }
     }
-    
+
     public function testCannotGetSubjectAboutUnsavedEntities()
     {
-        $this->setExpectedException('Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException');
-        $entity = new FirstEntity();
-        $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);        
+        try
+        {
+            $entity = new FirstEntity();
+            $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+        }
     }
     
     public function testGetAllowedUsersOnEntityByMaskReturnsExpectedUsers()
@@ -235,12 +248,19 @@ class RightManagerTest extends FunctionalTestCase
     }
     
     public function testCannotGivePermissionToUnsavedRole()
-    {    
-        $this->setExpectedException('Claroline\SecurityBundle\Exception\RightManagerException');
-        $entity = $this->createEntity();
-        $role = new Role();
-        $role->setName('ROLE_FOO');
-        $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_EDIT);
+    {
+        try
+        {
+            $entity = $this->createEntity();
+            $role = new Role();
+            $role->setName('ROLE_FOO');
+            $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_EDIT);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_ROLE_STATE, $ex->getCode());
+        }
     }
     
     public function testGiveRightsForRoleGrantsPermissionsToAllUsersWhoHaveThatRole()
@@ -264,8 +284,7 @@ class RightManagerTest extends FunctionalTestCase
     }
     
     public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstance()
-    {
-        
+    {       
         $user = $this->createUser();
         $entity = $this->createEntity();
         $fqcn = get_class($entity);

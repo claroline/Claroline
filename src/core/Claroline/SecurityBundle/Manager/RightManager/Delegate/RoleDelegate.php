@@ -23,11 +23,11 @@ class RoleDelegate implements SubjectDelegateInterface
     
     public function buildSecurityIdentity($subject)
     {
-        if($subject->getId() == 0)
+        if ($subject->getId() === null)
         {
             throw new RightManagerException(
                 "The role must be saved before being granted any right.",
-                RightManagerException :: INVALID_ROLE_STATE
+                RightManagerException::INVALID_ROLE_STATE
             );
         }
         
