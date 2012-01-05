@@ -25,6 +25,11 @@
             {{ 'security.logout'|trans({}, 'ClarolineSecurityBundle') }}
         </a>
     {% else %}
+        {% if register_target is not null %}
+        <a href="{{ path(register_target) }}">
+            {{ 'profile.register'|trans({}, 'ClarolineUserBundle') }}
+        </a> | 
+        {% endif %}
         <a href="{{ path(login_target) }}">
             {{ 'security.login'|trans({}, 'ClarolineSecurityBundle') }}
         </a>

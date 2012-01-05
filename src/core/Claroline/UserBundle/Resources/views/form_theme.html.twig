@@ -1,0 +1,13 @@
+{% block field_row %}
+    <div class="form_row">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        <div class="form_error">{{ form_errors(form) }}</div>
+    </div>
+{% endblock field_row %}
+
+{% block field_label %}
+{% spaceless %}
+    <label for="{{ id }}">{{ id|trans([], 'ClarolineUserBundle') }}</label>
+{% endspaceless %}
+{% endblock field_label %}

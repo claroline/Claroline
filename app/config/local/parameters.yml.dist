@@ -29,6 +29,7 @@ parameters:
 # platform options
 
     locale: en
+    allow_self_registration: true
 
 # others
 

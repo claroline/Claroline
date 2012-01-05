@@ -31,7 +31,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(name="first_name", type="string", length="50")
-     * @Assert\NotBlank(message = "FIRST NAME NOT BLANK TEST")
+     * @Assert\NotBlank()
      */
     protected $firstName;
 

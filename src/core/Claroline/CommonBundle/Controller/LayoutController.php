@@ -28,6 +28,7 @@ class LayoutController extends Controller
     {
         $connected = false;
         $username = null;
+        $registerTarget = null;
         $loginTarget = null;
         $user = $this->container->get('security.context')->getToken()->getUser();
 
@@ -38,6 +39,11 @@ class LayoutController extends Controller
         }
         else
         {
+            if ($this->container->getParameter('allow_self_registration') === true)
+            {
+                $registerTarget = 'claro_user_registration_form';
+            }
+            
             // TODO : use a configuration option (-> admin)
             $loginTarget = 'claro_desktop_index';
         }
@@ -47,6 +53,7 @@ class LayoutController extends Controller
             array(
                 'connected' => $connected,
                 'username' => $username,
+                'register_target' => $registerTarget,
                 'login_target' => $loginTarget
             )
         );
