@@ -1,12 +1,13 @@
 <?php
-namespace Claroline\SecurityBundle\Service;
+
+namespace Claroline\SecurityBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Security\Acl\Dbal\AclProvider;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
-use Symfony\Component\Security\Acl\Dbal\AclProvider;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 
 class AclPersister extends ContainerAware implements EventSubscriber
 {
@@ -20,7 +21,6 @@ class AclPersister extends ContainerAware implements EventSubscriber
     {
         return array(Events::postPersist, Events::preRemove); 
     }
-
     
     public function postPersist(LifecycleEventArgs $event)
     {
@@ -35,5 +35,4 @@ class AclPersister extends ContainerAware implements EventSubscriber
         $oid = ObjectIdentity::fromDomainObject($entity);
         $this->getAclProvider()->deleteAcl($oid);
     }
-
 }

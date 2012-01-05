@@ -1,10 +1,11 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager\Delegate;
+
+namespace Claroline\SecurityBundle\Manager\RightManager\Delegate;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
-use Claroline\SecurityBundle\Service\Exception\RightManagerException;
+use Claroline\SecurityBundle\Exception\RightManagerException;
 
 class RoleDelegate implements SubjectDelegateInterface
 {
@@ -14,7 +15,7 @@ class RoleDelegate implements SubjectDelegateInterface
     /** @var EntityRepository */
     private $roleRepository;
     
-    function __construct(EntityManager $em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
         $this->roleRepository = $this->em->getRepository('Claroline\SecurityBundle\Entity\Role');
@@ -29,6 +30,7 @@ class RoleDelegate implements SubjectDelegateInterface
                 RightManagerException :: INVALID_ROLE_STATE
             );
         }
+        
         return new RoleSecurityIdentity($subject->getName());
     }
     
@@ -36,10 +38,7 @@ class RoleDelegate implements SubjectDelegateInterface
     {
         $roleName = $sid->getRole();
         $role = $this->roleRepository->findOneByName($roleName);
+        
         return $role;
     }
-
-
-    
-
 }

@@ -3,9 +3,6 @@
 namespace Claroline\SecurityBundle\Tests;
 
 use Claroline\CommonBundle\Test\TransactionalTestCase;
-use Claroline\SecurityBundle\Service\RightManager\RestrictedOwnerRightManager;
-use Claroline\UserBundle\Service\UserManagerManager as UserManager;
-use Claroline\SecurityBundle\Service\RoleManager;
 use Claroline\UserBundle\Entity\User;
 use Claroline\SecurityBundle\Entity\Role;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;

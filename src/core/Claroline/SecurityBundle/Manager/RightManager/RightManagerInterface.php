@@ -1,6 +1,6 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager;
 
+namespace Claroline\SecurityBundle\Manager\RightManager;
 
 interface RightManagerInterface
 {
@@ -11,4 +11,3 @@ interface RightManagerInterface
     function hasRight($target, $subject, $rightMask);
     function getUsersWithRight($target, $rightMask);
 }
-

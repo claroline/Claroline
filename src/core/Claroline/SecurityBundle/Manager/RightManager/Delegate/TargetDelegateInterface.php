@@ -1,5 +1,6 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager\Delegate;
+
+namespace Claroline\SecurityBundle\Manager\RightManager\Delegate;
 
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
@@ -12,4 +13,3 @@ interface TargetDelegateInterface
     function updateAce(Acl $acl, $aceIndex, $mask);    
     function buildObjectIdentity($target);
 }
-

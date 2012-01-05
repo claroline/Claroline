@@ -1,11 +1,11 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager\Delegate;
 
-use \Exception;
+namespace Claroline\SecurityBundle\Manager\RightManager\Delegate;
+
+use Claroline\SecurityBundle\Exception\RightManagerException;
 
 class StrategyChooser
 {
-    
     /** @var TargetDelegateInterface */
     private $entityDelegate;
     
@@ -17,45 +17,53 @@ class StrategyChooser
     
     /** @var SubjectDelegateInterface */
     private $roleDelegate;
-    
-    
-    function __construct($entityDelegate, $classDelegate, $userDelegate, $roleDelegate)
+     
+    public function __construct($entityDelegate, $classDelegate, $userDelegate, $roleDelegate)
     {
         $this->entityDelegate = $entityDelegate;
         $this->classDelegate = $classDelegate;
         $this->userDelegate = $userDelegate;
         $this->roleDelegate = $roleDelegate;
     }
-
-    
+   
     public function chooseTargetStrategy($target)
     {
-        if(is_null($target))
+        if (is_null($target))
         {
             return null;
         }
-        if ( $this->isAnEntity($target)){
+        
+        if ($this->isAnEntity($target))
+        {
             return $this->entityDelegate;
         }
-        if ( $this->isAClass($target)){
+        
+        if ($this->isAClass($target))
+        {
             return $this->classDelegate;
         }
-        throw new Exception("Cannot choose Target Strategy for [{$target}]");
+        
+        throw new RightManagerException("Cannot choose Target Strategy for [{$target}]");
     }
     
     public function chooseSubjectStrategy($subject)
     {
-        if(is_null($subject))
+        if (is_null($subject))
         {
             return null;
         }
-        if ( $this->isAUser($subject) ){
+        
+        if ($this->isAUser($subject))
+        {
             return $this->userDelegate;
         }
-        if ( $this->isARole($subject) ){
+        
+        if ($this->isARole($subject))
+        {
             return $this->roleDelegate;
         }
-        throw new Exception("Cannot choose Subject Strategy for [{$subject}]");
+        
+        throw new RightManagerException("Cannot choose Subject Strategy for [{$subject}]");
     }
     
     public function getEntityDelegate()
@@ -77,8 +85,7 @@ class StrategyChooser
     {
         return $this->roleDelegate;
     }
-
-    
+   
     private function isAnEntity($target)
     {
         return is_object($target);
@@ -97,8 +104,5 @@ class StrategyChooser
     private function isARole($subject)
     {
         return $subject instanceof \Claroline\SecurityBundle\Entity\Role;
-    }
-
-    
+    }  
 }
-

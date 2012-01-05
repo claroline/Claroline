@@ -4,7 +4,7 @@ namespace Claroline\ResourceBundle\Manager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
-use Claroline\SecurityBundle\Service\RightManager\RightManagerInterface;
+use Claroline\SecurityBundle\Manager\RightManager\RightManagerInterface;
 use Claroline\ResourceBundle\Entity\Resource;
 use Claroline\UserBundle\Entity\User;
 

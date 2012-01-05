@@ -1,5 +1,6 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager;
+
+namespace Claroline\SecurityBundle\Manager\RightManager;
 
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
@@ -15,4 +16,3 @@ interface DelegateInterface
     function buildSecurityIdentity($subject);
     function buildTarget($sid);
 }
-

@@ -1,12 +1,11 @@
 <?php
 
-namespace Claroline\SecurityBundle\Tests\Service\RightManager;
+namespace Claroline\SecurityBundle\Manager\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\SecurityBundle\Tests\FunctionalTestCase;
-use Claroline\SecurityBundle\Service\RightManager\RightManager;
 use Claroline\SecurityBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Claroline\SecurityBundle\Service\RightManager\RightManagerException;
+use Claroline\SecurityBundle\Exception\RightManagerException;
 use Claroline\SecurityBundle\Acl\Domain\ClassIdentity;
 use Claroline\UserBundle\Entity\User;
 use Claroline\SecurityBundle\Entity\Role;
@@ -52,19 +51,33 @@ class RightManagerTest extends FunctionalTestCase
     
     public function testCannotDefineRightOnUnsavedEntity()
     {
-        $this->setExpectedException('Exception');
-        $jdoe = $this->createUser();
-        $someEntity = new FirstEntity();
-        $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+        try 
+        {
+            $jdoe = $this->createUser();
+            $someEntity = new FirstEntity();
+            $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+            $this->fail('No exception thrown');
+        }
+        catch (\Exception $ex)
+        {
+            $this->assertEquals('$identifier cannot be empty.', $ex->getMessage());
+        }
     }
     
     public function testCannotDefineRightForUnsavedUser()
     {
-        $this->setExpectedException('Claroline\SecurityBundle\Service\Exception\RightManagerException');
-        $jdoe = new User();
-        $jdoe->setUsername('jdoe');
-        $someEntity = $this->createEntity();
-        $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+        try
+        {
+            $jdoe = new User();
+            $jdoe->setUsername('jdoe');
+            $someEntity = $this->createEntity();
+            $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+            $this->fail('No exception thrown');
+        }
+        catch (RightManagerException $ex)
+        {
+            $this->assertEquals(RightManagerException::INVALID_USER_STATE, $ex->getCode());
+        }
     }
     
     public function testPermissionCanBeGrantedThroughRoleAndUser()
@@ -109,7 +122,7 @@ class RightManagerTest extends FunctionalTestCase
      */
     public function testPermissionMaskMustBeValid($mask)
     {
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('InvalidArgumentException');
         $jdoe = $this->createUser();
         $someEntity = $this->createEntity();
         $this->rightManager->addRight($someEntity, $jdoe, $mask);       
@@ -188,14 +201,14 @@ class RightManagerTest extends FunctionalTestCase
     
     public function testCannotGetSubjectAboutUnidentifiableEntities()
     {
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException');
         $entity = new \stdClass();
         $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);        
     }
     
     public function testCannotGetSubjectAboutUnsavedEntities()
     {
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException');
         $entity = new FirstEntity();
         $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);        
     }
@@ -223,9 +236,9 @@ class RightManagerTest extends FunctionalTestCase
     
     public function testCannotGivePermissionToUnsavedRole()
     {    
-        $this->setExpectedException('Claroline\SecurityBundle\Service\Exception\RightManagerException');
+        $this->setExpectedException('Claroline\SecurityBundle\Exception\RightManagerException');
         $entity = $this->createEntity();
-        $role = $role = new Role();
+        $role = new Role();
         $role->setName('ROLE_FOO');
         $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_EDIT);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SecurityBundle\Service;
+namespace Claroline\SecurityBundle\Listener;
 
 use Symfony\Component\Security\Acl\Dbal\AclProvider;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;

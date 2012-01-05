@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Doctrine\ORM\EntityManager;
 use Claroline\CommonBundle\Exception\ClarolineException;
 use Claroline\UserBundle\Entity\User;
-use Claroline\SecurityBundle\Service\RoleManager;
+use Claroline\SecurityBundle\Manager\RoleManager;
 use Claroline\SecurityBundle\Entity\Role;
 
 class UserManager
@@ -37,10 +37,12 @@ class UserManager
      */
     private $roleManager;
 
-    public function __construct(EntityManager $em,
-                                Validator $validator,
-                                EncoderFactory $encoderFactory,
-                                RoleManager $roleManager)
+    public function __construct(
+        EntityManager $em,
+        Validator $validator,
+        EncoderFactory $encoderFactory,
+        RoleManager $roleManager
+    )
     {
         $this->em = $em;
         $this->userRepository = $this->em->getRepository('Claroline\UserBundle\Entity\User');
