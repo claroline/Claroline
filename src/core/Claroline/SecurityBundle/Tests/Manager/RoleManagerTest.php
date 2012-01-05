@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SecurityBundle\Service;
+namespace Claroline\SecurityBundle\Manager;
 
 use Claroline\SecurityBundle\Entity\Role;
 use Claroline\CommonBundle\Test\TransactionalTestCase;
@@ -30,7 +30,7 @@ class RoleManagerTest extends TransactionalTestCase
     
     public function testCreateARoleWithInvalidNameThrowsAnException()
     {
-        $this->setExpectedException('Claroline\SecurityBundle\Service\Exception\RoleException');
+        $this->setExpectedException('Claroline\SecurityBundle\Exception\RoleException');
         
         $role = new Role();
         $role->setName('');
@@ -40,7 +40,7 @@ class RoleManagerTest extends TransactionalTestCase
     
     public function testARoleCantBeDuplicated()
     {
-        $this->setExpectedException('Claroline\SecurityBundle\Service\Exception\RoleException');
+        $this->setExpectedException('Claroline\SecurityBundle\Exception\RoleException');
         
         $firstRole = new Role();
         $firstRole->setName('ROLE_TEST');

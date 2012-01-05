@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\SecurityBundle\Service;
+namespace Claroline\SecurityBundle\Manager;
 
 use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\EntityManager;
 use Claroline\SecurityBundle\Entity\Role;
-use Claroline\SecurityBundle\Service\Exception\RoleException;
+use Claroline\SecurityBundle\Exception\RoleException;
 
 class RoleManager
 {

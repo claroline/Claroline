@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SecurityBundle\Service\Exception;
+namespace Claroline\SecurityBundle\Exception;
 
 use Claroline\CommonBundle\Exception\ClarolineException;
 

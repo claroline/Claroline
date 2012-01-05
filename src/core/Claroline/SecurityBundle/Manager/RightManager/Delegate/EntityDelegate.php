@@ -1,5 +1,6 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager\Delegate;
+
+namespace Claroline\SecurityBundle\Manager\RightManager\Delegate;
 
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
@@ -16,23 +17,19 @@ class EntityDelegate implements TargetDelegateInterface
     {
         $acl->insertObjectAce($sid, $mask);
     }
-
     
     public function deleteAce(Acl $acl, $aceIndex)
     {
         $acl->deleteObjectAce($aceIndex);
-    }
-    
+    }    
     
     public function buildObjectIdentity($target)
     {
         return ObjectIdentity::fromDomainObject($target);
-    }
-    
+    }    
     
     public function updateAce(Acl $acl, $aceIndex, $mask)
     {
         $acl->updateObjectAce($aceIndex, $mask);
     }
 }
-

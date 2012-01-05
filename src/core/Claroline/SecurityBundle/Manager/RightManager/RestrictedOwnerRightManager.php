@@ -1,28 +1,29 @@
 <?php
-namespace Claroline\SecurityBundle\Service\RightManager;
 
-use \Exception;
+namespace Claroline\SecurityBundle\Manager\RightManager;
+
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\SecurityBundle\Service\Exception\RightManagerException;
+use Claroline\SecurityBundle\Exception\RightManagerException;
 
 class RestrictedOwnerRightManager implements RightManagerInterface
 {
     /** @var RightManagerInterface */
     private $baseManager;
     
-    function __construct($baseManager)
+    public function __construct($baseManager)
     {
         $this->baseManager = $baseManager;
     }    
     
     public function addRight($target, $subject, $rightMask)
     {
-        if($this->isOwningMask($rightMask))
+        if ($this->isOwningMask($rightMask))
         {
             $this->assertThereIsNoOtherOwner($target, $subject);
             $this->assertSubjectIsAUser($subject);
             $this->assertTargetIsNotAClass($target);
         }
+        
         return $this->baseManager->addRight($target, $subject, $rightMask);
     }
     
@@ -35,9 +36,9 @@ class RestrictedOwnerRightManager implements RightManagerInterface
     {
         $currentOwners = $this->getUsersWithRight($target, MaskBuilder::MASK_OWNER);
         
-        foreach($currentOwners as $owner)
+        foreach ($currentOwners as $owner)
         {
-            if($owner != $subject)
+            if ($owner != $subject)
             {
                 throw new RightManagerException(
                     'Attempted to set an owner on an object which already have one',
@@ -49,35 +50,35 @@ class RestrictedOwnerRightManager implements RightManagerInterface
     
     private function assertSubjectIsAUser($subject)
     {
-        if( ! ($subject instanceof \Claroline\UserBundle\Entity\User ) )
+        if (! $subject instanceof \Claroline\UserBundle\Entity\User)
         {
             throw new RightManagerException(
                 "Only users can be owner", 
                 RightManagerException::NOT_ALLOWED_OWNER_MASK
             );
-        }
-        
+        }   
     }
     
     private function assertTargetIsNotAClass($target)
     {
-        if( is_string($target) )
+        if (is_string($target))
         {
             throw new RightManagerException(
                 "Classes are not supposed to be owned", 
                 RightManagerException::NOT_ALLOWED_OWNER_MASK
             );
-        }
-        
+        }       
     }
     
     public function setOwner($target, $subject)
     {
         $currentOwners = $this->getUsersWithRight($target, MaskBuilder::MASK_OWNER);
-        foreach($currentOwners as $owner)
+        
+        foreach ($currentOwners as $owner)
         {
             $this->removeRight($target, $owner, MaskBuilder::MASK_OWNER);            
         }
+        
         return $this->baseManager->addRight($target, $subject, MaskBuilder::MASK_OWNER);
     }
 
@@ -109,9 +110,5 @@ class RestrictedOwnerRightManager implements RightManagerInterface
     public function setRight($target, $subject, $rightMask)
     {
         return $this->baseManager->setRight($target, $subject, $rightMask);
-    }
-
-
-    
+    }   
 }
-
