@@ -33,6 +33,8 @@ class EntityDelegate implements TargetDelegateInterface
         }
         catch (InvalidDomainObjectException $ex)
         {
+            unset($ex);
+            
             throw new RightManagerException(
                 "The entity must be saved before any right is granted on it (and it must have " 
                 . "a valid identifier accessible via a getId or a getObjectIdentifier method).",
