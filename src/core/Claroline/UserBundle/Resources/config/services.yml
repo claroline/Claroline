@@ -1,4 +1,5 @@
 services:
+  
     claroline.user.manager:
         class: Claroline\UserBundle\Manager\UserManager
         arguments:
@@ -6,3 +7,17 @@ services:
             - "@validator"
             - "@security.encoder_factory"
             - "@claroline.security.role_manager"
+            
+    # controllers
+    
+    claroline.user.registration_controller:
+        class: Claroline\UserBundle\Controller\RegistrationController
+        scope: request
+        arguments:
+            - "@request"
+            - "@security.context"
+            - "@form.factory"
+            - "@templating.engine.twig"
+            - "@translator"
+            - "@claroline.user.manager"
+            - %allow_self_registration%

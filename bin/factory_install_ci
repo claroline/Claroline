@@ -3,19 +3,14 @@
 /*
  * This script can be used as a part of a CIS job.
  * 
- * it will initialize a test environment
+ * It will initialize a test environment
  *
-  * Requirements :
- *    - a valid 'app/config/parameters.ini' file.
- *
+ * Requirement : a valid 'app/config/local/parameters.yml' file.
  */
 
 $rootDirectory = realpath(__DIR__ . "/..");
-system("php {$rootDirectory}/bin/vendors install");
 
+system("php {$rootDirectory}/bin/vendors install");
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
 system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
-
 system("php {$rootDirectory}/app/console claroline:install --env=test --with-plugins");
-
-

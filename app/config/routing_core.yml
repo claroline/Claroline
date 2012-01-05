@@ -4,6 +4,10 @@ claro_index:
 
 claro_security:
     resource: "@ClarolineSecurityBundle/Resources/config/routing.yml"
+
+claro_user:
+    resource: "@ClarolineUserBundle/Resources/config/routing.yml"
+    prefix: user
     
 claro_home:
     resource: "@ClarolineHomeBundle/Resources/config/routing.yml"
