@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\UserBundle\Entity\User;
-use Claroline\SecurityBundle\Service\RoleManager;
+use Claroline\SecurityBundle\Manager\RoleManager;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
