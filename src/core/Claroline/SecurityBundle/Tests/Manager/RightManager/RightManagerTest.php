@@ -184,6 +184,22 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertTrue($isAllowedToEdit);
     }
     
+    public function testGettingRightReturnsNullIfNoRightWasSet()
+    {
+        $jdoe = $this->createUser();
+        $someEntity = $this->createEntity();
+        $this->assertNull($this->rightManager->getRight($someEntity, $jdoe));
+    }
+    
+    public function testGettingRightReturnsRightThatWasSet()
+    {
+        $jdoe = $this->createUser();
+        $someEntity = $this->createEntity();
+        $this->rightManager->setRight($someEntity, $jdoe, MaskBuilder::MASK_EDIT);
+        $right = $this->rightManager->getRight($someEntity, $jdoe);
+        $this->assertEquals(MaskBuilder::MASK_EDIT, $right);
+    }
+    
     /**
      * @dataProvider maskAndAllowedPermissionsProvider
      */
