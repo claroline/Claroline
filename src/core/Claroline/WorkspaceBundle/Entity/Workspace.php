@@ -9,7 +9,7 @@ use Claroline\UserBundle\Entity\User;
 use Claroline\PluginBundle\Entity\Tool;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\WorkspaceBundle\Repository\WorkspaceRepository")
  * @ORM\Table(name="claro_workspace")
  */
 class Workspace
@@ -28,6 +28,15 @@ class Workspace
     protected $name;
 
     /**
+     * @ORM\ManyToMany(
+     *  targetEntity="Claroline\UserBundle\Entity\User", 
+     *  inversedBy="workspaces"
+     * )
+     * @ORM\JoinTable(name="claro_workspace_user")
+     */
+    protected $users;
+    
+    /**
      * @ORM\OneToMany(
      *  targetEntity="Claroline\PluginBundle\Entity\ToolInstance", 
      *  mappedBy="hostWorkspace"
@@ -38,6 +47,7 @@ class Workspace
     public function __construct()
     {
         $this->tools = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     
     public function getId()
@@ -53,6 +63,22 @@ class Workspace
     public function setName($name)
     {
         $this->name = $name;
+    }
+    
+    public function getUsers()
+    {
+        return $this->users->toArray();
+    }
+    
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
+    }
+    
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+        $user->getWorkspaceCollection()->removeElement($this);
     }
     
     public function getTools()
