@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\UserBundle\Manager;
+namespace Claroline\WorkspaceBundle\Manager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
