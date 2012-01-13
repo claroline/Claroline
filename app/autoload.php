@@ -3,12 +3,15 @@
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-if( defined('GID_EXTENSION_LOADED_APC') )
+if ( defined('GID_EXTENSION_LOADED_APC') )
 {
     require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
     $loader = new ApcUniversalClassLoader('apc.prefix.');
 }
-else $loader = new UniversalClassLoader();
+else 
+{
+    $loader = new UniversalClassLoader();
+}
 
 $coreNamespaces = array(
     'Symfony'          => array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),
