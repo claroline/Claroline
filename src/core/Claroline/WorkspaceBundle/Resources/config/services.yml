@@ -1,4 +1,11 @@
 services:
+  
+    claroline.workspace.user_manager:
+        class: Claroline\WorkspaceBundle\Manager\UserManager
+        arguments:    
+            - "@doctrine.orm.entity_manager"
+            - "@claroline.security.right_manager"
+  
     claroline.workspace.workspace_manager:
         class: Claroline\WorkspaceBundle\Service\Manager\WorkspaceManager
         arguments:    

@@ -55,11 +55,31 @@ class RightManager implements RightManagerInterface
         $this->doRemoveRight($target, $subject, 0);
     }  
     
-    public function setRight($target, $subject, $right)
+    public function getRight($target, $subject)
+    {
+        $this->chooseStrategy($target, $subject);
+        $acl = $this->getAclFromTarget($target);
+        $aces = $this->currentTargetStrategy->getAces($acl);
+        $sid = $this->currentSubjectStrategy->buildSecurityIdentity($subject);
+        $mask = null;
+        
+        foreach ($aces as $ace)
+        {
+            if ($ace->getSecurityIdentity() == $sid)
+            {
+                $mask = $ace->getMask();
+                break;
+            }
+        }
+        
+        return $mask;
+    }
+    
+    public function setRight($target, $subject, $mask)
     {       
         $this->chooseStrategy($target, $subject);
         $this->removeAllRights($target, $subject);
-        $this->addRight($target, $subject, $right);
+        $this->addRight($target, $subject, $mask);
     }
     
     public function getUsersWithRight($target, $rightMask)
@@ -69,7 +89,7 @@ class RightManager implements RightManagerInterface
         $this->currentSubjectStrategy = 
             $this->strategyChooser->getUserDelegate();
         
-        $acl = $this->getAclFromTarget($target);    
+        $acl = $this->getAclFromTarget($target);
         $aces = $this->currentTargetStrategy->getAces($acl);
         
         $res = array();
@@ -104,9 +124,7 @@ class RightManager implements RightManagerInterface
             unset($ex);
             return false;
         }
-    }
-    
-    
+    }    
     
     private function doRemoveRight($target, $subject, $mask = 0)
     {
@@ -145,7 +163,7 @@ class RightManager implements RightManagerInterface
                 $mb->remove($mask);
                 $updatedMask = $mb->get();
                 
-                if($updatedMask == 0 || $mask == 0)
+                if ($updatedMask == 0 || $mask == 0)
                 {
                     $this->currentTargetStrategy->deleteAce($acl, $aceIndex);
                     $this->doRecursiveRemoveRight($acl, $sid, $mask, $aceIndex);
