@@ -1,4 +1,12 @@
 services:
+  
+    claroline.common.history_browser:
+        class: Claroline\CommonBundle\History\Browser
+        scope: request
+        arguments:
+            - "@request"
+            - "@session"
+  
     claroline.common.doctrine_load_metadata_subscriber:
         class: Claroline\CommonBundle\Listener\ExtendableListener
         calls:
