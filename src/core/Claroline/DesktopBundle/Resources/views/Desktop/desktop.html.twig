@@ -6,8 +6,9 @@
     
     <h4>{{ 'desktop.desktop'|trans({}, 'ClarolineDesktopBundle') }}</h4>
     
-    {% block section_content %}{% endblock %}
-
+    {% autoescape false %}
+        {{ workspaces_block }}
+    {% endautoescape %}
 <div>
 
 {% endblock %}

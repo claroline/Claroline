@@ -71,9 +71,19 @@ class User implements UserInterface
      */
     protected $roles;
 
+    /**
+     * @ORM\ManyToMany(
+     *  targetEntity="Claroline\WorkspaceBundle\Entity\Workspace", 
+     *  inversedBy="users"
+     * )
+     * @ORM\JoinTable(name="claro_workspace_user")
+     */
+    protected $workspaces;
+    
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->workspaces = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
@@ -157,7 +167,7 @@ class User implements UserInterface
     /**
      * Returns the user's role object representations.
      * 
-     * @return array
+     * @return array[Role]
      */
     public function getRoleObjects()
     {
@@ -185,6 +195,16 @@ class User implements UserInterface
         return false;
     }
 
+    public function getWorkspaces()
+    {
+        return $this->workspaces->toArray();
+    }
+    
+    public function getWorkspaceCollection()
+    {
+        return $this->workspaces;
+    }
+    
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -192,27 +212,33 @@ class User implements UserInterface
 
     public function equals(UserInterface $user)
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof User) 
+        {
             return false;
         }
 
-        if ($this->firstName !== $user->getFirstName()) {
+        if ($this->firstName !== $user->getFirstName()) 
+        {
             return false;
         }
 
-        if ($this->lastName !== $user->getLastName()) {
+        if ($this->lastName !== $user->getLastName()) 
+        {
             return false;
         }
 
-        if ($this->username !== $user->getUsername()) {
+        if ($this->username !== $user->getUsername()) 
+        {
             return false;
         }
 
-        if ($this->password !== $user->getPassword()) {
+        if ($this->password !== $user->getPassword()) 
+        {
             return false;
         }
 
-        if ($this->getSalt() !== $user->getSalt()) {
+        if ($this->getSalt() !== $user->getSalt()) 
+        {
             return false;
         }
     }

@@ -19,7 +19,7 @@ claro_desktop:
     
 claro_workspace:
     resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
-    prefix: workspaces
+    prefix: workspace
     
 claro_admin:
     resource: "@ClarolineAdminBundle/Resources/config/routing.yml"

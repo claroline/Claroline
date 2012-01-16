@@ -1,24 +1,17 @@
-claro_workspaces_index:
-    pattern: /
-    defaults: { _controller: claroline.workspace.workspace_controller:indexAction }
+claro_workspace_new_workspace:
+    pattern: /new/form
+    defaults: { _controller: claroline.workspace.workspace_controller:newAction }
+    requirements:
+        _method: GET
 
-
-
-
-#claro_workspace_new_workspace:
-#    pattern: /workspaces/new
-#    defaults: { _controller: claroline.workspace.workspace_controller:newAction }
-#    requirements:
-#        _method: GET
-#
-#claro_workspace_create_workspace:
-#    pattern: /workspace
-#    defaults: { _controller: claroline.workspace.workspace_controller:createAction }
-#    requirements:
-#        _method: POST
-#        
-#claro_workspace_delete_workspace:
-#    pattern: /workspace/{id}/delete
-#    defaults: { _controller: claroline.workspace.workspace_controller:deleteAction }
-#    requirements:
-#        _method: POST
+claro_workspace_create_workspace:
+    pattern: /new/create
+    defaults: { _controller: claroline.workspace.workspace_controller:createAction }
+    requirements:
+        _method: POST
+        
+claro_workspace_delete_workspace:
+    pattern: /delete/{id}
+    defaults: { _controller: claroline.workspace.workspace_controller:deleteAction }
+    requirements:
+        _method: POST
