@@ -24,3 +24,9 @@ services:
         scope: request
         arguments:
             - "@templating.engine.twig"
+                        
+    claroline.workspace.toolinstance_manager:
+        class: Claroline\WorkspaceBundle\Manager\ToolInstanceManager
+        arguments:    
+            - "@doctrine.orm.entity_manager"
+            - Claroline\PluginBundle\Entity\ToolInstance
