@@ -66,6 +66,18 @@ class Workspace
         $this->name = $name;
     }
     
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
+        $user->getWorkspaceCollection()->add($this);
+    }
+    
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+        $user->getWorkspaceCollection()->removeElement($this);
+    }
+    
     public function getUsers()
     {
         return $this->users->toArray();
@@ -89,6 +101,5 @@ class Workspace
     public function addTool(Tool $tool)
     {
         $this->tools->add($tool);
-    }
-    
+    } 
 }

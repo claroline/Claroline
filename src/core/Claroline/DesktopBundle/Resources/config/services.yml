@@ -3,4 +3,5 @@ services:
     claroline.desktop.desktop_controller:
         class: Claroline\DesktopBundle\Controller\DesktopController
         arguments:
+            - "@security.context"
             - "@templating.engine.twig"

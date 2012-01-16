@@ -44,5 +44,10 @@ class LoadUserData extends AbstractFixture implements FixtureInterface, Containe
 
         $this->addReference('user/admin', $admin);
         $this->addReference('user/user', $user);
+        
+        return array(
+            'admin' => $admin,
+            'user' => $user
+        );
     }
 }
