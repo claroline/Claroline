@@ -5,7 +5,7 @@ namespace Claroline\PluginBundle\Installer\Validator\Checker;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\PluginBundle\Installer\Loader;
 use Claroline\PluginBundle\Exception\ValidationException;
-use vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 class CommonCheckerTest extends WebTestCase
 {

@@ -4,7 +4,7 @@ namespace Claroline\PluginBundle\Installer\Recorder\Writer;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Yaml\Yaml;
-use vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 class ConfigurationFileWriterTest extends WebTestCase
 {
