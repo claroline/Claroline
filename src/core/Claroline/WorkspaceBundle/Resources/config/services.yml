@@ -2,19 +2,19 @@ services:
   
     claroline.workspace.user_manager:
         class: Claroline\WorkspaceBundle\Manager\UserManager
-        arguments:    
+        arguments:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"
   
     claroline.workspace.workspace_manager:
         class: Claroline\WorkspaceBundle\Service\Manager\WorkspaceManager
-        arguments:    
+        arguments:
             - "@doctrine.orm.entity_manager"
             - Claroline\WorkspaceBundle\Entity\Workspace
         public: false
     claroline.workspace.acl_workspace_manager:
         class: Claroline\WorkspaceBundle\Service\Manager\ACLWorkspaceManager
-        arguments:    
+        arguments:
             - "@claroline.workspace.workspace_manager"
             - "@security.context"
             - "@security.acl.provider"
@@ -23,12 +23,10 @@ services:
         class: Claroline\WorkspaceBundle\Controller\WorkspaceController
         scope: request
         arguments:
-            - "@request"
-            - "@session"
-            - "@security.context"
-            - "@doctrine.orm.entity_manager"
-            - "@router"
-            - "@form.factory"
             - "@templating.engine.twig"
-            - "@claroline.workspace.user_manager"
-            - "@claroline.common.history_browser"
+                        
+    claroline.workspace.toolinstance_manager:
+        class: Claroline\WorkspaceBundle\Manager\ToolInstanceManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - Claroline\PluginBundle\Entity\ToolInstance

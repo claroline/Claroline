@@ -5,11 +5,11 @@ namespace Claroline\PluginBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CommonBundle\Annotation\ORM as ORMExt;
 use Claroline\WorkspaceBundle\Entity\Workspace;
+use Claroline\PluginBundle\Entity\Tool;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_tool_instance")
- * @ORMExt\Extendable(discriminatorColumn="discr")
  */
 class ToolInstance
 {
@@ -32,6 +32,10 @@ class ToolInstance
      */
     protected $hostWorkspace;
     
+    public function getId()
+    {
+        return $this->id;
+    }
     public function getToolType()
     {
         return $this->toolType;
