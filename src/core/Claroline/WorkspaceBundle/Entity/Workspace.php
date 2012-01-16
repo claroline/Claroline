@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\UserBundle\Entity\User;
 use Claroline\PluginBundle\Entity\Tool;
+use Claroline\PluginBundle\Entity\ToolInstance;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\WorkspaceBundle\Repository\WorkspaceRepository")
@@ -70,15 +71,14 @@ class Workspace
         return $this->users->toArray();
     }
     
-    public function addUser(User $user)
+    public function addToolInstance(ToolInstance $toolInstance)
     {
-        $this->users->add($user);
+        $this->tools->add($toolInstance);  
     }
     
-    public function removeUser(User $user)
+    public function removeToolInstance(ToolInstance $toolInstance)
     {
-        $this->users->removeElement($user);
-        $user->getWorkspaceCollection()->removeElement($this);
+        $this->tools->removeElement($toolInstance);  
     }
     
     public function getTools()
@@ -90,4 +90,5 @@ class Workspace
     {
         $this->tools->add($tool);
     }
+    
 }
