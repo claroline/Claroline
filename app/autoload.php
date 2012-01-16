@@ -27,8 +27,9 @@ $coreNamespaces = array(
     'Metadata'         => __DIR__.'/../vendor/metadata/src',
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
+    'org\\bovigo\\vfs' => __DIR__.'/../vendor/vfsstream/src/main/php',
     'Claroline'        => array(
-        __DIR__.'/../src/core', 
+        __DIR__.'/../src/core',
         __DIR__.'/../src/plugin/extension', 
         __DIR__.'/../src/plugin/application', 
         __DIR__.'/../src/plugin/tool'
@@ -54,8 +55,7 @@ $loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));
 
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
-    'Twig_'            => __DIR__.'/../vendor/twig/lib',
-    'vfsStream'        => __DIR__.'/../vendor/vfsstream/src/main/php/org/bovigo/vfs',
+    'Twig_'            => __DIR__.'/../vendor/twig/lib'
 ));
 $loader->registerPrefixFallbacks(array(
     __DIR__.'/../vendor/symfony/src/Symfony/Component/Locale/Resources/stubs',
