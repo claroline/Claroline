@@ -6,6 +6,7 @@ services:
         arguments:
             - "@request"
             - "@session"
+            - %context_history_max_size%
   
     claroline.common.doctrine_load_metadata_subscriber:
         class: Claroline\CommonBundle\Listener\ExtendableListener
