@@ -10,6 +10,7 @@ services:
         class: Claroline\WorkspaceBundle\Manager\ToolInstanceManager
         arguments:    
             - "@doctrine.orm.entity_manager"
+            - "@claroline.security.right_manager"
             - Claroline\PluginBundle\Entity\ToolInstance
   
     # controller
