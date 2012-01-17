@@ -7,7 +7,7 @@ use Claroline\PluginBundle\Entity\ToolInstance;
 use Claroline\PluginBundle\Entity\Tool;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\SecurityBundle\Service\RightManager;
+use Claroline\SecurityBundle\Manager\RightManager\RightManager;
 
 class ToolInstanceManager
 {
@@ -15,6 +15,11 @@ class ToolInstanceManager
      * @var EntityManager
      */
     protected $em;
+    
+    /** 
+    * @var RightManager
+     */
+    protected $rightManager;
 
     /**
      * @var EntityRepository
@@ -30,19 +35,20 @@ class ToolInstanceManager
      * Constructor.
      *
      * @param EntityManager $em
+     * @param RightManager $rm
      * @param string $class
      */
-    public function __construct(EntityManager $em, $class)
+    public function __construct(EntityManager $em, RightManager $rm, $class)
     {
         $this->em = $em;
         $this->repository = $em->getRepository($class);
+        $this->rightManager = $rm;
         $this->class = $em->getClassMetadata($class)->name;
 
     }
 
     public function create(Tool $tool, Workspace $workspace)
-    {
-       
+    {  
         $toolInstance = new ToolInstance();
         $toolInstance->setToolType($tool);
         $toolInstance->setHostWorkspace($workspace);
@@ -60,5 +66,10 @@ class ToolInstanceManager
         $workspace->removeToolInstance($toolInstance);
         $this->em->remove($toolInstance);
         $this->em->flush();
+    }
+    
+    public function setPermission($toolInstance, $user, $mask)
+    {
+        $this->rightManager->addRight($toolInstance, $user, $mask);
     }
 }
