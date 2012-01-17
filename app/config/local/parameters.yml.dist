@@ -30,6 +30,7 @@ parameters:
 
     locale: en
     allow_self_registration: true
+    context_history_max_size: 5
 
 # others
 

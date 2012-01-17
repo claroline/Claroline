@@ -4,75 +4,96 @@ namespace Claroline\CommonBundle\History;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session;
+use Claroline\CommonBundle\History\Context;
 use Claroline\CommonBundle\Exception\ClarolineException;
 
 class Browser
 {
+    const HISTORY_SESSION_VARIABLE = 'context_history';
+
     private $request;
     private $session;  
     private $historyQueue;
     private $queueMaxSize;
     
-    public function __construct(Request $request, Session $session)
+    public function __construct(Request $request, Session $session, $historyMaxSize)
     {
         $this->request = $request;
         $this->session = $session;
-        $this->historyQueue = $this->initQueue($session);
-        $this->queueMaxSize = 4; // TODO : use a config param
+        $this->queueMaxSize = $historyMaxSize;
+        $this->historyQueue = $this->initQueue();
     }
     
-    public function keepCurrentContext($key)
+    public function keepCurrentContext($contextName)
     {
-        if (! is_string($key) || empty($key))
+        if ('GET' !== $this->request->getMethod())
         {
             throw new ClarolineException(
-                'The keepCurrentContext() $key argument must be an non empty string.'
+                'The keepCurrentContext() method is only available for GET contexts.'
             );
         }
         
-        $this->enqueue($this->request->getUri());
-    }
+        if (! is_string($contextName) || empty($contextName))
+        {
+            throw new ClarolineException(
+                'The keepCurrentContext() $contextName argument must be an non empty string.'
+            );
+        }
+        
+        $this->enqueue(new Context($contextName, $this->request->getUri()));
+    }  
     
     public function getLastContext()
     {
-        // if queue = 0 -> exception or return current uri ?
-        return $this->historyQueue[count($this->historyQueue) - 1];
+        $historyQueue = $this->session->get(self::HISTORY_SESSION_VARIABLE);
+        $lastContextIndex = count($this->historyQueue) - 1;
+        
+        if (array_key_exists($lastContextIndex, $historyQueue))
+        {
+            return $historyQueue[$lastContextIndex];
+        }
+        
+        return null;
     }
     
     public function getContextHistory()
     {
-        return $this->historyQueue;
+        $historyQueue = $this->session->get(self::HISTORY_SESSION_VARIABLE);
+        
+        return array_reverse($historyQueue);
     }
     
-    private function initQueue(Session $session)
-    {
-        if (! $session->has('context_history'))
+    private function initQueue()
+    {        
+        if (! $this->session->has(self::HISTORY_SESSION_VARIABLE))
         {
             $queue = array();
-            $session->set('context_history', $queue);
+            $this->session->set(self::HISTORY_SESSION_VARIABLE, $queue);
             
             return $queue;
         }
         
-        $queue = $session->get('context_history');
-        $queueSize = $count($queue);
+        $queue = $this->session->get(self::HISTORY_SESSION_VARIABLE);
+        $queueSize = count($queue);
         
         if ($queueSize > $this->queueMaxSize)
         {
-            for ($i = 0; $i < $queueSize - $this->queueMaxSize; ++$i)
+            for ($i = 0; $i < ($queueSize - $this->queueMaxSize); ++$i)
             {
                 array_shift($queue);
             }
+            
+            $this->session->set(self::HISTORY_SESSION_VARIABLE, $queue);
         }
         
         return $queue;
     }
     
-    private function enqueue($element)
+    private function enqueue(Context $context)
     {
-        foreach ($this->historyQueue as $index => $storedElement)
+        foreach ($this->historyQueue as $index => $storedContext)
         {
-            if ($element == $storedElement)
+            if ($context == $storedContext)
             {
                 unset($this->historyQueue[$index]);
                 $this->historyQueue = array_values($this->historyQueue);
@@ -85,6 +106,7 @@ class Browser
             array_shift($this->historyQueue);
         }
 
-        $this->historyQueue[] = $element;
+        $this->historyQueue[] = $context;
+        $this->session->set(self::HISTORY_SESSION_VARIABLE, $this->historyQueue);
     }
 }
