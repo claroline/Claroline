@@ -1,0 +1,14 @@
+{% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
+
+{% block content %}
+
+<div class="section" id="desktop">
+    
+    <h4>{{ 'desktop.desktop'|trans({}, 'ClarolineDesktopBundle') }}</h4>
+    
+    {% autoescape false %}
+        {{ workspaces_block }}
+    {% endautoescape %}
+<div>
+
+{% endblock %}

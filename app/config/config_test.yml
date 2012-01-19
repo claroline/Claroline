@@ -22,19 +22,11 @@ doctrine:
         password: %test_database_password%
     orm:
         mappings:
-            claroline_common_stubs:
+            claroline_core_stubs:
                 type: annotation
-                dir: %kernel.root_dir%/../src/core/Claroline/CommonBundle/Tests/Stub/Entity
-                prefix: Claroline\CommonBundle\Tests\Stub\Entity
-            claroline_security_stubs:
-                type: annotation
-                dir: %kernel.root_dir%/../src/core/Claroline/SecurityBundle/Tests/Stub/Entity
-                prefix: Claroline\SecurityBundle\Tests\Stub\Entity
-            claroline_resource_stubs:
-                type: annotation
-                dir: %kernel.root_dir%/../src/core/Claroline/ResourceBundle/Tests/Stub/Entity
-                prefix: Claroline\ResourceBundle\Tests\Stub\Entity
+                dir: %kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/stub/Entity
+                prefix: Claroline\CoreBundle\Tests\stub\Entity
 
 parameters:
-    test.client.class: Claroline\CommonBundle\Test\TransactionalTestClient
-    claroline.install.bundle_migrator_class: "Claroline\InstallBundle\Service\TestEnvBundleMigrator"
+    test.client.class: Claroline\CoreBundle\Testing\TransactionalTestClient
+    claroline.install.bundle_migrator_class: Claroline\CoreBundle\Service\TestEnvBundleMigrator

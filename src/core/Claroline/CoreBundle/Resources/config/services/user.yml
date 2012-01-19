@@ -1,0 +1,23 @@
+services:
+  
+    claroline.user.manager:
+        class: Claroline\CoreBundle\Manager\UserManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@validator"
+            - "@security.encoder_factory"
+            - "@claroline.security.role_manager"
+            
+    # controllers
+    
+    claroline.user.registration_controller:
+        class: Claroline\CoreBundle\Controller\RegistrationController
+        scope: request
+        arguments:
+            - "@request"
+            - "@security.context"
+            - "@form.factory"
+            - "@templating.engine.twig"
+            - "@translator"
+            - "@claroline.user.manager"
+            - %allow_self_registration%

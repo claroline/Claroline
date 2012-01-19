@@ -2,10 +2,10 @@ security:
   
     providers:
         user_db:
-            entity: { class: Claroline\UserBundle\Entity\User, property: username }
+            entity: { class: Claroline\CoreBundle\Entity\User, property: username }
     
     encoders:
-        Claroline\UserBundle\Entity\User: sha512
+        Claroline\CoreBundle\Entity\User: sha512
     
     firewalls:
         dev:

@@ -1,0 +1,20 @@
+{% extends 'ClarolineCoreBundle::common_layout.html.twig' %}
+
+{% block global_content %}
+
+<form id="login_form" action="{{ path('claro_security_login_check') }}" method="post">
+
+{% if error %}
+     <div class="failure_msg">{{ 'security.login_failure'|trans({}, 'ClarolineSecurityBundle') }}</div>
+{% endif %}
+
+    <label for="username">{{ 'security.username'|trans({}, 'ClarolineSecurityBundle') }} :</label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+
+    <label for="password">{{ 'security.password'|trans({}, 'ClarolineSecurityBundle') }} :</label>
+    <input type="password" id="password" name="_password" />
+
+    <input type="submit" id="submit" name="_submit" value="{{ 'security.login_submit'|trans({}, 'ClarolineSecurityBundle') }}" />
+</form>
+
+{% endblock global_content %}

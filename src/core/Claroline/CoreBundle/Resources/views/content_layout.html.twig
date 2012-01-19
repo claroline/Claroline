@@ -1,0 +1,13 @@
+{% extends 'ClarolineCoreBundle::common_layout.html.twig' %}
+
+{% block global_content %}
+    
+    <div id="top_bar">
+    {% render 'ClarolineCoreBundle:Layout:topBar' %}
+    </div>
+
+    <div id="content">
+    {% block content %}{% endblock %}
+    </div>
+
+{% endblock %}
