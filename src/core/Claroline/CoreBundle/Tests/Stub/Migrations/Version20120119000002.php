@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Migrations;
+namespace Claroline\CoreBundle\Tests\Stub\Migrations;
 
 use Claroline\CoreBundle\Library\Migration\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;

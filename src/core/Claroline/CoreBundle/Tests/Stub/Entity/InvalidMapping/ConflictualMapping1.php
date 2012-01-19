@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Annotation\ORM as ORMExt;

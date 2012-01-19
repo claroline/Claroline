@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Annotation\ORM as ORMExt;

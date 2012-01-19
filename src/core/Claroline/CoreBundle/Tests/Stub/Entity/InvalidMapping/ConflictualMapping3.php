@@ -1,21 +1,21 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Annotation\ORM as ORMExt;
 
 /**
- * Conflictual because you can't have a "@DiscriminatorColumn" along with 
- * an "@Extendable" annotation (which already has the discriminator column's 
- * name as an attribute).
+ * Conflictual because you can't have a "@DiscriminatorMap" along with 
+ * an "@Extendable" annotation (the discriminator map will always be 
+ * built dynamically).
  * 
  * @ORM\Entity
- * @ORM\Table(name="claro_test_conflictual_mapping_2")
+ * @ORM\Table(name="claro_test_conflictual_mapping_3")
  * @ORMExt\Extendable(discriminatorColumn="discr")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"child_1" = "Foo", "child_2" = "Bar"})
  */
-class ConflictualMapping2
+class ConflictualMapping3
 {
     /**
      * @ORM\Id

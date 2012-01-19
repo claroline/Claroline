@@ -226,7 +226,7 @@ class CommonCheckerTest extends WebTestCase
     private function overrideDefaultPluginDirectories(Loader $loader, CommonChecker $checker)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}stub{$ds}plugin{$ds}";
+        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $pluginDirs = array(
             'extension' => "{$stubDir}extension",
             'tool' => "{$stubDir}tool"

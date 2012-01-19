@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Testing;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Tests\stub\Entity\TestEntity\FirstEntity;
+use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 
 abstract class FunctionalTestCase extends TransactionalTestCase
 {

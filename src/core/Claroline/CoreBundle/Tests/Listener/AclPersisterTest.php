@@ -6,7 +6,7 @@ use Symfony\Component\Security\Acl\Dbal\AclProvider;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Tests\stub\Entity\TestEntity\FirstEntity;
+use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 
 class AclPersisterTest extends TransactionalTestCase
 {

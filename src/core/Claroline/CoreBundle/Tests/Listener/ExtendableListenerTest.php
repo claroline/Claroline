@@ -4,14 +4,14 @@ namespace Claroline\CoreBundle\Listener;
 
 use Doctrine\ORM\Events;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\Ancestor;
-use Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\FirstChild;
-use Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\SecondChild;
-use Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\FirstDescendant;
-use Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\SecondDescendant;
-use Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy\TreeAncestor;
-use Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy\FirstChild as TreeFirstChild;
-use Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy\SecondChild as TreeSecondChild;
+use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor;
+use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstChild;
+use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondChild;
+use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstDescendant;
+use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondDescendant;
+use Claroline\CoreBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor;
+use Claroline\CoreBundle\Tests\Stub\Entity\NodeHierarchy\FirstChild as TreeFirstChild;
+use Claroline\CoreBundle\Tests\Stub\Entity\NodeHierarchy\SecondChild as TreeSecondChild;
 
 class ExtendableListenerTest extends TransactionalTestCase
 {
@@ -94,13 +94,13 @@ class ExtendableListenerTest extends TransactionalTestCase
         
         $firstLoaded = $this->em->createQueryBuilder()
             ->select('f')
-            ->from('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\FirstDescendant', 'f')
+            ->from('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstDescendant', 'f')
             ->getQuery()
             ->getSingleResult();
         
         $secondLoaded = $this->em->createQueryBuilder()
             ->select('s')
-            ->from('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\SecondDescendant', 's')
+            ->from('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondDescendant', 's')
             ->getQuery()
             ->getSingleResult();
         
@@ -114,15 +114,15 @@ class ExtendableListenerTest extends TransactionalTestCase
         $this->flushTheWholeValidHierarchy();
         
         $ancestors = $this->em
-            ->getRepository('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\Ancestor')
+            ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor')
             ->findAll();
         
         $firstChildren = $this->em
-            ->getRepository('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\FirstChild')
+            ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstChild')
             ->findAll();
         
         $secondChildren = $this->em
-            ->getRepository('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\SecondChild')
+            ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondChild')
             ->findAll();
         
         $this->assertEquals(5, count($ancestors));
@@ -146,11 +146,11 @@ class ExtendableListenerTest extends TransactionalTestCase
         $this->assertEquals(1, count($firstDescendants));
         $this->assertEquals(1, count($secondDescendants));
         
-        $this->assertInstanceOf('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\Ancestor', $ancestors[0]);
-        $this->assertInstanceOf('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\FirstChild', $firstChildren[0]);
-        $this->assertInstanceOf('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\SecondChild', $secondChildren[0]);
-        $this->assertInstanceOf('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\FirstDescendant', $firstDescendants[0]);
-        $this->assertInstanceOf('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\SecondDescendant', $secondDescendants[0]);
+        $this->assertInstanceOf('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor', $ancestors[0]);
+        $this->assertInstanceOf('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstChild', $firstChildren[0]);
+        $this->assertInstanceOf('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondChild', $secondChildren[0]);
+        $this->assertInstanceOf('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstDescendant', $firstDescendants[0]);
+        $this->assertInstanceOf('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondDescendant', $secondDescendants[0]);
     }
     
     public function testDeletingAncestorsDeletesChildrenJoinedRecords()
@@ -158,7 +158,7 @@ class ExtendableListenerTest extends TransactionalTestCase
         $this->flushTheWholeValidHierarchy();
         
         $ancestors = $this->em
-            ->getRepository('Claroline\CoreBundle\Tests\stub\Entity\ValidHierarchy\Ancestor')
+            ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor')
             ->findAll();
             
         foreach ($ancestors as $ancestor)
@@ -208,7 +208,7 @@ class ExtendableListenerTest extends TransactionalTestCase
     {
         $this->flushTheWholeNodeHierarchy();
         
-        $ancestorRepo = $this->em->getRepository('Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy\TreeAncestor');
+        $ancestorRepo = $this->em->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor');
         
         $ancestors = $ancestorRepo->findAll();
         $rootAncestor = $ancestorRepo->findOneByTreeAncestorField('FTA');
@@ -227,7 +227,7 @@ class ExtendableListenerTest extends TransactionalTestCase
     {
         $this->flushTheWholeNodeHierarchy();
         
-        $ancestorRepo = $this->em->getRepository('Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy\TreeAncestor');
+        $ancestorRepo = $this->em->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\NodeHierarchy\TreeAncestor');
         $ancestors = $ancestorRepo->findAll();
         $firstTreeAncestor = $ancestorRepo->findOneByTreeAncestorField('FTA');
         $firstFirstChild = $ancestorRepo->findOneByTreeAncestorField('FFCA');
@@ -253,17 +253,17 @@ class ExtendableListenerTest extends TransactionalTestCase
     public function conflictualMappingEntityProvider()
     {
         return array(
-            array('Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping\ConflictualMapping1'),
-            array('Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping\ConflictualMapping2'),
-            array('Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping\ConflictualMapping3')
+            array('Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping\ConflictualMapping1'),
+            array('Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping\ConflictualMapping2'),
+            array('Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping\ConflictualMapping3')
         );
     }
     
     public function invalidDiscriminatorColumnNameEntityProvider()
     {
         return array(
-            array('Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping\InvalidDiscriminatorColumn1'),
-            array('Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping\InvalidDiscriminatorColumn2')
+            array('Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping\InvalidDiscriminatorColumn1'),
+            array('Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping\InvalidDiscriminatorColumn2')
         );
     }
     
@@ -350,8 +350,8 @@ class ExtendableListenerTest extends TransactionalTestCase
         return $this->em
             ->createQuery(
                 "SELECT a "
-                ."FROM Claroline\CoreBundle\Tests\stub\Entity\\".$className." a "
-                ."WHERE a INSTANCE OF Claroline\CoreBundle\Tests\stub\Entity\\".$className
+                ."FROM Claroline\CoreBundle\Tests\Stub\Entity\\".$className." a "
+                ."WHERE a INSTANCE OF Claroline\CoreBundle\Tests\Stub\Entity\\".$className
             )
             ->getResult();
     }

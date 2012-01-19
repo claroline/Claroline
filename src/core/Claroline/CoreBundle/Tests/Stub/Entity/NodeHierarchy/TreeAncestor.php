@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\NodeHierarchy;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
