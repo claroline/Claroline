@@ -1,14 +1,14 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\TestEntity;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\TestEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_test_security_second_entity")
+ * @ORM\Table(name="claro_test_security_third_entity")
  */
-class SecondEntity
+class ThirdEntity
 {
     /**
      * @ORM\Id
@@ -20,20 +20,20 @@ class SecondEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $secondEntityField;
+    private $thirdEntityField;
     
     public function getId()
     {
         return $this->id;
     }
 
-    public function getSecondEntityField()
+    public function getThirdEntityField()
     {
-        return $this->secondEntityField;
+        return $this->thirdEntityField;
     }
 
-    public function setSecondEntityField($value)
+    public function setThirdEntityField($value)
     {
-        $this->secondEntityField = $value;
+        $this->thirdEntityField = $value;
     }
 }

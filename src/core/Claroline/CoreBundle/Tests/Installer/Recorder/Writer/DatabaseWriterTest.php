@@ -99,7 +99,7 @@ class DatabaseWriterTest extends TransactionalTestCase
     private function overrideDefaultPluginDirectories(Loader $loader)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}stub{$ds}plugin{$ds}";
+        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $loader->setPluginDirectories(
             array(
                 'extension' => "{$stubDir}extension",

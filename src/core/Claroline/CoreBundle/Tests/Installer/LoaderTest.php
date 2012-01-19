@@ -105,7 +105,7 @@ class LoaderTest extends WebTestCase
     private function overrideDefaultPluginDirectories(Loader $loader)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $pluginDir = __DIR__ . "{$ds}..{$ds}stub{$ds}plugin{$ds}";
+        $pluginDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $this->extensionPath = "{$pluginDir}extension";
         $loader->setPluginDirectories(
             array(

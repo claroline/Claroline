@@ -1,19 +1,18 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\InvalidMapping;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\InvalidMapping;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Annotation\ORM as ORMExt;
 
 /**
- * Invalid because the "discriminatorColumn" attribute of the "@Extendable"
- * annotation has an empty value.
+ * Invalid because the "@Extendable" annotation has no discriminatorColumn attribute.
  * 
  * @ORM\Entity
- * @ORM\Table(name="claro_test_invalid_disc_column_2")
- * @ORMExt\Extendable(discriminatorColumn="")
+ * @ORM\Table(name="claro_test_invalid_disc_column_1")
+ * @ORMExt\Extendable()
  */
-class InvalidDiscriminatorColumn2
+class InvalidDiscriminatorColumn1
 {
     /**
      * @ORM\Id

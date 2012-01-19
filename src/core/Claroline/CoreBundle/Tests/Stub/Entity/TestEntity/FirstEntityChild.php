@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\TestEntity;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\TestEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 

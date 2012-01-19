@@ -1,16 +1,16 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\stub\Entity\NodeHierarchy;
+namespace Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Annotation\ORM as ORMExt;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_test_node_first_child")
+ * @ORM\Table(name="claro_test_firstchild")
  * @ORMExt\Extendable(discriminatorColumn="discr")
  */
-class FirstChild extends TreeAncestor
+class FirstChild extends Ancestor
 {
     /**
      * @ORM\Column(type="string", length=255)

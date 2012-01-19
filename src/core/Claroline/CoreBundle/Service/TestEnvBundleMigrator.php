@@ -44,7 +44,7 @@ class TestEnvBundleMigrator extends BundleMigrator
         );
         $migrationPath = implode(DIRECTORY_SEPARATOR, $migrationPathPieces);
         $config->setMigrationsDirectory($migrationPath);        
-        $config->setMigrationsNamespace($bundle->getNamespace() . '\\Tests\\stub\\Migrations');
+        $config->setMigrationsNamespace($bundle->getNamespace() . '\\Tests\\Stub\\Migrations');
         $config->registerMigrationsFromDirectory($migrationPath);
         
         //FIXME next lines are a hack fixing this bug 

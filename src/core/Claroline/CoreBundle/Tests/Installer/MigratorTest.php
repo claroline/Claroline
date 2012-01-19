@@ -155,7 +155,7 @@ class MigratorTest extends TransactionalTestCase
     private function overrideDefaultPluginDirectories(Loader $loader)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $stubDir = __DIR__ . "{$ds}..{$ds}stub{$ds}plugin{$ds}";
+        $stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $loader->setPluginDirectories(
             array(
                 'extension' => "{$stubDir}extension",
