@@ -3,25 +3,24 @@ claro_index:
     defaults: { _controller: claroline.home.home_controller:indexAction }
 
 claro_security:
-    resource: "@ClarolineSecurityBundle/Resources/config/routing.yml"
+    resource: "@ClarolineCoreBundle/Resources/config/routing/security.yml"
 
 claro_user:
-    resource: "@ClarolineUserBundle/Resources/config/routing.yml"
+    resource: "@ClarolineCoreBundle/Resources/config/routing/user.yml"
     prefix: user
     
 claro_home:
-    resource: "@ClarolineHomeBundle/Resources/config/routing.yml"
-    prefix: home
-    
+    resource: "@ClarolineCoreBundle/Resources/config/routing/home.yml"
+    prefix: home    
+
 claro_desktop:
-    resource: "@ClarolineDesktopBundle/Resources/config/routing.yml"
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
     prefix: desktop
     
 claro_workspace:
-    resource: "@ClarolineWorkspaceBundle/Resources/config/routing.yml"
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
     prefix: workspace
     
 claro_admin:
-    resource: "@ClarolineAdminBundle/Resources/config/routing.yml"
-    prefix: admin
-    
+    resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
+    prefix: admin    

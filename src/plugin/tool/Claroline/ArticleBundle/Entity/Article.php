@@ -3,7 +3,7 @@
 namespace Claroline\ArticleBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\ResourceBundle\Entity\Text;
+use Claroline\CoreBundle\Entity\Text;
 
 /**
  * @ORM\Entity

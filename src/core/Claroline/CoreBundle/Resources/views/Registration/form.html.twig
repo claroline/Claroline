@@ -1,0 +1,18 @@
+{% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
+
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block content %}
+
+<h4>{{ 'profile.register'|trans({}, 'ClarolineUserBundle') }}</h4>
+
+{% if msg is defined and msg is not null %}
+    <div id="msg">&gt;&gt; {{ msg }}</div>
+{% endif %}
+
+<form id="user_registration_form" action="{{ path('claro_user_registration_form_submit') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <input type="submit" />
+</form>
+
+{% endblock %}
