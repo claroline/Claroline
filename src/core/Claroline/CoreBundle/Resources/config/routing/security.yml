@@ -1,6 +1,6 @@
 claro_security_login:
     pattern: /login
-    defaults: { _controller: claroline.security.authentication_controller:loginAction }
+    defaults: { _controller: claroline.controller.authentication:loginAction }
 
 claro_security_login_check:
     pattern: /login_check

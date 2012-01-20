@@ -1,30 +1,27 @@
 services:
+  
     claroline.security.role_manager:
         class: Claroline\CoreBundle\Manager\RoleManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@validator"
             
-    claroline.security.acl_persister:
-        class: Claroline\CoreBundle\Listener\AclPersister
-        calls:
-          - [setContainer, ["@service_container"]]
-        tags:
-            - { name: doctrine.event_subscriber, event: preRemove}
-            - { name: doctrine.event_subscriber, event: postPersist}
-            
     claroline.security.right_manager.delegate.entity:
         class: Claroline\CoreBundle\Manager\RightManager\Delegate\EntityDelegate
+    
     claroline.security.right_manager.delegate.class:
         class: Claroline\CoreBundle\Manager\RightManager\Delegate\ClassDelegate
+    
     claroline.security.right_manager.delegate.user:
         class: Claroline\CoreBundle\Manager\RightManager\Delegate\UserDelegate
         arguments:
             - "@doctrine.orm.entity_manager"
+    
     claroline.security.right_manager.delegate.role:
         class: Claroline\CoreBundle\Manager\RightManager\Delegate\RoleDelegate
         arguments:
             - "@doctrine.orm.entity_manager"
+    
     claroline.security.right_manager.strategy_chooser:
         class: Claroline\CoreBundle\Manager\RightManager\Delegate\StrategyChooser
         arguments:
@@ -32,21 +29,14 @@ services:
             - "@claroline.security.right_manager.delegate.class"
             - "@claroline.security.right_manager.delegate.user"
             - "@claroline.security.right_manager.delegate.role"
+    
     claroline.security.right_manager:
         class: Claroline\CoreBundle\Manager\RightManager\RightManager
         arguments:
             - "@security.acl.provider"
             - "@claroline.security.right_manager.strategy_chooser"
+    
     claroline.security.restricted_owner_right_manager:
         class: Claroline\CoreBundle\Manager\RightManager\RestrictedOwnerRightManager
         arguments:
             - "@claroline.security.right_manager"
-            
-
-    # controller
-    claroline.security.authentication_controller:
-        class: Claroline\CoreBundle\Controller\AuthenticationController
-        scope: request
-        arguments:
-            - "@request"
-            - "@templating.engine.twig"

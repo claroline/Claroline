@@ -1,17 +1,17 @@
 claro_workspace_new_workspace:
     pattern: /new/form
-    defaults: { _controller: claroline.workspace.workspace_controller:newAction }
+    defaults: { _controller: claroline.controller.workspace:newAction }
     requirements:
         _method: GET
 
 claro_workspace_create_workspace:
     pattern: /new/create
-    defaults: { _controller: claroline.workspace.workspace_controller:createAction }
+    defaults: { _controller: claroline.controller.workspace:createAction }
     requirements:
         _method: POST
         
 claro_workspace_delete_workspace:
     pattern: /delete/{id}
-    defaults: { _controller: claroline.workspace.workspace_controller:deleteAction }
+    defaults: { _controller: claroline.controller.workspace:deleteAction }
     requirements:
         _method: POST

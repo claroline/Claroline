@@ -1,0 +1,17 @@
+services:
+  
+    claroline.listener.extendable_listener:
+        class: Claroline\CoreBundle\Listener\ExtendableListener
+        calls:
+          - [setContainer, ["@service_container"]] 
+          - [setAnnotationReader, ["@annotation_reader"]]
+        tags:
+            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }
+            
+    claroline.listener.acl_persister:
+        class: Claroline\CoreBundle\Listener\AclPersister
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+            - { name: doctrine.event_subscriber, event: preRemove}
+            - { name: doctrine.event_subscriber, event: postPersist}
