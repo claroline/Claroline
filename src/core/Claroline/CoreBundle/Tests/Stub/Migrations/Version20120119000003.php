@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Tests\Stub\Migrations;
 
-use Claroline\CoreBundle\Library\Migration\BundleMigration;
+use Claroline\CoreBundle\Installation\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20120119000003 extends BundleMigration
@@ -21,9 +21,9 @@ class Version20120119000003 extends BundleMigration
         
         $this->addId($table);
         $table->addColumn('firstEntityField', 'string', array('length' => 255));
-        $table->addColumn('discr', 'string', array('length' => 255));       
+        $table->addColumn('discr', 'string', array('length' => 255));
         
-        $this->storeTable($table);  
+        $this->storeTable($table);
     }
     
     private function createFirstEntityChildTable(Schema $schema)
@@ -31,10 +31,10 @@ class Version20120119000003 extends BundleMigration
         $table = $schema->createTable('claro_test_security_first_entity_child');
         
         $this->addId($table);
-        $table->addColumn('firstEntityChildField', 'string', array('length' => 255));        
+        $table->addColumn('firstEntityChildField', 'string', array('length' => 255));       
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_test_security_first_entity'), 
-            array('id'), 
+            $this->getStoredTable('claro_test_security_first_entity'),
+            array('id'),
             array('id'),
             array("onDelete" => "CASCADE")
         );
@@ -45,7 +45,7 @@ class Version20120119000003 extends BundleMigration
         $table = $schema->createTable('claro_test_security_second_entity');
         
         $this->addId($table);
-        $table->addColumn('secondChildField', 'string', array('length' => 255));  
+        $table->addColumn('secondChildField', 'string', array('length' => 255));
         $table->setPrimaryKey(array('id'));
     }
     
@@ -54,8 +54,7 @@ class Version20120119000003 extends BundleMigration
         $table = $schema->createTable('claro_test_security_third_entity');
         
         $this->addId($table);
-        $table->addColumn('thirdChildField', 'string', array('length' => 255));  
-        
+        $table->addColumn('thirdChildField', 'string', array('length' => 255));
     }
     
     public function down(Schema $schema)

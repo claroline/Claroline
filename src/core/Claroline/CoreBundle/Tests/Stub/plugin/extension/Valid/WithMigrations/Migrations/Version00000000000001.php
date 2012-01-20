@@ -2,31 +2,27 @@
 
 namespace Valid\WithMigrations\Migrations;
 
-use Claroline\CoreBundle\Library\Migration\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Claroline\CoreBundle\Installation\BundleMigration;
 
 class Version00000000000001 extends BundleMigration
-{
-    
+{  
     public function up(Schema $schema)
     {
-        $table = $schema->createTable($this->prefix() . '_stuffs');
-        $this->addId($table);
-        
+        $table = $schema->createTable($this->getTablePrefix() . '_stuffs');
+
+        $this->addId($table);        
         $table->addColumn(
             'name', 
             'string', 
             array(
                 'length' => 50
             )
-        );
-        
+        );      
     }
 
     public function down(Schema $schema)
     {
-        $schema->dropTable($this->prefix() . '_stuffs');
+        $schema->dropTable($this->getTablePrefix() . '_stuffs');
     }
-
-
 }
