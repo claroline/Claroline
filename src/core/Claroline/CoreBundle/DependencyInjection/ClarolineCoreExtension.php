@@ -16,10 +16,10 @@ class ClarolineCoreExtension extends Extension
         $loader->load('listeners.yml');
         $loader->load('controllers.yml');
         $loader->load('installation.yml');
+        $loader->load('browsing.yml');
         $loader->load('resource.yml');
         $loader->load('user.yml');
         $loader->load('security.yml');
         $loader->load('workspace.yml');
-        $loader->load('common.yml');
     }
 }

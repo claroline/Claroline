@@ -1,13 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\History;
+namespace Claroline\CoreBundle\Browsing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\CoreBundle\History\Browser;
 
-class BrowserTest extends WebTestCase
+class HistoryBrowserTest extends WebTestCase
 {
-    /** @var Claroline\CoreBundle\History\Browser */
+    /** @var HistoryBrowser */
     private $browser;
     
     /** @var Symfony\Component\HttpFoundation\Request */
@@ -20,20 +19,20 @@ class BrowserTest extends WebTestCase
     {
         $this->session = self::createClient()->getContainer()->get('session');
         $this->request = $this->getMockedRequest();
-        $this->browser = new Browser($this->request, $this->session, 4);       
+        $this->browser = new HistoryBrowser($this->request, $this->session, 4);       
     }
     
     public function testBrowserInitsAnArraySessionVariableToHandleHistory()
     {
-        $this->assertTrue($this->session->has(Browser::HISTORY_SESSION_VARIABLE));
-        $this->assertTrue(is_array($this->session->get(Browser::HISTORY_SESSION_VARIABLE)));
+        $this->assertTrue($this->session->has(HistoryBrowser::HISTORY_SESSION_VARIABLE));
+        $this->assertTrue(is_array($this->session->get(HistoryBrowser::HISTORY_SESSION_VARIABLE)));
         $this->assertTrue(is_array($this->browser->getContextHistory()));
     }
     
     public function testKeepCurrentContextIsOnlyAllowedForGetRequests()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
-        $browser = new Browser($this->getMockedRequest('POST'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('POST'), $this->session, 4);
         $browser->keepCurrentContext('Some context name');
     }
     
@@ -45,11 +44,11 @@ class BrowserTest extends WebTestCase
     
     public function testBrowserBuildsCompleteContextsAndReturnsThemFromTheNewerToTheOlder()
     {
-        $browser = new Browser($this->getMockedRequest('GET', 'some/uri/1'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/1'), $this->session, 4);
         $browser->keepCurrentContext('A');
-        $browser = new Browser($this->getMockedRequest('GET', 'some/uri/2'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/2'), $this->session, 4);
         $browser->keepCurrentContext('B');
-        $browser = new Browser($this->getMockedRequest('GET', 'some/uri/3'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/3'), $this->session, 4);
         $browser->keepCurrentContext('C');
         
         $history = $this->browser->getContextHistory();
@@ -102,7 +101,7 @@ class BrowserTest extends WebTestCase
         $this->browser->keepCurrentContext('C');
         $this->browser->keepCurrentContext('D');
         
-        $otherBrowserInstance = new Browser($this->request, $this->session, 2);
+        $otherBrowserInstance = new HistoryBrowser($this->request, $this->session, 2);
         $history = $otherBrowserInstance->getContextHistory();
         
         $this->assertEquals(2, count($history));

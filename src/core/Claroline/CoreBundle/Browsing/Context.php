@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\History;
+namespace Claroline\CoreBundle\Browsing;
 
 class Context
 {
