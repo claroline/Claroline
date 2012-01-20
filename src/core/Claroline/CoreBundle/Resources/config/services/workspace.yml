@@ -12,19 +12,4 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"
             - Claroline\CoreBundle\Entity\ToolInstance
-  
-    # controller
-    claroline.workspace.workspace_controller:
-        class: Claroline\CoreBundle\Controller\WorkspaceController
-        scope: request
-        arguments:
-            - "@request"
-            - "@session"
-            - "@security.context"
-            - "@doctrine.orm.entity_manager"
-            - "@router"
-            - "@form.factory"
-            - "@templating.engine.twig"
-            - "@claroline.workspace.user_manager"
-            - "@claroline.common.history_browser"
             

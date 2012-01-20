@@ -1,0 +1,51 @@
+services:
+
+    claroline.controller.home:
+        class: Claroline\CoreBundle\Controller\HomeController
+        arguments:
+            - "@templating.engine.twig"
+
+    claroline.controller.desktop:
+        class: Claroline\CoreBundle\Controller\DesktopController
+        arguments:
+            - "@security.context"
+            - "@templating.engine.twig"
+
+    claroline.controller.admin:
+        class: Claroline\CoreBundle\Controller\AdministrationController
+        arguments:
+            - "@templating.engine.twig"
+
+    claroline.controller.authentication:
+        class: Claroline\CoreBundle\Controller\AuthenticationController
+        scope: request
+        arguments:
+            - "@request"
+            - "@templating.engine.twig"
+
+    claroline.controller.registration:
+        class: Claroline\CoreBundle\Controller\RegistrationController
+        scope: request
+        arguments:
+            - "@request"
+            - "@security.context"
+            - "@form.factory"
+            - "@templating.engine.twig"
+            - "@translator"
+            - "@claroline.user.manager"
+            - %allow_self_registration%
+
+    claroline.controller.workspace:
+        class: Claroline\CoreBundle\Controller\WorkspaceController
+        scope: request
+        arguments:
+            - "@request"
+            - "@session"
+            - "@security.context"
+            - "@doctrine.orm.entity_manager"
+            - "@router"
+            - "@form.factory"
+            - "@templating.engine.twig"
+            - "@claroline.workspace.user_manager"
+            - "@claroline.common.history_browser"
+            

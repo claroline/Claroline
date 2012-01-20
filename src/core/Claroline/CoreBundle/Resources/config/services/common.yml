@@ -8,10 +8,3 @@ services:
             - "@session"
             - %context_history_max_size%
   
-    claroline.common.doctrine_load_metadata_subscriber:
-        class: Claroline\CoreBundle\Listener\ExtendableListener
-        calls:
-          - [setContainer, ["@service_container"]] 
-          - [setAnnotationReader, ["@annotation_reader"]]
-        tags:
-            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }
