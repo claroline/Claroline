@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Manager\WorkspaceUserManager;
-use Claroline\CoreBundle\History\Browser;
+use Claroline\CoreBundle\Browsing\HistoryBrowser;
 
 class WorkspaceController
 {
@@ -38,7 +38,7 @@ class WorkspaceController
         FormFactory $factory,
         TwigEngine $engine,
         WorkspaceUserManager $userManager,
-        Browser $historyBrowser
+        HistoryBrowser $historyBrowser
     )
     {
         $this->request = $request;

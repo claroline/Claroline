@@ -1,13 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\History;
+namespace Claroline\CoreBundle\Browsing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session;
-use Claroline\CoreBundle\History\Context;
 use Claroline\CoreBundle\Exception\ClarolineException;
 
-class Browser
+class HistoryBrowser
 {
     const HISTORY_SESSION_VARIABLE = 'context_history';
 
