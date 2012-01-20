@@ -29,4 +29,4 @@ doctrine:
 
 parameters:
     test.client.class: Claroline\CoreBundle\Testing\TransactionalTestClient
-    claroline.install.bundle_migrator_class: Claroline\CoreBundle\Service\TestEnvBundleMigrator
+    claroline.install.include_test_migrations: true
