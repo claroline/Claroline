@@ -15,8 +15,10 @@ class LoaderTest extends WebTestCase
     
     public function setUp()
     {
-        $this->loader = self::createClient()->getContainer()->get('claroline.plugin.loader');
-        $this->overrideDefaultPluginDirectories($this->loader);
+        $container = self::createClient()->getContainer();
+        $this->loader = $container->get('claroline.plugin.loader');
+        $stubDir = $container->getParameter('claroline.stub_plugin_directory');
+        $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
     }
     
     public function testLoaderCanReturnAnInstanceOfALoadablePluginBundleClass()
@@ -102,15 +104,14 @@ class LoaderTest extends WebTestCase
         );
     }
     
-    private function overrideDefaultPluginDirectories(Loader $loader)
+    private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $pluginDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}";
-        $this->extensionPath = "{$pluginDir}extension";
+        $this->extensionPath = "{$stubDir}{$ds}extension";
         $loader->setPluginDirectories(
             array(
                 'extension' => $this->extensionPath,
-                'tool' =>"{$pluginDir}tool"
+                'tool' =>"{$stubDir}{$ds}tool"
             )
         );
     }
