@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\AbstractType;
+namespace Claroline\CoreBundle\Plugin;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

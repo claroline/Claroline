@@ -2,7 +2,7 @@
 
 namespace Valid\WithMigrations;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class ValidWithMigrations extends ClarolineExtension
 {

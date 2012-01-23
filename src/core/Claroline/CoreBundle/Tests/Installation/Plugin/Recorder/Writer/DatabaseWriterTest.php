@@ -86,12 +86,12 @@ class DatabaseWriterTest extends TransactionalTestCase
             array(
                 'Valid\Simple\ValidSimple',
                 'Claroline\CoreBundle\Entity\Extension',
-                'Claroline\CoreBundle\AbstractType\ClarolineExtension'
+                'Claroline\CoreBundle\Plugin\ClarolineExtension'
             ),
             array(
                 'Valid\Basic\ValidBasic',
                 'Claroline\CoreBundle\Entity\Tool',
-                'Claroline\CoreBundle\AbstractType\ClarolineTool'
+                'Claroline\CoreBundle\Plugin\ClarolineTool'
             )
         );
     }

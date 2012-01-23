@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\AbstractType;
+namespace Claroline\CoreBundle\Plugin;
 
 abstract class ClarolineExtension extends ClarolinePlugin
 {

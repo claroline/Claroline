@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Installation\Plugin\Validator\Checker;
 
-use Claroline\CoreBundle\AbstractType\ClarolineTool;
+use Claroline\CoreBundle\Plugin\ClarolineTool;
 
 class ToolChecker
 {

@@ -2,7 +2,7 @@
 
 namespace Invalid\UnexpectedPluginLocation;
 
-use Claroline\CoreBundle\AbstractType\ClarolineTool;
+use Claroline\CoreBundle\Plugin\ClarolineTool;
 
 /**
  * Invalid because tools must be located in the "plugin/tool" directory.

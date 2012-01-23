@@ -2,7 +2,7 @@
 
 namespace Invalid\NonYamlRoutingResource1;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class InvalidNonYamlRoutingResource1 extends ClarolineExtension
 {

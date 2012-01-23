@@ -2,7 +2,7 @@
 
 namespace Invalid\UnexpectedTranslationKey2;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class InvalidUnexpectedTranslationKey2 extends ClarolineExtension
 {

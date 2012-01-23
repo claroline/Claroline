@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Installation\Plugin\Validator\Checker;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class ExtensionChecker
 {

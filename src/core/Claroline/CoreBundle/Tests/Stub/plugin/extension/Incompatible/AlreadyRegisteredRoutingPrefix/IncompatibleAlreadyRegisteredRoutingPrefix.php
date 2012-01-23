@@ -2,7 +2,7 @@
 
 namespace Incompatible\AlreadyRegisteredRoutingPrefix;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class IncompatibleAlreadyRegisteredRoutingPrefix extends ClarolineExtension
 {

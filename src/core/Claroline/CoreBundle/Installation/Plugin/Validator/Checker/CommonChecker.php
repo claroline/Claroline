@@ -5,9 +5,9 @@ namespace Claroline\CoreBundle\Installation\Plugin\Validator\Checker;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Config\FileLocatorInterface;
-use Claroline\CoreBundle\AbstractType\ClarolinePlugin;
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
-use Claroline\CoreBundle\AbstractType\ClarolineTool;
+use Claroline\CoreBundle\Plugin\ClarolinePlugin;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineTool;
 use Claroline\CoreBundle\Exception\ValidationException;
 
 class CommonChecker
@@ -77,8 +77,8 @@ class CommonChecker
     
     private function checkPluginExtendsClarolinePluginSubType()
     {
-        if (! $this->plugin instanceof \Claroline\CoreBundle\AbstractType\ClarolineExtension
-            && ! $this->plugin instanceof \Claroline\CoreBundle\AbstractType\ClarolineTool)
+        if (! $this->plugin instanceof \Claroline\CoreBundle\Plugin\ClarolineExtension
+            && ! $this->plugin instanceof \Claroline\CoreBundle\Plugin\ClarolineTool)
         {
             throw new ValidationException(
                 "Class '{$this->pluginFQCN}' must inherit one of the ClarolinePlugin "
