@@ -6,7 +6,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Claroline\CoreBundle\Installation\BundleMigration;
 
 class Version00000000000001 extends BundleMigration
-{  
+{
     public function up(Schema $schema)
     {
         $table = $schema->createTable($this->getTablePrefix() . '_stuffs');

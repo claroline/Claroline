@@ -44,7 +44,8 @@ class ToolInstanceTest extends TransactionalTestCase
         $this->initTestWorkspace();
         $this->initTestUsers();
         $this->initTestTool();
-        }
+    }
+    
     private function initTestWorkspace()
     {
         $this->workspace = new Workspace();
@@ -102,12 +103,9 @@ class ToolInstanceTest extends TransactionalTestCase
         
         $this->logUser('user', '123');
         
-        $this->assertTrue($this->client->getContainer()->get('security.context')
-                    ->isGranted('VIEW', $toolInstance));
-        $this->assertFalse($this->client->getContainer()->get('security.context')
-                    ->isGranted('EDIT', $toolInstance));
-        $this->assertFalse($this->client->getContainer()->get('security.context')
-                    ->isGranted('DELETE', $toolInstance));
+        $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $toolInstance));
+        $this->assertFalse($this->getSecurityContext()->isGranted('EDIT', $toolInstance));
+        $this->assertFalse($this->getSecurityContext()->isGranted('DELETE', $toolInstance));
     }
     
     private function logUser($username, $password)
@@ -120,5 +118,8 @@ class ToolInstanceTest extends TransactionalTestCase
         $this->client->submit($form);
     }
     
-    
+    private function getSecurityContext()
+    {
+        return $this->client->getContainer()->get('security.context');
+    }
 }
