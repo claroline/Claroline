@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager\Delegate;
+namespace Claroline\CoreBundle\Security\RightManager\Delegate;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;

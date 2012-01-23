@@ -1,18 +1,18 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager;
+namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\CoreBundle\Exception\RightManagerException;
-use Claroline\CoreBundle\Acl\Domain\ClassIdentity;
+use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 
 class RightManagerTest extends FunctionalTestCase
 {
-    /** @var Claroline\CoreBundle\Manager\RightManager\RightManagerInterface */
+    /** @var RightManagerInterface */
     private $rightManager;
       
     public function setUp()

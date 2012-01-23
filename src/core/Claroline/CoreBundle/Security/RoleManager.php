@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Security;
 
 use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\EntityManager;

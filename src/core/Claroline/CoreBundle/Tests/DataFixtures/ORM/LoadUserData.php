@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Security\RoleManager;
 use Claroline\CoreBundle\Entity\User;
 
 class LoadUserData extends AbstractFixture implements FixtureInterface, ContainerAwareInterface

@@ -1,10 +1,10 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager\Delegate;
+namespace Claroline\CoreBundle\Security\RightManager\Delegate;
 
-use Claroline\CoreBundle\Acl\Domain\ClassIdentity;
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
+use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 
 class ClassDelegate implements TargetDelegateInterface
 {

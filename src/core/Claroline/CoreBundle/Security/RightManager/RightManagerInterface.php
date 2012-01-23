@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager;
+namespace Claroline\CoreBundle\Security\RightManager;
 
 interface RightManagerInterface
 {

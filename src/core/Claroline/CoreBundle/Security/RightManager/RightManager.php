@@ -1,13 +1,13 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager;
+namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Dbal\AclProvider;
 use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Manager\RightManager\Delegate\StrategyChooser;
+use Claroline\CoreBundle\Security\RightManager\Delegate\StrategyChooser;
 
 class RightManager implements RightManagerInterface
 {
