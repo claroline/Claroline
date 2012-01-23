@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Installation\Plugin;
 
-use Claroline\CoreBundle\Exception\LoaderException;
+use Claroline\CoreBundle\Exception\InstallationException;
 
 class Loader
 {
@@ -46,19 +46,19 @@ class Loader
         
         if ($foundPathCount == 0)
         {
-            throw new LoaderException(
+            throw new InstallationException(
                 "No bundle class file matches the FQCN '{$pluginFQCN}' "
                 . '(possible paths where : ' . implode(', ', $possiblePaths) . ')',
-                LoaderException::NO_PLUGIN_FOUND
+                InstallationException::NO_PLUGIN_FOUND
             );
         }
         
         if ($foundPathCount > 1)
         {
-            throw new LoaderException(
+            throw new InstallationException(
                 "{$foundPathCount} bundle class files matches the FQCN "
                 . "'{$pluginFQCN}' (" . implode(', ', $foundPaths) . ')',
-                LoaderException::MULTIPLE_PLUGINS_FOUND
+                InstallationException::MULTIPLE_PLUGINS_FOUND
             );
         }
         
@@ -71,9 +71,9 @@ class Loader
 
         if (! class_exists($pluginFQCN))
         {
-            throw new LoaderException(
+            throw new InstallationException(
                 "Class '{$pluginFQCN}' not found in '{$pluginPath}'.",
-                LoaderException::NON_EXISTENT_BUNDLE_CLASS
+                InstallationException::NON_EXISTENT_BUNDLE_CLASS
             );
         }
         
@@ -81,9 +81,9 @@ class Loader
         
         if (! $reflectionClass->IsInstantiable())
         {
-            throw new LoaderException(
+            throw new InstallationException(
                 "Class '{$pluginFQCN}' is not instantiable.",
-                LoaderException::NON_INSTANTIABLE_BUNDLE_CLASS
+                InstallationException::NON_INSTANTIABLE_BUNDLE_CLASS
             );
         }
         

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Security\RightManager\Delegate;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 
 class RoleDelegate implements SubjectDelegateInterface
 {
@@ -25,9 +25,9 @@ class RoleDelegate implements SubjectDelegateInterface
     {
         if ($subject->getId() === null)
         {
-            throw new RightManagerException(
+            throw new SecurityException(
                 "The role must be saved before being granted any right.",
-                RightManagerException::INVALID_ROLE_STATE
+                SecurityException::INVALID_ROLE_STATE
             );
         }
         

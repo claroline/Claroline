@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Security\RightManager\Delegate;
 
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 
 class UserDelegate implements SubjectDelegateInterface
 {
@@ -24,9 +24,9 @@ class UserDelegate implements SubjectDelegateInterface
     {
         if ($subject->getId() == 0)
         {
-            throw new RightManagerException(
+            throw new SecurityException(
                 "The user must be saved before being granted any right.",
-                RightManagerException::INVALID_USER_STATE
+                SecurityException::INVALID_USER_STATE
             );
         }
         

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Installation\Plugin\Validator\Checker;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use org\bovigo\vfs\vfsStream;
 use Claroline\CoreBundle\Installation\Plugin\Loader;
-use Claroline\CoreBundle\Exception\ValidationException;
+use Claroline\CoreBundle\Exception\InstallationException;
 
 class CommonCheckerTest extends WebTestCase
 {
@@ -28,7 +28,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckerThrowsAnExceptionOnInvalidFQCN($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_FQCN);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_FQCN);
     }
     
     /**
@@ -36,7 +36,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckerThrowsAnExceptionIfBundleClassDoesntExtendAClarolinePluginSubType($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_PLUGIN_TYPE);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_PLUGIN_TYPE);
     }
 
     /**
@@ -44,7 +44,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckerThrowsAnExceptionIfPluginIsNotLocatedInTheAppropriateDirectory($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_PLUGIN_LOCATION);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_PLUGIN_LOCATION);
     }
     
     /**
@@ -52,7 +52,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckerThrowsAnExceptionOnInvalidRoutingPrefix($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_ROUTING_PREFIX);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ROUTING_PREFIX);
     }
     
     /**
@@ -76,7 +76,7 @@ class CommonCheckerTest extends WebTestCase
                 ->will($this->returnValue("Fake/PluginBundle/Resources/Resources/config/routing.yml"));
         $this->checker->setFileLocator($locator);
         
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_ALREADY_REGISTERED_PREFIX);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ALREADY_REGISTERED_PREFIX);
     }
     
     /**
@@ -84,7 +84,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckThrowsAnExceptionOnNonExistentRoutingResource($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_ROUTING_PATH);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ROUTING_PATH);
     }
 
     /**
@@ -92,7 +92,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckThrowsAnExceptionOnUnexpectedRoutingResourceLocation($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_ROUTING_LOCATION);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ROUTING_LOCATION);
     }
 
     /**
@@ -100,7 +100,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckThrowsAnExceptionOnNonYamlRoutingFile($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_ROUTING_EXTENSION);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ROUTING_EXTENSION);
     }
 
     /**
@@ -108,7 +108,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckThrowsAnExceptionOnUnloadableYamlRoutingFile($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_YAML_RESOURCE);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_YAML_RESOURCE);
     }
     
     /**
@@ -116,7 +116,7 @@ class CommonCheckerTest extends WebTestCase
      */
     public function testCheckThrowsAnExceptionOnInvalidTranslationKey($pluginFQCN)
     {
-        $this->assertValidationExceptionIsThrown($pluginFQCN, ValidationException::INVALID_TRANSLATION_KEY);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_TRANSLATION_KEY);
     }
 
     /**
@@ -131,7 +131,7 @@ class CommonCheckerTest extends WebTestCase
             $this->checker->check($plugin);
             $this->assertTrue(true);
         }
-        catch (ValidationException $ex)
+        catch (InstallationException $ex)
         {
             $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
         }
@@ -236,7 +236,7 @@ class CommonCheckerTest extends WebTestCase
         $checker->setPluginDirectories($pluginDirs);
     }
     
-    private function assertValidationExceptionIsThrown($pluginFQCN, $exceptionCode)
+    private function assertInstallationExceptionIsThrown($pluginFQCN, $exceptionCode)
     {
         $plugin = $this->loader->load($pluginFQCN);
         
@@ -245,7 +245,7 @@ class CommonCheckerTest extends WebTestCase
             $this->checker->check($plugin);
             $this->fail("No exception thrown.");
         }
-        catch (ValidationException $ex)
+        catch (InstallationException $ex)
         {
             $this->assertEquals($exceptionCode, $ex->getCode());
         }

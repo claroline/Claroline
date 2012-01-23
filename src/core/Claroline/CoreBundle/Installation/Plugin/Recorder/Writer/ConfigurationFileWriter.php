@@ -211,7 +211,10 @@ class ConfigurationFileWriter
     {
         if (empty($item))
         {
-            throw new InstallationException("{$itemType} argument cannot be empty.");
+            throw new InstallationException(
+                "{$itemType} argument cannot be empty.",
+                InstallationException::EMPTY_FILE_ITEM
+            );
         }
 
         $items = file($file, FILE_IGNORE_NEW_LINES);

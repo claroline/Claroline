@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 use Claroline\CoreBundle\Entity\User;
 
 class RestrictedOwnerRightManager implements RightManagerInterface
@@ -41,9 +41,9 @@ class RestrictedOwnerRightManager implements RightManagerInterface
         {
             if ($owner != $subject)
             {
-                throw new RightManagerException(
+                throw new SecurityException(
                     'Attempted to set an owner on an object which already have one',
-                    RightManagerException::MULTIPLE_OWNERS_ATTEMPT
+                    SecurityException::MULTIPLE_OWNERS_ATTEMPT
                 );
             }
         }        
@@ -53,9 +53,9 @@ class RestrictedOwnerRightManager implements RightManagerInterface
     {
         if (! $subject instanceof User)
         {
-            throw new RightManagerException(
+            throw new SecurityException(
                 "Only users can be owner", 
-                RightManagerException::NOT_ALLOWED_OWNER_MASK
+                SecurityException::NOT_ALLOWED_OWNER_MASK
             );
         }   
     }
@@ -64,9 +64,9 @@ class RestrictedOwnerRightManager implements RightManagerInterface
     {
         if (is_string($target))
         {
-            throw new RightManagerException(
+            throw new SecurityException(
                 "Classes are not supposed to be owned", 
-                RightManagerException::NOT_ALLOWED_OWNER_MASK
+                SecurityException::NOT_ALLOWED_OWNER_MASK
             );
         }       
     }

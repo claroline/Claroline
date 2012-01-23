@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Security\RightManager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 
 class RestrictedOwnerManagerTest extends FunctionalTestCase
 {
@@ -30,9 +30,9 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($entity, $dave, $mask);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::MULTIPLE_OWNERS_ATTEMPT, $ex->getCode());
+            $this->assertEquals(SecurityException::MULTIPLE_OWNERS_ATTEMPT, $ex->getCode());
         }
     }
     
@@ -72,9 +72,9 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_OWNER);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
+            $this->assertEquals(SecurityException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
         }
     }
     
@@ -89,9 +89,9 @@ class RestrictedOwnerManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($fqcn, $role, MaskBuilder::MASK_OWNER);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
+            $this->assertEquals(SecurityException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
         }
     }
 }

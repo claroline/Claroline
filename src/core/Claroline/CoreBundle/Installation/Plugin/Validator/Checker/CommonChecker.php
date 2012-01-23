@@ -8,7 +8,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Claroline\CoreBundle\Plugin\ClarolinePlugin;
 use Claroline\CoreBundle\Plugin\ClarolineExtension;
 use Claroline\CoreBundle\Plugin\ClarolineTool;
-use Claroline\CoreBundle\Exception\ValidationException;
+use Claroline\CoreBundle\Exception\InstallationException;
 
 class CommonChecker
 {
@@ -67,10 +67,10 @@ class CommonChecker
         
         if (count($nameParts) !== 3 || $nameParts[2] !== $nameParts[0] . $nameParts[1])
         {
-            throw new ValidationException(
+            throw new InstallationException(
                 "Plugin FQCN '{$this->pluginFQCN}' doesn't follow the "
                 . "'Vendor\BundleName\VendorBundleName' convention.",
-                ValidationException::INVALID_FQCN
+                InstallationException::INVALID_FQCN
             );
         }
     }
@@ -80,10 +80,10 @@ class CommonChecker
         if (! $this->plugin instanceof \Claroline\CoreBundle\Plugin\ClarolineExtension
             && ! $this->plugin instanceof \Claroline\CoreBundle\Plugin\ClarolineTool)
         {
-            throw new ValidationException(
+            throw new InstallationException(
                 "Class '{$this->pluginFQCN}' must inherit one of the ClarolinePlugin "
                 . "sub-types (ClarolineExtension, ClarolineApplication or ClarolineTool).",
-                ValidationException::INVALID_PLUGIN_TYPE
+                InstallationException::INVALID_PLUGIN_TYPE
             );
         }
     }
@@ -105,10 +105,10 @@ class CommonChecker
         
         if (preg_match("/^{$expectedDirectoryEscaped}/", $pluginPath) === 0)
         {
-            throw new ValidationException(
+            throw new InstallationException(
                 "Plugin '{$this->pluginFQCN}' location doesn't match its "
                 . "type (expected location was {$expectedDirectory}).",
-                ValidationException::INVALID_PLUGIN_LOCATION
+                InstallationException::INVALID_PLUGIN_LOCATION
             );
         }
     }
@@ -119,25 +119,25 @@ class CommonChecker
         
         if (! is_string($prefix))
         {
-            throw new ValidationException(
+            throw new InstallationException(
                 "{$this->pluginFQCN} : routing prefix must be a string.",
-                ValidationException::INVALID_ROUTING_PREFIX
+                InstallationException::INVALID_ROUTING_PREFIX
             );
         }
         
         if (empty($prefix))
         {
-            throw new ValidationException(
+            throw new InstallationException(
                 "{$this->pluginFQCN} : routing prefix cannot be empty.",
-                ValidationException::INVALID_ROUTING_PREFIX
+                InstallationException::INVALID_ROUTING_PREFIX
             );
         }
         
         if (preg_match('#\s#', $prefix))
         {
-            throw new ValidationException(
+            throw new InstallationException(
                 "{$this->pluginFQCN} : routing prefix cannot contain white spaces.",
-                ValidationException::INVALID_ROUTING_PREFIX
+                InstallationException::INVALID_ROUTING_PREFIX
             );
         }
     }
@@ -154,9 +154,9 @@ class CommonChecker
             
             if ($resource['prefix'] === $prefix &&  $isConflicting)
             {
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : routing prefix '{$prefix}' is already registered in another plugin.",
-                    ValidationException::INVALID_ALREADY_REGISTERED_PREFIX
+                    InstallationException::INVALID_ALREADY_REGISTERED_PREFIX
                 );
             }
         }
@@ -200,9 +200,9 @@ class CommonChecker
 
             if (! file_exists($path))
             {
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : Cannot find routing file '{$path}'.",
-                    ValidationException::INVALID_ROUTING_PATH
+                    InstallationException::INVALID_ROUTING_PATH
                 );
             }
 
@@ -210,19 +210,19 @@ class CommonChecker
             
             if (preg_match("/^{$bundlePath}/", $path) === 0)
             {                
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : Invalid routing file '{$path}' "
                     . "(must be located within the bundle).",
-                    ValidationException::INVALID_ROUTING_LOCATION
+                    InstallationException::INVALID_ROUTING_LOCATION
                 );
             }
             
             if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION))
             {
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : Unsupported '{$ext}' extension for "
                     . "routing file '{$path}'(use .yml).",
-                    ValidationException::INVALID_ROUTING_EXTENSION
+                    InstallationException::INVALID_ROUTING_EXTENSION
                 );
             }
 
@@ -233,10 +233,10 @@ class CommonChecker
             }
             catch (ParseException $ex)
             {
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : Unloadable YAML routing file "
                     . "(parse exception message : '{$ex->getMessage()}')",
-                    ValidationException::INVALID_YAML_RESOURCE
+                    InstallationException::INVALID_YAML_RESOURCE
                 );
             }
         }
@@ -252,17 +252,17 @@ class CommonChecker
         {
             if (! is_string($key))
             {
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : {$type} translation key must be a string.",
-                    ValidationException::INVALID_TRANSLATION_KEY
+                    InstallationException::INVALID_TRANSLATION_KEY
                 );
             }
 
             if (empty($key))
             {
-                throw new ValidationException(
+                throw new InstallationException(
                     "{$this->pluginFQCN} : {$type} translation key cannot be empty.",
-                    ValidationException::INVALID_TRANSLATION_KEY
+                    InstallationException::INVALID_TRANSLATION_KEY
                 );
             }
         }
