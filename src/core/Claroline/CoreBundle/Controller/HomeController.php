@@ -17,7 +17,7 @@ class HomeController
     public function indexAction()
     {        
         return $this->twigEngine->renderResponse(
-            'ClarolineCoreBundle:Home:index.html.twig'
+            'ClarolineCoreBundle:Home:home.html.twig'
         );
     }
 }

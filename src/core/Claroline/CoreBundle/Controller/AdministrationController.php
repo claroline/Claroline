@@ -17,7 +17,7 @@ class AdministrationController
     public function indexAction()
     {        
         return $this->twigEngine->renderResponse(
-            'ClarolineCoreBundle:Administration:index.html.twig'
+            'ClarolineCoreBundle:Administration:administration.html.twig'
         );
     }
 }
