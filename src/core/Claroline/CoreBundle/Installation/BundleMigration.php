@@ -7,7 +7,7 @@ use Doctrine\DBAL\Schema\Table;
 use Claroline\CoreBundle\Installation\MigrationHelper;
 
 abstract class BundleMigration extends AbstractMigration
-{ 
+{
     /** @var MigrationHelper */
     private $helper;
     
