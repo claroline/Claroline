@@ -20,7 +20,8 @@ class CommonCheckerTest extends WebTestCase
         $container = self::createClient()->getContainer();
         $this->checker = $container->get('claroline.plugin.common_checker');
         $this->loader = $container->get('claroline.plugin.loader');
-        $this->overrideDefaultPluginDirectories($this->loader, $this->checker);
+        $stubDir = $container->getParameter('claroline.stub_plugin_directory');
+        $this->overrideDefaultPluginDirectories($stubDir, $this->loader, $this->checker);
     }
     
     /**
@@ -223,13 +224,12 @@ class CommonCheckerTest extends WebTestCase
         );
     }
     
-    private function overrideDefaultPluginDirectories(Loader $loader, CommonChecker $checker)
+    private function overrideDefaultPluginDirectories($stubDir, Loader $loader, CommonChecker $checker)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $pluginDirs = array(
-            'extension' => "{$stubDir}extension",
-            'tool' => "{$stubDir}tool"
+            'extension' => "{$stubDir}{$ds}extension",
+            'tool' => "{$stubDir}{$ds}tool"
         );
         
         $loader->setPluginDirectories($pluginDirs);

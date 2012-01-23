@@ -24,7 +24,8 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->dbWriter = $container->get('claroline.plugin.recorder_database_writer');
         $this->loader = $container->get('claroline.plugin.loader');
         $this->em = $container->get('doctrine.orm.entity_manager');
-        $this->overrideDefaultPluginDirectories($this->loader);
+        $stubDir = $container->getParameter('claroline.stub_plugin_directory');
+        $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
     }
     
     /**
@@ -96,14 +97,13 @@ class DatabaseWriterTest extends TransactionalTestCase
         );
     }
     
-    private function overrideDefaultPluginDirectories(Loader $loader)
+    private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $loader->setPluginDirectories(
             array(
-                'extension' => "{$stubDir}extension",
-                'tool' => "{$stubDir}tool"
+                'extension' => "{$stubDir}{$ds}extension",
+                'tool' => "{$stubDir}{$ds}tool"
             )
         );
     }

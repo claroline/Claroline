@@ -19,7 +19,8 @@ class MigratorTest extends TransactionalTestCase
         $container = $this->client->getContainer();
         $this->migrator = $container->get('claroline.plugin.migrator');
         $this->loader = $container->get('claroline.plugin.loader');
-        $this->overrideDefaultPluginDirectories($this->loader);
+        $stubDir = $container->getParameter('claroline.stub_plugin_directory');
+        $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
     }
     
     protected function tearDown() 
@@ -151,14 +152,13 @@ class MigratorTest extends TransactionalTestCase
         return null;
     }
     
-    private function overrideDefaultPluginDirectories(Loader $loader)
+    private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}";
         $loader->setPluginDirectories(
             array(
-                'extension' => "{$stubDir}extension",
-                'tool' => "{$stubDir}tool"
+                'extension' => "{$stubDir}{$ds}extension",
+                'tool' => "{$stubDir}{$ds}tool"
             )
         );
     }

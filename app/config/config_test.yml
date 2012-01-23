@@ -30,3 +30,4 @@ doctrine:
 parameters:
     test.client.class: Claroline\CoreBundle\Testing\TransactionalTestClient
     claroline.install.include_test_migrations: true
+    claroline.stub_plugin_directory: %kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/Stub/plugin
