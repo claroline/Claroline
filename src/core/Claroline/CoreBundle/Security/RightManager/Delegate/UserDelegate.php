@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager\Delegate;
+namespace Claroline\CoreBundle\Security\RightManager\Delegate;
 
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Doctrine\ORM\EntityManager;

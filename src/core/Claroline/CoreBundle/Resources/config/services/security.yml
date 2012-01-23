@@ -1,29 +1,29 @@
 services:
   
     claroline.security.role_manager:
-        class: Claroline\CoreBundle\Manager\RoleManager
+        class: Claroline\CoreBundle\Security\RoleManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@validator"
             
     claroline.security.right_manager.delegate.entity:
-        class: Claroline\CoreBundle\Manager\RightManager\Delegate\EntityDelegate
+        class: Claroline\CoreBundle\Security\RightManager\Delegate\EntityDelegate
     
     claroline.security.right_manager.delegate.class:
-        class: Claroline\CoreBundle\Manager\RightManager\Delegate\ClassDelegate
+        class: Claroline\CoreBundle\Security\RightManager\Delegate\ClassDelegate
     
     claroline.security.right_manager.delegate.user:
-        class: Claroline\CoreBundle\Manager\RightManager\Delegate\UserDelegate
+        class: Claroline\CoreBundle\Security\RightManager\Delegate\UserDelegate
         arguments:
             - "@doctrine.orm.entity_manager"
     
     claroline.security.right_manager.delegate.role:
-        class: Claroline\CoreBundle\Manager\RightManager\Delegate\RoleDelegate
+        class: Claroline\CoreBundle\Security\RightManager\Delegate\RoleDelegate
         arguments:
             - "@doctrine.orm.entity_manager"
     
     claroline.security.right_manager.strategy_chooser:
-        class: Claroline\CoreBundle\Manager\RightManager\Delegate\StrategyChooser
+        class: Claroline\CoreBundle\Security\RightManager\Delegate\StrategyChooser
         arguments:
             - "@claroline.security.right_manager.delegate.entity"
             - "@claroline.security.right_manager.delegate.class"
@@ -31,12 +31,12 @@ services:
             - "@claroline.security.right_manager.delegate.role"
     
     claroline.security.right_manager:
-        class: Claroline\CoreBundle\Manager\RightManager\RightManager
+        class: Claroline\CoreBundle\Security\RightManager\RightManager
         arguments:
             - "@security.acl.provider"
             - "@claroline.security.right_manager.strategy_chooser"
     
     claroline.security.restricted_owner_right_manager:
-        class: Claroline\CoreBundle\Manager\RightManager\RestrictedOwnerRightManager
+        class: Claroline\CoreBundle\Security\RightManager\RestrictedOwnerRightManager
         arguments:
             - "@claroline.security.right_manager"

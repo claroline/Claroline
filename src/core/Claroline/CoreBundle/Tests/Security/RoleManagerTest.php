@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Security;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;

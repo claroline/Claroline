@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Acl\Domain;
+namespace Claroline\CoreBundle\Security\Acl;
 
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 

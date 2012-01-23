@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Acl\Domain\ClassIdentity;
+use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 
 class RegistrationController
 {

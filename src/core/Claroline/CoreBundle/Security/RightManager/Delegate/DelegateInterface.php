@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Manager\RightManager;
+namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;

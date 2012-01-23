@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Security\RoleManager;
 use Claroline\CoreBundle\Entity\Role;
 
 class UserManager
@@ -33,7 +33,7 @@ class UserManager
     private $encoderFactory;
 
     /**
-     * @var Claroline\CoreBundle\Manager\RoleManager
+     * @var Claroline\CoreBundle\Security\RoleManager
      */
     private $roleManager;
 
