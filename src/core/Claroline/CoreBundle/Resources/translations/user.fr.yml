@@ -1,0 +1,15 @@
+username: Nom d'utilisateur
+password: Mot de passe
+login: Connexion
+logout: Déconnexion
+login_submit: Connexion
+login_failure: La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
+register: Inscription
+account_created: Compte créé
+
+#form field labels
+user_form_firstName: "Prénom :"
+user_form_lastName: "Nom :"
+user_form_username: "Nom d'utilisateur :"
+user_form_plainPassword_first: "Mot de passe :"
+user_form_plainPassword_second: "Vérification :"

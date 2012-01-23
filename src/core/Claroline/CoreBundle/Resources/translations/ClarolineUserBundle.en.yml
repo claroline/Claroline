@@ -1,9 +1,0 @@
-profile.register: Register
-profile.account_created: Account created
-
-#form field labels
-user_form_firstName: "First name :"
-user_form_lastName: "Last name :"
-user_form_username: "Username :"
-user_form_plainPassword_first: "Password :"
-user_form_plainPassword_second: "Verification :"
