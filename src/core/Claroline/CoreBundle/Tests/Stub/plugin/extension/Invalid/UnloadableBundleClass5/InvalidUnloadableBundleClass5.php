@@ -2,7 +2,7 @@
 
 namespace Invalid\UnloadableBundleClass5;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 abstract class InvalidUnloadableBundleClass5 extends ClarolineExtension
 {

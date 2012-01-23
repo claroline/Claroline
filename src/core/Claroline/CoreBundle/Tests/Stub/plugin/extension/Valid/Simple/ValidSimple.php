@@ -2,7 +2,7 @@
 
 namespace Valid\Simple;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class ValidSimple extends ClarolineExtension
 {

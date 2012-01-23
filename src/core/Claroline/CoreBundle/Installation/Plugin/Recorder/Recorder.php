@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Installation\Plugin\Recorder;
 
 use Claroline\CoreBundle\Installation\Plugin\Recorder\Writer\ConfigurationFileWriter;
 use Claroline\CoreBundle\Installation\Plugin\Recorder\Writer\DatabaseWriter;
-use Claroline\CoreBundle\AbstractType\ClarolinePlugin;
+use Claroline\CoreBundle\Plugin\ClarolinePlugin;
 
 class Recorder
 {

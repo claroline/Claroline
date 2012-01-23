@@ -2,7 +2,7 @@
 
 namespace Invalid\NonConventionalFQCN1\AdditionalNamespaceSegment;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class InvalidNonConventionalFQCN1 extends ClarolineExtension
 {

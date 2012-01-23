@@ -2,7 +2,7 @@
 
 namespace Invalid\NonExistentRoutingResource2;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class InvalidNonExistentRoutingResource2 extends ClarolineExtension
 {

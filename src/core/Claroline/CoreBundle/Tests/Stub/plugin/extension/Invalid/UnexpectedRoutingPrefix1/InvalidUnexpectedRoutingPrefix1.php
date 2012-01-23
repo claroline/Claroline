@@ -2,7 +2,7 @@
 
 namespace Invalid\UnexpectedRoutingPrefix1;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class InvalidUnexpectedRoutingPrefix1 extends ClarolineExtension
 {

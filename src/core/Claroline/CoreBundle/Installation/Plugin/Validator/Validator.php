@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Installation\Plugin\Validator;
 
-use Claroline\CoreBundle\AbstractType\ClarolinePlugin;
-use Claroline\CoreBundle\AbstractType\ClarolineTool;
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolinePlugin;
+use Claroline\CoreBundle\Plugin\ClarolineTool;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 use Claroline\CoreBundle\Installation\Plugin\Validator\Checker\CommonChecker;
 use Claroline\CoreBundle\Installation\Plugin\Validator\Checker\ToolChecker;
 use Claroline\CoreBundle\Installation\Plugin\Validator\Checker\ExtensionChecker;

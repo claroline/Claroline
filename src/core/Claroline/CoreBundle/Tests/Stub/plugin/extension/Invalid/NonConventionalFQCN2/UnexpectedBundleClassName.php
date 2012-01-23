@@ -2,7 +2,7 @@
 
 namespace Invalid\NonConventionalFQCN2;
 
-use Claroline\CoreBundle\AbstractType\ClarolineExtension;
+use Claroline\CoreBundle\Plugin\ClarolineExtension;
 
 class UnexpectedBundleClassName extends ClarolineExtension
 {

@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Installation\Plugin;
 
 use Claroline\CoreBundle\Installation\BundleMigrator;
-use Claroline\CoreBundle\AbstractType\ClarolinePlugin;
+use Claroline\CoreBundle\Plugin\ClarolinePlugin;
 
 class Migrator
 {

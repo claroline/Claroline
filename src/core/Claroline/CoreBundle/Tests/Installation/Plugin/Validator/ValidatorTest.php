@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Installation\Plugin\Validator;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\CoreBundle\AbstractType\ClarolinePlugin;
+use Claroline\CoreBundle\Plugin\ClarolinePlugin;
 
 class ValidatorTest extends WebTestCase
 {
@@ -88,8 +88,8 @@ class ValidatorTest extends WebTestCase
     private function getMockedPlugins()
     {
         $plugins = array();
-        $plugins['extension'] = $this->getMock('Claroline\CoreBundle\AbstractType\ClarolineExtension');
-        $plugins['tool'] = $this->getMock('Claroline\CoreBundle\AbstractType\ClarolineTool');
+        $plugins['extension'] = $this->getMock('Claroline\CoreBundle\Plugin\ClarolineExtension');
+        $plugins['tool'] = $this->getMock('Claroline\CoreBundle\Plugin\ClarolineTool');
         
         return $plugins;
     }
