@@ -1,6 +1,0 @@
-security.username: Nom d'utilisateur
-security.password: Mot de passe
-security.login: Connexion
-security.logout: Déconnexion
-security.login_submit: Connexion
-security.login_failure: La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.

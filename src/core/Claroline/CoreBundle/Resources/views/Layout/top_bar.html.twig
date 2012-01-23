@@ -2,12 +2,12 @@
 {% if connected %}
     <div id="section_menu">
         <a href="{{ path('claro_desktop_index') }}">
-            {{ 'desktop.desktop'|trans({}, 'ClarolineDesktopBundle') }}
+            {{ 'desktop'|trans({}, 'desktop') }}
         </a>
     {% if is_granted('ROLE_ADMIN') %}
              |
         <a href="{{ path('claro_admin_index') }}">
-            {{ 'admin.administration'|trans({}, 'ClarolineAdminBundle') }}
+            {{ 'administration'|trans({}, 'administration') }}
         </a>
     {% endif %}    
     </div>
@@ -16,16 +16,16 @@
     {% if connected %}
         <span>{{ username }}</span>
         <a href="{{ path('claro_security_logout') }}">
-            {{ 'security.logout'|trans({}, 'ClarolineSecurityBundle') }}
+            {{ 'logout'|trans({}, 'user') }}
         </a>
     {% else %}
         {% if register_target is not null %}
         <a href="{{ path(register_target) }}">
-            {{ 'profile.register'|trans({}, 'ClarolineUserBundle') }}
+            {{ 'register'|trans({}, 'user') }}
         </a> | 
         {% endif %}
         <a href="{{ path(login_target) }}">
-            {{ 'security.login'|trans({}, 'ClarolineSecurityBundle') }}
+            {{ 'login'|trans({}, 'user') }}
         </a>
     {% endif %}
     </div>
