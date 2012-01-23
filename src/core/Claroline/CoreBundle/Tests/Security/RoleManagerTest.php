@@ -30,7 +30,7 @@ class RoleManagerTest extends TransactionalTestCase
     
     public function testCreateARoleWithInvalidNameThrowsAnException()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\RoleException');
+        $this->setExpectedException('Claroline\CoreBundle\Exception\SecurityException');
         
         $role = new Role();
         $role->setName('');
@@ -40,7 +40,7 @@ class RoleManagerTest extends TransactionalTestCase
     
     public function testARoleCantBeDuplicated()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\RoleException');
+        $this->setExpectedException('Claroline\CoreBundle\Exception\SecurityException');
         
         $firstRole = new Role();
         $firstRole->setName('ROLE_TEST');

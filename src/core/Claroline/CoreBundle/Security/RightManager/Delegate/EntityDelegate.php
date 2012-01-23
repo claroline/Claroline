@@ -6,7 +6,7 @@ use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 
 class EntityDelegate implements TargetDelegateInterface
 {
@@ -35,10 +35,10 @@ class EntityDelegate implements TargetDelegateInterface
         {
             unset($ex);
             
-            throw new RightManagerException(
+            throw new SecurityException(
                 "The entity must be saved before any right is granted on it (and it must have " 
                 . "a valid identifier accessible via a getId or a getObjectIdentifier method).",
-                RightManagerException::INVALID_ENTITY_STATE
+                SecurityException::INVALID_ENTITY_STATE
             );
         }
     }

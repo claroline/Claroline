@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Security;
 use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Exception\RoleException;
+use Claroline\CoreBundle\Exception\SecurityException;
 
 class RoleManager
 {
@@ -53,7 +53,10 @@ class RoleManager
 
         if (count($errors) > 0)
         {
-            throw new RoleException(print_r($errors, true));
+            throw new SecurityException(
+                print_r($errors, true),
+                SecurityException::ROLE_EXCEPTION
+            );
         }
 
         $this->em->persist($role);

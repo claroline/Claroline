@@ -49,7 +49,8 @@ class DatabaseWriter
             
             throw new InstallationException(
                 "The plugin entity for '{$pluginFQCN}' cannot be validated. " 
-                . "Validation errors : {$errors->__toString()}." 
+                . "Validation errors : {$errors->__toString()}.",
+                InstallationException::ENTIY_VALIDATION_ERROR
             );
         }
 

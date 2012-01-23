@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Installation\Plugin;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\CoreBundle\Exception\LoaderException;
+use Claroline\CoreBundle\Exception\InstallationException;
 
 class LoaderTest extends WebTestCase
 {
@@ -33,9 +33,9 @@ class LoaderTest extends WebTestCase
             $this->loader->load('Invalid\NoBundleClassFile\InvalidNoBundleClassFile');
             $this->fail('No exception thrown');
         }
-        catch (LoaderException $ex)
+        catch (InstallationException $ex)
         {
-            $this->assertEquals(LoaderException::NO_PLUGIN_FOUND, $ex->getCode());
+            $this->assertEquals(InstallationException::NO_PLUGIN_FOUND, $ex->getCode());
         }
     }
     
@@ -46,9 +46,9 @@ class LoaderTest extends WebTestCase
             $this->loader->load('Incompatible\SameFQCNThanAnotherPlugin\IncompatibleSameFQCNThanAnotherPlugin');
             $this->fail('No exception thrown');
         }
-        catch (LoaderException $ex)
+        catch (InstallationException $ex)
         {
-            $this->assertEquals(LoaderException::MULTIPLE_PLUGINS_FOUND, $ex->getCode());
+            $this->assertEquals(InstallationException::MULTIPLE_PLUGINS_FOUND, $ex->getCode());
         }
     }
     
@@ -62,9 +62,9 @@ class LoaderTest extends WebTestCase
             $this->loader->load($fqcn);
             $this->fail('No exception thrown');
         }
-        catch (LoaderException $ex)
+        catch (InstallationException $ex)
         {
-            $this->assertEquals(LoaderException::NON_EXISTENT_BUNDLE_CLASS, $ex->getCode());
+            $this->assertEquals(InstallationException::NON_EXISTENT_BUNDLE_CLASS, $ex->getCode());
         }
     }
     
@@ -78,9 +78,9 @@ class LoaderTest extends WebTestCase
             $this->loader->load($fqcn);
             $this->fail('No exception thrown');
         }
-        catch (LoaderException $ex)
+        catch (InstallationException $ex)
         {
-            $this->assertEquals(LoaderException::NON_INSTANTIABLE_BUNDLE_CLASS, $ex->getCode());
+            $this->assertEquals(InstallationException::NON_INSTANTIABLE_BUNDLE_CLASS, $ex->getCode());
         }
     }
     

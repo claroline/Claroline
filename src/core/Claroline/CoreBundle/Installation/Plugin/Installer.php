@@ -85,7 +85,8 @@ class Installer
             $expectedStatus === true ? $stateDiscr = 'not' : $stateDiscr = 'already';
             
             throw new InstallationException(
-                "Plugin '{$pluginFQCN}' is {$stateDiscr} registered."
+                "Plugin '{$pluginFQCN}' is {$stateDiscr} registered.",
+                InstallationException::UNEXPECTED_REGISTRATION_STATUS
             );
         }
     }

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Security\RightManager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
@@ -58,9 +58,9 @@ class RightManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+            $this->assertEquals(SecurityException::INVALID_ENTITY_STATE, $ex->getCode());
         }
     }
     
@@ -74,9 +74,9 @@ class RightManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::INVALID_USER_STATE, $ex->getCode());
+            $this->assertEquals(SecurityException::INVALID_USER_STATE, $ex->getCode());
         }
     }
     
@@ -222,9 +222,9 @@ class RightManagerTest extends FunctionalTestCase
             $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+            $this->assertEquals(SecurityException::INVALID_ENTITY_STATE, $ex->getCode());
         }
     }
 
@@ -236,9 +236,9 @@ class RightManagerTest extends FunctionalTestCase
             $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::INVALID_ENTITY_STATE, $ex->getCode());
+            $this->assertEquals(SecurityException::INVALID_ENTITY_STATE, $ex->getCode());
         }
     }
     
@@ -273,9 +273,9 @@ class RightManagerTest extends FunctionalTestCase
             $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_EDIT);
             $this->fail('No exception thrown');
         }
-        catch (RightManagerException $ex)
+        catch (SecurityException $ex)
         {
-            $this->assertEquals(RightManagerException::INVALID_ROLE_STATE, $ex->getCode());
+            $this->assertEquals(SecurityException::INVALID_ROLE_STATE, $ex->getCode());
         }
     }
     

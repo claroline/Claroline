@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Security\RightManager\Delegate;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Exception\RightManagerException;
+use Claroline\CoreBundle\Exception\SecurityException;
 
 class StrategyChooser
 {
@@ -45,7 +45,7 @@ class StrategyChooser
             return $this->classDelegate;
         }
         
-        throw new RightManagerException("Cannot choose Target Strategy for [{$target}]");
+        throw new SecurityException("Cannot choose Target Strategy for [{$target}]");
     }
     
     public function chooseSubjectStrategy($subject)
@@ -65,7 +65,7 @@ class StrategyChooser
             return $this->roleDelegate;
         }
         
-        throw new RightManagerException("Cannot choose Subject Strategy for [{$subject}]");
+        throw new SecurityException("Cannot choose Subject Strategy for [{$subject}]");
     }
     
     public function getEntityDelegate()
