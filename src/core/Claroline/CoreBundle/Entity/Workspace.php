@@ -5,12 +5,12 @@ namespace Claroline\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Tool;
 use Claroline\CoreBundle\Entity\ToolInstance;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_workspace")
  */
 class Workspace
@@ -20,22 +20,21 @@ class Workspace
      * @ORM\Column(type="integer")
      * @ORM\generatedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length="255")
      * @Assert\NotBlank(message="workspace.name_not_blank")
      */
-    protected $name;
-
+    private $name;
+    
     /**
-     * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\User", 
-     *  inversedBy="workspaces"
+     * @ORM\OneToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
+     *  mappedBy="workspace"
      * )
-     * @ORM\JoinTable(name="claro_workspace_user")
      */
-    protected $users;
+    private $roles;
     
     /**
      * @ORM\OneToMany(
@@ -43,12 +42,12 @@ class Workspace
      *  mappedBy="hostWorkspace"
      * )
      */
-    protected $tools;
+    private $tools;
 
     public function __construct()
     {
         $this->tools = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
     
     public function getId()
@@ -66,21 +65,15 @@ class Workspace
         $this->name = $name;
     }
     
-    public function addUser(User $user)
+    public function getRoles()
     {
-        $this->users->add($user);
-        $user->getWorkspaceCollection()->add($this);
+        return $this->roles;
     }
-    
-    public function removeUser(User $user)
+
+    public function addRole(WorkspaceRole $role)
     {
-        $this->users->removeElement($user);
-        $user->getWorkspaceCollection()->removeElement($this);
-    }
-    
-    public function getUsers()
-    {
-        return $this->users->toArray();
+        $this->roles->add($role);
+        $role->setWorkspace($this);
     }
     
     public function addToolInstance(ToolInstance $toolInstance)

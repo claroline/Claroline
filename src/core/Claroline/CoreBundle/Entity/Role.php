@@ -9,10 +9,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="claro_role",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="role_idx", columns={"name"})}
- * )
+ * @ORM\Table(name="claro_role")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *      "Claroline\CoreBundle\Entity\Role" = "Claroline\CoreBundle\Entity\Role",
+ *      "Claroline\CoreBundle\Entity\WorkspaceRole" = "Claroline\CoreBundle\Entity\WorkspaceRole"
+ * })
  * @DoctrineAssert\UniqueEntity("name")
  */
 class Role implements RoleInterface

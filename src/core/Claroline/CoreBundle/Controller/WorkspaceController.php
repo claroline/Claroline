@@ -14,7 +14,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Manager\WorkspaceUserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Browsing\HistoryBrowser;
 
 class WorkspaceController
@@ -26,7 +26,7 @@ class WorkspaceController
     private $router;
     private $formFactory;
     private $twigEngine;
-    private $userManager;
+    private $workspaceManager;
     private $historyBrowser;
     
     public function __construct(
@@ -37,7 +37,7 @@ class WorkspaceController
         Router $router,
         FormFactory $factory,
         TwigEngine $engine,
-        WorkspaceUserManager $userManager,
+        WorkspaceManager $workspaceManager,
         HistoryBrowser $historyBrowser
     )
     {
@@ -48,7 +48,7 @@ class WorkspaceController
         $this->router = $router;
         $this->formFactory = $factory;
         $this->twigEngine = $engine;
-        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
         $this->historyBrowser = $historyBrowser;
     }
        
@@ -85,7 +85,11 @@ class WorkspaceController
         {
             $this->entityManager->persist($workspace);
             $this->entityManager->flush();
-            $this->userManager->addUser($workspace, $user, MaskBuilder::MASK_OWNER);
+            
+            
+            $this->workspaceManager->createWorkspace($workspace->getName(), $user);
+            
+            //$this->userManager->addUser($workspace, $user, MaskBuilder::MASK_OWNER);
             
             
             //$this->rightManager->setOwner($workspace, $user);

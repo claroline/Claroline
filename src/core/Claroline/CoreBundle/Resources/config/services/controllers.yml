@@ -46,6 +46,6 @@ services:
             - "@router"
             - "@form.factory"
             - "@templating.engine.twig"
-            - "@claroline.workspace.user_manager"
+            - "@claroline.workspace_manager"
             - "@claroline.common.history_browser"
             
