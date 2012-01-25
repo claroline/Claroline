@@ -14,11 +14,7 @@ use Claroline\CoreBundle\Entity\WorkspaceRole;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
- * @ORM\Table
- * (
- *     name="claro_user",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="username_idx", columns={"username"})}
- * )
+ * @ORM\Table(name="claro_user")
  * @DoctrineAssert\UniqueEntity("username")
  */
 class User implements UserInterface
@@ -64,22 +60,25 @@ class User implements UserInterface
     protected $plainPassword;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"persist"})
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      cascade={"persist"}
+     * )
      * @ORM\JoinTable(name="claro_user_role",
-     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      */
     protected $roles;
 
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
-     *  inversedBy="users"
+     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
+     *      inversedBy="users"
      * )
-     * @ORM\JoinTable(name="claro_user_workspace_role",
-     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="workspace_role_id", referencedColumnName="id")}
+     * @ORM\JoinTable(name="claro_user_role",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      */
     protected $workspaceRoles;
@@ -154,7 +153,7 @@ class User implements UserInterface
     /**
      * Returns the user's roles string values (needed for Symfony security checks).
      * 
-     * @return array
+     * @return array[string]
      */
     public function getRoles()
     {
@@ -165,22 +164,27 @@ class User implements UserInterface
             $roleNames[] = $role->getName();
         }
         
-        foreach ($this->workspaceRoles as $workspaceRole)
-        {
-            $roleNames[] = $workspaceRole->getName();
-        }
-        
         return $roleNames;
     }
     
     /**
-     * Returns the user's role object representations.
+     * Returns the user's roles as an ArrayCollection of Role objects.
      * 
-     * @return array[Role]
+     * @return ArrayCollection[Role]
      */
-    public function getRoleObjects()
+    public function getRoleCollection()
     {
-        return $this->roles->toArray();
+        return $this->roles;
+    }
+    
+    /**
+     * Returns the user's workspace roles as an ArrayCollection of WorkspaceRole objects.
+     * 
+     * @return ArrayCollection[WorkspaceRole]
+     */
+    public function getWorkspaceRoleCollection()
+    {
+        return $this->workspaceRoles;
     }
     
     public function addRole(Role $role)
@@ -202,23 +206,6 @@ class User implements UserInterface
         }
 
         return false;
-    }
-    
-    public function getWorkspaceRoles()
-    {
-        return $this->workspaceRoles;
-    }
-    
-    public function addWorkspaceRole(WorkspaceRole $role)
-    {
-        $this->workspaceRoles->add($role);
-        $role->getUsers()->add($this);
-    }
-    
-    public function removeWorkspacesRole(WorkspaceRole $role)
-    {
-        $this->workspaceRoles->removeElement($role);
-        $role->getUsers()->removeElement($this);
     }
     
     public function eraseCredentials()

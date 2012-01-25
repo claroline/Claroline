@@ -24,8 +24,8 @@ class WorkspaceRole extends Role
      *  targetEntity="Claroline\CoreBundle\Entity\User", 
      *  inversedBy="workspaceRoles"
      * )
-     * @ORM\JoinTable(name="claro_user_workspace_role",
-     *     joinColumns={@ORM\JoinColumn(name="workspace_role_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="claro_user_role",
+     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
      * )
      */
@@ -54,12 +54,12 @@ class WorkspaceRole extends Role
     public function addUser(User $user)
     {
         $this->users->add($user);
-        $user->getWorkspaceRoles()->add($this);
+        $user->getRoleCollection()->add($this);
     }
     
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
-        $user->getWorkspaceRoles()->removeElement($this);
+        $user->getRoleCollection()->removeElement($this);
     }
 }
