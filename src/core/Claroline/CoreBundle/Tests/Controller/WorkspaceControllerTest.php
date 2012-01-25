@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadWorkspaceData;
 
+// TODO : use FunctionalTestCase when active
 class WorkspaceControllerTest extends TransactionalTestCase
 {
     /**@var Crawler */

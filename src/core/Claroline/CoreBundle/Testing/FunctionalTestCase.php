@@ -2,7 +2,9 @@
 
 namespace Claroline\CoreBundle\Testing;
 
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
@@ -25,6 +27,17 @@ abstract class FunctionalTestCase extends TransactionalTestCase
         $this->roleManager = $this->client->getContainer()->get('claroline.security.role_manager');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     } 
+    
+    protected function loadUserFixture()
+    {
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $refRepo = new ReferenceRepository($em);
+        $userFixture = new LoadUserData();
+        $userFixture->setContainer($this->client->getContainer());
+        $userFixture->setReferenceRepository($refRepo);
+        
+        return $userFixture->load($em);
+    }
     
     protected function createUser
     (
@@ -72,7 +85,8 @@ abstract class FunctionalTestCase extends TransactionalTestCase
         $form = $crawler->filter('#login_form input[type=submit]')->form();
         $form['_username'] = $user->getUsername();
         $form['_password'] = $user->getPlainPassword();
-        $this->client->submit($form);
+        
+        return $this->client->submit($form);
     }
     
     /** @return \Symfony\Component\Security\Core\SecurityContextInterface */
