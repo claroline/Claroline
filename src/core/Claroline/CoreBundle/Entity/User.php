@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\WorkspaceRole;
 
 // TODO: Implements AdvancedUserInterface
 
@@ -73,17 +74,20 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\Workspace", 
+     *  targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
      *  inversedBy="users"
      * )
-     * @ORM\JoinTable(name="claro_workspace_user")
+     * @ORM\JoinTable(name="claro_user_workspace_role",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="workspace_role_id", referencedColumnName="id")}
+     * )
      */
-    protected $workspaces;
+    protected $workspaceRoles;
     
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->workspaces = new ArrayCollection();
+        $this->workspaceRoles = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
@@ -161,6 +165,11 @@ class User implements UserInterface
             $roleNames[] = $role->getName();
         }
         
+        foreach ($this->workspaceRoles as $workspaceRole)
+        {
+            $roleNames[] = $workspaceRole->getName();
+        }
+        
         return $roleNames;
     }
     
@@ -194,15 +203,22 @@ class User implements UserInterface
 
         return false;
     }
-
-    public function getWorkspaces()
+    
+    public function getWorkspaceRoles()
     {
-        return $this->workspaces->toArray();
+        return $this->workspaceRoles;
     }
     
-    public function getWorkspaceCollection()
+    public function addWorkspaceRole(WorkspaceRole $role)
     {
-        return $this->workspaces;
+        $this->workspaceRoles->add($role);
+        $role->getUsers()->add($this);
+    }
+    
+    public function removeWorkspacesRole(WorkspaceRole $role)
+    {
+        $this->workspaceRoles->removeElement($role);
+        $role->getUsers()->removeElement($this);
     }
     
     public function eraseCredentials()

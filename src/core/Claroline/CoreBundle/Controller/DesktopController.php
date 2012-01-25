@@ -30,17 +30,17 @@ class DesktopController
     
     private function renderWorkspaceBlock()
     {
-        $workspaces = array();
+        $workspaceRoles = array();
         $user = $this->securityContext->getToken()->getUser();
         
         if ($user instanceof User)
         {
-            $workspaces = $user->getWorkspaces(); 
+            $workspaceRoles = $user->getWorkspaceRoles(); 
         }
         
         return $this->twigEngine->render(
             'ClarolineCoreBundle:Desktop:workspaces_block.html.twig',
-            array('workspaces' => $workspaces)
+            array('workspace_roles' => $workspaceRoles)
         );
     }
 }
