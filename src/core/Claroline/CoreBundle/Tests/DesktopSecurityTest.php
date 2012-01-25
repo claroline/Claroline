@@ -2,23 +2,17 @@
 
 namespace Claroline\CoreBundle;
 
-use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
+use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
-class SecurityTest extends TransactionalTestCase
+class SecurityTest extends FunctionalTestCase
 {
+    /** @var array[User] */
+    private $users;
+    
     public function setUp()
     {
         parent::setUp();
-        
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $refRepo = new ReferenceRepository($em);
-        $userFixture = new LoadUserData();
-        $userFixture->setContainer($this->client->getContainer());
-        $userFixture->setReferenceRepository($refRepo);
-        $userFixture->load($em);
-        
+        $this->users = $this->loadUserFixture();
         $this->client->followRedirects();
     }
     
@@ -30,12 +24,7 @@ class SecurityTest extends TransactionalTestCase
     
     public function testAccessToDesktopSectionIsAllowedToSimpleUsers()
     {
-        $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('#login_form input[type=submit]')->form();
-        $form['_username'] = 'user';
-        $form['_password'] = '123';
-        $this->client->submit($form);
-        
+        $this->logUser($this->users['user']);        
         $crawler = $this->client->request('GET', '/desktop');
         $this->assertTrue($crawler->filter('#desktop.section')->count() > 0);
     }

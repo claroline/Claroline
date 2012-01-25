@@ -2,9 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\CoreBundle\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
 
 class WorkspaceManagerTest extends FunctionalTestCase
 {
@@ -17,8 +15,7 @@ class WorkspaceManagerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $container = $this->client->getContainer();
-        $this->initTestUsers($container->get('doctrine.orm.entity_manager'));
+        $this->users = $this->loadUserFixture();
         $this->workspaceManager = $this->client->getContainer()->get('claroline.workspace_manager');
     }
     
@@ -61,14 +58,5 @@ class WorkspaceManagerTest extends FunctionalTestCase
         
         $this->logUser($user);
         $this->assertTrue($this->getSecurityContext()->isGranted('ROLE_Workspace test user'));
-    }
-    
-    private function initTestUsers($entityManager)
-    {
-        $refRepo = new ReferenceRepository($entityManager);
-        $userFixture = new LoadUserData();
-        $userFixture->setContainer($this->client->getContainer());
-        $userFixture->setReferenceRepository($refRepo);
-        $this->users = $userFixture->load($entityManager);
     }
 }

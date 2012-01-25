@@ -2,49 +2,32 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
 
-class ResourceManagerTest extends TransactionalTestCase
+class ResourceManagerTest extends FunctionalTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
-    private $em;
-    
     /** @var Claroline\CoreBundle\Manager\ResourceManager */
     private $resourceManager;
     
-    /** @var Claroline\CoreBundle\Manager\UserManager */
-    private $userManager;
+    /** @var array[User] */
+    private $users;
     
     public function setUp()
     {
-        parent :: setUp();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        parent::setUp();
         $this->resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
-        $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
+        $this->users = $this->loadUserFixture();
     }
     
     public function testCreateResourceGivesPassedInUserOwnerPermissions()
     {
-        $user = new User();
-        $user->setFirstName('John');
-        $user->setLastName('Doe');
-        $user->setUserName('jdoe');
-        $user->setPlainPassword('123');
-        $this->userManager->create($user);
-        
         $resource = new Resource();
-        $this->resourceManager->createResource($resource, $user);
-
-        $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('#login_form input[type=submit]')->form();
-        $form['_username'] = 'jdoe';
-        $form['_password'] = '123';
-        $this->client->submit($form);
+        $this->resourceManager->createResource($resource, $this->users['user']);
         
-        $securityContext = $this->client->getContainer()->get('security.context');      
-        $this->assertTrue($securityContext->isGranted('OWNER', $resource));
+        $this->logUser($this->users['user']);   
+        
+        $this->assertTrue($this->getSecurityContext()->isGranted('OWNER', $resource));
     }
     
 //    public function test() // cf RightManager::getAllowedEntityIdsByUser

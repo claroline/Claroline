@@ -3,15 +3,13 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Entity\Tool;
 use Claroline\CoreBundle\Entity\Workspace;
 
-class ToolInstanceTest extends TransactionalTestCase
+class ToolInstanceTest extends FunctionalTestCase
 {
     /** @var Claroline\CoreBundle\Manager\ToolInstanceManager\ */
     private $manager;
@@ -40,41 +38,10 @@ class ToolInstanceTest extends TransactionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\ToolInstance');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-
-        $this->initTestWorkspace();
-        $this->initTestUsers();
-        $this->initTestTool();
-    }
-    
-    private function initTestWorkspace()
-    {
-        $this->workspace = new Workspace();
-        $this->workspace->setName('Workspace Test');
-        $this->em->persist($this->workspace);
-        $this->em->flush($this->workspace);
-    }
-    
-    private function initTestUsers()
-    {
-        $refRepo = new ReferenceRepository($this->em);
-        $userFixture = new LoadUserData();
-        $userFixture->setContainer($this->client->getContainer());
-        $userFixture->setReferenceRepository($refRepo);
-        $this->users = $userFixture->load($this->em);
-    }
-    
-    private function initTestTool()
-    {
-        $this->tool = new Tool();
-        $this->tool->setType('articleType');
-        $this->tool->setBundleFQCN('articleFQCN');
-        $this->tool->setBundleName('article');
-        $this->tool->setVendorName('articleVendor');
-        $this->tool->setNameTranslationKey('fr');
-        $this->tool->setDescriptionTranslationKey('article');
+        $this->users = $this->loadUserFixture();
         
-        $this->em->persist($this->tool);
-        $this->em->flush($this->tool);
+        $this->initTestWorkspace();
+        $this->initTestTool();
     }
     
     public function testCreateThenDeleteAnToolInstance()
@@ -101,25 +68,32 @@ class ToolInstanceTest extends TransactionalTestCase
         $toolInstance = $this->manager->create($this->tool, $this->workspace);
         $this->manager->setPermission($toolInstance, $this->users['user'], MaskBuilder::MASK_VIEW);
         
-        $this->logUser('user', '123');
+        $this->logUser($this->users['user']);
         
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $toolInstance));
         $this->assertFalse($this->getSecurityContext()->isGranted('EDIT', $toolInstance));
         $this->assertFalse($this->getSecurityContext()->isGranted('DELETE', $toolInstance));
     }
-    
-    private function logUser($username, $password)
+       
+    private function initTestWorkspace()
     {
-        $this->client->request('GET', '/logout');
-        $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('#login_form input[type=submit]')->form();
-        $form['_username'] = $username;
-        $form['_password'] = $password;
-        $this->client->submit($form);
+        $this->workspace = new Workspace();
+        $this->workspace->setName('Workspace Test');
+        $this->em->persist($this->workspace);
+        $this->em->flush($this->workspace);
     }
     
-    private function getSecurityContext()
+    private function initTestTool()
     {
-        return $this->client->getContainer()->get('security.context');
+        $this->tool = new Tool();
+        $this->tool->setType('articleType');
+        $this->tool->setBundleFQCN('articleFQCN');
+        $this->tool->setBundleName('article');
+        $this->tool->setVendorName('articleVendor');
+        $this->tool->setNameTranslationKey('fr');
+        $this->tool->setDescriptionTranslationKey('article');
+        
+        $this->em->persist($this->tool);
+        $this->em->flush($this->tool);
     }
 }

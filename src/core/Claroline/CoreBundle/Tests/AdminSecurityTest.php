@@ -2,23 +2,17 @@
 
 namespace Claroline\CoreBundle;
 
-use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
+use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
-class AdminSecurityTest extends TransactionalTestCase
+class AdminSecurityTest extends FunctionalTestCase
 {
+    /** @var array[User] */
+    private $users;
+    
     public function setUp()
     {
         parent::setUp();
-        
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $refRepo = new ReferenceRepository($em);
-        $userFixture = new LoadUserData();
-        $userFixture->setContainer($this->client->getContainer());
-        $userFixture->setReferenceRepository($refRepo);
-        $userFixture->load($em);
-        
+        $this->users = $this->loadUserFixture();
         $this->client->followRedirects();
     }
     
@@ -30,24 +24,15 @@ class AdminSecurityTest extends TransactionalTestCase
     
     public function testAccessToAdminSectionIsDeniedToSimpleUsers()
     {
-        $this->logUser('user', '123');
+        $this->logUser($this->users['user']);
         $this->client->request('GET', '/admin');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
     public function testAccessToAdminSectionIsAllowedToAdminUsers()
     {
-        $this->logUser('admin', '123');
+        $this->logUser($this->users['admin']);
         $crawler = $this->client->request('GET', '/admin');
         $this->assertTrue($crawler->filter('#administration.section')->count() > 0);
-    }
-    
-    private function logUser($username, $password)
-    {
-        $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('#login_form input[type=submit]')->form();
-        $form['_username'] = $username;
-        $form['_password'] = $password;
-        $this->client->submit($form);
     }
 }
