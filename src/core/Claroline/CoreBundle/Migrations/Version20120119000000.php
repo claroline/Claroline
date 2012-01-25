@@ -13,7 +13,6 @@ class Version20120119000000 extends BundleMigration
         $this->createRoleTable($schema);
         $this->createUserRoleTable($schema);
         $this->createWorkspaceTable($schema);
-        $this->createUserWorkspaceRoleTable($schema);
         $this->createResourceTable($schema);
         $this->createTextTableSchema($schema);
         $this->createPluginTable($schema);
@@ -30,7 +29,6 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_plugin');
         $schema->dropTable('claro_text');
         $schema->dropTable('claro_resource');
-        $schema->dropTable('claro_user_workspace_role');
         $schema->dropTable('claro_workspace');
         $schema->dropTable('claro_user_role');
         $schema->dropTable('claro_role');
@@ -93,26 +91,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         
         $this->storeTable($table);
-    }
-    
-    private function createUserWorkspaceRoleTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_user_workspace_role');
-
-        $table->addColumn('user_id', 'integer', array('notnull' => true));
-        $table->addColumn('workspace_role_id', 'integer', array('notnull' => true));
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'),
-            array('user_id'),
-            array('id'),
-            array("onDelete" => "CASCADE")
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_role'),
-            array('workspace_role_id'), 
-            array('id'),
-            array("onDelete" => "CASCADE")
-        );
     }
     
     private function createResourceTable(Schema $schema)

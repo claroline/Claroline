@@ -69,7 +69,7 @@ class WorkspaceManager
             if ($role->getName() == "ROLE_{$workspace->getName()} user")
             {
                 $role->addUser($user);
-                $user->addWorkspaceRole($role);
+                $user->addRole($role);
                 $this->entityManager->flush();
                 break;
             }

@@ -35,7 +35,7 @@ class DesktopController
         
         if ($user instanceof User)
         {
-            $workspaceRoles = $user->getWorkspaceRoles(); 
+            $workspaceRoles = $user->getWorkspaceRoleCollection(); 
         }
         
         return $this->twigEngine->render(
