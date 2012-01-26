@@ -23,9 +23,6 @@ class ToolInstanceTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Entity\Workspace */
     private $workspace;
     
-    /** @var array[User] */
-    private $users;
-    
     /** @var Claroline\CoreBundle\Entity\tool */
     private $tool;   
 
@@ -38,8 +35,8 @@ class ToolInstanceTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\ToolInstance');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->users = $this->loadUserFixture();
-        
+
+        $this->loadUserFixture();
         $this->initTestWorkspace();
         $this->initTestTool();
     }
@@ -66,9 +63,10 @@ class ToolInstanceTest extends FunctionalTestCase
     {
         $toolInstance = new ToolInstance;
         $toolInstance = $this->manager->create($this->tool, $this->workspace);
-        $this->manager->setPermission($toolInstance, $this->users['user'], MaskBuilder::MASK_VIEW);
+        $user = $this->getFixtureReference('user/user');
+        $this->manager->setPermission($toolInstance, $user, MaskBuilder::MASK_VIEW);
         
-        $this->logUser($this->users['user']);
+        $this->logUser($user);
         
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $toolInstance));
         $this->assertFalse($this->getSecurityContext()->isGranted('EDIT', $toolInstance));

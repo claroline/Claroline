@@ -7,19 +7,16 @@ use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
 class RegistrationControllerTest extends FunctionalTestCase
 {
-    /** @var array[User] */
-    private $users;
-    
     public function setUp()
     {
         parent::setUp();
-        $this->users = $this->loadUserFixture();
+        $this->loadUserFixture();
         $this->client->followRedirects();
     }
     
     public function testUserCanBeRegisteredByAdmin()
     {
-        $this->logUser($this->users['admin']);
+        $this->logUser($this->getFixtureReference('user/admin'));
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $crawler = $this->logUser($this->getUser('bdoe'));
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
@@ -27,7 +24,7 @@ class RegistrationControllerTest extends FunctionalTestCase
     
     public function testUserCannotBeRegisteredByUnauthorizedUser()
     {
-        $this->logUser($this->users['user']);
+        $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/user/register');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -35,9 +32,10 @@ class RegistrationControllerTest extends FunctionalTestCase
     public function testUserCanBeRegisteredByAuthorizedUser()
     {
         $rm = $this->client->getContainer()->get('claroline.security.right_manager');
-        $rm->addRight('Claroline\CoreBundle\Entity\User', $this->users['user'], MaskBuilder::MASK_CREATE);    
+        $user = $this->getFixtureReference('user/user');
+        $rm->addRight('Claroline\CoreBundle\Entity\User', $user, MaskBuilder::MASK_CREATE);    
         
-        $this->logUser($this->users['user']);
+        $this->logUser($user);
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         
         $crawler = $this->logUser($this->getUser('bdoe'));

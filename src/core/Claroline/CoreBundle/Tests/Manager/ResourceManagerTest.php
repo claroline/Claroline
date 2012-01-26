@@ -10,22 +10,20 @@ class ResourceManagerTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Manager\ResourceManager */
     private $resourceManager;
     
-    /** @var array[User] */
-    private $users;
-    
     public function setUp()
     {
         parent::setUp();
         $this->resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
-        $this->users = $this->loadUserFixture();
+        $this->loadUserFixture();
     }
     
     public function testCreateResourceGivesPassedInUserOwnerPermissions()
     {
         $resource = new Resource();
-        $this->resourceManager->createResource($resource, $this->users['user']);
+        $user = $this->getFixtureReference('user/user');
+        $this->resourceManager->createResource($resource, $user);
         
-        $this->logUser($this->users['user']);   
+        $this->logUser($user);   
         
         $this->assertTrue($this->getSecurityContext()->isGranted('OWNER', $resource));
     }

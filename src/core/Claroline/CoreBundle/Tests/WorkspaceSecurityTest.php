@@ -6,13 +6,10 @@ use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
 class WorkspaceSecurityTest extends FunctionalTestCase
 {
-    /** @var array[User] */
-    private $users;
-    
     public function setUp()
     {
         parent::setUp();
-        $this->users = $this->loadUserFixture();
+        $this->loadUserFixture();
         $this->client->followRedirects();
     }
     
@@ -24,11 +21,11 @@ class WorkspaceSecurityTest extends FunctionalTestCase
     
     public function testWorkspaceCreationIsReservedToWorkspaceCreators()
     {
-        $this->logUser($this->users['user']);
+        $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/workspace/new/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         
-        $this->logUser($this->users['admin']);
+        $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/workspace/new/form');
         $this->assertTrue($crawler->filter('#workspaces.section')->count() > 0);
     }

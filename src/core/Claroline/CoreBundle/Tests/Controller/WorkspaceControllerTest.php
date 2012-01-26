@@ -6,8 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadWorkspaceData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 // TODO : use FunctionalTestCase when active
 class WorkspaceControllerTest extends TransactionalTestCase

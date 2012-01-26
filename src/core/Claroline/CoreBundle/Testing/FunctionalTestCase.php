@@ -4,78 +4,40 @@ namespace Claroline\CoreBundle\Testing;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\ORM\LoadUserData;
+use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 
 abstract class FunctionalTestCase extends TransactionalTestCase
 {
-    /** @var UserManager */
-    private $userManager;
-    
-    /** @var RoleManager */
-    private $roleManager;
-    
-    /** @var \Doctrine\ORM\EntityManager */
+    /** @var Doctrine\ORM\EntityManager */
     private $em;
 
+    /** @var ReferenceRepository */
+    private $referenceRepo;
+    
     public function setUp()
     {
         parent::setUp();
-        $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
-        $this->roleManager = $this->client->getContainer()->get('claroline.security.role_manager');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-    } 
+        $this->referenceRepo = new ReferenceRepository($this->em);
+    }
     
     protected function loadUserFixture()
     {
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $refRepo = new ReferenceRepository($em);
+        $roleFixture = new LoadPlatformRolesData();
+        $roleFixture->setReferenceRepository($this->referenceRepo);
+        $roleFixture->load($this->em);
         $userFixture = new LoadUserData();
         $userFixture->setContainer($this->client->getContainer());
-        $userFixture->setReferenceRepository($refRepo);
+        $userFixture->setReferenceRepository($this->referenceRepo);
         
-        return $userFixture->load($em);
+        return $userFixture->load($this->em);
     }
-    
-    protected function createUser
-    (
-        $firstName = "John", 
-        $lastName = "Doe", 
-        $username = "jdoe", 
-        $password = "topsecret",
-        $role = null
-    )
+
+    protected function getFixtureReference($name)
     {
-        $user = new User();
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
-        $user->setUserName($username);
-        $user->setPlainPassword($password);
-        $role && $user->addRole($role);
-        
-        $this->userManager->create($user);
-        
-        return $user;
-    }
-    
-    protected function createRole($roleName = 'ROLE_FOO')
-    {
-        $role = new Role();
-        $role->setName($roleName);
-        $this->roleManager->create($role);
-        
-        return $role;
-    }
-    
-    protected function createEntity($value = "foo")
-    {
-        $entity = new FirstEntity();
-        $entity->setFirstEntityField($value);
-        $this->em->persist($entity);
-        $this->em->flush();
-        return $entity;
+        return $this->referenceRepo->getReference($name);
     }
     
     protected function logUser(User $user)
