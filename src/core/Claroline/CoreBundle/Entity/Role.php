@@ -4,11 +4,12 @@ namespace Claroline\CoreBundle\Entity;
 
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  * @ORM\Table(name="claro_role")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -16,6 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *      "Claroline\CoreBundle\Entity\Role" = "Claroline\CoreBundle\Entity\Role",
  *      "Claroline\CoreBundle\Entity\WorkspaceRole" = "Claroline\CoreBundle\Entity\WorkspaceRole"
  * })
+ * @Gedmo\Tree(type="nested")
  * @DoctrineAssert\UniqueEntity("name")
  */
 class Role implements RoleInterface
@@ -33,6 +35,49 @@ class Role implements RoleInterface
      */
     protected $name;
 
+    /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer")
+     */
+    private $lft;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    private $lvl;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer")
+     */
+    private $rgt;
+
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\Column(name="root", type="integer", nullable=true)
+     */
+    private $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      inversedBy="children"
+     * )
+     * @ORM\JoinColumn(
+     *      name="parent_id",
+     *      referencedColumnName="id",
+     *      onDelete="SET NULL"
+     * )
+     */
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Role", mappedBy="parent")
+     * @ORM\OrderBy({"lft" = "ASC"})
+     */
+    private $children;
     
     public function getId()
     {
@@ -57,5 +102,15 @@ class Role implements RoleInterface
     public function getRole()
     {
         return $this->getName();
+    }
+    
+    public function setParent(Role $role = null)
+    {
+        $this->parent = $role;    
+    }
+
+    public function getParent()
+    {
+        return $this->parent;   
     }
 }
