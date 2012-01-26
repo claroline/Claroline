@@ -7,19 +7,16 @@ use Claroline\CoreBundle\Entity\User;
 
 class AuthenticationControllerTest extends FunctionalTestCase
 {
-    /** @var array[User] */
-    private $users;
-    
     public function setUp()
     {
         parent::setUp();
-        $this->users = $this->loadUserFixture();
+        $this->loadUserFixture();
         $this->client->followRedirects();
     }
 
     public function testLoginWithValidCredentialsDoesntReturnFailureMsg()
     {
-        $crawler = $this->logUser($this->users['user']);
+        $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
 

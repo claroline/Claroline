@@ -3,11 +3,11 @@
 namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Tests\Security\RightManager\RightManagerTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\CoreBundle\Exception\SecurityException;
 
-class RestrictedOwnerManagerTest extends FunctionalTestCase
+class RestrictedOwnerManagerTest extends RightManagerTestCase
 {
     /** @var RestrictedOwnerRightManager */
     private $rightManager;

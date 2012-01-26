@@ -6,13 +6,10 @@ use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
 class SecurityTest extends FunctionalTestCase
 {
-    /** @var array[User] */
-    private $users;
-    
     public function setUp()
     {
         parent::setUp();
-        $this->users = $this->loadUserFixture();
+        $this->loadUserFixture();
         $this->client->followRedirects();
     }
     
@@ -24,7 +21,7 @@ class SecurityTest extends FunctionalTestCase
     
     public function testAccessToDesktopSectionIsAllowedToSimpleUsers()
     {
-        $this->logUser($this->users['user']);        
+        $this->logUser($this->getFixtureReference('user/user'));        
         $crawler = $this->client->request('GET', '/desktop');
         $this->assertTrue($crawler->filter('#desktop.section')->count() > 0);
     }

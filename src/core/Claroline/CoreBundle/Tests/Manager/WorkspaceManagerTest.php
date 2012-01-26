@@ -9,19 +9,16 @@ class WorkspaceManagerTest extends FunctionalTestCase
     /** @var WorkspaceManager */
     private $workspaceManager;
     
-    /** @var array[User] */
-    private $users;
-    
     public function setUp()
     {
         parent::setUp();
-        $this->users = $this->loadUserFixture();
+        $this->loadUserFixture();
         $this->workspaceManager = $this->client->getContainer()->get('claroline.workspace_manager');
     }
     
     public function testManagerOfANewlyCreatedWorkspaceOwnsTheWorkspaceAndHasManagerRole()
     {
-        $manager = $this->users['user'];
+        $manager = $this->getFixtureReference('user/user');
         $workspace = $this->workspaceManager->createWorkspace('Workspace test', $manager);
         
         $this->logUser($manager);
@@ -32,7 +29,7 @@ class WorkspaceManagerTest extends FunctionalTestCase
     
     public function testANewlyCreatedWorkspaceHasADefaultUserRoleIfNoPublicRolesAreSpecified()
     {
-        $manager = $this->users['user'];
+        $manager = $this->getFixtureReference('user/user');
         $this->workspaceManager->createWorkspace('Workspace test', $manager);
         
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
@@ -51,8 +48,8 @@ class WorkspaceManagerTest extends FunctionalTestCase
     
     public function testASimpleUserCanBeAdded()
     {
-        $manager = $this->users['user'];
-        $user = $this->users['admin'];
+        $manager = $this->getFixtureReference('user/user');
+        $user = $this->getFixtureReference('user/admin');
         $workspace = $this->workspaceManager->createWorkspace('Workspace test', $manager);
         $this->workspaceManager->addSimpleUser($workspace, $user);
         

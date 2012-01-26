@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\DataFixtures\ORM;
+namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,7 +10,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Security\RoleManager;
 use Claroline\CoreBundle\Entity\User;
 
-class LoadUserData extends AbstractFixture implements FixtureInterface, ContainerAwareInterface
+class LoadUserData extends AbstractFixture implements ContainerAwareInterface
 {
     /** @var ContainerInterface $container */
     private $container;
@@ -27,10 +27,7 @@ class LoadUserData extends AbstractFixture implements FixtureInterface, Containe
         $admin->setLastName('Doe');
         $admin->setUserName('admin');
         $admin->setPlainPassword('123');
-        
-        $roleManager = $this->container->get('claroline.security.role_manager');
-        $adminRole = $roleManager->getRole('ROLE_ADMIN', RoleManager::CREATE_IF_NOT_EXISTS);
-        $admin->addRole($adminRole);
+        $admin->addRole($this->getReference('role/admin'));
         
         $user = new User();
         $user->setFirstName('Jane');
@@ -44,10 +41,5 @@ class LoadUserData extends AbstractFixture implements FixtureInterface, Containe
 
         $this->addReference('user/admin', $admin);
         $this->addReference('user/user', $user);
-        
-        return array(
-            'admin' => $admin,
-            'user' => $user
-        );
     }
 }
