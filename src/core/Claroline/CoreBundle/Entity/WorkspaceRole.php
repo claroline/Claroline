@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_workspace_role")
  */
 class WorkspaceRole extends Role
 {

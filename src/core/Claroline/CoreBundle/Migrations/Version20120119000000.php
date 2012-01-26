@@ -58,6 +58,11 @@ class Version20120119000000 extends BundleMigration
         $this->addDiscriminator($table);
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
+        $table->addColumn('lft', 'integer', array('notnull' => true));
+        $table->addColumn('rgt', 'integer', array('notnull' => true));
+        $table->addColumn('lvl', 'integer', array('notnull' => true));
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('name'));
         
         $this->storeTable($table);
