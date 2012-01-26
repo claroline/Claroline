@@ -18,21 +18,39 @@ class PlatformInstallCommand extends ContainerAwareCommand
     
         $this->addOption(
             'with-plugins', 
-            'w', 
+            'wp', 
             InputOption::VALUE_NONE, 
             "When set to true, available plugins will be installed"
+        );
+        
+        $this->addOption(
+            'with-prod-fixtures', 
+            'wf', 
+            InputOption::VALUE_NONE, 
+            "When set to true, production data fixtures will be loaded"
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $manager = $this->getContainer()->get('claroline.install.core_installer');
-        
         $output->writeln('Installing the platform...');
+        $manager = $this->getContainer()->get('claroline.install.core_installer');
         $manager->install();
         
         $aclCommand = $this->getApplication()->find('init:acl');        
         $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
+        
+        if ($input->getOption('with-prod-fixtures'))
+        {
+            $output->writeln('Loading platform basic data...');
+            $fixtureCommand = $this->getApplication()->find('doctrine:fixture:load');
+            $coreFixturesPath = realpath(__DIR__ . '/../../../../../src/core/Claroline/CoreBundle/DataFixtures');
+            $fixtureInput = new ArrayInput(array(
+                'command' => 'doctrine:fixtures:load',
+                '--fixtures' => $coreFixturesPath
+            ));
+            $fixtureCommand->run($fixtureInput, $output);
+        }
         
         if ($input->getOption('with-plugins'))
         {            
@@ -41,12 +59,12 @@ class PlatformInstallCommand extends ContainerAwareCommand
         }
         
         $assetCommand = $this->getApplication()->find('assets:install');
-        $input = new ArrayInput(array(
+        $assetInput = new ArrayInput(array(
             'command' => 'assets:install',
             'target' => realpath(__DIR__ . '/../../../../../web'),
             '--symlink'=> false
         ));
-        $assetCommand->run($input, $output);        
+        $assetCommand->run($assetInput, $output);        
         
         $output->writeln('Done');
     }
