@@ -17,11 +17,6 @@ security:
             anonymous: ~
             logout: true
     
-    role_hierarchy:
-        ROLE_WS_CREATOR: ROLE_USER
-        ROLE_ADMIN: [ROLE_USER, ROLE_WS_CREATOR]
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
-    
     access_control:
         - { path: ^/desktop, roles: ROLE_USER }
         - { path: ^/workspace/new, roles: ROLE_WS_CREATOR }

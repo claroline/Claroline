@@ -39,25 +39,25 @@ class Role implements RoleInterface
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
-    private $lft;
+    protected $lft;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $lvl;
+    protected $lvl;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
-    private $rgt;
+    protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    private $root;
+    protected $root;
 
     /**
      * @Gedmo\TreeParent
@@ -71,13 +71,13 @@ class Role implements RoleInterface
      *      onDelete="SET NULL"
      * )
      */
-    private $parent;
+    protected $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Role", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
      */
-    private $children;
+    protected $children;
     
     public function getId()
     {
