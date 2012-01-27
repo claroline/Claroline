@@ -25,7 +25,7 @@ class WorkspaceSecurityTest extends FunctionalTestCase
         $this->client->request('GET', '/workspace/new/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', '/workspace/new/form');
         $this->assertTrue($crawler->filter('#workspaces.section')->count() > 0);
     }

@@ -1,5 +1,10 @@
 services:
   
+    claroline.security.admin_voter:
+        class: Claroline\CoreBundle\Security\Voter\AdministratorVoter
+        tags:
+            -  { name: security.voter }
+  
     claroline.security.role_manager:
         class: Claroline\CoreBundle\Security\RoleManager
         arguments:
