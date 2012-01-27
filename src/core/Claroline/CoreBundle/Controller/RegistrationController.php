@@ -91,11 +91,6 @@ class RegistrationController
             return;
         }
         
-        if ($this->securityContext->isGranted('ROLE_ADMIN'))
-        {
-            return;
-        }
-        
         if ($this->securityContext->isGranted('CREATE', ClassIdentity::fromDomainClass('Claroline\CoreBundle\Entity\User')))
         {
             return;
