@@ -21,7 +21,20 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     }
     
     public function load($manager)
-    {
+    {   
+        $user = new User();
+        $user->setFirstName('Jane');
+        $user->setLastName('Doe');
+        $user->setUserName('user');
+        $user->setPlainPassword('123');
+
+        $wsCreator = new User();
+        $wsCreator->setFirstName('Henry');
+        $wsCreator->setLastName('Doe');
+        $wsCreator->setUserName('ws_creator');
+        $wsCreator->setPlainPassword('123');
+        $wsCreator->addRole($this->getReference('role/ws_creator'));
+        
         $admin = new User();
         $admin->setFirstName('John');
         $admin->setLastName('Doe');
@@ -29,17 +42,13 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         $admin->setPlainPassword('123');
         $admin->addRole($this->getReference('role/admin'));
         
-        $user = new User();
-        $user->setFirstName('Jane');
-        $user->setLastName('Doe');
-        $user->setUserName('user');
-        $user->setPlainPassword('123');
-
-        $userManager = $this->container->get('claroline.user.manager');    
-        $userManager->create($admin);
+        $userManager = $this->container->get('claroline.user.manager');
         $userManager->create($user);
+        $userManager->create($wsCreator);
+        $userManager->create($admin);
 
-        $this->addReference('user/admin', $admin);
         $this->addReference('user/user', $user);
+        $this->addReference('user/ws_creator', $wsCreator);
+        $this->addReference('user/admin', $admin);
     }
 }

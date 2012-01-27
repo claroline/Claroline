@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\Role;
 
 class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInterface
-{    
+{
     public function load($manager)
     {
         $userRole = new Role();

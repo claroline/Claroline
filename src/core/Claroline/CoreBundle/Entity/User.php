@@ -149,9 +149,43 @@ class User implements UserInterface
     {
         $this->plainPassword = $plainPassword;
     }
-
+    
     /**
-     * Returns the user's roles string values (needed for Symfony security checks).
+     * Checks if the user has a given role. This method will explore
+     * role hierarchies if necessary.
+     * 
+     * @param string $roleName
+     * 
+     * @return boolean
+     */
+    public function hasRole($roleName)
+    {
+        foreach ($this->roles as $role)
+        {
+            if ($role->getName() == $roleName)
+            {
+                return true;
+            }
+            else
+            {
+                while (null !== $parentRole = $role->getParent())
+                {
+                    if ($parentRole->getName() == $roleName)
+                    {
+                        return true;
+                    }
+                    
+                    $role = $parentRole;
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    /**
+     * Returns the user's roles (including role's ancestors) as an array 
+     * of string values (needed for Symfony security checks).
      * 
      * @return array[string]
      */
@@ -159,7 +193,7 @@ class User implements UserInterface
     {
         $roleNames = array();
         
-        foreach ($this->roles->toArray() as $role)
+        foreach ($this->getRoleCollection(true) as $role)
         {
             $roleNames[] = $role->getName();
         }
@@ -170,11 +204,43 @@ class User implements UserInterface
     /**
      * Returns the user's roles as an ArrayCollection of Role objects.
      * 
+     * By default, this method will only return the actual stored roles, 
+     * which are always the leaf nodes of a hierarchy, if any. For example,
+     * given a hierarchy :
+     * 
+     *  ROLE_A
+     *      ROLE_B
+     *          ROLE_C,
+     * 
+     * if the current user has ROLE_C, the returned collection will only 
+     * include ROLE_C. But if the first parameter is set to true, the collection
+     * will also contain the ancestors of ROLE_C, i.e. ROLE_B and ROLE_A.
+     * 
+     * @param boolean $includeAncestorRoles
+     * 
      * @return ArrayCollection[Role]
      */
-    public function getRoleCollection()
+    public function getRoleCollection($includeAncestorRoles = false)
     {
-        return $this->roles;
+        if (false === $includeAncestorRoles)
+        {
+            return $this->roles;          
+        }
+        
+        $roles = new ArrayCollection();
+        
+        foreach ($this->roles as $role)
+        {
+            $roles->add($role);
+                
+            while (null !== $parentRole = $role->getParent())
+            {
+                $roles->add($parentRole);
+                $role = $parentRole;
+            }
+        }
+        
+        return $roles;
     }
     
     /**
@@ -187,6 +253,15 @@ class User implements UserInterface
         return $this->workspaceRoles;
     }
     
+    /**
+     * Adds a role to the user role collection. This method effectively add
+     * the role only if it isn't in the collection yet, and if it isn't the ancestor
+     * of an already stored role (ex: given a hierarchy ROLE_USER -> ROLE_ADMIN, 
+     * adding the role ROLE_USER to an user who already has the role ROLE_ADMIN 
+     * won't have any effect).
+     * 
+     * @param Role $role 
+     */
     public function addRole(Role $role)
     {
         if (! $this->hasRole($role->getName()))
@@ -195,19 +270,56 @@ class User implements UserInterface
         }
     }
 
-    public function hasRole($roleName)
+    /**
+     * Removes a role from the user role collection. The children of the role to be 
+     * removed are removed as well, but its parent is kept (ex: given a hierarchy 
+     * ROLE_A -> ROLE_B -> ROLE_C, removing ROLE_B from an user who has ROLE_C will 
+     * remove ROLE_B and ROLE_C, but not ROLE_A).
+     * 
+     * @param Role $role
+     */
+    public function removeRole(Role $role)
     {
-        foreach ($this->roles as $role)
+        foreach ($this->roles as $storedRole)
         {
-            if ($role->getName() == $roleName)
+            if ($role === $storedRole)
             {
-                return true;
+                // remove role
+                $this->roles->removeElement($storedRole);
+                
+                // but keep parent role, if any 
+                if (null !== $parentRole = $storedRole->getParent())
+                {
+                    $this->roles->add($parentRole);
+                }
+                
+                return;
+            }
+            else
+            {
+                $currentRole = $storedRole;
+                
+                while (null !== $parentRole = $currentRole->getParent())
+                {
+                    if ($parentRole === $role)
+                    {
+                        // remove children role
+                        $this->roles->removeElement($storedRole);
+                        
+                        // but keep parent role, if any
+                        if (null !== $ancestorRole = $parentRole->getParent())
+                        {
+                            $this->roles->add($ancestorRole);
+                        }
+                        
+                    }
+                    
+                    $currentRole = $parentRole;
+                }
             }
         }
-
-        return false;
     }
-    
+
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -215,7 +327,7 @@ class User implements UserInterface
 
     public function equals(UserInterface $user)
     {
-        if (!$user instanceof User) 
+        if (! $user instanceof User) 
         {
             return false;
         }
