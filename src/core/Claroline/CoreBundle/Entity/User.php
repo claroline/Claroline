@@ -83,6 +83,18 @@ class User implements UserInterface
      */
     protected $workspaceRoles;
     
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
+     *      inversedBy="users"
+     * )
+     * @ORM\JoinTable(name="claro_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
+    
     public function __construct()
     {
         $this->roles = new ArrayCollection();

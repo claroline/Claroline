@@ -10,9 +10,12 @@ class Version20120119000000 extends BundleMigration
     public function up(Schema $schema)
     {
         $this->createUserTable($schema);
+        $this->createGroupTable($schema);
+        $this->createUserGroupTable($schema);
+        $this->createWorkspaceTable($schema);
         $this->createRoleTable($schema);
         $this->createUserRoleTable($schema);
-        $this->createWorkspaceTable($schema);
+        $this->createGroupRoleTable($schema);
         $this->createResourceTable($schema);
         $this->createTextTableSchema($schema);
         $this->createPluginTable($schema);
@@ -29,9 +32,11 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_plugin');
         $schema->dropTable('claro_text');
         $schema->dropTable('claro_resource');
-        $schema->dropTable('claro_workspace');
+        $schema->dropTable('claro_group_role');
         $schema->dropTable('claro_user_role');
         $schema->dropTable('claro_role');
+        $schema->dropTable('claro_workspace');
+        $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
     }
     
@@ -50,6 +55,52 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
     
+    private function createGroupTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_group');
+        
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 255));
+        $table->addColumn('lft', 'integer', array('notnull' => true));
+        $table->addColumn('rgt', 'integer', array('notnull' => true));
+        $table->addColumn('lvl', 'integer', array('notnull' => true));
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addUniqueIndex(array('name'));
+        
+        $this->storeTable($table);
+    }
+    
+    private function createUserGroupTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_user_group');
+
+        $table->addColumn('user_id', 'integer', array('notnull' => true));
+        $table->addColumn('group_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_group'),
+            array('group_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
+    }
+    
+    private function createWorkspaceTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace');
+        
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 255));
+        
+        $this->storeTable($table);
+    }
+    
     private function createRoleTable(Schema $schema)
     {
         $table = $schema->createTable('claro_role');
@@ -63,6 +114,12 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
         $table->addUniqueIndex(array('name'));
         
         $this->storeTable($table);
@@ -88,14 +145,24 @@ class Version20120119000000 extends BundleMigration
         );
     }
     
-    private function createWorkspaceTable(Schema $schema)
+    private function createGroupRoleTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_workspace');
-        
-        $this->addId($table);
-        $table->addColumn('name', 'string', array('length' => 255));
-        
-        $this->storeTable($table);
+        $table = $schema->createTable('claro_group_role');
+
+        $table->addColumn('group_id', 'integer', array('notnull' => true));
+        $table->addColumn('role_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_group'),
+            array('group_id'),
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_role'),
+            array('role_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
     }
     
     private function createResourceTable(Schema $schema)
