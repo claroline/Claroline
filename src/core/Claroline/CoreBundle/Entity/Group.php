@@ -2,25 +2,19 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Symfony\Component\Security\Core\Role\RoleInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
- * @ORM\Table(name="claro_role")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({
- *      "Claroline\CoreBundle\Entity\Role" = "Claroline\CoreBundle\Entity\Role",
- *      "Claroline\CoreBundle\Entity\WorkspaceRole" = "Claroline\CoreBundle\Entity\WorkspaceRole"
- * })
+ * @ORM\Entity
+ * @ORM\Table(name="claro_group")
  * @Gedmo\Tree(type="nested")
  * @DoctrineAssert\UniqueEntity("name")
  */
-class Role implements RoleInterface
+class Group
 {
     /**
      * @ORM\Id
@@ -34,7 +28,7 @@ class Role implements RoleInterface
      * @Assert\NotBlank()
      */
     protected $name;
-
+    
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
@@ -58,11 +52,11 @@ class Role implements RoleInterface
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
     protected $root;
-
+    
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
      *      inversedBy="children"
      * )
      * @ORM\JoinColumn(
@@ -75,45 +69,40 @@ class Role implements RoleInterface
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
      *      mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     protected $children;
     
-    public function getId()
-    {
-        return $this->id;
-    }
-        
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
     /**
-     * Alias of getName().
-     * 
-     * @return string The role name.
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\User", 
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="claro_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
      */
-    public function getRole()
-    {
-        return $this->getName();
-    }
+    protected $users;
     
-    public function setParent(Role $role = null)
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="claro_group_role",
+     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * )
+     */
+    protected $roles;
+    
+    public function __construct()
     {
-        $this->parent = $role;    
-    }
-
-    public function getParent()
-    {
-        return $this->parent;   
+        $this->users = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 }
