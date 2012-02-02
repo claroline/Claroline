@@ -38,9 +38,9 @@ $coreNamespaces = array(
 
 $pluginNamespaces = array();
 
-if (file_exists(__DIR__.'/config/plugin/namespaces'))
+if (file_exists(__DIR__.'/config/local/plugin/namespaces'))
 {
-    $namespaceValues = file(__DIR__.'/config/plugin/namespaces', FILE_IGNORE_NEW_LINES);
+    $namespaceValues = file(__DIR__.'/config/local/plugin/namespaces', FILE_IGNORE_NEW_LINES);
     $pluginNamespaces = array_fill_keys(
         $namespaceValues, 
         array(

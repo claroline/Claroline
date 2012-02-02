@@ -26,9 +26,9 @@ class AppKernel extends Kernel
             new Claroline\CoreBundle\ClarolineCoreBundle()
         );
 
-        if (file_exists(__DIR__.'/config/plugin/bundles'))
+        if (file_exists(__DIR__.'/config/local/plugin/bundles'))
         {
-            foreach (file(__DIR__.'/config/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
+            foreach (file(__DIR__.'/config/local/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
             {
                 $bundles[] = new $bundle;
             }
