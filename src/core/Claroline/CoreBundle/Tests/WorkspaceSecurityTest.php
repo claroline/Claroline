@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
 class WorkspaceSecurityTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();

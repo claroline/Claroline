@@ -13,7 +13,7 @@ class MigratorTest extends TransactionalTestCase
     /** @var Loader */
     private $loader;
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();       
         $container = $this->client->getContainer();

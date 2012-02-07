@@ -16,7 +16,7 @@ class UserRepositoryTest extends TransactionalTestCase
     /** @var UserRepository */
     private $userRepo;
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');

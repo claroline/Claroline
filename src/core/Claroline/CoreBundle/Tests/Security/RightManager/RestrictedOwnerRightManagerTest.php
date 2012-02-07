@@ -12,7 +12,7 @@ class RestrictedOwnerManagerTest extends RightManagerTestCase
     /** @var RestrictedOwnerRightManager */
     private $rightManager;
 
-    public function setUp()
+    protected function setUp()
     {
         parent :: setUp();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.restricted_owner_right_manager');

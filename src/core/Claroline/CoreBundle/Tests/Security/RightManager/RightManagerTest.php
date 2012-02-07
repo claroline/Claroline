@@ -15,7 +15,7 @@ class RightManagerTest extends RightManagerTestCase
     /** @var RightManagerInterface */
     private $rightManager;
       
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.right_manager');

@@ -16,7 +16,7 @@ class AclPersisterTest extends TransactionalTestCase
     /** @var EntityManager */
     private $em;   
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->aclProvider = $this->client->getContainer()->get('security.acl.provider');

@@ -9,7 +9,7 @@ class RoleManagerTest extends TransactionalTestCase
 {
     private $roleManager;
     
-    public function setUp()
+    protected function setUp()
     {
         parent :: setUp();
         $this->roleManager = $this->client

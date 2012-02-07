@@ -20,7 +20,7 @@ class ConfigurationFileWriterTest extends WebTestCase
     /** @var string */
     private $routingFile;
     
-    public function setUp()
+    protected function setUp()
     {
         $container = self::createClient()->getContainer();
         $this->configWriter = $container->get('claroline.plugin.recorder_configuration_file_writer');

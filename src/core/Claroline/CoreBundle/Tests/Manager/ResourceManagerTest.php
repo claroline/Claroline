@@ -10,7 +10,7 @@ class ResourceManagerTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Manager\ResourceManager */
     private $resourceManager;
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->resourceManager = $this->client->getContainer()->get('claroline.resource.manager');

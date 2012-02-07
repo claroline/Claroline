@@ -18,7 +18,7 @@ class ExtendableListenerTest extends TransactionalTestCase
     /** Doctrine\ORM\EntityManager */
     private $em;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');

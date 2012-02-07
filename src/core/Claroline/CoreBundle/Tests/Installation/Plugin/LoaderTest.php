@@ -13,7 +13,7 @@ class LoaderTest extends WebTestCase
     /** @var string */
     private $extensionPath;
     
-    public function setUp()
+    protected function setUp()
     {
         $container = self::createClient()->getContainer();
         $this->loader = $container->get('claroline.plugin.loader');

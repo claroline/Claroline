@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 
 class AuthenticationControllerTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();

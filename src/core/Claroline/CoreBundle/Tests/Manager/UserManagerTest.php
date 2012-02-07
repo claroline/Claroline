@@ -13,7 +13,7 @@ class UserManagerTest extends TransactionalTestCase
     /** @var Doctrine\ORM\EntityRepository */
     private $repository;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->manager = $this->client->getContainer()->get('claroline.user.manager');

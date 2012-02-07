@@ -15,7 +15,7 @@ class HistoryBrowserTest extends WebTestCase
     /** @var Symfony\Component\HttpFoundation\Session */
     private $session;
     
-    public function setUp()
+    protected function setUp()
     {
         $this->session = self::createClient()->getContainer()->get('session');
         $this->request = $this->getMockedRequest();
