@@ -28,6 +28,6 @@ class Version20120119000000 extends BundleMigration
             array('id'), 
             array('id'),
             array("onDelete" => "CASCADE")
-        );   
+        );
     }
 }
