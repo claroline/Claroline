@@ -47,7 +47,8 @@ class PlatformInstallCommand extends ContainerAwareCommand
             $coreFixturesPath = realpath(__DIR__ . '/../../../../../src/core/Claroline/CoreBundle/DataFixtures');
             $fixtureInput = new ArrayInput(array(
                 'command' => 'doctrine:fixtures:load',
-                '--fixtures' => $coreFixturesPath
+                '--fixtures' => $coreFixturesPath,
+                '--append' => true
             ));
             $fixtureCommand->run($fixtureInput, $output);
         }

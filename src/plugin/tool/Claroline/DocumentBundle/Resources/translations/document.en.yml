@@ -1,0 +1,8 @@
+upload_document: upload
+name: name
+file: file
+delete_document: delete
+download_document: download
+upload_success: upload successfull
+download_success: download sucessfull
+delete_success: file supressed
