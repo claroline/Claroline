@@ -24,7 +24,7 @@ class WorkspaceManager
     {
         $managerRole = new WorkspaceRole();
         $managerRole->setName("ROLE_{$baseName} manager");
-        $managerRole->addUser($manager);
+        $manager->addRole($managerRole);
         
         $workspace = new Workspace();
         $workspace->setName($baseName);
@@ -68,7 +68,6 @@ class WorkspaceManager
         {
             if ($role->getName() == "ROLE_{$workspace->getName()} user")
             {
-                $role->addUser($user);
                 $user->addRole($role);
                 $this->entityManager->flush();
                 break;

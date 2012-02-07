@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="claro_role")
  */
 class WorkspaceRole extends Role
 {
@@ -30,9 +31,22 @@ class WorkspaceRole extends Role
      */
     private $users;
     
+    /**
+     * @ORM\ManyToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\Group", 
+     *  inversedBy="workspaceRoles"
+     * )
+     * @ORM\JoinTable(name="claro_group_role",
+     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    private $groups;
+    
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
     
     public function getWorkspace()
@@ -50,15 +64,8 @@ class WorkspaceRole extends Role
         return $this->users;
     }
 
-    public function addUser(User $user)
+    public function getGroups()
     {
-        $this->users->add($user);
-        $user->getRoleCollection()->add($this);
-    }
-    
-    public function removeUser(User $user)
-    {
-        $this->users->removeElement($user);
-        $user->getRoleCollection()->removeElement($this);
+        return $this->groups;
     }
 }

@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle;
 
 use Claroline\CoreBundle\Testing\FunctionalTestCase;
 
-class SecurityTest extends FunctionalTestCase
+class DesktopSecurityTest extends FunctionalTestCase
 {
     public function setUp()
     {
