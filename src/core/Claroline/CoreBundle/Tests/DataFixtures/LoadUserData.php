@@ -5,9 +5,6 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Claroline\CoreBundle\Security\RoleManager;
 use Claroline\CoreBundle\Entity\User;
 
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface
@@ -20,8 +17,15 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         $this->container = $container;
     }
     
+    /**
+     * Loads three users with the following roles :
+     * 
+     * Jane Doe  : ROLE_USER
+     * Henry Doe : ROLE_WS_CREATOR (i.e. ROLE_USER -> ROLE_WS_CREATOR)
+     * John Doe  : ROLE_ADMIN (i.e. ROLE_USER -> ROLE_WS_CREATOR -> ROLE_ADMIN)
+     */
     public function load($manager)
-    {   
+    {
         $user = new User();
         $user->setFirstName('Jane');
         $user->setLastName('Doe');
