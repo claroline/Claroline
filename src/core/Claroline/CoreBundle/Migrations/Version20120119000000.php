@@ -103,6 +103,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $this->addDiscriminator($table);
         $table->addColumn('name', 'string', array('length' => 255));
+        $table->addColumn('can_be_deleted', 'boolean', array('notnull' => true));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('lft', 'integer', array('notnull' => true));
         $table->addColumn('rgt', 'integer', array('notnull' => true));

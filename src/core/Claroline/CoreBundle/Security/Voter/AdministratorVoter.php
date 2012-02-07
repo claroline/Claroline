@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Claroline\CoreBundle\Security\PlatformRoles;
 
 /**
  * This voter grants access to admin users, whenever the attribute or the 
@@ -21,7 +22,7 @@ class AdministratorVoter implements VoterInterface
     {
         foreach ($token->getRoles() as $role)
         {
-            if ('ROLE_ADMIN' === $role->getRole()) 
+            if (PlatformRoles::ADMIN === $role->getRole()) 
             {
                 return true;
             }

@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Exception\ClarolineException;
 
 /**
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
@@ -17,6 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      "Claroline\CoreBundle\Entity\Role" = "Claroline\CoreBundle\Entity\Role",
  *      "Claroline\CoreBundle\Entity\WorkspaceRole" = "Claroline\CoreBundle\Entity\WorkspaceRole"
  * })
+ * @ORM\HasLifecycleCallbacks
  * @Gedmo\Tree(type="nested")
  * @DoctrineAssert\UniqueEntity("name")
  */
@@ -35,6 +38,11 @@ class Role implements RoleInterface
      */
     protected $name;
 
+    /**
+     * @ORM\Column(name="can_be_deleted", type="boolean")
+     */
+    private $canBeDeleted = true;
+    
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
@@ -86,15 +94,30 @@ class Role implements RoleInterface
     {
         return $this->id;
     }
+
+    final public function setName($name)
+    {
+        if (PlatformRoles::contains($this->name))
+        {
+            throw new ClarolineException('Platform roles cannot be modified');
+        }
+        
+        if (PlatformRoles::contains($name))
+        {
+            $this->canBeDeleted = false;
+        }
+        
+        $this->name = $name;
+    }
         
     public function getName()
     {
         return $this->name;
     }
-
-    public function setName($name)
+    
+    public function canBeDeleted()
     {
-        $this->name = $name;
+        return $this->canBeDeleted;
     }
 
     /**
@@ -115,5 +138,14 @@ class Role implements RoleInterface
     public function getParent()
     {
         return $this->parent;   
+    }
+    
+    /** @ORM\PreRemove */
+    public function preRemove()
+    {
+        if (PlatformRoles::contains($this->name))
+        {
+            throw new ClarolineException('Platform roles cannot be deleted');
+        }
     }
 }
