@@ -1,0 +1,21 @@
+claro_document_upload:
+   pattern: /upload
+   defaults:  { _controller: ClarolineDocumentBundle:Document:upload }
+   requirements:
+     _method: POST
+  
+claro_document_form:
+   pattern: /form
+   defaults: { _controller: ClarolineDocumentBundle:Document:getForm }
+   
+claro_document_list:
+   pattern: /list
+   defaults: { _controller: ClarolineDocumentBundle:Document:list }
+   
+claro_document_delete:
+   pattern: /delete/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:delete }
+   
+claro_document_download:
+   pattern: /download/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:download }

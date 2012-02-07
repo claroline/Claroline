@@ -31,3 +31,4 @@ parameters:
     test.client.class: Claroline\CoreBundle\Testing\TransactionalTestClient
     claroline.install.include_test_migrations: true
     claroline.stub_plugin_directory: %kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/Stub/plugin
+    claroline.files.directory: "%kernel.root_dir%/../test/files"
