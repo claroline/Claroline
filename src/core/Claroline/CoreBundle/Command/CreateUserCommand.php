@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\RoleManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -85,7 +86,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if ($input->getOption('admin'))
         {            
             $roleManager = $this->getContainer()->get('claroline.security.role_manager');
-            $adminRole = $roleManager->getRole('ROLE_ADMIN', RoleManager::CREATE_IF_NOT_EXISTS);
+            $adminRole = $roleManager->getRole(PlatformRoles::ADMIN, RoleManager::CREATE_IF_NOT_EXISTS);
             $user->addRole($adminRole);
         }
         

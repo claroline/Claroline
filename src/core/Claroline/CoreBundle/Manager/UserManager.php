@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\RoleManager;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Security\PlatformRoles;
 
 class UserManager
 {
@@ -76,7 +77,7 @@ class UserManager
         $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
         $user->setPassword($password);
 
-        $userRole = $this->roleManager->getRole('ROLE_USER', RoleManager::CREATE_IF_NOT_EXISTS);
+        $userRole = $this->roleManager->getRole(PlatformRoles::USER, RoleManager::CREATE_IF_NOT_EXISTS);
         $user->addRole($userRole);
 
         $this->em->persist($user);

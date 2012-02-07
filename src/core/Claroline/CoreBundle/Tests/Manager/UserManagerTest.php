@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Security\PlatformRoles;
 
 class UserManagerTest extends TransactionalTestCase
 {
@@ -32,7 +33,7 @@ class UserManagerTest extends TransactionalTestCase
         $users = $this->repository->findByUsername($user->getUsername());
         $this->assertEquals(1, count($users));
         $this->assertEquals($user, $users[0]);
-        $this->assertTrue($users[0]->hasRole('ROLE_USER'));
+        $this->assertTrue($users[0]->hasRole(PlatformRoles::USER));
 
         $this->manager->delete($user);
 

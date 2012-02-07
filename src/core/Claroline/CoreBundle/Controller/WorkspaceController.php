@@ -10,7 +10,6 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
@@ -51,10 +50,7 @@ class WorkspaceController
         $this->workspaceManager = $workspaceManager;
         $this->historyBrowser = $historyBrowser;
     }
-       
-    /**
-     * @Secure(roles="ROLE_USER")
-     */
+    
     public function newAction()
     {
         // check if granted
@@ -68,9 +64,6 @@ class WorkspaceController
         );
     }
     
-    /**
-     * @Secure(roles="ROLE_USER")
-     */
     public function createAction()
     {
         // check if granted
@@ -105,9 +98,6 @@ class WorkspaceController
         );
     }
     
-    /**
-     * @Secure(roles="ROLE_USER")
-     */
     public function deleteAction($id)
     {
         $workspaceEntity = 'ClarolineCoreBundle:Workspace';

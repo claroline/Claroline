@@ -6,20 +6,21 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Security\PlatformRoles;
 
 class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
         $userRole = new Role();
-        $userRole->setName('ROLE_USER');
+        $userRole->setName(PlatformRoles::USER);
         
         $creatorRole = new Role();
-        $creatorRole->setName('ROLE_WS_CREATOR');
+        $creatorRole->setName(PlatformRoles::WS_CREATOR);
         $creatorRole->setParent($userRole);
         
         $adminRole = new Role();
-        $adminRole->setName('ROLE_ADMIN');
+        $adminRole->setName(PlatformRoles::ADMIN);
         $adminRole->setParent($creatorRole);
         
         $manager->persist($userRole);
