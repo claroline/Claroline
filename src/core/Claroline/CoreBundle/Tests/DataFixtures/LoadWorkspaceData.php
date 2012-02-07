@@ -8,6 +8,7 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace;
 
 class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
@@ -20,7 +21,7 @@ class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, Ord
         $this->container = $container;
     }
 
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
         $admin = $manager->merge($this->getReference('user/admin'));
         $rightManager = $this->container->get('claroline.security.restricted_owner_right_manager');

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface
@@ -24,7 +25,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
      * Henry Doe : ROLE_WS_CREATOR (i.e. ROLE_USER -> ROLE_WS_CREATOR)
      * John Doe  : ROLE_ADMIN (i.e. ROLE_USER -> ROLE_WS_CREATOR -> ROLE_ADMIN)
      */
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
         $user = new User();
         $user->setFirstName('Jane');
