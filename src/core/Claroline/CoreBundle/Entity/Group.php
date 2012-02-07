@@ -6,15 +6,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_group")
- * @Gedmo\Tree(type="nested")
  * @DoctrineAssert\UniqueEntity("name")
  */
-class Group
+class Group extends AbstractRoleSubject
 {
     /**
      * @ORM\Id
@@ -28,53 +28,6 @@ class Group
      * @Assert\NotBlank()
      */
     protected $name;
-    
-    /**
-     * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
-     */
-    protected $lft;
-
-    /**
-     * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
-     */
-    protected $lvl;
-
-    /**
-     * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
-     */
-    protected $rgt;
-
-    /**
-     * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
-     */
-    protected $root;
-    
-    /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
-     *      inversedBy="children"
-     * )
-     * @ORM\JoinColumn(
-     *      name="parent_id",
-     *      referencedColumnName="id",
-     *      onDelete="SET NULL"
-     * )
-     */
-    protected $parent;
-
-    /**
-     * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
-     *      mappedBy="parent"
-     * )
-     * @ORM\OrderBy({"lft" = "ASC"})
-     */
-    protected $children;
     
     /**
      * @ORM\ManyToMany(
@@ -100,9 +53,64 @@ class Group
      */
     protected $roles;
     
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
+     *      inversedBy="groups"
+     * )
+     * @ORM\JoinTable(name="claro_group_role",
+     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * )
+     */
+    protected $workspaceRoles;
+    
     public function __construct()
     {
+        parent::__construct();
+        $this->workspaceRoles = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->roles = new ArrayCollection();
+    }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+       
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
+        $user->getGroups()->add($this);
+    }
+    
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+        $user->getGroups()->removeElement($this);
+    }
+    
+    public function getUsers()
+    {
+        return $this->users;      
+    }
+
+    /**
+     * Returns the group's workspace roles as an ArrayCollection of WorkspaceRole objects.
+     * 
+     * @return ArrayCollection[WorkspaceRole]
+     */
+    public function getWorkspaceRoleCollection()
+    {
+        return $this->workspaceRoles;
     }
 }
