@@ -101,7 +101,7 @@ class Document
         return $this->dateUpload;
     }
 
-    public function getFormatSize()()
+    public function getFormatSize()
     {
         if ($this->size < 1024)
         {
