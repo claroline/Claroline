@@ -26,7 +26,7 @@ class ToolInstanceTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Entity\tool */
     private $tool;   
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->manager = $this->client->getContainer()->get('claroline.workspace.toolInstance_manager');

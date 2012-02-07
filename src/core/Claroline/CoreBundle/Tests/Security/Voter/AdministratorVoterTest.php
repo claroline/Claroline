@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 
 class AdministratorVoterTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();

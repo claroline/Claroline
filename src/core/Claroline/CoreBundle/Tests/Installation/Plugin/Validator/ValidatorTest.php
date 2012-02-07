@@ -10,7 +10,7 @@ class ValidatorTest extends WebTestCase
     /** @var Validator */
     private $validator;
     
-    public function setUp()
+    protected function setUp()
     {
         $this->validator = self::createClient()->getContainer()->get('claroline.plugin.validator');
         $checkers = $this->getMockedCheckers();

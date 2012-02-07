@@ -17,7 +17,7 @@ class DatabaseWriterTest extends TransactionalTestCase
     /** @var Doctrine\ORM\EntityManager */
     private $em;
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $container = $this->client->getContainer();

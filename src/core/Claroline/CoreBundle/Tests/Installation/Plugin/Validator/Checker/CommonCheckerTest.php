@@ -15,7 +15,7 @@ class CommonCheckerTest extends WebTestCase
     /** @var Claroline\CoreBundle\Installation\Plugin\Loader */
     private $loader;
     
-    public function setUp()
+    protected function setUp()
     {
         $container = self::createClient()->getContainer();
         $this->checker = $container->get('claroline.plugin.common_checker');

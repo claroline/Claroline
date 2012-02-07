@@ -12,7 +12,7 @@ class RecorderTest extends WebTestCase
     private $mockedDbWriter;
     private $mockedConfigWriter;
     
-    public function setUp()
+    protected function setUp()
     {
         $this->recorder = self::createClient()->getContainer()->get('claroline.plugin.recorder');
         $this->initMockObjects();

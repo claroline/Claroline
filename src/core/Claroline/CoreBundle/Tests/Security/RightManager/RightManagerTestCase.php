@@ -18,7 +18,7 @@ abstract class RightManagerTestCase extends FunctionalTestCase
     /** @var Doctrine\ORM\EntityManager */
     private $em;
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
