@@ -32,7 +32,7 @@ services:
             - "@form.factory"
             - "@templating.engine.twig"
             - "@translator"
-            - "@claroline.user.manager"
+            - "@doctrine.orm.entity_manager"
             - %allow_self_registration%
 
     claroline.controller.workspace:

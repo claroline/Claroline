@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
-use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 
 class RegistrationController
@@ -21,7 +21,7 @@ class RegistrationController
     private $formFactory;
     private $twigEngine;
     private $translator;
-    private $userManager;
+    private $entityManager;
     private $isSelfRegistrationEnabled;
     
     public function __construct(
@@ -30,7 +30,7 @@ class RegistrationController
         FormFactory $factory,
         TwigEngine $twigEngine,
         Translator $translator,
-        UserManager $userManager,
+        EntityManager $entityManager,
         $isSelfRegistrationEnabled
     )
     {
@@ -39,7 +39,7 @@ class RegistrationController
         $this->formFactory = $factory;
         $this->twigEngine = $twigEngine;
         $this->translator = $translator;
-        $this->userManager = $userManager;
+        $this->entityManager = $entityManager;
         $this->isSelfRegistrationEnabled = $isSelfRegistrationEnabled;
     }
     
@@ -67,7 +67,13 @@ class RegistrationController
         
         if ($form->isValid())
         {
-            $this->userManager->create($user);
+            $userRole = $this->entityManager
+                ->getRepository('Claroline\CoreBundle\Entity\Role')
+                ->findOneByName(PlatformRoles::USER);
+            $user->addRole($userRole);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            
             $msg = $this->translator->trans(
                 'profile.account_created', 
                 array(), 
