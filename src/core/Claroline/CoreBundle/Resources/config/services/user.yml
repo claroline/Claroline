@@ -6,4 +6,3 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@validator"
             - "@security.encoder_factory"
-            - "@claroline.security.role_manager"

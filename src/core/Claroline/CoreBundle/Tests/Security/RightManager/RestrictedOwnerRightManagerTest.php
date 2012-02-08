@@ -3,31 +3,33 @@
 namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Tests\Security\RightManager\RightManagerTestCase;
+use Claroline\CoreBundle\Testing\FixtureTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\CoreBundle\Exception\SecurityException;
 
-class RestrictedOwnerManagerTest extends RightManagerTestCase
+class RestrictedOwnerManagerTest extends FixtureTestCase
 {
     /** @var RestrictedOwnerRightManager */
     private $rightManager;
 
     protected function setUp()
     {
-        parent :: setUp();
-        $this->rightManager = $this->client->getContainer()->get('claroline.security.restricted_owner_right_manager');
+        parent::setUp();
+        $this->loadUserFixture();
+        $this->rightManager = $this->client->getContainer()
+            ->get('claroline.security.restricted_owner_right_manager');
     }
     
     public function testThereCanOnlyBeOneOwnerMaximum()
     {
         try
         {
-            $john = $this->createUser('John', 'Doe', 'jdoe', '123');
-            $dave = $this->createUser('Dave', 'Doe', 'ddoe', '123');
+            $jane = $this->getFixtureReference('user/user');
+            $henry = $this->getFixtureReference('user/ws_creator');
             $entity = $this->createEntity();
             $mask = MaskBuilder::MASK_OWNER;
-            $this->rightManager->addRight($entity, $john, $mask);
-            $this->rightManager->addRight($entity, $dave, $mask);
+            $this->rightManager->addRight($entity, $jane, $mask);
+            $this->rightManager->addRight($entity, $henry, $mask);
             $this->fail('No exception thrown');
         }
         catch (SecurityException $ex)
@@ -38,29 +40,28 @@ class RestrictedOwnerManagerTest extends RightManagerTestCase
     
     public function testSameOwnerCanBeDefinedAgainAndAgain()
     {
-        $john = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $entity = $this->createEntity();
         $mask = MaskBuilder::MASK_OWNER;
-        $this->rightManager->addRight($entity, $john, $mask);
-        $this->rightManager->addRight($entity, $john, $mask);
+        $this->rightManager->addRight($entity, $jane, $mask);
+        $this->rightManager->addRight($entity, $jane, $mask);
     }
     
     public function testSettingAnOwnerRemovesTheOwningRightFromOlderOwner()
     {
-        $john = $this->createUser('John', 'Doe', 'jdoe', '123');
-        $dave = $this->createUser('Dave', 'Doe', 'ddoe', '123');
+        $jane = $this->getFixtureReference('user/user');
+        $henry = $this->getFixtureReference('user/ws_creator');        
         $entity = $this->createEntity();
         $mb = new MaskBuilder();
-        $mb ->add(MaskBuilder::MASK_OWNER)
-            ->add(MaskBuilder::MASK_UNDELETE);
-        $mask = $mb->get();
-        $this->rightManager->addRight($entity, $john, $mask);
-        $this->rightManager->setOwner($entity, $dave);
+        $mask = $mb->add(MaskBuilder::MASK_OWNER)
+            ->add(MaskBuilder::MASK_UNDELETE)
+            ->get();
+        $this->rightManager->addRight($entity, $jane, $mask);
+        $this->rightManager->setOwner($entity, $henry);
         
-        $this->assertTrue($this->rightManager->hasRight($entity, $john, MaskBuilder::MASK_UNDELETE));
-        $this->assertFalse($this->rightManager->hasRight($entity, $john, MaskBuilder::MASK_OWNER));
-        $this->assertTrue($this->rightManager->hasRight($entity, $dave, MaskBuilder::MASK_OWNER));
-        
+        $this->assertTrue($this->rightManager->hasRight($entity, $jane, MaskBuilder::MASK_UNDELETE));
+        $this->assertFalse($this->rightManager->hasRight($entity, $jane, MaskBuilder::MASK_OWNER));
+        $this->assertTrue($this->rightManager->hasRight($entity, $henry, MaskBuilder::MASK_OWNER));
     }
     
     public function testARoleCannotBeOwner()
@@ -68,7 +69,7 @@ class RestrictedOwnerManagerTest extends RightManagerTestCase
         try
         {
             $entity = $this->createEntity();
-            $role = $this->createRole();
+            $role = $this->getFixtureReference('role/user');
             $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_OWNER);
             $this->fail('No exception thrown');
         }
@@ -78,11 +79,11 @@ class RestrictedOwnerManagerTest extends RightManagerTestCase
         }
     }
     
-    public function testUSersCannotOwnAClass()
+    public function testUsersCannotOwnAClass()
     {
         try
         {
-            $role = $this->createRole();
+            $role = $this->getFixtureReference('role/user');
             $entity = new FirstEntity();
             $fqcn = get_class($entity);
             
@@ -93,5 +94,15 @@ class RestrictedOwnerManagerTest extends RightManagerTestCase
         {
             $this->assertEquals(SecurityException::NOT_ALLOWED_OWNER_MASK, $ex->getCode());
         }
+    }
+    
+    private function createEntity($value = "foo")
+    {
+        $entity = new FirstEntity();
+        $entity->setFirstEntityField($value);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+        
+        return $entity;
     }
 }

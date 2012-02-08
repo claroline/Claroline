@@ -3,13 +3,10 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Testing\FixtureTestCase;
 
-class UserRepositoryTest extends TransactionalTestCase
+class UserRepositoryTest extends FixtureTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
-    private $em;
-    
     /** @var Claroline\CoreBundle\Manager\UserManager */    
     private $userManager;
     
@@ -19,9 +16,9 @@ class UserRepositoryTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $this->loadPlatformRolesFixture();
         $this->userManager = $this->client->getContainer()->get('claroline.user.manager');
-        $this->userRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->userRepo = $this->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\User');
     }
     
     public function testGetUsersByUsernameListReturnsExpectedResults()
