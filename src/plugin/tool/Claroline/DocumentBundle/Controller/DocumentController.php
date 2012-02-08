@@ -31,8 +31,10 @@ class DocumentController extends Controller
             $em->persist($document);
             $em->flush();
         }
-        //$this->getRequest()->getSession()->setFlash("notice",$this->get('translator')->trans('upload_success', array(), 'document'));
-        $this->getRequest()->getSession()->setFlash("notice", "size = " . $size);
+        
+        $msg = $this->get('translator')->trans('upload_success', array(), 'document');
+        $this->getRequest()->getSession()->setFlash('notice', $msg);
+        
         return $this->getFormAction();
     }
 
