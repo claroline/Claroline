@@ -1,8 +1,0 @@
-services:
-  
-    claroline.user.manager:
-        class: Claroline\CoreBundle\Manager\UserManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@validator"
-            - "@security.encoder_factory"

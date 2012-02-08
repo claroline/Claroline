@@ -23,50 +23,57 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
      * 
      * Jane Doe  : ROLE_USER
      * Bob Doe   : ROLE_USER
-     * Bill Doe   : ROLE_USER
+     * Bill Doe  : ROLE_USER
      * Henry Doe : ROLE_WS_CREATOR (i.e. ROLE_USER -> ROLE_WS_CREATOR)
      * John Doe  : ROLE_ADMIN (i.e. ROLE_USER -> ROLE_WS_CREATOR -> ROLE_ADMIN)
      */
     public function load(ObjectManager $manager)
     {
+        $userRole = $this->getReference('role/user');
+        $wsCreatorRole = $this->getReference('role/ws_creator');
+        $adminRole = $this->getReference('role/admin');
+        
         $user = new User();
         $user->setFirstName('Jane');
         $user->setLastName('Doe');
         $user->setUserName('user');
         $user->setPlainPassword('123');
+        $user->addRole($userRole);
         
         $secondUser = new User();
         $secondUser->setFirstName('Bob');
         $secondUser->setLastName('Doe');
         $secondUser->setUserName('user_2');
         $secondUser->setPlainPassword('123');
+        $secondUser->addRole($userRole);
 
         $thirdUser = new User();
         $thirdUser->setFirstName('Bill');
         $thirdUser->setLastName('Doe');
         $thirdUser->setUserName('user_3');
         $thirdUser->setPlainPassword('123');
+        $thirdUser->addRole($userRole);
         
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
         $wsCreator->setLastName('Doe');
         $wsCreator->setUserName('ws_creator');
         $wsCreator->setPlainPassword('123');
-        $wsCreator->addRole($this->getReference('role/ws_creator'));
+        $wsCreator->addRole($wsCreatorRole);
         
         $admin = new User();
         $admin->setFirstName('John');
         $admin->setLastName('Doe');
         $admin->setUserName('admin');
         $admin->setPlainPassword('123');
-        $admin->addRole($this->getReference('role/admin'));
+        $admin->addRole($adminRole);
         
-        $userManager = $this->container->get('claroline.user.manager');
-        $userManager->create($user);
-        $userManager->create($secondUser);
-        $userManager->create($thirdUser);
-        $userManager->create($wsCreator);
-        $userManager->create($admin);
+        $manager->persist($user);
+        $manager->persist($secondUser);
+        $manager->persist($thirdUser);
+        $manager->persist($wsCreator);
+        $manager->persist($admin);
+        $manager->flush();
 
         $this->addReference('user/user', $user);
         $this->addReference('user/user_2', $secondUser);
