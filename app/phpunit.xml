@@ -17,7 +17,7 @@
     <testsuites>
         <testsuite name="Claronext test suite">
             <directory>../src/core/*/*Bundle/Tests</directory>
-            <directory>../src/plugin/*/*Bundle/Tests</directory>
+            <directory>../src/plugin/*/*/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
 

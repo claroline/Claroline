@@ -1,0 +1,12 @@
+{% extends "ClarolineCoreBundle::content_layout.html.twig" %}
+{% block content %}
+<ul id="document_list">
+{% for document in documents %}
+<li id="document_item" name="_document_item">
+{{document.name}} {{ 'size'|trans({}, 'document') }} {{document.getFormatSize()}}    
+<a href="{{ path('claro_document_delete', {'id': document.id}) }}" id="link_delete" name="_link_delete">{{ 'delete_document'|trans({}, 'document') }}</a>
+<a href="{{ path('claro_document_download', {'id': document.id}) }}" id="link_download" name="_link_download">{{ 'download_document'|trans({}, 'document') }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}

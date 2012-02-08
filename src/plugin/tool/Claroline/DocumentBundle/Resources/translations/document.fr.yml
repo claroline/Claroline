@@ -1,0 +1,9 @@
+upload_document: upload
+name: nom
+file: fichier
+delete_document: supprimer
+download_document: télécharger
+upload_success: upload réussi
+download_success: download réussi
+delete_success: fichier supprimé
+size: taille

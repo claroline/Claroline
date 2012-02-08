@@ -14,3 +14,5 @@ app/config/local/parameters.yml
 app/config/local/plugin/*
 vendor/*
 web/bundles/*
+files/*
+test/files/*
