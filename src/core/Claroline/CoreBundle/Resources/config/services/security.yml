@@ -4,12 +4,6 @@ services:
         class: Claroline\CoreBundle\Security\Voter\AdministratorVoter
         tags:
             -  { name: security.voter }
-  
-    claroline.security.role_manager:
-        class: Claroline\CoreBundle\Security\RoleManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@validator"
             
     claroline.security.right_manager.delegate.entity:
         class: Claroline\CoreBundle\Security\RightManager\Delegate\EntityDelegate

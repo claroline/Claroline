@@ -28,6 +28,11 @@ abstract class FixtureTestCase extends TransactionalTestCase
         $this->referenceRepo = new ReferenceRepository($this->em);
     }
     
+    protected function loadPlatformRolesFixture()
+    {
+        $this->loadFixture(new LoadPlatformRolesData());
+    }
+    
     protected function loadUserFixture()
     {
         $this->loadFixture(new LoadPlatformRolesData());

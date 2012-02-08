@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Installation\Plugin\Recorder\Writer;
 
 use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Service\RoleManager;
 use Claroline\CoreBundle\Plugin\ClarolinePlugin;
 use Claroline\CoreBundle\Plugin\ClarolineTool;
 use Claroline\CoreBundle\Plugin\ClarolineExtension;

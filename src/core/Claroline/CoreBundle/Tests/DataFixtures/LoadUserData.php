@@ -19,9 +19,11 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     }
     
     /**
-     * Loads three users with the following roles :
+     * Loads five users with the following roles :
      * 
      * Jane Doe  : ROLE_USER
+     * Bob Doe   : ROLE_USER
+     * Bill Doe   : ROLE_USER
      * Henry Doe : ROLE_WS_CREATOR (i.e. ROLE_USER -> ROLE_WS_CREATOR)
      * John Doe  : ROLE_ADMIN (i.e. ROLE_USER -> ROLE_WS_CREATOR -> ROLE_ADMIN)
      */
@@ -32,7 +34,19 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         $user->setLastName('Doe');
         $user->setUserName('user');
         $user->setPlainPassword('123');
+        
+        $secondUser = new User();
+        $secondUser->setFirstName('Bob');
+        $secondUser->setLastName('Doe');
+        $secondUser->setUserName('user_2');
+        $secondUser->setPlainPassword('123');
 
+        $thirdUser = new User();
+        $thirdUser->setFirstName('Bill');
+        $thirdUser->setLastName('Doe');
+        $thirdUser->setUserName('user_3');
+        $thirdUser->setPlainPassword('123');
+        
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
         $wsCreator->setLastName('Doe');
@@ -49,10 +63,14 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         
         $userManager = $this->container->get('claroline.user.manager');
         $userManager->create($user);
+        $userManager->create($secondUser);
+        $userManager->create($thirdUser);
         $userManager->create($wsCreator);
         $userManager->create($admin);
 
         $this->addReference('user/user', $user);
+        $this->addReference('user/user_2', $secondUser);
+        $this->addReference('user/user_3', $thirdUser);
         $this->addReference('user/ws_creator', $wsCreator);
         $this->addReference('user/admin', $admin);
     }

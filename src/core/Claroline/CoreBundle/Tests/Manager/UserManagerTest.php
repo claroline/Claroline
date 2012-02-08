@@ -3,10 +3,10 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Testing\FixtureTestCase;
 use Claroline\CoreBundle\Security\PlatformRoles;
 
-class UserManagerTest extends TransactionalTestCase
+class UserManagerTest extends FixtureTestCase
 {
     /** @var Claroline\CoreBundle\Manager\UserManager */
     private $manager;
@@ -17,11 +17,9 @@ class UserManagerTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->loadPlatformRolesFixture();
         $this->manager = $this->client->getContainer()->get('claroline.user.manager');
-        $this->repository = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->repository = $this->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
     public function testCreateThenDeleteAnUser()

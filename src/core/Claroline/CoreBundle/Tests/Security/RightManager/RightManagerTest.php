@@ -3,14 +3,14 @@
 namespace Claroline\CoreBundle\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Tests\Security\RightManager\RightManagerTestCase;
+use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\CoreBundle\Exception\SecurityException;
 use Claroline\CoreBundle\Security\Acl\ClassIdentity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 
-class RightManagerTest extends RightManagerTestCase
+class RightManagerTest extends FunctionalTestCase
 {
     /** @var RightManagerInterface */
     private $rightManager;
@@ -18,34 +18,36 @@ class RightManagerTest extends RightManagerTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->loadUserFixture();
+        $this->loadRoleFixture();
         $this->rightManager = $this->client->getContainer()->get('claroline.security.right_manager');
     }
     
     public function testAddingViewRightGrantsViewRight()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
         $this->assertFalse($isAllowed);
-        $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+        $this->rightManager->addRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
         $this->assertTrue($isAllowed);      
     }
     
     public function testAddingViewAndDeleteRightGrantViewRight()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();
         
         $mb = new MaskBuilder();
-        $mb->add(MaskBuilder::MASK_VIEW);
-        $mb->add(MaskBuilder::MASK_DELETE);
-        $rightMask = $mb->get();
+        $rightMask = $mb->add(MaskBuilder::MASK_VIEW)
+            ->add(MaskBuilder::MASK_DELETE)
+            ->get();
         
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
         $this->assertFalse($isAllowed);
-        $this->rightManager->addRight($someEntity, $jdoe, $rightMask);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+        $this->rightManager->addRight($someEntity, $jane, $rightMask);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
         $this->assertTrue($isAllowed);   
     }
     
@@ -53,9 +55,9 @@ class RightManagerTest extends RightManagerTestCase
     {
         try 
         {
-            $jdoe = $this->createUser();
+            $jane = $this->getFixtureReference('user/user');
             $someEntity = new FirstEntity();
-            $this->rightManager->addRight($someEntity, $jdoe, MaskBuilder::MASK_VIEW);
+            $this->rightManager->addRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
         }
         catch (SecurityException $ex)
@@ -83,13 +85,15 @@ class RightManagerTest extends RightManagerTestCase
     public function testPermissionCanBeGrantedThroughRoleAndUser()
     {
         $entity = $this->createEntity();
-        $role = $this->createRole();
-        $user = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
+        $jane = $this->getFixtureReference('user/user');
+        $roleA = $this->getFixtureReference('role/role_a');
+        $jane->addRole($roleA);
+        $this->getEntityManager()->flush();
+        
+        $this->rightManager->addRight($entity, $roleA, MaskBuilder::MASK_DELETE);
+        $this->rightManager->addRight($entity, $jane, MaskBuilder::MASK_VIEW);
            
-        $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_DELETE);
-        $this->rightManager->addRight($entity, $user, MaskBuilder::MASK_VIEW);
-           
-        $this->logUser($user);
+        $this->logUser($jane);
         
         $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $entity));
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
@@ -98,20 +102,20 @@ class RightManagerTest extends RightManagerTestCase
     public function testRemovePermissionsForRoleRemovesPermissionsForAllUsersWhoHaveThatRole()
     {
         $entity = $this->createEntity();
-        $role = $this->createRole();
-        $john = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
-        $suze = $this->createUser('Suze', 'Doe', 'sdoe', '123', $role);
+        $roleD = $this->getFixtureReference('role/role_d');
+        $jane = $this->getFixtureReference('user/user');
+        $henry = $this->getFixtureReference('user/ws_creator');
         
-        $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_OPERATOR);
-        $this->rightManager->addRight($entity, $john, MaskBuilder::MASK_VIEW);
-        $this->rightManager->removeRight($entity, $role, MaskBuilder::MASK_OPERATOR);
+        $this->rightManager->addRight($entity, $roleD, MaskBuilder::MASK_OPERATOR);
+        $this->rightManager->addRight($entity, $jane, MaskBuilder::MASK_VIEW);
+        $this->rightManager->removeRight($entity, $roleD, MaskBuilder::MASK_OPERATOR);
         
-        $this->logUser($john);
+        $this->logUser($jane);
         
         $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $entity));
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
         
-        $this->logUser($suze);
+        $this->logUser($henry);
         
         $this->assertFalse($this->getSecurityContext()->isGranted('OPERATOR', $entity));
         $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
@@ -123,80 +127,79 @@ class RightManagerTest extends RightManagerTestCase
     public function testPermissionMaskMustBeValid($mask)
     {
         $this->setExpectedException('InvalidArgumentException');
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();
-        $this->rightManager->addRight($someEntity, $jdoe, $mask);       
+        $this->rightManager->addRight($someEntity, $jane, $mask);       
     } 
     
     public function testRemoveRightsForbidAccess()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();        
         $rightMask = MaskBuilder::MASK_VIEW;
         
-        $this->rightManager->addRight($someEntity, $jdoe, $rightMask);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, $rightMask);
+        $this->rightManager->addRight($someEntity, $jane, $rightMask);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, $rightMask);
         $this->assertTrue($isAllowed);
-        $isAllowed = $this->rightManager->removeRight($someEntity, $jdoe, $rightMask);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, $rightMask);
+        $isAllowed = $this->rightManager->removeRight($someEntity, $jane, $rightMask);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, $rightMask);
         $this->assertFalse($isAllowed);
     }
     
     public function testRemoveAllRightsForbidAccess()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();        
         $view = MaskBuilder::MASK_VIEW;
         $edit = MaskBuilder::MASK_EDIT;
         
-        $this->rightManager->addRight($someEntity, $jdoe, $view);
-        $this->rightManager->addRight($someEntity, $jdoe, $edit);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, $view);
+        $this->rightManager->addRight($someEntity, $jane, $view);
+        $this->rightManager->addRight($someEntity, $jane, $edit);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, $view);
         $this->assertTrue($isAllowed);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, $edit);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, $edit);
         $this->assertTrue($isAllowed);
-        $this->rightManager->removeAllRights($someEntity, $jdoe);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, $view);
+        $this->rightManager->removeAllRights($someEntity, $jane);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, $view);
         $this->assertFalse($isAllowed);
-        $isAllowed = $this->rightManager->hasRight($someEntity, $jdoe, $edit);
+        $isAllowed = $this->rightManager->hasRight($someEntity, $jane, $edit);
         $this->assertFalse($isAllowed);
     }
     
     public function testSettingRightRemoveAllOldRights()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();
         
         $mb = new MaskBuilder();
-        $mb->add(MaskBuilder::MASK_VIEW);
-        $mb->add(MaskBuilder::MASK_DELETE);
-        $viewdel = $mb->get();
-        
+        $viewdel = $mb->add(MaskBuilder::MASK_VIEW)
+            ->add(MaskBuilder::MASK_DELETE)
+            ->get();       
         $edit = MaskBuilder::MASK_EDIT;
         
-        $this->rightManager->addRight($someEntity, $jdoe, $viewdel);        
-        $isAllowedToViewDel = $this->rightManager->hasRight($someEntity, $jdoe, $viewdel);
+        $this->rightManager->addRight($someEntity, $jane, $viewdel);        
+        $isAllowedToViewDel = $this->rightManager->hasRight($someEntity, $jane, $viewdel);
         $this->assertTrue($isAllowedToViewDel);
-        $this->rightManager->setRight($someEntity, $jdoe, $edit);
-        $isAllowedToViewDel = $this->rightManager->hasRight($someEntity, $jdoe, $viewdel);
+        $this->rightManager->setRight($someEntity, $jane, $edit);
+        $isAllowedToViewDel = $this->rightManager->hasRight($someEntity, $jane, $viewdel);
         $this->assertFalse($isAllowedToViewDel);
-        $isAllowedToEdit = $this->rightManager->hasRight($someEntity, $jdoe, $edit);
+        $isAllowedToEdit = $this->rightManager->hasRight($someEntity, $jane, $edit);
         $this->assertTrue($isAllowedToEdit);
     }
     
     public function testGettingRightReturnsNullIfNoRightWasSet()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();
-        $this->assertNull($this->rightManager->getRight($someEntity, $jdoe));
+        $this->assertNull($this->rightManager->getRight($someEntity, $jane));
     }
     
     public function testGettingRightReturnsRightThatWasSet()
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();
-        $this->rightManager->setRight($someEntity, $jdoe, MaskBuilder::MASK_EDIT);
-        $right = $this->rightManager->getRight($someEntity, $jdoe);
+        $this->rightManager->setRight($someEntity, $jane, MaskBuilder::MASK_EDIT);
+        $right = $this->rightManager->getRight($someEntity, $jane);
         $this->assertEquals(MaskBuilder::MASK_EDIT, $right);
     }
     
@@ -205,11 +208,11 @@ class RightManagerTest extends RightManagerTestCase
      */
     public function testRightManagerIscompatibleWithSecurityContext($mask, $allowedPermission)
     {
-        $jdoe = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $someEntity = $this->createEntity();       
-        $this->rightManager->addRight($someEntity, $jdoe, $mask);
+        $this->rightManager->addRight($someEntity, $jane, $mask);
         
-        $this->logUser($jdoe);
+        $this->logUser($jane);
         
         $this->assertTrue($this->getSecurityContext()->isGranted($allowedPermission, $someEntity));
     }   
@@ -246,21 +249,21 @@ class RightManagerTest extends RightManagerTestCase
     {
         $entity = $this->createEntity();
         
-        $john = $this->createUser('John', 'Doe', 'jdoe', '123');
-        $dave = $this->createUser('Dave', 'Doe', 'ddoe', '123');
-        $lisa = $this->createUser('Lisa', 'Doe', 'ldoe', '123');
-        $bart = $this->createUser('Bart', 'Doe', 'bdoe', '123');
+        $jane = $this->getFixtureReference('user/user');
+        $bob = $this->getFixtureReference('user/user_2');
+        $bill = $this->getFixtureReference('user/user_3');
+        $henry = $this->getFixtureReference('user/ws_creator');
         
-        $this->rightManager->addRight($entity, $john, MaskBuilder::MASK_OWNER);
-        $this->rightManager->addRight($entity, $dave, MaskBuilder::MASK_DELETE);
-        $this->rightManager->addRight($entity, $lisa, MaskBuilder::MASK_CREATE);
-        $this->rightManager->addRight($entity, $bart, MaskBuilder::MASK_DELETE);
+        $this->rightManager->addRight($entity, $jane, MaskBuilder::MASK_OWNER);
+        $this->rightManager->addRight($entity, $bob, MaskBuilder::MASK_DELETE);
+        $this->rightManager->addRight($entity, $bill, MaskBuilder::MASK_CREATE);
+        $this->rightManager->addRight($entity, $henry, MaskBuilder::MASK_DELETE);
         
         $users = $this->rightManager->getUsersWithRight($entity, MaskBuilder::MASK_DELETE);
         
         $this->assertEquals(2, count($users));
-        $this->assertEquals($bart, $users[0]);
-        $this->assertEquals($dave, $users[1]);
+        $this->assertEquals($henry, $users[0]);
+        $this->assertEquals($bob, $users[1]);
     }
     
     public function testCannotGivePermissionToUnsavedRole()
@@ -282,18 +285,22 @@ class RightManagerTest extends RightManagerTestCase
     public function testGiveRightsForRoleGrantsPermissionsToAllUsersWhoHaveThatRole()
     {
         $entity = $this->createEntity();
-        $role = $this->createRole();
         
-        $john = $this->createUser('John', 'Doe', 'jdoe', '123', $role);
-        $suze = $this->createUser('Suze', 'Doe', 'sdoe', '123', $role);
-        $bill = $this->createUser('Bill', 'Doe', 'bdoe', '123');
+        $jane = $this->getFixtureReference('user/user');
+        $bob = $this->getFixtureReference('user/user_2');
+        $bill = $this->getFixtureReference('user/user_3');
+        
+        $roleC = $this->getFixtureReference('role/role_c');
+        $jane->addRole($roleC);
+        $bob->addRole($roleC);
+        $this->getEntityManager()->flush();
         
         
-        $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_VIEW);
+        $this->rightManager->addRight($entity, $roleC, MaskBuilder::MASK_VIEW);
         
-        $this->logUser($john);
+        $this->logUser($jane);
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
-        $this->logUser($suze);
+        $this->logUser($bob);
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity));
         $this->logUser($bill);
         $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
@@ -301,13 +308,13 @@ class RightManagerTest extends RightManagerTestCase
     
     public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstance()
     {       
-        $user = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $entity = $this->createEntity();
         $fqcn = get_class($entity);
         $classIdentity = ClassIdentity::fromDomainClass($fqcn);
         
-        $this->rightManager->addRight($fqcn, $user, MaskBuilder::MASK_EDIT);
-        $this->logUser($user);
+        $this->rightManager->addRight($fqcn, $jane, MaskBuilder::MASK_EDIT);
+        $this->logUser($jane);
         
         $this->assertTrue($this->getSecurityContext()->isGranted('EDIT', $classIdentity));        
         $this->assertTrue($this->getSecurityContext()->isGranted('VIEW', $entity)); 
@@ -317,15 +324,15 @@ class RightManagerTest extends RightManagerTestCase
     
     public function testSetClassPermissionsForUserCanUpdatePreviousPermissions()
     {
-        $user = $this->createUser();
+        $jane = $this->getFixtureReference('user/user');
         $entity = $this->createEntity();
         $fqcn = get_class($entity);
         $classIdentity = ClassIdentity::fromDomainClass($fqcn);
         
-        $this->rightManager->addRight($fqcn, $user, MaskBuilder::MASK_MASTER);
-        $this->rightManager->setRight($fqcn, $user, MaskBuilder::MASK_DELETE);
+        $this->rightManager->addRight($fqcn, $jane, MaskBuilder::MASK_MASTER);
+        $this->rightManager->setRight($fqcn, $jane, MaskBuilder::MASK_DELETE);
         
-        $this->logUser($user);
+        $this->logUser($jane);
         
         $this->assertFalse($this->getSecurityContext()->isGranted('OWNER', $classIdentity));        
         $this->assertTrue($this->getSecurityContext()->isGranted('DELETE', $classIdentity));
@@ -349,5 +356,15 @@ class RightManagerTest extends RightManagerTestCase
             array(MaskBuilder::MASK_MASTER, 'VIEW'),
             array(MaskBuilder::MASK_MASTER, 'EDIT'),
         );
+    }
+    
+    private function createEntity($value = "foo")
+    {
+        $entity = new FirstEntity();
+        $entity->setFirstEntityField($value);
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+        
+        return $entity;
     }
 }

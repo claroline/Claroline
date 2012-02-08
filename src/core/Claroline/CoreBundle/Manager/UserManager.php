@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\RoleManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Security\PlatformRoles;
 
@@ -33,23 +32,16 @@ class UserManager
      */
     private $encoderFactory;
 
-    /**
-     * @var Claroline\CoreBundle\Security\RoleManager
-     */
-    private $roleManager;
-
     public function __construct(
         EntityManager $em,
         Validator $validator,
-        EncoderFactory $encoderFactory,
-        RoleManager $roleManager
+        EncoderFactory $encoderFactory
     )
     {
         $this->em = $em;
         $this->userRepository = $this->em->getRepository('Claroline\CoreBundle\Entity\User');
         $this->validator = $validator;
         $this->encoderFactory = $encoderFactory;
-        $this->roleManager = $roleManager;
     }
 
     public function hasUniqueUsername(User $user)
@@ -77,7 +69,8 @@ class UserManager
         $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
         $user->setPassword($password);
 
-        $userRole = $this->roleManager->getRole(PlatformRoles::USER, RoleManager::CREATE_IF_NOT_EXISTS);
+        $userRole = $this->em->getRepository('Claroline\CoreBundle\Entity\Role')
+            ->findOneByName(PlatformRoles::USER);
         $user->addRole($userRole);
 
         $this->em->persist($user);
