@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Installation;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Table;
 use Claroline\CoreBundle\Installation\MigrationHelper;
+use Claroline\CoreBundle\Exception\ClarolineException;
 
 abstract class BundleMigration extends AbstractMigration
 {
