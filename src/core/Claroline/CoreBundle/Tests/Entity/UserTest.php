@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 class UserTest extends FunctionalTestCase
 {

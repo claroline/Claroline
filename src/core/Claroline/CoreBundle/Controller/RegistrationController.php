@@ -11,8 +11,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
-use Claroline\CoreBundle\Security\PlatformRoles;
-use Claroline\CoreBundle\Security\Acl\ClassIdentity;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
 
 class RegistrationController
 {

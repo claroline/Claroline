@@ -13,8 +13,8 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Browsing\HistoryBrowser;
+use Claroline\CoreBundle\Library\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Library\Browsing\HistoryBrowser;
 
 class WorkspaceController
 {

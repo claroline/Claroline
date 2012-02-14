@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Claroline\CoreBundle\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 class SimpleWorkspaceTest extends FixtureTestCase

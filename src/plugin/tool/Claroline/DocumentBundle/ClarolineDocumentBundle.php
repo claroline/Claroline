@@ -2,7 +2,7 @@
 
 namespace Claroline\DocumentBundle;
 
-use Claroline\CoreBundle\Plugin\ClarolineTool;
+use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
 
 class ClarolineDocumentBundle extends ClarolineTool
 {
@@ -10,5 +10,4 @@ class ClarolineDocumentBundle extends ClarolineTool
     {
         return "document";
     }
-
 }

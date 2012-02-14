@@ -2,7 +2,7 @@
 
 namespace Valid\Minimal;
 
-use Claroline\CoreBundle\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
 
 class ValidMinimal extends ClarolineExtension
 {

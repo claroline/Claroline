@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 
 class UserRepositoryTest extends FixtureTestCase
 {

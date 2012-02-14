@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
 
 class RoleTest extends FixtureTestCase

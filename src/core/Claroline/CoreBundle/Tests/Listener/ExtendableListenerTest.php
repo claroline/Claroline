@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Doctrine\ORM\Events;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\Ancestor;
 use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\FirstChild;
 use Claroline\CoreBundle\Tests\Stub\Entity\ValidHierarchy\SecondChild;
