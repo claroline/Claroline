@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Security\RightManager\RightManager;
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Entity\Tool;
 
@@ -47,8 +47,8 @@ class ToolInstanceManager
 
     }
 
-    public function create(Tool $tool, Workspace $workspace)
-    {  
+    public function create(Tool $tool, AbstractWorkspace $workspace)
+    {
         $toolInstance = new ToolInstance();
         $toolInstance->setToolType($tool);
         $toolInstance->setHostWorkspace($workspace);
@@ -61,7 +61,7 @@ class ToolInstanceManager
         return $toolInstance;
     }
 
-    public function delete(ToolInstance $toolInstance, Workspace $workspace)
+    public function delete(ToolInstance $toolInstance, AbstractWorkspace $workspace)
     {       
         $workspace->removeToolInstance($toolInstance);
         $this->em->remove($toolInstance);

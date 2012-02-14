@@ -24,36 +24,18 @@ class WorkspaceManagerTest extends FunctionalTestCase
         $this->logUser($manager);
         
         $this->assertTrue($this->getSecurityContext()->isGranted('OWNER', $workspace));
-        $this->assertTrue($this->getSecurityContext()->isGranted('ROLE_Workspace test manager'));
+        $this->assertTrue($this->getSecurityContext()->isGranted($workspace->getManagerRole()->getName()));
     }
     
-    public function testANewlyCreatedWorkspaceHasADefaultUserRoleIfNoPublicRolesAreSpecified()
+    public function testACollaboratorCanBeAdded()
     {
         $manager = $this->getFixtureReference('user/user');
-        $this->workspaceManager->createWorkspace('Workspace test', $manager);
-        
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace')
-            ->findOneByName('Workspace test');
-        
-        $roleNames = array();
-        
-        foreach ($workspace->getRoles() as $role)
-        {
-            $roleNames[] = $role->getName();
-        }
-        
-        $this->assertTrue(in_array('ROLE_Workspace test user', $roleNames));
-    }
-    
-    public function testASimpleUserCanBeAdded()
-    {
-        $manager = $this->getFixtureReference('user/user');
-        $user = $this->getFixtureReference('user/admin');
         $workspace = $this->workspaceManager->createWorkspace('Workspace test', $manager);
-        $this->workspaceManager->addSimpleUser($workspace, $user);
+        
+        $user = $this->getFixtureReference('user/admin');
+        $this->workspaceManager->addCollaborator($workspace, $user);
         
         $this->logUser($user);
-        $this->assertTrue($this->getSecurityContext()->isGranted('ROLE_Workspace test user'));
+        $this->assertTrue($this->getSecurityContext()->isGranted($workspace->getCollaboratorRole()->getName()));
     }
 }

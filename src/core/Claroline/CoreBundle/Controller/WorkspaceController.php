@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Browsing\HistoryBrowser;
@@ -55,7 +55,7 @@ class WorkspaceController
     {
         // check if granted
         
-        $workspace = new Workspace();
+        $workspace = new SimpleWorkspace();
         $form = $this->formFactory->create(new WorkspaceType(), $workspace);
 
         return $this->twigEngine->renderResponse(
@@ -69,7 +69,7 @@ class WorkspaceController
         // check if granted
         
         
-        $workspace = new Workspace();
+        $workspace = new SimpleWorkspace();
         $form = $this->formFactory->create(new WorkspaceType(), $workspace);
         $form->bindRequest($this->request);
         $user = $this->securityContext->getToken()->getUser();
