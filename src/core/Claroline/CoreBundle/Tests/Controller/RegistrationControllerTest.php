@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class RegistrationControllerTest extends FunctionalTestCase
 {

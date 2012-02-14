@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Exception\ClarolineException;
 
 /**

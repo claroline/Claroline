@@ -2,7 +2,7 @@
 
 namespace Claroline\ArticleBundle;
 
-use Claroline\CoreBundle\Plugin\ClarolineTool;
+use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
 
 class ClarolineArticleBundle extends ClarolineTool
 {

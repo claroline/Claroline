@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle;
 
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class WorkspaceSecurityTest extends FunctionalTestCase
 {

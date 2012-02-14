@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
 use Claroline\CoreBundle\Tests\DataFixtures\OldLoadWorkspaceData;
 

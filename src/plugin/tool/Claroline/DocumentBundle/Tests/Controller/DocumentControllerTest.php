@@ -2,7 +2,7 @@
 
 namespace Claroline\DocumentBundle\Tests\Controller;
 
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class DocumentControllerTest extends TransactionalTestCase
 {

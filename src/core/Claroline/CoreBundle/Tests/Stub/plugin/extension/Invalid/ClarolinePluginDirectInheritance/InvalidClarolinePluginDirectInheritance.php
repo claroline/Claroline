@@ -2,7 +2,7 @@
 
 namespace Invalid\ClarolinePluginDirectInheritance;
 
-use Claroline\CoreBundle\Plugin\ClarolinePlugin;
+use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
 
 /**
  * Invalid because it doesn't extend one of the ClarolinePlugin 

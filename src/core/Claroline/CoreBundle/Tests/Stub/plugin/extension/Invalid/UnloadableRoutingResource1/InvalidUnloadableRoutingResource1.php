@@ -2,7 +2,7 @@
 
 namespace Invalid\UnloadableRoutingResource1;
 
-use Claroline\CoreBundle\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
 
 class InvalidUnloadableRoutingResource1 extends ClarolineExtension
 {

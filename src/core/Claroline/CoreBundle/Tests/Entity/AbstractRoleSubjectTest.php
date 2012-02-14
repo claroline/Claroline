@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Testing\FixtureTestCase;
-use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 class AbstractRoleSubjectTest extends FixtureTestCase
 {
