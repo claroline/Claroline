@@ -4,8 +4,8 @@ namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Workspace;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Exception\ClarolineException;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @ORM\Entity
@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\User;
 class WorkspaceRole extends Role
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     private $workspace;
@@ -49,13 +49,49 @@ class WorkspaceRole extends Role
         $this->groups = new ArrayCollection();
     }
     
+    /**
+     * Sets the role's name. This operation is only needed for workspace custom roles.
+     * Note that in this case, the 'ROLE_' convention isn't mandatory.
+     * 
+     * @param string $name 
+     */
+    public function setName($name)
+    {
+        if (AbstractWorkspace::isBaseRole($this->getName()))
+        {
+            throw new ClarolineException('Workspace base roles cannot be modified');
+        }
+        
+        if (AbstractWorkspace::isBaseRole($name))
+        {
+            $this->setReadOnly(true);
+        }
+        
+        $this->name = $name;
+    }
+    
     public function getWorkspace()
     {
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace)
+    /**
+     * Binds the role to a workspace instance. This method is aimed to be used
+     * by the AbstractWorkspace role setters.
+     * 
+     * @param AbstractWorkspace $workspace 
+     */
+    public function setWorkspace(AbstractWorkspace $workspace)
     {
+        $ws = $this->getWorkspace();
+        
+        if (null !== $ws)
+        {
+            throw new ClarolineException(
+                "This role is already bound to workspace '{$ws->getName()}'"
+            );
+        }
+        
         $this->workspace = $workspace;
     }
 

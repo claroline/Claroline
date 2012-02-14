@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Entity\Tool;
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 
 class ToolInstanceTest extends FunctionalTestCase
 {
@@ -20,7 +20,7 @@ class ToolInstanceTest extends FunctionalTestCase
     /** @var Doctrine\ORM\EntityRepository */
     private $repository;
     
-    /** @var Claroline\CoreBundle\Entity\Workspace */
+    /** @var Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace */
     private $workspace;
     
     /** @var Claroline\CoreBundle\Entity\tool */
@@ -72,10 +72,10 @@ class ToolInstanceTest extends FunctionalTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('EDIT', $toolInstance));
         $this->assertFalse($this->getSecurityContext()->isGranted('DELETE', $toolInstance));
     }
-       
+    
     private function initTestWorkspace()
     {
-        $this->workspace = new Workspace();
+        $this->workspace = new SimpleWorkspace();
         $this->workspace->setName('Workspace Test');
         $this->em->persist($this->workspace);
         $this->em->flush($this->workspace);

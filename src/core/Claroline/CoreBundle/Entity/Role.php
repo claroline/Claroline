@@ -30,7 +30,7 @@ class Role implements RoleInterface
      * @ORM\Column(type="integer")
      * @ORM\generatedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(name="name", type="string", length="50")
@@ -39,33 +39,33 @@ class Role implements RoleInterface
     protected $name;
 
     /**
-     * @ORM\Column(name="can_be_deleted", type="boolean")
+     * @ORM\Column(name="is_read_only", type="boolean")
      */
-    private $canBeDeleted = true;
+    private $isReadOnly = false;
     
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
-    protected $lft;
+    private $lft;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
-    protected $lvl;
+    private $lvl;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
-    protected $rgt;
+    private $rgt;
 
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    protected $root;
+    private $root;
 
     /**
      * @Gedmo\TreeParent
@@ -79,7 +79,7 @@ class Role implements RoleInterface
      *      onDelete="SET NULL"
      * )
      */
-    protected $parent;
+    private $parent;
 
     /**
      * @ORM\OneToMany(
@@ -88,15 +88,28 @@ class Role implements RoleInterface
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
-    protected $children;
+    private $children;
     
     public function getId()
     {
         return $this->id;
     }
 
-    final public function setName($name)
+    /**
+     * Sets the role name. The name must be prefixed by 'ROLE_'. Note that
+     * platform-wide roles (as listed in Claroline/CoreBundle/Security/PlatformRoles)
+     * cannot be modified by this setter.
+     * 
+     * @param string $name 
+     * @throw ClarolineException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
+     */
+    public function setName($name)
     {
+        if (0 !== strpos($name, 'ROLE_'))
+        {
+            throw new ClarolineException('Role names must start with "ROLE_"');
+        }
+        
         if (PlatformRoles::contains($this->name))
         {
             throw new ClarolineException('Platform roles cannot be modified');
@@ -104,7 +117,7 @@ class Role implements RoleInterface
         
         if (PlatformRoles::contains($name))
         {
-            $this->canBeDeleted = false;
+            $this->isReadOnly = true;
         }
         
         $this->name = $name;
@@ -115,9 +128,9 @@ class Role implements RoleInterface
         return $this->name;
     }
     
-    public function canBeDeleted()
+    public function isReadOnly()
     {
-        return $this->canBeDeleted;
+        return $this->isReadOnly;
     }
 
     /**
@@ -140,12 +153,19 @@ class Role implements RoleInterface
         return $this->parent;   
     }
     
-    /** @ORM\PreRemove */
+    /** 
+     * @ORM\PreRemove 
+     */
     public function preRemove()
     {
         if (PlatformRoles::contains($this->name))
         {
             throw new ClarolineException('Platform roles cannot be deleted');
         }
+    }
+    
+    protected function setReadOnly($value)
+    {
+        $this->isReadOnly = $value;
     }
 }
