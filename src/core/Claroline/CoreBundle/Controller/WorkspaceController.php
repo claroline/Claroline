@@ -13,7 +13,8 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Library\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Workspace\Creator;
 use Claroline\CoreBundle\Library\Browsing\HistoryBrowser;
 
 class WorkspaceController
@@ -25,7 +26,7 @@ class WorkspaceController
     private $router;
     private $formFactory;
     private $twigEngine;
-    private $workspaceManager;
+    private $workspaceCreator;
     private $historyBrowser;
     
     public function __construct(
@@ -36,7 +37,7 @@ class WorkspaceController
         Router $router,
         FormFactory $factory,
         TwigEngine $engine,
-        WorkspaceManager $workspaceManager,
+        Creator $workspaceCreator,
         HistoryBrowser $historyBrowser
     )
     {
@@ -47,7 +48,7 @@ class WorkspaceController
         $this->router = $router;
         $this->formFactory = $factory;
         $this->twigEngine = $engine;
-        $this->workspaceManager = $workspaceManager;
+        $this->workspaceCreator = $workspaceCreator;
         $this->historyBrowser = $historyBrowser;
     }
     
@@ -67,8 +68,7 @@ class WorkspaceController
     public function createAction()
     {
         // check if granted
-        
-        
+              
         $workspace = new SimpleWorkspace();
         $form = $this->formFactory->create(new WorkspaceType(), $workspace);
         $form->bindRequest($this->request);
@@ -76,16 +76,9 @@ class WorkspaceController
 
         if ($form->isValid())
         {
-            $this->entityManager->persist($workspace);
-            $this->entityManager->flush();
-            
-            
-            $this->workspaceManager->createWorkspace($workspace->getName(), $user);
-            
-            //$this->userManager->addUser($workspace, $user, MaskBuilder::MASK_OWNER);
-            
-            
-            //$this->rightManager->setOwner($workspace, $user);
+            $config = new Configuration();
+            $config->setName($workspace->getName());
+            $this->workspaceCreator->createWorkspace($config, $user);
             
             $route = $this->router->generate('claroline_desktop_index');
             

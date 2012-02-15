@@ -39,6 +39,11 @@ class Role implements RoleInterface
     protected $name;
 
     /**
+     * @ORM\Column(name="translation_key", type="string", length="255")
+     */
+    private $translationKey;
+    
+    /**
      * @ORM\Column(name="is_read_only", type="boolean")
      */
     private $isReadOnly = false;
@@ -126,6 +131,21 @@ class Role implements RoleInterface
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function setTranslationKey($key)
+    {
+        $this->translationKey = $key;
+    }
+    
+    public function getTranslationKey()
+    {
+        if (null === $this->translationKey)
+        {
+            return $this->getName();
+        }
+        
+        return $this->translationKey;
     }
     
     public function isReadOnly()
