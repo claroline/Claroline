@@ -35,6 +35,11 @@ abstract class AbstractWorkspace
     private $name;
     
     /**
+     * @ORM\Column(name="is_public", type="boolean")
+     */
+    protected $isPublic = true;
+    
+    /**
      * @ORM\OneToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
      *  mappedBy="workspace",
@@ -75,6 +80,13 @@ abstract class AbstractWorkspace
     public function setName($name)
     {
         $this->name = $name;
+    }
+    
+    abstract function setPublic($isPublic);
+    
+    public function isPublic()
+    {
+        return $this->isPublic;
     }
     
     /**
