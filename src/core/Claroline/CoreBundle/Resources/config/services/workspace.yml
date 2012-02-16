@@ -1,13 +1,13 @@
 services:
 
     claroline.workspace_manager:
-        class: Claroline\CoreBundle\Manager\WorkspaceManager
+        class: Claroline\CoreBundle\Library\Manager\WorkspaceManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"
 
     claroline.workspace.toolinstance_manager:
-        class: Claroline\CoreBundle\Manager\ToolInstanceManager
+        class: Claroline\CoreBundle\Library\Manager\ToolInstanceManager
         arguments:    
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"

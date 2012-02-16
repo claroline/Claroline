@@ -2,7 +2,7 @@
 
 namespace Valid\Basic;
 
-use Claroline\CoreBundle\Plugin\ClarolineTool;
+use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
 
 class ValidBasic extends ClarolineTool
 {

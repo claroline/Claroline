@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Migrations;
 
-use Claroline\CoreBundle\Installation\BundleMigration;
+use Claroline\CoreBundle\Library\Installation\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20120119000000 extends BundleMigration
@@ -13,6 +13,7 @@ class Version20120119000000 extends BundleMigration
         $this->createGroupTable($schema);
         $this->createUserGroupTable($schema);
         $this->createWorkspaceTable($schema);
+        $this->createWorkspaceAggregationTable($schema);
         $this->createRoleTable($schema);
         $this->createUserRoleTable($schema);
         $this->createGroupRoleTable($schema);
@@ -35,6 +36,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_group_role');
         $schema->dropTable('claro_user_role');
         $schema->dropTable('claro_role');
+        $schema->dropTable('claro_workspace_aggregation');
         $schema->dropTable('claro_workspace');
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
@@ -91,9 +93,36 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_workspace');
         
         $this->addId($table);
+        $this->addDiscriminator($table);
         $table->addColumn('name', 'string', array('length' => 255));
+        $table->addColumn('is_public', 'boolean', array('notnull' => false));
+        $table->addColumn('lft', 'integer', array('notnull' => false));
+        $table->addColumn('rgt', 'integer', array('notnull' => false));
+        $table->addColumn('lvl', 'integer', array('notnull' => false));
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
         
         $this->storeTable($table);
+    }
+    
+    private function createWorkspaceAggregationTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_aggregation');
+
+        $table->addColumn('aggregator_workspace_id', 'integer', array('notnull' => true));
+        $table->addColumn('workspace_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('aggregator_workspace_id'),
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'), 
+            array('id'),
+            array("onDelete" => "CASCADE")
+        );
     }
     
     private function createRoleTable(Schema $schema)
@@ -103,6 +132,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $this->addDiscriminator($table);
         $table->addColumn('name', 'string', array('length' => 255));
+        $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('lft', 'integer', array('notnull' => true));
         $table->addColumn('rgt', 'integer', array('notnull' => true));

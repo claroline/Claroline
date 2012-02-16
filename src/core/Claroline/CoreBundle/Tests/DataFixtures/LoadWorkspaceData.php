@@ -2,46 +2,59 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Claroline\CoreBundle\Entity\Workspace;
+use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 
-class LoadWorkspaceData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
+class LoadWorkspaceData extends AbstractFixture
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
+    /**
+     * Creates a simple workspace with the following structure :
+     * 
+     * Workspace A              (public)
+     *      Workspace B         (public)
+     *      Workspace C         (public)
+     *          Workspace D     (private)
+     *          Workspace E     (private)
+     *              Workspace F (private)
+     */
+    public function load(ObjectManager $manager)
     {
-        $this->container = $container;
-    }
-
-    public function load($manager)
-    {
-        $admin = $manager->merge($this->getReference('user/admin'));
-        $rightManager = $this->container->get('claroline.security.restricted_owner_right_manager');
-        $workspaces = array();
-        for($i = 0; $i < 10; ++$i)
-        {
-            $workspace = new Workspace();
-            $workspace->setName("test workspace #{$i}");
-            $workspaces[] = $workspace;
-            $manager->persist($workspace);
-        }
+        $wsA = new SimpleWorkspace();
+        $wsA->setName('Workspace A');
+        $wsB = new SimpleWorkspace();
+        $wsB->setName('Workspace B');
+        $wsC = new SimpleWorkspace();
+        $wsC->setName('Workspace C');
+        $wsD = new SimpleWorkspace();
+        $wsD->setName('Workspace D');
+        $wsD->setPublic(false);
+        $wsE = new SimpleWorkspace();
+        $wsE->setName('Workspace E');
+        $wsE->setPublic(false);
+        $wsF = new SimpleWorkspace();
+        $wsF->setName('Workspace F');
+        $wsF->setPublic(false);
+        
+        $wsB->setParent($wsA);
+        $wsC->setParent($wsA);
+        $wsD->setParent($wsC);
+        $wsE->setParent($wsC);
+        $wsF->setParent($wsE);
+        
+        $manager->persist($wsA);
+        $manager->persist($wsB);
+        $manager->persist($wsC);
+        $manager->persist($wsD);
+        $manager->persist($wsE);
+        $manager->persist($wsF);
         $manager->flush();
-        foreach($workspaces as $workspace)
-        {            
-            $rightManager->addRight($workspace, $admin, MaskBuilder::MASK_OWNER);
-        }
 
-    }
-
-    public function getOrder()
-    {
-        return 11; // the order in which fixtures will be loaded
+        $this->addReference('workspace/ws_a', $wsA);
+        $this->addReference('workspace/ws_b', $wsB);
+        $this->addReference('workspace/ws_c', $wsC);
+        $this->addReference('workspace/ws_d', $wsD);
+        $this->addReference('workspace/ws_e', $wsE);
+        $this->addReference('workspace/ws_f', $wsF);
     }
 }

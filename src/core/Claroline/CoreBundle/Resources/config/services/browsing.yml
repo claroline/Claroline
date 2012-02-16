@@ -1,7 +1,7 @@
 services:
   
     claroline.common.history_browser:
-        class: Claroline\CoreBundle\Browsing\HistoryBrowser
+        class: Claroline\CoreBundle\Library\Browsing\HistoryBrowser
         scope: request
         arguments:
             - "@request"

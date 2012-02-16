@@ -2,14 +2,14 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class TextTest extends TransactionalTestCase
 {
     /** @var Doctrine\ORM\EntityManager */
     private $em;
     
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\RoleManager;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -82,14 +82,21 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setUsername($username);
         $user->setPlainPassword($password);
         
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
+        
         if ($input->getOption('admin'))
-        {            
-            $roleManager = $this->getContainer()->get('claroline.security.role_manager');
-            $adminRole = $roleManager->getRole('ROLE_ADMIN', RoleManager::CREATE_IF_NOT_EXISTS);
+        {
+            $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
             $user->addRole($adminRole);
         }
+        else
+        {
+            $userRole = $roleRepo->findOneByName(PlatformRoles::USER);
+            $user->addRole($userRole);
+        }
         
-        $manager = $this->getContainer()->get('claroline.user.manager');
-        $manager->create($user);
+        $em->persist($user);
+        $em->flush();
     }
 }

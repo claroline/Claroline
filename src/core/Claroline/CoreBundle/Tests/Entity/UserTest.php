@@ -2,8 +2,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 class UserTest extends FunctionalTestCase
 {
@@ -16,20 +17,20 @@ class UserTest extends FunctionalTestCase
     
     public function testGetRolesReturnsUserOwnedRolesAndGroupOwnedRolesAndIncludesRoleAncestors()
     {
-        $wsCreator = $this->getFixtureReference('user/ws_creator');
-        $groupC = $this->getFixtureReference('group/group_c');       
+        $wsCreator = $this->getFixtureReference('user/ws_creator');  
         $this->logUser($wsCreator);
         $securityContext = $this->getSecurityContext();
         
-        $this->assertTrue($securityContext->isGranted('ROLE_USER'));
-        $this->assertTrue($securityContext->isGranted('ROLE_WS_CREATOR'));
+        $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));
+        $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
         
+        $groupC = $this->getFixtureReference('group/group_c');     
         $groupC->addUser($wsCreator);
         $this->getEntityManager()->flush();
         $securityContext->getToken()->setUser($wsCreator); // refresh session info
                         
-        $this->assertTrue($securityContext->isGranted('ROLE_USER'));
-        $this->assertTrue($securityContext->isGranted('ROLE_WS_CREATOR'));
+        $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));
+        $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
         $this->assertTrue($securityContext->isGranted('ROLE_C'));
         $this->assertTrue($securityContext->isGranted('ROLE_E'));
         $this->assertTrue($securityContext->isGranted('ROLE_F'));
@@ -38,8 +39,8 @@ class UserTest extends FunctionalTestCase
         $this->getEntityManager()->flush();
         $securityContext->getToken()->setUser($wsCreator); // refresh session info
         
-        $this->assertTrue($securityContext->isGranted('ROLE_USER'));
-        $this->assertTrue($securityContext->isGranted('ROLE_WS_CREATOR'));
+        $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));
+        $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
         $this->assertFalse($securityContext->isGranted('ROLE_C'));
         $this->assertFalse($securityContext->isGranted('ROLE_E'));
         $this->assertFalse($securityContext->isGranted('ROLE_F'));

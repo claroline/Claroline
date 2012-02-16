@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle;
 
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class DesktopSecurityTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();

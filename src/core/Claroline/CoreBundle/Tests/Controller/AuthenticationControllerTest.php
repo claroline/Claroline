@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Tests\Controller;
 
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\User;
 
 class AuthenticationControllerTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();

@@ -24,7 +24,7 @@
     <filter>
         <whitelist>
             <directory>../src/core</directory>
-            <directory>../src/plugin/Claroline</directory>
+            <directory>../src/plugin/*/Claroline</directory>
             <exclude>
                 <directory>../src/core/*/*Bundle/Command</directory>
                 <directory>../src/core/*/*Bundle/Resources</directory>

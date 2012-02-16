@@ -38,7 +38,8 @@ class DocumentController extends Controller
             $em->flush();
         }
 
-        $this->getRequest()->getSession()->setFlash("notice", "size = " . $size);
+        $msg = $this->get('translator')->trans('upload_success', array(), 'document');
+        $this->getRequest()->getSession()->setFlash('notice', $msg);
         $url = $this->generateUrl('claro_directory_show', array('id' => $id));
 
         return $this->redirect($url);
@@ -238,5 +239,4 @@ class DocumentController extends Controller
         $em->remove($document);
         $em->flush();
     }
-
 }

@@ -11,12 +11,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class AclPersister extends ContainerAware implements EventSubscriber
 {
-    /** @return AclProvider */
-    private function getAclProvider()
-    {
-        return $this->container->get('security.acl.provider');
-    }
-    
     public function getSubscribedEvents()
     {
         return array(Events::postPersist, Events::preRemove); 
@@ -34,5 +28,11 @@ class AclPersister extends ContainerAware implements EventSubscriber
         $entity = $event->getEntity();
         $oid = ObjectIdentity::fromDomainObject($entity);
         $this->getAclProvider()->deleteAcl($oid);
+    }
+ 
+    /** @return AclProvider */
+    private function getAclProvider()
+    {
+        return $this->container->get('security.acl.provider');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Claroline\DocumentBundle\Tests\Controller;
 
-use Claroline\CoreBundle\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDirectoryData;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDocumentData;
 
@@ -28,7 +28,6 @@ class DocumentControllerTest extends FixtureTestCase
         $this->cleanUploadDirectory();
         $this->loadFixture(new LoadDocumentData());
         $this->root = $this->getFixtureReference("dir/dir_a");
-
         $this->client->followRedirects();
     }
 
@@ -137,5 +136,4 @@ class DocumentControllerTest extends FixtureTestCase
         $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name));
         $this->client->restart();
     }
-
 }
