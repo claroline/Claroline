@@ -1,5 +1,5 @@
 <?php
-
+//à changer delete directory
 namespace Claroline\DocumentBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -128,9 +128,46 @@ class DocumentController extends Controller
         );
     }
 
-    public function downloadDirectoryAction()
+    public function downloadDirectoryAction($id)
     {
+        $zipFile = new \ZipArchive();
+        $zipName =   $hashName = hash("md5", "tmpzip" . time());
+        $pathZip = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR ."tmp". DIRECTORY_SEPARATOR .$zipName;
+        $zipFile->open($pathZip,\ZIPARCHIVE::CREATE);
+        $em = $this->getDoctrine()->getEntityManager();
+        $rep = $em->getRepository('ClarolineDocumentBundle:Directory');
+        $currentDir = $rep->find($id);
         
+        $directories = $rep->children($currentDir);
+        foreach($directories as $directory)
+        {
+            $pathDir = $this->getRelativeDirectoryPath($currentDir, $directory, $directory->getName());
+            $zipFile->addEmptyDir($pathDir); 
+            $documents = $directory->getDocuments();
+            
+            foreach ($documents as $document)
+            {
+                $zipFile->addFile($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR.$document->getHashName(), $pathDir.DIRECTORY_SEPARATOR.$document->getName());
+            }
+        }
+        $documents = $currentDir->getDocuments();
+        foreach($documents as $document)
+        {
+             $zipFile->addFile($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR.$document->getHashName(), $currentDir->getName().DIRECTORY_SEPARATOR.$document->getName());
+        }
+        
+        $zipFile->close();
+        
+        $response = new Response();
+        $response->setContent(file_get_contents($pathZip));
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=zip-a-dee-doo-dah.zip');
+        $response->headers->set('Content-Type', 'application/' . '.zip');
+        $response->headers->set('Connection', 'close');
+        chmod($pathZip, 0777);
+        unlink($pathZip);
+        return $response;
     }
 
     public function uploadDirectoryAction()
@@ -153,7 +190,7 @@ class DocumentController extends Controller
         return $this->showDirectoryAction($currentDirectory->getId());
     }
 
-    public function getDirectoryRealPath($directory)
+    public function getDirectoryRealPath(Directory $directory)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $tabPath = $em->getRepository('ClarolineDocumentBundle:Directory')->getPath($directory);
@@ -167,7 +204,7 @@ class DocumentController extends Controller
         return $path;
     }
 
-    public function getListParentDirectories($directory)
+    public function getListParentDirectories(Directory $directory)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $tabPath = $em->getRepository('ClarolineDocumentBundle:Directory')->getPath($directory);
@@ -196,7 +233,7 @@ class DocumentController extends Controller
         return $currentDirectory;
     }
 
-    public function removeDocumentsFromSubDirectories($rmdir)
+    public function removeDocumentsFromSubDirectories(Directory $rmdir)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $rep = $em->getRepository('ClarolineDocumentBundle:Directory');
@@ -217,7 +254,7 @@ class DocumentController extends Controller
         }
     }
 
-    public function removeDocumentsFromDirectory($rmdir)
+    public function removeDocumentsFromDirectory(Directory $rmdir)
     {
         $documents = $rmdir->getDocuments();
 
@@ -238,5 +275,35 @@ class DocumentController extends Controller
         unlink($pathName);
         $em->remove($document);
         $em->flush();
+    }    
+    
+    public function addDirectoryContentToZip(\ZipArchive $zipFile, $id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $directory = $em->getRepository('ClarolineDocumentBundle:Directory')->find($id);
+        $documents = $directory->getDocuments();
+        foreach ($documents as $document)
+        {
+            $pathName = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $document->getHashName();
+            $zipFile->addFile($pathName, $document->getName());
+        }
+    }
+    
+    public function getRelativeDirectoryPath(Directory $root, Directory $dir, $pathName)
+    { 
+        $parent = $dir->getParent();
+        
+        
+        if ($parent->getName() != $root->getName() && $parent!=null)
+        {
+            $pathName=$parent->getName().DIRECTORY_SEPARATOR.$pathName;
+            $pathName = $this->
+                getRelativeDirectoryPath($root, $parent, $pathName);
+        }else
+        {
+            $pathName = $root->getName().DIRECTORY_SEPARATOR.$pathName;
+        }
+        
+        return $pathName;
     }
 }
