@@ -92,5 +92,3 @@ class LoadDocumentData extends AbstractFixture
         $manager->flush();
     }
 }
-
-?>
