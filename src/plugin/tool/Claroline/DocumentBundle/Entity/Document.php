@@ -26,11 +26,6 @@ class Document
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $path;
-
-    /**
      * @Assert\File(maxSize="6000000")
      */
     private $file;
@@ -45,7 +40,19 @@ class Document
      * @ORM\Column(type="integer", nullable=false)
      */
     private $size;
-
+    
+    /**
+     * @ORM\Column(type="string", length=32, name="hash_name")
+     * @Assert\NotBlank
+     */
+    private $hashName;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\DocumentBundle\Entity\Directory", inversedBy="documents")
+     * @ORM\JoinColumn(name="directory_id", referencedColumnName="id")
+     */
+    private $directory;
+    
     public function getSize()
     {
         return $this->size;
@@ -81,16 +88,6 @@ class Document
         $this->name = $name;
     }
 
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
     public function setDateUpload($dateUpload)
     {
         $this->dateUpload = $dateUpload;
@@ -123,5 +120,27 @@ class Document
         {
             return round($this->size / 1099511627776, 2) . ' TB';
         }
-    }  
+    }
+    
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+    
+    public function setDirectory(Directory $directory)
+    {
+       $this->directory=$directory;
+    }
+    
+    public function getHashName()
+    {
+        return $this->hashName;
+    }
+    
+    public function setHashName($hashName)
+    {
+        $this->hashName = $hashName;
+    }
+    
+    
 }
