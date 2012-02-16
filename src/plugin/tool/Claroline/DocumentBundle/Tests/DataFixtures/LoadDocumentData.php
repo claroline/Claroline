@@ -5,6 +5,7 @@ namespace Claroline\DocumentBundle\Tests\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Claroline\DocumentBundle\Entity\Directory;
 use Claroline\DocumentBundle\Entity\Document;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadDocumentData extends AbstractFixture
 {
@@ -17,7 +18,7 @@ class LoadDocumentData extends AbstractFixture
      *          Dir_F
      *              Dir_G
      */
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
      /*   $docA = new Document();
         $docB = new Document();

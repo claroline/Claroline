@@ -77,7 +77,7 @@ class DocumentController extends Controller
         $this->getRequest()->getSession()->setFlash("notice", "taille = " . $size);
         return $response;
     }
-
+    
     public function addDirectoryAction($id)
     {
 
@@ -124,8 +124,7 @@ class DocumentController extends Controller
 
         return $this->render(
             'ClarolineDocumentBundle:Document:showDirectory.html.twig', array(
-                'documents' => $documents, 'directories' => $directories, 'currentDirectory' => $currentDirectory, 'listParent' => $listParentDirectories, 'formdoc' => $formDoc->createView(), 'formdir' => $formDir->createView())
-        );
+                'documents' => $documents, 'directories' => $directories, 'currentDirectory' => $currentDirectory, 'listParent' => $listParentDirectories, 'formdoc' => $formDoc->createView(), 'formdir' => $formDir->createView()));
     }
 
     public function downloadDirectoryAction($id)
@@ -136,9 +135,9 @@ class DocumentController extends Controller
         $zipFile->open($pathZip,\ZIPARCHIVE::CREATE);
         $em = $this->getDoctrine()->getEntityManager();
         $rep = $em->getRepository('ClarolineDocumentBundle:Directory');
-        $currentDir = $rep->find($id);
-        
+        $currentDir = $rep->find($id);             
         $directories = $rep->children($currentDir);
+        
         foreach($directories as $directory)
         {
             $pathDir = $this->getRelativeDirectoryPath($currentDir, $directory, $directory->getName());
@@ -150,21 +149,22 @@ class DocumentController extends Controller
                 $zipFile->addFile($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR.$document->getHashName(), $pathDir.DIRECTORY_SEPARATOR.$document->getName());
             }
         }
+        
         $documents = $currentDir->getDocuments();
+        
         foreach($documents as $document)
         {
              $zipFile->addFile($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR.$document->getHashName(), $currentDir->getName().DIRECTORY_SEPARATOR.$document->getName());
         }
         
-        $zipFile->close();
-        
+        $zipFile->close();     
         $response = new Response();
         $response->setContent(file_get_contents($pathZip));
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=zip-a-dee-doo-dah.zip');
         $response->headers->set('Content-Type', 'application/' . '.zip');
-        $response->headers->set('Connection', 'close');
+        $response->headers->set('Connection', 'close');       
         chmod($pathZip, 0777);
         unlink($pathZip);
         return $response;
@@ -240,7 +240,6 @@ class DocumentController extends Controller
         $directories = $rep->children($rmdir);
         $this->removeDocumentsFromDirectory($rmdir);
 
-
         foreach ($directories as $directory)
         {
             $documents = $directory->getDocuments();
@@ -292,8 +291,7 @@ class DocumentController extends Controller
     public function getRelativeDirectoryPath(Directory $root, Directory $dir, $pathName)
     { 
         $parent = $dir->getParent();
-        
-        
+                
         if ($parent->getName() != $root->getName() && $parent!=null)
         {
             $pathName=$parent->getName().DIRECTORY_SEPARATOR.$pathName;
