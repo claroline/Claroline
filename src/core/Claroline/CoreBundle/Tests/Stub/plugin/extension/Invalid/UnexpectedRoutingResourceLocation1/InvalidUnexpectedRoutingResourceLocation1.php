@@ -2,7 +2,7 @@
 
 namespace Invalid\UnexpectedRoutingResourceLocation1;
 
-use Claroline\CoreBundle\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
 
 class InvalidUnexpectedRoutingResourceLocation1 extends ClarolineExtension
 {

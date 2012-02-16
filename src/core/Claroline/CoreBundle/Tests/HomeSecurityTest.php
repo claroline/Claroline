@@ -9,7 +9,7 @@ class HomeSecurityTest extends WebTestCase
     /** @var \Symfony\Component\HttpKernel\Client */
     private $client;
     
-    public function setUp()
+    protected function setUp()
     {
         $this->client = self::createClient();
         $this->client->followRedirects();

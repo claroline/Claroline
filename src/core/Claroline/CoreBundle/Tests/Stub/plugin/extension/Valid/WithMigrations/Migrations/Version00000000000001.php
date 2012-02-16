@@ -3,7 +3,7 @@
 namespace Valid\WithMigrations\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
-use Claroline\CoreBundle\Installation\BundleMigration;
+use Claroline\CoreBundle\Library\Installation\BundleMigration;
 
 class Version00000000000001 extends BundleMigration
 {

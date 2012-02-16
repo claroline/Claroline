@@ -17,17 +17,7 @@ use Claroline\CoreBundle\Annotation\ORM\Extendable;
 class ExtendableListener extends ContainerAware implements EventSubscriber
 {
     // metadatas of the @extendable entities
-    private $extendables;
-    
-    public function __construct()
-    {
-        $this->extendables = array();
-    }
-    
-    public function setAnnotationReader(FileCacheReader $reader)
-    {
-        $this->annotationReader = $reader;
-    }
+    private $extendables = array();
     
     public function getSubscribedEvents() 
     {
@@ -70,11 +60,11 @@ class ExtendableListener extends ContainerAware implements EventSubscriber
             }
         }
     }
-
+    
     private function getExtendableAnnotation($className)
     {
         $reflectionClass = new \ReflectionClass($className);
-        $annotations = $this->annotationReader->getClassAnnotations($reflectionClass);
+        $annotations = $this->getReader()->getClassAnnotations($reflectionClass);
         $hasDoctrineInheritanceMapping = false;
         $extendableAnnotation = false;
         
@@ -121,5 +111,11 @@ class ExtendableListener extends ContainerAware implements EventSubscriber
                 . "must have a non empty value in '{$className}'."
             );
         }
+    }  
+
+    /** @return FileCacheReader */
+    private function getReader()
+    {
+        return $this->container->get('annotation_reader');
     }
 }

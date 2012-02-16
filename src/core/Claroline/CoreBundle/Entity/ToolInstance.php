@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Annotation\ORM as ORMExt;
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool;
 
 /**
@@ -27,7 +27,7 @@ class ToolInstance
     protected $toolType;
     
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $hostWorkspace;
@@ -51,7 +51,7 @@ class ToolInstance
         return $this->hostWorkspace;
     }
 
-    public function setHostWorkspace(Workspace $hostWorkspace)
+    public function setHostWorkspace(AbstractWorkspace $hostWorkspace)
     {
         $this->hostWorkspace = $hostWorkspace;
     }

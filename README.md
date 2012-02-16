@@ -11,9 +11,9 @@ After having cloned the project :
 
 * use the automatic install script (php must be in $PATH ) : `php bin/factory_install_dev`
 
-* make the *app/cache*, *app/logs* and *app/config/local* directories (and their children) writable from
-  the webserver (for further explanation on common permissions issues and solutions with Symfony, 
-  read [this][symfony_doc_install])
+* make the *app/cache*, *app/logs*, *app/config/local*, *files* and *test* directories 
+  (and their children) writable from the webserver (for further explanation on common 
+  permissions issues and solutions with Symfony, read [this][symfony_doc_install])
 
 * *For dev* : check that either the SQLite3 or PDO_SQLite extension are enabled in your
   PHP configuration in order for the profiler to work

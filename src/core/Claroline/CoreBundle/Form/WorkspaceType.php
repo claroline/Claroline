@@ -15,7 +15,7 @@ class WorkspaceType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-        'data_class' => 'Claroline\CoreBundle\Entity\Workspace',
+            'data_class' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
         );
     }
 

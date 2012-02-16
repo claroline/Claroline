@@ -2,7 +2,7 @@
 
 namespace Claroline\DocumentBundle\Migrations;
 
-use Claroline\CoreBundle\Installation\BundleMigration;
+use Claroline\CoreBundle\Library\Installation\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20120303000000 extends BundleMigration

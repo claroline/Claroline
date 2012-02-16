@@ -2,7 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 class AbstractRoleSubjectTest extends FixtureTestCase
 {
@@ -66,7 +67,7 @@ class AbstractRoleSubjectTest extends FixtureTestCase
         $user->removeRole($wsCreatorRole);
         $userRoles = $user->getOwnedRoles(true);
         $this->assertEquals(1, count($userRoles));
-        $this->assertEquals('ROLE_USER', $userRoles[0]->getName());
+        $this->assertEquals(PlatformRoles::USER, $userRoles[0]->getName());
         
         $groupB = $this->getFixtureReference('group/group_b');
         $roleD = $this->getFixtureReference('role/role_d');       

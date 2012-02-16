@@ -10,12 +10,11 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Entity\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Browsing\HistoryBrowser;
+use Claroline\CoreBundle\Library\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Library\Browsing\HistoryBrowser;
 
 class WorkspaceController
 {
@@ -51,15 +50,12 @@ class WorkspaceController
         $this->workspaceManager = $workspaceManager;
         $this->historyBrowser = $historyBrowser;
     }
-       
-    /**
-     * @Secure(roles="ROLE_USER")
-     */
+    
     public function newAction()
     {
         // check if granted
         
-        $workspace = new Workspace();
+        $workspace = new SimpleWorkspace();
         $form = $this->formFactory->create(new WorkspaceType(), $workspace);
 
         return $this->twigEngine->renderResponse(
@@ -68,15 +64,12 @@ class WorkspaceController
         );
     }
     
-    /**
-     * @Secure(roles="ROLE_USER")
-     */
     public function createAction()
     {
         // check if granted
         
         
-        $workspace = new Workspace();
+        $workspace = new SimpleWorkspace();
         $form = $this->formFactory->create(new WorkspaceType(), $workspace);
         $form->bindRequest($this->request);
         $user = $this->securityContext->getToken()->getUser();
@@ -105,9 +98,6 @@ class WorkspaceController
         );
     }
     
-    /**
-     * @Secure(roles="ROLE_USER")
-     */
     public function deleteAction($id)
     {
         $workspaceEntity = 'ClarolineCoreBundle:Workspace';

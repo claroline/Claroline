@@ -2,7 +2,7 @@
 
 namespace Valid\Custom;
 
-use Claroline\CoreBundle\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
 
 /**
  * Plugin overriding all the ClarolinePlugin methods.

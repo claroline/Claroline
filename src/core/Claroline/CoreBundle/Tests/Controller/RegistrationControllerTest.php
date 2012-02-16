@@ -3,11 +3,11 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class RegistrationControllerTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();
@@ -17,8 +17,8 @@ class RegistrationControllerTest extends FunctionalTestCase
     public function testUserCanBeRegisteredByAdmin()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->registerUser('Bill', 'Doe', 'bdoe', '123');
-        $crawler = $this->logUser($this->getUser('bdoe'));
+        $this->registerUser('Black', 'Jack', 'new_user', '123');
+        $crawler = $this->logUser($this->getUser('new_user'));
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
     
@@ -88,7 +88,7 @@ class RegistrationControllerTest extends FunctionalTestCase
             $this->client->getContainer()->get('form.factory'),
             $this->client->getContainer()->get('templating'),
             $this->client->getContainer()->get('translator'),
-            $this->client->getContainer()->get('claroline.user.manager'),
+            $this->client->getContainer()->get('doctrine.orm.entity_manager'),
             $isSelfRegistrationAllowed
         );
     }

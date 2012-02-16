@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 
 class LoadGroupData extends AbstractFixture
@@ -14,7 +15,7 @@ class LoadGroupData extends AbstractFixture
      * Group B : ROLE_D (i.e. ROLE_C -> ROLE_D)
      * Group C : ROLE_F (i.e. ROLE_C -> ROLE_E -> ROLE_F)
      */
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
         $groupA = new Group();
         $groupA->setName('Group A');

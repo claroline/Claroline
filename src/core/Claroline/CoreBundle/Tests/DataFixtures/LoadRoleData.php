@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 
 class LoadRoleData extends AbstractFixture
@@ -18,7 +19,7 @@ class LoadRoleData extends AbstractFixture
      *      Role E
      *          Role F
      */
-    public function load($manager)
+    public function load(ObjectManager $manager)
     {
         $roleA = new Role();
         $roleA->setName('ROLE_A');

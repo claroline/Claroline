@@ -2,7 +2,7 @@
 
 namespace Incompatible\SameFQCNThanAnotherPlugin;
 
-use Claroline\CoreBundle\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
 
 /*
  * A stub tool has the same FQCN
