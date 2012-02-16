@@ -1,21 +1,41 @@
 claro_document_upload:
-   pattern: /upload
-   defaults:  { _controller: ClarolineDocumentBundle:Document:upload }
+   pattern: /upload/directory/{id}
+   defaults:  { _controller: ClarolineDocumentBundle:Document:uploadDocument }
    requirements:
      _method: POST
-  
-claro_document_form:
-   pattern: /form
-   defaults: { _controller: ClarolineDocumentBundle:Document:getForm }
-   
-claro_document_list:
-   pattern: /list
-   defaults: { _controller: ClarolineDocumentBundle:Document:list }
-   
+     
 claro_document_delete:
-   pattern: /delete/{id}
-   defaults: { _controller: ClarolineDocumentBundle:Document:delete }
+   pattern: document/delete/{dir}/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:deleteDocument }
    
 claro_document_download:
-   pattern: /download/{id}
-   defaults: { _controller: ClarolineDocumentBundle:Document:download }
+   pattern: document/download/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:downloadDocument }
+   
+claro_directory_show:
+   pattern: /show/directory/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:showDirectory }
+   
+claro_directory_add:
+   pattern: /add/directory/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:addDirectory }
+   requirements:
+     _method: POST
+     
+claro_directory_delete:
+   pattern: directory/delete/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:deleteDirectory }
+   
+claro_document_move:
+   pattern: document/move/{dir}/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:moveDocument }
+   
+claro_rar_upload:
+   pattern: document/upload/rar/{id}
+   defaults:  { _controller: ClarolineDocumentBundle:Document:uploadDirectory }
+   
+claro_rar_download:
+   pattern: document/download/rar/{id}
+   defaults: { _controller: ClarolineDocumentBundle:Document:downloadDirectory }
+   
+  
