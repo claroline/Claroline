@@ -136,4 +136,22 @@ class DocumentControllerTest extends FixtureTestCase
         $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name));
         $this->client->restart();
     }
+    
+    function emptyDir($dir)
+    {
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
+                RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($iterator as $path)
+        {
+            if ($path->isDir())
+            {
+                rmdir($path->__toString());
+            }
+            else
+            {
+                unlink($path->__toString());
+            }
+        }
+        rmdir($dir);
+    }
 }
