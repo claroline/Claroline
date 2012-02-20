@@ -26,12 +26,7 @@ parameters:
     mailer_user: ~
     mailer_password: ~
 
-# platform options
-
-    locale: en
-    allow_self_registration: true
-    context_history_max_size: 5
-
 # others
 
+    locale: en
     secret: ThisTokenIsNotSoSecretChangeIt

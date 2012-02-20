@@ -39,7 +39,9 @@ class LayoutController extends Controller
         }
         else
         {
-            if ($this->container->getParameter('allow_self_registration') === true)
+            $configHandler = $this->get('claroline.config.platform_config_handler');
+            
+            if (true === $configHandler->getParameter('allow_self_registration'))
             {
                 $registerTarget = 'claro_user_registration_form';
             }

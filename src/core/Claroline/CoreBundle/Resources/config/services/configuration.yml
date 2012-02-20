@@ -1,0 +1,12 @@
+parameters:
+
+    claroline.config.platform_handler_class : Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+    claroline.config.platform_options_files:
+        prod: %kernel.root_dir%/config/local/platform_options.yml
+
+services:
+
+     claroline.config.platform_config_handler:
+        class: %claroline.config.platform_handler_class%
+        arguments:
+            - %claroline.config.platform_options_files%
