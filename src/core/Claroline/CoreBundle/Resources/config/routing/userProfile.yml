@@ -4,8 +4,8 @@ claro_profile_show_edit:
     
 claro_profile_edit:
     pattern: /edit
-    defaults: { _controller:ClarolineCoreBundle:UserProfile:editProfile }
+    defaults: { _controller: ClarolineCoreBundle:UserProfile:editProfile }
     
 claro_profile_show:
-   pattern: /show
-   defaults: { _controller:ClarolineCoreBundle:UserProfile:showProfile }
+   pattern: /show/{id}
+   defaults: { _controller: ClarolineCoreBundle:UserProfile:showProfile }

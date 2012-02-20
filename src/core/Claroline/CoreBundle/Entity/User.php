@@ -42,7 +42,6 @@ class User extends AbstractRoleSubject implements UserInterface
      * @Assert\NotBlank()
      */
     protected $username;
-
     /**
      * @ORM\Column(type="string", length="255")
      */
@@ -96,18 +95,20 @@ class User extends AbstractRoleSubject implements UserInterface
     
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $phone;
     
     /**
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string", length="1000", nullable=true) 
      */
-    
     protected $note;
+
     /**
-     * @ORM\Column(type="string", length="1000") 
+     * @ORM\Column(type="string") 
      */
+    protected $mail;
+ 
         
     
     public function __construct()
@@ -116,6 +117,11 @@ class User extends AbstractRoleSubject implements UserInterface
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+    }
+    
+    public function setId($id)
+    {
+        $this->id=$id;
     }
 
     public function getId()
@@ -289,5 +295,15 @@ class User extends AbstractRoleSubject implements UserInterface
     public function setNote($note)
     {
         $this->note = $note;
+    }
+    
+    public function getMail()
+    {
+        return $this->mail;
+    }
+    
+    public function setMail($mail)
+    {
+        $this->mail = $mail;
     }
 }
