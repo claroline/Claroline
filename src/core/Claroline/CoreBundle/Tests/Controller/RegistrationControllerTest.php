@@ -7,19 +7,24 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class RegistrationControllerTest extends FunctionalTestCase
 {
+    /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
+    private $configHandler;
+    
     protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();
         $this->client->followRedirects();
+        $this->configHandler = $this->client
+            ->getContainer()
+            ->get('claroline.config.platform_config_handler');
+        $this->configHandler->eraseTestConfiguration();
     }
     
-    public function testUserCanBeRegisteredByAdmin()
+    protected function tearDown()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->registerUser('Black', 'Jack', 'new_user', '123');
-        $crawler = $this->logUser($this->getUser('new_user'));
-        $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
+        parent::tearDown();
+        $this->configHandler->eraseTestConfiguration();
     }
     
     public function testUserCannotBeRegisteredByUnauthorizedUser()
@@ -42,10 +47,16 @@ class RegistrationControllerTest extends FunctionalTestCase
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
     
-    public function testSelfRegistrationAttemptThrowsAnExceptionIfNotAllowed()
+    public function testAnonymousUserCanRegisterHimselfOnlyIfOptionIsEnabled()
     {
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
-        $this->getControllerPreparedForAnonymousUser(false)->createAction();
+        $this->configHandler->setParameter('allow_self_registration', false);        
+        $this->client->request('GET', '/user/register');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        
+        $this->configHandler->setParameter('allow_self_registration', true);        
+        $this->registerUser('Bill', 'Doe', 'bdoe', '123');
+        $crawler = $this->logUser($this->getUser('bdoe'));
+        $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
     
     private function registerUser($firstName, $lastName, $username, $password)
@@ -59,38 +70,6 @@ class RegistrationControllerTest extends FunctionalTestCase
         $form['user_form[plainPassword][second]'] = $password;
         
         return $this->client->submit($form);
-    }
-    
-    private function getControllerPreparedForAnonymousUser($isSelfRegistrationAllowed)
-    {
-        $mockedRequest = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-            ->disableOriginalConstructor()
-            ->getMock();     
-        $mockedToken = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\AbstractToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockedToken->expects($this->any())
-            ->method('getUser')
-            ->will($this->returnValue('anon.'));        
-        $mockedContext = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContextInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockedContext->expects($this->any())
-            ->method('isGranted')
-            ->will($this->returnValue(false));        
-        $mockedContext->expects($this->any())
-            ->method('getToken')
-            ->will($this->returnValue($mockedToken));
-        
-        return new RegistrationController(
-            $mockedRequest,
-            $mockedContext,
-            $this->client->getContainer()->get('form.factory'),
-            $this->client->getContainer()->get('templating'),
-            $this->client->getContainer()->get('translator'),
-            $this->client->getContainer()->get('doctrine.orm.entity_manager'),
-            $isSelfRegistrationAllowed
-        );
     }
     
     private function getUser($username)

@@ -29,6 +29,15 @@ class AggregatorWorkspace extends AbstractWorkspace
         $this->workspaces = new ArrayCollection();
     }
     
+    /**
+     * Method implemented only to match parent definition. As the aggregator 
+     * workspaces have no parents, they are always public
+     */
+    public function setPublic($isPublic)
+    {
+        $this->isPublic = true;
+    }
+    
     public function getWorkspaces()
     {
         return $this->workspaces;

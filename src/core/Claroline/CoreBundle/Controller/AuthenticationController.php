@@ -2,36 +2,27 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 
-class AuthenticationController
+class AuthenticationController extends Controller
 {
-    private $request;
-    private $twigEngigne;
-    
-    public function __construct(Request $request,
-                                TwigEngine $engine)
-    {
-        $this->request = $request;
-        $this->twigEngigne = $engine;
-    }
-    
     public function loginAction()
     {
-        if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR))
+        $request = $this->get('request');
+        
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR))
         {
-            $error = $this->request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         }
         else
         {
-            $error = $this->request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
+            $error = $request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
+        $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
         
-        return $this->twigEngigne->renderResponse(
+        return $this->render(
             'ClarolineCoreBundle:Authentication:login.html.twig', 
             array(
                 'last_username' => $lastUsername,

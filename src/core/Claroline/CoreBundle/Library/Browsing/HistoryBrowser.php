@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Browsing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Exception\ClarolineException;
 
 class HistoryBrowser
@@ -15,11 +16,15 @@ class HistoryBrowser
     private $historyQueue;
     private $queueMaxSize;
     
-    public function __construct(Request $request, Session $session, $historyMaxSize)
+    public function __construct(
+        Request $request, 
+        Session $session, 
+        PlatformConfigurationHandler $configHandler
+    )
     {
         $this->request = $request;
         $this->session = $session;
-        $this->queueMaxSize = $historyMaxSize;
+        $this->queueMaxSize = $configHandler->getParameter('context_history_max_size');
         $this->historyQueue = $this->initQueue();
     }
     

@@ -16,11 +16,6 @@ use Claroline\CoreBundle\Exception\ClarolineException;
 class SimpleWorkspace extends AbstractWorkspace
 {
     /**
-     * @ORM\Column(name="is_public", type="boolean")
-     */
-    private $isPublic = true;
-    
-    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -71,11 +66,6 @@ class SimpleWorkspace extends AbstractWorkspace
     {
         parent::__construct();
         $this->children = new ArrayCollection();
-    }
-    
-    public function isPublic()
-    {
-        return $this->isPublic;
     }
     
     public function setPublic($isPublic)

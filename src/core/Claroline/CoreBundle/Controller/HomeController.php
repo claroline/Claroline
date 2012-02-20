@@ -2,22 +2,12 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class HomeController
+class HomeController extends Controller
 {
-    /** Symfony\Bundle\TwigBundle\TwigEngine */
-    private $twigEngine;
-    
-    public function __construct(TwigEngine $twigEngine)
-    {
-        $this->twigEngine = $twigEngine;
-    }
-    
     public function indexAction()
-    {        
-        return $this->twigEngine->renderResponse(
-            'ClarolineCoreBundle:Home:home.html.twig'
-        );
+    {
+        return $this->render('ClarolineCoreBundle:Home:home.html.twig');
     }
 }
