@@ -1,0 +1,11 @@
+claro_profile_show_edit:
+    pattern: /show/edit
+    defaults: { _controller: ClarolineCoreBundle:UserProfile:showEditProfile }
+    
+claro_profile_edit:
+    pattern: /edit
+    defaults: { _controller:ClarolineCoreBundle:UserProfile:editProfile }
+    
+claro_profile_show:
+   pattern: /show
+   defaults: { _controller:ClarolineCoreBundle:UserProfile:showProfile }

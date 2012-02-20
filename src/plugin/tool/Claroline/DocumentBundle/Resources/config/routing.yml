@@ -34,8 +34,8 @@ claro_rar_upload:
    pattern: document/upload/rar/{id}
    defaults:  { _controller: ClarolineDocumentBundle:Document:uploadDirectory }
    
-claro_rar_download:
-   pattern: document/download/rar/{id}
+claro_directory_download:
+   pattern: document/directory/download/{id}
    defaults: { _controller: ClarolineDocumentBundle:Document:downloadDirectory }
    
   

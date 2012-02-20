@@ -52,6 +52,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('username', 'string', array('length' => 255));
         $table->addColumn('password', 'string', array('length' => 255));
         $table->addColumn('salt', 'string', array('length' => 255));
+        $table->addColumn('phone', 'integer', array('notnull' => false));
+        $table->addColumn('note', 'string', array('length' => 1000, 'notnull' => false));
         $table->addUniqueIndex(array('username'));
         
         $this->storeTable($table);
