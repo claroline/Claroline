@@ -6,3 +6,8 @@ download_document: download
 upload_success: upload successfull
 download_success: download sucessfull
 delete_success: file supressed
+size: size
+directory_name: current directory name
+move_document: move document
+upload_rar: upload rar
+download_rar: download rar

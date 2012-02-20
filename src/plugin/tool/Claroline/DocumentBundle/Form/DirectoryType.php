@@ -5,15 +5,15 @@ namespace Claroline\DocumentBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class DocumentType extends AbstractType
+class DirectoryType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('file', 'file');
+        $builder->add('name');
     }
 
     public function getName()
     {
-        return 'Document_Form';
+        return 'Directory_Form';
     }
 }
