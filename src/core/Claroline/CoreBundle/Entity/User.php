@@ -94,6 +94,22 @@ class User extends AbstractRoleSubject implements UserInterface
      */
     protected $workspaceRoles;
     
+    
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $phone;
+    
+    /**
+     * @ORM\Column(type="integer") 
+     */
+    
+    protected $note;
+    /**
+     * @ORM\Column(type="string", length="1000") 
+     */
+        
+    
     public function __construct()
     {
         parent::__construct();
@@ -253,5 +269,25 @@ class User extends AbstractRoleSubject implements UserInterface
         {
             return false;
         }
+    }
+    
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+    
+    public function setPhone ($phone)
+    {
+        $this->phone = $phone;
+    }
+    
+    public function getNote()
+    {
+        return $this->note;
+    }
+    
+    public function setNote($note)
+    {
+        $this->note = $note;
     }
 }

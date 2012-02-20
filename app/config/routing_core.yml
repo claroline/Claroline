@@ -24,3 +24,8 @@ claro_workspace:
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
     prefix: admin    
+    
+claro_userProfile:
+   resource: "@ClarolineCoreBundle/Resources/config/routing/userProfile.yml"
+   prefix: profile
+   

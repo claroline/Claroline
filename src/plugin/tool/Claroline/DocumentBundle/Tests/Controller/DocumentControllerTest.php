@@ -88,6 +88,32 @@ class DocumentControllerTest extends FixtureTestCase
         $this->assertEquals(0, $crawler->filter('.directory_item')->count());
         $this->assertEquals(0, count($this->getUploadedFiles()));
     }
+    
+    public function testZipCanBeUploaded()
+    {
+        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->root->getId());
+        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $this->assertEquals(3, $crawler->filter('.directory_item')->count());
+        $link = $crawler->filter('.link_directory_show')->eq(2)->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(4, $crawler->filter('.directory_item')->count());
+        $this->assertEquals(1, $crawler->filter('.document_item')->count());
+        $link = $crawler->filter('.link_directory_show')->eq(0)->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(2, $crawler->filter('.directory_item')->count());
+        $this->assertEquals(63, $crawler->filter('.document_item')->count());
+        $this->assertEquals(110, count($this->getUploadedFiles()));
+    }
+    
+    public function testZipCanBeDownloaded()
+    {
+        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->root->getId());
+        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $link = $crawler->filter('.link_download_directory')->eq(2)->link();
+        $crawler = $this->client->click($link);
+        $this->assertTrue($this->client->getResponse()->headers->contains(
+            'Content-Disposition', 'attachment; filename=dynatree.zip')); 
+    }
 
     private function cleanUploadDirectory()
     {
@@ -135,23 +161,5 @@ class DocumentControllerTest extends FixtureTestCase
         $form = $crawler->filter('input[type=submit]')->last()->form();
         $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name));
         $this->client->restart();
-    }
-    
-    function emptyDir($dir)
-    {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
-                RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($iterator as $path)
-        {
-            if ($path->isDir())
-            {
-                rmdir($path->__toString());
-            }
-            else
-            {
-                unlink($path->__toString());
-            }
-        }
-        rmdir($dir);
     }
 }

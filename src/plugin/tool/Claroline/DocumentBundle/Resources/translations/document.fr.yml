@@ -9,5 +9,4 @@ delete_success: fichier supprimé
 size: taille
 directory_name: nom du répertoire courant
 move_document: déplacer le document
-upload_rar: upload rar
-download_rar: download rar
+new_directory: nouveau répertoire

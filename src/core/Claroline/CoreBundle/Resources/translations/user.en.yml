@@ -13,3 +13,7 @@ user_form_lastName: "Last name :"
 user_form_username: "Username :"
 user_form_plainPassword_first: "Password :"
 user_form_plainPassword_second: "Verification :"
+
+ #layout profile
+user_profile_link: "my account"
+ 
