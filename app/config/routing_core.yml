@@ -1,6 +1,6 @@
 claro_index:
     pattern: /
-    defaults: { _controller: claroline.controller.home:indexAction }
+    defaults: { _controller: ClarolineCoreBundle:Home:index }
 
 claro_security:
     resource: "@ClarolineCoreBundle/Resources/config/routing/security.yml"

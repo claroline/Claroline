@@ -7,10 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 
 /**
  * Note : Actions of this controller are not routed. They're intended to be
- *        rendered directly in the "common_layout" and "content_layout" templates.
- *        Note that defining this controller as a service is incompatible
- *        with this technique (the twig/symfony "render" statement seems to 
- *        work only with the symfony Controller class).
+ * rendered directly in the "common_layout" and "content_layout" templates.
  */
 class LayoutController extends Controller
 {
@@ -39,7 +36,9 @@ class LayoutController extends Controller
         }
         else
         {
-            if ($this->container->getParameter('allow_self_registration') === true)
+            $configHandler = $this->get('claroline.config.platform_config_handler');
+            
+            if (true === $configHandler->getParameter('allow_self_registration'))
             {
                 $registerTarget = 'claro_user_registration_form';
             }

@@ -1,7 +1,7 @@
 services:
 
-    claroline.workspace_manager:
-        class: Claroline\CoreBundle\Library\Manager\WorkspaceManager
+    claroline.workspace.creator:
+        class: Claroline\CoreBundle\Library\Workspace\Creator
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"

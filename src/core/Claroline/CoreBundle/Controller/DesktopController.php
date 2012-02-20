@@ -2,27 +2,14 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
 
-class DesktopController
+class DesktopController extends Controller
 {
-    private $twigEngine;
-    private $securityContext;
-    
-    public function __construct(
-        SecurityContext $securityContext, 
-        TwigEngine $twigEngine
-    )
-    {
-        $this->securityContext = $securityContext;
-        $this->twigEngine = $twigEngine;
-    }
-    
     public function indexAction()
     {
-        return $this->twigEngine->renderResponse(
+        return $this->render(
             'ClarolineCoreBundle:Desktop:desktop.html.twig',
             array('workspaces_block' => $this->renderWorkspaceBlock())
         );
@@ -31,14 +18,14 @@ class DesktopController
     private function renderWorkspaceBlock()
     {
         $workspaceRoles = array();
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
         
         if ($user instanceof User)
         {
             $workspaceRoles = $user->getWorkspaceRoleCollection(); 
         }
         
-        return $this->twigEngine->render(
+        return $this->render(
             'ClarolineCoreBundle:Desktop:workspaces_block.html.twig',
             array('workspace_roles' => $workspaceRoles)
         );
