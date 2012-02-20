@@ -7,12 +7,13 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class RegistrationController
 {
@@ -22,7 +23,7 @@ class RegistrationController
     private $twigEngine;
     private $translator;
     private $entityManager;
-    private $isSelfRegistrationEnabled;
+    private $configHandler;
     
     public function __construct(
         Request $request,
@@ -31,7 +32,7 @@ class RegistrationController
         TwigEngine $twigEngine,
         Translator $translator,
         EntityManager $entityManager,
-        $isSelfRegistrationEnabled
+        PlatformConfigurationHandler $handler
     )
     {
         $this->request = $request;
@@ -40,7 +41,7 @@ class RegistrationController
         $this->twigEngine = $twigEngine;
         $this->translator = $translator;
         $this->entityManager = $entityManager;
-        $this->isSelfRegistrationEnabled = $isSelfRegistrationEnabled;
+        $this->configHandler = $handler;
     }
     
     public function newAction()
@@ -92,7 +93,9 @@ class RegistrationController
     
     private function checkAccess()
     {
-        if (! $this->securityContext->getToken()->getUser() instanceof User && $this->isSelfRegistrationEnabled)
+        $isSelfRegistrationAllowed = $this->configHandler->getParameter('allow_self_registration');
+        
+        if (! $this->securityContext->getToken()->getUser() instanceof User && $isSelfRegistrationAllowed)
         {
             return;
         }
@@ -102,7 +105,6 @@ class RegistrationController
             return;
         }
         
-        
-        throw new AccessDeniedException();
+        throw new AccessDeniedHttpException();
     }
 }

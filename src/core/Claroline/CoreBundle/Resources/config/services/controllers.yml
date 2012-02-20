@@ -33,7 +33,7 @@ services:
             - "@templating.engine.twig"
             - "@translator"
             - "@doctrine.orm.entity_manager"
-            - %allow_self_registration%
+            - "@claroline.config.platform_config_handler"
 
     claroline.controller.workspace:
         class: Claroline\CoreBundle\Controller\WorkspaceController

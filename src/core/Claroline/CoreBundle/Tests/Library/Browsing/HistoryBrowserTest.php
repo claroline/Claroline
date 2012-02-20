@@ -15,11 +15,24 @@ class HistoryBrowserTest extends WebTestCase
     /** @var Symfony\Component\HttpFoundation\Session */
     private $session;
     
+    /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
+    private $configHandler;
+    
     protected function setUp()
     {
-        $this->session = self::createClient()->getContainer()->get('session');
+        parent::setUp();
+        $container = self::createClient()->getContainer();
+        $this->session = $container->get('session');
+        $this->configHandler = $container->get('claroline.config.platform_config_handler');
+        $this->configHandler->setParameter('context_history_max_size', 4);
         $this->request = $this->getMockedRequest();
-        $this->browser = new HistoryBrowser($this->request, $this->session, 4);       
+        $this->browser = new HistoryBrowser($this->request, $this->session, $this->configHandler);
+    }
+    
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->configHandler->eraseTestConfiguration();
     }
     
     public function testBrowserInitsAnArraySessionVariableToHandleHistory()
@@ -32,7 +45,7 @@ class HistoryBrowserTest extends WebTestCase
     public function testKeepCurrentContextIsOnlyAllowedForGetRequests()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
-        $browser = new HistoryBrowser($this->getMockedRequest('POST'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('POST'), $this->session, $this->configHandler);
         $browser->keepCurrentContext('Some context name');
     }
     
@@ -44,11 +57,11 @@ class HistoryBrowserTest extends WebTestCase
     
     public function testBrowserBuildsCompleteContextsAndReturnsThemFromTheNewerToTheOlder()
     {
-        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/1'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/1'), $this->session, $this->configHandler);
         $browser->keepCurrentContext('A');
-        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/2'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/2'), $this->session, $this->configHandler);
         $browser->keepCurrentContext('B');
-        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/3'), $this->session, 4);
+        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/3'), $this->session, $this->configHandler);
         $browser->keepCurrentContext('C');
         
         $history = $this->browser->getContextHistory();
@@ -101,7 +114,8 @@ class HistoryBrowserTest extends WebTestCase
         $this->browser->keepCurrentContext('C');
         $this->browser->keepCurrentContext('D');
         
-        $otherBrowserInstance = new HistoryBrowser($this->request, $this->session, 2);
+        $this->configHandler->setParameter('context_history_max_size', 2);
+        $otherBrowserInstance = new HistoryBrowser($this->request, $this->session, $this->configHandler);
         $history = $otherBrowserInstance->getContextHistory();
         
         $this->assertEquals(2, count($history));

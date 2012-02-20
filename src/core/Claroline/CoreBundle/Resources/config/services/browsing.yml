@@ -6,5 +6,5 @@ services:
         arguments:
             - "@request"
             - "@session"
-            - %context_history_max_size%
+            - "@claroline.config.platform_config_handler"
   
