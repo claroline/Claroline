@@ -15,4 +15,5 @@ app/config/local/plugin/*
 vendor/*
 web/bundles/*
 files/*
+files/tmp/*
 test/files/*
