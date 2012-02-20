@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+//use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController
 {
@@ -64,7 +65,7 @@ class RegistrationController
         $user = new User();
         $form = $this->formFactory->create(new UserType(), $user);
         $form->bindRequest($this->request);
-        
+       //  return new Response ((var_dump($form)));
         if ($form->isValid())
         {
             $userRole = $this->entityManager
