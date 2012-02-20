@@ -2,64 +2,23 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Library\Workspace\Creator;
-use Claroline\CoreBundle\Library\Browsing\HistoryBrowser;
 
-class WorkspaceController
+class WorkspaceController extends Controller
 {
-    private $request;
-    private $session;
-    private $securityContext;
-    private $entityManager;
-    private $router;
-    private $formFactory;
-    private $twigEngine;
-    private $workspaceCreator;
-    private $historyBrowser;
-    
-    public function __construct(
-        Request $request,
-        Session $session,
-        SecurityContext $context,
-        EntityManager $em,
-        Router $router,
-        FormFactory $factory,
-        TwigEngine $engine,
-        Creator $workspaceCreator,
-        HistoryBrowser $historyBrowser
-    )
-    {
-        $this->request = $request;
-        $this->session = $session;
-        $this->securityContext = $context;
-        $this->entityManager = $em;
-        $this->router = $router;
-        $this->formFactory = $factory;
-        $this->twigEngine = $engine;
-        $this->workspaceCreator = $workspaceCreator;
-        $this->historyBrowser = $historyBrowser;
-    }
-    
     public function newAction()
     {
         // check if granted
         
         $workspace = new SimpleWorkspace();
-        $form = $this->formFactory->create(new WorkspaceType(), $workspace);
+        $form = $this->get('form.factory')->create(new WorkspaceType(), $workspace);
 
-        return $this->twigEngine->renderResponse(
+        return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig', 
             array('form' => $form->createView())
         );
@@ -70,22 +29,23 @@ class WorkspaceController
         // check if granted
               
         $workspace = new SimpleWorkspace();
-        $form = $this->formFactory->create(new WorkspaceType(), $workspace);
+        $form = $this->get('form.factory')->create(new WorkspaceType(), $workspace);
         $form->bindRequest($this->request);
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         if ($form->isValid())
         {
             $config = new Configuration();
             $config->setName($workspace->getName());
-            $this->workspaceCreator->createWorkspace($config, $user);
+            $wsCreator = $this->get('claroline.workspace.creator');
+            $wsCreator->createWorkspace($config, $user);
             
-            $route = $this->router->generate('claroline_desktop_index');
+            $route = $this->get('router')->generate('claroline_desktop_index');
             
             return new RedirectResponse($route);
         }
 
-        return $this->twigEngine->renderResponse(
+        return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig',
             array('form' => $form->createView())
         );
@@ -93,19 +53,18 @@ class WorkspaceController
     
     public function deleteAction($id)
     {
-        $workspaceEntity = 'ClarolineCoreBundle:Workspace';
-        $workspace = $this->entityManager->find($workspaceEntity, $id);
+        $workspace = $em->find('ClarolineCoreBundle:Workspace', $id);
         
-        if (false === $this->securityContext->isGranted('DELETE', $workspace))
+        if (false === $this->get('security.context')->isGranted('DELETE', $workspace))
         {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         
-        $this->entityManager->remove($workspace);
-        $this->entityManager->flush();
+        $em->remove($workspace);
+        $em->flush();
         
-        $this->session->setFlash('notice', 'Workspace successfully deleted');            
-        $route = $this->router->generate('claroline_desktop_index');
+        $this->get('session')->setFlash('notice', 'Workspace successfully deleted');            
+        $route = $this->get('router')->generate('claroline_desktop_index');
        
         return new RedirectResponse($route);
     }
