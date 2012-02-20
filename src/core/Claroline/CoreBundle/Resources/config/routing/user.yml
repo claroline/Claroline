@@ -1,7 +1,7 @@
 claro_user_registration_form:
     pattern: /register
-    defaults: { _controller: claroline.controller.registration:newAction }
+    defaults: { _controller: ClarolineCoreBundle:Registration:new }
     
 claro_user_registration_form_submit:
     pattern: /create
-    defaults: { _controller: claroline.controller.registration:createAction }
+    defaults: { _controller: ClarolineCoreBundle:Registration:create }

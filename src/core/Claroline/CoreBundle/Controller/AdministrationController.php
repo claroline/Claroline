@@ -2,22 +2,12 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class AdministrationController
+class AdministrationController extends Controller
 {
-    /** Symfony\Bundle\TwigBundle\TwigEngine */
-    private $twigEngine;
-    
-    public function __construct(TwigEngine $twigEngine)
-    {
-        $this->twigEngine = $twigEngine;
-    }
-    
     public function indexAction()
-    {        
-        return $this->twigEngine->renderResponse(
-            'ClarolineCoreBundle:Administration:administration.html.twig'
-        );
+    {
+        return $this->render('ClarolineCoreBundle:Administration:administration.html.twig');
     }
 }
