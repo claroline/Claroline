@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Exception\ClarolineException;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
  * @ORM\Table(name="claro_workspace")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
