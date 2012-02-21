@@ -6,24 +6,45 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Claroline\CoreBundle\Entity\User;
 
 class UserPasswordEncoder extends ContainerAware implements EventSubscriber
 {
     public function getSubscribedEvents()
     {
-        return array(Events::prePersist); 
+        return array(Events::prePersist, Events::preUpdate); 
     }
-    
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        $user = $event->getEntity();
         
-        if ($user instanceof User)
+    public function prePersist(LifecycleEventArgs $eventArgs)
+    {
+        $user = $eventArgs->getEntity();
+        
+        if ($user instanceof User) 
         {
-            $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-            $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
+            $password = $this->encodePassword($user);
             $user->setPassword($password);
         }
+    }
+    
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    {
+        $user = $eventArgs->getEntity();
+        
+        if ($user instanceof User) 
+        {
+            if ($eventArgs->hasChangedField('password')) 
+            {   
+                $password = $this->encodePassword($user);
+                $eventArgs->setNewValue('password', $password);
+            }
+        }
+    }
+    
+    private function encodePassword(User $user)
+    {
+        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+        
+        return $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
     }
 }
