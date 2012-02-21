@@ -1,0 +1,46 @@
+<table class="claroTable userList" width="100%" cellspacing="2" border="0">
+    <thead>
+        <tr class="headerX" align="center" valign"=top">
+            <th id="c0" scope="col">id</th>
+            <th id="c1" scope="col">username</th>
+            <th id="c2" scope="col">last name</th>
+            <th id="c3" scope="col">first name</th>
+            <th id="c4" scope="col">Email</th>
+            <th id="c5" scope="col">Role</th>
+            <th id="c6" scope="col">Delete</th>
+            <th id="c7" scope="col">Login as</th>
+            <th id="c8" scope="col">Show</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <td align="center" headers="c0 L0">{{user.getId()}}</td>
+        <td align="center" headers="c1 L0">{{user.getUsername()}}</td>
+        <td align="center" headers="c2 L0">{{user.getLastName()}}</td>
+        <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
+        <td align="center" headers="c4 L0">{{user.getMail()}}</td>
+        <td align="center" headers="c5 L0">
+            <div>
+                {%for role in user.getOwnedRoles() %}            
+                    {{role.getTranslationKey()}}<br/>
+                {% endfor %}
+            </div>
+        </td>
+        {% if is_granted('user', 'EDIT') %}
+            <td align="center" headers="c6 L0"><a href="{{path('claro_profile_delete', {'id': user.getId()})}}">delete</a></td>
+            <td align="center" headers="c7 L0">login as</td>
+        {% endif %}
+        <td align="center" headers="c8 L0"><a href="{{path('claro_profile_show', {'id': user.getId()})}}">show</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{{app.user.username}}
+
+
+{% for role in app.user.roles %}
+{%if role == 'ROLE_USER' %}
+    {{role}}
+{% endif %}
+{% endfor %}

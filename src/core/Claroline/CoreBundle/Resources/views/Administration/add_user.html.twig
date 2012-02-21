@@ -1,0 +1,9 @@
+{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% block section_content %}
+    {% form_theme form_complete_user 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form action="{{path('claro_admin_user_add')}}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user">
+        {{ form_errors(form_complete_user) }}
+        {{ form_widget(form_complete_user) }}
+        <input type="submit" />
+    </form>
+{% endblock %}

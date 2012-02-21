@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDirectoryData;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDocumentData;
 
+//TODO: test zip files: are they really here ? 
+
 class DocumentControllerTest extends FixtureTestCase
 {
     /** @var string */
