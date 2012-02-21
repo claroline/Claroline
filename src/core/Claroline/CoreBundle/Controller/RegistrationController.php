@@ -42,19 +42,13 @@ class RegistrationController extends Controller
             $em->persist($user);
             $em->flush();
             
-            $msg = $this->get('translator')->trans(
-                'profile.account_created', 
-                array(), 
-                'ClarolineUserBundle'
-            );
+            $msg = $this->get('translator')->trans('account_created', array(), 'user');
+            $this->getRequest()->getSession()->setFlash('notice', $msg);
         }
 
         return $this->render(
             'ClarolineCoreBundle:Registration:form.html.twig', 
-            array(
-                'form' => $form->createView(),
-                'msg' => $msg
-            )
+            array('form' => $form->createView())
         );
     }
     

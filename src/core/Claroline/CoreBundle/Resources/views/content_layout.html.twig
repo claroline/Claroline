@@ -6,6 +6,18 @@
     {% render 'ClarolineCoreBundle:Layout:topBar' %}
     </div>
 
+    {% if app.session.hasFlash('notice') %}
+    <div class="flash_msg flash_notice">
+        {{ app.session.flash('notice') }}
+    </div>
+    {% endif %}
+
+    {% if app.session.hasFlash('alert') %}
+    <div class="flash_msg flash_alert">
+        {{ app.session.flash('alert') }}
+    </div>
+    {% endif %}
+
     <div id="content">
     {% block content %}{% endblock %}
     </div>

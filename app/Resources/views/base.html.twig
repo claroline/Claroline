@@ -9,17 +9,6 @@
         {% endblock %}
     </head>
     <body>
-        {% if app.session.hasFlash('notice') %}
-            <div class="flash-notice">
-                {{ app.session.flash('notice') }}
-            </div>
-        {% endif %}
-        {% if app.session.hasFlash('alert') %}
-            <div class="flash-alert">
-                {{ app.session.flash('alert') }}
-            </div>
-        {% endif %}
-
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

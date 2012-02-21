@@ -7,7 +7,6 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-
 use Claroline\CoreBundle\Entity\User;
 
 class UserPasswordEncoder extends ContainerAware implements EventSubscriber
@@ -16,28 +15,36 @@ class UserPasswordEncoder extends ContainerAware implements EventSubscriber
     {
         return array(Events::prePersist, Events::preUpdate); 
     }
-    
-    public function prePersist(LifecycleEventArgs $event)
+        
+    public function prePersist(LifecycleEventArgs $eventArgs)
     {
-        $user = $event->getEntity();
-
-        if ($user instanceof User)
+        $user = $eventArgs->getEntity();
+        
+        if ($user instanceof User) 
         {
-            $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-            $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
+            $password = $this->encodePassword($user);
             $user->setPassword($password);
         }
     }
     
-    public function preUpdate(PreUpdateEventArgs $event)
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
-        $user = $event->getEntity();
-
-        if ($user instanceof User)
+        $user = $eventArgs->getEntity();
+        
+        if ($user instanceof User) 
         {
-            $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-            $password = $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
-            $user->setPassword($password);
+            if ($eventArgs->hasChangedField('password')) 
+            {   
+                $password = $this->encodePassword($user);
+                $eventArgs->setNewValue('password', $password);
+            }
         }
+    }
+    
+    private function encodePassword(User $user)
+    {
+        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+        
+        return $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
     }
 }
