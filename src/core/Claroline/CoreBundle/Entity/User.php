@@ -192,6 +192,7 @@ class User extends AbstractRoleSubject implements UserInterface
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
+        $this->password = null;
     }
 
     public function getGroups()

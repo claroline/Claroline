@@ -41,6 +41,25 @@ body
     padding: 16px;
 }
 
+.flash_msg
+{
+    width: 400px;
+    margin: 20px;
+    padding: 12px;
+    text-align: center;
+    font-style: italic;
+}
+
+.flash_notice
+{
+    background-color: #5D6;
+}
+
+.flash_alert
+{
+    background-color: #900;
+}
+
 #login_form
 {
     width: 380px;
