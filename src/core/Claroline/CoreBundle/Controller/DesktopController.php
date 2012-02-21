@@ -25,7 +25,7 @@ class DesktopController extends Controller
             $workspaceRoles = $user->getWorkspaceRoleCollection(); 
         }
         
-        return $this->render(
+        return $this->get('templating')->render(
             'ClarolineCoreBundle:Desktop:workspaces_block.html.twig',
             array('workspace_roles' => $workspaceRoles)
         );
