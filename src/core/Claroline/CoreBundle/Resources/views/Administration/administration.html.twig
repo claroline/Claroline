@@ -5,6 +5,10 @@
 <div class="section" id="administration">
     
     <h4>{{ 'administration'|trans({}, 'administration') }}</h4>
+    <h5> 
+        <a href="{{ path('claro_admin_user_add_form') }}"> Add user </a>|
+        <a href="{{ path('claro_admin_user_list') }}"> List user </a>
+    </h5>
     
     {% block section_content %}{% endblock %}
 

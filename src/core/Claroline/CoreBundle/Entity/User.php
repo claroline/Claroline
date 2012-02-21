@@ -20,6 +20,7 @@ class User extends AbstractRoleSubject implements UserInterface
 {
     /**
      * @ORM\Id
+
      * @ORM\Column(type="integer")
      * @ORM\generatedValue(strategy="AUTO")
      */
@@ -42,6 +43,7 @@ class User extends AbstractRoleSubject implements UserInterface
      * @Assert\NotBlank()
      */
     protected $username;
+
     /**
      * @ORM\Column(type="string", length="255")
      */
@@ -56,7 +58,7 @@ class User extends AbstractRoleSubject implements UserInterface
      * @Assert\NotBlank()
      */
     protected $plainPassword;
-    
+
     /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Group", 
@@ -92,36 +94,44 @@ class User extends AbstractRoleSubject implements UserInterface
      * )
      */
     protected $workspaceRoles;
-    
-    
+
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $phone;
-    
+
     /**
      * @ORM\Column(type="string", length="1000", nullable=true) 
      */
     protected $note;
 
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string", nullable=true) 
      */
     protected $mail;
- 
-        
-    
+
+    /**
+     * @ORM\Column(name="administrative_code", type="string", nullable=true)  
+     */
+    protected $administrativeCode;
+
     public function __construct()
     {
         parent::__construct();
+        $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
-    
+
+    public function getUserRole()
+    {
+        return $this->roles;
+    }
+
     public function setId($id)
     {
-        $this->id=$id;
+        $this->id = $id;
     }
 
     public function getId()
@@ -183,12 +193,12 @@ class User extends AbstractRoleSubject implements UserInterface
     {
         $this->plainPassword = $plainPassword;
     }
-    
+
     public function getGroups()
     {
         return $this->groups;
     }
-    
+
     /**
      * Returns the user's roles (including role's ancestors) as an array 
      * of string values (needed for Symfony security checks). The roles
@@ -199,12 +209,12 @@ class User extends AbstractRoleSubject implements UserInterface
     public function getRoles()
     {
         $roleNames = array();
-        
+
         foreach ($this->getOwnedRoles(true) as $role)
         {
             $roleNames[] = $role->getName();
         }
-        
+
         foreach ($this->getGroups() as $group)
         {
             foreach ($group->getOwnedRoles(true) as $role)
@@ -212,10 +222,10 @@ class User extends AbstractRoleSubject implements UserInterface
                 $roleNames[] = $role->getName();
             }
         }
-        
+
         return array_unique($roleNames);
     }
-    
+
     /**
      * Checks if the user has a given role. This method will explore
      * role hierarchies if necessary.
@@ -230,7 +240,7 @@ class User extends AbstractRoleSubject implements UserInterface
         {
             return true;
         }
-        
+
         return false;
     }
 
@@ -238,7 +248,7 @@ class User extends AbstractRoleSubject implements UserInterface
     {
         return $this->workspaceRoles;
     }
-    
+
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -246,64 +256,75 @@ class User extends AbstractRoleSubject implements UserInterface
 
     public function equals(UserInterface $user)
     {
-        if (! $user instanceof User) 
+        if (!$user instanceof User)
         {
             return false;
         }
 
-        if ($this->firstName !== $user->getFirstName()) 
+        if ($this->firstName !== $user->getFirstName())
         {
             return false;
         }
 
-        if ($this->lastName !== $user->getLastName()) 
+        if ($this->lastName !== $user->getLastName())
         {
             return false;
         }
 
-        if ($this->username !== $user->getUsername()) 
+        if ($this->username !== $user->getUsername())
         {
             return false;
         }
 
-        if ($this->password !== $user->getPassword()) 
+        if ($this->password !== $user->getPassword())
         {
             return false;
         }
 
-        if ($this->getSalt() !== $user->getSalt()) 
+        if ($this->getSalt() !== $user->getSalt())
         {
             return false;
         }
     }
-    
+
     public function getPhone()
     {
         return $this->phone;
     }
-    
-    public function setPhone ($phone)
+
+    public function setPhone($phone)
     {
         $this->phone = $phone;
     }
-    
+
     public function getNote()
     {
         return $this->note;
     }
-    
+
     public function setNote($note)
     {
         $this->note = $note;
     }
-    
+
     public function getMail()
     {
         return $this->mail;
     }
-    
+
     public function setMail($mail)
     {
         $this->mail = $mail;
     }
+
+    public function getAdministrativeCode()
+    {
+        return $this->administrativeCode;
+    }
+
+    public function setAdministrativeCode($administrativeCode)
+    {
+        $this->administrativeCode = $administrativeCode;
+    }
+
 }

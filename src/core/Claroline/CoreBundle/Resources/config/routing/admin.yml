@@ -1,3 +1,16 @@
 claro_admin_index:
     pattern: /
     defaults: { _controller: ClarolineCoreBundle:Administration:index }
+    
+claro_admin_user_add:
+    pattern: /add/user/
+    defaults: { _controller: ClarolineCoreBundle:Administration:addUser }
+    
+claro_admin_user_add_form:
+    pattern: /add/user/form
+    defaults: { _controller: ClarolineCoreBundle:Administration:showFormAddUser }
+    
+claro_admin_user_list:
+   pattern: /list/user
+   defaults: { _controller: ClarolineCoreBundle:Administration:listUser }
+   

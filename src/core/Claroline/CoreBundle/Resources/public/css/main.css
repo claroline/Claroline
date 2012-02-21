@@ -107,3 +107,17 @@ body
     font-size: 10px;
     color: #922;
 }
+
+#form_complete_user div label
+{
+    display: inline-block;
+    width: 180px;
+    padding-right: 12px;
+    text-align: right;
+}
+
+#form_complete_user  input[type=submit] 
+{
+    margin: 12px 150px;
+}
+

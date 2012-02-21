@@ -6,6 +6,7 @@ services:
             - [setContainer, ["@service_container"]]
         tags:
             - { name: doctrine.event_subscriber, event: prePersist}
+            - { name: doctrine.event_subscriber, event: preUpdate}
   
     claroline.listener.extendable_listener:
         class: Claroline\CoreBundle\Listener\ExtendableListener

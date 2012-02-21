@@ -4,8 +4,9 @@
         <a href="{{ path('claro_desktop_index') }}">
             {{ 'desktop'|trans({}, 'desktop') }}
         </a>
+        |
         <a href="{{ path('claro_profile_show_edit') }}">
-            my profile
+            My account
         </a>
     {% if is_granted('ROLE_ADMIN') %}
              |
