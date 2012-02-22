@@ -1,8 +1,0 @@
-<form action="{{path('claro_document_upload', {'id': currentDirectory.id})}}" method="post" {{ form_enctype(formdoc) }} id="formdoc">
-{{ form_errors(formdoc) }}
-{% set label_file %}{{ 'file'|trans({}, 'document') }}{% endset %}
-{{ form_label(formdoc.file, label_file ) }}
-{{ form_widget(formdoc.file) }}
-{{ form_rest(formdoc) }}
-<input type="submit" />
-</form>

@@ -5,3 +5,19 @@ claro_user_registration_form:
 claro_user_registration_form_submit:
     pattern: /create
     defaults: { _controller: ClarolineCoreBundle:Registration:create }
+   
+claro_profile_show_edit:
+    pattern: /profile/show/edit
+    defaults: { _controller: ClarolineCoreBundle:User:showEditProfile }
+    
+claro_profile_show:
+   pattern: /profile/show/{id}
+   defaults: { _controller: ClarolineCoreBundle:User:showProfile }
+    
+claro_profile_edit:
+    pattern: /profile/edit
+    defaults: { _controller: ClarolineCoreBundle:User:editProfile }
+    
+claro_profile_delete:
+   pattern: /profile/delete/{id}
+   defaults: { _controller: ClarolineCoreBundle:User:deleteProfile }

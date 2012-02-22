@@ -4,6 +4,10 @@
         <a href="{{ path('claro_desktop_index') }}">
             {{ 'desktop'|trans({}, 'desktop') }}
         </a>
+        |
+        <a href="{{ path('claro_profile_show_edit') }}">
+            My account
+        </a>
     {% if is_granted('ROLE_ADMIN') %}
              |
         <a href="{{ path('claro_admin_index') }}">
@@ -14,7 +18,7 @@
 {% endif %}
     <div id="status_box">
     {% if connected %}
-        <span>{{ username }}</span>
+        <span id="username">{{ username }}</span>
         <a href="{{ path('claro_security_logout') }}">
             {{ 'logout'|trans({}, 'user') }}
         </a>

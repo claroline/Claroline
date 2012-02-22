@@ -19,27 +19,7 @@ class LoadDocumentData extends AbstractFixture
      *              Dir_G
      */
     public function load(ObjectManager $manager)
-    {
-     /*   $docA = new Document();
-        $docB = new Document();
-        $docC = new Document();
-        
-        $docA->setName("doc_A.txt");
-        $docB->setName("Doc_B.png");
-        $docC->setName("Doc_C.mov"); 
-        
-        $hashA = hash("md5", $docA->getName().time());
-        $hashB = hash("md5", $docB->getName().time());
-        $hashC = hash("md5", $docC->getName().time());
-        
-        $docA->setHashName($hashA);
-        $docB->setHashName($hashB);
-        $docC->setHashName($hashC);
-        
-        $docA->setSize(42);
-        $docC->setSize(110);
-        $docB->setSize(150);
-       */       
+    {     
         $dirA = new Directory();
         $dirB = new Directory();
         $dirC = new Directory();
@@ -62,14 +42,7 @@ class LoadDocumentData extends AbstractFixture
         $dirF->setParent($dirE);
         $dirE->setParent($dirA);
         $dirG->setParent($dirF);
-        /*
-        $dirE->addDocument($docA);
-        $dirE->addDocument($docB);
-        $dirF->addDocument($docC);
-         */ 
-        //$manager->persist($docA);
-        //$manager->persist($docB);
-        //$manager->persist($docC);
+
         $manager->persist($dirA);
         $manager->persist($dirB);
         $manager->persist($dirC);
@@ -85,10 +58,6 @@ class LoadDocumentData extends AbstractFixture
         $this->addReference('dir/dir_e', $dirE);
         $this->addReference('dir/dir_f', $dirF);
         $this->addReference('dir/dir_g', $dirG);
-        /*
-        $this->addReference('doc/doc_a', $docA);
-        $this->addReference('doc/doc_b', $docB);
-        $this->addReference('doc/doc_c', $docC);*/
 
         $manager->flush();
     }
