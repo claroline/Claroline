@@ -75,19 +75,19 @@ class UserControllerTest extends FunctionalTestCase
         $this->assertEquals(5, $crawler->filter('.row_user')->count());
     }
     
-    public function testUserCanGetFullUserList()
+    public function testUserCantGetFullUserList()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', 'admin/list/user');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode()); 
     }
-    public function testUnregisteredCanGetFullUserList()
+    public function testUnregisteredCantGetFullUserList()
     {
         $crawler = $this->client->request('GET', 'admin/list/user');
         $this->assertEquals(1, $crawler->filter('#login_form')->count());
     }
     
-    public function testWorkspaceCreatorCanGetFullUserList ()
+    public function testWorkspaceCreatorCantGetFullUserList ()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', 'admin/list/user');
@@ -103,7 +103,7 @@ class UserControllerTest extends FunctionalTestCase
         $this->assertEquals(4, $crawler->filter('.row_user')->count());
     }
     
-    public function testUserCanDeleteUsers()
+    public function testUserCantDeleteUsers()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request(
@@ -111,7 +111,7 @@ class UserControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
-    public function testWorskpaceCreatorCanDeleteUsers()
+    public function testWorskpaceCreatorCantDeleteUsers()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request(
@@ -119,7 +119,7 @@ class UserControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
-    public function testUnregisteredCanDeleteUsers()
+    public function testUnregisteredCantDeleteUsers()
     {
         $crawler = $this->client->request(
             'GET', "/user/profile/delete/{$this->getFixtureReference('user/ws_creator')->getId()}");
@@ -144,21 +144,21 @@ class UserControllerTest extends FunctionalTestCase
         $this->assertEquals(6, $crawler->filter('.row_user')->count());
     }
     
-    public function testUserCanAddUser()
+    public function testUserCantAddUser()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', 'admin/add/user/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());; 
     }
     
-    public function testWorkspaceCreatorCanAddUser()
+    public function testWorkspaceCreatorCantAddUser()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', 'admin/add/user/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());; 
     }
     
-    public function testUnregisteredCanAddUser()
+    public function testUnregisteredCantAddUser()
     {
         $crawler = $this->client->request('GET', 'admin/add/user/form');
         $this->assertEquals(1, $crawler->filter('#login_form')->count());
