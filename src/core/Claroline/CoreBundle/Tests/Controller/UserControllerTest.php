@@ -58,7 +58,7 @@ class UserControllerTest extends FunctionalTestCase
         $this->client->submit($form);
         $this->getFixtureReference('user/admin')->setPlainPassword('abc');
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $username = $crawler->filter('')->text();
+        $username = $crawler->filter('#username')->text();
         $this->assertEquals("toto Doe", $username);
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
         $this->assertEquals(0, $crawler->filter('a:contains("Administration")')->count());
