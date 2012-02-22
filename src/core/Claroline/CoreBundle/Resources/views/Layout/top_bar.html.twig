@@ -18,7 +18,7 @@
 {% endif %}
     <div id="status_box">
     {% if connected %}
-        <span>{{ username }}</span>
+        <span id="username">{{ username }}</span>
         <a href="{{ path('claro_security_logout') }}">
             {{ 'logout'|trans({}, 'user') }}
         </a>
