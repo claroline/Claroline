@@ -6,9 +6,9 @@
     
     <h4>{{ 'desktop'|trans({}, 'desktop') }}</h4>
     
-    {% autoescape false %}
-        {{ workspaces_block }}
-    {% endautoescape %}
+    <h5>{{ 'workspaces'|trans({}, 'workspace') }} : </h5>
+    {% render "ClarolineCoreBundle:Workspace:listForUser" with {'userId': app.user.id} %}
+
 <div>
 
 {% endblock %}
