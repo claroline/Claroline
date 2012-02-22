@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDirectoryData;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDocumentData;
 
-//TODO: test zip file: do they containes the right files ? 
+//TODO: test zip file: do they contain the right files ? 
 
 class DocumentControllerTest extends FixtureTestCase
 {
@@ -161,7 +161,7 @@ class DocumentControllerTest extends FixtureTestCase
         $this->client->restart();
         $crawler = $this->client->request('GET', "document/show/directory/" . $id);
         $form = $crawler->filter('input[type=submit]')->last()->form();
-        $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name, 'user_form[plainPassword][first]' => 'abc', 'user_form[plainPassword][second]' => 'abc'));
+        $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name));
         $this->client->restart();
     }
 }
