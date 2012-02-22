@@ -1,0 +1,8 @@
+{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% block section_content %}
+    <form action="temp" method="post" {{ form_enctype(form_group) }} id="form_group">
+        {{ form_errors(form_group) }}
+        {{ form_widget(form_group) }}
+        <input type="submit" />
+    </form>
+{% endblock %}

@@ -11,14 +11,14 @@ claro_admin_user_add_form:
     defaults: { _controller: ClarolineCoreBundle:Administration:showFormAddUser }
     
 claro_admin_user_list:
-   pattern: /list/user
-   defaults: { _controller: ClarolineCoreBundle:Administration:listUser }
+    pattern: /list/user
+    defaults: { _controller: ClarolineCoreBundle:Administration:listUser }
    
 claro_admin_group_create:
-   pattern: /group/create
-   defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
+    pattern: /group/create
+    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
    
 claro_admin_group_list:
-   pattern: /group/list
-   defaults: { _controller: ClarolineCoreBundle:Administration:listGroup }
+    pattern: /group/list
+    defaults: { _controller: ClarolineCoreBundle:Administration:listGroup }
    
