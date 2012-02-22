@@ -14,7 +14,7 @@
     </thead>
     <tbody>
     {% for user in users %}
-    <tr>
+    <tr id="{{user.getId()}}" class="row_user">
         <td align="center" headers="c0 L0">{{user.getId()}}</td>
         <td align="center" headers="c1 L0">{{user.getUsername()}}</td>
         <td align="center" headers="c2 L0">{{user.getLastName()}}</td>

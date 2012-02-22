@@ -68,14 +68,12 @@ class UserController extends Controller
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($id);
         $em->remove($user);
         $em->flush();
-    }
-
-    public function addUserAction()
-    {
         
+        //this will be changed later
+        return $this->redirect($this->generateUrl('claro_admin_user_list'));
     }
 
-    //TODO: self explatory
+    //TODO: self explanatory
     public function searchUserAction($options)
     {
         
