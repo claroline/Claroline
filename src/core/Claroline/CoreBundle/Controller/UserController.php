@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\UserType;
 
 //TODO redirections
-//TODO password edition not working
 
 class UserController extends Controller
 {
@@ -77,6 +76,16 @@ class UserController extends Controller
     public function searchUserAction($options)
     {
         
+    }
+    
+    public function createGroupAction()
+    {
+        return new Response ("hello");
+    }
+    
+    public function listGroupAction()
+    {
+        return new Response ("goodbye");
     }
 
 }

@@ -371,6 +371,7 @@ class DocumentController extends Controller
     {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir),
             \RecursiveIteratorIterator::CHILD_FIRST);
+        
         foreach ($iterator as $path)
         {
             if ($path->isDir())
