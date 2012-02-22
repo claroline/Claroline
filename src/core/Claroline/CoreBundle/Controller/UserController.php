@@ -80,12 +80,12 @@ class UserController extends Controller
     
     public function createGroupAction()
     {
-        return new Response ("hello");
+        return new Response("hello");
     }
     
     public function listGroupAction()
     {
-        return new Response ("goodbye");
+        return new Response("goodbye");
     }
 
 }
