@@ -1,8 +1,0 @@
-<form action="{{path('claro_directory_add', {'id': currentDirectory.id})}}" method="post" {{ form_enctype(formdir) }} id="formdir">
-{{ form_errors(formdir) }}
-{% set label_nom %}{{ 'name'|trans({}, 'document') }}{% endset %}
-{{ form_label(formdir.name, label_nom ) }}
-{{ form_widget(formdir.name) }}
-{{ form_rest(formdir) }}
-<input type="submit" />
-</form>

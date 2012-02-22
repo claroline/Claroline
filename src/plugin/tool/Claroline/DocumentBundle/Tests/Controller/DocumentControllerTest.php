@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDirectoryData;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDocumentData;
 
+//TODO: test zip file: do they contain the right files ? 
+
 class DocumentControllerTest extends FixtureTestCase
 {
     /** @var string */
@@ -87,6 +89,32 @@ class DocumentControllerTest extends FixtureTestCase
         $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
         $this->assertEquals(0, $crawler->filter('.directory_item')->count());
         $this->assertEquals(0, count($this->getUploadedFiles()));
+    }
+    
+    public function testZipCanBeUploaded()
+    {
+        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->root->getId());
+        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $this->assertEquals(3, $crawler->filter('.directory_item')->count());
+        $link = $crawler->filter('.link_directory_show')->eq(2)->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(4, $crawler->filter('.directory_item')->count());
+        $this->assertEquals(1, $crawler->filter('.document_item')->count());
+        $link = $crawler->filter('.link_directory_show')->eq(0)->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(2, $crawler->filter('.directory_item')->count());
+        $this->assertEquals(63, $crawler->filter('.document_item')->count());
+        $this->assertEquals(110, count($this->getUploadedFiles()));
+    }
+    
+    public function testZipCanBeDownloaded()
+    {
+        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->root->getId());
+        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $link = $crawler->filter('.link_download_directory')->eq(2)->link();
+        $crawler = $this->client->click($link);
+        $this->assertTrue($this->client->getResponse()->headers->contains(
+            'Content-Disposition', 'attachment; filename=dynatree.zip')); 
     }
 
     private function cleanUploadDirectory()

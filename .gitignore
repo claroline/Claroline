@@ -17,3 +17,4 @@ web/bundles/*
 files/*
 files/tmp/*
 test/files/*
+test/files/tmp/*

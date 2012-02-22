@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+//use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
 {
@@ -26,8 +27,7 @@ class RegistrationController extends Controller
     
     public function createAction()
     {
-        $this->checkAccess();
-        
+        $this->checkAccess();    
         $msg = null;
         $user = new User();
         $form = $this->get('form.factory')->create(new UserType(), $user);
