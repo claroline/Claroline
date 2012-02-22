@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\UserType;

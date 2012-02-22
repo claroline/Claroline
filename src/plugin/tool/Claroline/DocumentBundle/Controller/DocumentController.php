@@ -27,7 +27,7 @@ class DocumentController extends Controller
                 $zipName = $this->genTmpZipName() . '.zip';
                 $newDirName = explode('.', $fileName);
                 $form['file']->getData()->move($dir . DIRECTORY_SEPARATOR . 'tmp', $zipName);
-                $this->unzipTmpFile($zipName, $id, $newDirName[0]);
+                return new Response($this->unzipTmpFile($zipName, $id, $newDirName[0]));
                 chmod($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName, 0777);
                 unlink($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName);
             }
@@ -316,7 +316,7 @@ class DocumentController extends Controller
         }
         else
         {
-            return new \Exception("couldnt upload directory");
+            return new \Exception("couldn't upload directory");
         }
 
         $root = new Directory();
@@ -327,7 +327,10 @@ class DocumentController extends Controller
         $em->persist($root);
         $em->persist($currentDirectory);
         $this->uploadDirectory($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir, $root);
-        $this->emptyDir($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir, $root);
+        $this->emptyDir($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir);
+        rmdir($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir);
+        chmod($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName, 0777);
+        unlink($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName);
         $em->flush();
     }
 
@@ -369,22 +372,21 @@ class DocumentController extends Controller
 
     private function emptyDir($dir)
     {
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir),
-            \RecursiveIteratorIterator::CHILD_FIRST);
-        
-        foreach ($iterator as $path)
-        {
-            if ($path->isDir())
-            {
-                rmdir($path->__toString());
-            }
-            else
-            {
-                chmod($path->__toString(), 0777);
-                unlink($path->__toString());
-            }
-        }
-        rmdir($dir);
+         $iterator = new \DirectoryIterator($dir);
+         
+         foreach ($iterator as $item)
+         {
+             if($item->isFile())
+             {
+                 chmod($item->getPathname(), 0777);
+                 unlink($item->getPathname());
+             }
+             if($item->isDir() && ($item->isDot()==null))
+             {
+                 $this->emptyDir($item->getPathname());
+                 rmdir($item->getPathname());
+             }
+         }
     }
 
     private function genTmpZipName($length = 8)
