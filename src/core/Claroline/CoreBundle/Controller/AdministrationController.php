@@ -1,10 +1,11 @@
 <?php
-
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Form\GroupType;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationController extends Controller
@@ -49,5 +50,17 @@ class AdministrationController extends Controller
         return $this->render('ClarolineCoreBundle:Administration:user_list.html.twig', array(
                 'users' => $users));
     }
-
+    
+    public function createGroupAction()
+    {
+        $group = new Group();
+        $formGroup = $this->createForm(new GroupType(),$group);
+        return $this->render('ClarolineCoreBundle:Administration:create_group.html.twig', array(
+            'form_group' => $formGroup->createView()));
+    }
+    
+    public function listGroupAction()
+    {
+        return new Response("goodbye");
+    }
 }

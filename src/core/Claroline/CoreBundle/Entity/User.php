@@ -124,11 +124,6 @@ class User extends AbstractRoleSubject implements UserInterface
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
-    public function getUserRole()
-    {
-        return $this->roles;
-    }
-
     public function setId($id)
     {
         $this->id = $id;
