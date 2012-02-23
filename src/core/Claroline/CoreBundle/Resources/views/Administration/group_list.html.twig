@@ -13,13 +13,13 @@
     </thead>
     <tbody>
         {% for group in groups %}
-            <tr id="{{group.getId()}}" class="row_group"/>
+            <tr id="group_{{group.getId()}}" class="row_group"/>
                 <td align="center" headers="c0 L0">{{group.getName()}}</td>
-                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_user_per_group_list', {'id': group.getId()}) }}">Show</a></td>
+                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_user_per_group_list', {'id': group.getId()}) }}" id="link_show_{{group.getId()}}">Show</a></td>
                 <td align="center" headers="c2 L0"><a href="todo">todo</a></td>
                 <td align="center" headers="c3 L0"><a href="todo">todo</a></td>
                 <td align="center" headers="c4 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'id':group.getId()}) }}">delete it !</a></td>
+                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'id':group.getId()}) }}" id="link_delete_{{group.getId()}}">delete it !</a></td>
             <tr>
         {% endfor %}
     </tbody>
