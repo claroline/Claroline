@@ -1,0 +1,27 @@
+{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% block section_content %}
+<table class="claroTable group" width="100%" cellspacing="2" border="0">
+    <thead class="headerX" align="center" valign="top">
+        <tr>
+            <th id="c0" scope="col">Groups</th>
+            <th id="c1" scope="col">Users</th>
+            <th id="c2" scope="col">Resource</th>
+            <th id="c3" scope="col">Edit settings</th>
+            <th id="c4" scope="col">Move</th>
+            <th id="c5" scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+            <tr id="{{group.getId()}}" class="row_group"/>
+                <td align="center" headers="c0 L0">{{group.getName()}}</td>
+                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_user_per_group_list', {'id': group.getId()}) }}">Show</a></td>
+                <td align="center" headers="c2 L0"><a href="todo">todo</a></td>
+                <td align="center" headers="c3 L0"><a href="todo">todo</a></td>
+                <td align="center" headers="c4 L0"><a href="todo">todo</a></td>
+                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'id':group.getId()}) }}">delete it !</a></td>
+            <tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

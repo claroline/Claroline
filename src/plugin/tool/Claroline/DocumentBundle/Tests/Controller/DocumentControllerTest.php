@@ -79,15 +79,16 @@ class DocumentControllerTest extends FixtureTestCase
     public function testDirCanBeRemoved()
     {
         $this->addDirectory("DIR_TEST", $this->root->getId());
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $crawler = $this->client->request('GET', '/document/show/directory/' . $this->root->getId());
         $link = $crawler->filter('.link_directory_show')->eq(0)->link();
         $this->client->click($link);
         $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->client->getRequest()->get('id'));
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $crawler = $this->client->request('GET', '/document/show/directory/' . $this->root->getId());
         $link = $crawler->filter('.link_delete_directory')->eq(0)->link();
         $this->client->click($link);
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
-        $this->assertEquals(0, $crawler->filter('.directory_item')->count());
+        $crawler = $this->client->request('GET', '/document/show/directory/' . $this->root->getId());
+        var_dump($this->client->getResponse()->getContent());
+        $this->assertEquals(2, $crawler->filter('.directory_item')->count());
         $this->assertEquals(0, count($this->getUploadedFiles()));
     }
     

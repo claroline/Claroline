@@ -11,9 +11,6 @@ class GroupType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
          $builder->add('name', 'text');
-         $builder->add('WorkspaceRoleCollection', 'entity', array(
-             'class' => 'ClarolineCoreBundle:WorskpaceRole', 'expanded' => false,
-             'multiple' => true, 'property' => 'name'));
     }
     
     public function getName()

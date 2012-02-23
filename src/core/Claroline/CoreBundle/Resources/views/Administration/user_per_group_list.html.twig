@@ -1,0 +1,32 @@
+{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% block section_content %}
+<h6>
+    users for group {{group.getName()}} | 
+    <a href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a>
+</h6>
+<table class="claroTable userList" width="100%" cellspacing="2" border="0">
+    <thead>
+        <tr class="headerX" align="center" valign"=top">
+            <th id="c0" scope="col">id</th>
+            <th id="c1" scope="col">username</th>
+            <th id="c2" scope="col">last name</th>
+            <th id="c3" scope="col">first name</th>
+            <th id="c4" scope="col">Email</th>
+            <th id="c5" scope="col">Administrative code</th>
+            <th id="c6" scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in group.getUsers() %}
+    <tr id="{{user.getId()}}" class="row_user">
+        <td align="center" headers="c0 L0">{{user.getId()}}</td>
+        <td align="center" headers="c1 L0">{{user.getUsername()}}</td>
+        <td align="center" headers="c2 L0">{{user.getLastName()}}</td>
+        <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
+        <td align="center" headers="c4 L0">{{user.getMail()}}</td>
+        <td align="center" headers="c5 L0">{{user.getAdministrativeCode()}}</td>
+        <td align="center" headers="c6 L0"><a href="{{path('claro_admin_delete_user_from_group', {'idUser':user.getId(), 'idGroup':group.getId()})}}">delete him!</a></td>    
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

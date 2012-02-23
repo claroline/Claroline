@@ -7,8 +7,9 @@
     <h4>{{ 'administration'|trans({}, 'administration') }}</h4>
     <h5> 
         <a href="{{ path('claro_admin_user_add_form') }}" id="link_add_user"> Add user </a> |
-        <a href="{{ path('claro_admin_user_list') }}" id="link_list_user"> List user </a> |
-        <a href="{{ path('claro_admin_group_create') }}" id="link_group_create"> Create group </a>
+        <a href="{{ path('claro_admin_user_list') }}" id="link_list_user"> List users </a> |
+        <a href="{{ path('claro_admin_group_create_form') }}" id="link_group_create_form"> Create group </a> |
+        <a href="{{ path('claro_admin_group_list') }}" id="link_group_list"> List groups </a>
     </h5>
     
     {% block section_content %}{% endblock %}
