@@ -27,9 +27,7 @@ class DocumentController extends Controller
                 $zipName = $this->genTmpZipName() . '.zip';
                 $newDirName = explode('.', $fileName);
                 $form['file']->getData()->move($dir . DIRECTORY_SEPARATOR . 'tmp', $zipName);
-                return new Response($this->unzipTmpFile($zipName, $id, $newDirName[0]));
-                chmod($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName, 0777);
-                unlink($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName);
+                $this->unzipTmpFile($zipName, $id, $newDirName[0]);
             }
             else
             {
@@ -64,12 +62,6 @@ class DocumentController extends Controller
         $url = $this->generateUrl('claro_directory_show', array('id' => $dir));
 
         return $this->redirect($url);
-    }
-
-    //TODO: be able to move a document from a directory to another one.
-    public function moveDocument()
-    {
-        
     }
 
     public function downloadDocumentAction($id)
@@ -126,7 +118,7 @@ class DocumentController extends Controller
         $formDir = $this->createForm(new DirectoryType(), $directory);
         $documents = $currentDirectory->getDocuments();
         $rep = $em->getRepository('ClarolineDocumentBundle:Directory');
-        $directories = $rep->children($currentDirectory, true);
+        $directories = $rep->children($currentDirectory, true, 'name');
 
         foreach ($directories as $directory)
         {

@@ -26,10 +26,6 @@ claro_directory_delete:
    pattern: directory/delete/{id}
    defaults: { _controller: ClarolineDocumentBundle:Document:deleteDirectory }
    
-claro_document_move:
-   pattern: document/move/{dir}/{id}
-   defaults: { _controller: ClarolineDocumentBundle:Document:moveDocument }
-   
 claro_rar_upload:
    pattern: document/upload/rar/{id}
    defaults:  { _controller: ClarolineDocumentBundle:Document:uploadDirectory }
