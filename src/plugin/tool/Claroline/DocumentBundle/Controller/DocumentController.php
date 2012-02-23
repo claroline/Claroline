@@ -27,9 +27,7 @@ class DocumentController extends Controller
                 $zipName = $this->genTmpZipName() . '.zip';
                 $newDirName = explode('.', $fileName);
                 $form['file']->getData()->move($dir . DIRECTORY_SEPARATOR . 'tmp', $zipName);
-                return new Response($this->unzipTmpFile($zipName, $id, $newDirName[0]));
-                chmod($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName, 0777);
-                unlink($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName);
+                $this->unzipTmpFile($zipName, $id, $newDirName[0]);
             }
             else
             {
@@ -126,7 +124,7 @@ class DocumentController extends Controller
         $formDir = $this->createForm(new DirectoryType(), $directory);
         $documents = $currentDirectory->getDocuments();
         $rep = $em->getRepository('ClarolineDocumentBundle:Directory');
-        $directories = $rep->children($currentDirectory, true);
+        $directories = $rep->children($currentDirectory, true, 'name');
 
         foreach ($directories as $directory)
         {
@@ -284,6 +282,7 @@ class DocumentController extends Controller
         $em->flush();
     }
 
+    //$pathname should be $dir->getPath the 1st iteration
     private function getRelativeDirectoryPath(Directory $root, Directory $dir, $pathName)
     {
         $parent = $dir->getParent();

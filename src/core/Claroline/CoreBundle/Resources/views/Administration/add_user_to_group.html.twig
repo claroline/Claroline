@@ -1,0 +1,27 @@
+{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% block section_content %}
+<h6>
+    add user to group {{group.getName()}}  
+</h6>
+<table class="claroTable userList" width="100%" cellspacing="2" border="0">
+    <thead>
+        <tr class="headerX" align="center" valign"=top">
+            <th id="c0" scope="col">id</th>
+            <th id="c1" scope="col">username</th>
+            <th id="c2" scope="col">last name</th>
+            <th id="c3" scope="col">first name</th>
+            <th id="c4" scope="col">Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr id="{{user.getId()}}" class="row_user">
+        <td align="center" headers="c0 L0">{{user.getId()}}</td>
+        <td align="center" headers="c1 L0">{{user.getUsername()}}</td>
+        <td align="center" headers="c2 L0">{{user.getLastName()}}</td>
+        <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
+        <td align="center" headers="c4 L0"><a href="{{path('claro_admin_add_user_to_group', {'idGroup': group.getId(), 'idUser': user.getId()})}}">add me !</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

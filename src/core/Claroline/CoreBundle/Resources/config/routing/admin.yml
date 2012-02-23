@@ -14,11 +14,38 @@ claro_admin_user_list:
     pattern: /list/user
     defaults: { _controller: ClarolineCoreBundle:Administration:listUser }
    
-claro_admin_group_create:
-    pattern: /group/create
-    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
+claro_admin_group_create_form:
+    pattern: /group/create/form
+    defaults: { _controller: ClarolineCoreBundle:Administration:showFormCreateGroup }
    
 claro_admin_group_list:
     pattern: /group/list
     defaults: { _controller: ClarolineCoreBundle:Administration:listGroup }
+    
+claro_admin_group_create:
+    pattern: /group/create
+    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
+    
+claro_admin_user_per_group_list:
+    pattern: /group/{id}
+    defaults: { _controller: ClarolineCoreBundle:Administration:listUserPerGroup }
+    
+claro_admin_list_add_user_to_group:
+    pattern: /group/add/{id}
+    defaults: { _controller: ClarolineCoreBundle:Administration:listAddUserToGroup }
+    
+claro_admin_add_user_to_group:
+    pattern: /group/add/user/{idGroup}/{idUser}
+    defaults: { _controller: ClarolineCoreBundle:Administration:AddUserToGroup }
+    
+claro_admin_delete_user_from_group:
+    pattern: /group/delete/user/{idGroup}/{idUser}
+    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUserFromGroup }
+    
+claro_admin_delete_group:
+    pattern: /group/delete/{id}
+    defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }
+  
+  
+  
    
