@@ -9,13 +9,18 @@ class WorkspaceType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name');
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
+        $builder->add('name', 'text', array('required' => true));
+        $builder->add(
+            'type', 
+            'choice',
+            array(
+                'choices' => array(
+                    'simple'     => 'Simple',
+                    'aggregator' => 'Aggregator',
+                ),
+                'multiple' => false,
+                'required' => true
+            )
         );
     }
 

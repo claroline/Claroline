@@ -4,9 +4,8 @@ namespace Claroline\DocumentBundle\Tests\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\DocumentBundle\Tests\DataFixtures\LoadDirectoryData;
-use Claroline\DocumentBundle\Tests\DataFixtures\LoadDocumentData;
 
-//TODO: test zip file: do they contain the right files ? 
+//TODO: test downloaded zip contain the right files 
 
 class DocumentControllerTest extends FixtureTestCase
 {
@@ -16,8 +15,8 @@ class DocumentControllerTest extends FixtureTestCase
     /** @var string */
     private $stubDirectory;
 
-    /** @var Directory */
-    private $root;
+    /** @var integer */
+    private $rootDirId;
 
     protected function setUp()
     {
@@ -28,8 +27,8 @@ class DocumentControllerTest extends FixtureTestCase
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDirectory = __DIR__ . "{$ds}..{$ds}stubs{$ds}";
         $this->cleanUploadDirectory();
-        $this->loadFixture(new LoadDocumentData());
-        $this->root = $this->getFixtureReference("dir/dir_a");
+        $this->loadFixture(new LoadDirectoryData());
+        $this->rootDirId = $this->getFixtureReference("dir/dir_a")->getId();
         $this->client->followRedirects();
     }
 
@@ -41,95 +40,115 @@ class DocumentControllerTest extends FixtureTestCase
 
     public function testUploadedFilesAppearInTheDocumentList()
     {
-        $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->root->getId());
-        $this->uploadFile("{$this->stubDirectory}otherMoveTest.txt", $this->root->getId());
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
-        $this->assertEquals(2, $crawler->filter('.document_item')->count());
+        $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->rootDirId);
+        $this->uploadFile("{$this->stubDirectory}otherMoveTest.txt", $this->rootDirId);
+        
+        $crawler = $this->showDirectory($this->rootDirId);
+        
         $this->assertEquals(2, count($this->getUploadedFiles()));
+        $this->assertEquals(2, $crawler->filter('.document_item')->count());
     }
 
-    public function testAddDirAppearInTheDirList()
+    public function testAddedSubDirectoryAppearsInTheDirectoryContent()
     {
-        $this->addDirectory("DIR_TEST", $this->root->getId());
-        $crawler = $this->client->request('GET', "document/show/directory/" . $this->root->getId());
+        $this->addSubDirectory('DIR_TEST', $this->rootDirId);
+        
+        $crawler = $this->showDirectory($this->rootDirId);
+        
         $this->assertEquals(3, $crawler->filter('.directory_item')->count());
     }
 
     public function testUploadedFileCanBeDownloaded()
     {
-        $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->root->getId());
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->rootDirId);
+       
+        $crawler = $this->showDirectory($this->rootDirId);        
         $link = $crawler->filter('.link_download_document')->eq(0)->link();
-        $crawler = $this->client->click($link);
-        $this->assertTrue($this->client->getResponse()->headers->contains(
-            'Content-Disposition', 'attachment; filename=moveTest.txt'));
+        $this->client->click($link);
+        
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=moveTest.txt'));
     }
 
     public function testUploadedFileCanBeDeleted()
     {
-        $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->root->getId());
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->rootDirId);
+        
+        $crawler = $this->showDirectory($this->rootDirId);
         $link = $crawler->filter('.link_delete_document')->eq(0)->link();
         $this->client->click($link);
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        
+        $crawler = $this->showDirectory($this->rootDirId);       
         $this->assertEquals(0, $crawler->filter('.document_item')->count());
         $this->assertEquals(0, count($this->getUploadedFiles()));
     }
 
-    public function testDirCanBeRemoved()
+    public function testAddedDirectoryCanBeRemovedWithItsContent()
     {
-        $this->addDirectory("DIR_TEST", $this->root->getId());
-        $crawler = $this->client->request('GET', '/document/show/directory/' . $this->root->getId());
+        $this->addSubDirectory('DIR_TEST', $this->rootDirId);       
+        $crawler = $this->showDirectory($this->rootDirId);    
         $link = $crawler->filter('.link_directory_show')->eq(0)->link();
         $this->client->click($link);
         $this->uploadFile("{$this->stubDirectory}moveTest.txt", $this->client->getRequest()->get('id'));
-        $crawler = $this->client->request('GET', '/document/show/directory/' . $this->root->getId());
+        
+        $crawler = $this->showDirectory($this->rootDirId);
         $link = $crawler->filter('.link_delete_directory')->eq(0)->link();
         $this->client->click($link);
-        $crawler = $this->client->request('GET', '/document/show/directory/' . $this->root->getId());
-        var_dump($this->client->getResponse()->getContent());
+        
+        $crawler = $this->showDirectory($this->rootDirId);
         $this->assertEquals(2, $crawler->filter('.directory_item')->count());
         $this->assertEquals(0, count($this->getUploadedFiles()));
     }
     
     public function testZipCanBeUploaded()
     {
-        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->root->getId());
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->rootDirId);
+        
+        $crawler = $this->showDirectory($this->rootDirId);
         $this->assertEquals(3, $crawler->filter('.directory_item')->count());
-        $link = $crawler->filter('.link_directory_show')->eq(2)->link();
-        $crawler = $this->client->click($link);
+        
+        $dynaLink = $crawler->filter('#dynatree .link_directory_show')->link();
+        $crawler = $this->client->click($dynaLink);
         $this->assertEquals(4, $crawler->filter('.directory_item')->count());
         $this->assertEquals(1, $crawler->filter('.document_item')->count());
-        $link = $crawler->filter('.link_directory_show')->eq(0)->link();
-        $crawler = $this->client->click($link);
+        
+        $docLink = $crawler->filter('#doc .link_directory_show')->eq(0)->link();
+        $crawler = $this->client->click($docLink);
         $this->assertEquals(2, $crawler->filter('.directory_item')->count());
         $this->assertEquals(63, $crawler->filter('.document_item')->count());
         $this->assertEquals(110, count($this->getUploadedFiles()));
     }
-    
+ 
     public function testZipCanBeDownloaded()
     {
-        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->root->getId());
-        $crawler = $this->client->request('GET', 'document/show/directory/' . $this->root->getId());
+        $this->uploadFile("{$this->stubDirectory}dynatree.zip", $this->rootDirId);
+        
+        $crawler = $this->showDirectory($this->rootDirId);
         $link = $crawler->filter('.link_download_directory')->eq(2)->link();
         $crawler = $this->client->click($link);
-        $this->assertTrue($this->client->getResponse()->headers->contains(
-            'Content-Disposition', 'attachment; filename=dynatree.zip')); 
+        
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=dynatree.zip'));
     }
 
-    private function cleanUploadDirectory()
+    private function showDirectory($dirId)
     {
-        $iterator = new \DirectoryIterator($this->uploadDirectory);
+        return $this->client->request('GET', '/document/show/directory/' . $dirId);
+    }
 
-        foreach ($iterator as $file)
-        {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder')
-            {
-                chmod($file->getPathname(), 0777);
-                unlink($file->getPathname());
-            }
-        }
+    private function uploadFile($filePath, $dirId)
+    {
+        $crawler = $this->showDirectory($dirId);
+        $form = $crawler->filter('input[type=submit]')->first()->form();
+        
+        return $this->client->submit($form, array('Document_Form[file]' => $filePath));
+    }
+    
+    private function addSubDirectory($name, $dirId)
+    {
+        $crawler = $this->showDirectory($dirId);
+        $form = $crawler->filter('input[type=submit]')->last()->form();
+        $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name));
     }
 
     private function getUploadedFiles()
@@ -147,22 +166,18 @@ class DocumentControllerTest extends FixtureTestCase
 
         return $uploadedFiles;
     }
-
-    private function uploadFile($filePath, $id)
+    
+    private function cleanUploadDirectory()
     {
-        $this->client->restart();
-        $crawler = $this->client->request('GET', "document/show/directory/" . $id);
-        $form = $crawler->filter('input[type=submit]')->first()->form();
-        $this->client->submit($form, array('Document_Form[file]' => $filePath));
-        $this->client->restart();
-    }
+        $iterator = new \DirectoryIterator($this->uploadDirectory);
 
-    private function addDirectory($name, $id)
-    {
-        $this->client->restart();
-        $crawler = $this->client->request('GET', "document/show/directory/" . $id);
-        $form = $crawler->filter('input[type=submit]')->last()->form();
-        $crawler = $this->client->submit($form, array('Directory_Form[name]' => $name));
-        $this->client->restart();
+        foreach ($iterator as $file)
+        {
+            if ($file->isFile() && $file->getFilename() !== 'placeholder')
+            {
+                chmod($file->getPathname(), 0777);
+                unlink($file->getPathname());
+            }
+        }
     }
 }

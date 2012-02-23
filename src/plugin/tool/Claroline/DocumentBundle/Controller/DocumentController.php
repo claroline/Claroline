@@ -64,12 +64,6 @@ class DocumentController extends Controller
         return $this->redirect($url);
     }
 
-    //TODO: be able to move a document from a directory to another one.
-    public function moveDocument()
-    {
-        
-    }
-
     public function downloadDocumentAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
