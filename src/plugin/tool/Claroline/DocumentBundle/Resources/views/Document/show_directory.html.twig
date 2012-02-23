@@ -42,9 +42,8 @@
         <a href="{{ path('claro_document_download', {'id': document.id}) }}" class="link_download_document" name="_link_download_document">{{document.name}}</a>
         {{ 'size'|trans({}, 'document') }} {{document.getFormatSize()}}    
         <a href="{{ path('claro_document_delete', {'dir':currentDirectory.id, 'id': document.id}) }}" class="link_delete_document" name="_link_delete_document">{{ 'delete_document'|trans({}, 'document') }}</a>
-        <a href="{{ path('claro_document_move', {'dir': currentDirectory.id, 'id': document.id}) }}" class="link_move_document" name="_link_move_document">{{ 'move_document'|trans({}, 'document') }}</a>
     </li>
-{% endfor %}
+    {% endfor %}
 </ul>
 
 <script>

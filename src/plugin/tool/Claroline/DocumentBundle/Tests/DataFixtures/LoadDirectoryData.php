@@ -3,20 +3,19 @@
 namespace Claroline\DocumentBundle\Tests\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Claroline\DocumentBundle\Entity\Directory;
-use Claroline\DocumentBundle\Entity\Document;
 use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\DocumentBundle\Entity\Directory;
 
-class LoadDocumentData extends AbstractFixture
+class LoadDirectoryData extends AbstractFixture
 {
     /*
      * DIR_A
-     *      Dir_B
-     *          Dir_C
-     *          Dir_D
-     *      Dir_E
-     *          Dir_F
-     *              Dir_G
+     *      DIR_B
+     *          DIR_C
+     *          DIR_D
+     *      DIR_E
+     *          DIR_F
+     *              DIR_G
      */
     public function load(ObjectManager $manager)
     {     
