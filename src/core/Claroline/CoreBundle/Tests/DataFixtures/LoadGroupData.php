@@ -20,9 +20,12 @@ class LoadGroupData extends AbstractFixture
         $groupA = new Group();
         $groupA->setName('Group A');
         $groupA->addRole($this->getReference('role/role_a'));
+        $groupA->addUser($this->getReference('user/user'));
+        $groupA->addUser($this->getReference('user/user_2'));
         $groupB = new Group();
         $groupB->setName(('Group B'));
         $groupB->addRole($this->getReference('role/role_d'));
+        $groupB->addUser($this->getReference('user/user_3'));
         $groupC = new Group();
         $groupC->setName(('Group C'));
         $groupC->addRole($this->getReference('role/role_f'));

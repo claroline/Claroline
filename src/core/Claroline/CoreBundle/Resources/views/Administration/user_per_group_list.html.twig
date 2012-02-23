@@ -2,7 +2,7 @@
 {% block section_content %}
 <h6>
     users for group {{group.getName()}} | 
-    <a href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a>
+    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a>
 </h6>
 <table class="claroTable userList" width="100%" cellspacing="2" border="0">
     <thead>
@@ -25,7 +25,7 @@
         <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
         <td align="center" headers="c4 L0">{{user.getMail()}}</td>
         <td align="center" headers="c5 L0">{{user.getAdministrativeCode()}}</td>
-        <td align="center" headers="c6 L0"><a href="{{path('claro_admin_delete_user_from_group', {'idUser':user.getId(), 'idGroup':group.getId()})}}">delete him!</a></td>    
+        <td align="center" headers="c6 L0"><a href="{{path('claro_admin_delete_user_from_group', {'idUser':user.getId(), 'idGroup':group.getId()})}}" id="link_delete_{{user.getId()}}">delete him!</a></td>    
     </tr>
     {% endfor %}
 </table>

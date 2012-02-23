@@ -18,11 +18,14 @@ class AdministrationController extends Controller
 
     public function showFormAddUserAction()
     {
-        $formUserProfile = $this->createForm(new ProfileType($this->get('security.context')->getToken()->getUser()->getOwnedRoles()));
+        $formUserProfile = $this->createForm(new ProfileType(
+            $this->get('security.context')->getToken()->getUser()->getOwnedRoles())
+        );
 
         return $this->render(
-                'ClarolineCoreBundle:Administration:add_user.html.twig', array(
-                'form_complete_user' => $formUserProfile->createView()));
+            'ClarolineCoreBundle:Administration:add_user.html.twig', array(
+            'form_complete_user' => $formUserProfile->createView())
+        );
     }
 
     public function addUserAction()
@@ -79,7 +82,7 @@ class AdministrationController extends Controller
         }
         else
         {
-            return new Response ("formulaire non valide");
+            return new Response("formulaire non valide");
         }
         
         $url = $this->generateUrl('claro_admin_group_list');
