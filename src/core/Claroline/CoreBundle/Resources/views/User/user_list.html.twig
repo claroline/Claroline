@@ -39,12 +39,3 @@
     </tr>
     {% endfor %}
 </table>
-
-{{app.user.username}}
-
-
-{% for role in app.user.roles %}
-{%if role == 'ROLE_USER' %}
-    {{role}}
-{% endif %}
-{% endfor %}
