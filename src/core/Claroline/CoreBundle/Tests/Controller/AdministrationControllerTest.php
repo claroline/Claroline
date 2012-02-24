@@ -80,10 +80,26 @@ class AdministrationControllerTest extends FunctionalTestCase
          $this->assertEquals(2, $crawler->filter('.row_group')->count()); 
     }
     
-    public function testOnlyAdminCanMangeGroup()
+    public function testAdminCanEditGroupSettings()
+    {
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/group/list');
+        $link = $crawler->filter("#link_settings_{$this->getFixtureReference('group/group_a')->getId()}")->link();
+        $crawler = $this->client->click($link);
+        $selected = $crawler->filterXpath("//select/option[. = 'ROLE_A']")->attr('selected');
+        $this->assertEquals("selected", $selected);
+        $form = $crawler->filter('input[type=submit]')->form();      
+        $form['group_settings_form[ownedRoles]'] = $this->getFixtureReference('role/admin')->getId();
+        $this->client->submit($form);
+        $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
+        $selected = $crawler->filter('option:contains("ROLE_ADMIN")')->attr('selected');
+        $this->assertEquals("selected", $selected);
+    }
+    
+    public function testOnlyAdminCanManageGroup()
     {
           $crawler = $this->logUser($this->getFixtureReference('user/user'));
           $crawler = $this->client->request('GET', '/admin/group/list');
-          $this->assertEquals(403, $this->client->getResponse()->getStatusCode());; 
+          $this->assertEquals(403, $this->client->getResponse()->getStatusCode());;
     }
 }
