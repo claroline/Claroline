@@ -32,11 +32,11 @@ class ProfileType extends UserType
             ->add('phone', 'text', array('required' => false));
         if ($this->grantRole == true)
         {
-            $builder->add('ownedRoles', 'entity', array('class' => 'ClarolineCoreBundle:Role', 'expanded' => true, 'multiple' => true, 'property' => 'name', 'read_only' => false));
+            $builder->add('ownedRoles', 'entity', array('class' => 'ClarolineCoreBundle:Role', 'expanded' => false, 'multiple' => true, 'property' => 'name', 'read_only' => false));
         }
         else
         {
-            $builder->add('ownedRoles', 'entity', array('class' => 'ClarolineCoreBundle:Role', 'expanded' => true, 'multiple' => true, 'property' => 'name', 'read_only' => true));
+            $builder->add('ownedRoles', 'entity', array('class' => 'ClarolineCoreBundle:Role', 'expanded' => false, 'multiple' => true, 'property' => 'name', 'read_only' => true));
         }
         $builder->add('note', 'textarea', array('required' => false));
     }
