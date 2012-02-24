@@ -45,6 +45,14 @@ claro_admin_delete_user_from_group:
 claro_admin_delete_group:
     pattern: /group/delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }
+    
+claro_admin_group_settings_form:
+   pattern: /group/settings/form/{id}
+   defaults: { _controller: ClarolineCoreBundle:Administration:showGroupSettings }
+   
+claro_admin_group_settings_edit:
+   pattern: group/settings/edit/{id}
+   defaults: { _controller: ClarolineCoreBundle:Administration:editGroupSettings }
   
   
   
