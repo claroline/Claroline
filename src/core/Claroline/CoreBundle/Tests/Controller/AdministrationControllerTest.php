@@ -75,7 +75,6 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
          $crawler = $this->logUser($this->getFixtureReference('user/admin'));
          $crawler = $this->client->request('GET', '/admin/group/list');
-         var_dump($this->client->getResponse()->getContent());
          $link = $crawler->filter("#link_delete_{$this->getFixtureReference('group/group_a')->getId()}")->link();
          $crawler = $this->client->click($link);
          $this->assertEquals(2, $crawler->filter('.row_group')->count()); 
@@ -87,6 +86,4 @@ class AdministrationControllerTest extends FunctionalTestCase
           $crawler = $this->client->request('GET', '/admin/group/list');
           $this->assertEquals(403, $this->client->getResponse()->getStatusCode());; 
     }
-    
-
 }

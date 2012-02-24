@@ -2,7 +2,8 @@
 {% block section_content %}
 <h6>
     users for group {{group.getName()}} | 
-    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a>
+    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a> | 
+    <a id="link_setting" href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}">group settings</a>
 </h6>
 <table class="claroTable userList" width="100%" cellspacing="2" border="0">
     <thead>
