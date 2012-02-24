@@ -28,7 +28,11 @@
             </div>
         </td>
         {% if is_granted('user', 'EDIT') %}
-            <td align="center" headers="c6 L0"><a href="{{path('claro_profile_delete', {'id': user.getId()})}}">delete</a></td>
+            {%if app.user.id == user.getId() %}
+                <td align="center" headers="c6 L0">you're here</td>
+            {% else %}
+                <td align="center" headers="c6 L0"><a href="{{path('claro_profile_delete', {'id': user.getId()})}}">delete</a></td>
+            {% endif %}
             <td align="center" headers="c7 L0">login as</td>
         {% endif %}
         <td align="center" headers="c8 L0"><a href="{{path('claro_profile_show', {'id': user.getId()})}}">show</a></td>

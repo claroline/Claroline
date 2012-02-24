@@ -63,13 +63,20 @@ class UserController extends Controller
 
     public function deleteProfileAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('ClarolineCoreBundle:User')->find($id);
-        $em->remove($user);
-        $em->flush();
+        if($id != $this->get('security.context')->getToken()->getUser()->getId())
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $user = $em->getRepository('ClarolineCoreBundle:User')->find($id);
+            $em->remove($user);
+            $em->flush();
         
-        //this will be changed later
-        return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            //this will be changed later
+            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+        }
+        else
+        {
+            throw new \Exception("You can't delete yourself");
+        }
     }
 
     //TODO: self explanatory
