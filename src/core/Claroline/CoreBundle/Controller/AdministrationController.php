@@ -20,12 +20,12 @@ class AdministrationController extends Controller
     public function showFormAddUserAction()
     {
         $formUserProfile = $this->createForm(new ProfileType(
-                $this->get('security.context')->getToken()->getUser()->getOwnedRoles())
+            $this->get('security.context')->getToken()->getUser()->getOwnedRoles())
         );
 
         return $this->render(
-                'ClarolineCoreBundle:Administration:add_user.html.twig', array(
-                'form_complete_user' => $formUserProfile->createView())
+            'ClarolineCoreBundle:Administration:add_user.html.twig', array(
+            'form_complete_user' => $formUserProfile->createView())
         );
     }
 
@@ -33,7 +33,9 @@ class AdministrationController extends Controller
     {
         $request = $this->get('request');
         $user = new User();
-        $form = $this->get('form.factory')->create(new ProfileType($this->get('security.context')->getToken()->getUser()->getOwnedRoles()), $user);
+        $form = $this->get('form.factory')->create(new ProfileType(
+            $this->get('security.context')->getToken()->getUser()->getOwnedRoles()), $user
+        );
         $form->bindRequest($request);
 
         if ($form->isValid())
@@ -55,7 +57,8 @@ class AdministrationController extends Controller
         $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
 
         return $this->render('ClarolineCoreBundle:Administration:user_list.html.twig', array(
-                'users' => $users));
+            'users' => $users)
+        );
     }
 
     public function showFormCreateGroupAction()
@@ -64,7 +67,8 @@ class AdministrationController extends Controller
         $formGroup = $this->createForm(new GroupType(), $group);
 
         return $this->render('ClarolineCoreBundle:Administration:create_group.html.twig', array(
-                'form_group' => $formGroup->createView()));
+            'form_group' => $formGroup->createView())
+        );
     }
 
     public function createGroupAction()
@@ -95,9 +99,11 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-
+        
+        
         return $this->render('ClarolineCoreBundle:Administration:group_list.html.twig', array(
-                'groups' => $groups));
+            'groups' => $groups)
+        );
     }
 
     public function listUserPerGroupAction($id)
@@ -114,7 +120,10 @@ class AdministrationController extends Controller
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($id);
         $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
 
-        return $this->render('ClarolineCoreBundle:Administration:add_user_to_group.html.twig', array('group' => $group, 'users' => $users));
+        return $this->render(
+            'ClarolineCoreBundle:Administration:add_user_to_group.html.twig', array(
+                'group' => $group, 'users' => $users)
+        );
     }
 
     public function addUserToGroupAction($idGroup, $idUser)
@@ -158,11 +167,11 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($id);
-
         $form = $this->createForm(new GroupSettingsType(), $group);
 
         return $this->render(
-                'ClarolineCoreBundle:Administration:edit_group_settings.html.twig', array('group' => $group, 'form_settings' => $form->createView())
+            'ClarolineCoreBundle:Administration:edit_group_settings.html.twig', array(
+                'group' => $group, 'form_settings' => $form->createView())
         );
     }
 

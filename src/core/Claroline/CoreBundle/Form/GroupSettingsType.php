@@ -13,7 +13,7 @@ class GroupSettingsType extends GroupType
     {
           parent::buildForm($builder, $options);
           $builder->add(
-              'WorkspaceRoleCollection', 'entity', array(
+              'ownedRoles', 'entity', array(
                   'class' => 'ClarolineCoreBundle:Role', 'expanded' => false,
                   'multiple' => true, 'property' => 'name', 'read_only' => false,
                   'required' => false)

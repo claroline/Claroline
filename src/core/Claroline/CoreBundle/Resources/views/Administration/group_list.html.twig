@@ -4,6 +4,7 @@
     <thead class="headerX" align="center" valign="top">
         <tr>
             <th id="c0" scope="col">Groups</th>
+            <th id="c6" scope="col">Role</th>
             <th id="c1" scope="col">Users</th>
             <th id="c2" scope="col">Resource</th>
             <th id="c3" scope="col">Edit settings</th>
@@ -15,6 +16,12 @@
         {% for group in groups %}
             <tr id="group_{{group.getId()}}" class="row_group"/>
                 <td align="center" headers="c0 L0">{{group.getName()}}</td>
+                <td align="center" headers="c6 L0">
+                <div id="roleName">
+                {% for role in group.getWorkspaceRoleCollection() %}
+                    {{role.getName}}
+                {% endfor %}
+                </div>
                 <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_user_per_group_list', {'id': group.getId()}) }}" id="link_show_{{group.getId()}}">Show</a></td>
                 <td align="center" headers="c2 L0"><a href="todo">todo</a></td>
                 <td align="center" headers="c3 L0"><a href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}">settings</a></td>
