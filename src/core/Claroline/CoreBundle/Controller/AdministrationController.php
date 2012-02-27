@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
+use Claroline\CoreBundle\Form\ClarolineSettingsType;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationController extends Controller
@@ -30,7 +31,7 @@ class AdministrationController extends Controller
     }
 
     public function addUserAction()
-    {
+    {      
         $request = $this->get('request');
         $user = new User();
         $form = $this->get('form.factory')->create(new ProfileType(
@@ -193,6 +194,32 @@ class AdministrationController extends Controller
         
         $url = $this->generateUrl('claro_admin_group_list');
 
+        return $this->redirect($url);
+    }
+      
+    public function showFormClaroSettingsAction()
+    {
+        $form = $this->createForm(new ClarolineSettingsType());     
+        
+        return $this->render(
+            'ClarolineCoreBundle:Administration:claro_settings.html.twig', array(
+            'form_settings' => $form->createView())
+        );
+    }
+    
+    public function editClaroSettingsAction()
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new ClarolineSettingsType());
+        $form->bindRequest($request);
+        
+        if ($form->isValid())
+        {
+            $this->get('claroline.config.platform_config_handler')->setParameter('allow_self_registration', $form['allow self registration']->getData());
+        }
+        
+        $url = $this->generateUrl('claro_admin_claro_settings_form');
+        
         return $this->redirect($url);
     }
 

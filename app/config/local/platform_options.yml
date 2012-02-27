@@ -1,2 +1,2 @@
-allow_self_registration: true
+allow_self_registration: 'false'
 context_history_max_size: 5

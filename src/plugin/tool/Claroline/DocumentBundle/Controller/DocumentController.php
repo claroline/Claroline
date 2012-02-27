@@ -394,5 +394,4 @@ class DocumentController extends Controller
 
         return $result;
     }
-
 }
