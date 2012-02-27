@@ -51,9 +51,17 @@ claro_admin_group_settings_form:
    defaults: { _controller: ClarolineCoreBundle:Administration:showGroupSettings }
    
 claro_admin_group_settings_edit:
-   pattern: group/settings/edit/{id}
+   pattern: /group/settings/edit/{id}
    defaults: { _controller: ClarolineCoreBundle:Administration:editGroupSettings }
-  
+   
+claro_admin_claro_settings_form:
+   pattern: /claronext/settings/form
+   defaults: { _controller: ClarolineCoreBundle:Administration:showFormClaroSettings }
+   
+claro_admin_claro_settings_edit:
+   pattern: /claronext/settings/edit
+   defaults: { _controller: ClarolineCoreBundle:Administration:editClaroSettings }
+    
   
   
    

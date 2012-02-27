@@ -15,8 +15,8 @@ class UserController extends Controller
     public function showEditProfileAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $formUserProfile = $this->createForm(new ProfileType($user->getOwnedRoles()), $user);
-
+                     $formUserProfile = $this->createForm(new ProfileType($user->getOwnedRoles()), $user);
+        
         return $this->render(
             'ClarolineCoreBundle:User:show_edit.html.twig', array(
             'form_complete_user' => $formUserProfile->createView()));
@@ -83,5 +83,5 @@ class UserController extends Controller
     public function searchUserAction($options)
     {
         
-    }
+    }          
 }

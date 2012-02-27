@@ -35,6 +35,17 @@
 
     -->
 
+    <!-- Import Zend coding standard (which in turn imports PEAR) -->
+    <rule ref="Zend">
+        <!-- but exclude their code analyzer -->
+        <exclude name="Zend.Debug.CodeAnalyzer"/>
+
+        <!-- covered by Squiz ControlSignature, which enforces try/catch as well -->
+        <exclude name="PEAR.ControlStructures.ControlSignature"/>
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+
+    
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Functions.CallTimePassByReference"/>
@@ -48,17 +59,7 @@
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.Scope.MemberVarScope"/>
-
-    <!-- Import Zend coding standard (which in turn imports PEAR) -->
-    <rule ref="Zend">
-        <!-- but exclude their code analyzer -->
-        <exclude name="Zend.Debug.CodeAnalyzer"/>
-
-        <!-- covered by Squiz ControlSignature, which enforces try/catch as well -->
-        <exclude name="PEAR.ControlStructures.ControlSignature"/>
-        <exclude name="Generic.Files.LineLength"/>
-    </rule>
-
+    
     <!-- Don't enforce Zend's private member underscores -->
     <rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
         <severity>0</severity>
