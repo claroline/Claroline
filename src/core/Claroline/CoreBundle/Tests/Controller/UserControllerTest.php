@@ -11,22 +11,22 @@ class UserControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testUserProfileEdit()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', 'user/profile/edit');
         $form = $crawler->filter('input[type=submit]')->form();
-        $readonly = ($crawler->filter('#user_form_ownedRoles')->attr('disabled'));
+        $readonly = $crawler->filter('#user_form_ownedRoles')->attr('disabled');
         $selected = $crawler->filter('option:contains("ROLE_USER")')->attr('selected');
         $this->assertEquals("selected", $selected);
         $crawler = $this->client->submit(
-            $form, array('user_form[firstName]' => 'toto', 'user_form[plainPassword][first]' =>
-            'abc', 'user_form[plainPassword][second]' => 'abc'));
+            $form, 
+            array(
+                'user_form[firstName]' => 'toto', 
+                'user_form[plainPassword][first]' => 'abc', 
+                'user_form[plainPassword][second]' => 'abc'
+            )
+        );
         $username = $crawler->filter('#username')->text();
         $this->assertEquals("toto Doe", $username);
         $this->assertEquals("disabled", $readonly);
@@ -44,12 +44,12 @@ class UserControllerTest extends FunctionalTestCase
 
     public function testAdminOwnProfileEdit()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', 'user/profile/edit');
         $form = $crawler->filter('input[type=submit]')->form();
         $selected = $crawler->filter('option:contains("ROLE_ADMIN")')->attr('selected');
         $this->assertEquals("selected", $selected);
-        $readonly = ($crawler->filter('#user_form_ownedRoles')->attr('disabled'));
+        $readonly = $crawler->filter('#user_form_ownedRoles')->attr('disabled');
         $this->assertEquals("", $readonly);
         $form['user_form[firstName]'] = 'toto';
         $form['user_form[plainPassword][first]'] = 'abc';
@@ -69,7 +69,7 @@ class UserControllerTest extends FunctionalTestCase
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $link = $crawler->filter('a:contains("Administration")')->link();
         $crawler = $this->client->click($link);
-        $crawler = $link = $crawler->filter('#link_list_user')->link();
+        $link = $crawler->filter('#link_list_user')->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(9, $crawler->filter('.headerX')->children()->count());
         $this->assertEquals(5, $crawler->filter('.row_user')->count());
@@ -77,8 +77,8 @@ class UserControllerTest extends FunctionalTestCase
     
     public function testUserCantGetFullUserList()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', 'admin/list/user');
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', 'admin/list/user');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode()); 
     }
     public function testUnregisteredCantGetFullUserList()
@@ -89,14 +89,14 @@ class UserControllerTest extends FunctionalTestCase
     
     public function testWorkspaceCreatorCantGetFullUserList ()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $crawler = $this->client->request('GET', 'admin/list/user');
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->client->request('GET', 'admin/list/user');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminCanDeleteFromList()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', 'admin/list/user');
         $link = $crawler->filter('a:contains("delete")')->eq(0)->link();
         $crawler = $this->client->click($link);
@@ -106,23 +106,23 @@ class UserControllerTest extends FunctionalTestCase
     public function testUserCantDeleteUsers()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request(
-            'GET', "/user/profile/delete/{$this->getFixtureReference('user/ws_creator')->getId()}");
+        $creatorUserId = $this->getFixtureReference('user/ws_creator')->getId();
+        $crawler = $this->client->request('GET', "/user/profile/delete/{$creatorUserId}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
     public function testWorskpaceCreatorCantDeleteUsers()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $crawler = $this->client->request(
-            'GET', "/user/profile/delete/{$this->getFixtureReference('user/user')->getId()}");
+        $userId = $this->getFixtureReference('user/user')->getId();
+        $crawler = $this->client->request('GET', "/user/profile/delete/{$userId}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
     public function testUnregisteredCantDeleteUsers()
     {
-        $crawler = $this->client->request(
-            'GET', "/user/profile/delete/{$this->getFixtureReference('user/ws_creator')->getId()}");
+        $creatorUserId = $this->getFixtureReference('user/ws_creator')->getId();
+        $crawler = $this->client->request('GET', "/user/profile/delete/{$creatorUserId}");
         $this->assertEquals(1, $crawler->filter('#login_form')->count());    
     }
     
@@ -131,7 +131,7 @@ class UserControllerTest extends FunctionalTestCase
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $link = $crawler->filter('a:contains("Administration")')->link();
         $crawler = $this->client->click($link);
-        $crawler = $link = $crawler->filter('#link_add_user')->link();
+        $link = $crawler->filter('#link_add_user')->link();
         $crawler = $this->client->click($link);
         $form = $crawler->filter('input[type=submit]')->form();
         $form['user_form[firstName]'] = 'toto';
@@ -142,25 +142,5 @@ class UserControllerTest extends FunctionalTestCase
         $form['user_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
         $crawler = $this->client->submit($form);
         $this->assertEquals(6, $crawler->filter('.row_user')->count());
-    }
-    
-    public function testUserCantAddUser()
-    {
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', 'admin/add/user/form');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());; 
-    }
-    
-    public function testWorkspaceCreatorCantAddUser()
-    {
-        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $crawler = $this->client->request('GET', 'admin/add/user/form');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());; 
-    }
-    
-    public function testUnregisteredCantAddUser()
-    {
-        $crawler = $this->client->request('GET', 'admin/add/user/form');
-        $this->assertEquals(1, $crawler->filter('#login_form')->count());
     }
 }
