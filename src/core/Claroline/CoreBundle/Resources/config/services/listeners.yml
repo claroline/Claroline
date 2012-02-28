@@ -22,3 +22,10 @@ services:
         tags:
             - { name: doctrine.event_subscriber, event: preRemove}
             - { name: doctrine.event_subscriber, event: postPersist}
+            
+    claroline.listener.request:
+        class: Claroline\CoreBundle\Listener\RequestListener
+        arguments: ["@session", "@claroline.config.platform_config_handler"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+         

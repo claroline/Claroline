@@ -24,7 +24,7 @@
         </a>
     {% else %}
         {% if register_target is not null %}
-        <a href="{{ path(register_target) }}">
+        <a id="link_registration" href="{{ path(register_target) }}">
             {{ 'register'|trans({}, 'user') }}
         </a> | 
         {% endif %}
