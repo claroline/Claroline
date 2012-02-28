@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\ClarolineSettingsType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationController extends Controller
@@ -171,8 +172,8 @@ class AdministrationController extends Controller
         $form = $this->createForm(new GroupSettingsType(), $group);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:edit_group_settings.html.twig', array(
-                'group' => $group, 'form_settings' => $form->createView())
+            'ClarolineCoreBundle:Administration:edit_group_settings.html.twig',
+            array('group' => $group, 'form_settings' => $form->createView())
         );
     }
 
@@ -199,7 +200,9 @@ class AdministrationController extends Controller
       
     public function showFormClaroSettingsAction()
     {
-        $form = $this->createForm(new ClarolineSettingsType());     
+        $platformConfig = $this->get('claroline.config.platform_config_handler')
+                ->getPlatformConfig();
+        $form = $this->createForm(new ClarolineSettingsType(), $platformConfig);  
         
         return $this->render(
             'ClarolineCoreBundle:Administration:claro_settings.html.twig', array(
@@ -214,12 +217,22 @@ class AdministrationController extends Controller
         $form->bindRequest($request);
         
         if ($form->isValid())
-        {
-            $this->get('claroline.config.platform_config_handler')->setParameter('allow_self_registration', $form['allow self registration']->getData());
+        {      
+            $this->get('claroline.config.platform_config_handler')
+                ->setParameter(
+                    'allow_self_registration', $form['selfRegistration']->getData()
+                );
+
+            $this->get('claroline.config.platform_config_handler')
+                 ->setParameter(
+                     'locale_language', $form['localLanguage']->getData()
+                 );
+
+            $this->get('session')->setLocale($form['localLanguage']->getData());
         }
-        
+
         $url = $this->generateUrl('claro_admin_claro_settings_form');
-        
+
         return $this->redirect($url);
     }
 

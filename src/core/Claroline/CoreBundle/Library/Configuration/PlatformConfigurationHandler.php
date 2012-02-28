@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Configuration;
 
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Exception\ClarolineException;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 
 class PlatformConfigurationHandler
 {
@@ -49,4 +50,14 @@ class PlatformConfigurationHandler
             );
         }
     }
+    
+    public function getPlatformConfig()
+    { 
+        $platformConfig = new PlatformConfiguration(
+            $this->getParameter('allow_self_registration'),
+            $this->getParameter('locale_language')
+        );
+        
+        return $platformConfig;
+    } 
 }

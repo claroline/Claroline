@@ -98,8 +98,45 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     public function testOnlyAdminCanManageGroup()
     {
-          $crawler = $this->logUser($this->getFixtureReference('user/user'));
-          $crawler = $this->client->request('GET', '/admin/group/list');
-          $this->assertEquals(403, $this->client->getResponse()->getStatusCode());;
+        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', '/admin/group/list');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());;
+    }
+    
+    public function testEditClaroSelfRegistration()
+    {
+        $this->setPlatformTestOptions();
+        $this->assertEquals(true, static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('allow_self_registration'));
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin');
+        $link = $crawler->filter("#link_claro_settings")->link();
+        $crawler = $this->client->click($link);
+        $form = $crawler->filter('input[type=submit]')->form();
+        $form['claro_settings_form[selfRegistration]'] = false;
+        $this->client->submit($form);
+        $this->client->request('GET', '/logout');
+        $this->assertEquals(false, static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('allow_self_registration'));
+        $this->assertEquals(0, $crawler->filter("#link_registration")->count());
+    }
+    
+    public function testEditClaroLanguage()
+    {
+        $this->setPlatformTestOptions();
+        $this->assertEquals('en', static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('locale_language'));
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/claronext/settings/form');
+        $this->assertEquals(1, $crawler->filter("a:contains('Logout')")->count());
+        $form = $crawler->filter('input[type=submit]')->form();
+        $form['claro_settings_form[localLanguage]'] = 'fr';
+        $crawler = $this->client->submit($form);
+        $this->assertEquals(1, $crawler->filter("a:contains('Déconnexion')")->count());
+        $crawler = $this->client->request('GET', '/logout');
+        $this->assertEquals(1, $crawler->filter("a:contains('Connexion')")->count());
+    }
+    
+    public function setPlatformTestOptions()
+    {
+        static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->setParameter('allow_self_registration', true);
+        static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->setParameter('locale_language', 'en');
     }
 }

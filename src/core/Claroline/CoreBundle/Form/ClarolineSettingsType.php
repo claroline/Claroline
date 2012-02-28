@@ -9,12 +9,9 @@ class ClarolineSettingsType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('allow self registration', 'choice', array (
-            'choices' => array('true' => 'true', 'false' => 'false')
-            )
-        );
-        $builder->add('language', 'choice', array(
-            'choices' => array('en' => 'EN', 'fr' => 'FR')
+        $builder->add('selfRegistration', 'checkbox', array('required' => false));
+        $builder->add('localLanguage', 'choice', array(
+            'choices' => array('en' => 'en', 'fr' => 'fr')
             )
         );
     }
