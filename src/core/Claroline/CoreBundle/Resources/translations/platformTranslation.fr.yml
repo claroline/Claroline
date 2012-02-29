@@ -1,0 +1,93 @@
+#########
+# LINKS #
+#########
+
+#topbar links
+administration: Administration
+desktop: Bureau
+home: Accueil
+my_account: Mon compte
+
+#administration links
+add_user: Ajouter un utilisateur
+list_users: Lister les utilisateurs
+create_group: Créer un groupe
+list_groups: Lister les groupes
+claro_settings: Paramètres de la plateforme
+
+#registration
+login: Connexion
+logout: Déconnexion
+register: Inscription
+
+#########
+# FORMS #
+#########
+
+#users form field labels 
+user_form_firstName: "Nom :"
+user_form_lastName: "Prénom :"
+user_form_username: "Nom d'utilisateur:"
+user_form_plainPassword_first: "Mot de passe :"
+user_form_plainPassword_second: "Vérification :"
+user_form_administrativeCode: "Code administratif :"
+user_form_mail: "Mail :"
+user_form_phone: "Téléphone :"
+user_form_ownedRoles: "Role(s) :"
+user_form_note: "Note personnelle :"
+
+#claro settings form field labels
+claro_settings_form_selfRegistration: Auto-inscription
+claro_settings_form_localLanguage: Langue
+
+#claro group form fields labels
+group_form_name: Nom
+
+#file manager form field labels
+
+############
+# MESSAGES #
+############
+
+login_failure:  La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
+account_created:  Compte créé
+workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
+
+########
+# MISC #
+########
+
+#user
+first_name: prénom
+last_name: nom
+mail: mail
+phone: téléphone
+note: note
+username: nom d'utilisateur
+password: mot de passe
+role: role
+user: utilisateur
+users: utilisateurs
+administrative_code: code administratif
+
+#group
+group: groupe
+groups: groupes
+
+#resource
+resource: ressource
+resources: ressources
+
+#workspace
+workspace: Espace d'activité
+workspaces: Espace d'activités
+workspace.create: Créer un nouvel espace d'activités
+
+#common
+id: id
+add: ajouter
+delete: supprimer
+show: voir
+login_as: login as
+move : bouger
+settings: paramètres

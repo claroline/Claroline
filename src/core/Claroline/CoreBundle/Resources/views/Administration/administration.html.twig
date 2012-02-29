@@ -3,13 +3,13 @@
 {% block content %}
 
 <div class="section" id="administration">    
-    <h4>{{ 'administration'|trans({}, 'administration') }}</h4>
+    <h4>{{ 'administration'|trans({}, 'platformTranslation') }}</h4>
     <h5> 
-        <a href="{{ path('claro_admin_user_add_form') }}" id="link_add_user"> Add user </a> |
-        <a href="{{ path('claro_admin_user_list') }}" id="link_list_user"> List users </a> |
-        <a href="{{ path('claro_admin_group_create_form') }}" id="link_group_create_form"> Create group </a> |
-        <a href="{{ path('claro_admin_group_list') }}" id="link_group_list"> List groups </a> |
-        <a href="{{ path('claro_admin_claro_settings_form') }}" id="link_claro_settings">Claroline settings</a>
+        <a href="{{ path('claro_admin_user_add_form') }}" id="link_add_user"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a> |
+        <a href="{{ path('claro_admin_user_list') }}" id="link_list_user"> {{ 'list_users'|trans({}, 'platformTranslation') }} </a> |
+        <a href="{{ path('claro_admin_group_create_form') }}" id="link_group_create_form"> {{ 'create_group'|trans({}, 'platformTranslation') }} </a> |
+        <a href="{{ path('claro_admin_group_list') }}" id="link_group_list"> {{ 'list_groups'|trans({}, 'platformTranslation') }} </a> |
+        <a href="{{ path('claro_admin_claro_settings_form') }}" id="link_claro_settings">{{ 'claro_settings'|trans({}, 'platformTranslation') }}</a>
     </h5>
     {% block section_content %}
     {% endblock %}

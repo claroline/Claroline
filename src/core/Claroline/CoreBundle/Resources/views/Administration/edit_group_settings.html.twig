@@ -1,9 +1,9 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <h6>
-    settings for {{group.getName()}} | 
-    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a> | 
-    <a id="link_setting" href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}">group settings</a>
+    {{group.getName()}}: {{ 'settings'|trans({}, 'platformTranslation') }} | 
+    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">{{ 'add_user'|trans({}, 'platformTranslation') }}</a> | 
+    <a id="link_setting" href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}">{{ 'settings'|trans({}, 'platformTranslation') }}</a>
 </h6>
 <form action="{{path('claro_admin_group_settings_edit', {'id':group.getId()})}}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
 {{ form_errors(form_settings) }}

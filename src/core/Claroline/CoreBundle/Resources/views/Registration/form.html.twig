@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h4>{{ 'register'|trans({}, 'user') }}</h4>
+<h4>{{ 'register'|trans({}, 'platformTranslation') }}</h4>
 
 <form id="user_registration_form" action="{{ path('claro_user_registration_form_submit') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}

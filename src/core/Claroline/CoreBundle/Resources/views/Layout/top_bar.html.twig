@@ -2,16 +2,16 @@
 {% if connected %}
     <div id="section_menu">
         <a href="{{ path('claro_desktop_index') }}">
-            {{ 'desktop'|trans({}, 'desktop') }}
+            {{ 'desktop'|trans({}, 'platformTranslation') }}
         </a>
         |
         <a href="{{ path('claro_profile_show_edit') }}">
-            My account
+            {{ 'my_account'|trans({}, 'platformTranslation') }}
         </a>
     {% if is_granted('ROLE_ADMIN') %}
              |
         <a href="{{ path('claro_admin_index') }}">
-            {{ 'administration'|trans({}, 'administration') }}
+            {{ 'administration'|trans({}, 'platformTranslation') }}
         </a>
     {% endif %}    
     </div>
@@ -20,16 +20,16 @@
     {% if connected %}
         <span id="username">{{ username }}</span>
         <a href="{{ path('claro_security_logout') }}">
-            {{ 'logout'|trans({}, 'user') }}
+            {{ 'logout'|trans({}, 'platformTranslation') }}
         </a>
     {% else %}
         {% if register_target is not null %}
         <a id="link_registration" href="{{ path(register_target) }}">
-            {{ 'register'|trans({}, 'user') }}
+            {{ 'register'|trans({}, 'platformTranslation') }}
         </a> | 
         {% endif %}
         <a href="{{ path(login_target) }}">
-            {{ 'login'|trans({}, 'user') }}
+            {{ 'login'|trans({}, 'platformTranslation') }}
         </a>
     {% endif %}
     </div>
