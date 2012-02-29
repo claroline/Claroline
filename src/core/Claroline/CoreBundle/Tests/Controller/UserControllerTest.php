@@ -98,7 +98,7 @@ class UserControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', 'admin/list/user');
-        $link = $crawler->filter('a:contains("delete")')->eq(0)->link();
+        $link = $crawler->filter('.link_delete')->eq(0)->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(4, $crawler->filter('.row_user')->count());
     }

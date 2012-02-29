@@ -1,16 +1,16 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <h6>
-    add user to group {{group.getName()}}
+    {{group.getName()}}: {{ 'add_user'|trans({}, 'platformTranslation') }}
 </h6>
 <table class="claroTable userList" width="100%" cellspacing="2" border="0">
     <thead>
         <tr class="headerX" align="center" valign"=top">
-            <th id="c0" scope="col">id</th>
-            <th id="c1" scope="col">username</th>
-            <th id="c2" scope="col">last name</th>
-            <th id="c3" scope="col">first name</th>
-            <th id="c4" scope="col">Manage</th>
+            <th id="c0" scope="col">{{ 'id'|trans({}, 'platformTranslation') }}</th>
+            <th id="c1" scope="col">{{ 'username'|trans({}, 'platformTranslation') }}</th>
+            <th id="c2" scope="col">{{ 'last_name'|trans({}, 'platformTranslation') }}</th>
+            <th id="c3" scope="col">{{ 'first_name'|trans({}, 'platformTranslation') }}</th>
+            <th id="c4" scope="col">{{ 'manage'|trans({}, 'platformTranslation') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -20,7 +20,7 @@
         <td align="center" headers="c1 L0">{{user.getUsername()}}</td>
         <td align="center" headers="c2 L0">{{user.getLastName()}}</td>
         <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
-        <td align="center" headers="c4 L0"><a id="link_add_user_{{user.getId()}}" href="{{path('claro_admin_add_user_to_group', {'idGroup': group.getId(), 'idUser': user.getId()})}}">add me !</td>
+        <td align="center" headers="c4 L0"><a id="link_add_user_{{user.getId()}}" href="{{path('claro_admin_add_user_to_group', {'idGroup': group.getId(), 'idUser': user.getId()})}}">{{ 'add'|trans({}, 'platformTranslation') }}</td>
     </tr>
     {% endfor %}
 </table>

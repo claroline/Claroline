@@ -1,20 +1,20 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <h6>
-    users for group {{group.getName()}} | 
-    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">add user to this group</a> | 
-    <a id="link_setting" href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}">group settings</a>
+    {{ 'group'|trans({}, 'platformTranslation') }}: {{group.getName()}} | 
+    <a id="link_add_user_to_group" href="{{path('claro_admin_list_add_user_to_group', {'id' : group.getId()})}}">{{ 'add_user'|trans({}, 'platformTranslation') }}</a> | 
+    <a id="link_setting" href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}">{{ 'settings'|trans({}, 'platformTranslation') }}</a>
 </h6>
 <table class="claroTable userList" width="100%" cellspacing="2" border="0">
     <thead>
-        <tr class="headerX" align="center" valign"=top">
-            <th id="c0" scope="col">id</th>
-            <th id="c1" scope="col">username</th>
-            <th id="c2" scope="col">last name</th>
-            <th id="c3" scope="col">first name</th>
-            <th id="c4" scope="col">Email</th>
-            <th id="c5" scope="col">Administrative code</th>
-            <th id="c6" scope="col">Delete</th>
+        <tr class="headerX" align="center" valign="top">
+            <th id="c0" scope="col">{{ 'id'|trans({}, 'platformTranslation') }}</th>
+            <th id="c1" scope="col">{{ 'username'|trans({}, 'platformTranslation') }}</th>
+            <th id="c2" scope="col">{{ 'last_name'|trans({}, 'platformTranslation') }}</th>
+            <th id="c3" scope="col">{{ 'first_name'|trans({}, 'platformTranslation') }}</th>
+            <th id="c4" scope="col">{{ 'mail'|trans({}, 'platformTranslation') }}</th>
+            <th id="c5" scope="col">{{ 'administrative_code'|trans({}, 'platformTranslation') }}</th>
+            <th id="c6" scope="col">{{ 'delete'|trans({}, 'platformTranslation') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +26,7 @@
         <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
         <td align="center" headers="c4 L0">{{user.getMail()}}</td>
         <td align="center" headers="c5 L0">{{user.getAdministrativeCode()}}</td>
-        <td align="center" headers="c6 L0"><a href="{{path('claro_admin_delete_user_from_group', {'idUser':user.getId(), 'idGroup':group.getId()})}}" id="link_delete_{{user.getId()}}">delete him!</a></td>    
+        <td align="center" headers="c6 L0"><a href="{{path('claro_admin_delete_user_from_group', {'idUser':user.getId(), 'idGroup':group.getId()})}}" id="link_delete_{{user.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a></td>    
     </tr>
     {% endfor %}
 </table>

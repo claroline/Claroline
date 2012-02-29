@@ -1,0 +1,97 @@
+#########
+# LINKS #
+#########
+
+# topbar links
+administration: Administration
+desktop: Desktop
+home: Home
+my_account: My account
+
+#administration links
+add_user: Add user
+list_users: List users
+create_group: Create group
+list_groups: List groups
+claro_settings: Claroline settings
+
+#registration
+login: Login
+logout: Logout
+register: Register
+
+#########
+# FORMS #
+#########
+
+#users form field labels
+user_form_firstName: "First name :"
+user_form_lastName: "Last name :"
+user_form_username: "Username :"
+user_form_plainPassword_first: "Password :"
+user_form_plainPassword_second: "Verification :"
+user_form_administrativeCode: "Administrative code :"
+user_form_mail: "Mail :"
+user_form_phone: "Phone :"
+user_form_ownedRoles: "Role(s) :"
+user_form_note: "Personnal note :"
+
+#claro settings form field labels
+claro_settings_form_selfRegistration: Auto-inscription
+claro_settings_form_localLanguage: Langue
+
+#claro group form fields labels
+group_form_name: Name
+
+#file manager form field labels
+
+############
+# MESSAGES #
+############
+
+login_failure: Login has failed. Check your username and password are correct.
+account_created: Account created
+workspace.name_not_blank: The workspace's name is required.
+
+##########
+# COMMON #
+##########
+
+########
+# MISC #
+########
+
+#user
+first_name: first name
+last_name: lastname
+mail: mail
+phone: phone
+note: note
+username: username
+password: password
+role: role
+user: user
+users: users
+administrative_code: administrative code
+
+#group
+group: group
+groups: groups
+
+#resource
+resource: resource
+resources: resources
+
+#workspace
+workspace: Workspaces
+workspaces: Workspaces
+workspace.create: Create a new workspace
+
+#common
+id: id
+add: add
+delete: delete
+show: show
+login_as: login as
+move : move
+settings: settings

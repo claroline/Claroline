@@ -1,9 +1,9 @@
 {% extends "ClarolineCoreBundle::content_layout.html.twig" %}
 {% block content %}
-    nom: {{user.getFirstName()}}<br/>
-    prénom: {{user.getLastName()}}<br/>
-    username: {{user.getUsername()}}<br/>
-    mail: {{user.getMail()}}<br/>
-    tel: {{user.getPhone()}}<br/>
-    note: {{user.getNote()}}<br/>
+    {{ 'first_name'|trans({}, 'platformTranslation') }}: {{user.getFirstName()}}<br/>
+    {{ 'last_name'|trans({}, 'platformTranslation') }}: {{user.getLastName()}}<br/>
+    {{ 'username'|trans({}, 'platformTranslation') }}: {{user.getUsername()}}<br/>
+    {{ 'mail'|trans({}, 'platformTranslation') }}: {{user.getMail()}}<br/>
+    {{ 'phone'|trans({}, 'platformTranslation') }}: {{user.getPhone()}}<br/>
+    {{ 'note'|trans({}, 'platformTranslation') }}: {{user.getNote()}}<br/>
 {% endblock %}
