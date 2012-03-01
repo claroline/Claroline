@@ -1,0 +1,11 @@
+parameters:
+  
+   claroline.files.directory: "%kernel.root_dir%/../files"
+  #  prod: "%kernel.root_dir%/../files"
+   
+services:
+    claroline.files.file_manager:
+        class: Claroline\CoreBundle\Library\Manager\FileManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - %claroline.files.directory%

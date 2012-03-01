@@ -21,7 +21,7 @@
     document.getElementById('formdir').style.display='none';
 </script>
 <a HREF="javascript:showUpload();" id="link_upload" alt="link_upload">{{ 'upload_document'|trans({}, 'document') }}</a>
-<a HREF="javascript:showDir();" id="link_delete" alt="link_delete">{{ 'new_directory'|trans({}, 'document') }}</a>
+<a HREF="javascript:showDir();" id="link_dir" alt="link_dir">{{ 'new_directory'|trans({}, 'document') }}</a>
 </br>
 {{ 'directory_name'|trans({}, 'document') }}: 
 {% for directory in listParent %}
@@ -41,7 +41,7 @@
     <li class="document_item" id="{{ document.getName() }}">
         <a href="{{ path('claro_document_download', {'id': document.id}) }}" class="link_download_document" name="_link_download_document">{{document.name}}</a>
         {{ 'size'|trans({}, 'document') }} {{document.getFormatSize()}}    
-        <a href="{{ path('claro_document_delete', {'dir':currentDirectory.id, 'id': document.id}) }}" class="link_delete_document" name="_link_delete_document">{{ 'delete_document'|trans({}, 'document') }}</a>
+        <a href="{{ path('claro_document_delete', {'dir':currentDirectory.id, 'id': document.id}) }}" class="link_delete_document" name="_link_delete_document">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
     </li>
     {% endfor %}
 </ul>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Manager;
+namespace Claroline\CoreBundle\Tests\Library\Manager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
