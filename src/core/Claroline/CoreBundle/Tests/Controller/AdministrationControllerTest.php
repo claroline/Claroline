@@ -28,7 +28,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     public function testAdminCanSeeUsersFromGroup()
     {
-          $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+          $this->logUser($this->getFixtureReference('user/admin'));
           $crawler = $this->client->request('GET', '/admin/group/list');
           $link = $crawler->filter("#link_show_{$this->getFixtureReference('group/group_a')->getId()}")->link();
           $crawler = $this->client->click($link);
@@ -51,7 +51,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     public function testAdminCanAddUserToGroup()
     {
-         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+         $this->logUser($this->getFixtureReference('user/admin'));
          $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
          $link = $crawler->filter('#link_add_user_to_group')->link();
          $crawler = $this->client->click($link);
@@ -63,17 +63,17 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     public function testAdminCanRemoveUserFromGroup()
     {
-          $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+          $this->logUser($this->getFixtureReference('user/admin'));
           $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
           $link = $crawler->filter("#link_delete_{$this->getFixtureReference('user/user')->getId()}")->link();
-          $crawler = $this->client->click($link);
+          $this->client->click($link);
           $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
           $this->assertEquals(1, $crawler->filter('.row_user')->count());
     }
     
     public function testAdminCanDeleteGroup()
     {
-         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+         $this->logUser($this->getFixtureReference('user/admin'));
          $crawler = $this->client->request('GET', '/admin/group/list');
          $link = $crawler->filter("#link_delete_{$this->getFixtureReference('group/group_a')->getId()}")->link();
          $crawler = $this->client->click($link);
@@ -82,7 +82,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     public function testAdminCanEditGroupSettings()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/group/list');
         $link = $crawler->filter("#link_settings_{$this->getFixtureReference('group/group_a')->getId()}")->link();
         $crawler = $this->client->click($link);
@@ -98,7 +98,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     public function testOnlyAdminCanManageGroup()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/admin/group/list');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());;
     }
@@ -107,7 +107,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->setPlatformTestOptions();
         $this->assertEquals(true, static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('allow_self_registration'));
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
         $link = $crawler->filter("#link_claro_settings")->link();
         $crawler = $this->client->click($link);
@@ -123,7 +123,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->setPlatformTestOptions();
         $this->assertEquals('en', static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('locale_language'));
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/claronext/settings/form');
         $this->assertEquals(1, $crawler->filter("a:contains('Logout')")->count());
         $form = $crawler->filter('input[type=submit]')->form();
