@@ -83,6 +83,10 @@ workspace: Espace d'activité
 workspaces: Espace d'activités
 workspace.create: Créer un nouvel espace d'activités
 
+#file
+file: fichier
+files: fichiers
+
 #common
 id: id
 add: ajouter

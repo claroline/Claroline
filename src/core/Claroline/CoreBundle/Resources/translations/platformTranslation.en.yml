@@ -87,6 +87,10 @@ workspace: Workspaces
 workspaces: Workspaces
 workspace.create: Create a new workspace
 
+#file
+file: fichier
+files: fichiers
+
 #common
 id: id
 add: add

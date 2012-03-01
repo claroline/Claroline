@@ -1,3 +1,0 @@
-parameters:
-  
-   claroline.files.directory: "%kernel.root_dir%/../files"

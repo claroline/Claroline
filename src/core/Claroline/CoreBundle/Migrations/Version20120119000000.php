@@ -23,6 +23,7 @@ class Version20120119000000 extends BundleMigration
         $this->createToolTable($schema);
         $this->createToolInstanceTable($schema);
         $this->createExtensionTable($schema);
+        $this->createFileTable($schema);
     }
 
     public function down(Schema $schema)
@@ -40,6 +41,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace');
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
+        $schema->dropTable('claro_file');
     }
 
     private function createUserTable(Schema $schema)
@@ -245,6 +247,17 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), array('id'), array('id'), array("onDelete" => "CASCADE")
         );
+    }
+    
+    private function createFileTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_file');
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('lenght' => 255));
+        $table->addColumn('date_upload', 'datetime');
+        $table->addColumn('size', 'integer', array('notnull' => true));
+        $table->addColumn('hash_name', 'string', array('lenght' => 32));
+        $table->addUniqueIndex(array('hash_name'));
     }
 
 }
