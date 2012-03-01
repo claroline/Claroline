@@ -1,1 +1,2 @@
-{  }
+allow_self_registration: true
+locale_language: fr
