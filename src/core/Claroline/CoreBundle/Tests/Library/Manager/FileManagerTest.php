@@ -27,10 +27,10 @@ class FileManagerTest extends FunctionalTestCase
         
         $ds = DIRECTORY_SEPARATOR;
         $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
-        $this->stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}stubs{$ds}";
+        $this->stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}";
         $this->manager =  $this->client->getContainer()->get('claroline.files.file_manager');
         $this->cleanDirectory($this->upDir);
-        $this->cleanDirectory(__DIR__ . "{$ds}..{$ds}..{$ds}stubs");
+        $this->cleanDirectory(__DIR__ . "{$ds}..{$ds}..{$ds}Stub");
         $this->setUpCopy();
     }
     
@@ -40,7 +40,7 @@ class FileManagerTest extends FunctionalTestCase
         
         $ds = DIRECTORY_SEPARATOR;
         $this->cleanDirectory($this->upDir);
-        $this->cleanDirectory(__DIR__ . "{$ds}..{$ds}..{$ds}stubs");
+        $this->cleanDirectory(__DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}");
     }     
     
     public function testUploadFile()
@@ -88,8 +88,7 @@ class FileManagerTest extends FunctionalTestCase
         $firstNewPath = $this->stubDir.'new_1.txt';
         $secNewPath = $this->stubDir.'new_2.txt'; 
         copy($originalPath, $firstNewPath);
-        copy($originalPath, $secNewPath);
-        
+        copy($originalPath, $secNewPath);     
     }
     
     private function getUploadedFiles()
