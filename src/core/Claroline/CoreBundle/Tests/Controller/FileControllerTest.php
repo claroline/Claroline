@@ -17,7 +17,7 @@ class FileControllerTest extends FunctionalTestCase
         $this->loadUserFixture();
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
-        $this->stubDir = __DIR__ . "{$ds}..{$ds}stubs{$ds}";
+        $this->stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}";
         $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory'); 
         $this->cleanDirectory($this->upDir);
     }
