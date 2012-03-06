@@ -1,5 +1,35 @@
+{% extends 'ClarolineCoreBundle:Workspace:base_template.html.twig' %}
+{% block section_content %}
+<div id="workspaces">
 <ul>
     {% for workspace in workspaces %}
-    <li>{{ workspace.name}}</li>
+        <li class="row_workspace" id="workspace_{{workspace.getId()}}" >
+            {% set bool = 'false' %}
+            {% for role in workspace.getWorkspaceRoles() %}
+                {% if is_granted(role.getName()) %}
+                    {% set bool = 'true' %}          
+                {% endif %}                
+            {% endfor %}
+            {% if bool == 'true' %}
+                <a href="{{path('claro_workspace_show_workspace', {'id': workspace.getId()})}}" class="link_show" id="link_show_{{workspace.getId}}"</>
+               {{ workspace.name}}</a>
+            {% else %}
+               {{ workspace.name}}
+            {% endif %}
+            {% if (is_granted('ROLE_ADMIN')) or  ('ROLE_WS_MANAGER_' ~ workspace.getId() in app.user.getRoles()) %}|
+                <a href = "{{path('claro_workspace_delete_workspace', {'id': workspace.getId()})}}" class="link_delete" id="link_delete_{{workspace.getId}}"</>
+                {{ 'delete'|trans({}, 'platformTranslation') }}</a>
+            {% endif %}
+            {% if bool == 'true' %}
+                <a href="todo" class="link_registration" id="link_registration"> | unregister </a> 
+            {% else %}
+                <a href="todo" class="link_registration" id="link_registration"> | register </a> 
+            {% endif %}         
+    </li>
     {% endfor %}
 </ul>
+</div>
+{% endblock %}
+
+
+

@@ -15,6 +15,11 @@ create_group: Créer un groupe
 list_groups: Lister les groupes
 claro_settings: Paramètres de la plateforme
 
+#workspace links
+create_workspace: Ajouter un espace d'activité
+my_workspaces: Mes espaces d'activités
+list_workspaces: Lister les espaces d'activités
+
 #registration
 login: Connexion
 logout: Déconnexion
@@ -42,6 +47,11 @@ claro_settings_form_localLanguage: Langue
 
 #claro group form fields labels
 group_form_name: Nom
+group_form_ownedRoles: Roles
+
+#claro_workspace_form_fields_labels
+workspace_form_name: Name
+workspace_form_type: Type
 
 #file manager form field labels
 
@@ -88,6 +98,7 @@ file: fichier
 files: fichiers
 
 #common
+name: nom
 id: id
 add: ajouter
 delete: supprimer

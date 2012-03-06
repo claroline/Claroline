@@ -10,7 +10,8 @@ class WorkspaceRoleTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadWorkspaceData());
+        $this->loadUserFixture();
+        $this->loadWorkspaceFixture();
     }
     
     public function testAWorkspaceRoleCannotBeReallocatedToAnotherWorkspace()

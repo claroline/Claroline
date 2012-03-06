@@ -11,6 +11,7 @@ use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 use Claroline\CoreBundle\Entity\User;
 
 abstract class FixtureTestCase extends TransactionalTestCase
@@ -31,6 +32,11 @@ abstract class FixtureTestCase extends TransactionalTestCase
     protected function loadPlatformRolesFixture()
     {
         $this->loadFixture(new LoadPlatformRolesData());
+    }
+    
+    protected function loadWorkspaceFixture()
+    {
+        $this->loadFixture(new LoadWorkspaceData());
     }
     
     protected function loadUserFixture()

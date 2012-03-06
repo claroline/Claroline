@@ -272,4 +272,9 @@ abstract class AbstractWorkspace
             }
         }
     }
+    
+    public function getWorkspaceRoles()
+    {
+        return $this->roles;
+    }
 }

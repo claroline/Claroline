@@ -11,3 +11,23 @@ claro_workspace_create_workspace:
 claro_workspace_delete_workspace:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Workspace:delete }
+    
+claro_workspace_user_workspace:
+    pattern: /list/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:listForUser }
+    
+claro_workspace_list_all:
+    pattern: /list
+    defaults: { _controller: ClarolineCoreBundle:Workspace:list }
+    
+claro_workspace_show_workspace:
+    pattern: /show/{id}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:show }
+    
+claro_workspace_register_workspace:
+    pattern: /register/{id}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:register }
+    
+claro_workspace_unregister_workspace:
+    pattern: /unregister/{id}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:unregister }

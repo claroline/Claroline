@@ -22,7 +22,7 @@ class GroupSettingsType extends GroupType
     
     public function getName()
     {
-         return 'group_settings_form';
+         return 'group_form';
     }
 }
 

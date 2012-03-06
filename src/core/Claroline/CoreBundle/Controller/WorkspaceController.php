@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Symfony\Component\HttpFoundation\Response;
 
 class WorkspaceController extends Controller
 {
@@ -102,9 +103,9 @@ class WorkspaceController extends Controller
     public function deleteAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->find(self::ABSTRACT_WS_CLASS, $id);
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
         
-        if (false === $this->get('security.context')->isGranted('DELETE', $workspace))
+        if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$id}", $workspace))
         {
             throw new AccessDeniedHttpException();
         }
@@ -116,5 +117,39 @@ class WorkspaceController extends Controller
         $route = $this->get('router')->generate('claro_desktop_index');
        
         return new RedirectResponse($route);
+    }
+    
+    public function showAction($id)
+    { 
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+        $authorization = false;  
+        
+        foreach ($workspace->getWorkspaceRoles() as $role)
+        {
+            $this->get('security.context')->isGranted($role->getName());
+            {
+                $authorization = true;
+            }
+        }
+        
+        if ($authorization == false)
+        {
+            throw new AccessDeniedHttpException();
+        }
+               
+        return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array('workspace' => $workspace));
+    }
+    
+    public function registerAction($id)
+    {
+        //$user = $this->get('security.context')->getToken()->getUser();
+        return new Response ('todo');
+        
+    }
+    
+    public function unregisterAction($id)
+    {
+        return new Response ('todo');
     }
 }

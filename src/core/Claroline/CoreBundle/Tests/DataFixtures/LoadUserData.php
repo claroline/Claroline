@@ -7,8 +7,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
-class LoadUserData extends AbstractFixture implements ContainerAwareInterface
+class LoadUserData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
     /** @var ContainerInterface $container */
     private $container;
@@ -80,5 +81,10 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         $this->addReference('user/user_3', $thirdUser);
         $this->addReference('user/ws_creator', $wsCreator);
         $this->addReference('user/admin', $admin);
+    }
+    
+    public function getOrder()
+    {
+        return 2; // the order in which fixtures will be loaded
     }
 }
