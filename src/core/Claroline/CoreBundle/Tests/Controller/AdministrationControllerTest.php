@@ -19,7 +19,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanSeeGroups()
     {
          $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-         $link = $crawler->filter('a:contains("Administration")')->link();
+         $link = $crawler->filter('#link_administration')->link();
          $crawler = $this->client->click($link);
          $link = $crawler->filter('#link_group_list')->link();
          $crawler = $this->client->click($link);
@@ -38,7 +38,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanCreateGroups()
     {
          $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-         $link = $crawler->filter('a:contains("Administration")')->link();
+         $link = $crawler->filter('#link_administration')->link();
          $crawler = $this->client->click($link);
          $link = $crawler->filter('#link_group_create_form')->link();
          $crawler = $this->client->click($link);
@@ -89,7 +89,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $selected = $crawler->filterXpath("//select/option[. = 'ROLE_A']")->attr('selected');
         $this->assertEquals("selected", $selected);
         $form = $crawler->filter('input[type=submit]')->form();      
-        $form['group_settings_form[ownedRoles]'] = $this->getFixtureReference('role/admin')->getId();
+        $form['group_form[ownedRoles]'] = $this->getFixtureReference('role/admin')->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
         $selected = $crawler->filter('option:contains("ROLE_ADMIN")')->attr('selected');
@@ -99,7 +99,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testOnlyAdminCanManageGroup()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', '/admin/group/list');
+        $this->client->request('GET', '/admin/group/list');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());;
     }
     
@@ -129,9 +129,9 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form = $crawler->filter('input[type=submit]')->form();
         $form['claro_settings_form[localLanguage]'] = 'fr';
         $crawler = $this->client->submit($form);
-        $this->assertEquals(1, $crawler->filter("a:contains('Déconnexion')")->count());
+        $this->assertEquals(1, $crawler->filter("#link_logout")->count());
         $crawler = $this->client->request('GET', '/logout');
-        $this->assertEquals(1, $crawler->filter("a:contains('Connexion')")->count());
+        $this->assertEquals(1, $crawler->filter("#link_login")->count());
     }
     
     public function setPlatformTestOptions()

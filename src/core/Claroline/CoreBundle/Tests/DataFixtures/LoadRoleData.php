@@ -5,8 +5,9 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
-class LoadRoleData extends AbstractFixture
+class LoadRoleData extends AbstractFixture  implements OrderedFixtureInterface
 {
     /**
      * Creates two hierarchies of roles with the following structures :
@@ -53,5 +54,10 @@ class LoadRoleData extends AbstractFixture
         $this->addReference('role/role_d', $roleD);
         $this->addReference('role/role_e', $roleE);
         $this->addReference('role/role_f', $roleF);
+    }
+    
+    public function getOrder()
+    {
+        return 3; // the order in which fixtures will be loaded
     }
 }

@@ -11,7 +11,9 @@ class AbstractWorkspaceTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadWorkspaceData());
+        //$this->loadFixture(new LoadWorkspaceData());
+        $this->loadUserFixture();
+        $this->loadWorkspaceFixture();
     }
     
     public function testInitBaseRolesRequireWorkspaceToHaveAnIdentifier()
@@ -59,7 +61,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
     public function testAddThenRemoveCustomRoleDoesntAffectBaseRoles()
     {
         $wsA = $this->getFixtureReference('workspace/ws_a');    
-        $wsA->initBaseRoles();
+        //$wsA->initBaseRoles();
         
         $customRole = new WorkspaceRole();
         $customRole->setWorkspace($wsA);
@@ -80,7 +82,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
     public function testIsBaseAndIsCustomRoleMethodsReturnExpectedValues()
     {
         $wsA = $this->getFixtureReference('workspace/ws_a');
-        $wsA->initBaseRoles();
+        //$wsA->initBaseRoles();
         
         $customRole = new WorkspaceRole();
         $customRole->setName('FOO');

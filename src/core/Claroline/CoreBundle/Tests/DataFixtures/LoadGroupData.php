@@ -5,8 +5,9 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
-class LoadGroupData extends AbstractFixture
+class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * Loads three groups with the following roles :
@@ -38,5 +39,10 @@ class LoadGroupData extends AbstractFixture
         $this->addReference('group/group_a', $groupA);
         $this->addReference('group/group_b', $groupB);
         $this->addReference('group/group_c', $groupC);
+    }
+    
+    public function getOrder()
+    {
+        return 4; // the order in which fixtures will be loaded
     }
 }

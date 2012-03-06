@@ -3,10 +3,10 @@
 {% block section_content %}
 
 <h4>{{ 'workspace.create'|trans({}, 'platformTranslation') }} : </h4>
-
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form action="{{ path('claro_workspace_create_workspace') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_errors(form) }}
     {{ form_widget(form) }}
-
     <input type="submit" />
 </form>
 

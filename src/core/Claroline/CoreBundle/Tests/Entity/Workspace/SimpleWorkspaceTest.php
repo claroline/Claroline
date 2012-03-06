@@ -10,7 +10,9 @@ class SimpleWorkspaceTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadWorkspaceData());
+                $this->loadUserFixture();
+        $this->loadWorkspaceFixture();
+        //$this->loadFixture(new LoadWorkspaceData());
     }
     
     public function testPublicWorkspaceCannotBeASubWorkspaceOfAPrivateWorkspace()
