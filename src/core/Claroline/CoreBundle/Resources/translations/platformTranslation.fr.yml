@@ -92,6 +92,7 @@ resources: ressources
 workspace: Espace d'activité
 workspaces: Espace d'activités
 workspace.create: Créer un nouvel espace d'activités
+registered_users: Utilisateurs enregistrés
 
 #file
 file: fichier
@@ -106,3 +107,5 @@ show: voir
 login_as: login as
 move : bouger
 settings: paramètres
+register: s'inscrire
+unregister: se désinscrire

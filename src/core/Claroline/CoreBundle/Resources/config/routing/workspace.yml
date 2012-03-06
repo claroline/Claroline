@@ -31,3 +31,7 @@ claro_workspace_register_workspace:
 claro_workspace_unregister_workspace:
     pattern: /unregister/{id}
     defaults: { _controller: ClarolineCoreBundle:Workspace:unregister }
+    
+claro_workspace_show_user_list_workspace:
+    pattern: /show/list/user/{id}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:listUserPerWorkspace }
