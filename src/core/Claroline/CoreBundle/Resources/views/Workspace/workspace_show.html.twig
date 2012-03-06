@@ -1,0 +1,10 @@
+{% extends 'ClarolineCoreBundle:Workspace:base_template.html.twig' %}
+{% block section_content %}
+    <div id="div_WS_show">
+    {{ 'workspace'|trans({}, 'platformTranslation') }}: {{workspace.getName()}}
+    {% if is_granted(workspace.getManagerRole().getName()) %}
+        | <a href ="todo" id="link_add_user"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>
+        | ramène vers la liste des utilisateurs inscrits au workspace => possibilité d'en rajouter à partir d'une boite de dialogue
+    {% endif %}
+    </div>
+{% endblock %}
