@@ -25,7 +25,7 @@ class WorkspaceController extends Controller
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findAll();
         
         return $this->render(
-            'ClarolineCoreBundle:Workspace:list.html.twig', 
+            'ClarolineCoreBundle:Workspace:workspace_list.html.twig', 
             array('workspaces' => $workspaces)
         );
     }
@@ -44,7 +44,7 @@ class WorkspaceController extends Controller
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getWorkspacesOfUser($user);
         
         return $this->render(
-            'ClarolineCoreBundle:Workspace:list.html.twig', 
+            'ClarolineCoreBundle:Workspace:workspace_list.html.twig', 
             array('workspaces' => $workspaces)
         );
     }
@@ -59,7 +59,7 @@ class WorkspaceController extends Controller
         $form = $this->get('form.factory')->create(new WorkspaceType());
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:form.html.twig', 
+            'ClarolineCoreBundle:Workspace:workspace_form.html.twig', 
             array('form' => $form->createView())
         );
     }
@@ -95,7 +95,7 @@ class WorkspaceController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:form.html.twig',
+            'ClarolineCoreBundle:Workspace:workspace_form.html.twig',
             array('form' => $form->createView())
         );
     }
@@ -138,18 +138,51 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
                
-        return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array('workspace' => $workspace));
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace));
     }
     
     public function registerAction($id)
     {
-        //$user = $this->get('security.context')->getToken()->getUser();
-        return new Response ('todo');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+        //var_dump($workspace->getCollaboratorRole());
+        $user->addRole($workspace->getCollaboratorRole());
+        $em->flush();
+        $route = $this->get('router')->generate('claro_workspace_list_all');
         
+        return new RedirectResponse($route);
     }
     
     public function unregisterAction($id)
     {
-        return new Response ('todo');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+        $roles = $workspace->getWorkspaceRoles();
+        foreach ($roles as $role)
+        {
+            $user->removeRole($role);
+        }
+        
+        $route = $this->get('router')->generate('claro_workspace_list_all');
+        $em->flush();
+        
+        return new RedirectResponse($route);
+    }
+    
+    public function listUserPerWorkspaceAction($id)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+        
+        if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$id}", $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+        
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
+           
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users));
     }
 }

@@ -96,6 +96,7 @@ resources: resources
 workspace: Workspaces
 workspaces: Workspaces
 workspace.create: Create a new workspace
+registered_users: Registered users
 
 #file
 file: fichier
@@ -110,3 +111,5 @@ show: show
 login_as: login as
 move : move
 settings: settings
+register: register
+unregister: unregister
