@@ -77,5 +77,15 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/list");
         $this->assertEquals(6, $crawler->filter('.row_workspace')->count()); 
-    } 
+    }
+    
+    public function testWSManagerCanSeeWSUsersList()
+    {
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+    }
+    
+    public function testAdminCanSeeWsUsersList()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+    }
 }

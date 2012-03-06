@@ -2,7 +2,8 @@
 {% block section_content %}
 {{ 'registered_users'|trans({}, 'platformTranslation') }}
 {{workspace.getName()}}
-<a href="todo" link="link_add_user">ADD USER</a>
+
+<input type="button" id="button_user" value="show me the users !!!!" ></input>
 <ul>
     {% for user in users %}
         <li class="row_user" id="user_{{user.getId()}}" >
@@ -10,4 +11,37 @@
         </li>    
     {% endfor %}
 </ul>
+<div id="list user" title="ajouter un truc">
+		<div id="list use_handle">			
+			<a href="#" id="close">[ x ]</a>
+			list users
+		</div>
+        
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery.js') }}" ></script>
+<script language="Javascript">
+$(document).ready(function() 
+{ 
+    $('#list user').Draggable
+    (
+        {
+			zIndex: 	20,			
+            ghosting:	false,
+			opacity: 	0.7,
+			handle:	'#list user'
+        }	
+    );	
+		
+	$("#list user").hide();
+						
+			$('#button_user').click(function()
+			{
+				$("#list user").show();
+			});
+			
+			$('#close').click(function()
+			{
+				$("#list user").hide();
+			});
+});
+</script>
 {% endblock %}
