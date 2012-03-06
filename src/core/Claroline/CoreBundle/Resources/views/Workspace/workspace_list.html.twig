@@ -20,6 +20,12 @@
                 <a href = "{{path('claro_workspace_delete_workspace', {'id': workspace.getId()})}}" class="link_delete" id="link_delete_{{workspace.getId}}"</>
                 {{ 'delete'|trans({}, 'platformTranslation') }}</a>
             {% endif %}
+            {% set bool = 'false' %}
+            {% for role in workspace.getWorkspaceRoles() %}
+                {% if app.user.hasRole(role.getName())==true %}
+                    {% set bool = 'true' %}          
+                {% endif %}                
+            {% endfor %}
             {% if bool == 'true' %}
                 <a href="{{path('claro_workspace_unregister_workspace', {'id': workspace.getId()})}}" class="link_unregistration" id="link_unregistration"> | {{ 'unregister'|trans({}, 'platformTranslation') }} </a> 
             {% else %}
