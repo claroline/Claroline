@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class UserRepository extends EntityRepository
 {
@@ -24,5 +25,16 @@ class UserRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         
         return $query->getResult();
+    }
+    
+    public function getUsersOfWorkspace(AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u 
+            JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = '{$workspace->getId()}'
+        ";
+        $query = $this->_em->createQuery($dql);
+        
+        return $query->getResult();   
     }
 }

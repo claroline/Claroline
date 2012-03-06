@@ -181,6 +181,8 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
         
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace));
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
+           
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users));
     }
 }
