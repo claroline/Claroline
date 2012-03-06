@@ -43,7 +43,7 @@ abstract class AbstractWorkspace
      * @ORM\OneToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
      *  mappedBy="workspace",
-     *  cascade={"persist", "remove"}
+     *  cascade={"persist"}
      * )
      */
     private $roles;
@@ -113,7 +113,7 @@ abstract class AbstractWorkspace
         $this->doAddBaseRole(self::$collaboratorPrefix);
         $this->doAddBaseRole(self::$managerPrefix);
     }
-    
+
     public function getVisitorRole()
     {
         return $this->doGetBaseRole(self::$visitorPrefix);
