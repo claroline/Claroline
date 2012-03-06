@@ -16,14 +16,14 @@
             {% else %}
                {{ workspace.name}}
             {% endif %}
-            {% if (is_granted('ROLE_ADMIN')) or  ('ROLE_WS_MANAGER_' ~ workspace.getId() in app.user.getRoles()) %}|
+            {% if (is_granted(workspace.getManagerRole().getName())) %}|
                 <a href = "{{path('claro_workspace_delete_workspace', {'id': workspace.getId()})}}" class="link_delete" id="link_delete_{{workspace.getId}}"</>
                 {{ 'delete'|trans({}, 'platformTranslation') }}</a>
             {% endif %}
             {% if bool == 'true' %}
-                <a href="todo" class="link_registration" id="link_registration"> | unregister </a> 
+                <a href="{{path('claro_workspace_unregister_workspace', {'id': workspace.getId()})}}" class="link_unregistration" id="link_unregistration"> | {{ 'unregister'|trans({}, 'platformTranslation') }} </a> 
             {% else %}
-                <a href="todo" class="link_registration" id="link_registration"> | register </a> 
+                <a href="{{path('claro_workspace_register_workspace', {'id': workspace.getId()})}}" class="link_registration" id="link_registration"> | {{ 'register'|trans({}, 'platformTranslation') }}</a> 
             {% endif %}         
     </li>
     {% endfor %}

@@ -106,3 +106,5 @@ show: voir
 login_as: login as
 move : bouger
 settings: paramètres
+register: s'inscrire
+unregister: se désinscrire

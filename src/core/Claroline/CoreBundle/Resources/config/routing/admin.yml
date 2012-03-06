@@ -2,6 +2,8 @@ claro_admin_index:
     pattern: /
     defaults: { _controller: ClarolineCoreBundle:Administration:index }
     
+#users
+
 claro_admin_user_add:
     pattern: /add/user/
     defaults: { _controller: ClarolineCoreBundle:Administration:addUser }
@@ -13,6 +15,8 @@ claro_admin_user_add_form:
 claro_admin_user_list:
     pattern: /list/user
     defaults: { _controller: ClarolineCoreBundle:Administration:listUser }
+    
+#groups
    
 claro_admin_group_create_form:
     pattern: /group/create/form
@@ -53,6 +57,8 @@ claro_admin_group_settings_form:
 claro_admin_group_settings_edit:
    pattern: /group/settings/edit/{id}
    defaults: { _controller: ClarolineCoreBundle:Administration:editGroupSettings }
+   
+#platform
    
 claro_admin_claro_settings_form:
    pattern: /claronext/settings/form

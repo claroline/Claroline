@@ -110,3 +110,5 @@ show: show
 login_as: login as
 move : move
 settings: settings
+register: register
+unregister: unregister

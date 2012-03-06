@@ -26,7 +26,7 @@ class AdministrationController extends Controller
         );
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:add_user.html.twig', array(
+            'ClarolineCoreBundle:Administration:user_add.html.twig', array(
             'form_complete_user' => $formUserProfile->createView())
         );
     }
@@ -68,7 +68,7 @@ class AdministrationController extends Controller
         $group = new Group();
         $formGroup = $this->createForm(new GroupType(), $group);
 
-        return $this->render('ClarolineCoreBundle:Administration:create_group.html.twig', array(
+        return $this->render('ClarolineCoreBundle:Administration:group_create.html.twig', array(
             'form_group' => $formGroup->createView())
         );
     }
@@ -123,7 +123,7 @@ class AdministrationController extends Controller
         $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:add_user_to_group.html.twig', array(
+            'ClarolineCoreBundle:Administration:user_add_to_group.html.twig', array(
                 'group' => $group, 'users' => $users)
         );
     }
@@ -172,7 +172,7 @@ class AdministrationController extends Controller
         $form = $this->createForm(new GroupSettingsType(), $group);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:edit_group_settings.html.twig',
+            'ClarolineCoreBundle:Administration:group_edit_settings.html.twig',
             array('group' => $group, 'form_settings' => $form->createView())
         );
     }

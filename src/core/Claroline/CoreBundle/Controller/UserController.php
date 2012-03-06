@@ -18,7 +18,7 @@ class UserController extends Controller
                      $formUserProfile = $this->createForm(new ProfileType($user->getOwnedRoles()), $user);
         
         return $this->render(
-            'ClarolineCoreBundle:User:show_edit.html.twig', array(
+            'ClarolineCoreBundle:User:user_show_edit.html.twig', array(
             'form_complete_user' => $formUserProfile->createView()));
     }
 
