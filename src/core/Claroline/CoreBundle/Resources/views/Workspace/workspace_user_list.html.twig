@@ -22,7 +22,6 @@
             <form id="list_user_form" >
                 <div id="checkboxes" style="overflow-y:scroll;"></div></br>
                 <input type="submit" id="add_next" value="add next"> 
-                <input type="submit" id="submit_users" value="add users to workspace"
             </form>
         </div>
         <div class="loading">load...</div>   
@@ -66,11 +65,10 @@ $(document).ready(function()
 		  alert($(this).val());
           sendValue($(this).val());
 	});  
-    
-    $('#test').scroll(function(){});
 });
 
-$("#list_user_form").submit(function(){ 
+$("#list_user_form").submit(function(){
+    
    $(".loading").show();
    $.ajax({
         type: "POST",
