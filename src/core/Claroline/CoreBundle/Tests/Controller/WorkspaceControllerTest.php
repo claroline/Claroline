@@ -15,7 +15,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadUserFixture();
         $this->loadWorkspaceFixture();
         $this->client->followRedirects();
-        $this->markTestSkipped('fixture import is bugging');
+        //$this->markTestSkipped('fixture import is bugging');
     }
     
     
