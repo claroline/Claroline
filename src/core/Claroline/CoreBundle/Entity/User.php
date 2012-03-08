@@ -16,11 +16,10 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
  * @ORM\Table(name="claro_user")
  * @DoctrineAssert\UniqueEntity("username")
  */
-class User extends AbstractRoleSubject implements UserInterface
+class User extends AbstractRoleSubject implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
-
      * @ORM\Column(type="integer")
      * @ORM\generatedValue(strategy="AUTO")
      */
@@ -58,43 +57,7 @@ class User extends AbstractRoleSubject implements UserInterface
      * @Assert\NotBlank()
      */
     protected $plainPassword;
-
-    /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
-     *      inversedBy="users"
-     * )
-     * @ORM\JoinTable(name="claro_user_group",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     */
-    protected $groups;
-
-    /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     */
-    protected $roles;
-
-    /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
-     *      inversedBy="users"
-     * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     */
-    protected $workspaceRoles;
-
+    
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -114,6 +77,42 @@ class User extends AbstractRoleSubject implements UserInterface
      * @ORM\Column(name="administrative_code", type="string", nullable=true)  
      */
     protected $administrativeCode;
+
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
+     *      inversedBy="users"
+     * )
+     * @ORM\JoinTable(name="claro_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
+
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Role"
+
+     * )
+     * @ORM\JoinTable(name="claro_user_role",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * )
+     */
+    protected $roles;
+
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
+     *      inversedBy="users"
+     * )
+     * @ORM\JoinTable(name="claro_user_role",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * )
+     */
+    protected $workspaceRoles;
 
     public function __construct()
     {
@@ -323,4 +322,34 @@ class User extends AbstractRoleSubject implements UserInterface
         $this->administrativeCode = $administrativeCode;
     }
 
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->firstName,
+            $this->lastName,
+            $this->username,
+            $this->password,
+            $this->salt,
+            $this->phone,
+            $this->note,
+            $this->mail,
+            $this->administrativeCode
+        ));
+    }
+    
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->lastName,
+            $this->username,
+            $this->password,
+            $this->salt,
+            $this->phone,
+            $this->note,
+            $this->mail,
+            $this->administrativeCode
+        ) = unserialize($serialized);
+    }
 }
