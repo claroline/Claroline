@@ -197,12 +197,12 @@ class WorkspaceController extends Controller
 
         if($request->isXmlHttpRequest()) 
         {   
-                    return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow, 'data' => 2));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow));
         }
-        else{
-
-        return new Response("none shall pass");
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow));
-    }
+        else
+        {
+            return new Response("none shall pass");
+            return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow));
+        }
     }
 }

@@ -6,7 +6,7 @@
         <li class="row_workspace" id="workspace_{{workspace.getId()}}" >
             {% set bool = 'false' %}
             {% for role in workspace.getWorkspaceRoles() %}
-                {% if app.user.hasRole(role.getName()) == true %}
+                {% if is_granted(role.getName()) %}
                     {% set bool = 'true' %}          
                 {% endif %}                
             {% endfor %}
