@@ -165,3 +165,50 @@ body
 {
     margin: 12px 150px;
 }
+
+#list_user_window
+{
+	position: absolute;
+	left:200px;
+	top:100px;
+	width:500px;
+    height:300px;
+	background-color:#f0f5FF;
+	border: 1px solid #000;
+	z-index: 50;
+}
+
+#list_user_window_handle
+{
+	background-color:#5588bb;
+	padding:2px;
+	text-align:center;
+	font-weight:bold;
+	color: #FFFFFF;
+	vertical-align:middle;
+}
+
+#list_user_window_content 
+{
+	padding:5px;
+    width:98%;
+    height:190px;
+}
+
+#close
+{
+	float:right;
+	text-decoration:none;
+	color:#FFFFFF;
+}
+    
+#list_user_form
+{
+    width: 100%;
+	height: 100%;
+}
+
+#checkboxes
+{
+    height: 100%;
+}

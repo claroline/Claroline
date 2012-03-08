@@ -3,7 +3,7 @@
 {{ 'registered_users'|trans({}, 'platformTranslation') }}
 {{workspace.getName()}}
 
-<input type="button" id="button_user" value="show me the users !!!!" ></input>
+<input type="button" id="button_user" value="{{ 'add_user'|trans({}, 'platformTranslation') }}" ></input>
 <ul>
     {% for user in users %}
         <li class="row_user" id="user_{{user.getId()}}" >
@@ -11,37 +11,120 @@
         </li>    
     {% endfor %}
 </ul>
-<div id="list user" title="ajouter un truc">
-		<div id="list use_handle">			
-			<a href="#" id="close">[ x ]</a>
-			list users
+
+<!----------- user list window ------------------------------------------------------>
+ <div id="list_user_window" title="user_list">
+		<div id="list_user_window_handle">			
+			{{ 'list_users'|trans({}, 'platformTranslation') }}
+            <a href="#" id="close">[x]</a>
 		</div>
-        
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery.js') }}" ></script>
+        <div id="list_user_window_content">
+            <form id="list_user_form" >
+                <div id="checkboxes" style="overflow-y:scroll;"></div></br>
+                <input type="submit" id="add_next" value="add next"> 
+                <input type="submit" id="submit_users" value="add users to workspace"
+            </form>
+        </div>
+        <div class="loading">load...</div>   
+</div>
+<!----------- end list -------------------------------------------------------------->
+              
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-1.7.1.js') }}" ></script>
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.sortable.js') }}" ></script>
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.core.js') }}" ></script>
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.widget.js') }}" ></script>
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.mouse.js') }}" ></script>
+<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.draggable.js') }}" ></script>
 <script language="Javascript">
+    
+//var nbClick=0;   
+    
 $(document).ready(function() 
 { 
-    $('#list user').Draggable
-    (
-        {
-			zIndex: 	20,			
-            ghosting:	false,
-			opacity: 	0.7,
-			handle:	'#list user'
-        }	
-    );	
-		
-	$("#list user").hide();
-						
-			$('#button_user').click(function()
-			{
-				$("#list user").show();
-			});
-			
-			$('#close').click(function()
-			{
-				$("#list user").hide();
-			});
+    $(".loading").hide();
+    $("#list_user_window").draggable();		
+    $("#list_user_window").hide();
+    
+    $('#button_user').click(function()
+	{
+		$("#list_user_window").show();
+	});
+    
+    $('#close').click(function()
+	{
+		$("#list_user_window").hide();
+	});
+    
+    $('input[type="checkbox"]').bind('click',function() {
+        if($(this).is(':checked')) {
+            alert($(this).val());
+         }
+   });
+   
+    $('.checkbox_user').click(function()
+	{
+		  alert($(this).val());
+          sendValue($(this).val());
+	});  
+    
+    $('#test').scroll(function(){});
 });
+
+$("#list_user_form").submit(function(){ 
+   $(".loading").show();
+   $.ajax({
+        type: "POST",
+        url: "{{path('claro_workspace_ajax_get_add_user_workspace',{ 'id': workspace.getId()})}}",
+        cache: false,
+        dataType: 'html',
+        success: function(data)
+        {
+            $('#checkboxes').append(data);
+
+            $(".loading").hide();
+            
+            $('.checkbox_user').click(function()
+            {
+                 alert($(this).val());
+                 sendValue($(this).val());
+            });
+        }
+    });    
+});
+/*
+function test(test, listIds)
+{
+    alert(test.value);  
+    nbClick++;
+    alert('nbCLick' = nbClick);
+}*/
+/*
+var xhr = null;
+	
+function getXMLHttpRequest() {
+	var xhr = null;
+	
+	if (window.XMLHttpRequest || window.ActiveXObject) {
+		if (window.ActiveXObject) {
+			try {
+				xhr = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch(e) {
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		} else {
+			xhr = new XMLHttpRequest(); 
+		}
+	} else {
+		alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
+		return null;
+	}
+	
+	return xhr;
+}	
+
+var xhr = getXMLHttpRequest();
+xhr.open("GET", "{{path('claro_workspace_ajax_get_add_user_workspace', {'id':workspace.getId()})}}", true);
+xhr.send(null);
+*/
 </script>
 {% endblock %}

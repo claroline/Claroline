@@ -35,3 +35,7 @@ claro_workspace_unregister_workspace:
 claro_workspace_show_user_list_workspace:
     pattern: /show/list/user/{id}
     defaults: { _controller: ClarolineCoreBundle:Workspace:listUserPerWorkspace }
+    
+claro_workspace_ajax_get_add_user_workspace:
+    pattern: /ajax/get/add/user/{id}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetAddUser }

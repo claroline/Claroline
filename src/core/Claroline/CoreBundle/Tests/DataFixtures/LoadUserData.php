@@ -81,7 +81,37 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $this->addReference('user/user_3', $thirdUser);
         $this->addReference('user/ws_creator', $wsCreator);
         $this->addReference('user/admin', $admin);
+        
+        for($i=0; $i<100; $i++)
+        {
+            $this->createUser($i, $userRole, $manager);
+            $i++;
+        }
+        
+        for($i; $i<120; $i++)
+        {
+            $this->createUser($i, $wsCreatorRole, $manager);
+            $i++;
+        }
+        
+        for($i; $i<125; $i++)
+        {
+            $this->createUser($i, $adminRole, $manager);
+            $i++;
+        }
     }
+    
+    protected function createUser($number, $role, $manager)
+    {
+        $user = new User();
+        $user->setFirstName("firstName{$number}");
+        $user->setLastName("lastName{$number}");
+        $user->setUserName("userName{$number}");
+        $user->setPlainPassword("password{$number}");
+        $user->addRole($role);
+        $manager->persist($user);
+    }
+
     
     public function getOrder()
     {

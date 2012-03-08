@@ -182,7 +182,27 @@ class WorkspaceController extends Controller
         }
         
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
+        $usersWindow = $em->getRepository('ClarolineCoreBundle:User')->findAll();
            
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users));
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'data' => 1));
+    }
+    
+    public function ajaxGetAddUserAction($id)
+    {
+        $request = $this->get('request');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
+        $usersWindow = $em->getRepository('ClarolineCoreBundle:User')->findAll();
+
+        if($request->isXmlHttpRequest()) 
+        {   
+                    return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow, 'data' => 2));
+        }
+        else{
+
+        return new Response("none shall pass");
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow));
+    }
     }
 }
