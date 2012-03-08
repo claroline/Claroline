@@ -74,6 +74,22 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $manager->persist($thirdUser);
         $manager->persist($wsCreator);
         $manager->persist($admin);
+        /*     
+        for($i=0; $i<100; $i++)
+        {
+            $this->createUser($i, $userRole, $manager);
+        }
+        
+        for($i; $i<120; $i++)
+        {
+            $this->createUser($i, $wsCreatorRole, $manager);
+        }
+        
+        for($i; $i<125; $i++)
+        {
+            $this->createUser($i, $adminRole, $manager);
+        }   
+        */
         $manager->flush();
 
         $this->addReference('user/user', $user);
@@ -81,24 +97,6 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $this->addReference('user/user_3', $thirdUser);
         $this->addReference('user/ws_creator', $wsCreator);
         $this->addReference('user/admin', $admin);
-        
-        for($i=0; $i<100; $i++)
-        {
-            $this->createUser($i, $userRole, $manager);
-            $i++;
-        }
-        
-        for($i; $i<120; $i++)
-        {
-            $this->createUser($i, $wsCreatorRole, $manager);
-            $i++;
-        }
-        
-        for($i; $i<125; $i++)
-        {
-            $this->createUser($i, $adminRole, $manager);
-            $i++;
-        }
     }
     
     protected function createUser($number, $role, $manager)
