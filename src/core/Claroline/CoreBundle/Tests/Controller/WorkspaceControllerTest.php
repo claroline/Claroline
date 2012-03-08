@@ -15,9 +15,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadUserFixture();
         $this->loadWorkspaceFixture();
         $this->client->followRedirects();
-        //$this->markTestSkipped('fixture import is bugging');
     }
-    
     
     public function testWSCreatorCanSeeHisWS()
     {
@@ -31,10 +29,11 @@ class WorkspaceControllerTest extends FunctionalTestCase
     
     public function testAdminCanSeeHisWs()
     {
-         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+         $crawler = $this->logUser($this->getFixtureReference('user/admin'));         
          $link = $crawler->filter('#link_workspace')->link();
          $crawler = $this->client->click($link);
          $link = $crawler->filter('#link_owned_WS')->link();
+         $crawler = $this->client->click($link);
          $this->assertEquals(2, $crawler->filter('.row_workspace')->count());
     }
     
@@ -77,15 +76,5 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/list");
         $this->assertEquals(6, $crawler->filter('.row_workspace')->count()); 
-    }
-    
-    public function testWSManagerCanSeeWSUsersList()
-    {
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-    }
-    
-    public function testAdminCanSeeWsUsersList()
-    {
-        $this->logUser($this->getFixtureReference('user/admin'));
     }
 }

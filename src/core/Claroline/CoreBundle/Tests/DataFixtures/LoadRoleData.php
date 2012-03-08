@@ -4,8 +4,8 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Claroline\CoreBundle\Entity\Role;
 
 class LoadRoleData extends AbstractFixture  implements OrderedFixtureInterface
 {
@@ -58,6 +58,6 @@ class LoadRoleData extends AbstractFixture  implements OrderedFixtureInterface
     
     public function getOrder()
     {
-        return 3; // the order in which fixtures will be loaded
+        return 3;
     }
 }

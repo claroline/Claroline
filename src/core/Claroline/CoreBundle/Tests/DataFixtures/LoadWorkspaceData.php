@@ -2,13 +2,13 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 
 class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -32,12 +32,15 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
      */
     public function load(ObjectManager $manager) 
     {
-        $wsA = $this->createSimpleWorkspace('Workspace_A', $this->getReference('user/ws_creator'));
-        $wsB = $this->createSimpleWorkspace('Workspace_B', $this->getReference('user/ws_creator'));
-        $wsC = $this->createSimpleWorkspace('Workspace_C', $this->getReference('user/ws_creator'));
-        $wsD = $this->createSimpleWorkspace('Workspace_D', $this->getReference('user/ws_creator'));
-        $wsE = $this->createSimpleWorkspace('Workspace_E', $this->getReference('user/admin'));
-        $wsF = $this->createSimpleWorkspace('Workspace_F', $this->getReference('user/admin'));
+        $admin = $this->getReference('user/admin');
+        $wsCreator = $this->getReference('user/ws_creator');
+        
+        $wsA = $this->createSimpleWorkspace('Workspace_A', $wsCreator);
+        $wsB = $this->createSimpleWorkspace('Workspace_B', $wsCreator);
+        $wsC = $this->createSimpleWorkspace('Workspace_C', $wsCreator);
+        $wsD = $this->createSimpleWorkspace('Workspace_D', $wsCreator);
+        $wsE = $this->createSimpleWorkspace('Workspace_E', $admin);
+        $wsF = $this->createSimpleWorkspace('Workspace_F', $admin);
         
         $wsD->setPublic(false);
         $wsE->setPublic(false);
@@ -68,15 +71,15 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     private function createSimpleWorkspace($name, $user)
     {
         $wsCreator = $this->container->get('claroline.workspace.creator');
-        $configWs = new Configuration();
-        $configWs->setWorkspaceName($name);
-        $ws = $wsCreator->createWorkspace($configWs, $user);
+        $config = new Configuration();
+        $config->setWorkspaceName($name);
+        $ws = $wsCreator->createWorkspace($config, $user);
         
         return $ws;
     }
     
     public function getOrder()
     {
-        return 4; // the order in which fixtures will be loaded
+        return 4;
     }
 }

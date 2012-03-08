@@ -23,6 +23,12 @@ class CreateUserCommand extends ContainerAwareCommand
             new InputArgument('user_password', InputArgument::REQUIRED, 'The user password')
         ));
         $this->addOption(
+            'ws_creator', 
+            'wsc', 
+            InputOption::VALUE_NONE, 
+            "When set to true, created user will have the workspace creator role"
+        );
+        $this->addOption(
             'admin', 
             'a', 
             InputOption::VALUE_NONE, 
@@ -89,6 +95,11 @@ class CreateUserCommand extends ContainerAwareCommand
         {
             $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
             $user->addRole($adminRole);
+        }
+        elseif ($input->getOption('ws_creator'))
+        {
+            $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
+            $user->addRole($wsCreatorRole);
         }
         else
         {
