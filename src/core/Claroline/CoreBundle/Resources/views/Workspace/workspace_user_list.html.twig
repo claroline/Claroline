@@ -4,15 +4,16 @@
 {{workspace.getName()}}
 
 <input type="button" id="button_user" value="{{ 'add_user'|trans({}, 'platformTranslation') }}" ></input>
-<ul>
+<ul id="workspace_users">
     {% for user in users %}
         <li class="row_user" id="user_{{user.getId()}}" >
             {{user.getUsername()}}
+            <a href="{{path('claro_workspace_delete_user_workspace', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_{{user.getId()}}">delete</a>
         </li>    
     {% endfor %}
 </ul>
 
-<!----------- user list window ------------------------------------------------------>
+<!----------- user list window ------------------------------------------------->
  <div id="list_user_window" title="user_list">
 		<div id="list_user_window_handle">			
 			{{ 'list_users'|trans({}, 'platformTranslation') }}
@@ -21,14 +22,12 @@
         <div id="list_user_window_content">
             <form id="list_user_form" >
                 <div id="checkboxes" style="overflow-y:scroll;"></div></br>
-                <input type="submit" id="add_next" value="add next"> 
+                <input type="button" id="add_next" value="add next"> 
             </form>
         </div>
         <div class="loading">load...</div>   
 </div>
-<!----------- end list -------------------------------------------------------------->
-              
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-1.7.1.js') }}" ></script>
+<!----------- end list --------------------------------------------------------->
 <script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.sortable.js') }}" ></script>
 <script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.core.js') }}" ></script>
 <script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.widget.js') }}" ></script>
@@ -36,7 +35,7 @@
 <script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.draggable.js') }}" ></script>
 <script language="Javascript">
     
-//var nbClick=0;   
+var nbIteration=0;   
     
 $(document).ready(function() 
 { 
@@ -54,75 +53,67 @@ $(document).ready(function()
 		$("#list_user_window").hide();
 	});
     
-    $('input[type="checkbox"]').bind('click',function() {
-        if($(this).is(':checked')) {
-            alert($(this).val());
-         }
-   });
-   
-    $('.checkbox_user').click(function()
-	{
-		  alert($(this).val());
-          sendValue($(this).val());
-	});  
-});
+    $('#checkboxes').on("click", ".checkbox_user", function(event){
+        var userId = $(this).val();
+        if($(this).is(':checked')) 
+        {
+            setOnAddChkBox(userId);
+        }
+        else
+        {
+            setOnRemoveChkBox(userId);  
+        }
+    });   
+});    
 
-$("#list_user_form").submit(function(){
-    
-   $(".loading").show();
-   $.ajax({
+$("#add_next").click(function(){
+    $(".loading").show();
+    $.ajax({
         type: "POST",
-        url: "{{path('claro_workspace_ajax_get_add_user_workspace',{ 'id': workspace.getId()})}}",
+        url: Routing.generate('claro_workspace_ajax_get_add_user_workspace', { "id":{{workspace.getId()}}, "nbIteration":nbIteration}),
         cache: false,
         dataType: 'html',
-        success: function(data)
-        {
+        success: function(data){
+            nbIteration++;
             $('#checkboxes').append(data);
-
-            $(".loading").hide();
-            
-            $('.checkbox_user').click(function()
-            {
-                 alert($(this).val());
-                 sendValue($(this).val());
-            });
+            $(".loading").hide(); 
+        }, 
+        error: function(xhr) {
+            alert(xhr.status);
         }
-    });    
+      });    
 });
-/*
-function test(test, listIds)
-{
-    alert(test.value);  
-    nbClick++;
-    alert('nbCLick' = nbClick);
-}*/
-/*
-var xhr = null;
-	
-function getXMLHttpRequest() {
-	var xhr = null;
-	
-	if (window.XMLHttpRequest || window.ActiveXObject) {
-		if (window.ActiveXObject) {
-			try {
-				xhr = new ActiveXObject("Msxml2.XMLHTTP");
-			} catch(e) {
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-		} else {
-			xhr = new XMLHttpRequest(); 
-		}
-	} else {
-		alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
-		return null;
-	}
-	
-	return xhr;
-}	
 
-var xhr = getXMLHttpRequest();
-xhr.open("GET", "{{path('claro_workspace_ajax_get_add_user_workspace', {'id':workspace.getId()})}}", true);
-xhr.send(null);
-*/
+function setOnAddChkBox(userId)
+{
+     $.ajax({
+         type:"POST",
+         url: Routing.generate('claro_workspace_ajax_add_user_workspace', {"userId":userId, "workspaceId" : {{workspace.getId()}}}),
+         cache: false,
+         dataType: 'html',
+         success: function(data){
+             $('#workspace_users').append(data);
+         },
+         error: function(xhr){
+                 alert(xhr.status);
+             }
+      });
+}
+
+function setOnRemoveChkBox(userId)
+{
+    $.ajax({
+        type:"POST",
+        url: Routing.generate('claro_workspace_ajax_delete_user_workspace', {"userId":userId, "workspaceId" : {{workspace.getId()}}}),
+        cache: false,
+        dataType: 'html',
+        success: function(data){
+            $("#user_"+userId).remove();
+            },
+        error: function(xhr){
+            alert(xhr.status);
+            }
+    });       
+}    
 </script>
 {% endblock %}

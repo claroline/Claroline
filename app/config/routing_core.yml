@@ -28,3 +28,6 @@ claro_admin:
 claro_file:
     resource: "@ClarolineCoreBundle/Resources/config/routing/file.yml"
     prefix: file    
+    
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

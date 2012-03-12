@@ -71,6 +71,10 @@
     git=http://github.com/FriendsOfSymfony/FOSUserBundle.git
     target=/bundles/FOS/UserBundle
 
+[FOSJsRoutingBundle]
+    git=https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git
+    target=/bundles/FOS/JsRoutingBundle
+
 [DoctrineExtensionsBundle]
     git=http://github.com/stof/StofDoctrineExtensionsBundle.git
     target=/bundles/Stof/DoctrineExtensionsBundle

@@ -7,6 +7,11 @@
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/main.css') }}" />
 {% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-1.7.1.js') }}" ></script>
+{% endblock %}
 
 {% block favicon %}
     <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/claro_favicon.ico') }}" />

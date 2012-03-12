@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>{% block title %}Symfony{% endblock %}</title>
+        {% block scripts %}{% endblock %}
         {% block stylesheets %}{% endblock %}
         {% block favicon %}
             <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />

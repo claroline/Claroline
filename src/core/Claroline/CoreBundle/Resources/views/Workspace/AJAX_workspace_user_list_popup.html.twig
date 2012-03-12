@@ -1,0 +1,3 @@
+{% for userWindow in usersWindow %}
+    <input class="checkbox_user" id="checkbox_user_{{userWindow.getId()}}" type="checkbox" value="{{userWindow.getId()}}" id="checkbox_user_{{userWindow.getId()}}">{{userWindow.getUsername()}}</input><br>
+{% endfor %}
