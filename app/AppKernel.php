@@ -11,6 +11,7 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
@@ -23,7 +24,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Claroline\CoreBundle\ClarolineCoreBundle()
+            new Claroline\CoreBundle\ClarolineCoreBundle()   
         );
 
         if (file_exists(__DIR__.'/config/local/plugin/bundles'))

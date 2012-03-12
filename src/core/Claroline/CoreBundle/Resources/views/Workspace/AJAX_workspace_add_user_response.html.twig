@@ -1,0 +1,3 @@
+<li class="row_user" id="user_{{user.getId()}}" >{{user.getUsername()}}
+<a href="{{path('claro_workspace_delete_user_workspace', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_{{user.getId()}}">delete</a>
+</li>    
