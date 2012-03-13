@@ -1,7 +1,5 @@
 {% for group in groups %}
     <tr>
         <td><input class="checkbox_group_name" id="checkbox_group_{{group.getId()}}" type="checkbox" value="{{group.getId()}}" id="checkbox_user_{{group.getId()}}">{{group.getName()}}</input></td>
-        <td>{{group.getFirstName()}}</td>
-        <td>{{group.getLastName()}}</td>
     </tr>
 {% endfor %}
