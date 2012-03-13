@@ -44,7 +44,7 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
             
     }
      
-    protected function createUser($number, $role, $manager)
+    protected function createUser($number, $role, ObjectManager $manager)
     {
         $user = new User();
         $user->setFirstName("firstName{$number}");
@@ -60,6 +60,6 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
     
     public function getOrder()
     {
-        return 10;
+        return 100;
     }  
 }

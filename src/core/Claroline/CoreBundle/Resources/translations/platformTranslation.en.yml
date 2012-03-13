@@ -87,6 +87,7 @@ administrative_code: administrative code
 #group
 group: group
 groups: groups
+add_group: add group
 
 #resource
 resource: resource
@@ -97,6 +98,7 @@ workspace: Workspaces
 workspaces: Workspaces
 workspace.create: Create a new workspace
 registered_users: Registered users
+registered_groups: Registered groups
 
 #file
 file: fichier

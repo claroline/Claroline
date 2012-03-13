@@ -100,7 +100,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
-        $this->assertEquals(25, $crawler->filter(".checkbox_user")->count());
+        $this->assertEquals(25, $crawler->filter(".checkbox_user_name")->count());
         $this->assertEquals(1, $crawler->filter("#checkbox_user_{$this->getFixtureReference('user/manyUser28')->getId()}")->count());
     }
     
@@ -133,4 +133,70 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(0, $crawler->filter(".row_user")->count()); 
     }
+    
+    public function testAJAXContollerGetUsersByUsername()
+    {
+        $this->loadFixture(new LoadManyUsersData());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/username/username/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+        $this->assertEquals(125, $crawler->filter(".checkbox_user_name")->count());
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/username/admin/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+       $this->assertEquals(1, $crawler->filter(".checkbox_user_name")->count());
+    }
+    
+    public function testAJAXControllerGetUsersByLastName()
+    {
+        $this->loadFixture(new LoadManyUsersData());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/lastname/lastname/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+        $this->assertEquals(125, $crawler->filter(".checkbox_user_name")->count());
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/lastname/doe/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+       $this->assertEquals(4, $crawler->filter(".checkbox_user_name")->count());   
+    }
+    
+    public function testAJAXControllerGetUsersByFirstName()
+    {
+        $this->loadFixture(new LoadManyUsersData());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/firstname/firstname/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+        $this->assertEquals(125, $crawler->filter(".checkbox_user_name")->count());
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/firstname/john/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+       $this->assertEquals(1, $crawler->filter(".checkbox_user_name")->count());        
+    }    
 }

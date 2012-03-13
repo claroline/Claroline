@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
  * @ORM\Table(name="claro_group")
  * @DoctrineAssert\UniqueEntity("name")
  */

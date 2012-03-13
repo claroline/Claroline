@@ -40,7 +40,7 @@ claro_workspace_delete_user_workspace:
     pattern: /delete/user/{userId}/{workspaceId}
     defaults: { _controller:ClarolineCoreBundle:Workspace:deleteUserFromWorkspace }
     
-claro_workspace_ajax_get_add_user_workspace:
+claro_workspace_ajax_get_add_users_workspace:
     pattern: /ajax/get/add/user/{id}/{nbIteration}
     defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetAddUser }
     requirements:
@@ -63,3 +63,35 @@ claro_workspace_ajax_delete_user_workspace:
      _method: POST
    options:
       expose: true
+      
+claro_workspace_ajax_search_username_workspace:
+   pattern: /ajax/search/username/{search}/{id}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetSearchUnregisteredUsername }
+   requirements:
+      _method: POST
+   options:
+       expose: true
+       
+claro_workspace_ajax_search_first_name_workspace:
+   pattern: /ajax/search/firstname/{search}/{id}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetSearchUnregisteredFirstName }
+   requirements:
+      _method: POST
+   options:
+       expose: true
+       
+claro_workspace_ajax_search_last_name_workspace:
+   pattern: /ajax/search/lastname/{search}/{id}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetSearchUnregisteredLastName }
+   requirements:
+      _method: POST
+   options:
+       expose: true      
+       
+claro_workspace_ajax_get_add_groups_workspace:
+    pattern: /ajax/get/add/group/{id}/{nbIteration}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetAddGroup }
+    requirements:
+        _method: POST
+    options:
+        expose: true
