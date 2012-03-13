@@ -16,6 +16,7 @@ class WorkspaceController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
+    const NUMBER_GROUP_PER_ITERATION = 10;
     
     public function listAction()
     {
@@ -223,7 +224,7 @@ class WorkspaceController extends Controller
        return new \Exception("ajax error");
     }
     
-    public function getAddGroupAction($id, $nbIteration)
+    public function ajaxGetAddGroupAction($id, $nbIteration)
     {
        $request = $this->get('request');
        
@@ -231,41 +232,14 @@ class WorkspaceController extends Controller
        {  
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-            $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredUsersOfWorkspace($workspace, $nbIteration, self::NUMBER_USER_PER_ITERATION);
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_group_list_popup.html.twig', array('$groups' => $groups));
+            $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $nbIteration, self::NUMBER_GROUP_PER_ITERATION);
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_group_list_popup.html.twig', array('groups' => $groups));
        }
        
        return new \Exception("ajax error");
     }
     
-    public function ajaxGetSearchUnregisteredUsernameAction($search, $id)
-    {
-        $request = $this->get('request');
-        if($request->isXmlHttpRequest())
-        {
-            $em = $this->getDoctrine()->getEntityManager();
-            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceByUsername($search, $workspace);
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
-        }    
-        return new \Exception("ajax error");
-    }
-    
-    public function ajaxGetSearchUnregisteredFirstNameAction($search, $id)
-    {
-        $request = $this->get('request');
-        
-        if($request->isXmlHttpRequest())
-        {    
-            $em = $this->getDoctrine()->getEntityManager();
-            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceByFirstName($search, $workspace);      
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
-        }    
-        return new \Exception("ajax error");
-    }
-    
-    public function ajaxGetSearchUnregisteredLastNameAction($search, $id)
+    public function ajaxGetGenericSearchUnregisteredUserAction($search, $id)
     {
         $request = $this->get('request');
         
@@ -273,10 +247,9 @@ class WorkspaceController extends Controller
         {
             $em = $this->getDoctrine()->getEntityManager();
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceByLastName($search, $workspace);
+            $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersFromGenericSearch($search, $workspace);
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
-        }    
-        return new \Exception("ajax error");
+        }
     }
     
     public function ajaxAddUserToWorkspaceAction($userId, $workspaceId)
@@ -299,7 +272,6 @@ class WorkspaceController extends Controller
     
     public function ajaxDeleteUserFromWorkspaceAction($userId, $workspaceId)
     {
-         return new Response("success");
         $request = $this->get('request');
         
         if($request->isXmlHttpRequest())
@@ -316,8 +288,26 @@ class WorkspaceController extends Controller
             }
         
             $em->flush(); 
+            
+            return new Response("success");
         }
        
         return new \Exception("ajax error");     
+    }
+    
+    public function ajaxAddGroupToWorkspaceAction($groupId, $workspaceId)
+    {
+        $request = $this->get('request');
+        
+        if($request->isXmlHttpRequest())
+        {
+            $em = $this->get('doctrine.orm.entity_manager');              
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+            $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);   
+            $group->addRole($workspace->getCollaboratorRole());
+            $em->flush();
+            
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_add_group_response.html.twig', array('group' => $group, 'workspace' => $workspace));
+        }
     }
 }
