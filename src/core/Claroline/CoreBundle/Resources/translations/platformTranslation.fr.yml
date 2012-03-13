@@ -83,6 +83,7 @@ administrative_code: code administratif
 #group
 group: groupe
 groups: groupes
+add_group: ajouter un groupe
 
 #resource
 resource: ressource
@@ -93,6 +94,7 @@ workspace: Espace d'activité
 workspaces: Espace d'activités
 workspace.create: Créer un nouvel espace d'activités
 registered_users: Utilisateurs enregistrés
+registered_groups: Groupes enregistrés
 
 #file
 file: fichier

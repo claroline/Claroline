@@ -149,7 +149,6 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-        //var_dump($workspace->getCollaboratorRole());
         $user->addRole($workspace->getCollaboratorRole());
         $em->flush();
         $route = $this->get('router')->generate('claro_workspace_list_all');
@@ -184,9 +183,11 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
         
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
-           
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'data' => 1));
+        $groups= $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
+        $groups=null;
+
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
     }
     
     public function deleteUserFromWorkspaceAction($userId, $workspaceId)
@@ -215,12 +216,67 @@ class WorkspaceController extends Controller
        {  
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-            $usersWindow = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $nbIteration, self::NUMBER_USER_PER_ITERATION);
-            //return new Response ("response ");
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('usersWindow' => $usersWindow));
+            $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $nbIteration, self::NUMBER_USER_PER_ITERATION);
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
        }
        
        return new \Exception("ajax error");
+    }
+    
+    public function getAddGroupAction($id, $nbIteration)
+    {
+       $request = $this->get('request');
+       
+       if($request->isXmlHttpRequest()) 
+       {  
+            $em = $this->get('doctrine.orm.entity_manager');
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+            $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredUsersOfWorkspace($workspace, $nbIteration, self::NUMBER_USER_PER_ITERATION);
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_group_list_popup.html.twig', array('$groups' => $groups));
+       }
+       
+       return new \Exception("ajax error");
+    }
+    
+    public function ajaxGetSearchUnregisteredUsernameAction($search, $id)
+    {
+        $request = $this->get('request');
+        if($request->isXmlHttpRequest())
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceByUsername($search, $workspace);
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
+        }    
+        return new \Exception("ajax error");
+    }
+    
+    public function ajaxGetSearchUnregisteredFirstNameAction($search, $id)
+    {
+        $request = $this->get('request');
+        
+        if($request->isXmlHttpRequest())
+        {    
+            $em = $this->getDoctrine()->getEntityManager();
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceByFirstName($search, $workspace);      
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
+        }    
+        return new \Exception("ajax error");
+    }
+    
+    public function ajaxGetSearchUnregisteredLastNameAction($search, $id)
+    {
+        $request = $this->get('request');
+        
+        if($request->isXmlHttpRequest())
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceByLastName($search, $workspace);
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
+        }    
+        return new \Exception("ajax error");
     }
     
     public function ajaxAddUserToWorkspaceAction($userId, $workspaceId)
