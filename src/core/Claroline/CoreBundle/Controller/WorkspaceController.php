@@ -200,7 +200,25 @@ class WorkspaceController extends Controller
         foreach ($roles as $role)
         {
             $user->removeRole($role);
-        };
+        }
+        
+        $em->flush();
+        $route = $this->get('router')->generate('claro_workspace_show_user_list_workspace', array('id' => $workspaceId));
+        
+        return new RedirectResponse($route);
+    }
+    
+    public function deleteGroupFromWorkspaceAction($groupId, $workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $roles = $workspace->getWorkspaceRoles();
+        
+        foreach($roles as $role)
+        {
+            $group->removeRole($role);
+        }
         
         $em->flush();
         $route = $this->get('router')->generate('claro_workspace_show_user_list_workspace', array('id' => $workspaceId));
@@ -295,6 +313,32 @@ class WorkspaceController extends Controller
         return new \Exception("ajax error");     
     }
     
+    public function ajaxDeleteGroupFromWorkspaceAction($groupId, $workspaceId)
+    {
+        $request = $this->get('request');
+        
+        if($request->isXmlHttpRequest())
+        {
+           
+            $em = $this->get('doctrine.orm.entity_manager');
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+            $user = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+            $roles = $workspace->getWorkspaceRoles();
+        
+            foreach ($roles as $role)
+            {
+                $user->removeRole($role);
+            }
+        
+            $em->flush(); 
+            
+            return new Response("success");
+        }
+       
+        return new \Exception("ajax error");     
+    }
+        
+    
     public function ajaxAddGroupToWorkspaceAction($groupId, $workspaceId)
     {
         $request = $this->get('request');
@@ -327,6 +371,5 @@ class WorkspaceController extends Controller
         }
         
         return new \Exception("ajax error");
-    }  
-    
+    }          
 }

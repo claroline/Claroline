@@ -24,16 +24,28 @@ body
     padding: 2px 8px;
     border-bottom: solid 1px #bbb;
 }
+/*media query exemple*/
+@media screen and (max-width: 600px)
+{  
+    #top_bar
+    {
+        height: 20px;
+        padding: 2px 8px;
+        border-bottom: solid 1px #bbb;
+        background-color: red;
+    }
+}
 
-#section_menu
+.top_bar_left
 {
+    float: left;
     display: inline;
 }
 
-#status_box
+.top_bar_right
 {
-    display: inline;
     float: right;
+    display: inline;
 }
 
 #content
@@ -266,3 +278,5 @@ body
 {
     height: 100%;
 }
+
+/* mobile top bar  */
