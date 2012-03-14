@@ -1,40 +1,48 @@
 {% block log_action %}
-{% if connected %}
-    <div id="section_menu">
-        <a href="{{ path('claro_desktop_index') }}" id="link_desktop">
-            {{ 'desktop'|trans({}, 'platformTranslation') }}
-        </a>
-        |
-        <a href="{{ path('claro_profile_show_edit') }}" id="link_account">
-            {{ 'my_account'|trans({}, 'platformTranslation') }}
-        </a>
-            |
-        <a href="{{ path('claro_workspace_list_all') }}" id="link_workspace">
-            {{ 'workspace'|trans({}, 'platformTranslation') }}
-        </a>
-        {% if is_granted('ROLE_ADMIN') %}
-             |
-        <a href="{{ path('claro_admin_index') }}" id="link_administration">
-            {{ 'administration'|trans({}, 'platformTranslation') }}
-        </a>
-        {% endif %}    
-    </div>
-{% endif %}
-    <div id="status_box">
-    {% if connected %}
-        <span id="username">{{ username }}</span>
-        <a href="{{ path('claro_security_logout') }}" id="link_logout">
-            {{ 'logout'|trans({}, 'platformTranslation') }}
-        </a>
-    {% else %}
-        {% if register_target is not null %}
-        <a id="link_registration" href="{{ path(register_target) }}">
-            {{ 'register'|trans({}, 'platformTranslation') }}
-        </a> | 
-        {% endif %}
-        <a href="{{ path(login_target) }}" id="link_login">
-            {{ 'login'|trans({}, 'platformTranslation') }}
-        </a>
-    {% endif %}
-    </div>
+    <nav id="top_bar" class="clearfix top">
+        <div class="container">
+            <div class="top_bar_left">
+            {% if connected %}
+                <a href="{{ path('claro_desktop_index') }}" id="link_desktop">
+                    {{ 'desktop'|trans({}, 'platformTranslation') }}
+                </a>
+                |
+                <a href="{{ path('claro_profile_show_edit') }}" id="link_account">
+                    {{ 'my_account'|trans({}, 'platformTranslation') }}
+                </a></li>
+                |
+                <a href="{{ path('claro_workspace_list_all') }}" id="link_workspace">
+                    {{ 'workspace'|trans({}, 'platformTranslation') }}
+                </a>
+                {% if is_granted('ROLE_ADMIN') %}
+                |
+                <a href="{{ path('claro_admin_index') }}" id="link_administration">
+                    {{ 'administration'|trans({}, 'platformTranslation') }}
+                </a>
+                {% endif %} 
+           </div>
+           {% endif %}
+           <div class="top_bar_right">     
+               {% if connected %}
+                    <span id="username">{{ username }}</span>
+                    <a href="{{ path('claro_security_logout') }}" id="link_logout">
+                    {{ 'logout'|trans({}, 'platformTranslation') }}
+                    </a>
+                
+                {% else %}
+                    {% if register_target is not null %}
+                   
+                        <a id="link_registration" href="{{ path(register_target) }}">
+                     {{ 'register'|trans({}, 'platformTranslation') }}
+                     </a> | 
+                    {% endif %}
+            
+                        <a href="{{ path(login_target) }}" id="link_login">
+                        {{ 'login'|trans({}, 'platformTranslation') }}
+                        </a>                                  
+                  
+                {% endif %}
+            </div>        
+        </div>
+    </nav>
 {% endblock %}
