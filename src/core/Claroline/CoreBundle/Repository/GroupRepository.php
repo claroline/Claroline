@@ -34,4 +34,20 @@ class GroupRepository extends EntityRepository
         
        return $query->getResult();       
     }
+    
+    public function getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, AbstractWorkspace $workspace)
+    {
+        $search = strtoupper($search);
+        
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g 
+            WHERE UPPER(g.name) LIKE '%".$search."%'
+            AND g NOT IN (SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
+            JOIN gr.workspaceRoles wr JOIN wr.workspace w WHERE w.id = '{$workspace->getId()}')    
+        "; 
+            
+        $query = $this->_em->createQuery($dql);
+        
+        return $query->getResult(); 
+    }
 }

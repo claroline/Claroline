@@ -186,7 +186,6 @@ class WorkspaceController extends Controller
         
         $groups= $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
-        $groups=null;
 
         return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
     }
@@ -247,7 +246,8 @@ class WorkspaceController extends Controller
         {
             $em = $this->getDoctrine()->getEntityManager();
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-            $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersFromGenericSearch($search, $workspace);
+            $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace);
+            
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
         }
     }
@@ -309,5 +309,24 @@ class WorkspaceController extends Controller
             
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_add_group_response.html.twig', array('group' => $group, 'workspace' => $workspace));
         }
+        
+        return new \Exception("ajax error");
     }
+    
+    public function ajaxGetGenericSearchUnregisteredGroupAction($search, $id)
+    {
+        $request = $this->get('request');
+        
+        if($request->isXmlHttpRequest())
+        {
+            $em = $this->get('doctrine.orm.entity_manager');
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+            $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
+            
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_group_list_popup.html.twig', array('groups' => $groups));
+        }
+        
+        return new \Exception("ajax error");
+    }  
+    
 }

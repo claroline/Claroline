@@ -79,3 +79,19 @@ claro_workspace_ajax_generic_user_search_workspace:
         _method: POST
     options:
          expose: TRUE 
+         
+claro_workspace_ajax_generic_group_search_workspace:
+    pattern: /ajax/search/group/{search}/{id}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetGenericSearchUnregisteredGroup }
+    requirements:
+        _method: POST
+    options:
+         expose: TRUE          
+       
+claro_workspace_ajax_add_group_workspace:
+   pattern: /ajax/add/group/{groupId}/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxAddGroupToWorkspace }
+   requirements:
+      _method : POST
+   options:
+      expose: true
