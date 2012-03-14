@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadManyUsersData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadManyGroupsData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
 class WorkspaceControllerTest extends FunctionalTestCase
 {
@@ -166,6 +167,29 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(125, $crawler->filter(".checkbox_user_name")->count());         
     }
     
+    public function testAJAXControllerGetGenericSearchUnregisteredGroup()
+    {
+        $this->loadFixture(new LoadRoleData());
+        $this->loadFixture(new LoadGroupData());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/group/a/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );  
+        $this->assertEquals(1, $crawler->filter(".checkbox_group_name")->count());
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/search/group/group/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );  
+        $this->assertEquals(3, $crawler->filter(".checkbox_group_name")->count()); 
+    }
+    
     public function testAJAXControllerGetAddGroups()
     {
         $this->loadFixture(new LoadRoleData());
@@ -180,5 +204,22 @@ class WorkspaceControllerTest extends FunctionalTestCase
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->assertEquals(10, $crawler->filter(".checkbox_group_name")->count());        
+    }
+    
+    public function testAJAXControllerAddGroupToWorkspace()
+    {
+        $this->loadFixture(new LoadRoleData());
+        $this->loadFixture(new LoadGroupData);
+        $this->logUser($this->getFixtureReference('user/ws_creator')); 
+        $crawler = $this->client->request(
+            'POST', 
+            "/workspace/ajax/add/group/{$this->getFixtureReference('group/group_a')->getId()}/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );  
+        $this->assertEquals(1, $crawler->filter("#group_{$this->getFixtureReference('group/group_a')->getId()}")->count());
+        $crawler = $this->client->request('GET', "/workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+        $this->assertEquals(1, $crawler->filter(".row_group")->count());
     }
 }
