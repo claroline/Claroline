@@ -14,6 +14,11 @@
     syntaxCheck                 = "false"
     bootstrap                   = "bootstrap.php.cache" >
 
+    <php>
+        <!-- temporary : should be set directly in php.ini -->
+        <ini name="xdebug.max_nesting_level" value="200"/>
+    </php>
+
     <testsuites>
         <testsuite name="Claronext test suite">
             <directory>../src/core/*/*Bundle/Tests</directory>
