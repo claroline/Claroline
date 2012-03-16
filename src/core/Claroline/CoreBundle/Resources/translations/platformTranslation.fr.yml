@@ -54,6 +54,7 @@ workspace_form_name: Name
 workspace_form_type: Type
 
 #file manager form field labels
+choose_resource_form_type: "Type de ressource:"
 
 ############
 # MESSAGES #
@@ -88,6 +89,7 @@ add_group: ajouter un groupe
 #resource
 resource: ressource
 resources: ressources
+resource_manager: gestionnaire de ressource
 
 #workspace
 workspace: Espace d'activité

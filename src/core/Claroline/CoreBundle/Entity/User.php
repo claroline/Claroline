@@ -113,6 +113,11 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      * )
      */
     protected $workspaceRoles;
+    
+     /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource", mappedBy="user")
+     */
+    private $resources;
 
     public function __construct()
     {
@@ -120,6 +125,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
+        $this->resources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
@@ -351,5 +357,16 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
             $this->mail,
             $this->administrativeCode
         ) = unserialize($serialized);
+    }
+    
+    public function getResources()
+    {
+        return $this->resources;
+    }
+
+    public function addResource(Resource $resource)
+    {
+        $this->resources[] = $resource;
+        $resource->setUser($this);
     }
 }

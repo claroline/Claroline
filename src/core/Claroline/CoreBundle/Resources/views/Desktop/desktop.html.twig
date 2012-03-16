@@ -1,14 +1,9 @@
 {% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
-
 {% block content %}
 
-<div class="section" id="desktop">
-    
+<div class="section" id="desktop"> 
     <h4>{{ 'desktop'|trans({}, 'platformTranslation') }}</h4>
-    
-    <h5>{{ 'workspaces'|trans({}, 'platformTranslation') }} : </h5>
-    GONE
-
+    <a href="{{ path('claro_resource_create') }}" id="resource_manager_link">{{ 'resource_manager'|trans({}, 'platformTranslation') }}</a>
 <div>
-
+    
 {% endblock %}

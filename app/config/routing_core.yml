@@ -29,5 +29,9 @@ claro_file:
     resource: "@ClarolineCoreBundle/Resources/config/routing/file.yml"
     prefix: file    
     
+claro_resource:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
+    prefix: resource
+    
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

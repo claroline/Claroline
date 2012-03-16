@@ -238,7 +238,7 @@ class WorkspaceController extends Controller
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_user_list_popup.html.twig', array('users' => $users));
        }
        
-       return new \Exception("ajax error");
+       throw new \Exception("ajax error");
     }
     
     public function ajaxGetAddGroupAction($id, $nbIteration)
@@ -253,7 +253,7 @@ class WorkspaceController extends Controller
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_group_list_popup.html.twig', array('groups' => $groups));
        }
        
-       return new \Exception("ajax error");
+       throw new \Exception("ajax error");
     }
     
     public function ajaxGetGenericSearchUnregisteredUserAction($search, $id)
@@ -285,7 +285,7 @@ class WorkspaceController extends Controller
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_add_user_response.html.twig', array('user' => $user, 'workspace' => $workspace));
         }
         
-        return new \Exception("ajax error");
+        throw new \Exception("ajax error");
     }
     
     public function ajaxDeleteUserFromWorkspaceAction($userId, $workspaceId)
@@ -310,7 +310,7 @@ class WorkspaceController extends Controller
             return new Response("success");
         }
        
-        return new \Exception("ajax error");     
+        throw new \Exception("ajax error");     
     }
     
     public function ajaxDeleteGroupFromWorkspaceAction($groupId, $workspaceId)
@@ -335,7 +335,7 @@ class WorkspaceController extends Controller
             return new Response("success");
         }
        
-        return new \Exception("ajax error");     
+        throw new \Exception("ajax error");     
     }
         
     
@@ -354,7 +354,7 @@ class WorkspaceController extends Controller
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_add_group_response.html.twig', array('group' => $group, 'workspace' => $workspace));
         }
         
-        return new \Exception("ajax error");
+        throw new \Exception("ajax error");
     }
     
     public function ajaxGetGenericSearchUnregisteredGroupAction($search, $id)
@@ -370,6 +370,6 @@ class WorkspaceController extends Controller
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:AJAX_workspace_group_list_popup.html.twig', array('groups' => $groups));
         }
         
-        return new \Exception("ajax error");
+        throw new \Exception("ajax error");
     }          
 }
