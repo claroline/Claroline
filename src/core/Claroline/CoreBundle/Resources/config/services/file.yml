@@ -8,4 +8,6 @@ services:
         class: Claroline\CoreBundle\Library\Manager\FileManager
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@claroline.security.restricted_owner_right_manager"
+            - "@form.factory"
             - %claroline.files.directory%

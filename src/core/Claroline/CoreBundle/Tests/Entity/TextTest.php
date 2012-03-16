@@ -2,9 +2,10 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 
-class TextTest extends TransactionalTestCase
+class TextTest extends FixtureTestCase
 {
     /** @var Doctrine\ORM\EntityManager */
     private $em;
@@ -12,12 +13,16 @@ class TextTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->loadUserFixture();
+        $this->loadFixture(new LoadResourceTypeData());
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
     
     public function testTextEntityCanBePersistedAndRetreived()
     {
         $text = new Text();
+        $text->setUser($this->getFixtureReference('user/admin'));
+        $text->setResourceType($this->getFixtureReference('resource_type/file'));
         $text->setType('text/html');
         $text->setContent('<p>Test content</p>');
         

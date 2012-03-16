@@ -6,24 +6,27 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\File;
 use Claroline\CoreBundle\Form\FileType;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 
-class FileManager
+class FileManager extends ResourceManager
 {
     /**
      * @var EntityManager
      */
-    private $em;
-    
-    
+    protected $em;
     /**
      * @var string
      */
-    private $dir;
+    protected $dir;
+    protected $formFactory;
+    /** @var RightManagerInterface */
+    protected $rightManager;
     
     
-    public function __construct(EntityManager $em, $dir)
+    public function __construct(EntityManager $em, RightManagerInterface $rightManager, $formFactory, $dir)
     {   
-        $this->em = $em; 
+        parent::__construct($em, $rightManager);
+        $this->formFactory = $formFactory; 
         $this->dir = $dir;
     }
     
@@ -41,7 +44,7 @@ class FileManager
         return $response;
     }
     
-    public function upload($tmpFile, $fileName)
+    public function upload($tmpFile, $fileName, $user)
     {
          $size = filesize($tmpFile);
          $hashName = hash('md5', $tmpFile . time());
@@ -50,6 +53,9 @@ class FileManager
          $file->setSize($size);
          $file->setName($fileName);
          $file->setHashName($hashName);
+         $file->setUser($user);
+         $resourceType = $this->em->getRepository('ClarolineCoreBundle:ResourceType')->findOneBy(array('type' => 'file'));
+         $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
     }
@@ -81,6 +87,12 @@ class FileManager
         return $file;
     }
     
+    public function getForm()
+    {
+        $form = $this->formFactory->create(new FileType, new File());
+        return $form;
+    }
+    
     private function removeFile(File $file)
     {
         $pathName = $this->dir . DIRECTORY_SEPARATOR . $file->getHashName();
@@ -101,5 +113,12 @@ class FileManager
         $response->headers->set('Connection', 'close');
         
         return $response;
+    }  
+
+    public function getResourcesOfUser($user)
+    {
+        $files = $this->em->getRepository('ClarolineCoreBundle:File')->findBy(array('user' => $user->getId()));
+        
+        return $files;        
     }
 }

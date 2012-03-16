@@ -61,13 +61,13 @@ class UserControllerTest extends FunctionalTestCase
         $username = $crawler->filter('#username')->text();
         $this->assertEquals("toto Doe", $username);
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
-        $this->assertEquals(0, $crawler->filter('a:contains("Administration")')->count());
+        $this->assertEquals(0, $crawler->filter('#link_administration')->count());
     }
 
     public function testAdminCanGetFullUserList()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('a:contains("Administration")')->link();
+        $link = $crawler->filter('#link_administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_list_user')->link();
         $crawler = $this->client->click($link);
@@ -129,7 +129,7 @@ class UserControllerTest extends FunctionalTestCase
     public function testAdminCanAddUser()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('a:contains("Administration")')->link();
+        $link = $crawler->filter('#link_administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_add_user')->link();
         $crawler = $this->client->click($link);
