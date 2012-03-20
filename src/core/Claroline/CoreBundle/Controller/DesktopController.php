@@ -9,6 +9,7 @@ class DesktopController extends Controller
 {
     public function indexAction()
     {
+        $this->get('claroline.common.history_browser')->keepCurrentContext('desktop');
         return $this->render('ClarolineCoreBundle:Desktop:desktop.html.twig');
     }
 }

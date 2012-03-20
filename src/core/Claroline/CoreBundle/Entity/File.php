@@ -5,26 +5,14 @@ namespace Claroline\CoreBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Resource;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_file")
  */
-class File
+class File extends Resource
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     */
-    private $name;
-
     /**
      * @Assert\File(maxSize="6000000")
      */
@@ -70,16 +58,6 @@ class File
     public function setFile($file)
     {
         $this->file = $file;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     public function setDateUpload($dateUpload)

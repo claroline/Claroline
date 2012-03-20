@@ -22,8 +22,8 @@
 <ul id="workspace_groups">
     {% for group in groups %}
         <li class="row_group" id="group_{{group.getId()}}">
-            <a href="todo">{{ group.getName() }}</a>
-            |<a href ="todo">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
+            <a href="todo">{{group.getName()}}</a>
+           |<a href ="{{ path('claro_workspace_delete_group_workspace', {'groupId': group.getId(), 'workspaceId': workspace.getId()})}}" id="link_delete_group_{{ group.getId() }}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
         </li>
     {% endfor %}
 </ul>

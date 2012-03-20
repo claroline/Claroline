@@ -25,15 +25,16 @@ body
     border-bottom: solid 1px #bbb;
 }
 
-#section_menu
+.top_bar_left
 {
+    float: left;
     display: inline;
 }
 
-#status_box
+.top_bar_right
 {
-    display: inline;
     float: right;
+    display: inline;
 }
 
 #content
