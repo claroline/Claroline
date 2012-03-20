@@ -26,6 +26,12 @@
         </testsuite>
     </testsuites>
 
+    <groups>
+        <exclude>
+            <group>seleniumSauce</group>
+        </exclude>
+    </groups>
+
     <filter>
         <whitelist>
             <directory>../src/core</directory>
