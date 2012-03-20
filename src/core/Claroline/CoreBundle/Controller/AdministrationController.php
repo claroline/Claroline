@@ -3,14 +3,13 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\ClarolineSettingsType;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationController extends Controller
 {
@@ -21,9 +20,8 @@ class AdministrationController extends Controller
 
     public function showFormAddUserAction()
     {
-        $formUserProfile = $this->createForm(new ProfileType(
-            $this->get('security.context')->getToken()->getUser()->getOwnedRoles())
-        );
+        $userRoles = $this->get('security.context')->getToken()->getUser()->getOwnedRoles();
+        $formUserProfile = $this->createForm(new ProfileType($userRoles));
 
         return $this->render(
             'ClarolineCoreBundle:Administration:user_add.html.twig', array(
@@ -36,10 +34,8 @@ class AdministrationController extends Controller
     public function addUserAction()
     {      
         $request = $this->get('request');
-        $user = new User();
-        $form = $this->get('form.factory')->create(new ProfileType(
-            $this->get('security.context')->getToken()->getUser()->getOwnedRoles()), $user
-        );
+        $userRoles = $this->get('security.context')->getToken()->getUser()->getOwnedRoles();
+        $form = $this->get('form.factory')->create(new ProfileType($userRoles));
         $form->bindRequest($request);
 
         if ($form->isValid())
@@ -103,7 +99,6 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-        
         
         return $this->render('ClarolineCoreBundle:Administration:group_list.html.twig', array(
             'groups' => $groups)
@@ -203,7 +198,7 @@ class AdministrationController extends Controller
     public function showFormClaroSettingsAction()
     {
         $platformConfig = $this->get('claroline.config.platform_config_handler')
-                ->getPlatformConfig();
+             ->getPlatformConfig();
         $form = $this->createForm(new ClarolineSettingsType(), $platformConfig);  
         
         return $this->render(
@@ -215,20 +210,14 @@ class AdministrationController extends Controller
     public function editClaroSettingsAction()
     {
         $request = $this->get('request');
+        $configHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->get('form.factory')->create(new ClarolineSettingsType());
         $form->bindRequest($request);
         
         if ($form->isValid())
         {      
-            $this->get('claroline.config.platform_config_handler')
-                ->setParameter(
-                    'allow_self_registration', $form['selfRegistration']->getData()
-                );
-
-            $this->get('claroline.config.platform_config_handler')
-                 ->setParameter(
-                     'locale_language', $form['localLanguage']->getData()
-                 );
+            $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
+            $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
 
             $this->get('session')->setLocale($form['localLanguage']->getData());
         }
@@ -237,5 +226,4 @@ class AdministrationController extends Controller
 
         return $this->redirect($url);
     }
-
 }
