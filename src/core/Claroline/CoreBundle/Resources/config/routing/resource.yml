@@ -1,0 +1,11 @@
+claro_resource_create:
+    pattern: /new
+    defaults: { _controller: ClarolineCoreBundle:Resource:getChooseForm }
+    
+claro_resource_choose_create:
+    pattern: /new/chosen
+    defaults: { _controller: ClarolineCoreBundle:Resource:choose }
+    
+claro_resource_admin_index:
+   pattern: /admin/index
+   defaults: { _controller: ClarolineCoreBundle:Resource:index }

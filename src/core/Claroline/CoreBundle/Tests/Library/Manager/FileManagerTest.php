@@ -1,13 +1,14 @@
 <?php
 namespace Claroline\CoreBundle\Tests\Library\Manager;
 
-use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Claroline\CoreBundle\Library\Manager\FileManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 
-class FileManagerTest extends FunctionalTestCase
+class FileManagerTest extends FixtureTestCase
 {
     /** @var Claroline\CoreBundle\Manager\FileManager\ */
     private $manager;
@@ -25,6 +26,8 @@ class FileManagerTest extends FunctionalTestCase
     {
         parent::setUp();
         
+        $this->loadUserFixture();  
+        $this->loadFixture(new LoadResourceTypeData());
         $ds = DIRECTORY_SEPARATOR;
         $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}";
@@ -45,8 +48,8 @@ class FileManagerTest extends FunctionalTestCase
     
     public function testUploadFile()
     {  
-        $this->uploadFile('new_1.txt');
-        $this->uploadFile('new_2.txt');
+        $this->uploadFile('new_1.txt', $this->getFixtureReference('user/admin'));
+        $this->uploadFile('new_2.txt', $this->getFixtureReference('user/admin'));
         $instances = $this->manager->findAll();
         $this->assertEquals(2, count($instances));
         $this->assertEquals(2, count($this->getUploadedFiles()));
@@ -54,8 +57,8 @@ class FileManagerTest extends FunctionalTestCase
     
     public function testDeleteFile()
     {
-        $this->uploadFile('new_1.txt');
-        $this->uploadFile('new_2.txt');
+        $this->uploadFile('new_1.txt', $this->getFixtureReference('user/admin'));
+        $this->uploadFile('new_2.txt', $this->getFixtureReference('user/admin'));
         $files=$this->manager->findAll();
         $this->manager->deleteById($files[0]->getId());
         $instances = $this->manager->findAll();
@@ -65,18 +68,18 @@ class FileManagerTest extends FunctionalTestCase
    
     public function testDownloadFile()
     {
-        $this->uploadFile('new_1.txt');
-        $this->uploadFile('new_2.txt');
+        $this->uploadFile('new_1.txt', $this->getFixtureReference('user/admin'));
+        $this->uploadFile('new_2.txt', $this->getFixtureReference('user/admin'));
         $files = $this->manager->findAll();
         $response = $this->manager->setDownloadResponseById($files[0]->getId(), new Response());
         $this->assertTrue($response->headers->contains('Content-Disposition', 'attachment; filename=new_1.txt'));
     }
     
-    private function uploadFile($fileName)
+    private function uploadFile($fileName, $user)
     {
        $filePath = $this->stubDir.$fileName;
        $file = new File($filePath);
-       $this->manager->upload($file, $fileName); 
+       $this->manager->upload($file, $fileName, $user); 
     }
     
     private function setUpCopy()

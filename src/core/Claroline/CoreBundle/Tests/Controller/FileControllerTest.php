@@ -1,6 +1,7 @@
 <?php
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 
 class FileControllerTest extends FunctionalTestCase
 {
@@ -13,7 +14,7 @@ class FileControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        
+        $this->loadFixture(new LoadResourceTypeData());
         $this->loadUserFixture();
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
@@ -34,6 +35,7 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);
+         $crawler = $this->client->request('GET', '/file');
          $this->assertEquals(1, $crawler->filter('.file_item')->count());
          $this->assertEquals(1, count($this->getUploadedFiles()));
     }
@@ -43,6 +45,7 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);
+         $crawler = $this->client->request('GET', '/file');
          $link = $crawler->filter('.link_download_file')->eq(0)->link();
          $this->client->click($link);
          $headers = $this->client->getResponse()->headers;
@@ -54,6 +57,7 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);   
+         $crawler = $this->client->request('GET', '/file');
          $link = $crawler->filter('.link_delete_file')->eq(0)->link();
          $crawler = $this->client->click($link);
          $this->assertEquals(0, $crawler->filter('.file_item')->count());

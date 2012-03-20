@@ -91,7 +91,20 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->click($link);
         $this->assertEquals(0, $crawler->filter(".row_user")->count());  
     }
-          
+    
+    public function testDeleteGroupFromWorkspace()
+    {
+        $this->loadFixture(new LoadRoleData());
+        $this->loadFixture(new LoadManyUsersData());
+        $this->loadFixture(new LoadManyGroupsData());
+        $this->logUser($this->getFixtureReference('user/admin')); 
+        $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+        $this->assertEquals(1, $crawler->filter(".row_group")->count());
+        $link = $crawler->filter("#link_delete_group_{$this->getFixtureReference('group/manyGroup1')->getId()}")->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(0, $crawler->filter(".row_group")->count());  
+    }
+ 
     public function testAJAXControllerGetAddUsers()
     {
         $this->loadFixture(new LoadManyUsersData());
@@ -198,7 +211,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request(
             'POST', 
-            "/workspace/ajax/get/add/group/{$this->getFixtureReference('workspace/ws_a')->getId()}/1",
+            "/workspace/ajax/get/add/group/{$this->getFixtureReference('workspace/ws_a')->getId()}/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -221,5 +234,23 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, $crawler->filter("#group_{$this->getFixtureReference('group/group_a')->getId()}")->count());
         $crawler = $this->client->request('GET', "/workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(1, $crawler->filter(".row_group")->count());
+    }
+    
+    public function testAJAXControllerDeleteGroupFromWorkspace()
+    {
+        $this->loadFixture(new LoadRoleData());
+        $this->loadFixture(new LoadManyUsersData());
+        $this->loadFixture(new LoadManyGroupsData());        
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request(
+            'POST', 
+            "/workspace/ajax/delete/group/{$this->getFixtureReference('group/manyGroup1')->getId()}/{$this->getFixtureReference('workspace/ws_a')->getId()}",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        ); 
+        $this->assertEquals("success", $this->client->getResponse()->getContent());
+        $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+        $this->assertEquals(0, $crawler->filter(".row_group")->count()); 
     }
 }

@@ -40,6 +40,10 @@ claro_workspace_delete_user_workspace:
     pattern: /delete/user/{userId}/{workspaceId}
     defaults: { _controller:ClarolineCoreBundle:Workspace:deleteUserFromWorkspace }
     
+claro_workspace_delete_group_workspace:
+   pattern: /delete/group/{groupId}/{workspaceId}
+   defaults: { _controller:ClarolineCoreBundle:Workspace:deleteGroupFromWorkspace }
+    
 claro_workspace_ajax_get_add_users_workspace:
     pattern: /ajax/get/add/user/{id}/{nbIteration}
     defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetAddUser }
@@ -95,3 +99,11 @@ claro_workspace_ajax_add_group_workspace:
       _method : POST
    options:
       expose: true
+      
+claro_workspace_ajax_delete_group_workspace:
+   pattern: /ajax/delete/group/{groupId}/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxDeleteGroupFromWorkspace }
+   requirements:
+     _method: POST
+   options:
+      expose: true      
