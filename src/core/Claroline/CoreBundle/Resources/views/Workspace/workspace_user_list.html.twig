@@ -1,6 +1,9 @@
 {% extends 'ClarolineCoreBundle:Workspace:base_template.html.twig' %}
+
 {% block section_content %}
+
 {{ 'registered_users'|trans({}, 'platformTranslation') }}
+
 {{workspace.getName()}}
 
 <input type="button" id="button_user" value="{{ 'add_user'|trans({}, 'platformTranslation') }}" ></input>
@@ -10,8 +13,8 @@
     {% for user in users %}
         <li class="row_user" id="user_{{user.getId()}}" >
             {{user.getUsername()}}
-            <a href="{{path('claro_workspace_delete_user_workspace', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_user_{{user.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
-        </li>    
+            <a href="{{ path('claro_workspace_delete_user_workspace', {'userId': user.getId(), 'workspaceId': workspace.getId()}) }}" id="link_delete_user_{{user.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
+        </li>
     {% endfor %}
 </ul>
 
@@ -19,270 +22,200 @@
 <ul id="workspace_groups">
     {% for group in groups %}
         <li class="row_group" id="group_{{group.getId()}}">
-            <a href="todo">{{group.getName()}}</a>
+            <a href="todo">{{ group.getName() }}</a>
             |<a href ="todo">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
         </li>
     {% endfor %}
 </ul>
-<!------ TODO : CSS style for AJAX boxes --------------------------------------->
-<!----------- user list window ------------------------------------------------->
- <div id="AJAX_list_user_window" title="user_list">
-		<div id="AJAX_list_user_window_handle">			
-			{{ 'list_users'|trans({}, 'platformTranslation') }}
-            <a href="#" id="AJAX_user_close">[x]</a>
-		</div>
-        <div id="AJAX_list_user_window_content">
-            <div id="AJAX_user_search_div">
-                <a href="todo">ADVANCED SEARCH</a><br>
-                <input type="text" id="AJAX_search_user_txt" value="search">
-                <input type="button" id="AJAX_search_user_button" value ="search"><br>
-            </div>
-            <form id="AJAX_list_user_form" >
-                <div id="AJAX_user_checkboxes" style="overflow-y:scroll;">
-                    <table id="AJAX_user_table_checkboxes"></table>    
-                </div>
-                <input type="button" id="AJAX_add_next_users" value="add next"><div class="loading">load...</div>          
-            </form>
+
+<div id="user_dialog" title="{{ 'list_users'|trans({}, 'platformTranslation') }}">
+    <div id="user_search_div">
+        <input type="text" id="search_user_txt" value="">
+        <input type="button" id="search_user_button" value ="search"><br>
+    </div>
+    <form id="list_user_form" >
+        <div id="user_checkboxes" style="overflow-y:scroll;">
+            <table id="user_table_checkboxes"></table>
         </div>
-</div>
-<!----------- end list --------------------------------------------------------->
-
-<!---------- group list window ------------------------------------------------->
- <div id="AJAX_list_group_window" title="group_list">
-		<div id="AJAX_list_group_window_handle">			
-			{{ 'list_groups'|trans({}, 'platformTranslation') }}
-            <a href="#" id="AJAX_group_close">[x]</a>
-		</div>
-            <div id="AJAX_list_group_window_content">
-                <div id="AJAX_group_search_div">
-                    <input type="text" id="AJAX_search_group_txt" value="search by name">
-                    <input type="button" id="AJAX_search_group_button" value ="search name"><br>
-                </div>
-            <form id="AJAX_list_group_form" >
-                <div id="AJAX_group_checkboxes" style="overflow-y:scroll;">
-                    <table id="AJAX_group_table_checkboxes"></table>
-                </div>    
-                <input type="button" id="AJAX_add_next_groups" value="add next"> 
-                <div class="loading">load...</div> 
-            </form>       
-        </div>  
+        <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="user_loading" class="loading"/><br/>
+        <input type="button" id="add_next_users" value="add next">
+    </form>
 </div>
 
-<!------------ end list -------------------------------------------------------->
+<div id="group_dialog" title="{{ 'list_groups'|trans({}, 'platformTranslation') }}">
+    <div id="group_search_div">
+        <input type="text" id="search_group_txt" value="">
+        <input type="button" id="search_group_button" value ="search name"><br>
+    </div>
+    <form id="list_group_form" >
+        <div id="group_checkboxes" style="overflow-y:scroll;">
+            <table id="group_table_checkboxes"></table>
+        </div>
+        <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="group_loading" class="loading"/><br/>
+        <input type="button" id="add_next_groups" value="add next">
+    </form>
+</div>
 
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.sortable.js') }}" ></script>
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.core.js') }}" ></script>
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.widget.js') }}" ></script>
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.mouse.js') }}" ></script>
-<script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/ui/jquery.ui.draggable.js') }}" ></script>
-<script language="Javascript">
+<script type="text/javascript">
     
 var nbIterationUsers=0;   
 var nbIterationGroups=0; 
     
-$(document).ready(function() 
+$(function() 
 { 
     $(".loading").hide();
-    $("#AJAX_list_user_window").draggable();		
-    $("#AJAX_list_user_window").hide();
-    $("#AJAX_list_group_window").draggable();		
-    $("#AJAX_list_group_window").hide();
+    $('#user_dialog').dialog({ autoOpen: false });	
+    $('#group_dialog').dialog({ autoOpen: false });	   
+    $('#button_user').click(function(){
+        $("#user_dialog").dialog('open');
+    });
+    $('#button_group').click(function(){
+        $("#group_dialog").dialog('open');
+    });
     
-    $('#button_user').click(function()
-	{
-		$("#AJAX_list_user_window").show();
-	});
-    
-    $('#button_group').click(function()
-	{
-		$("#AJAX_list_group_window").show();
-	});
-    
-    $('#AJAX_user_close').click(function()
-	{
-		$("#AJAX_list_user_window").hide();
-	});
-    
-    $('#AJAX_group_close').click(function()
-	{
-		$("#AJAX_list_group_window").hide();
-	});
-    
-    $('#AJAX_user_checkboxes').on("click", ".checkbox_user_name", function(event){
+    $('#user_checkboxes').on('click', '.checkbox_user_name', function(event){
         var userId = $(this).val();
-        if($(this).is(':checked')) 
-        {
+        if ($(this).is(':checked')){
             setOnAddUserChkBox(userId);
-        }
-        else
-        {
+        } else {
             setOnRemoveUserChkBox(userId);  
         }
     }); 
     
-    $('#AJAX_group_checkboxes').on("click", ".checkbox_group_name", function(event){
+    $('#group_checkboxes').on('click', '.checkbox_group_name', function(event){
         var groupId = $(this).val();
-        if($(this).is(':checked')) 
-        {
+        if( $(this).is(':checked')){
             setOnAddGroupChkBox(groupId);
-        }
-        else
-        {
+        } else {
             setOnRemoveGroupChkBox(groupId);  
         }
     });  
 });  
 
-$("#AJAX_add_next_users").click(function(){
-    $(".loading").show();
-    $.ajax({
-        type: "POST",
-        url: Routing.generate('claro_workspace_ajax_get_add_users_workspace', { "id":{{workspace.getId()}}, "nbIteration":nbIterationUsers}),
-        cache: false,
-        dataType: 'html',
-        success: function(data){
-            if(nbIterationUsers == 0)
-            {
+$('#add_next_users').click(function(){
+    $('#user_loading').show();
+    sendRequest(
+        'claro_workspace_ajax_get_add_users_workspace',
+        {'id': {{ workspace.getId() }}, 'nbIteration': nbIterationUsers},
+        function(data){
+            if (nbIterationUsers == 0){
                 $('.checkbox_user_name').remove();
-                $('#AJAX_user_checkboxes').empty();               
+                $('#user_checkboxes').empty();               
             }
             nbIterationUsers++;
-            $('#AJAX_user_checkboxes').append(data);
-            $(".loading").hide(); 
-        }, 
-        error: function(xhr) {
-            alert(xhr.status);
+            $('#user_checkboxes').append(data);
+            $('#user_loading').hide();
         }
-      }); 
+    );
 });
 
-$("#AJAX_add_next_groups").click(function(){
-    $(".loading").show();
-    $.ajax({
-        type: "POST",
-        url: Routing.generate('claro_workspace_ajax_get_add_groups_workspace', { "id":{{workspace.getId()}}, "nbIteration":nbIterationGroups}),
-        cache: false,
-        dataType: 'html',
-        success: function(data){
-            if(nbIterationGroups == 0)
-            {
+$('#add_next_groups').click(function(){
+    $('#group_loading').show();
+    sendRequest(
+        'claro_workspace_ajax_get_add_groups_workspace',
+        {'id': {{workspace.getId()}}, 'nbIteration': nbIterationGroups},
+        function(data){
+            if (nbIterationGroups == 0){
                 $('.checkbox_group_name').remove();
-                $('#AJAX_group_checkboxes').empty();               
+                $('#group_checkboxes').empty();               
             }
             nbIterationGroups++;
-            $('#AJAX_group_checkboxes').append(data);
-            $(".loading").hide(); 
-        }, 
-        error: function(xhr) {
-            alert(xhr.status);
+            $('#group_checkboxes').append(data);
+            $('#group_loading').hide(); 
         }
-      });    
+    );
 });
 
-$('#AJAX_search_user_button').click(function(){
-    $('.loading').show();
-    var search = document.getElementById('AJAX_search_user_txt').value;
-    nbIterationUsers=0;
-    $.ajax({
-        type: "POST",
-        url: Routing.generate('claro_workspace_ajax_generic_user_search_workspace', { 'search': search, 'id':{{workspace.getId()}} }),
-        cache: false,
-        dataType: 'html',
-        success: function(data){
+$('#search_user_button').click(function(){
+    $('#user_loading').show();
+    var search = document.getElementById('search_user_txt').value;
+    nbIterationUsers = 0;
+    sendRequest(
+        'claro_workspace_ajax_generic_user_search_workspace',
+        {'search': search, 'id': {{ workspace.getId() }}},
+        function(data){
             $('.checkbox_user_name').remove();
-            $('#AJAX_user_checkboxes').empty();
-            $('#AJAX_user_checkboxes').append(data);
-            $(".loading").hide(); 
-            },
-        error: function(xhr){
-            alert(xhr.status);
-            }
-    });
+            $('#user_checkboxes').empty();
+            $('#user_checkboxes').append(data);
+            $('#user_loading').hide();
+        }
+    );
 });
 
-$('#AJAX_search_group_button').click(function(){
-    $('.loading').show();
-    var search = document.getElementById('AJAX_search_group_txt').value;
-    nbIterationGroups=0;
-    $.ajax({
-        type: "POST",
-        url: Routing.generate('claro_workspace_ajax_generic_group_search_workspace', { 'search': search, 'id':{{workspace.getId()}} }),
-        cache: false,
-        dataType: 'html',
-        success: function(data){
+$('#search_group_button').click(function(){
+    $('#group_loading').show();
+    var search = document.getElementById('search_group_txt').value;
+    nbIterationGroups = 0;
+    sendRequest(
+        'claro_workspace_ajax_generic_group_search_workspace',
+        {'search': search, 'id': {{ workspace.getId() }}},
+        function(data){
             $('.checkbox_group_name').remove();
-            $('#AJAX_group_checkboxes').empty();
-            $('#AJAX_group_checkboxes').append(data);
-            $(".loading").hide(); 
-            },
-        error: function(xhr){
-            alert(xhr.status);
-            }
-    });
+            $('#group_checkboxes').empty();
+            $('#group_checkboxes').append(data);
+            $('#group_loading').hide(); 
+        }
+    );
 });
-            
+        
 function setOnAddUserChkBox(userId)
 {
-     $.ajax({
-         type:"POST",
-         url: Routing.generate('claro_workspace_ajax_add_user_workspace', {"userId":userId, "workspaceId" : {{workspace.getId()}}}),
-         cache: false,
-         dataType: 'html',
-         success: function(data){
+    sendRequest(
+        'claro_workspace_ajax_add_user_workspace',
+        {'userId': userId, 'workspaceId': {{ workspace.getId() }}},
+        function(data){
              $('#workspace_users').append(data);
-         },
-         error: function(xhr){
-                 alert(xhr.status);
-             }
-      });
+        }
+    );
 }
 
 function setOnRemoveUserChkBox(userId)
 {
-    $.ajax({
-        type:"POST",
-        url: Routing.generate('claro_workspace_ajax_delete_user_workspace', {"userId":userId, "workspaceId" : {{workspace.getId()}}}),
-        cache: false,
-        dataType: 'html',
-        success: function(data){
-            $("#user_"+userId).remove();
-            },
-        error: function(xhr){
-            alert(xhr.status);
-            }
-    });       
+    sendRequest(
+        'claro_workspace_ajax_delete_user_workspace',
+        {'userId': userId, 'workspaceId': {{ workspace.getId() }}},
+        function(data){
+            $('#user_' + userId).remove();
+        }
+    );   
 }   
 
 function setOnAddGroupChkBox(groupId)
 {
-     $.ajax({
-         type:"POST",
-         url: Routing.generate('claro_workspace_ajax_add_group_workspace', {"groupId":groupId, "workspaceId" : {{workspace.getId()}}}),
-         cache: false,
-         dataType: 'html',
-         success: function(data){
-             $('#workspace_groups').append(data);
-         },
-         error: function(xhr){
-                 alert(xhr.status);
-             }
-      });
+    sendRequest(
+        'claro_workspace_ajax_add_group_workspace',
+        {'groupId': groupId, 'workspaceId': {{ workspace.getId() }}},
+        function(data){
+            $('#workspace_groups').append(data);
+        }
+    );
 }
 
 function setOnRemoveGroupChkBox(groupId)
 {
+    sendRequest(
+        'claro_workspace_ajax_delete_group_workspace',
+        {'groupId': groupId, 'workspaceId': {{ workspace.getId() }}},
+        function(data){
+            $('#group_' + groupId).remove();
+        }
+    );
+}
+
+function sendRequest(route, routeParams, successHandler)
+{
     $.ajax({
-        type:"POST",
-        url: Routing.generate('claro_workspace_ajax_delete_group_workspace', {"groupId":groupId, "workspaceId" : {{workspace.getId()}}}),
+        type: 'POST',
+        url: Routing.generate(route, routeParams),
         cache: false,
         dataType: 'html',
-        success: function(data){
-            $("#group_"+groupId).remove();
-            },
+        success: successHandler,
         error: function(xhr){
             alert(xhr.status);
-            }
-    });       
+        }
+    });
 }
+
 </script>
+
 {% endblock %}
