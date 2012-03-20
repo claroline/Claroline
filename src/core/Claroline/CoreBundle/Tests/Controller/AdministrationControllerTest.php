@@ -1,19 +1,27 @@
 <?php
+
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class AdministrationControllerTest extends FunctionalTestCase
 {
-    public function setUp()
+    /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
+    private $configHandler;
+    
+    protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();
         $this->loadGroupFixture();
+        $this->configHandler = $this->client
+            ->getContainer()
+            ->get('claroline.config.platform_config_handler');
         $this->client->followRedirects();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
+        $this->configHandler->eraseTestConfiguration();
     }
     
     public function testAdminCanSeeGroups()
@@ -103,40 +111,34 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());;
     }
     
-    public function testEditClaroSelfRegistration()
+    public function testEditSelfRegistrationParameter()
     {
-        $this->setPlatformTestOptions();
-        $this->assertEquals(true, static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('allow_self_registration'));
+        $this->configHandler->setParameter('allow_self_registration', false);
+        $crawler = $this->client->request('GET', '/');
+        $this->assertEquals(0, $crawler->filter("#link_registration")->count());
+        
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
         $link = $crawler->filter("#link_claro_settings")->link();
         $crawler = $this->client->click($link);
         $form = $crawler->filter('input[type=submit]')->form();
-        $form['claro_settings_form[selfRegistration]'] = false;
+        $form['claro_settings_form[selfRegistration]'] = true;
         $this->client->submit($form);
-        $this->client->request('GET', '/logout');
-        $this->assertEquals(false, static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('allow_self_registration'));
-        $this->assertEquals(0, $crawler->filter("#link_registration")->count());
+        $crawler = $this->client->request('GET', '/logout');
+        $this->assertEquals(1, $crawler->filter("#link_registration")->count());
     }
     
-    public function testEditClaroLanguage()
+    public function testEditLanguageParameter()
     {
-        $this->setPlatformTestOptions();
-        $this->assertEquals('en', static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->getParameter('locale_language'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->configHandler->setParameter('locale_language', 'en');
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $this->assertEquals('Logout', trim($crawler->filter("#link_logout")->text()));
+
         $crawler = $this->client->request('GET', '/admin/claronext/settings/form');
-        $this->assertEquals(1, $crawler->filter("a:contains('Logout')")->count());
         $form = $crawler->filter('input[type=submit]')->form();
         $form['claro_settings_form[localLanguage]'] = 'fr';
         $crawler = $this->client->submit($form);
-        $this->assertEquals(1, $crawler->filter("#link_logout")->count());
-        $crawler = $this->client->request('GET', '/logout');
-        $this->assertEquals(1, $crawler->filter("#link_login")->count());
-    }
-    
-    public function setPlatformTestOptions()
-    {
-        static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->setParameter('allow_self_registration', true);
-        static::$kernel->getContainer()->get('claroline.config.platform_config_handler')->setParameter('locale_language', 'en');
+        
+        $this->assertEquals('Déconnexion', trim($crawler->filter("#link_logout")->text()));
     }
 }
