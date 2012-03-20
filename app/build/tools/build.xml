@@ -39,6 +39,8 @@
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--coverage-html" />
+            <arg path="--exclude-group" />
+            <arg value="--seleniumSauce" />
             <arg path="${basedir}/../coverage" />
             <arg value="--coverage-clover" />
             <arg path="${basedir}/../logs/clover.xml" />
