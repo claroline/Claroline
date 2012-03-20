@@ -16,6 +16,7 @@ AsseticBundle v1.0.1
 
 
 UserBundle 39ace1e1ce6eaecacd27830c9b040129da5e32b7
+FOSJsRoutingBundle bc61ffe5c4186a8ac206a8c68de221bc48e8a436
 DoctrineExtensionsBundle 1.0.1~1
 gedmo-doctrine-extensions f693cf408dfa85e69809aaf26bbc123bdeb32da3
 doctrine-migrations 9e81984b0f126b0830d9ac6acc2d1da81aba2b94
