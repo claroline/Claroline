@@ -6,11 +6,14 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/main.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/ui-lightness/jquery-ui-1.8.18.custom.css') }}" />
 {% endblock %}
+
 {% block scripts %}
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    <script language="Javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-1.7.1.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-1.7.1.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-ui-1.8.18.custom.min.js') }}"></script>
 {% endblock %}
 
 {% block favicon %}
