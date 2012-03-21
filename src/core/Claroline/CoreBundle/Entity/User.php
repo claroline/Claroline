@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 // TODO: Implements AdvancedUserInterface
 
@@ -115,7 +116,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     protected $workspaceRoles;
     
      /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="user")
      */
     private $resources;
 
@@ -364,7 +365,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         return $this->resources;
     }
 
-    public function addResource(Resource $resource)
+    public function addResource(AbstractResource $resource)
     {
         $this->resources[] = $resource;
         $resource->setUser($this);

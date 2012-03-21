@@ -24,7 +24,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);        
         $table->addColumn('title', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
-            $schema->getTable('claro_text'),
+            $schema->getTable('claro_resource'),
             array('id'), 
             array('id'),
             array("onDelete" => "CASCADE")

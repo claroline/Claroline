@@ -7,14 +7,7 @@ services:
         tags:
             - { name: doctrine.event_subscriber, event: prePersist}
             - { name: doctrine.event_subscriber, event: preUpdate}
-  
-    claroline.listener.extendable_listener:
-        class: Claroline\CoreBundle\Listener\ExtendableListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default }
-            
+     
     claroline.listener.acl_persister:
         class: Claroline\CoreBundle\Listener\AclPersister
         calls:

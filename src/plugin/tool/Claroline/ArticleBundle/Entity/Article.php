@@ -3,13 +3,13 @@
 namespace Claroline\ArticleBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Text;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_article")
  */
-class Article extends Text
+class Article extends AbstractResource
 {
     /**
      * @ORM\Id

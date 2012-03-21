@@ -1,17 +1,16 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Entity\Resource;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Entity\Resource;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_file")
  */
-class File extends Resource
+class File extends AbstractResource
 {
     /**
      * @Assert\File(maxSize="6000000")
@@ -103,6 +102,4 @@ class File extends Resource
     {
         $this->hashName = $hashName;
     }
-    
-    
 }
