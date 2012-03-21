@@ -38,8 +38,8 @@
         <exec executable="phpunit" failonerror="true">
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
-            <arg path="--exclude-group" />
-            <arg value="seleniumSauce" />
+            <arg value="--exclude-group" />
+            <arg path="seleniumSauce" />
             <arg value="--coverage-html" />
             <arg path="${basedir}/../coverage" />
             <arg value="--coverage-clover" />

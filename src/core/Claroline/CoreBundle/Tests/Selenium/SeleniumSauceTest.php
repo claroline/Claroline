@@ -5,7 +5,7 @@ use Claroline\CoreBundle\Library\Testing\SeleniumSauceTestCase;
 /**
  * @group seleniumSauce
  */
-class SeleniumSauceTest extends SeleniumSauceTestCase 
+class SeleniumSauceTest extends SeleniumSauceTestCase
 {
     public function test() 
     {
