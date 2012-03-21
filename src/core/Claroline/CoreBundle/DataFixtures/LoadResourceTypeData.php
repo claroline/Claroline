@@ -5,9 +5,9 @@ namespace Claroline\CoreBundle\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
-class LoadResourceTypeData  extends AbstractFixture implements OrderedFixtureInterface
+class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load (ObjectManager $manager)
     {
@@ -26,6 +26,6 @@ class LoadResourceTypeData  extends AbstractFixture implements OrderedFixtureInt
     
     public function getOrder()
     {
-        return 50;
+        return 2;
     }
 }

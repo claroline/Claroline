@@ -2,6 +2,12 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
-class LoadResourceTypeData extends \Claroline\CoreBundle\DataFixtures\LoadResourceTypeData
-{
+use Claroline\CoreBundle\DataFixtures\LoadResourceTypeData as ResourceTypeFixture;
+
+class LoadResourceTypeData extends ResourceTypeFixture
+{   
+    public function getOrder()
+    {
+        return 8;
+    }
 }

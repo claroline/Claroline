@@ -1,17 +1,19 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Annotation\ORM as ORMExt;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_resource")
- * @ORMExt\Extendable(discriminatorColumn="discr")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"file" = "File"})
  */
-class Resource
+abstract class AbstractResource
 {
     /**
      * @ORM\Id
@@ -39,7 +41,7 @@ class Resource
     private $user;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\ResourceType", inversedBy="resources")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="resources")
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     private $resourceType;

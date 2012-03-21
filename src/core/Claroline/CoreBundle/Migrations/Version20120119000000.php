@@ -19,12 +19,11 @@ class Version20120119000000 extends BundleMigration
         $this->createGroupRoleTable($schema);
         $this->createResourceTypeTable($schema);
         $this->createResourceTable($schema);
-        $this->createTextTableSchema($schema);
+        $this->createFileTable($schema);
         $this->createPluginTable($schema);
         $this->createToolTable($schema);
         $this->createToolInstanceTable($schema);
         $this->createExtensionTable($schema);
-        $this->createFileTable($schema);
     }
 
     public function down(Schema $schema)
@@ -33,10 +32,9 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_tool_instance');
         $schema->dropTable('claro_tool');
         $schema->dropTable('claro_plugin');
-        $schema->dropTable('claro_resource_type');
-        $schema->dropTable('claro_text');
         $schema->dropTable('claro_file');
         $schema->dropTable('claro_resource');
+        $schema->dropTable('claro_resource_type');
         $schema->dropTable('claro_group_role');
         $schema->dropTable('claro_user_role');
         $schema->dropTable('claro_role');
@@ -171,7 +169,19 @@ class Version20120119000000 extends BundleMigration
             $schema->getTable('claro_role'), array('role_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
-
+    
+    private function createResourceTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_type');   
+        $this->addId($table);
+        $table->addColumn('type', 'string');
+        $table->addColumn('bundle', 'string');
+        $table->addColumn('controller', 'string');
+        $table->addColumn('isListable', 'boolean');
+        $table->addColumn('isNavigable', 'boolean');
+        $this->storeTable($table);
+    }
+    
     private function createResourceTable(Schema $schema)
     {
         $table = $schema->createTable('claro_resource');
@@ -190,31 +200,6 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array("onDelete" => "CASCADE")    
         );
         $this->storeTable($table);
-    }
-    
-    private function createResourceTypeTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_resource_type');   
-        $this->addId($table);
-        $table->addColumn('type', 'string');
-        $table->addColumn('bundle', 'string');
-        $table->addColumn('controller', 'string');
-        $table->addColumn('isListable', 'boolean');
-        $table->addColumn('isNavigable', 'boolean');
-        $this->storeTable($table);
-    }
-
-    private function createTextTableSchema(Schema $schema)
-    {
-        $table = $schema->createTable('claro_text');
-
-        $this->addId($table);
-        $this->addDiscriminator($table);
-        $table->addColumn('type', 'string', array('length' => 255));
-        $table->addColumn('content', 'text');
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
-        );
     }
 
     private function createPluginTable(Schema $schema)
@@ -283,7 +268,5 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
         );
-
     }
-
 }

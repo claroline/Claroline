@@ -3,12 +3,13 @@
 namespace Claroline\CoreBundle\Tests\Stub\Entity\TestEntity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Annotation\ORM as ORMExt;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_test_security_first_entity")
- * @ORMExt\Extendable(discriminatorColumn="discr")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"first_entity" = "FirstEntity", "first_entity_child" = "FirstEntityChild"})
  */
 class FirstEntity
 {

@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Library\Manager;
 
-use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Entity\File;
-use Claroline\CoreBundle\Form\FileType;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 
 class FileManager extends ResourceManager
@@ -32,7 +32,7 @@ class FileManager extends ResourceManager
     
     public function setDownloadResponseById($id, Response $response)
     {
-        $file = $this->em->getRepository('ClarolineCoreBundle:File')->find($id);
+        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
         $response = $this->setDownloadResponse($file, $response);
         
         return $response;
@@ -54,7 +54,7 @@ class FileManager extends ResourceManager
          $file->setName($fileName);
          $file->setHashName($hashName);
          $file->setUser($user);
-         $resourceType = $this->em->getRepository('ClarolineCoreBundle:ResourceType')->findOneBy(array('type' => 'file'));
+         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'file'));
          $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
@@ -62,7 +62,7 @@ class FileManager extends ResourceManager
 
     public function deleteById($id)
     {
-        $file = $this->em->getRepository('ClarolineCoreBundle:File')->find($id);
+        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
         $this->delete($file);
     }
        
@@ -75,14 +75,14 @@ class FileManager extends ResourceManager
      
     public function findAll()
     {
-        $files = $this->em->getRepository('ClarolineCoreBundle:File')->findAll();
+        $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findAll();
         
         return $files;
     }
     
     public function findById($id)
     {
-        $file = $this->em->getRepository('ClarolineCoreBundle:File')->find($id);
+        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
         
         return $file;
     }
@@ -117,7 +117,7 @@ class FileManager extends ResourceManager
 
     public function getResourcesOfUser($user)
     {
-        $files = $this->em->getRepository('ClarolineCoreBundle:File')->findBy(array('user' => $user->getId()));
+        $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findBy(array('user' => $user->getId()));
         
         return $files;        
     }

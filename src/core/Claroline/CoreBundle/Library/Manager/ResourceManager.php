@@ -5,9 +5,8 @@ namespace Claroline\CoreBundle\Library\Manager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
-use Claroline\CoreBundle\Entity\Resource;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-//use Claroline\CoreBundle\Library\Resource\ResourceInterface;
 
 class ResourceManager
 {
@@ -26,7 +25,7 @@ class ResourceManager
         $this->rightManager = $rightManager;
     }
     
-    public function createResource(Resource $resource, User $owner)
+    public function createResource(AbstractResource $resource, User $owner)
     {
         $resource->setUser($owner);
         $this->em->persist($resource);
@@ -41,14 +40,14 @@ class ResourceManager
 
     public function getResourcesOfUser($user)
     {
-        $resources = $this->em->getRepository('ClarolineCoreBundle:Resource')->findBy(array('user' => $user->getId()));
+        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findBy(array('user' => $user->getId()));
         
         return $resources;        
     }
     
     public function findAll()
     {
-        $resources = $this->em->getRepository('ClarolineCoreBundle:Resource')->findAll();
+        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findAll();
         
         return $resources; 
     }

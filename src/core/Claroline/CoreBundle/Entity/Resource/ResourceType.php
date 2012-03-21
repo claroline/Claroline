@@ -1,10 +1,10 @@
 <?php
-namespace Claroline\CoreBundle\Entity;
+
+namespace Claroline\CoreBundle\Entity\Resource;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -35,7 +35,7 @@ class ResourceType
     private $controller;
     
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource", mappedBy="resource_type")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resource_type")
      */
     private $resources;
     
@@ -84,7 +84,7 @@ class ResourceType
         return $this->resources;
     }
     
-    public function addResource(Resource $resource)
+    public function addResource(AbstractResource $resource)
     {
         $this->resources[] = $resource;
         $resource->setUser($this);

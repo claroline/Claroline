@@ -2,7 +2,8 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
+use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData as BasePlatformRolesFixture;
 
-class LoadPlatformRolesData extends \Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData
+class LoadPlatformRolesData extends BasePlatformRolesFixture
 {
 }

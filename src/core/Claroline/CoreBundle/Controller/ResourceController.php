@@ -3,10 +3,10 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-    use Claroline\CoreBundle\Form\ChooseResourceType;
-use Claroline\CoreBundle\Entity\ResourceType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Form\ChooseResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class ResourceController extends Controller
 {

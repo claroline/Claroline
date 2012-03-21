@@ -20,9 +20,7 @@ class LoadManyGroupsData extends AbstractFixture implements ContainerAwareInterf
     
    /** @var ArrayCollection $roles */
     private $users;
-    
-    
-    
+     
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -113,4 +111,3 @@ class LoadManyGroupsData extends AbstractFixture implements ContainerAwareInterf
         return 101;
     }
 }
-
