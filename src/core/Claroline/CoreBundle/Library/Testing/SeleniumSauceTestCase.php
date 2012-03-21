@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Testing;
 /**
  * @runTestsInParallel 10
  */
-abstract class SeleniumSauceTestCase extends \PHPUnit_Extensions_SeleniumTestCase_SauceOnDemandTestCase 
+abstract class SeleniumSauceTestCase extends \PHPUnit_Extensions_SeleniumTestCase_SauceOnDemandTestCase
 {
     public static $browsers = array(
       array(
