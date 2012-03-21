@@ -42,6 +42,24 @@ class AdministrationControllerTest extends FunctionalTestCase
           $crawler = $this->client->click($link);
           $this->assertEquals(2, $crawler->filter('.row_user')->count());
     }
+        
+    public function testAdminCanAddUser()
+    {
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $link = $crawler->filter('#link_administration')->link();
+        $crawler = $this->client->click($link);
+        $link = $crawler->filter('#link_add_user')->link();
+        $crawler = $this->client->click($link);
+        $form = $crawler->filter('input[type=submit]')->form();
+        $form['user_form[firstName]'] = 'toto';
+        $form['user_form[lastName]'] = 'tata';
+        $form['user_form[username]'] = 'tototata';
+        $form['user_form[plainPassword][first]'] = 'abc';
+        $form['user_form[plainPassword][second]'] = 'abc';
+        $form['user_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
+        $crawler = $this->client->submit($form);
+        $this->assertEquals(6, $crawler->filter('.row_user')->count());
+    }
     
     public function testAdminCanCreateGroups()
     {

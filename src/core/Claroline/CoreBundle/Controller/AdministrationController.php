@@ -35,7 +35,7 @@ class AdministrationController extends Controller
     {      
         $request = $this->get('request');
         $userRoles = $this->get('security.context')->getToken()->getUser()->getOwnedRoles();
-        $form = $this->get('form.factory')->create(new ProfileType($userRoles));
+        $form = $this->get('form.factory')->create(new ProfileType($userRoles), new User());
         $form->bindRequest($request);
 
         if ($form->isValid())
@@ -63,8 +63,7 @@ class AdministrationController extends Controller
 
     public function showFormCreateGroupAction()
     {
-        $group = new Group();
-        $formGroup = $this->createForm(new GroupType(), $group);
+        $formGroup = $this->createForm(new GroupType(), new Group());
 
         return $this->render('ClarolineCoreBundle:Administration:group_create.html.twig', array(
             'form_group' => $formGroup->createView())
@@ -74,15 +73,14 @@ class AdministrationController extends Controller
     public function createGroupAction()
     {
         $request = $this->get('request');
-        $group = new Group();
-        $form = $this->get('form.factory')->create(new GroupType(), $group);
+        $form = $this->get('form.factory')->create(new GroupType(), new Group());
         $form->bindRequest($request);
 
         if ($form->isValid())
         {
-            $role = $form->getData();
+            $group = $form->getData();
             $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($role);
+            $em->persist($group);
             $em->flush();
         }
         else
