@@ -16,9 +16,8 @@ services:
             - { name: doctrine.event_subscriber, event: preRemove}
             - { name: doctrine.event_subscriber, event: postPersist}
             
-    claroline.listener.request:
-        class: Claroline\CoreBundle\Listener\RequestListener
+    claroline.listener.locale_setter:
+        class: Claroline\CoreBundle\Listener\LocaleSetter
         arguments: ["@session", "@claroline.config.platform_config_handler"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-         
