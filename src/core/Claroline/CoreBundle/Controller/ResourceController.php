@@ -53,6 +53,12 @@ class ResourceController extends Controller
     
     public function deleteAction($id)
     {
-        return new Response("this resource will be removed");
+       $resource = $this->get('claroline.resource.manager')->find($id);
+       $resourceType = $resource->getResourceType();
+       
+       $routeName = $this->get('claroline.routing')->getRouteName($resourceType->getBundle(), $resourceType->getController(), 'delete');
+       $route = $this->get('router')->generate($routeName, array('id' => $id));
+            
+       return new RedirectResponse($route);
     }
 }

@@ -52,19 +52,18 @@ class FileControllerTest extends FunctionalTestCase
          $headers = $this->client->getResponse()->headers;
          $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=originalFile.txt'));
     }
-    /*
+    
     public function testDelete()
     {
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);   
          $crawler = $this->client->request('GET', '/resource/index');
-         var_dump($this->client->getResponse()->getContent());
          $link = $crawler->filter('.link_delete_resource')->eq(0)->link();
          $crawler = $this->client->click($link);
          $this->assertEquals(0, $crawler->filter('.row_resource')->count());
          $this->assertEquals(0, count($this->getUploadedFiles()));
-    }*/
+    }
     
     private function uploadFile($filePath)
     {
