@@ -1,0 +1,22 @@
+{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% block section_content %}
+     {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form action="{{ path('claro_resource_add_to_directory', {'id':'null'}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
+        {{ form_errors(form_resource) }}
+        {{ form_widget(form_resource) }}
+        <input type="submit" />
+    </form>
+
+    NAVIGABLE
+    {% for resource in resources %}
+        {% if resource.getResourceType.getNavigable() == true %}
+            <div class="row_resource"><a href="{{path('claro_resource_view', {'id':resource.getId()})}}" id="link_resource_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> | {{resource.getResourceType().getType()}} | <a id="link_resource_delete_{{resource.getId()}}" href="{{path('claro_resource_delete', {'id':resource.getId()})}}" class="link_delete_resource">delete</a></div>
+        {% endif %}
+    {% endfor %}            
+    NOT NAVIGABLE
+    {%for resource in resources %}
+        {% if resource.getResourceType.getNavigable() == false %}
+            <div class="row_resource"><a href="{{path('claro_resource_view', {'id':resource.getId()})}}" id="link_resource_view_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> | {{resource.getResourceType().getType()}} | <a id="link_resource_delete_{{resource.getId()}}" href="{{path('claro_resource_delete', {'id':resource.getId()})}}" class="link_delete_resource">delete</a></div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,13 @@
+claro_directory_add:
+    pattern: /add/{id}
+    defaults: { _controller: ClarolineCoreBundle:Directory:add, id:null }
+    requirements:
+      _method: POST
+  
+claro_directory_add_to_directory:
+    pattern: /show/{id}
+    defaults: { _controller: ClarolineCoreBundle:Directory:addToDirectory, id:null }
+    
+claro_directory_view:
+    pattern: /view/{id}
+    defaults: { _controller: ClarolineCoreBundle:Directory:view, id:null }

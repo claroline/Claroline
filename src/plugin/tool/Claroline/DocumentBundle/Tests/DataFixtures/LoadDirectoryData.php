@@ -4,7 +4,7 @@ namespace Claroline\DocumentBundle\Tests\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\DocumentBundle\Entity\Directory;
+use Claroline\DocumentBundle\Entity\Resource\Directory;
 
 class LoadDirectoryData extends AbstractFixture
 {

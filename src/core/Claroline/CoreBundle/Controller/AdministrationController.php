@@ -83,10 +83,6 @@ class AdministrationController extends Controller
             $em->persist($group);
             $em->flush();
         }
-        else
-        {
-            return new Response("formulaire non valide");
-        }
 
         $url = $this->generateUrl('claro_admin_group_list');
 

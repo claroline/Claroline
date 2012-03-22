@@ -19,6 +19,7 @@ class Version20120119000000 extends BundleMigration
         $this->createGroupRoleTable($schema);
         $this->createResourceTypeTable($schema);
         $this->createResourceTable($schema);
+        $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
         $this->createPluginTable($schema);
         $this->createToolTable($schema);
@@ -33,6 +34,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_tool');
         $schema->dropTable('claro_plugin');
         $schema->dropTable('claro_file');
+        $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
         $schema->dropTable('claro_resource_type');
         $schema->dropTable('claro_group_role');
@@ -177,6 +179,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('type', 'string');
         $table->addColumn('bundle', 'string');
         $table->addColumn('controller', 'string');
+        $table->addColumn('service', 'string');
         $table->addColumn('isListable', 'boolean');
         $table->addColumn('isNavigable', 'boolean');
         $this->storeTable($table);
@@ -191,8 +194,17 @@ class Version20120119000000 extends BundleMigration
         $this->addDiscriminator($table);
         $table->addColumn('created', 'datetime');
         $table->addColumn('updated', 'datetime');
+        $table->addColumn('lft', 'integer', array('notnull' => true));
+        $table->addColumn('rgt', 'integer', array('notnull' => true));
+        $table->addColumn('lvl', 'integer', array('notnull' => true));
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
+        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array("onDelete" => "CASCADE")
+        );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array("onDelete" => "CASCADE")
         );
@@ -269,4 +281,12 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
+    
+    private function createDirectoryTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_directory');
+        $this->addId($table);
+        $this->storeTable($table);
+    }
+
 }

@@ -1,11 +1,15 @@
-claro_resource_create:
-    pattern: /new
-    defaults: { _controller: ClarolineCoreBundle:Resource:getChooseForm }
+claro_resource_index:
+    pattern: /index
+    defaults: { _controller: ClarolineCoreBundle:Resource:index}
     
-claro_resource_choose_create:
-    pattern: /new/chosen
-    defaults: { _controller: ClarolineCoreBundle:Resource:choose }
+claro_resource_add_to_directory:
+    pattern: /add/{id}
+    defaults: { _controller: ClarolineCoreBundle:Resource:addToDirectory, id:null }
     
-claro_resource_admin_index:
-   pattern: /admin/index
-   defaults: { _controller: ClarolineCoreBundle:Resource:index }
+claro_resource_view:
+    pattern: /view/{id}
+    defaults: { _controller: ClarolineCoreBundle:Resource:view }
+    
+claro_resource_delete:
+    pattern: /delete/{id}
+    defaults: { _controller: ClarolineCoreBundle:Resource:delete }

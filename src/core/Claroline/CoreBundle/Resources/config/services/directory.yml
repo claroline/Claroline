@@ -1,6 +1,6 @@
 services:
-    claroline.resource.manager:
-        class: Claroline\CoreBundle\Library\Manager\ResourceManager
+    claroline.directory.manager:
+        class: Claroline\CoreBundle\Library\Manager\DirectoryManager
         arguments:
             - "@form.factory"
             - "@doctrine.orm.entity_manager"

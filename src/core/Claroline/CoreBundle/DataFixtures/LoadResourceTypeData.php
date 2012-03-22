@@ -14,14 +14,25 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
         $fileType = new ResourceType();
         $fileType->setType('file');
         $fileType->setBundle('CoreBundle');
+        $fileType->setService('claroline.file.manager');
         $fileType->setController('File');
         $fileType->setListable(true);
         $fileType->setNavigable(false);
             
+        $dirType = new ResourceType();
+        $dirType->setType('directory');
+        $dirType->setBundle('CoreBundle');
+        $dirType->setController('Directory');
+        $dirType->setService('claroline.directory.manager');
+        $dirType->setListable(true);
+        $dirType->setNavigable(true);
+         
+        $manager->persist($dirType);
         $manager->persist($fileType);
         $manager->flush();
         
         $this->addReference('resource_type/file', $fileType);
+        $this->addReference('resource_type/dir', $dirType);
     }
     
     public function getOrder()

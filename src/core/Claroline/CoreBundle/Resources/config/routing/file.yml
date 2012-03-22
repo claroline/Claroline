@@ -1,15 +1,15 @@
-claro_file_index:
-    pattern: /
-    defaults: { _controller: ClarolineCoreBundle:File:index }
+claro_file_add_to_directory_form:
+    pattern: /{id}
+    defaults: { _controller: ClarolineCoreBundle:File:addToDirectory, id:null }
   
 claro_file_download:
     pattern: /download/{id}
-    defaults: { _controller: ClarolineCoreBundle:File:download }
+    defaults: { _controller: ClarolineCoreBundle:File:view }
   
 claro_file_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:File:delete }
   
 claro_file_upload:
-    pattern: /upload
-    defaults: { _controller: ClarolineCoreBundle:File:upload }
+    pattern: /upload/{id}
+    defaults: { _controller: ClarolineCoreBundle:File:upload, id:null }

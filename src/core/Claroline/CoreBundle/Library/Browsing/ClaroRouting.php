@@ -39,7 +39,8 @@ class ClaroRouting
                 return $name;
             }
         }  
-        throw new ClarolineException("controller {$controller} doesn't exist");
+        
+        throw new ClarolineException("controller {$controller} was not found");
     }
    
 }
