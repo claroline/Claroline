@@ -54,7 +54,7 @@ class ResourceManager
         return $resources; 
     }
     
-       public function getChildren($resource)
+    public function getChildren($resource)
     {
         $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, true);
                 
