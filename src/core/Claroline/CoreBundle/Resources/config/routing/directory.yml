@@ -11,3 +11,7 @@ claro_directory_add_to_directory:
 claro_directory_view:
     pattern: /view/{id}
     defaults: { _controller: ClarolineCoreBundle:Directory:view, id:null }
+    
+claro_directory_delete:
+    pattern: /delete/{id}
+    defaults: { _controller: ClarolineCoreBundle:Directory:delete }

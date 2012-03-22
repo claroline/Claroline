@@ -10,10 +10,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Form\DirectoryType;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class DirectoryManager implements ContainerAwareInterface
+class DirectoryManager
 {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
@@ -23,12 +22,16 @@ class DirectoryManager implements ContainerAwareInterface
     
     /** @var FormFactory */
     protected $formFactory;
+    
+    /** @var ContainerInterface */
+    protected $container;
 
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container)
     {
         $this->em = $em;
         $this->rightManager = $rightManager;
         $this->formFactory=$formFactory;
+        $this->container=$container;
     }
      
     public function getDirectoriesOfUser($user)
@@ -99,23 +102,23 @@ class DirectoryManager implements ContainerAwareInterface
         $this->removeResourcesFromSubDirectories($directory);
         $this->em->remove($directory);
         $this->em->flush();
-        $this->getRequest()->getSession()->setFlash("notice", "directory removed");
     }
     
     public function deleteById($id)
     {
-       $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->findById($id);
+       $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
        $this->delete($directory);
     }
     
     private function removeResourcesFromDirectory($directory)
     {
-        $resources = $directory->getResources();
+        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory');
+        $resources = $rep->getNotDirectoryDirectChildren($directory);
         
         foreach ($resources as $resource)
         {
-            $rsrcServName = $resource->getService();
-            $rsrcServ = $this->get($rsrcServName);
+            $rsrcServName = $resource->getResourceType()->getService();
+            $rsrcServ = $this->getContainer()->get($rsrcServName);
             $rsrcServ->delete($resource);           
         }
     }
@@ -123,25 +126,25 @@ class DirectoryManager implements ContainerAwareInterface
     private function removeResourcesFromSubDirectories($directory)
     {
         $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory');
-        $directories = $rep->children($directory);
+        $directories = $rep->getDirectoryDirectChildren($directory);
         $this->removeResourcesFromDirectory($directory);
         
         foreach ($directories as $directory)
         {
-            $resources = $directory->getResources();
+            $resources = $rep->getNotDirectoryDirectChildren($directory);
         
             foreach ($resources as $resource)
             {
-                $rsrcServName = $resource->getService();
-                $rsrcServ = $this->get($rsrcServName);
+                $rsrcServName = $resource->getResourceType()->getService();
+                $rsrcServ = $this->getContainer()->get($rsrcServName);
                 $rsrcServ->delete($resource);           
             }
         }
     }
-    
-    public function setContainer(ContainerInterface $container = null)
+     
+    public function getContainer()
     {
-        $this->container = $container;
+        return $this->container;
     }
     
 }
