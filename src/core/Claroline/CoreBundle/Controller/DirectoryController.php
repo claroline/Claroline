@@ -64,7 +64,7 @@ class DirectoryController extends Controller implements ClarolineControllerInter
     {
         $directoryManager = $this->get('claroline.directory.manager');  
         $directoryManager->deleteById($id);
-        $url = $this->generateUrl('claro_resource_user_index');
+        $url = $this->generateUrl('claro_resource_index');
 
         return $this->redirect($url);
     }

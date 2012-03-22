@@ -11,6 +11,7 @@ class FileControllerTest extends FunctionalTestCase
     /** @var string */   
     private $stubDir;
     
+    //todo test upload file in a directory
     public function setUp()
     {
         parent::setUp();
@@ -39,7 +40,6 @@ class FileControllerTest extends FunctionalTestCase
          $this->assertEquals(1, $crawler->filter('.row_resource')->count());
          $this->assertEquals(1, count($this->getUploadedFiles()));
     }
-    
     
     public function testDownload()
     {
