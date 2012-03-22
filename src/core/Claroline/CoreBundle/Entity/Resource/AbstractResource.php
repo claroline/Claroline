@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @Gedmo\Tree(type="nested")
@@ -89,6 +90,12 @@ use Claroline\CoreBundle\Entity\User;
      */
     protected $children;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="resources")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     */
+    protected $workspace;
+    
     public function getId()
     {
         return $this->id;
@@ -152,5 +159,15 @@ use Claroline\CoreBundle\Entity\User;
     public function addChildren(AbstractResource $resource)
     {
         $this->children[] = $resource;
+    }
+    
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+    
+    public function setWorkspace($workspace)
+    {
+        $this->workspace=$workspace;
     }
 }

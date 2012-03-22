@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Exception\ClarolineException;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -55,6 +56,11 @@ abstract class AbstractWorkspace
      * )
      */
     private $tools;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="workspace")
+     */
+    protected $resources;
     
     private static $visitorPrefix = 'ROLE_WS_VISITOR';
     private static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -276,5 +282,16 @@ abstract class AbstractWorkspace
     public function getWorkspaceRoles()
     {
         return $this->roles;
+    }
+    
+    public function getResources()
+    {
+        return $this->resources;
+    }
+    
+    public function addResources(AbstractResource $resource)
+    {
+        $this->resources[] = $resource;
+        $resource->setDirectory($this);
     }
 }
