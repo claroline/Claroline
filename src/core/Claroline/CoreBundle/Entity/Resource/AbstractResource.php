@@ -141,7 +141,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
         $this->name = $name;
     }
     
-        public function setParent(AbstractResource $parent = null)
+    public function setParent(AbstractResource $parent = null)
     {
         $this->parent = $parent;
     }
