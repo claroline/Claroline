@@ -1,9 +1,0 @@
-{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
-{% block section_content %}
-     {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{ path('claro_resource_choose_create') }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
-        {{ form_errors(form_resource) }}
-        {{ form_widget(form_resource) }}
-        <input type="submit" />
-    </form>
-{% endblock %}

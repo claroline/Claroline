@@ -21,3 +21,9 @@ services:
         arguments: ["@session", "@claroline.config.platform_config_handler"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            
+    claroline.listener.ajax.authentication:
+        class: Claroline\CoreBundle\Listener\AjaxAuthenticationListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1 }
+                 

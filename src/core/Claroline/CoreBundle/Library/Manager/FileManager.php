@@ -5,8 +5,10 @@ namespace Claroline\CoreBundle\Library\Manager;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
+use Symfony\Component\Form\FormFactory;
 
 class FileManager extends ResourceManager
 {
@@ -23,9 +25,10 @@ class FileManager extends ResourceManager
     protected $rightManager;
     
     
-    public function __construct(EntityManager $em, RightManagerInterface $rightManager, $formFactory, $dir)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir)
     {   
-        parent::__construct($em, $rightManager);
+        $this->em = $em;
+        $this->rightManager = $rightManager;
         $this->formFactory = $formFactory; 
         $this->dir = $dir;
     }
@@ -44,7 +47,7 @@ class FileManager extends ResourceManager
         return $response;
     }
     
-    public function upload($tmpFile, $fileName, $user)
+    public function upload($tmpFile, $fileName, $user, $parent)
     {
          $size = filesize($tmpFile);
          $hashName = hash('md5', $tmpFile . time());
@@ -52,14 +55,15 @@ class FileManager extends ResourceManager
          $file = new File();
          $file->setSize($size);
          $file->setName($fileName);
-         $file->setHashName($hashName);
+         $file->setHashName($hashName);   
          $file->setUser($user);
+         $file->setParent($parent);
          $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'file'));
          $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
     }
-
+    
     public function deleteById($id)
     {
         $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);

@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  * @ORM\Entity
  * @ORM\Table(name="claro_article")
  */
-class Article extends AbstractResource
+class Article // extends AbstractResource
 {
     /**
      * @ORM\Id

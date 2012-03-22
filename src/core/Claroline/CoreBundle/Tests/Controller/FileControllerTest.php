@@ -35,38 +35,40 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/file');
-         $this->assertEquals(1, $crawler->filter('.file_item')->count());
+         $crawler = $this->client->request('GET', '/resource/index');
+         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
          $this->assertEquals(1, count($this->getUploadedFiles()));
     }
+    
     
     public function testDownload()
     {
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/file');
-         $link = $crawler->filter('.link_download_file')->eq(0)->link();
+         $crawler = $this->client->request('GET', '/resource/index');
+         $link = $crawler->filter('.link_resource_view')->eq(0)->link();
          $this->client->click($link);
          $headers = $this->client->getResponse()->headers;
          $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=originalFile.txt'));
     }
-    
+    /*
     public function testDelete()
     {
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);   
-         $crawler = $this->client->request('GET', '/file');
-         $link = $crawler->filter('.link_delete_file')->eq(0)->link();
+         $crawler = $this->client->request('GET', '/resource/index');
+         var_dump($this->client->getResponse()->getContent());
+         $link = $crawler->filter('.link_delete_resource')->eq(0)->link();
          $crawler = $this->client->click($link);
-         $this->assertEquals(0, $crawler->filter('.file_item')->count());
+         $this->assertEquals(0, $crawler->filter('.row_resource')->count());
          $this->assertEquals(0, count($this->getUploadedFiles()));
-    }
+    }*/
     
     private function uploadFile($filePath)
     {
-        $crawler = $this->client->request('GET', '/file');
+        $crawler = $this->client->request('GET', '/file/null');
         $form = $crawler->filter('input[type=submit]')->form();
         
         return $this->client->submit($form, array('File_Form[file]' => $filePath));

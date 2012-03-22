@@ -7,17 +7,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * @ORM\Entity
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AbstractResourceRepository")
  * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"file" = "File"})
+ * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory"})
  */
-abstract class AbstractResource
+/*abstract*/ class AbstractResource
 {
-    /**
+   /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer") 
      * @ORM\generatedValue(strategy="AUTO")
      */
     protected $id;
@@ -26,30 +27,67 @@ abstract class AbstractResource
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $created;
+    protected $created;
      
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    private $updated;
+    protected $updated;
     
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="resources")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    protected $user;
     
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="resources")
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
-    private $resourceType;
+    protected $resourceType;
     
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    protected $name;
+    
+     /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer")
+     */
+    protected $lft;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    protected $lvl;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer")
+     */
+    protected $rgt;
+
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\Column(name="root", type="integer", nullable=true)
+     */
+    protected $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="parent")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    protected $children;
     
     public function getId()
     {
@@ -94,5 +132,25 @@ abstract class AbstractResource
     public function setName($name)
     {
         $this->name = $name;
+    }
+    
+        public function setParent(AbstractResource $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function addChildren(AbstractResource $resource)
+    {
+        $this->children[] = $resource;
     }
 }

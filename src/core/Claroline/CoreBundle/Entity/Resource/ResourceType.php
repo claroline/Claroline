@@ -1,10 +1,10 @@
 <?php
-
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -35,6 +35,11 @@ class ResourceType
     private $controller;
     
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $service;    
+    
+    /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resource_type")
      */
     private $resources;
@@ -42,13 +47,13 @@ class ResourceType
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isListable;
+    private $isNavigable;
     
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isNavigable;
-    
+    private $isListable;
+        
     public function __construct()
     {
         $this->resources = new ArrayCollection();
@@ -89,27 +94,7 @@ class ResourceType
         $this->resources[] = $resource;
         $resource->setUser($this);
     }
-    
-    public function isNavigable()
-    {
-        return $this->isNavigable;
-    }
-    
-    public function isListable()
-    {
-        return $this->isListable;
-    }
-    
-    public function setNavigable($bool)
-    {
-        $this->isNavigable=$bool;
-    }
-            
-    public function setListable($bool)
-    {
-        $this->isListable=$bool;
-    }    
-    
+         
     public function setBundle($bundle)
     {
         $this->bundle=$bundle;
@@ -118,5 +103,35 @@ class ResourceType
     public function getBundle()
     {
         return $this->bundle;
+    }
+    
+    public function setService($service)
+    {
+        $this->service=$service;
+    }
+    
+    public function getService()
+    {
+        return $this->service;
+    }
+    
+    public function setNavigable($isNavigable)
+    {
+        $this->isNavigable=$isNavigable;
+    }
+    
+    public function getNavigable()
+    {
+        return $this->isNavigable;
+    }
+    
+    public function setListable($isListable)
+    {
+        $this->isListable=$isListable;
+    }
+    
+    public function getListable()
+    {
+        return $this->isListable;
     }
 }

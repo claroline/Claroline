@@ -1,7 +1,8 @@
 {% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
 
 {% block content %}
-<form action="{{path('claro_file_upload')}}" method="post" {{ form_enctype(formfile) }} id="formfile">
+{{dirId}}
+<form action="{{path('claro_file_upload', {'id':dirId })}}" method="post" {{ form_enctype(formfile) }} id="formfile">
     {{ form_errors(formfile) }}
     {% set label_file %}{{ 'file'|trans({}, 'platformTranslation') }}{% endset %}
     {{ form_label(formfile.file, label_file ) }}
@@ -9,14 +10,4 @@
     {{ form_rest(formfile) }}
 <input type="submit" />
 </form>
-<ul id="file_list">
-    {% for file in files %}
-    <li class="file_item" id="{{ file.getName() }}">
-        <a href="{{ path('claro_file_download', {'id': file.id}) }}" class="link_download_file" name="_link_download_file">{{file.name}}</a>
-        {{ 'size'|trans({}, 'document') }} {{file.getFormatSize()}}    
-        <a href="{{ path('claro_file_delete', {'id': file.id}) }}" class="link_delete_file" name="_link_delete_file">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
-    </li>
-    {% endfor %}
-</ul>
-
 {% endblock %}

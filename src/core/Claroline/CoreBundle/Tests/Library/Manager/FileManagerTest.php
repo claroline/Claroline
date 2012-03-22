@@ -31,7 +31,7 @@ class FileManagerTest extends FixtureTestCase
         $ds = DIRECTORY_SEPARATOR;
         $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}";
-        $this->manager =  $this->client->getContainer()->get('claroline.files.file_manager');
+        $this->manager =  $this->client->getContainer()->get('claroline.file.manager');
         $this->cleanDirectory($this->upDir);
         $this->cleanDirectory(__DIR__ . "{$ds}..{$ds}..{$ds}Stub");
         $this->setUpCopy();
@@ -79,7 +79,7 @@ class FileManagerTest extends FixtureTestCase
     {
        $filePath = $this->stubDir.$fileName;
        $file = new File($filePath);
-       $this->manager->upload($file, $fileName, $user); 
+       $this->manager->upload($file, $fileName, $user, null); 
     }
     
     private function setUpCopy()
@@ -125,7 +125,5 @@ class FileManagerTest extends FixtureTestCase
                 unlink($file->getPathname());
             }
         }
-    }
-    
-    
+    }   
 }
