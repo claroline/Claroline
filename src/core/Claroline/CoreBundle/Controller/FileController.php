@@ -57,7 +57,7 @@ class FileController extends Controller implements ClarolineControllerInterface
         }
         else
         {
-            $route = $this->get('router')->generate('claro_file_index');
+            $route = $this->get('router')->generate('claro_resource_index');
             return new RedirectResponse($route);
         }
     }
@@ -67,8 +67,8 @@ class FileController extends Controller implements ClarolineControllerInterface
         $fileManager = $this->get('claroline.file.manager');
         $fileManager->deleteById($id);
         
-        $url = $this->generateUrl('claro_file_index');
-        return $this->redirect($url);
+        $route = $this->get('router')->generate('claro_resource_index');
+        return $this->redirect($route);
     }
     
     public function viewAction($id)
