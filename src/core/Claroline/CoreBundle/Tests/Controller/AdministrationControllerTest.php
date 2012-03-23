@@ -1,4 +1,5 @@
 <?php
+namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 

@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class AbstractResourceRepository extends NestedTreeRepository
-{   /*
+{
     public function getNavigableChildren(AbstractResource $rsrc = null)
     {
         $resourceType = $this->_em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
@@ -20,7 +20,7 @@ class AbstractResourceRepository extends NestedTreeRepository
         
         $query = $this->_em->createQuery($dql);
         return $query->getResult();
-    } */
+    } 
     
     public function getUserRootResource($user)
     {

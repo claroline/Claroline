@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class DirectoryRepository extends NestedTreeRepository
-{   
+{
     public function getDirectoryDirectChildren(Directory $directory)
     {
         $dql = "

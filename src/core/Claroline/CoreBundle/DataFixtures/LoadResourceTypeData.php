@@ -32,7 +32,7 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
         $manager->flush();
         
         $this->addReference('resource_type/file', $fileType);
-        $this->addReference('resource_type/dir', $dirType);
+        $this->addReference('resource_type/directory', $dirType);
     }
     
     public function getOrder()

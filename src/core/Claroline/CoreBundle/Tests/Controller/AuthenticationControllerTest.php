@@ -1,6 +1,5 @@
 <?php
-
-namespace Claroline\CoreBundle\Tests\Controller;
+namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\User;

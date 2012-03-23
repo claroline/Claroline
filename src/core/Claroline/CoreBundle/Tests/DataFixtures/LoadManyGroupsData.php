@@ -50,7 +50,7 @@ class LoadManyGroupsData extends AbstractFixture implements ContainerAwareInterf
             $this->createGroup($i, $arrRoles, $arrUsers, $manager);
         }
         
-        //TODO add many group to even more workspaces
+        //TODO add many group to more workspaces than workpace/ws_a
         $this->getReference('group/manyGroup1')->addRole($this->getReference('workspace/ws_a')->getCollaboratorRole());   
         $manager->flush();
     }
@@ -75,7 +75,6 @@ class LoadManyGroupsData extends AbstractFixture implements ContainerAwareInterf
         $manager->flush();
     }   
     
-    //adds users who are multiple of the user iteration
     protected function genArrayUsers($nbIteration)
     {
         $arrUsers = new ArrayCollection();
@@ -93,7 +92,7 @@ class LoadManyGroupsData extends AbstractFixture implements ContainerAwareInterf
         return $arrUsers;
     }
     
-    //TODO change that one
+    //TODO change that one~ they currently don't have any role~ see line 49
     protected function genArrayRole($nbRoles)
     {
         $arrRoles = new ArrayCollection();
