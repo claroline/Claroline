@@ -1,5 +1,4 @@
 <?php
-
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;

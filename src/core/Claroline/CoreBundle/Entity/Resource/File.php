@@ -29,7 +29,7 @@ class File extends AbstractResource
     private $size;
     
     /**
-     * @ORM\Column(type="string", length=32, name="hash_name")
+     * @ORM\Column(type="string", length=36, name="hash_name")
      * @Assert\NotBlank
      */
     private $hashName;

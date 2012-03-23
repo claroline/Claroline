@@ -50,7 +50,7 @@ class FileManager extends ResourceManager
     public function upload($tmpFile, $fileName, $user, $parent)
     {
          $size = filesize($tmpFile);
-         $hashName = hash('md5', $tmpFile . time());
+         $hashName = $this->GUID();
          $tmpFile->move($this->dir, $hashName);
          $file = new File();
          $file->setSize($size);
@@ -94,6 +94,7 @@ class FileManager extends ResourceManager
     public function getForm()
     {
         $form = $this->formFactory->create(new FileType, new File());
+        
         return $form;
     }
     
@@ -124,5 +125,17 @@ class FileManager extends ResourceManager
         $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findBy(array('user' => $user->getId()));
         
         return $files;        
+    }
+    
+    private function GUID()
+    {
+        if (function_exists('com_create_guid') === true)
+        {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
+            mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
+            mt_rand(0, 65535), mt_rand(0, 65535));
     }
 }
