@@ -1,0 +1,13 @@
+resource_x:
+    class: Valid\WithCustomResources\Entity\ResourceX
+    manager_service_id: resource_x.manager
+    controller: ResourceX
+    listable: true
+    navigable: true
+    
+resource_y:
+    class: Valid\WithCustomResources\Entity\ResourceY
+    manager_service_id: resource_y.manager
+    controller: ResourceY
+    listable: false
+    navigable: false

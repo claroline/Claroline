@@ -80,6 +80,21 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertTrue($this->dbWriter->isSaved($pluginFQCN));
     }
     
+    public function testCustomResourceTypesArePersisted()
+    {
+        $pluginFQCN = 'Valid\WithCustomResources\ValidWithCustomResources';
+        $plugin = $this->loader->load($pluginFQCN);
+        $this->dbWriter->insert($plugin);
+        
+        $expectedTypes = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findByBundle('WithCustomResources');
+        
+        $this->assertEquals(2, count($expectedTypes));
+        $this->assertEquals('Valid\WithCustomResources\Entity\ResourceX', $expectedTypes[0]->getType());
+        $this->assertEquals('Valid\WithCustomResources\Entity\ResourceY', $expectedTypes[1]->getType());
+    }
+    
     public function pluginPropertiesProvider()
     {
         return array(
