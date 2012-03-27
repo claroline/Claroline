@@ -122,28 +122,28 @@ class CommonCheckerTest extends WebTestCase
     public function testCheckThrowsAnExceptionOnInvalidResourceKey()
     {
         $pluginFQCN = 'Invalid\MissingResourceKey\InvalidMissingResourceKey';
-        $plugin = $this->loader->load($pluginFQCN);
+        $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_KEY);
     }
     
     public function testCheckThrowsAnExceptionOnInvalidResourceValue()
     {
         $pluginFQCN = 'Invalid\UnexpectedResourceValue\InvalidUnexpectedResourceValue';
-        $plugin = $this->loader->load($pluginFQCN);
+        $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_VALUE);
     }
     
     public function testCheckThrowsAnExceptionOnInvalidResourceLocation()
     {
         $pluginFQCN = 'Invalid\UnloadableResourceClass\InvalidUnloadableResourceClass';
-        $plugin = $this->loader->load($pluginFQCN);
+        $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_LOCATION);
     }
     
     public function testCheckThrowsAnExceptionOnInvalidResourceType()
     {
         $pluginFQCN = 'Invalid\UnexpectedResourceType\InvalidUnexpectedResourceType';
-        $plugin = $this->loader->load($pluginFQCN);
+        $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_TYPE);
     }
     

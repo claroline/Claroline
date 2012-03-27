@@ -42,10 +42,10 @@ class ResourceExtenderTest extends FunctionalTestCase
         $allRes = $this->em
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->findAll();
-        $specRes1 = $this->em
+        $firstSpecRes = $this->em
             ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource1')
             ->findAll();
-        $specRes2 = $this->em
+        $secondSpecRes = $this->em
             ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2')
             ->findAll();
         $dirRes = $this->em
@@ -53,8 +53,8 @@ class ResourceExtenderTest extends FunctionalTestCase
             ->findAll();
         
         $this->assertEquals(4, count($allRes));
-        $this->assertEquals(1, count($specRes1));
-        $this->assertEquals(2, count($specRes2));
+        $this->assertEquals(1, count($firstSpecRes));
+        $this->assertEquals(2, count($secondSpecRes));
         $this->assertEquals(1, count($dirRes));
     }
     
