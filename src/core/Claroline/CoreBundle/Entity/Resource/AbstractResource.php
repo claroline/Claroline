@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory"})
  */
-/*abstract*/ class AbstractResource
+abstract class AbstractResource
 {
    /**
      * @ORM\Id
