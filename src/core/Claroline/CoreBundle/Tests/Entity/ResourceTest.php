@@ -28,7 +28,7 @@ class ResourceTest extends FixtureTestCase
         
         $interval = $creationTime->diff($resource->getCreationDate());
         
-        $this->assertLessThanOrEqual(1, $interval->s);        
+        $this->assertLessThanOrEqual(2, $interval->s);        
     }
     
     public function testModificationDateIsUpdatedWhenUpdatingAnExistentResource()
