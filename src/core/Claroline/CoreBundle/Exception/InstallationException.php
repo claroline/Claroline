@@ -24,11 +24,15 @@ class InstallationException extends ClarolineException
     const INVALID_ROUTING_EXTENSION = 12;
     const INVALID_YAML_RESOURCE = 13;
     const INVALID_TRANSLATION_KEY = 14;
+    const INVALID_RESOURCE_KEY = 15;
+    const INVALID_RESOURCE_VALUE = 16;
+    const INVALID_RESOURCE_LOCATION = 17;
+    const INVALID_RESOURCE_TYPE = 18;
     
     // general exceptions
-    const UNEXPECTED_REGISTRATION_STATUS = 15;
-    const EMPTY_FILE_ITEM = 16;
-    const ENTIY_VALIDATION_ERROR = 17;
+    const UNEXPECTED_REGISTRATION_STATUS = 19;
+    const EMPTY_FILE_ITEM = 20;
+    const ENTIY_VALIDATION_ERROR = 21;
     
     public function __construct($message, $code)
     {

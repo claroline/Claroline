@@ -22,8 +22,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             
-    claroline.listener.ajax.authentication:
+    claroline.listener.ajax_authentication:
         class: Claroline\CoreBundle\Listener\AjaxAuthenticationListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1 }
                  
+    claroline.listener.resource_extender:
+        class: Claroline\CoreBundle\Listener\ResourceExtender
+        tags:
+            - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default}

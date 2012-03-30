@@ -17,26 +17,26 @@ class Version20120119000000 extends BundleMigration
         $this->createRoleTable($schema);
         $this->createUserRoleTable($schema);
         $this->createGroupRoleTable($schema);
-        $this->createResourceTypeTable($schema);
-        $this->createResourceTable($schema);
-        $this->createDirectoryTable($schema);
-        $this->createFileTable($schema);
         $this->createPluginTable($schema);
         $this->createToolTable($schema);
         $this->createToolInstanceTable($schema);
         $this->createExtensionTable($schema);
+        $this->createResourceTypeTable($schema);
+        $this->createResourceTable($schema);
+        $this->createDirectoryTable($schema);
+        $this->createFileTable($schema);
     }
 
     public function down(Schema $schema)
     {
-        $schema->dropTable('claro_extension');
-        $schema->dropTable('claro_tool_instance');
-        $schema->dropTable('claro_tool');
-        $schema->dropTable('claro_plugin');
         $schema->dropTable('claro_file');
         $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
         $schema->dropTable('claro_resource_type');
+        $schema->dropTable('claro_extension');
+        $schema->dropTable('claro_tool_instance');
+        $schema->dropTable('claro_tool');
+        $schema->dropTable('claro_plugin');
         $schema->dropTable('claro_group_role');
         $schema->dropTable('claro_user_role');
         $schema->dropTable('claro_role');
@@ -180,8 +180,14 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('bundle', 'string');
         $table->addColumn('controller', 'string');
         $table->addColumn('service', 'string');
-        $table->addColumn('isListable', 'boolean');
-        $table->addColumn('isNavigable', 'boolean');
+        $table->addColumn('is_listable', 'boolean');
+        $table->addColumn('is_navigable', 'boolean');
+        $table->addColumn('plugin_id', 'integer', array('notnull' => false));
+        $table->addUniqueIndex(array('type'));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_plugin'), array('plugin_id'), array('id'), array("onDelete" => "CASCADE")
+        );
+        
         $this->storeTable($table);
     }
     

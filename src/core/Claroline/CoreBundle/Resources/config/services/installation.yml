@@ -98,6 +98,7 @@ services:
         arguments:
             - "@validator"
             - "@doctrine.orm.entity_manager"
+            - "@symfony.yaml"
 
     # symfony class used as service argument
     symfony.yaml:

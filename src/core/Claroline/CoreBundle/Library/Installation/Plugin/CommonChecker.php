@@ -8,6 +8,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
 use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
 use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Exception\InstallationException;
 
 class CommonChecker
@@ -59,6 +60,7 @@ class CommonChecker
         $this->checkRoutingPrefixIsNotAlreadyRegistered();
         $this->checkRoutingResourcesAreLoadable();
         $this->checkTranslationKeysAreValid();
+        $this->checkDeclaredResourcesAreValid();
     }
     
     private function checkPluginFollowsFQCNConvention()
@@ -264,6 +266,70 @@ class CommonChecker
                     "{$this->pluginFQCN} : {$type} translation key cannot be empty.",
                     InstallationException::INVALID_TRANSLATION_KEY
                 );
+            }
+        }
+    }
+    
+    private function checkDeclaredResourcesAreValid() 
+    {
+        $resourceFile = $this->plugin->getCustomResourcesFile();
+        
+        if (is_string($resourceFile) && file_exists($resourceFile))
+        {
+            $resources = (array) $this->yamlParser->parse($resourceFile);
+            $expectedKeys = array(
+                'class' => 'string',
+                'manager_service_id' => 'string',
+                'controller' => 'string',
+                'listable' => 'boolean',
+                'navigable' => 'boolean'
+            );
+            
+            foreach ($resources as $resource)
+            {
+                foreach ($expectedKeys as $expectedKey => $expectedType)
+                {
+                    if (! isset($resource[$expectedKey]))
+                    {
+                        throw new InstallationException(
+                            "{$this->pluginFQCN} : {$expectedKey} is required in '{$resourceFile}'.",
+                            InstallationException::INVALID_RESOURCE_KEY
+                        );
+                    }
+                    
+                    if (gettype($resource[$expectedKey]) !== $expectedType)
+                    {
+                        throw new InstallationException(
+                            "{$this->pluginFQCN} : {$expectedKey} must be a {$expectedType} in '{$resourceFile}'.",
+                            InstallationException::INVALID_RESOURCE_VALUE
+                        );
+                    }
+                }
+                
+                $expectedClassLocation = $this->plugin->getPath() . '/../../' 
+                    . str_replace('\\', '/', $resource['class']) . '.php';
+                
+                if (! file_exists($expectedClassLocation))
+                {
+                    throw new InstallationException(
+                        "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) " 
+                        . "cannot be found (looked for {$expectedClassLocation}).",
+                        InstallationException::INVALID_RESOURCE_LOCATION
+                    );
+                }
+                
+                require_once $expectedClassLocation;
+                
+                $classInstance = new $resource['class'];
+                
+                if (! $classInstance instanceof AbstractResource)
+                {
+                    throw new InstallationException(
+                        "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) "
+                        . "must extend Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource.",
+                        InstallationException::INVALID_RESOURCE_TYPE
+                    );
+                }
             }
         }
     }
