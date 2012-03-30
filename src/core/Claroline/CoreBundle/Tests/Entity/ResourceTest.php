@@ -3,30 +3,23 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
-use Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 
 class ResourceTest extends FixtureTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
-    private $em;
-    
     protected function setUp()
     {
         parent::setUp();
-        $this->markTestSkipped();
         $this->loadUserFixture();
-        $this->loadFixture(new LoadResourceTypeData());
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
     
     public function testANewResourceHasCreationAndModificationDatesWhenFlushed()
     {
-        $resource = new Resource(); 
+        $resource = new Directory();
+        $resource->setName('Test');
         $resource->setUser($this->getFixtureReference('user/admin'));
-        $resource->setResourceType($this->getFixtureReference('resource_type/file'));
-        $this->em->persist($resource);
-        $this->em->flush();
+        $this->getEntityManager()->persist($resource);
+        $this->getEntityManager()->flush();
         $creationTime = new \DateTime(); 
         
         $this->assertInstanceOf('DateTime', $resource->getCreationDate());
@@ -35,23 +28,22 @@ class ResourceTest extends FixtureTestCase
         
         $interval = $creationTime->diff($resource->getCreationDate());
         
-        $this->assertLessThanOrEqual(1, $interval->s);        
+        $this->assertLessThanOrEqual(2, $interval->s);        
     }
     
     public function testModificationDateIsUpdatedWhenUpdatingAnExistentResource()
     {
-        $resource = new SpecificResource();
-        $resource->setContent('Test content');
+        $resource = new Directory();
+        $resource->setName('Test');
         $resource->setUser($this->getFixtureReference('user/admin'));
-        $resource->setResourceType($this->getFixtureReference('resource_type/file'));
-        $this->em->persist($resource);
-        $this->em->flush();
+        $this->getEntityManager()->persist($resource);
+        $this->getEntityManager()->flush();
         
         sleep(1);
         
-        $resource->setContent('Updated content');
-        $this->em->persist($resource);
-        $this->em->flush();
+        $resource->setName('Updated name');
+        $this->getEntityManager()->persist($resource);
+        $this->getEntityManager()->flush();
         
         $interval = $resource->getCreationDate()->diff($resource->getModificationDate());
         

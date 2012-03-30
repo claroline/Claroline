@@ -1,0 +1,7 @@
+resource_x:
+    # this class doesnt exist
+    class: Invalid\UnloadableResourceClass\Entity\ResourceX
+    manager_service_id: resource_x.manager
+    controller: ResourceX
+    listable: true
+    navigable: true

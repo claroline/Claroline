@@ -63,4 +63,17 @@ abstract class ClarolinePlugin extends Bundle
     {
         return 'No available description';
     }
+    
+    public function getCustomResourcesFile()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $defaultFilePath = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'resources.yml';
+
+        if (file_exists($defaultFilePath))
+        {
+            return $defaultFilePath;
+        }
+        
+        return null;
+    }
 }

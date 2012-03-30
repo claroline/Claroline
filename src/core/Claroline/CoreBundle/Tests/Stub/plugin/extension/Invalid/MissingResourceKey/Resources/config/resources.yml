@@ -1,0 +1,3 @@
+resource_x:
+    class: Invalid\MissingResourceKey\Entity\FooEntity
+    # other keys (manager_service_id, controller, etc.) are missing

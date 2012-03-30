@@ -3,23 +3,32 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Symfony\Component\Validator\Validator as SymfonyValidator;
+use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
 use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
 use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Tool;
 use Claroline\CoreBundle\Entity\Extension;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Exception\InstallationException;
 
 class DatabaseWriter
 {
     private $validator;
     private $em;
+    private $yamlParser;
     
-    public function __construct(SymfonyValidator $validator, EntityManager $em)
+    public function __construct(
+        SymfonyValidator $validator, 
+        EntityManager $em,
+        Yaml $yamlParser
+    )
     {
         $this->validator = $validator;
         $this->em = $em;
+        $this->yamlParser = $yamlParser;
     }
 
     public function insert(ClarolinePlugin $plugin)
@@ -54,6 +63,7 @@ class DatabaseWriter
         }
 
         $this->em->persist($pluginEntity);
+        $this->persistCustomResourceTypes($plugin, $pluginEntity);
         $this->em->flush();
     }
 
@@ -91,5 +101,29 @@ class DatabaseWriter
         return $this->em
             ->getRepository('Claroline\CoreBundle\Entity\Plugin')
             ->findOneByBundleFQCN($pluginFQCN);
+    }
+    
+    private function persistCustomResourceTypes(ClarolinePlugin $plugin, Plugin $pluginEntity)
+    {
+        $resourceFile = $plugin->getCustomResourcesFile();
+        
+        if (is_string($resourceFile) && file_exists($resourceFile))
+        {
+            $resources = (array) $this->yamlParser->parse($resourceFile);
+
+            foreach ($resources as $resource)
+            {
+                $resourceType = new ResourceType();
+                $resourceType->setType($resource['class']);
+                $resourceType->setBundle($plugin->getBundleName());
+                $resourceType->setService($resource['manager_service_id']);
+                $resourceType->setController($resource['controller']);
+                $resourceType->setListable($resource['listable']);
+                $resourceType->setNavigable($resource['navigable']);
+                $resourceType->setPlugin($pluginEntity);
+                
+                $this->em->persist($resourceType);
+            }
+        }
     }
 }

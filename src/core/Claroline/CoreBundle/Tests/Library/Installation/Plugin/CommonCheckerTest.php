@@ -119,6 +119,34 @@ class CommonCheckerTest extends WebTestCase
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_TRANSLATION_KEY);
     }
 
+    public function testCheckThrowsAnExceptionOnInvalidResourceKey()
+    {
+        $pluginFQCN = 'Invalid\MissingResourceKey\InvalidMissingResourceKey';
+        $this->loader->load($pluginFQCN);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_KEY);
+    }
+    
+    public function testCheckThrowsAnExceptionOnInvalidResourceValue()
+    {
+        $pluginFQCN = 'Invalid\UnexpectedResourceValue\InvalidUnexpectedResourceValue';
+        $this->loader->load($pluginFQCN);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_VALUE);
+    }
+    
+    public function testCheckThrowsAnExceptionOnInvalidResourceLocation()
+    {
+        $pluginFQCN = 'Invalid\UnloadableResourceClass\InvalidUnloadableResourceClass';
+        $this->loader->load($pluginFQCN);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_LOCATION);
+    }
+    
+    public function testCheckThrowsAnExceptionOnInvalidResourceType()
+    {
+        $pluginFQCN = 'Invalid\UnexpectedResourceType\InvalidUnexpectedResourceType';
+        $this->loader->load($pluginFQCN);
+        $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_TYPE);
+    }
+    
     /**
      * @dataProvider validPluginProvider
      */
@@ -219,7 +247,8 @@ class CommonCheckerTest extends WebTestCase
         return array(
             array('Valid\Basic\ValidBasic'),
             array('Valid\Simple\ValidSimple'),
-            array('Valid\Custom\ValidCustom')
+            array('Valid\Custom\ValidCustom'),
+            array('Valid\WithCustomResources\ValidWithCustomResources')
         );
     }
     
