@@ -1,0 +1,13 @@
+{"users" :
+{% set i = 0 %}
+{% if users|length > 1 %}
+[
+{% for user in users %}
+{% set i = i+1 %}
+{"id": {{user.getId()}}, "username": "{{user.getUsername()}}", "lastName": "{{user.getLastName()}}", "firstName": "{{user.getFirstName()}}"}{% if i < users|length %}, {% endif %}
+{% endfor %}
+]
+{% else %}
+{"id": {{users.getId()}}, "username": "{{users.getUsername()}}", "lastName": "{{users.getLastName()}}", "firstName": "{{users.getFirstName()}}"}
+{% endif %}
+}
