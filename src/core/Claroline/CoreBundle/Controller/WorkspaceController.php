@@ -175,7 +175,7 @@ class WorkspaceController extends Controller
         return new RedirectResponse($route);
     }
     
-    public function listUserPerWorkspaceAction($id)
+    /*public function listUserPerWorkspaceAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
@@ -189,6 +189,22 @@ class WorkspaceController extends Controller
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
 
         return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
+    }*/
+    
+    public function listUserPerWorkspaceAction($id)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
+        
+        if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$id}", $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+        
+        $groups= $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
+
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list_dojo.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
     }
     
     public function deleteUserFromWorkspaceAction($userId, $workspaceId)
@@ -236,7 +252,8 @@ class WorkspaceController extends Controller
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
             $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $nbIteration, self::NUMBER_USER_PER_ITERATION);
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.html.twig', array('users' => $users));
+            
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $users));
        }
        
        throw new \Exception("ajax error");
@@ -251,6 +268,7 @@ class WorkspaceController extends Controller
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
             $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $nbIteration, self::NUMBER_GROUP_PER_ITERATION);
+            
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.html.twig', array('groups' => $groups));
        }
        
@@ -267,7 +285,7 @@ class WorkspaceController extends Controller
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
             $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace);
             
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.html.twig', array('users' => $users));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $users));
         }
     }
     
@@ -283,7 +301,7 @@ class WorkspaceController extends Controller
             $user->addRole($workspace->getCollaboratorRole());
             $em->flush();
             
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_add_user.html.twig', array('user' => $user, 'workspace' => $workspace));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $user, 'workspace' => $workspace));
         }
         
         throw new \Exception("ajax error");

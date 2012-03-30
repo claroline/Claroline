@@ -5,8 +5,10 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/main.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/ui-lightness/jquery-ui-1.8.18.custom.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/main.css') }}" />        
+   <!--<link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/ui-lightness/jquery-ui-1.8.18.custom.css') }}" />-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/js/dojo-release-1.7.2-src/dojo/resources/dojo.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/js/dojo-release-1.7.2-src/dijit/themes/claro/claro.css') }}" />
 {% endblock %}
 
 {% block scripts %}
@@ -14,6 +16,22 @@
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-1.7.1.min.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-ui-1.8.18.custom.min.js') }}"></script>
+    <script>
+    var dojoConfig = {
+        async:true,
+        cacheBust:new Date(),
+        waitSeconds:5,
+        parseOnLoad:true,
+        locale: 'en'
+        /*
+        packages: [{
+                name:"workspace_user_list",
+                location:"/workspace/"
+            }]*/
+        };
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/dojo-release-1.7.2-src/dojo/dojo.js') }}" /></script>
+
 {% endblock %}
 
 {% block favicon %}

@@ -1,4 +1,4 @@
-{% for user in users %}
+{% for user in users %}  
     <tr>
         <td><input class="checkbox_user_name" id="checkbox_user_{{user.getId()}}" type="checkbox" value="{{user.getId()}}" id="checkbox_user_{{user.getId()}}">{{user.getUsername()}}</input></td>
         <td>{{user.getFirstName()}}</td>
