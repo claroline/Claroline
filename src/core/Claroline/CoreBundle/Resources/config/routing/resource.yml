@@ -13,3 +13,9 @@ claro_resource_view:
 claro_resource_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
+    
+claro_resource_JSON_tree:
+    pattern: /JSONTree/{id}
+    defaults: { _controller: ClarolineCoreBundle:Resource:getJSONTree }
+    options:
+       expose: true

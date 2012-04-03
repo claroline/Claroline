@@ -1,0 +1,15 @@
+{% if groups is defined %}
+{"groups" :
+{% set i = 0 %}
+{% if groups|length > -1 %}
+[
+{% for group in groups %}
+{% set i = i+1 %}
+{"id": {{group.getId()}}, "name": "{{group.getName()}}"}{% if i < groups|length %}, {% endif %}
+{% endfor %}
+]
+{% else %}
+{"id": {{groups.getId()}}, "name": "{{groups.getName()}}"}
+{% endif %}
+}
+{% endif %}
