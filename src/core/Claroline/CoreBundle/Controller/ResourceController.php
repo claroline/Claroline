@@ -16,7 +16,12 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser(); 
         $formResource = $this->get('form.factory')->create(new ChooseResourceType(), new ResourceType());
         $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
-
+        //test here with the one and only root
+        //root id = 53
+        //$root = $this->get('claroline.resource.manager')->find(53);
+        //$em = $this->getDoctrine()->getEntityManager();
+        //$resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($root);
+        
         return $this->render(
             'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources)
         );
@@ -60,5 +65,33 @@ class ResourceController extends Controller
        $route = $this->get('router')->generate($routeName, array('id' => $id));
             
        return new RedirectResponse($route);
+    }
+    
+    public function getJSONTreeAction($id)
+    {
+        $root = $this->get('claroline.resource.manager')->find($id);
+        $em = $this->getDoctrine()->getEntityManager();
+        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($root);
+       /* 
+       return $this->render(
+            'ClarolineCoreBundle:Resource:resource_tree.json.twig', array(
+            'resources' => $resources, "root" => $root));*/
+       
+       /* create a JAVASCRIPT object string */ 
+       
+       $string = "";
+       $string.="[{id:'".$root.getId()."', name:'".$root.getName()."'";
+       $rootChildren = $root.getChildren();
+       if(count($rootChildren)>=1)
+       {
+           $string.=", children: [";
+               
+       }
+    }
+    
+    private function addResourceObject($string, $resource)
+    {
+        $line = "{id:'".$resource.getId()."', name:'".$resource.getName()."'";
+        return $string;
     }
 }

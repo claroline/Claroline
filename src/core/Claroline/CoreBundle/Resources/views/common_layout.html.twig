@@ -7,8 +7,8 @@
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/main.css') }}" />        
    <!--<link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/css/ui-lightness/jquery-ui-1.8.18.custom.css') }}" />-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/js/dojo-release-1.7.2-src/dojo/resources/dojo.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/js/dojo-release-1.7.2-src/dijit/themes/claro/claro.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/dojo-release-1.7.2-src/dojo/resources/dojo.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/clarolinecore/dojo-release-1.7.2-src/dijit/themes/claro/claro.css') }}" />
 {% endblock %}
 
 {% block scripts %}
@@ -18,19 +18,27 @@
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-ui-1.8.18.custom.min.js') }}"></script>
     <script>
     var dojoConfig = {
-        async:true,
+        async:false,
         cacheBust:new Date(),
         waitSeconds:5,
-        parseOnLoad:true,
-        locale: 'en'
-        /*
-        packages: [{
-                name:"workspace_user_list",
-                location:"/workspace/"
-            }]*/
+        //recommended: parseOnLoad = false and use dojo/parser.parse()
+        parseOnLoad: false,
+        tlmSiblingOfDojo: false,
+        baseUrl:"{{ asset('bundles/clarolinecore/dojo-release-1.7.2-src') }}/",
+        locale: 'fr',
+        DebugAtAllCosts: true,
+        isDebug: true,
+        packages: [
+            {name: "claroline", location: "claroline"},
+            {name: "dojo", location: "dojo"},
+            {name: "dijit", location: "dijit"},
+            {name: "dojox", location: "dojox"},
+            {name: "util", location: "util"}
+            ]
         };
+        //main: modual qui est load par défaut.
     </script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/dojo-release-1.7.2-src/dojo/dojo.js') }}" /></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/dojo-release-1.7.2-src/dojo/dojo.js') }}" /></script>
 
 {% endblock %}
 
