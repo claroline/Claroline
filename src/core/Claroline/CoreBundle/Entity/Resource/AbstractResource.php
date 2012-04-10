@@ -96,6 +96,11 @@ abstract class AbstractResource
      */
     protected $workspace;
     
+    public function setId($id)
+    {
+        $this->id=$id;
+    }
+    
     public function getId()
     {
         return $this->id;
@@ -169,5 +174,13 @@ abstract class AbstractResource
     public function setWorkspace($workspace)
     {
         $this->workspace=$workspace;
+    }
+    
+    public function setResource(array $options)
+    {
+        foreach($options as $parameter => $value)
+        {
+            $this.__set($parameter, $value);
+        }
     }
 }

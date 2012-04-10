@@ -14,6 +14,6 @@ class FileType extends AbstractType
 
     public function getName()
     {
-        return 'File_Form';
+        return 'file_form';
     }
 }

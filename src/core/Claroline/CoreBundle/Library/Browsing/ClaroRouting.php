@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Browsing;
 
 use Symfony\Component\Routing\Router;
 use Claroline\CoreBundle\Exception\ClarolineException;
+use Doctrine\ORM\EntityManager;
 
 class ClaroRouting
 {
@@ -12,9 +13,16 @@ class ClaroRouting
      */
     private $router;
     
-    public function __construct(Router $router)
+    /**
+     * @var EntityManager 
+     */    
+    private $em;
+    
+    public function __construct(Router $router, EntityManager $em)
     {
         $this->router=$router;
+        $this->em=$em;
+        
     }
     
     public function getRouteName($bundle, $controller, $method)
@@ -42,6 +50,19 @@ class ClaroRouting
         
         throw new ClarolineException("controller {$controller} was not found");
     }
-   
+    
+    public function getAllFormRoutes()
+    {
+        $routes = array();
+        
+        $resourcesType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        
+        foreach($resourcesType as $resourceType)
+        {       
+            $routes[$resourceType->getType()]=$this->getRouteName($resourceType->getBundle(), $resourceType->getController(), 'form');
+        }
+        
+        return $routes;
+    }
 }
 

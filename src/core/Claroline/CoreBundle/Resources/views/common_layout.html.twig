@@ -18,7 +18,7 @@
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jquery/jquery-ui-1.8.18.custom.min.js') }}"></script>
     <script>
     var dojoConfig = {
-        async:false,
+        async:true,
         cacheBust:new Date(),
         waitSeconds:5,
         //recommended: parseOnLoad = false and use dojo/parser.parse()
@@ -26,8 +26,8 @@
         tlmSiblingOfDojo: false,
         baseUrl:"{{ asset('bundles/clarolinecore/dojo-release-1.7.2-src') }}/",
         locale: 'fr',
-        DebugAtAllCosts: true,
-        isDebug: true,
+        DebugAtAllCosts: false,
+        isDebug: false,
         packages: [
             {name: "claroline", location: "claroline"},
             {name: "dojo", location: "dojo"},

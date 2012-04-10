@@ -1,8 +1,0 @@
-{ "resources" :[
-<!----------- here is the root resource ! ----->
-{"id": {{root.getId()}}, "name": "{{root.getName()}}"}
-<!----------- here comes the children ! ------->
-{% for resource in resources %}
-,{"id": {{resource.getId()}}, "name": "{{resource.getName()}}", "parent":{{resource.getParent().getId()}}}
-{% endfor %}
-]}
