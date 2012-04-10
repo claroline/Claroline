@@ -2,9 +2,9 @@ claro_resource_index:
     pattern: /index
     defaults: { _controller: ClarolineCoreBundle:Resource:index}
     
-claro_resource_add_to_directory:
+claro_resource_show_form:
     pattern: /add/{id}
-    defaults: { _controller: ClarolineCoreBundle:Resource:addToDirectory, id:null }
+    defaults: { _controller: ClarolineCoreBundle:Resource:showResourceForm, id:null }
     
 claro_resource_view:
     pattern: /view/{id}
@@ -13,9 +13,31 @@ claro_resource_view:
 claro_resource_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
+    options:
+      expose: true
     
 claro_resource_JSON_tree:
     pattern: /JSONTree/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:getJSONTree }
     options:
        expose: true
+       
+claro_resource_fakeroute:
+    pattern: tree/JSON
+    defaults: { _controller: ClarolineCoreBundle:Resource:index }
+    options:
+      expose: true
+       
+claro_resource_JSON_node:
+    pattern: tree/JSON/{id}
+    defaults: { _controller: ClarolineCoreBundle:Resource:getJSONResourceNode }
+    options:
+      expose: true
+      
+ClarolineCoreBundle_resource_edit:
+   pattern: tree/JSON/{param}
+   defaults: { _controller: ClarolineCoreBundle:Resource:edit }
+   options:
+      expose: true  
+   
+   

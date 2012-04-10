@@ -1,17 +1,26 @@
-claro_directory_add:
+#todo change route add_to_xxx
+ClarolineCoreBundle_directory_add:
     pattern: /add/{id}
     defaults: { _controller: ClarolineCoreBundle:Directory:add, id:null }
-    requirements:
-      _method: POST
+    options:
+       expose: true    
   
-claro_directory_add_to_directory:
+ClarolineCoreBundle_directory_add_to_directory:
     pattern: /show/{id}
     defaults: { _controller: ClarolineCoreBundle:Directory:addToDirectory, id:null }
+    options:
+       expose: true
     
-claro_directory_view:
+ClarolineCoreBundle_directory_view:
     pattern: /view/{id}
     defaults: { _controller: ClarolineCoreBundle:Directory:view, id:null }
     
-claro_directory_delete:
+ClarolineCoreBundle_directory_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Directory:delete }
+    
+ClarolineCoreBundle_directory_form:
+    pattern: /form
+    defaults: { _controller: ClarolineCoreBundle:Directory:form }
+    options:
+       expose: true    

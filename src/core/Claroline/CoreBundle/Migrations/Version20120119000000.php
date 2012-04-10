@@ -177,6 +177,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_type');   
         $this->addId($table);
         $table->addColumn('type', 'string');
+        $table->addColumn('vendor', 'string', array('notnull' => false));
         $table->addColumn('bundle', 'string');
         $table->addColumn('controller', 'string');
         $table->addColumn('service', 'string');

@@ -84,7 +84,6 @@ function(declare, template, translation, Dialog, domConstruct, on, xhr, CheckBox
            url: Routing.generate(route, routeParams),
            load: function(data){
                row = dom.byId('user_'+userId);
-               alert(Routing.generate(route, routeParams));
                domConstruct.destroy(row); 
            },
            error: function(e, ioargs){

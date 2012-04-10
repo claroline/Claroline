@@ -1,45 +1,273 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <script> 
-   dojo.require("dojo.data.ObjectStore");
-   dojo.require( "dijit.Tree" );
-   dojo.require("dojo.store.Memory");
-   require(['dojo/parser']);
-
-   dojo.addOnLoad(function(){
-
-        var objectStore = new dojo.store.Memory({
-        data : [
-        {id:"A", label: "Root", children:[
-            {id:"1", label:"First"},
-            {id:"2", label:"Second", children:[
-                {id:"2a", label:"First child"},
-                {id:"2b", label:"Second child"},
-            ]},
-            {id:"3", label:"Third"},
-            {id:"4", label:"Fourth"},
-        ]}]/*,
-        getChildren: function(object){
-            return this.query({parent: object.id});
-        }*/
-    });
-    
-    var dataStore = new dojo.data.ObjectStore({objectStore: objectStore});
-    var treeModel = new dijit.tree.TreeStoreModel({store: dataStore});
-    
-    var tree = new dijit.Tree({
-        model: treeModel
-        }, 'treeNode');
+ //todo vérifier la réponse du serveur avant de changer ? 
+ 
+ 
+require([
+    "dojo/store/JsonRest", 
+    "dijit/Tree", 
+    "dijit/tree/dndSource", 
+    "dijit/Menu", 
+    "dijit/MenuItem", 
+    "dijit/PopupMenuItem",
+    "dojo/_base/xhr",
+    "dijit/Dialog",
+    "dojo/on",
+    "dojo/domReady!"
+    ], function(JsonRest, Tree, dndSource, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on) {
         
+    dialog = createTreeDialog();
+    
+    on(dojo.byId("dialog_tree_button"), "click", function(e){
+        dialog.show();
+        });
+   var path = Routing.generate("claro_resource_fakeroute");
+   path+="/";
+   resources = new JsonRest({
+   target:path,
+   mayHaveChildren: function(object){
+        return "children" in object;
+    },
+    getChildren: function(object, onComplete, onError){
+        this.get(object.id).then(function(fullObject){
+            object.children = fullObject.children;
+            onComplete(fullObject.children);
+        }, function(error){
+            console.error(error);
+            onComplete([]);
+        });
+    },
+    getRoot: function(onItem, onError){
+        this.get(0).then(onItem, onError);
+    },
+    getLabel: function(object){
+        return object.name;
+    },
+    pasteItem: function(child, oldParent, newParent, bCopy, insertIndex){
+        var store = this;
+        console.log(child);
+        console.log(oldParent);
+        console.log(newParent);
+        console.log(bCopy);
+        console.log(insertIndex);
+        
+        updateDataBase(child, newParent);
+        //faudra mettre tout ça dedans
+        store.get(oldParent.id).then(function(oldParent){
+            store.get(newParent.id).then(function(newParent){
+                var oldChildren = oldParent.children;
+                dojo.some(oldChildren, function(oldChild, i){
+                    if(oldChild.id == child.id){
+                        oldChildren.splice(i, 1);
+                        return true;
+                    }
+                });
+                store.put(oldParent);
+                newParent.children.splice(insertIndex || 0, 0, child);
+                store.put(newParent);
+            });
+        });
+    },
+    put: function(object, options){
+        this.onChildrenChange(object, object.children);
+        this.onChange(object);
+        return JsonRest.prototype.put.apply(this, arguments);
+    },
+    remove: function(id){
+        this.onDelete({id: id});
+    },
+    onChildrenChange: function(parent, children){
+    },
+    onChange: function(object){
+    },
+    onDelete: function(object){
+    }
+   });
+   
+   function getStore()
+   {
+       return resources;
+   }
+   
+   tree = new Tree({ 
+       model: resources,
+       openOnDblClick:true,
+       autoExpand:false,
+       dndController: dndSource
+    }, "treeNode");
+    
     tree.startup();
-});        
+    
+    var menu = new dijit.Menu({
+        targetNodeIds:["treeNode"],
+        nodeId: 0
+        });
+    menu.addChild(new dijit.MenuItem({
+        label:"rename",
+        }));
+    menu.addChild(new dijit.MenuItem({
+        label:"delete",
+        onClick: function(){
+            removeResource(menu.get('nodeId'));
+            }
+        }));
+    menu.addChild(new dijit.MenuItem({
+        label:"open",
+        }));
+
+    var subMenu = new dijit.Menu();
+    
+    {% for resourceType in resourcesType %}
+    subMenu.addChild(new dijit.MenuItem({
+        label:"{{resourceType.getType()}}",
+        onClick: function(){addResource("{{routes[resourceType.getType()]}}", "{{resourceType.getVendor()}}", "{{resourceType.getBundle()}}","{{resourceType.getType()}}", menu.get('nodeId'))}
+        }));
+    {% endfor %}
+    
+    menu.addChild(new dijit.PopupMenuItem({
+        label:"add",
+        popup:subMenu
+        }));
+    menu.startup();
+    
+    dojo.connect(menu, "_openMyself", tree, function(e){
+        var tn = dijit.getEnclosingWidget(e.target);
+        menu.set("nodeId", tn.item.id);      
+    }); 
+    
+    function getSelectedTreeItem()
+    {
+        return menu.get("nodeId");
+    }  
+    function addResource(route, vendor, bundle, type, id)
+    {
+        xhr.post({
+            url:Routing.generate(route),
+            load: function(data){
+                createFormDialog(data, vendor, bundle, type, id);
+            },
+            error: function(e, ioargs){
+                switch(ioargs.xhr.status)
+                {
+                    case 403:
+                        //window.location.reload();
+                        break;
+                    default:
+                        alert(e);
+                }
+            }
+        });       
+    }
+    
+    function createTreeDialog()
+    {
+        var dialog = new Dialog({
+            title: "dialog tree",
+            content:'<div id="treeNode"></div>',
+            draggable: true,
+            open: false
+            });
+            
+        return dialog;    
+    }
+    
+    function createFormDialog(data, vendor, bundle, type, id)
+    {
+        var dialog = new Dialog({
+        title:"form dialog",
+        content: data,
+        draggable: true,
+        open: false,
+        onCancel: function(){this.destroyRecursive();}
+        });  
+            
+        route = vendor+bundle+"_"+type+"_add";
+              
+        on(dojo.byId("generic_form"), "submit", function(event){ 
+            dojo.stopEvent(event);
+            sendForm(route, {'id': id}, dialog, dojo.byId("generic_form"));
+            });
+        
+        dialog.show();
+        
+        return dialog;
+    }
+    
+    function sendForm(route, routeParameters, dialog, form)
+    {
+        xhr.post({
+                url:Routing.generate(route, routeParameters),
+                form:form,
+                load:function(data){          
+                        if(data!="")
+                        {
+                            store = getStore();
+                            store.get(getSelectedTreeItem()).then(function(selectedObject){
+                                selectedObject.children.push(data);
+                                store.put(selectedObject);
+                            });
+                        } 
+                        dialog.destroyRecursive();           
+                    },
+                error: function(e, ioargs){
+                    alert(e);
+                    
+                    switch(ioargs.xhr.status)
+                    {
+                        case 403:
+                            window.location.reload();
+                            break;
+                        default:
+                            alert(e);
+                    }
+                }
+            });
+    }
+    
+    
+    function removeResource(id)
+    {    
+        xhr.post({
+            url:Routing.generate("claro_resource_delete", {"id": id}),
+            load:function(data){
+                    if(data=='0')
+                    {
+                        alert("je passe");
+                        store = getStore();
+                        store.remove(id);
+                    }
+                }
+            });
+    }
+    
+    
+    
+    /*
+    function updateDatabase(child, newParent)
+    {
+        routeParameters = "someParams";
+        route = "ClarolineCoreBundle_resource_edit";
+        
+        xhr.post({
+            url: Routing.generate(route, routeParameters),
+            data: "child & newParent",
+            load:function(data){
+                alert(data);
+                }                  
+        });         
+    }*/
+}); 
+
+
 </script>
      {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{ path('claro_resource_add_to_directory', {'id':'null'}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
+    <form action="{{ path('claro_resource_show_form', {'id':'null'}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
         {{ form_errors(form_resource) }}
         {{ form_widget(form_resource) }}
         <input type="submit" />
     </form>
+    <br><br><br><br><br>
 
     NAVIGABLE
     {% for resource in resources %}
@@ -54,8 +282,5 @@
             <div class="row_resource"><a href="{{path('claro_resource_view', {'id':resource.getId()})}}" id="link_resource_view_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> | {{resource.getResourceType().getType()}} | <a id="link_resource_delete_{{resource.getId()}}" href="{{path('claro_resource_delete', {'id':resource.getId()})}}" class="link_delete_resource">delete</a></div>
         {% endif %}
     {% endfor %}
-            
-        <h1>Tree structure using the new Dojo Object Store</h1>
-		<div id="treeNode"></div>
-        <a href="{{path('claro_resource_JSON_tree', {'id':53})}}">get tree 53</a>
+    <button id="dialog_tree_button">resources</button>
 {% endblock %}

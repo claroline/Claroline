@@ -1,15 +1,26 @@
-claro_file_add_to_directory_form:
-    pattern: /{id}
+#todo change route add_to_xxx
+ClarolineCoreBundle_file_add_to_directory_form:
+    pattern: show/{id}
     defaults: { _controller: ClarolineCoreBundle:File:addToDirectory, id:null }
+    options:
+       expose: true
   
-claro_file_download:
+ClarolineCoreBundle_file_download:
     pattern: /download/{id}
     defaults: { _controller: ClarolineCoreBundle:File:view }
-  
-claro_file_delete:
+    
+ClarolineCoreBundle_file_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:File:delete }
   
-claro_file_upload:
-    pattern: /upload/{id}
-    defaults: { _controller: ClarolineCoreBundle:File:upload, id:null }
+ClarolineCoreBundle_file_add:
+    pattern: /add/{id}
+    defaults: { _controller: ClarolineCoreBundle:File:add, id:null }
+    options:
+       expose: true    
+    
+ClarolineCoreBundle_file_form:
+    pattern: /form
+    defaults: { _controller: ClarolineCoreBundle:File:form }
+    options:
+       expose: true    

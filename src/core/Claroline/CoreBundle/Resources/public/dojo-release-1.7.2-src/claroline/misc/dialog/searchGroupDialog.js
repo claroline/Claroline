@@ -25,7 +25,7 @@ function(declare, template, translation, Dialog, domConstruct, on, xhr, CheckBox
                     case 403:
                         window.location.reload();
                         break;
-                    defaults:
+                    default:
                         alert(e);
                 }
             }
@@ -71,7 +71,7 @@ function(declare, template, translation, Dialog, domConstruct, on, xhr, CheckBox
                     case 403:
                         window.location.reload();
                         break;
-                    defaults:
+                    default:
                         alert(e);
                 }
             }
@@ -91,7 +91,7 @@ function(declare, template, translation, Dialog, domConstruct, on, xhr, CheckBox
                     case 403:
                         window.location.reload();
                         break;
-                    defaults:
+                    default:
                         alert(e);
                 }
             }
@@ -119,7 +119,7 @@ function(declare, template, translation, Dialog, domConstruct, on, xhr, CheckBox
                     case 403:
                         window.location.reload();
                         break;
-                    defaults:
+                    default:
                         alert(e);
                 }
             }                           

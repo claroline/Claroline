@@ -62,6 +62,8 @@ class FileManager extends ResourceManager
          $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
+         
+         return $file;
     }
     
     public function deleteById($id)

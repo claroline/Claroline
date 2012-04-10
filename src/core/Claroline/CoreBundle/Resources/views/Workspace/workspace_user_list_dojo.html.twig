@@ -2,13 +2,12 @@
 {% block section_content %}
 
 <script>
-    
+   
     require(["claroline/workspace/workspace_user_list", "dojo/domReady!"], function(workspaceController){
         workspaceController.init({{workspace.getId()}});
-        });
-        
+    });
     require(["dijit/form/Button", "dojo/domReady"]);
-     
+
 </script>
 
 {{ 'registered_users'|trans({}, 'platformTranslation') }}

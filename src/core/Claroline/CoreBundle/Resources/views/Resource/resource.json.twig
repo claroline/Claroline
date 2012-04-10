@@ -1,0 +1,31 @@
+{
+    "name": "{{root.getName()}}",
+    "id": "{{root.getId()}}",
+    "type" :"{{root.getResourceType().getType()}}"
+    {% if root.getResourceType.getNavigable() == 1 %}
+        ,"children": [ 
+        {% for resource in root.getChildren() %}
+            {
+                "navigable": "{{resource.getResourceType().getNavigable() == 1 }}",
+                "name": "{{resource.getName()}}", 
+                "id": "{{resource.getId()}}",
+                "type": "{{resource.getResourceType().getType()}}"
+                {% if resource.getResourceType.getNavigable() == 1  %}
+                ,"children": [
+                    {% for child in resource.getChildren() %}
+                        {
+                            "name": "{{child.getName()}}", 
+                            "id": "{{child.getId()}}",
+                            "type": "{{child.getResourceType().getType()}}"
+                            {% if child.getResourceType().getNavigable() == 1 %}
+                                ,"children": true
+                            {% endif %}
+                        },
+                    {% endfor %}
+                ]
+                {% endif %}
+            },
+        {% endfor %}
+    ]
+    {% endif %}
+}

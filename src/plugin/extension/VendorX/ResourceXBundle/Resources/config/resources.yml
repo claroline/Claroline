@@ -4,6 +4,7 @@ resource_x:
     controller: ResourceX
     listable: true
     navigable: true
+    vendor: VendorX
     
 resource_y:
     class: VendorX\ResourceXBundle\Entity\ResourceY
@@ -11,3 +12,4 @@ resource_y:
     controller: ResourceY
     listable: true
     navigable: false
+    vendor: VendorX

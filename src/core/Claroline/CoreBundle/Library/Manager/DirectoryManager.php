@@ -77,7 +77,7 @@ class DirectoryManager
         return $resources; 
     }
     
-    public function getDirectoryForm()
+    public function getForm()
     {
         $form = $this->formFactory->create(new DirectoryType, new Directory());
         
@@ -95,6 +95,8 @@ class DirectoryManager
         $directory->setResourceType($resourceType);
         $this->em->persist($directory);
         $this->em->flush();
+        
+        return $directory;
     }
     
     public function delete($directory)

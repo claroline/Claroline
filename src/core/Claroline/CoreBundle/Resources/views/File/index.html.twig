@@ -2,7 +2,7 @@
 
 {% block content %}
 {{dirId}}
-<form action="{{path('claro_file_upload', {'id':dirId })}}" method="post" {{ form_enctype(formfile) }} id="formfile">
+<form action="{{path('ClarolineCoreBundle_file_add', {'id':dirId })}}" method="post" {{ form_enctype(formfile) }} id="formfile">
     {{ form_errors(formfile) }}
     {% set label_file %}{{ 'file'|trans({}, 'platformTranslation') }}{% endset %}
     {{ form_label(formfile.file, label_file ) }}

@@ -37,6 +37,11 @@ class ResourceType
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $vendor;
+    
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $service;    
     
     /**
@@ -149,5 +154,15 @@ class ResourceType
     public function getPlugin()
     {
         return $this->plugin;
+    }
+    
+    public function setVendor($vendor)
+    {
+        $this->vendor = $vendor;
+    }
+    
+    public function getVendor()
+    {
+        return $this->vendor;
     }
 }
