@@ -25,6 +25,7 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceTable($schema);
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
+        $this->createWorkspaceResourceTable($schema);
     }
 
     public function down(Schema $schema)
@@ -44,6 +45,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace');
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
+        $schema->dropTable('claro_workspace_resource');
     }
 
     private function createUserTable(Schema $schema)
@@ -294,6 +296,20 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_directory');
         $this->addId($table);
         $this->storeTable($table);
+    }
+    
+    private function createWorkspaceResourceTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_resource');
+        $this->addId($table);
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('resource_id', 'integer');
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')    
+        );
     }
 
 }

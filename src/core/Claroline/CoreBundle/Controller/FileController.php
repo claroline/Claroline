@@ -23,6 +23,7 @@ class FileController extends Controller implements ClarolineControllerInterface
         );
     }
     
+    //ajax submission: no route
     public function formAction()
     {
         $fileManager = $this->get('claroline.file.manager');
@@ -33,6 +34,7 @@ class FileController extends Controller implements ClarolineControllerInterface
         );
     }
     
+    //"normal" submission: must have a route
     public function addToDirectoryAction($id)
     {
         $fileManager = $this->get('claroline.file.manager');

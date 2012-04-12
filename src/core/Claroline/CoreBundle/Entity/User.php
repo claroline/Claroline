@@ -94,7 +94,6 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Role"
-
      * )
      * @ORM\JoinTable(name="claro_user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -115,7 +114,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      */
     protected $workspaceRoles;
     
-     /**
+    /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="user")
      */
     private $resources;

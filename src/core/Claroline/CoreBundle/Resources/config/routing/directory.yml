@@ -18,6 +18,8 @@ ClarolineCoreBundle_directory_view:
 ClarolineCoreBundle_directory_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Directory:delete }
+    options:
+       expose: true
     
 ClarolineCoreBundle_directory_form:
     pattern: /form
