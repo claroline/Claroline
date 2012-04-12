@@ -1,9 +1,147 @@
 {% extends 'ClarolineCoreBundle:Workspace:base_template.html.twig' %}
 {% block section_content %}
+<script>
+    require([
+    "dojo/store/JsonRest", 
+    "dijit/Tree", 
+    "dijit/tree/dndSource", 
+    "dijit/Menu", 
+    "dijit/MenuItem", 
+    "dijit/PopupMenuItem",
+    "dojo/_base/xhr",
+    "dijit/Dialog",
+    "dojo/on",
+    "dojo/text!claroline/misc/dialog/file_picker.html",
+    "dojo/domReady!"
+    ], function(JsonRest, Tree, dndSource, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on, template) {
+        
+        dialog = createDialog();
+    
+        function createDialog()
+        {
+            var dialog = new Dialog({
+                title:"file picker",
+                content:template,
+                draggable: true,
+                open: false
+                });
+            
+            return dialog;       
+        }
+        
+        on(dojo.byId("file_picker_button"), "click", function(e){
+            dialog.show();
+        });
+        on(dojo.byId("user_files_button"), "click", function(e){
+            createUserFilesTree();
+        }); 
+        
+        function createUserFilesTree(){
+            var path = Routing.generate("claro_resource_fakeroute");
+            path+="/"
+        
+            resources = new JsonRest({
+                target:path,
+                mayHaveChildren: function(object){
+                return "children" in object;
+            },
+            getChildren: function(object, onComplete, onError){
+                this.get(object.id).then(function(fullObject){
+                object.children = fullObject.children;
+                onComplete(fullObject.children);
+            }, function(error){
+                console.error(error);
+                onComplete([]);
+            });
+            },
+            getRoot: function(onItem, onError){
+                this.get(0).then(onItem, onError);
+            },
+            getLabel: function(object){
+                return object.name;
+            },
+            pasteItem: function(child, oldParent, newParent, bCopy, insertIndex){
+                var store = this;
+                //faudra mettre tout ça dedans
+                store.get(oldParent.id).then(function(oldParent){
+                    store.get(newParent.id).then(function(newParent){
+                        var oldChildren = oldParent.children;
+                        dojo.some(oldChildren, function(oldChild, i){
+                            if(oldChild.id == child.id){
+                                oldChildren.splice(i, 1);
+                                return true;
+                            }
+                        });
+                        store.put(oldParent);
+                        newParent.children.splice(insertIndex || 0, 0, child);
+                        store.put(newParent);
+                    });
+                });
+            },
+            put: function(object, options){
+                this.onChildrenChange(object, object.children);
+                this.onChange(object);
+                return JsonRest.prototype.put.apply(this, arguments);
+            },
+            remove: function(id){
+             this.onDelete({id: id});
+            },
+            onChildrenChange: function(parent, children){
+            },
+            onChange: function(object){
+            },
+            onDelete: function(object){
+            }
+            });
+        
+            tree = new Tree({ 
+            model: resources,
+            openOnDblClick:true,
+            autoExpand:false,
+            //dndController: dndSource
+            }, "to_pick");
+    
+            tree.startup();
+            
+            var menu = new dijit.Menu({
+                targetNodeIds:["to_pick"],
+                resourceId:0
+                });
+                
+            menu.addChild(new dijit.MenuItem({
+                label:"add",
+                onClick: function(){
+                    addResource(menu.get('to_pick'),"ClarolineCoreBundle_resource_addToWorkspace", {'idResource': menu.get('resourceId'), 'idWorkspace':{{workspace.getId()}}});
+                    }
+            }));
+            
+            dojo.connect(menu, "_openMyself", tree, function(e){
+                var tn = dijit.getEnclosingWidget(e.target);
+                menu.set("resourceId", tn.item.id);      
+            }); 
+        };
+        
+        function addResource(resourceId, route, routeParams)
+        {
+            xhr.post({
+                url:Routing.generate(route, routeParams),
+                load:function(data){
+                    alert(data);
+                    }
+                });
+        }
+    });
+</script>    
     <div id="div_WS_show">
     {{workspace.getName()}}: {{ 'workspace'|trans({}, 'platformTranslation') }}
     {% if is_granted(workspace.getManagerRole().getName()) %}
-        | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>
+        | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
+          <button id="file_picker_button">file</button>
     {% endif %}
+          <div id='div_resource'>
+              {% for resource in workspace.getResources() %}
+                  <div id="resource_row"> <div class="row_resource"><a href="{{path('claro_resource_view', {'id':resource.getId()})}}" id="link_resource_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> <a href="{{path('ClarolineCoreBundle_resource_removeFromWorkspace',{'idResource':resource.getId(), 'idWorkspace':workspace.getId()})}}"> delete </a>
+              {% endfor %}
+          </div>
     </div>
 {% endblock %}

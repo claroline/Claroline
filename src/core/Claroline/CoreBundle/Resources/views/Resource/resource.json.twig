@@ -11,18 +11,7 @@
                 "id": "{{resource.getId()}}",
                 "type": "{{resource.getResourceType().getType()}}"
                 {% if resource.getResourceType.getNavigable() == 1  %}
-                ,"children": [
-                    {% for child in resource.getChildren() %}
-                        {
-                            "name": "{{child.getName()}}", 
-                            "id": "{{child.getId()}}",
-                            "type": "{{child.getResourceType().getType()}}"
-                            {% if child.getResourceType().getNavigable() == 1 %}
-                                ,"children": true
-                            {% endif %}
-                        },
-                    {% endfor %}
-                ]
+                ,"children": true
                 {% endif %}
             },
         {% endfor %}

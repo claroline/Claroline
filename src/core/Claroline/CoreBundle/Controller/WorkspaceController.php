@@ -141,7 +141,11 @@ class WorkspaceController extends Controller
          {
             throw new AccessDeniedHttpException();
          }
-               
+         
+         $resources = null;
+         
+         //$resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findBy(array('workspace' => $id));
+         
          return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace));
     }
     
@@ -175,22 +179,6 @@ class WorkspaceController extends Controller
         return new RedirectResponse($route);
     }
     
-    /*public function listUserPerWorkspaceAction($id)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-        
-        if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$id}", $workspace))
-        {
-            throw new AccessDeniedHttpException();
-        }
-        
-        $groups= $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
-
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
-    }*/
-    
     public function listUserPerWorkspaceAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -204,7 +192,7 @@ class WorkspaceController extends Controller
         $groups= $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
 
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list_dojo.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
+        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
     }
     
     public function deleteUserFromWorkspaceAction($userId, $workspaceId)

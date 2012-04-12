@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Gedmo\Tree(type="nested")
@@ -17,7 +18,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  */
 abstract class AbstractResource
 {
-   /**
+    /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
      * @ORM\generatedValue(strategy="AUTO")
@@ -53,7 +54,7 @@ abstract class AbstractResource
      */
     protected $name;
     
-     /**
+    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -91,10 +92,21 @@ abstract class AbstractResource
     protected $children;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="resources")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", 
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="claro_workspace_resource",
+     *      joinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id")}
+     * )
      */
-    protected $workspace;
+    protected $workspaces;
+    
+    public function __construct()
+    {
+        $this->workspaces = new ArrayCollection();
+    }
     
     public function setId($id)
     {
@@ -168,14 +180,15 @@ abstract class AbstractResource
     
     public function getWorkspace()
     {
-        return $this->workspace;
+        return $this->workspaces;
     }
     
-    public function setWorkspace($workspace)
+    public function removeWorkspace($workspace)
     {
-        $this->workspace=$workspace;
+        $this->workspaces->removeElement($workspace);
+        $workspace->getResources()->removeElement($this);        
     }
-    
+      
     public function setResource(array $options)
     {
         foreach($options as $parameter => $value)

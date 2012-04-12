@@ -1,8 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <script> 
- //todo vérifier la réponse du serveur avant de changer ? 
- 
  
 require([
     "dojo/store/JsonRest", 
@@ -14,8 +12,9 @@ require([
     "dojo/_base/xhr",
     "dijit/Dialog",
     "dojo/on",
+    "dojo/io/iframe",
     "dojo/domReady!"
-    ], function(JsonRest, Tree, dndSource, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on) {
+    ], function(JsonRest, Tree, dndSource, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on, iframe) {
         
     dialog = createTreeDialog();
     
@@ -26,6 +25,7 @@ require([
    path+="/";
    resources = new JsonRest({
    target:path,
+   
    mayHaveChildren: function(object){
         return "children" in object;
     },
@@ -46,13 +46,7 @@ require([
     },
     pasteItem: function(child, oldParent, newParent, bCopy, insertIndex){
         var store = this;
-        console.log(child);
-        console.log(oldParent);
-        console.log(newParent);
-        console.log(bCopy);
-        console.log(insertIndex);
         
-        updateDataBase(child, newParent);
         //faudra mettre tout ça dedans
         store.get(oldParent.id).then(function(oldParent){
             store.get(newParent.id).then(function(newParent){
@@ -145,13 +139,13 @@ require([
         xhr.post({
             url:Routing.generate(route),
             load: function(data){
-                createFormDialog(data, vendor, bundle, type, id);
+                formDialog = createFormDialog(data, vendor, bundle, type, id);
             },
             error: function(e, ioargs){
                 switch(ioargs.xhr.status)
                 {
                     case 403:
-                        //window.location.reload();
+                        window.location.reload();
                         break;
                     default:
                         alert(e);
@@ -194,37 +188,28 @@ require([
         return dialog;
     }
     
-    function sendForm(route, routeParameters, dialog, form)
+    function sendForm(route, routeParameters, formDialog, form)
     {
-        xhr.post({
-                url:Routing.generate(route, routeParameters),
-                form:form,
-                load:function(data){          
-                        if(data!="")
-                        {
-                            store = getStore();
-                            store.get(getSelectedTreeItem()).then(function(selectedObject){
-                                selectedObject.children.push(data);
-                                store.put(selectedObject);
-                            });
-                        } 
-                        dialog.destroyRecursive();           
-                    },
-                error: function(e, ioargs){
-                    alert(e);
-                    
-                    switch(ioargs.xhr.status)
-                    {
-                        case 403:
-                            window.location.reload();
-                            break;
-                        default:
-                            alert(e);
-                    }
-                }
-            });
+        //HTML5 form submission
+        var formData = new FormData(form);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', Routing.generate(route, routeParameters), true);
+        xhr.onload = function(e){submissionHandler(xhr.responseText)};
+        xhr.send (formData);
     }
     
+    function submissionHandler(data)
+    {
+        if(data!="")
+        {
+            store = getStore();
+            store.get(getSelectedTreeItem()).then(function(selectedObject){
+                selectedObject.children.push(data);
+                store.put(selectedObject);
+            });
+        } 
+        formDialog.destroyRecursive(); 
+    }
     
     function removeResource(id)
     {    
@@ -233,32 +218,14 @@ require([
             load:function(data){
                     if(data=='0')
                     {
-                        alert("je passe");
+                        alert("done");
                         store = getStore();
                         store.remove(id);
                     }
                 }
             });
     }
-    
-    
-    
-    /*
-    function updateDatabase(child, newParent)
-    {
-        routeParameters = "someParams";
-        route = "ClarolineCoreBundle_resource_edit";
-        
-        xhr.post({
-            url: Routing.generate(route, routeParameters),
-            data: "child & newParent",
-            load:function(data){
-                alert(data);
-                }                  
-        });         
-    }*/
 }); 
-
 
 </script>
      {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}

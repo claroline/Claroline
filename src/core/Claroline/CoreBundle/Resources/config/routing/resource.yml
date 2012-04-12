@@ -33,11 +33,16 @@ claro_resource_JSON_node:
     defaults: { _controller: ClarolineCoreBundle:Resource:getJSONResourceNode }
     options:
       expose: true
-      
-ClarolineCoreBundle_resource_edit:
-   pattern: tree/JSON/{param}
-   defaults: { _controller: ClarolineCoreBundle:Resource:edit }
+  
+ClarolineCoreBundle_resource_addToWorkspace:
+   pattern: workspace/add/{idResource}/{idWorkspace}
+   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
    options:
-      expose: true  
-   
+      expose: true
+      
+ClarolineCoreBundle_resource_removeFromWorkspace:
+   pattern: workspace/remove/{idResource}/{idWorkspace}
+   defaults: { _controller: ClarolineCoreBundle:Resource:removeFromWorkspace }
+   options:
+      expose: true 
    
