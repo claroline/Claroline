@@ -63,10 +63,15 @@ class ResourceController extends Controller
     {
        $resource = $this->get('claroline.resource.manager')->find($id);
        $resourceType = $resource->getResourceType();
-       $routeName = $this->get('claroline.routing')->getRouteName($resourceType->getBundle(), $resourceType->getController(), 'delete');
+       $routeName = $this->get('claroline.routing')->getRouteName($resourceType->getVendor(), $resourceType->getBundle(), $resourceType->getController(), 'delete');
        $route = $this->get('router')->generate($routeName, array('id' => $id));
             
        return new RedirectResponse($route);
+    }
+    
+    public function deleteManyAction()
+    {
+        //
     }
 
     public function getJSONResourceNodeAction($id)
@@ -144,11 +149,19 @@ class ResourceController extends Controller
             {
                 $root = $this->get('claroline.resource.manager')->find($object->id);                
                 $newChild = $this->searchNewChild($object->children, $root->getChildren());
+                
+                /*
+                /f($object->type != "directory")
+                {
+                    return new Response("this is a complete fail and I'm not a JSONString");
+                }*/
+                
                 if($newChild != null)
                 {    
                     $newChild = $this->get('claroline.resource.manager')->find($newChild->id);
                     $newChild->setParent($this->get('claroline.resource.manager')->find($object->id));
                     $this->getDoctrine()->getEntityManager()->flush();  
+                    $root = $this->get('claroline.resource.manager')->find($object->id);
                 }
             }
             else
@@ -159,18 +172,31 @@ class ResourceController extends Controller
                     $resource = $this->get('claroline.resource.manager')->find($newChild->id);
                     $resource->setParent(null);
                     $this->getDoctrine()->getEntityManager()->flush(); 
-                    
-                    return new Response (var_dump($newChild));
+                    $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
+                    $root = new Directory();
+                    $root->setName('root');
+                    $root->setId(0);
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
+                    $root->setResourceType($directoryType[0]);
+                    foreach($resources as $resource)
+                    {
+                        $root->addChildren($resource);
+                    }           
                 }
             }
+            
+            $content = $this->renderView( 'ClarolineCoreBundle:Resource:resource.json.twig', array('root' => $root));
+            $response = new Response($content);
+            $response->headers->set('Content-Type', 'application/json'); 
             //todo change this response because it's really not that usefull
-            return new Response("put request");   
+            return $response;   
         }
     }
     
     private function GETNode($id)
     {
-        $user = $this->get('security.context')->getToken()->getUser(); 
+        $user = $this->get('security.context')->getToken()->getUser();
         
         if($id==0)
         {

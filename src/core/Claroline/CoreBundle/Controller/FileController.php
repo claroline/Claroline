@@ -47,7 +47,7 @@ class FileController extends Controller implements ClarolineControllerInterface
     public function addAction($id)
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new FileType());
+        $form = $this->get('form.factory')->create(new FileType(), new File());
         $form->bindRequest($request);
         
         if ($form->isValid())
@@ -60,16 +60,22 @@ class FileController extends Controller implements ClarolineControllerInterface
             $file = $fileManager->upload($file, $fileName, $user, $parent);
             
             if($request->isXmlHttpRequest()) 
-            {                    
+            {   /*                 
                 $content = $this->renderView( 'ClarolineCoreBundle:Resource:resource.json.twig', array('root' => $file));
                 $response = new Response($content);
-                $response->headers->set('Content-Type', 'application/json');
+                $response->headers->set('Content-Type', 'application/json');*/
             
-                return $response;
+                return new Response("success");
             }
             
-            return new Response("success");
-            //return new RedirectResponse('claro_resource_index');
+             $url = $this->generateUrl('claro_resource_index'); 
+             return $this->redirect($url); 
+        }
+        else
+        {
+             return $this->render(
+                'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView())
+             ); 
         }
         
         return new Response("failure");

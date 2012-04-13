@@ -25,9 +25,9 @@ class ClaroRouting
         
     }
     
-    public function getRouteName($bundle, $controller, $method)
+    public function getRouteName($vendor, $bundle, $controller, $method)
     {
-        $controller = "Claroline\\{$bundle}\\Controller\\{$controller}Controller::{$method}Action";
+        $controller = "{$vendor}\\{$bundle}\\Controller\\{$controller}Controller::{$method}Action";
         $route = $this->findRoute($controller);
         
         return $route;
@@ -59,7 +59,7 @@ class ClaroRouting
         
         foreach($resourcesType as $resourceType)
         {       
-            $routes[$resourceType->getType()]=$this->getRouteName($resourceType->getBundle(), $resourceType->getController(), 'form');
+            $routes[$resourceType->getType()]=$this->getRouteName($resourceType->getVendor(), $resourceType->getBundle(), $resourceType->getController(), 'form');
         }
         
         return $routes;
