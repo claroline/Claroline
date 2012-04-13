@@ -48,7 +48,7 @@ class DirectoryController extends Controller implements ClarolineControllerInter
     public function addAction($id)
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new DirectoryType());
+        $form = $this->get('form.factory')->create(new DirectoryType(), new Directory());
         $form->bindRequest($request);
         
         if ($form->isValid())
@@ -62,18 +62,23 @@ class DirectoryController extends Controller implements ClarolineControllerInter
              
              if($request->isXmlHttpRequest()) 
              {   
+                 /*
                 $content = $this->renderView( 'ClarolineCoreBundle:Resource:resource.json.twig', array('resources' => $resources, 'root' => $directory));
                 $response = new Response($content);
-                $response->headers->set('Content-Type', 'application/json');
+                $response->headers->set('Content-Type', 'application/json');*/
                 
-                return new Response($response);
+                return new Response("success");
              }
              
-             $url = $this->generateUrl('claro_resource_index');
+             $url = $this->generateUrl('claro_resource_index'); 
              return $this->redirect($url);     
         }
-        
-        return new Response("failure");
+        else
+        {
+             return $this->render(
+                'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView())
+             ); 
+        }
     }    
     
     public function deleteAction($id)

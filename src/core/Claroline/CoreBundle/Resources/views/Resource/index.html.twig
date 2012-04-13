@@ -1,20 +1,19 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <script> 
- 
+
 require([
-    "dojo/store/JsonRest", 
     "dijit/Tree", 
-    "dijit/tree/dndSource", 
     "dijit/Menu", 
     "dijit/MenuItem", 
     "dijit/PopupMenuItem",
     "dojo/_base/xhr",
     "dijit/Dialog",
     "dojo/on",
-    "dojo/io/iframe",
+    "claroline/resource/clarolineResourceJsonStore",
+    "claroline/resource/clarolineResourceDnd",
     "dojo/domReady!"
-    ], function(JsonRest, Tree, dndSource, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on, iframe) {
+    ], function(Tree, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on, ClaroStore, ClaroDnd) {
         
     dialog = createTreeDialog();
     
@@ -23,61 +22,8 @@ require([
         });
    var path = Routing.generate("claro_resource_fakeroute");
    path+="/";
-   resources = new JsonRest({
-   target:path,
    
-   mayHaveChildren: function(object){
-        return "children" in object;
-    },
-    getChildren: function(object, onComplete, onError){
-        this.get(object.id).then(function(fullObject){
-            object.children = fullObject.children;
-            onComplete(fullObject.children);
-        }, function(error){
-            console.error(error);
-            onComplete([]);
-        });
-    },
-    getRoot: function(onItem, onError){
-        this.get(0).then(onItem, onError);
-    },
-    getLabel: function(object){
-        return object.name;
-    },
-    pasteItem: function(child, oldParent, newParent, bCopy, insertIndex){
-        var store = this;
-        
-        //faudra mettre tout ça dedans
-        store.get(oldParent.id).then(function(oldParent){
-            store.get(newParent.id).then(function(newParent){
-                var oldChildren = oldParent.children;
-                dojo.some(oldChildren, function(oldChild, i){
-                    if(oldChild.id == child.id){
-                        oldChildren.splice(i, 1);
-                        return true;
-                    }
-                });
-                store.put(oldParent);
-                newParent.children.splice(insertIndex || 0, 0, child);
-                store.put(newParent);
-            });
-        });
-    },
-    put: function(object, options){
-        this.onChildrenChange(object, object.children);
-        this.onChange(object);
-        return JsonRest.prototype.put.apply(this, arguments);
-    },
-    remove: function(id){
-        this.onDelete({id: id});
-    },
-    onChildrenChange: function(parent, children){
-    },
-    onChange: function(object){
-    },
-    onDelete: function(object){
-    }
-   });
+   var resources = new ClaroStore(path);
    
    function getStore()
    {
@@ -86,10 +32,11 @@ require([
    
    tree = new Tree({ 
        model: resources,
-       openOnDblClick:true,
-       autoExpand:false,
-       dndController: dndSource
+       openOnDblClick: true,
+       autoExpand: false
     }, "treeNode");
+    
+    var dndController = new ClaroDnd(tree, {});
     
     tree.startup();
     
@@ -134,6 +81,7 @@ require([
     {
         return menu.get("nodeId");
     }  
+    
     function addResource(route, vendor, bundle, type, id)
     {
         xhr.post({
@@ -190,30 +138,42 @@ require([
     
     function sendForm(route, routeParameters, formDialog, form)
     {
-        //HTML5 form submission
         var formData = new FormData(form);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', Routing.generate(route, routeParameters), true);
-        xhr.onload = function(e){submissionHandler(xhr.responseText)};
+        xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
+        xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters, formDialog, form)};
         xhr.send (formData);
     }
     
-    function submissionHandler(data)
+    function submissionHandler(data, route, routeParameters, formDialog)
     {
-        if(data!="")
+        if(data=="success")
         {
+            console.debug("submission handler");
+            console.debug(data);
             store = getStore();
             store.get(getSelectedTreeItem()).then(function(selectedObject){
-                selectedObject.children.push(data);
-                store.put(selectedObject);
+            selectedObject.children.push(data);
+            store.put(selectedObject);
             });
+            formDialog.destroyRecursive(); 
         } 
-        formDialog.destroyRecursive(); 
+        else
+        {
+            console.debug("new form");
+            formDialog.set("content", data);
+            on(dojo.byId("generic_form"), "submit", function(event){ 
+                dojo.stopEvent(event);
+                sendForm(route, routeParameters, formDialog, dojo.byId("generic_form"));
+            });
+        }  
     }
     
     function removeResource(id)
     {    
         xhr.post({
+            /**/
             url:Routing.generate("claro_resource_delete", {"id": id}),
             load:function(data){
                     if(data=='0')
@@ -224,6 +184,31 @@ require([
                     }
                 }
             });
+    }
+    
+    function checkClaroItemAcceptance(node, source)
+    {
+        var newParent = dijit.getEnclosingWidget(node).item;
+        var newChild = source.anchor.item;
+        var droppable = true;
+        
+        if(newParent.type != 'directory')
+        {
+            droppable = false;
+        }
+        else
+        {
+            dojo.forEach(newParent.children, function(entry, i)
+            {
+                console.debug(entry.id+" at index "+i);
+                if(entry.id == newChild.id)
+                {
+                    console.debug("return false");
+                    droppable = false;
+                }
+            });  
+        }
+        return droppable;
     }
 }); 
 

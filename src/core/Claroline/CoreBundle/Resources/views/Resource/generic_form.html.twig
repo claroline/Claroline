@@ -1,5 +1,5 @@
-<form {% if route is defined %} action="{{path(route, {'id':id})}}" {% endif %} method="post" {{ form_enctype(form) }} id="generic_form">
+<form novalidate="validate" {% if route is defined %} action="{{path(route, {'id':id})}}" {% endif %} method="post" {{ form_enctype(form) }} id="generic_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
-   <input type="submit" />
+        <input type="submit" formnovalidate="formnovalidate" />
 </form>
