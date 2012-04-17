@@ -1,9 +1,9 @@
 claro_resource_index:
-    pattern: /index
-    defaults: { _controller: ClarolineCoreBundle:Resource:index}
+    pattern: /directory/{id}
+    defaults: { _controller: ClarolineCoreBundle:Resource:index, id:null}
     
 claro_resource_show_form:
-    pattern: /add/{id}
+    pattern: /form/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:showResourceForm, id:null }
     
 claro_resource_view:
@@ -14,7 +14,11 @@ claro_resource_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
     options:
-      expose: true
+      expose: true.
+      
+claro_resource_open:
+   pattern: /open/{id}
+   defaults: { _controller: ClarolineCoreBundle:Resource:open }
     
 claro_resource_JSON_tree:
     pattern: /JSONTree/{id}
@@ -33,7 +37,7 @@ claro_resource_JSON_node:
     defaults: { _controller: ClarolineCoreBundle:Resource:getJSONResourceNode }
     options:
       expose: true
-  
+      
 ClarolineCoreBundle_resource_addToWorkspace:
    pattern: workspace/add/{idResource}/{idWorkspace}
    defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
@@ -46,3 +50,10 @@ ClarolineCoreBundle_resource_removeFromWorkspace:
    options:
       expose: true 
    
+claro_resource_add_resource:
+   pattern: /add/{type}/{id}
+   defaults: { _controller: ClarolineCoreBundle:Resource:add, id:null }   
+   
+claro_resource_default_click:
+   pattern: /click/{type}/{id}
+   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }

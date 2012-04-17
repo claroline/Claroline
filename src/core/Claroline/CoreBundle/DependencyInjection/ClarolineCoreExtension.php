@@ -23,5 +23,8 @@ class ClarolineCoreExtension extends Extension
         $loader->load('file.yml');
         $loader->load('routing.yml');
         $loader->load('directory.yml');
+        
+        $taggedService = $container->findTaggedServiceIds("resource.manager");
+        $container->setParameter("resource.service.list", $taggedService);
     }
 }

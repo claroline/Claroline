@@ -11,8 +11,11 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Form\SelectResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
-class DirectoryManager
+class DirectoryManager implements ResourceInterface
 {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
@@ -25,13 +28,75 @@ class DirectoryManager
     
     /** @var ContainerInterface */
     protected $container;
+    
+    /** @var ResourseManager */
+    protected $resourceManager;
+    
+    protected $templating;
 
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container, ResourceManager $resourceManager, $templating)
     {
         $this->em = $em;
         $this->rightManager = $rightManager;
         $this->formFactory=$formFactory;
         $this->container=$container;
+        $this->resourceManager = $resourceManager;
+        $this->templating = $templating;
+    }
+    
+    public function getForm()
+    {
+        $form = $this->formFactory->create(new DirectoryType, new Directory());
+        
+        return $form;
+    }
+    
+    public function add($form, $id, $user)
+    {
+        $directory = new Directory();
+        $name = $form['name']->getData();
+        $directory->setName($name);
+        $directory->setUser($user);
+        $dir =$this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
+        $directory->setParent($dir);
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
+        $directory->setResourceType($resourceType);
+        $this->em->persist($directory);
+        $this->em->flush();
+        
+        return $directory;
+    }
+    
+    public function delete($directory)
+    {
+        $this->removeResourcesFromSubDirectories($directory);
+        $this->em->remove($directory);
+        $this->em->flush();
+    }
+    
+    public function getResourceType()
+    {
+        return "directory";
+    }
+    
+    public function getDefaultAction($id)
+    {
+        $formResource = $this->formFactory->create(new SelectResourceType(), new ResourceType());
+        $resources = $this->resourceManager->getChildrenById($id);
+        $content = $this->templating->render
+            ('ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => $id));
+        $response = new Response($content);
+        
+        return $response;
+    }    
+    
+    public function indexAction($id)
+    {
+        $content = $this->templating->render
+            ('ClarolineCoreBundle:Directory:index.html.twig');
+        $response = new Response($content);
+        
+        return $response;
     }
      
     public function getDirectoriesOfUser($user)
@@ -77,35 +142,6 @@ class DirectoryManager
         return $resources; 
     }
     
-    public function getForm()
-    {
-        $form = $this->formFactory->create(new DirectoryType, new Directory());
-        
-        return $form;
-    }
-    
-    public function addDirectory($name, $user, $dirId)
-    {
-        $directory = new Directory();
-        $directory->setName($name);
-        $directory->setUser($user);
-        $dir =$this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($dirId);
-        $directory->setParent($dir);
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
-        $directory->setResourceType($resourceType);
-        $this->em->persist($directory);
-        $this->em->flush();
-        
-        return $directory;
-    }
-    
-    public function delete($directory)
-    {
-        $this->removeResourcesFromSubDirectories($directory);
-        $this->em->remove($directory);
-        $this->em->flush();
-    }
-    
     public function deleteById($id)
     {
        $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
@@ -143,10 +179,4 @@ class DirectoryManager
             }
         }
     }
-     
-    public function getContainer()
-    {
-        return $this->container;
-    }
-    
 }

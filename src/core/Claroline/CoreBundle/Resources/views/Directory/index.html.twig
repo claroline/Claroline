@@ -1,9 +1,4 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
-   {% form_theme form_directory 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{ path('claro_directory_add', {'id':id }) }}" method="post" {{ form_enctype(form_directory) }} id="form_directory">
-        {{ form_errors(form_directory) }}
-        {{ form_widget(form_directory) }}
-        <input type="submit" />
-    </form>
+    DIRECTORY INDEX
 {% endblock %}
