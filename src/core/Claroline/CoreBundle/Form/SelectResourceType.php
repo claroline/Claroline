@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilder;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Symfony\Component\Form\AbstractType;
 
-class ChooseResourceType extends AbstractType
+class SelectResourceType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {

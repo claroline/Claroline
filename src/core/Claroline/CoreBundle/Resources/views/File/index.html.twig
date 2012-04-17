@@ -1,13 +1,5 @@
 {% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
 
 {% block content %}
-{{dirId}}
-<form action="{{path('ClarolineCoreBundle_file_add', {'id':dirId })}}" method="post" {{ form_enctype(formfile) }} id="formfile">
-    {{ form_errors(formfile) }}
-    {% set label_file %}{{ 'file'|trans({}, 'platformTranslation') }}{% endset %}
-    {{ form_label(formfile.file, label_file ) }}
-    {{ form_widget(formfile.file) }}
-    {{ form_rest(formfile) }}
-<input type="submit" />
-</form>
+    FILE INDEX
 {% endblock %}

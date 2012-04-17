@@ -6,3 +6,8 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.restricted_owner_right_manager"
             - "@service_container"
+            - "@claroline.resource.manager"
+            - "@templating"
+            
+        tags:
+           - { name: resource.manager}

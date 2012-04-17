@@ -1,5 +1,5 @@
-<form novalidate="validate" {% if route is defined %} action="{{path(route, {'id':id})}}" {% endif %} method="post" {{ form_enctype(form) }} id="generic_form">
+<form action="{{path('claro_resource_add_resource', {'type':type, 'id':id} )}}" method="post" {{ form_enctype(form) }} id="generic_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
-        <input type="submit" formnovalidate="formnovalidate" />
+        <input type="submit"  />
 </form>

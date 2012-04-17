@@ -1,5 +1,4 @@
 <?php
-
 namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +9,7 @@ use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Symfony\Component\Form\FormFactory;
 
-class FileManager extends ResourceManager
+class FileManager implements ResourceInterface
 {
     /**
      * @var EntityManager
@@ -23,56 +22,30 @@ class FileManager extends ResourceManager
     protected $formFactory;
     /** @var RightManagerInterface */
     protected $rightManager;
+    /** @var ResourseManager */
+    protected $resourceManager;
+    
+    protected $templating;
     
     
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir)
+    
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, ResourceManager $resourceManager, $templating)
     {   
         $this->em = $em;
         $this->rightManager = $rightManager;
         $this->formFactory = $formFactory; 
         $this->dir = $dir;
+        $this->resourceManager = $resourceManager;
+        $this->templating = $templating;
     }
-    
-    public function setDownloadResponseById($id, Response $response)
-    {
-        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
-        $response = $this->setDownloadResponse($file, $response);
-        
-        return $response;
-    }
-         
-    public function setDownloadResponse(File $file, Response $response)
-    {
-        $response = $this->setDownloadHeaders($file, $response);
-        return $response;
-    }
-    
-    public function upload($tmpFile, $fileName, $user, $parent)
-    {
-         $size = filesize($tmpFile);
-         $hashName = $this->GUID();
-         $tmpFile->move($this->dir, $hashName);
-         $file = new File();
-         $file->setSize($size);
-         $file->setName($fileName);
-         $file->setHashName($hashName);   
-         $file->setUser($user);
-         $file->setParent($parent);
-         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'file'));
-         $file->setResourceType($resourceType);
-         $this->em->persist($file);
-         $this->em->flush();
-         
-         return $file;
-    }
-    
+    /*
     public function deleteById($id)
     {
         $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
         $this->delete($file);
-    }
+    }*/
        
-    public function delete(File $file)
+    public function delete($file)
     {
         $this->removeFile($file);
         $this->em->remove($file);
@@ -100,13 +73,68 @@ class FileManager extends ResourceManager
         return $form;
     }
     
-    private function removeFile(File $file)
+    public function getResourcesOfUser($user)
     {
-        $pathName = $this->dir . DIRECTORY_SEPARATOR . $file->getHashName();
-        chmod($pathName, 0777);
-        unlink($pathName);
-        $this->em->remove($file);
-        $this->em->flush();
+        $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findBy(array('user' => $user->getId()));
+        
+        return $files;        
+    }
+    
+    public function add($form, $id, $user)
+    {
+         $tmpFile = $form['file']->getData();
+         $fileName = $tmpFile->getClientOriginalName();
+         $parent = $this->resourceManager->find($id);
+         $size = filesize($tmpFile);
+         $hashName = $this->GUID();
+         $tmpFile->move($this->dir, $hashName);
+         $file = new File();
+         $file->setSize($size);
+         $file->setName($fileName);
+         $file->setHashName($hashName);
+         $file->setUser($user);
+         $file->setParent($parent);
+         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'file'));
+         $file->setResourceType($resourceType);
+         $this->em->persist($file);
+         $this->em->flush();
+         
+         return $file;
+    }
+    
+    public function getResourceType()
+    {
+        return "file";
+    }
+    
+    public function getDefaultAction($id)
+    {
+        $response = new Response();
+        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
+        $response = $this->setDownloadHeaders($file, $response);
+        
+        return $response; 
+    }
+    
+    public function indexAction($id)
+    {
+        $content = $this->templating->render
+            ('ClarolineCoreBundle:Directory:index.html.twig');
+        $response = new Response($content);
+        
+        return $response;
+    }
+    
+    private function GUID()
+    {
+        if (function_exists('com_create_guid') === true)
+        {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
+            mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
+            mt_rand(0, 65535), mt_rand(0, 65535));
     }
     
     private function setDownloadHeaders(File $file, Response $response)
@@ -121,23 +149,13 @@ class FileManager extends ResourceManager
         
         return $response;
     }  
-
-    public function getResourcesOfUser($user)
-    {
-        $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findBy(array('user' => $user->getId()));
-        
-        return $files;        
-    }
     
-    private function GUID()
+    private function removeFile(File $file)
     {
-        if (function_exists('com_create_guid') === true)
-        {
-            return trim(com_create_guid(), '{}');
-        }
-
-        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
-            mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
-            mt_rand(0, 65535), mt_rand(0, 65535));
+        $pathName = $this->dir . DIRECTORY_SEPARATOR . $file->getHashName();
+        chmod($pathName, 0777);
+        unlink($pathName);
+        $this->em->remove($file);
+        $this->em->flush();
     }
 }

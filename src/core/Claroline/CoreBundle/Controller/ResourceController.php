@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Form\ChooseResourceType;
+use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Form\DirectoryType;
@@ -15,65 +15,90 @@ class ResourceController extends Controller
     public function indexAction()
     {
         $user = $this->get('security.context')->getToken()->getUser(); 
-        $formResource = $this->get('form.factory')->create(new ChooseResourceType(), new ResourceType());
+        $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
         $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourcesType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-        $routes = $this->get('claroline.routing')->getAllFormRoutes();
+        $em = $this->getDoctrine()->getEntityManager();        
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'resourcesType' => $resourcesType, 'routes' => $routes)
+            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => null)
         );
     }
     
     public function showResourceFormAction($id)
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new ChooseResourceType());
+        $form = $this->get('form.factory')->create(new SelectResourceType());
         $form->bindRequest($request);
 
         if ($form->isValid())
         {       
             $resourceType = $form['type']->getData();
-            $route = $resourceType->getVendor().$resourceType->getBundle()."_".$resourceType->getType()."_add";
-            $rsrcServName = $resourceType->getService();
+            $rsrcServName = $this->findRsrcServ($resourceType);
             $rsrcServ = $this->get($rsrcServName);
             $form = $rsrcServ->getForm();
             
             return $this->render(
-                'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'route' => $route, 'id' => $id)
+                'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $resourceType->getType())
             );
         }
         
         throw new \Exception("form error");
     }
     
-    public function viewAction($id)
+    public function addAction($type, $id)
     {
-       $resource = $this->get('claroline.resource.manager')->find($id);
-       $resourceType = $resource->getResourceType();
-       
-       $routeName = $this->get('claroline.routing')->getRouteName($resourceType->getBundle(), $resourceType->getController(), 'view');
-       $route = $this->get('router')->generate($routeName, array('id' => $id));
+        $request = $this->get('request');
+        $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
+        $name = $this->findRsrcServ($resourceType);
+        $form = $this->get($name)->getForm();
+        $form->bindRequest($request);
+ 
+        if($form->isValid())
+        {   
+            $user = $this->get('security.context')->getToken()->getUser();
+            $this->get($name)->add($form, $id, $user);
             
-       return new RedirectResponse($route);
+            //return new RedirectResponse('claro_resource_index'); 
+            return new Response("done");
+        }
+        else
+        {
+            return $this->render(
+                'ClarolineCoreBundle:Resource:form_page.html.twig', array ('form' => $form->createView(), 'type' => $type, 'id' => $id)
+            );
+        }
+    }
+    
+    public function defaultClickAction($type, $id)
+    {
+        $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
+                'Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
+        $name = $this->findRsrcServ($resourceType);
+        $response = $this->get($name)->getDefaultAction($id);
+        
+        return $response;
     }
     
     public function deleteAction($id)
     {
        $resource = $this->get('claroline.resource.manager')->find($id);
        $resourceType = $resource->getResourceType();
-       $routeName = $this->get('claroline.routing')->getRouteName($resourceType->getVendor(), $resourceType->getBundle(), $resourceType->getController(), 'delete');
-       $route = $this->get('router')->generate($routeName, array('id' => $id));
-            
-       return new RedirectResponse($route);
+       $name = $this->findRsrcServ($resourceType);
+       $this->get($name)->delete($resource);
+       
+       return new Response("delete");
     }
     
-    public function deleteManyAction()
+    public function openAction($id)
     {
-        //
+       $resource = $this->get('claroline.resource.manager')->find($id);
+       $resourceType = $resource->getResourceType();
+       $name = $this->findRsrcServ($resourceType);
+       $response = $this->get($name)->indexAction($resource);
+       
+       return $response;
     }
-
+    
     public function getJSONResourceNodeAction($id)
     {
         $method = $_SERVER['REQUEST_METHOD'];
@@ -148,13 +173,7 @@ class ResourceController extends Controller
             if($object->id != 0)
             {
                 $root = $this->get('claroline.resource.manager')->find($object->id);                
-                $newChild = $this->searchNewChild($object->children, $root->getChildren());
-                
-                /*
-                /f($object->type != "directory")
-                {
-                    return new Response("this is a complete fail and I'm not a JSONString");
-                }*/
+                $newChild = $this->searchNewChild($object->children, $root->getChildren());         
                 
                 if($newChild != null)
                 {    
@@ -222,5 +241,23 @@ class ResourceController extends Controller
         $response->headers->set('Content-Type', 'application/json'); 
         
         return $response;
+    }
+    
+    private function findRsrcServ($resourceType)
+    {
+        $services = $this->container->getParameter("resource.service.list");
+        $serviceName = null;
+        
+        foreach($services as $name => $service)
+        {
+            $type = $this->get($name)->getResourceType();
+            
+            if($type == $resourceType->getType())
+            {
+                $serviceName = $name;
+            }
+        }
+        
+        return $serviceName;
     }
 }
