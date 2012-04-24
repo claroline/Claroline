@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  * @ORM\Entity
  * @ORM\Table(name="vx_resource_x")
  */
-class ResourceX extends AbstractResource
+/*Abstract*/ class ResourceX extends AbstractResource
 {
     /**
      * @ORM\Column(type="string", name="some_field", length=255)

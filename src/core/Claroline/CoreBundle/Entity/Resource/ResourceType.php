@@ -22,27 +22,7 @@ class ResourceType
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
-    
-      /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $bundle;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $controller;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $vendor;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $service;    
+    private $type; 
     
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resource_type")
@@ -84,17 +64,7 @@ class ResourceType
     {
         $this->type=$type;
     }
-    
-    public function getController()
-    {
-        return $this->controller;
-    }
-    
-    public function setController($controller)
-    {
-        $this->controller=$controller;
-    }
-    
+        
     public function getResources()
     {
         return $this->resources;
@@ -106,25 +76,6 @@ class ResourceType
         $resource->setUser($this);
     }
          
-    public function setBundle($bundle)
-    {
-        $this->bundle=$bundle;
-    }
-    
-    public function getBundle()
-    {
-        return $this->bundle;
-    }
-    
-    public function setService($service)
-    {
-        $this->service=$service;
-    }
-    
-    public function getService()
-    {
-        return $this->service;
-    }
     
     public function setNavigable($isNavigable)
     {
@@ -154,15 +105,5 @@ class ResourceType
     public function getPlugin()
     {
         return $this->plugin;
-    }
-    
-    public function setVendor($vendor)
-    {
-        $this->vendor = $vendor;
-    }
-    
-    public function getVendor()
-    {
-        return $this->vendor;
     }
 }

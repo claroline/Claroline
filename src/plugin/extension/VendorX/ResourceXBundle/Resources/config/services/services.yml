@@ -1,0 +1,10 @@
+services:
+  vendorx.resourcex.manager:
+        class: VendorX\ResourceXBundle\Manager\ResourceXManager
+        tags:
+           - { name: resource.manager}
+
+  vendorx.resourcey.manager:
+        class: VendorX\ResourceXBundle\Manager\ResourceYManager
+        tags:
+           - { name: resource.manager}

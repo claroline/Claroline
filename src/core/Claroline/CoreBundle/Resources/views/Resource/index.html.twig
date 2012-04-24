@@ -1,194 +1,18 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
-<script> 
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.css') }}'>
+<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
+<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.js')}}'></script>
+<script src='{{ asset('bundles/clarolinecore/js/resource/index.js') }}' type="text/javascript"></script>
 
-require([
-    "dijit/Tree", 
-    "dijit/Menu", 
-    "dijit/MenuItem", 
-    "dijit/PopupMenuItem",
-    "dojo/_base/xhr",
-    "dijit/Dialog",
-    "dojo/on",
-    "claroline/resource/clarolineResourceJsonStore",
-    "claroline/resource/clarolineResourceDnd",
-    "dojo/domReady!"
-    ], function(Tree, Menu, MenuItem, PopupMenuItem, xhr, Dialog, on, ClaroStore, ClaroDnd) {
-        
-    dialog = createTreeDialog();
-    
-    on(dojo.byId("dialog_tree_button"), "click", function(e){
-        dialog.show();
-        });
-   var path = Routing.generate("claro_resource_fakeroute");
-   path+="/";
-   
-   var resources = new ClaroStore(path);
-   
-   function getStore()
-   {
-       return resources;
-   }
-   
-   tree = new Tree({ 
-       model: resources,
-       openOnDblClick: true,
-       autoExpand: false
-    }, "treeNode");
-    
-    var dndController = new ClaroDnd(tree, {});
-    
-    tree.startup();
-    
-    var menu = new dijit.Menu({
-        targetNodeIds:["treeNode"],
-        nodeId: 0
-        });
-    menu.addChild(new dijit.MenuItem({
-        label:"rename",
-        }));
-    menu.addChild(new dijit.MenuItem({
-        label:"delete",
-        onClick: function(){
-            removeResource(menu.get('nodeId'));
-            }
-        }));
-    menu.addChild(new dijit.MenuItem({
-        label:"open",
-        }));
-
-    var subMenu = new dijit.Menu();
-    
-    menu.addChild(new dijit.PopupMenuItem({
-        label:"add",
-        popup:subMenu
-        }));
-    menu.startup();
-    
-    dojo.connect(menu, "_openMyself", tree, function(e){
-        var tn = dijit.getEnclosingWidget(e.target);
-        menu.set("nodeId", tn.item.id);      
-    }); 
-    
-    function getSelectedTreeItem()
-    {
-        return menu.get("nodeId");
-    }  
-    
-    function addResource(route, vendor, bundle, type, id)
-    {
-        xhr.post({
-            url:Routing.generate(route),
-            load: function(data){
-                formDialog = createFormDialog(data, vendor, bundle, type, id);
-            },
-            error: function(e, ioargs){
-                switch(ioargs.xhr.status)
-                {
-                    case 403:
-                        window.location.reload();
-                        break;
-                    default:
-                        alert(e);
-                }
-            }
-        });       
-    }
-    
-    function createTreeDialog()
-    {
-        var dialog = new Dialog({
-            title: "dialog tree",
-            content:'<div id="treeNode"></div>',
-            draggable: true,
-            open: false
-            });
-            
-        return dialog;    
-    }
-    
-    function createFormDialog(data, vendor, bundle, type, id)
-    {
-        var dialog = new Dialog({
-        title:"form dialog",
-        content: data,
-        draggable: true,
-        open: false,
-        onCancel: function(){this.destroyRecursive();}
-        });  
-            
-        route = vendor+bundle+"_"+type+"_add";
-              
-        on(dojo.byId("generic_form"), "submit", function(event){ 
-            dojo.stopEvent(event);
-            sendForm(route, {'id': id}, dialog, dojo.byId("generic_form"));
-            });
-        
-        dialog.show();
-        
-        return dialog;
-    }
-    
-    function sendForm(route, routeParameters, formDialog, form)
-    {
-        var formData = new FormData(form);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', Routing.generate(route, routeParameters), true);
-        xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-        xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters, formDialog, form)};
-        xhr.send (formData);
-    }
-    
-    function submissionHandler(data, route, routeParameters, formDialog)
-    {
-        if(data=="success")
-        {
-            console.debug("submission handler");
-            console.debug(data);
-            store = getStore();
-            store.get(getSelectedTreeItem()).then(function(selectedObject){
-            selectedObject.children.push(data);
-            store.put(selectedObject);
-            });
-            formDialog.destroyRecursive(); 
-        } 
-        else
-        {
-            console.debug("new form");
-            formDialog.set("content", data);
-            on(dojo.byId("generic_form"), "submit", function(event){ 
-                dojo.stopEvent(event);
-                sendForm(route, routeParameters, formDialog, dojo.byId("generic_form"));
-            });
-        }  
-    }
-    
-    function removeResource(id)
-    {    
-        xhr.post({
-            /**/
-            url:Routing.generate("claro_resource_delete", {"id": id}),
-            load:function(data){
-                    if(data=='0')
-                    {
-                        alert("done");
-                        store = getStore();
-                        store.remove(id);
-                    }
-                }
-            });
-    }
-}); 
-
-</script>
      {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
         {{ form_errors(form_resource) }}
         {{ form_widget(form_resource) }}
         <input type="submit" />
     </form>
-    <br><br><br><br><br>
-
+    <br><br>
     NAVIGABLE
     {% for resource in resources %}
         {% if resource.getResourceType.getNavigable() == true %}
@@ -201,6 +25,9 @@ require([
         {% if resource.getResourceType.getNavigable() == false %}
             <div class="row_resource"><a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" id="link_resource_view_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> | {{resource.getResourceType().getType()}} | <a id="link_resource_delete_{{resource.getId()}}" href="{{path('claro_resource_delete', {'id':resource.getId()})}}" class="link_delete_resource">delete</a> | <a id="link_resource_open_{{resource.getId()}}" href="{{path('claro_resource_open', {'id':resource.getId()})}}" class="link_open_resource">open</a></div>
         {% endif %}
-    {% endfor %}
-    <button id="dialog_tree_button">resources</button>
+    {% endfor %}         
+            
+    <button id="dialog_tree_button" onclick="openTreeDialog();"C>resources</button>
+    <div id="formDialog"></div>
+    <div id="treeDialog"></div>
 {% endblock %}

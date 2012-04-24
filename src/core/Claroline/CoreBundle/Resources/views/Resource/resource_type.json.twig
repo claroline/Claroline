@@ -1,0 +1,13 @@
+{% set cpt = 0 %}
+[
+{% for resourceType in resourcesType %}
+{
+    "type":"{{resourceType.getType()}}",
+    "id":{{resourceType.getId()}}
+}
+{% set cpt = cpt+1 %}
+{% if cpt < resourcesType|length %}
+,
+{% endif %}
+{% endfor %}
+]

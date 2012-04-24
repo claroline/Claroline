@@ -22,16 +22,22 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->cleanDirectory($this->upDir);
     }
     
+    public function tearDown()
+    {
+       parent::tearDown();
+       $this->cleanDirectory($this->upDir);
+    }
+    
     public function testUserCanCreateRootDirectory()
     {
         $this->logUser($this->getFixtureReference('user/admin'));   
-        $crawler = $this->client->request('GET', '/resource/index');
+        $crawler = $this->client->request('GET', '/resource/directory');
         $form = $crawler->filter('input[type=submit]')->form(); 
         $form['choose_resource_form[type]'] = $this->getFixtureReference('resource_type/directory')->getId();
         $crawler = $this->client->submit($form);
         $form = $crawler->filter('input[type=submit]')->form();
         $this->client->submit($form, array('directory_form[name]' => 'abc'));
-        $crawler = $this->client->request('GET', '/resource/index');
+        $crawler = $this->client->request('GET', '/resource/directory');
         $this->assertEquals(1, count($crawler->filter(".row_resource")));
     }
     
@@ -39,13 +45,13 @@ class DirectoryControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadDirectoryData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/directory/view/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");       
+        $crawler = $this->client->request('GET', "/resource/click/directory/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");       
         $form = $crawler->filter('input[type=submit]')->form();
         $dirTypeId = $this->getFixtureReference('resource_type/directory')->getId(); 
         $crawler = $this->client->submit($form, array('choose_resource_form[type]' => $dirTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
         $this->client->submit($form, array('directory_form[name]' => 'abc'));
-        $crawler = $this->client->request('GET', "/directory/view/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
+        $crawler = $this->client->request('GET', "/resource/click/directory/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
         $this->assertEquals(3, count($crawler->filter(".row_resource")));
     }
     
@@ -56,16 +62,17 @@ class DirectoryControllerTest extends FunctionalTestCase
         $filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
                 
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/directory/view/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
+        $crawler = $this->client->request('GET', "/resource/click/directory/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
         $form = $crawler->filter('input[type=submit]')->form(); 
         $form['choose_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
         $crawler = $this->client->submit($form);
         $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('File_Form[file]' => $filePath));
-        $crawler = $this->client->request('GET', "/directory/view/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
+        $crawler = $this->client->submit($form, array('file_form[file]' => $filePath));
+        $crawler = $this->client->request('GET', "/resource/click/directory/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
         $this->assertEquals(3, count($crawler->filter(".row_resource")));
     }
-     
+    
+    
     public function testUserCanRemoveDirectoryAndItsContent()
     {
         $this->loadFixture(new LoadDirectoryData());
@@ -73,14 +80,14 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->assertEquals(2, count($this->getUploadedFiles($this->upDir)));
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', '/resource/index');
+        $crawler = $this->client->request('GET', '/resource/directory');
         $link = $crawler->filter("#link_resource_delete_{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}")->link();
         $this->client->click($link);
-        $crawler = $this->client->request('GET', '/resource/index');
+        $crawler = $this->client->request('GET', '/resource/directory');
         $this->assertEquals(1, count($this->getUploadedFiles($this->upDir)));
         $this->assertEquals(1, count($crawler->filter(".row_resource"))); 
     }
-      
+     
     private function cleanDirectory($dir)
     {    
         $iterator = new \DirectoryIterator($dir);

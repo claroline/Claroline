@@ -1,4 +1,3 @@
-{"users" :
 {% set i = 0 %}
 {% if users|length > 1 %}
 [
@@ -10,4 +9,3 @@
 {% else %}
 {"id": {{users.getId()}}, "username": "{{users.getUsername()}}", "lastName": "{{users.getLastName()}}", "firstName": "{{users.getFirstName()}}"}
 {% endif %}
-}
