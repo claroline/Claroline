@@ -44,6 +44,7 @@ class DirectoryManager implements ResourceInterface
         $this->templating = $templating;
     }
     
+    //METHODES OBLIGATOIRE A PARTIR D'ICI
     public function getForm()
     {
         $form = $this->formFactory->create(new DirectoryType, new Directory());
@@ -83,8 +84,9 @@ class DirectoryManager implements ResourceInterface
     {
         $formResource = $this->formFactory->create(new SelectResourceType(), new ResourceType());
         $resources = $this->resourceManager->getChildrenById($id);
-        $content = $this->templating->render
-            ('ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => $id));
+        $resourcesType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => $id, 'resourcesType' => $resourcesType));
         $response = new Response($content);
         
         return $response;
@@ -92,12 +94,13 @@ class DirectoryManager implements ResourceInterface
     
     public function indexAction($id)
     {
-        $content = $this->templating->render
-            ('ClarolineCoreBundle:Directory:index.html.twig');
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Directory:index.html.twig');
         $response = new Response($content);
         
         return $response;
     }
+    // FIN DES METHODES OBLIGATOIRES
      
     public function getDirectoriesOfUser($user)
     {
@@ -155,8 +158,8 @@ class DirectoryManager implements ResourceInterface
         
         foreach ($resources as $resource)
         {
-            $rsrcServName = $resource->getResourceType()->getService();
-            $rsrcServ = $this->getContainer()->get($rsrcServName);
+            $rsrcServName = $this->findRsrcServ($resource->getResourceType());
+            $rsrcServ = $this->container->get($rsrcServName);
             $rsrcServ->delete($resource);           
         }
     }
@@ -173,10 +176,30 @@ class DirectoryManager implements ResourceInterface
         
             foreach ($resources as $resource)
             {
-                $rsrcServName = $resource->getResourceType()->getService();
-                $rsrcServ = $this->getContainer()->get($rsrcServName);
+                $rsrcServName = $this->findRsrcServ($resource->getResourceType());
+                $rsrcServ = $this->container->get($rsrcServName);
                 $rsrcServ->delete($resource);           
             }
         }
     }
+    
+    private function findRsrcServ($resourceType)
+    {
+        $services = $this->container->getParameter("resource.service.list");
+        $serviceName = null;
+        
+        foreach($services as $name => $service)
+        {
+            $type = $this->container->get($name)->getResourceType();
+            
+            if($type == $resourceType->getType())
+            {
+                $serviceName = $name;
+            }
+        }
+        
+        return $serviceName;
+    }
+    
+    
 }

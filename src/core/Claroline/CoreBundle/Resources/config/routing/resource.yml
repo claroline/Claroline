@@ -3,22 +3,20 @@ claro_resource_index:
     defaults: { _controller: ClarolineCoreBundle:Resource:index, id:null}
     
 claro_resource_show_form:
-    pattern: /form/{id}
+    pattern: /form/show/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:showResourceForm, id:null }
-    
-claro_resource_view:
-    pattern: /view/{id}
-    defaults: { _controller: ClarolineCoreBundle:Resource:view }
     
 claro_resource_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
     options:
-      expose: true.
+      expose: true
       
 claro_resource_open:
    pattern: /open/{id}
    defaults: { _controller: ClarolineCoreBundle:Resource:open }
+   options:
+      expose: true   
     
 claro_resource_JSON_tree:
     pattern: /JSONTree/{id}
@@ -26,16 +24,16 @@ claro_resource_JSON_tree:
     options:
        expose: true
        
-claro_resource_fakeroute:
-    pattern: tree/JSON
-    defaults: { _controller: ClarolineCoreBundle:Resource:index }
-    options:
-      expose: true
-       
 claro_resource_JSON_node:
     pattern: tree/JSON/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:getJSONResourceNode }
     options:
+      expose: true
+      
+claro_resource_move:
+   pattern: move/{idChild}/{idParent}
+   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource }
+   options:
       expose: true
       
 ClarolineCoreBundle_resource_addToWorkspace:
@@ -52,8 +50,25 @@ ClarolineCoreBundle_resource_removeFromWorkspace:
    
 claro_resource_add_resource:
    pattern: /add/{type}/{id}
-   defaults: { _controller: ClarolineCoreBundle:Resource:add, id:null }   
+   defaults: { _controller: ClarolineCoreBundle:Resource:add, id:null }  
+   options:
+      expose: true
    
 claro_resource_default_click:
    pattern: /click/{type}/{id}
-   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
+   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick, type:null }
+   options:
+       expose: true
+    
+   
+claro_resource_form_resource:
+   pattern: /form/{id}/{type}
+   defaults: { _controller: ClarolineCoreBundle:Resource:getForm }
+   options:
+      expose: true
+      
+claro_resource_type_resource:
+   pattern: /type/all
+   defaults: { _controller: ClarolineCoreBundle:Resource:getResourcesType }
+   options:
+      expose: true

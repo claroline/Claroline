@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+	<title>dynatree - temporary tests</title>
+	<!-- Include the required JavaScript libraries: -->
+
+<style type="text/css">
+.container {
+	color: red;
+}
+.container a:link {
+	text-decoration: none;
+	color: inherit;
+}
+.container span.active a {
+	color: magenta;
+}
+
+/*
+a:link { font-weight:bold; color:blue; text-decoration:none; }
+a:visited { font-weight:bold; color:silver; text-decoration:none; }
+a:focus { font-weight:bold; color:red; text-decoration:underline; }
+a:hover { font-weight:bold; color:green; text-decoration:none; }
+a:active { font-weight:bold; color:lime; text-decoration:underline; }
+*/
+</style>
+
+</head>
+<body>
+	<P>This file is only temporarily used to reproduce issues.</P>
+	<p style="color: red;">Using doctype HTML 4.01 Strict.</p>
+	<div id='tree'> </div>
+
+	<div class="container">
+		<div><span>text</span></div>
+		<div><span class="active"><a href="#">tag</a></span></div>
+		<div><span><a href="#">tag</a></span></div>
+	</div>
+
+	<p><a href="http://dynatree.googlecode.com">jquery.dynatree.js</a></p>
+</body>
+</html>

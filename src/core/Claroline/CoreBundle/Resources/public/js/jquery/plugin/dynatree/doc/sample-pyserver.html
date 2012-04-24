@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>Dynatree - Local Server</title>
+
+	<script src="../jquery/jquery.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+
+	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
+	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
+
+	<!-- Start_Exclude: This block is not part of the sample code -->
+	<link href="prettify.css" rel="stylesheet">
+	<script src="prettify.js" type="text/javascript"></script>
+	<link href="sample.css" rel="stylesheet" type="text/css">
+	<script src="sample.js" type="text/javascript"></script>
+	<!-- End_Exclude -->
+
+<script type="text/javascript">
+	var _activeKey = null,
+		debugDelay = 5; // seconds
+	$(function(){
+
+		$("#tree").ajaxComplete(function(event, XMLHttpRequest, ajaxOptions) {
+			  _log("debug", "ajaxComplete: %o", this); // dom element listening
+			});
+
+		// --- Initialize sample trees
+		$("#tree").dynatree({
+			persist: true,
+			checkbox: true,
+			selectMode: 3,
+			onPostInit: function(isReloading, isError) {
+//				alert("reloading: "+isReloading+", error:"+isError);
+			   logMsg("onPostInit(%o, %o) - %o", isReloading, isError, this);
+			   // Re-fire onActivate, so the text is updated
+			   this.reactivate();
+			},
+			fx: { height: "toggle", duration: 200 },
+			// initAjax is hard to fake, so we pass the children as object array:
+			initAjax: {url: "http://127.0.0.1:8001",
+					   dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
+					   timeout: 10000, // timeout, otherwise 'connection refused' is not recognized if server is not running
+					   data: {key: "",
+							  sleep: debugDelay,
+//	                          returnEmpty: true,
+//							  depth: 3,
+							  mode: "baseFolders"
+							  },
+					   addExpandedKeyList: true // Send list of expanded keys, so the webservice can deliver these children also
+					   },
+			onLazyRead: function(node){
+				node.appendAjax(
+					{url: "http://127.0.0.1:8001",
+					 dataType: "jsonp", // Enable JSONP, so this sample can be run from the local file system against a localhost server
+					 data: {key: node.data.key,
+							sleep: debugDelay,
+//							returnEmpty: true,
+							mode: "branch"
+							}
+				});
+			},
+			onActivate: function(node) {
+				$("#echoActive").text(node.data.tooltip + ", key=" + node.data.key);
+				_activeKey = node.data.key;
+			},
+			dnd: {
+				onDragStart: function(node) {
+					/** This function MUST be defined to enable dragging for the tree.
+					 *  Return false to cancel dragging of node.
+					 */
+					logMsg("tree.onDragStart(%o)", node);
+					return true;
+				},
+				onDragStop: function(node) {
+					// This function is optional.
+					logMsg("tree.onDragStop(%o)", node);
+				},
+				autoExpandMS: 1000,
+				preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+				onDragEnter: function(node, sourceNode) {
+					/** sourceNode may be null for non-dynatree droppables.
+					 *  Return false to disallow dropping on node. In this case
+					 *  onDragOver and onDragLeave are not called.
+					 *  Return 'over', 'before, or 'after' to force a hitMode.
+					 *  Return ['before', 'after'] to restrict available hitModes.
+					 *  Any other return value will calc the hitMode from the cursor position.
+					 */
+					logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
+					return true;
+				},
+				onDragOver: function(node, sourceNode, hitMode) {
+					/** Return false to disallow dropping this node.
+					 *
+					 */
+					logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
+					// Prevent dropping a parent below it's own child
+					if(node.isDescendantOf(sourceNode)){
+						return false;
+					}
+					// Prohibit creating childs in non-folders (only sorting allowed)
+	//				if( !node.isFolder && hitMode == "over" )
+	//					return "after";
+				},
+				onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+					/** This function MUST be defined to enable dropping of items on
+					 * the tree.
+					 */
+					logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
+					sourceNode.move(node, hitMode);
+					// expand the drop target
+	//				sourceNode.expand(true);
+				},
+				onDragLeave: function(node, sourceNode) {
+					/** Always called if onDragEnter was called.
+					 */
+					logMsg("tree.onDragLeave(%o, %o)", node, sourceNode);
+				}
+			}
+		});
+
+		$("#btnReload").click(function(){
+			$("#tree").dynatree("getTree").reload();
+			return false;
+		});
+		$("#btnReloadNode").click(function(){
+			$("#tree").dynatree("getTree").getNodeByKey(_activeKey).reloadChildren();
+			return false;
+		});
+
+
+	});
+</script>
+</head>
+
+<body class="example">
+	<h1>Example: Lazy loading with a (local) HTTP test server</h1>
+	<p class="description">
+		Using <code>initAjax</code> option to initialize the tree using Ajax.<br>
+		The folders have the <code>isLazy</code> option set, so that they are also
+		loaded 'on demand', when expanded.<br>
+		<br>
+		Using <code>persist: true</code> and <code>initAjax: { addExpandedKeyList: true }</code>
+		we also support 'lazy persistence' (which has to be supported by the
+		web service, of course).<br>
+		<br>
+		Note:<br>
+		This sample assumes that a Dynatree Web Service is running at http://127.0.0.1:8001.<br>
+		See <a href="dynatree_server.py">dynatree_server.py</a> for a sample
+		server implementation.<br>
+		<br>
+		Note also:<br>
+		We have to enable JSONP using the option <code>initAjax: { dataType: 'jsonp' }</code>,
+		because Ajax calls will fail, if the originating HTML page and the web
+		service do not reside on the same host.<br>
+		In our case may have this sample page on the local file system and the
+		web service runs on 127.0.0.1.
+	</p>
+
+	<div id="tree">
+		<!-- When using initAjax, it may be nice to put a throbber here, that spins until the initial content is loaded: -->
+		Loading...
+	</div>
+
+	<div>Active node: <span id="echoActive">-</span></div>
+
+	<p>
+		<button id="btnReload">Reload tree</button>
+		<button id="btnReloadNode">Reload active node</button>
+	</p>
+	<!-- Start_Exclude: This block is not part of the sample code -->
+	<hr>
+	<p class="sample-links  no_code">
+		<a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+		<a class="hideOutsideFS" href="#">Link to this page</a>
+		<a class="hideInsideFS" href="samples.html">Example Browser</a>
+		<a href="#" id="codeExample">View source code</a>
+	</p>
+	<pre id="sourceCode" class="prettyprint" style="display:none"></pre>
+	<!-- End_Exclude -->
+</body>
+</html>

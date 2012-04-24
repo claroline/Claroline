@@ -1,0 +1,17 @@
+[
+    {"title": "Item 1"},
+    {"title": "Folder 2", "isFolder": true, "key": "folder2",
+        "children": [
+            {"title": "Sub-item 2.1"},
+			{"title": "Sub-item 2.2"}
+			]
+        },
+	{"title": "Folder 3", "isFolder": true, "key": "folder3",
+	    "children": [
+		    {"title": "Sub-item 3.1"},
+		    {"title": "Sub-item 3.2"}
+		    ]
+		},
+    {"title": "Lazy Folder 4", "isFolder": true, "isLazy": true, "key": "folder4"},
+	{"title": "Item 5"}
+]

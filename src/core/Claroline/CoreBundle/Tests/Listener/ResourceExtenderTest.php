@@ -21,6 +21,7 @@ class ResourceExtenderTest extends FunctionalTestCase
 
     public function testResourceExtenderIsSubscribed()
     {
+
         $listeners = $this->em->getEventManager()->getListeners(Events::loadClassMetadata);
         
         foreach ($listeners as $listener)
@@ -72,16 +73,16 @@ class ResourceExtenderTest extends FunctionalTestCase
         
         // Insert a fake extension plugin
         $sql = "INSERT INTO claro_plugin (type, bundle_fqcn, vendor_name, short_name, name_translation_key, description, discr)"
-            . " VALUES ('plugin x', 'TestTest', 'Test', 'Test', 'test', 'test', 'extension')";
+            . " VALUES ('plugin x', 'TestTest', '', 'Test', 'test', 'test', 'extension')";
         $conn->exec($sql);       
         $pluginId = $conn->lastInsertId();
         $sql = "INSERT INTO claro_extension (id) VALUES ({$pluginId})";
         $conn->exec($sql);
         
         // Insert two specific resource types (see test/Stub/Entity)
-        $sql = "INSERT INTO claro_resource_type (plugin_id, type, bundle, controller, service, is_listable, is_navigable)"
-            . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1', 'Test', 'Test', 'test', true, false),"
-            . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2', 'Test', 'Test', 'test', true, false)";
+        $sql = "INSERT INTO claro_resource_type (plugin_id, type, is_listable, is_navigable)"
+            . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1', true, false),"
+            . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2', true, false)";
         $conn->exec($sql);
     }
     

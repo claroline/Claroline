@@ -17,6 +17,7 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
+        //$this->markTestSkipped('columnType cannot be null');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
     }
@@ -57,36 +58,27 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
     private function createResourceTypes()
     {
         $plugin = new Extension();
-        $plugin->setBundleFQCN('Test\Test');
         $plugin->setVendorName('Test');
         $plugin->setBundleName('Test');
         $plugin->setType('test');
+        $plugin->setBundleFQCN('Test\Test');
         $plugin->setNameTranslationKey('test');
         $plugin->setDescriptionTranslationKey('test');
         
         $firstType = new ResourceType();
         $firstType->setType('Type x');
-        $firstType->setBundle('CoreBundle');
-        $firstType->setService('x.manager');
-        $firstType->setController('X');
         $firstType->setListable(true);
         $firstType->setNavigable(false);
         $firstType->setPlugin($plugin);
         
         $secondType = new ResourceType();
         $secondType->setType('Type y');
-        $secondType->setBundle('CoreBundle');
-        $secondType->setService('y.manager');
-        $secondType->setController('Y');
         $secondType->setListable(true);
         $secondType->setNavigable(false);
         $secondType->setPlugin($plugin);
         
         $thirdType = new ResourceType();
         $thirdType->setType('Type z');
-        $thirdType->setBundle('CoreBundle');
-        $thirdType->setService('z.manager');
-        $thirdType->setController('Z');
         $thirdType->setListable(true);
         $thirdType->setNavigable(false);
         

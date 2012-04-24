@@ -43,9 +43,9 @@ class DatabaseWriter
         }
         
         $pluginEntity->setBundleFQCN(get_class($plugin));
-        $pluginEntity->setType($plugin->getType());
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
+        $pluginEntity->setType($plugin->getType());
         $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
         
@@ -115,9 +115,6 @@ class DatabaseWriter
             {
                 $resourceType = new ResourceType();
                 $resourceType->setType($resource['class']);
-                $resourceType->setBundle($plugin->getBundleName());
-                $resourceType->setService($resource['manager_service_id']);
-                $resourceType->setController($resource['controller']);
                 $resourceType->setListable($resource['listable']);
                 $resourceType->setNavigable($resource['navigable']);
                 $resourceType->setPlugin($pluginEntity);

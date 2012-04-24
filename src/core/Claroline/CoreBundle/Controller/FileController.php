@@ -8,6 +8,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Plugin\ClarolineControllerInterface;
 
-class FileController extends Controller 
+class FileController extends Controller
 {
 }

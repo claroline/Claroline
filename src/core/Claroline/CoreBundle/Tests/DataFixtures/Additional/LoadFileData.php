@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\File;
+use Claroline\CoreBundle\Entity\Resource\File;
 
 class LoadFileData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -18,10 +18,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
     
     /** @var string */
     protected $upDir;
-    
-    /** @var FileManager */
-    protected $fileManager;
-    
+     
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -35,31 +32,39 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
     public function load(ObjectManager $manager)
     {
        $this->setLoader(); 
-       $this->addFiles($this->getReference("user/user"));
+       $this->addFiles($this->getReference("user/user"), $manager);
     }
     
     protected function setLoader()
     {       
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}";
-        $this->fileManager = $this->getContainer()->get('claroline.file.manager');
         $this->upDir  = $this->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);
     }
     
-    protected function addFiles($user)
+    protected function addFiles($user, $manager)
     {
-        $this->createFile($user, null);
-        $this->createFile($user, $this->getReference("directory/DIR_ROOT_{$user->getUsername()}"));
+        $this->createFile($user, null, $manager);
+        $this->createFile($user, $this->getReference("directory/DIR_ROOT_{$user->getUsername()}"), $manager);
     }
     
-    protected function createFile($user, $dir)
+    protected function createFile($user, $dir, $manager)
     {
-        $originalPath = $this->stubDir.'originalFile.txt';
-        $filePath = $this->stubDir."file.txt";
-        copy($originalPath, $filePath);
-        $file = new File($filePath);
-        $this->fileManager->upload($file, "file.txt", $user, $dir);
+         $filePath = $this->stubDir."file.txt";
+         $size = 1000;
+         $hashName = $this->GUID();
+         
+         $file = new File();
+         $file->setSize($size);
+         $file->setName("test.txt");
+         $file->setHashName($hashName);
+         $file->setUser($user);
+         $file->setParent($dir);
+         $file->setResourceType($this->getReference('resource_type/file'));
+         $manager->persist($file);
+         $manager->flush();
+         copy($filePath, $this->upDir.DIRECTORY_SEPARATOR.$hashName);
     }
     
     protected function cleanDirectory($dir)
@@ -78,6 +83,18 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
                 unlink($file->getPathname());
             }
         }
+    }
+    
+    private function GUID()
+    {
+        if (function_exists('com_create_guid') === true)
+        {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
+            mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
+            mt_rand(0, 65535), mt_rand(0, 65535));
     }
     
     public function getOrder()

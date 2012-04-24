@@ -1,0 +1,29 @@
+[
+{% set cptroot = 0 %}
+{% for root in resources %}
+{% set cptchild = 0 %}
+{
+    "title": "{{root.getName()}}",
+    "key": {{root.getId()}}
+    {% if root.getResourceType.getNavigable() == 1 %}
+        ,"isFolder": true
+        ,"children": [ 
+        {% for child in root.getChildren() %}
+            {
+                "title": "{{child.getName()}}",
+                "key": {{child.getId()}}
+                {% if child.getResourceType.getNavigable() == 1  %}
+                ,"isFolder": true
+                ,"isLazy": true
+                {% endif %}
+            }
+            {% set cptchild = cptchild + 1 %}
+            {% if cptchild < root.getChildren()|length %},{% endif %}
+        {% endfor %}
+    ]
+    {% endif %}
+    }
+{% set cptroot = cptroot + 1 %}
+{% if cptroot < resources|length %},{% endif %}
+{% endfor %}
+]

@@ -36,7 +36,7 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/index');
+         $crawler = $this->client->request('GET', '/resource/directory');
          $this->assertEquals(1, $crawler->filter('.row_resource')->count());
          $this->assertEquals(1, count($this->getUploadedFiles()));
     }
@@ -46,7 +46,7 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/index');
+         $crawler = $this->client->request('GET', '/resource/directory');
          $link = $crawler->filter('.link_resource_view')->eq(0)->link();
          $this->client->click($link);
          $headers = $this->client->getResponse()->headers;
@@ -58,7 +58,7 @@ class FileControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/admin'));
          $originalPath = $this->stubDir.'originalFile.txt';
          $crawler = $this->uploadFile($originalPath);   
-         $crawler = $this->client->request('GET', '/resource/index');
+         $crawler = $this->client->request('GET', '/resource/directory');
          $link = $crawler->filter('.link_delete_resource')->eq(0)->link();
          $crawler = $this->client->click($link);
          $this->assertEquals(0, $crawler->filter('.row_resource')->count());
@@ -67,10 +67,13 @@ class FileControllerTest extends FunctionalTestCase
     
     private function uploadFile($filePath)
     {
-        $crawler = $this->client->request('GET', '/file/null');
-        $form = $crawler->filter('input[type=submit]')->form();
+        $crawler = $this->client->request('GET', '/resource/directory');
         
-        return $this->client->submit($form, array('File_Form[file]' => $filePath));
+        $form = $crawler->filter('input[type=submit]')->form();
+        $form['choose_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
+        $crawler = $this->client->submit($form);
+        $form = $crawler->filter('input[type=submit]')->form(); 
+        return $this->client->submit($form, array('file_form[file]' => $filePath));
     }
     
      private function getUploadedFiles()

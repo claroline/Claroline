@@ -355,7 +355,7 @@ class WorkspaceController extends Controller
             $group->addRole($workspace->getCollaboratorRole());
             $em->flush();
             
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $group    , 'workspace' => $workspace));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $group, 'workspace' => $workspace));
         }
         
         throw new \Exception("ajax error");
@@ -371,7 +371,7 @@ class WorkspaceController extends Controller
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
             $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
             
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.html.twig', array('groups' => $groups));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $groups));
         }
         
         throw new \Exception("ajax error");

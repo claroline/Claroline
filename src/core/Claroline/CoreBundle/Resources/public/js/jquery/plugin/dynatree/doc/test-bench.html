@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<title>Dynatree - Example</title>
+
+	<script src="../jquery/jquery.min.js" type="text/javascript"></script>
+	<script src="../jquery/jquery-ui.custom.min.js" type="text/javascript"></script>
+	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
+
+	<link href="../src/skin/ui.dynatree.css" rel="stylesheet" type="text/css">
+	<script src="../src/jquery.dynatree.js" type="text/javascript"></script>
+
+	<!-- Start_Exclude: This block is not part of the sample code -->
+	<link href="prettify.css" rel="stylesheet">
+	<script src="prettify.js" type="text/javascript"></script>
+	<link href="sample.css" rel="stylesheet" type="text/css">
+	<script src="sample.js" type="text/javascript"></script>
+	<!-- End_Exclude -->
+
+	<!-- Add code to initialize the tree when the document is loaded: -->
+	<script type="text/javascript">
+	$(function(){
+		$("#tree").dynatree({
+			children: [
+				{title: "Add 100 nodes (flat, force update)...", isFolder: true, isLazy: true, mode: "add100_flat_u" },
+				{title: "Add 100 nodes (flat)...", isFolder: true, isLazy: true, mode: "add100_flat" },
+				{title: "Add 1.000 nodes (flat)...", isFolder: true, isLazy: true, mode: "add1000_flat" },
+				{title: "Add 1.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "add1000_deep" },
+				{title: "Add 10.000 nodes (deep)...", isFolder: true, isLazy: true, mode: "add10000_deep" }
+			],
+			onSelect: function(node) {
+				alert("You selected " + node.data.title);
+			},
+			onLazyRead: function(node) {
+				var tree = node.tree;
+				logMsg("Benchmarking mode='" + node.data.mode + "'...");
+				switch( node.data.mode ) {
+					case "add100_flat_u":
+						addNodes(node, 100, 0, 0, true)
+						break;
+					case "add100_flat":
+						addNodes(node, 100, 0, 0)
+						break;
+					case "add1000_flat":
+						addNodes(node, 1000, 0, 0)
+						break;
+					case "add1000_deep":
+						addNodes(node, 10, 10, 10)
+						break;
+					case "add10000_deep":
+						addNodes(node, 10, 100, 10)
+						break;
+				}
+//				node.setLazyNodeStatus(DTNodeStatus_Ok);
+				logMsg("Benchmarking mode='" + node.data.mode + "' done.");
+				// Return true, to show we're finished
+				return true;
+			}
+		});
+
+		$("#btnClear").click(function(){
+			var root = $("#tree").dynatree("getRoot");
+			for(var i = 0; i<root.childList.length; i++)
+				root.childList[i].removeChildren();
+		});
+		$("#btnRenderAll").click(function(){
+			var tree = $("#tree").dynatree("getTree");
+			var count = tree.count();
+			logMsg("Benchmarking node creation for " + count + " nodes...");
+			tree.renderInvisibleNodes();
+			logMsg("Benchmarking node creation for " + count + " nodes done.");
+		});
+	});
+
+	function addNodes(node, level1, level2, level3, forceUpdate) {
+		if( forceUpdate != true )
+			node.tree.enableUpdate(false);
+
+		var key;
+		for (var i=0; i<level1; i++) {
+			key = "" + (i+1);
+			var f = node.addChild({title: "Folder_" + key,
+								   key: key,
+								   isFolder: true
+								   });
+			for (var j=0; j<level2; j++) {
+				key = "" + (i+1) + "." + (j+1);
+				var d = f.addChild({title: "Node_" + key,
+								  key: key
+								  });
+				for (var k=0; k<level3; k++) {
+					key = "" + (i+1) + "." + (j+1) + "." + (k+1);
+					d.addChild({title: "Node_" + key,
+							  key: key
+							  });
+				}
+			}
+		}
+		node.tree.enableUpdate(true);
+	}
+
+	</script>
+</head>
+
+<body class="example">
+	<h1>Example: Benchmark</h1>
+	<p class="description">
+		Expand a node to start a benchmark, then check the firebug console.
+	</p>
+	<p class="description">
+		Some users reported slow loading with Firefox. If you experience
+		response times longer than 3-4 for seconds for <code>Add 1.000 nodes (flat)</code>
+		please <a href="http://code.google.com/p/dynatree/issues/detail?id=182">let us know</a>.
+	</p>
+
+	<div id='tree'> </div>
+	<p>
+	enableUpdate(false) is used for speedup.
+	</p>
+	<p>
+		<button id="btnClear">remove children</button>
+		<button id="btnRenderAll">Create HTML markup for all nodes</button>
+	</p>
+	<!-- Start_Exclude: This block is not part of the sample code -->
+	<hr>
+	<p class="sample-links  no_code">
+		<a class="hideInsideFS" href="http://dynatree.googlecode.com">jquery.dynatree.js project home</a>
+		<a class="hideOutsideFS" href="#">Link to this page</a>
+		<a class="hideInsideFS" href="samples.html">Example Browser</a>
+		<a href="#" id="codeExample">View source code</a>
+	</p>
+	<pre id="sourceCode" class="prettyprint" style="display:none"></pre>
+	<!-- End_Exclude -->
+</body>
+</html>
