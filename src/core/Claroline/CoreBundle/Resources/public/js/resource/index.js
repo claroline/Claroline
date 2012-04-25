@@ -222,7 +222,7 @@
                 }
             },
             "view": {name: "view", accesskey:"v"},
-            "delete": {name: "delete", icon: "delete", accesskey:"d"},
+            "delete": {name: "delete", icon: "delete", accesskey:"d"}
             }
         });   
     }

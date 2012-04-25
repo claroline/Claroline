@@ -1,15 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:base_template.html.twig' %}
 {% block section_content %}
 
-<script>
-   
-    require(["claroline/workspace/workspace_user_list", "dojo/domReady!"], function(workspaceController){
-        workspaceController.init({{workspace.getId()}});
-    });
-    require(["dijit/form/Button", "dojo/domReady"]);
-
-</script>
-
 {{ 'registered_users'|trans({}, 'platformTranslation') }}
 {{workspace.getName()}}
 
@@ -34,5 +25,11 @@
         </li>
     {% endfor %}
 </ul>
+
+<div id="user_dialog"></div>
+<div id="group_dialog"></div>
+
+<script>
+</script>
 
 {% endblock %}
