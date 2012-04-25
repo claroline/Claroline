@@ -1,7 +1,7 @@
 /*
  * dependencies: dynatree & rod-contextMenu + jquery
- * 
  */
+
 resourceTypeArray = new Array();
 subItems = {};
 getResourceTypeJSON();
