@@ -36,14 +36,14 @@ claro_resource_move:
    options:
       expose: true
       
-ClarolineCoreBundle_resource_addToWorkspace:
-   pattern: workspace/add/{idResource}/{idWorkspace}
+claro_resource_add_workspace:
+   pattern: workspace/add/{resourceId}/{workspaceId}
    defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
    options:
       expose: true
       
-ClarolineCoreBundle_resource_removeFromWorkspace:
-   pattern: workspace/remove/{idResource}/{idWorkspace}
+claro_resource_remove_workspace:
+   pattern: workspace/remove/{resourceId}/{workspaceId}
    defaults: { _controller: ClarolineCoreBundle:Resource:removeFromWorkspace }
    options:
       expose: true 
