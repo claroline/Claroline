@@ -47,6 +47,7 @@ class GroupRepository extends EntityRepository
         "; 
             
         $query = $this->_em->createQuery($dql);
+        $query->setMaxResults(200);
         
         return $query->getResult(); 
     }
