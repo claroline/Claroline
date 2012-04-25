@@ -87,6 +87,7 @@
     //todo:submission: check si la réponse est du json
     function submissionHandler(data, route, routeParameters)
     {
+        console.log(data);
         if(data!="epic fail")
         {
             var JSONObject = JSON.parse(data);
@@ -267,7 +268,10 @@
     function createTreeDialog()
     {
         $('#treeDialog').dialog({
-            autoOpen:false
+            autoOpen:false,
+            width: 400,
+            height: 300,
+            resizable: false
         });
     }
 });

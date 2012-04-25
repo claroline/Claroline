@@ -1,7 +1,6 @@
 
 $(function(){
     twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId');
-    //twigWorkspaceId = 3;
     var params = {
         autoOpen:false,
         submitHandler: function(oForm, id){

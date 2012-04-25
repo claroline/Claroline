@@ -9,11 +9,19 @@ $(function()
     $(".loading").hide();
     $('#user_dialog').dialog({ 
         autoOpen: false,
-        height: 300
+        height: 300,
+        width: 500,
+        maxHeight: 300,
+        minHeight: 150,
+        mawWidth: 500
     });
     $('#group_dialog').dialog({ 
         autoOpen: false,
-        height: 300
+        height: 300,
+        width: 500,
+        maxHeight: 300,
+        minHeight: 150,
+        maxWidth: 500
     });
     $('#show_user_dialog_button').click(function(){
         $("#user_dialog").dialog('open');
@@ -48,7 +56,7 @@ $(function()
             function(data){
                 if (nbIterationUsers == 0){
                     $('.checkbox_user_name').remove();
-                    $('#user_checkboxes').empty();
+                    $('user_table_checkboxes_body').empty();
                 }
                 nbIterationUsers++;
                 createUsersChkBoxes(data);
@@ -84,7 +92,7 @@ $(function()
             {'search': search, 'id': twigWorkspaceId},
             function(data){
                 $('.checkbox_user_name').remove();
-                $('#user_checkboxes').empty();
+                $('#user_table_checkboxes_body').empty();
                 createUsersChkBoxes(data);
                 $('#user_loading').hide();
             }
@@ -188,9 +196,12 @@ $(function()
         while (i<JSONObject.length)
         {  
             var list = '<tr>'
-            +'<td><input class="checkbox_user_name" id="checkbox_user_'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox_user_'+JSONObject[i].id+'">'+JSONObject[i].username+' '+JSONObject[i].lastName+' '+JSONObject[i].firstName+'</input></td>'
+            +'<td align="center"><input class="checkbox_user_name" id="checkbox_user_'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox_user_'+JSONObject[i].id+'"></input></td>'
+            +'<td align="center">'+JSONObject[i].username+'</td>'
+            +'<td align="center">'+JSONObject[i].lastName+'</td>'
+            +'<td align="center">'+JSONObject[i].firstName+'</td>'
             +'</tr>';
-            $('#user_checkboxes').append(list);
+            $('#user_table_checkboxes_body').append(list);
             i++; 
         }    
     }
@@ -198,12 +209,11 @@ $(function()
     function createUserCallbackLi(JSONString)
     {
         JSONObject = eval(JSONString);
-        console.debug(JSONObject);
         var i=0;
         while (i<JSONObject.length)
         {
             var li = '<li class="row_user" id="user_'+JSONObject[i].id+'">'+JSONObject[i].username
-            +'<a href="'+Routing.generate('claro_workspace_delete_user_workspace', {'userId':JSONObject[i].id, 'workspaceId':twigWorkspaceId })+' id="link_delete_user_'+JSONObject[i].id+'">'+ twigDeleteTranslation+'</a>';
+            +'<a href="'+Routing.generate('claro_workspace_delete_user_workspace', {'userId':JSONObject[i].id, 'workspaceId':twigWorkspaceId })+' id="link_delete_user_'+JSONObject[i].id+'">'+ twigDeleteTranslation+'</a>'
             +'</li>';
             alert(li);
             $('#workspace_users').append(li);

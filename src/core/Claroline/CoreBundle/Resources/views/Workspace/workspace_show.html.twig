@@ -10,10 +10,9 @@
          data-workspaceId="{{workspace.getId()}}"
     ></div>
     <div id="div_WS_show">
-    {{workspace.getName()}}: {{ 'workspace'|trans({}, 'platformTranslation') }}
+    {{ 'workspace'|trans({}, 'platformTranslation') }}: {{workspace.getName()}}
     {% if is_granted(workspace.getManagerRole().getName()) %}
         | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
-          <button id="file_picker_button">file</button>
     {% endif %}
           <div id='div_resource'>
               {% for resource in workspace.getResources() %}
