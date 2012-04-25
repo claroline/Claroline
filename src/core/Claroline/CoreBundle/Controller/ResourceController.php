@@ -169,7 +169,20 @@ class ResourceController extends Controller
         if($id==0)
         {
             $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
-            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $resources));
+            $root = new Directory();
+            $root->setName('root');
+            $root->setId('null');
+            $em = $this->getDoctrine()->getEntityManager();
+            $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
+            $root->setResourceType($directoryType[0]);
+            foreach($resources as $resource)
+            {
+                $root->addChildren($resource);
+            }
+            //must add root in an array for the json response
+            $root = array( 0 => $root);
+            
+            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $root));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');      
         }
