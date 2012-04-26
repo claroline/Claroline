@@ -5,7 +5,6 @@
 
  <a href="{{path('claro_workspace_show_workspace', {'id': workspace.getId()})}}" class="link_show" id="link_show_{{workspace.getId}}">{{workspace.getName()}}</a>
 {{ 'registered_users'|trans({}, 'platformTranslation') }}
- 
 <!-- twig variables are here in order to make javascript happy -->
 <div id="twig_attributes" 
      data-workspaceId="{{workspace.getId()}}" 

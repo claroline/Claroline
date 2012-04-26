@@ -5,15 +5,14 @@
     //variable globales = pas bon
     resourceTypeArray = new Array();
     subItems = {};
-    function openTreeDialog()
-    {
-        $("#treeDialog").dialog('open');
-    }
-    
     $(function(){
         
-        createTreeDialog();
-        
+        var dialog = createTreeDialog();
+             
+        $('#dialog_tree_button').click(function(){
+            dialog.dialog("open");
+        });
+     
         $.ajax({
         type: 'POST',
         url: Routing.generate('claro_resource_type_resource'),
@@ -35,15 +34,25 @@
         //créé après la récupération de resourceType~ à changer
         function createTree()
         {
-            $("#treeDialog").dynatree({
+            $("#ct_tree").dynatree({
                 title: "myTree",
                 initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0})},
+                clickFolderMode: 1,
                 onLazyRead: function(node){
                     node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key })});
-                    //bindContextMenu();
                 },
                 onCreate: function(node, span){
-                    bindContextMenu();
+                    bindContextMenu(node);
+                },
+                onDblClick: function(node)
+                {
+                    node.expand();
+                    node.activate();
+                },
+                onCustomRender: function(node){               
+                    var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" </a>";
+                    html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
+                    return html; 
                 },
                 dnd: {
                     onDragStart: function(node){
@@ -91,7 +100,7 @@
         if(data!="epic fail")
         {
             var JSONObject = JSON.parse(data);
-            var node = $("#treeDialog").dynatree("getTree").selectKey(routeParameters.id);
+            var node = $("#ct_tree").dynatree("getTree").selectKey(routeParameters.id);
             if(JSONObject.type != 'directory')
             {
                 var childNode = node.addChild({
@@ -107,12 +116,12 @@
                     isFolder:true
                 });
             }
-            $('#formDialog').dialog("close");
-            $('#formDialog').empty();
+            $('#ct_form').dialog("close");
+            $('#ct_form').empty();
         }
         else
         {
-            $('#formDialog').append(data);
+            $('#ct_form').append(data);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
                 sendForm(route, routeParameters, document.getElementById("generic_form"));
@@ -131,8 +140,8 @@
                 url: route,
                 cache: false,
                 success: function(data){
-                    $('#formDialog').append(data);
-                    $("#formDialog").dialog('open');
+                    $('#ct_form').append(data);
+                    $("#ct_form").dialog('open');
                     //ici je change l'event du submit
                     $("#generic_form").submit(function(e){
                         e.preventDefault();
@@ -166,73 +175,81 @@
         window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
     }
     
-    //traductions ?
-    function bindContextMenu(){
-        $.contextMenu({
-            selector: 'span.dynatree-node', 
-            callback: function(key, options) {
-                //menu click events
-                var m = "clicked: " + key;
-                console.debug(m);
-                switch(key)
-                {
-                    case "open":
-                        openNode(node);
-                        break;
-                    case "delete":
-                        deleteNode(node);
-                        break;
-                        
-                    case "view":
-                        viewNode(node, key);
-                        break;
-                    default:
-                        node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key);    
-                }
-
-            },
-        items: {
-            "new": {name: "new",
-                disabled: function(){
+   function bindContextMenu(node){
+    
+    var menuDefaultOptions = {
+    selector: 'a.dynatree-title', 
+        callback: function(key, options) {
+            switch(key)
+            {
+                case "open":
+                    openNode(node);
+                    break;
+                case "delete":
+                    deleteNode(node);
+                    break;
+                     
+                case "view":
+                    viewNode(node, key);
+                    break;
+                default:
                     node = $.ui.dynatree.getNode(this);
-                    if(node.data.isFolder == true)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                },
-                items:subItems
-            },
-            "open": {
-                name: "open",
-                accesskey:"o",
-                disabled: function(){
-                    node = $.ui.dynatree.getNode(this);
-                    if(node.data.isFolder != true)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-            },
-            "view": {name: "view", accesskey:"v"},
-            "delete": {name: "delete", icon: "delete", accesskey:"d"}
+                    createFormDialog(key, node.data.key);    
             }
-        });   
+        },
+    items: {
+        "new": {name: "new",
+            disabled: function(){
+                node = $.ui.dynatree.getNode(this);
+                if(node.data.isFolder == true)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            },
+            items:subItems
+        },
+        "open": {
+            name: "open",
+            accesskey:"o",
+            disabled: function(){
+                node = $.ui.dynatree.getNode(this);
+                if(node.data.isFolder != true)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+       },
+       "view": {name: "view", accesskey:"v"},
+       "delete": {name: "delete", icon: "delete", accesskey:"d"}
+       }
+    }
+   
+    $.contextMenu(menuDefaultOptions);
+    
+    var additionalMenuOptions = $.extend(menuDefaultOptions,
+    {
+        selector: 'span.dynatree-custom-claro-menu', 
+        trigger: 'left'
+    });
+
+    $.contextMenu(additionalMenuOptions);
     }
     
-    $('#formDialog').dialog({
-        autoOpen: false,
-        //more parameters here
+    $('#ct_form').dialog({
+        width: 'auto',
+        height: 'auto',
+        autoOpen:false,
+        resizable: false,
         close: function(ev, ui){
-            $('#formDialog').empty();}
+            $('#ct_form').empty();}
     });
       
     function sendForm(route, routeParameters, form)
@@ -267,11 +284,15 @@
     
     function createTreeDialog()
     {
-        $('#treeDialog').dialog({
+        var divContentHTML = "<div id='ct_content'><div id='ct_tree'></div><div id='ct_form'></div></div>";
+        $('#ct_dialog').append(divContentHTML);
+        var dialog = $('#ct_dialog').dialog({
             autoOpen:false,
             width: 400,
             height: 300,
             resizable: false
         });
+        
+        return dialog;
     }
 });
