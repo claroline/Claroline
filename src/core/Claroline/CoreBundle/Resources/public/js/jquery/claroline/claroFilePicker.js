@@ -12,8 +12,9 @@ getResourceTypeJSON();
         var params = $.extend({
             autoOpen: true,
             resizable: false,
-            width: 500,
+            width: 600,
             height: 350,
+           // leftClickMenu: true,
             getForm: function(){
                 var formHTML =
                     "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"ahah"+"'/><input type='submit' id='cfp_form_submit'></form>";
@@ -36,12 +37,21 @@ getResourceTypeJSON();
             }
         }, options);          
         return this.each(function(){   
-            var divTopHTML = "<div id='cfp_top_bar'><button id='local_tree_button'>local</button><button>others</button></div>"
+            var divTopHTML = "<div id='cfp_top_bar'><button id='local_tree_button'>local</button><button>others</button></div><br>"
             $(this).append(divTopHTML);
             var divContentHTML = "<div id='cfp_content'><div id='cfp_tree'></div><div id='cfp_form'></div></div>";
             $(this).append(divContentHTML);
             var divDialogHTML = "<div id='cfp_dialog'></div>";
             $(this).append(divDialogHTML);
+            $('#cfp_dialog').dialog({
+                width: 'auto',
+                height: 'auto',
+                autoOpen:false,
+                resizable: false,
+                close: function(ev, ui){
+                    $('#cfp_dialog').empty();
+                }
+            });
             
             $('#cfp_form').append(params.getForm());
             $('#cfp_form').hide();
@@ -56,19 +66,26 @@ getResourceTypeJSON();
                 clickFolderMode: 1,
                 onLazyRead: function(node){
                     node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key})});
-                    bindContextMenu();
                 },
                 onCreate: function(node, span){
-                    bindContextMenu();
+                    bindContextMenu(node);
                 },
                 onDblClick: function(node){
                     params.dblClickItem(node);
+                },
+                onCustomRender: function(node){               
+                    var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" </a>";
+                    html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
+                    return html; 
                 },
                 dnd: {
                     onDragStart: function(node){
                         return true;
                     },
-                    onDragStop: function(node){
+                    onDragStop: function(node, sourceNode){
+                        if(node.isDescendantOf(sourceNode)){
+                            return false;
+                        }
                     },
                     autoExpandMS: 1000,
                     preventVoidMoves: true,
@@ -95,8 +112,7 @@ getResourceTypeJSON();
                 $('#cfp_form').hide();
                 $('#cfp_tree').show();
             });
-            
-            console.debug(this); 
+
             $(this).dialog({
                 autoOpen: params.autoOpen,
                 resizable: params.resizable,
@@ -129,14 +145,11 @@ function generateSubItems()
     return object;
 }
 
-function bindContextMenu(){
-    console.debug(subItems);
-    $.contextMenu({
-    selector: 'span.dynatree-node', 
+function bindContextMenu(node){
+    
+    var menuDefaultOptions = {
+    selector: 'a.dynatree-title', 
         callback: function(key, options) {
-            //menu click events
-            var m = "clicked: " + key;
-            console.debug(m);
             switch(key)
             {
                 case "open":
@@ -187,7 +200,17 @@ function bindContextMenu(){
        "view": {name: "view", accesskey:"v"},
        "delete": {name: "delete", icon: "delete", accesskey:"d"}
        }
-   });   
+   }
+    $.contextMenu(menuDefaultOptions);
+    
+    
+    var additionalMenuOptions = $.extend(menuDefaultOptions,
+    {
+        selector: 'span.dynatree-custom-claro-menu', 
+        trigger: 'left'
+    });
+
+    $.contextMenu(additionalMenuOptions);
 }
 
 function getResourceTypeJSON()
