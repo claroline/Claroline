@@ -72,8 +72,13 @@
                         }
                     },
                     onDrop: function(node, sourceNode, hitMode, ui, draggable){
-                        sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key });
+                        if(node.isDescendantOf(sourceNode)){
+                            return false;
+                        }
+                        else{
+                        sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
                         sourceNode.move(node, hitMode);
+                        }
                     },
                     onDragLeave: function(node, sourceNode){
                     }
@@ -93,12 +98,10 @@
         });
     }
     
-    //todo:submission: check si la réponse est du json
     function submissionHandler(data, route, routeParameters)
     {
-        console.log(data);
-        if(data!="epic fail")
-        {
+        console.debug(data);
+        try{
             var JSONObject = JSON.parse(data);
             var node = $("#ct_tree").dynatree("getTree").selectKey(routeParameters.id);
             if(JSONObject.type != 'directory')
@@ -110,7 +113,7 @@
             }
             else
             {
-               var childNode = node.addChild({
+                var childNode = node.addChild({
                     title:JSONObject.name,
                     key:JSONObject.key,
                     isFolder:true
@@ -119,8 +122,9 @@
             $('#ct_form').dialog("close");
             $('#ct_form').empty();
         }
-        else
+        catch(err)
         {
+            $('#ct_form').empty();
             $('#ct_form').append(data);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
@@ -140,6 +144,7 @@
                 url: route,
                 cache: false,
                 success: function(data){
+                    $('#ct_form').empty();
                     $('#ct_form').append(data);
                     $("#ct_form").dialog('open');
                     //ici je change l'event du submit

@@ -82,7 +82,7 @@ class FileManager implements ResourceInterface
     
     public function add($form, $id, $user)
     {
-         $tmpFile = $form['file']->getData();
+         $tmpFile = $form['name']->getData();
          $fileName = $tmpFile->getClientOriginalName();
          $parent = $this->resourceManager->find($id);
          $size = filesize($tmpFile);

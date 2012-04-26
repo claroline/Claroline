@@ -67,7 +67,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $form['choose_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
         $crawler = $this->client->submit($form);
         $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('file_form[file]' => $filePath));
+        $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
         $crawler = $this->client->request('GET', "/resource/click/directory/{$this->getFixtureReference('directory/DIR_ROOT_user')->getId()}");
         $this->assertEquals(3, count($crawler->filter(".row_resource")));
     }

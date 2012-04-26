@@ -30,7 +30,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $fileTypeId = $this->getFixtureReference('resource_type/file')->getId();
         $crawler = $this->client->submit($form, array('choose_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('file_form[file]' => $filePath));
+        $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
         $this->assertEquals($crawler->filter('.row_resource')->count(), 1);        
     }    
 }    
