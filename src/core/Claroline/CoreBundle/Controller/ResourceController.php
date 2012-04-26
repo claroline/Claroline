@@ -10,8 +10,6 @@ use Claroline\CoreBundle\Form\DirectoryType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-
-//todo ASSERT RESSOURCE NAME NOT NULL: pq ça fonctionne pas ?
 class ResourceController extends Controller
 {
     public function indexAction()
@@ -91,13 +89,21 @@ class ResourceController extends Controller
         }
         else
         {
-            return $this->render(
-                'ClarolineCoreBundle:Resource:form_page.html.twig', array ('form' => $form->createView(), 'type' => $type, 'id' => $id)
-            );
+            if($request->isXmlHttpRequest())
+            {
+                return $this->render(
+                    'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
+                );
+            }
+            else
+            {
+                return $this->render(
+                    'ClarolineCoreBundle:Resource:form_page.html.twig', array ('form' => $form->createView(), 'type' => $type, 'id' => $id)
+                );
+            }
         }
     }
     
-    //pas de vérification xmlHttp; je vois pas encore comment gérer ça, je sais même pas si c'est important
     public function defaultClickAction($type, $id)
     {
         if($type!="null")

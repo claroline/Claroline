@@ -83,9 +83,6 @@ getResourceTypeJSON();
                         return true;
                     },
                     onDragStop: function(node, sourceNode){
-                        if(node.isDescendantOf(sourceNode)){
-                            return false;
-                        }
                     },
                     autoExpandMS: 1000,
                     preventVoidMoves: true,
@@ -99,8 +96,13 @@ getResourceTypeJSON();
                         }
                     },
                     onDrop: function(node, sourceNode, hitMode, ui, draggable){
+                        if(node.isDescendantOf(sourceNode)){
+                            return false;
+                        }
+                        else{
                         sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
                         sourceNode.move(node, hitMode);
+                        }
                     },
                     onDragLeave: function(node, sourceNode){
                     }  
@@ -264,6 +266,7 @@ function createFormDialog(type, id){
             url: route,
             cache: false,
             success: function(data){
+                $('#cfp_dialog').empty();
                 $('#cfp_dialog').append(data);
                 $("#cfp_dialog").dialog('open');
                 //ici je change l'event du submit
@@ -275,11 +278,10 @@ function createFormDialog(type, id){
             });
 }
 
-//todo:submission: check si la réponse est du json
 function submissionHandler(data, route, routeParameters)
 {
-    if(data!="epic fail")
-    {
+    console.debug(data);
+    try{
         var JSONObject = JSON.parse(data);
         var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.id);
         if(JSONObject.type != 'directory')
@@ -300,8 +302,9 @@ function submissionHandler(data, route, routeParameters)
         $('#cfp_dialog').dialog("close");
         $('#cfp_dialog').empty();
     }
-    else
+    catch(err)
     {
+        $('#cfp_dialog').empty();
         $('#cfp_dialog').append(data);
         $("#generic_form").submit(function(e){
             e.preventDefault();
@@ -318,6 +321,8 @@ function sendForm(route, routeParameters, form)
     xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
     xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters)};
     xhr.send(formData);
+    
+    
 }
 
 function sendRequest(route, routeParams, successHandler){

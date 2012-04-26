@@ -9,7 +9,7 @@ class FileType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('file', 'file');
+        $builder->add('name', 'file');;
     }
 
     public function getName()
