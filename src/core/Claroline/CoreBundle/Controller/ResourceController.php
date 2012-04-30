@@ -198,6 +198,7 @@ class ResourceController extends Controller
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');     
         }
+        
         return $response;
     }
     
@@ -242,6 +243,7 @@ class ResourceController extends Controller
         $resource = $this->get('claroline.resource.manager')->find($resourceId);
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);     
         $workspace->removeResource($resource);
+        $em = $this->getDoctrine()->getEntityManager();        
         $em->flush();
         
         return new Response("success");
