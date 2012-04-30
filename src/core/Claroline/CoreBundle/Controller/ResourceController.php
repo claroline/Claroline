@@ -70,8 +70,6 @@ class ResourceController extends Controller
  
         if($form->isValid())
         {   
-            
-            $user = $this->get('security.context')->getToken()->getUser();
             $resource = $this->get($name)->add($form, $id, $user);
             
             if($request->isXmlHttpRequest())
@@ -177,7 +175,7 @@ class ResourceController extends Controller
             $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
             $root = new Directory();
             $root->setName('root');
-            $root->setId('null');
+            $root->setId(0);
             $em = $this->getDoctrine()->getEntityManager();
             $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
             $root->setResourceType($directoryType[0]);
@@ -214,10 +212,25 @@ class ResourceController extends Controller
     
     public function addToWorkspaceAction($resourceId, $workspaceId)
     {
-        $resource = $this->get('claroline.resource.manager')->find($resourceId);
         $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);        
-        $workspace->addResource($resource);
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
+        
+        if($resourceId == 0)
+        {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
+            
+            foreach($resources as $resource)
+            {
+                $workspace->addResource($resource);
+            }           
+        }
+        else
+        {
+            $resource = $this->get('claroline.resource.manager')->find($resourceId);
+            $em = $this->getDoctrine()->getEntityManager();   
+            $workspace->addResource($resource);
+        }        
         $em->flush();
         
         return new Response("success");
@@ -226,7 +239,6 @@ class ResourceController extends Controller
     public function removeFromWorkspaceAction($resourceId, $workspaceId)
     {
         $resource = $this->get('claroline.resource.manager')->find($resourceId);
-        $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);     
         $workspace->removeResource($resource);
         $em->flush();
