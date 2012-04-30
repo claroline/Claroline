@@ -28,8 +28,12 @@ class AdminSecurityTest extends FunctionalTestCase
     
     public function testAccessToAdminSectionIsAllowedToAdminUsers()
     {
+        $this->markTestIncomplete(
+          "login form layout not done yet"
+        );
+        
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
-        $this->assertTrue($crawler->filter('#administration.section')->count() > 0);
+        $this->assertTrue($crawler->filter('.administration')->count() > 0);
     }
 }

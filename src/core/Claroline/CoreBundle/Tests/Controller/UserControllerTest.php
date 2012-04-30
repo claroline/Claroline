@@ -11,7 +11,7 @@ class UserControllerTest extends FunctionalTestCase
         $this->loadUserFixture();
         $this->client->followRedirects();
     }
-
+    
     public function testUserProfileEdit()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -24,15 +24,17 @@ class UserControllerTest extends FunctionalTestCase
             $form, 
             array(
                 'user_form[firstName]' => 'toto', 
+                'user_form[username]' => 'toto42', 
                 'user_form[plainPassword][first]' => 'abc', 
                 'user_form[plainPassword][second]' => 'abc'
             )
         );
-        $username = $crawler->filter('#username')->text();
-        $this->assertEquals("toto Doe", $username);
+
+        $this->assertTrue($crawler->filter("div:contains('toto42')")->count()>1);
         $this->assertEquals("disabled", $readonly);
         $this->client->request('GET', '/logout');
         $this->getFixtureReference('user/user')->setPlainPassword('abc');
+        $this->getFixtureReference('user/user')->setUsername('toto42');
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
@@ -42,6 +44,7 @@ class UserControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', 'user/profile/edit');
         $this->assertEquals(1, $crawler->filter('#login_form')->count());
     }
+
 
     public function testAdminOwnProfileEdit()
     {
@@ -53,18 +56,19 @@ class UserControllerTest extends FunctionalTestCase
         $readonly = $crawler->filter('#user_form_ownedRoles')->attr('disabled');
         $this->assertEquals("", $readonly);
         $form['user_form[firstName]'] = 'toto';
+        $form['user_form[username]'] = 'toto42';
         $form['user_form[plainPassword][first]'] = 'abc';
         $form['user_form[plainPassword][second]'] = 'abc';
         $form['user_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
         $this->client->submit($form);
         $this->getFixtureReference('user/admin')->setPlainPassword('abc');
+        $this->getFixtureReference('user/admin')->setUsername('toto42');
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $username = $crawler->filter('#username')->text();
-        $this->assertEquals("toto Doe", $username);
+        $this->assertTrue($crawler->filter("div:contains('toto42')")->count()>1);
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
         $this->assertEquals(0, $crawler->filter('#link_administration')->count());
     }
-
+    
     public function testAdminCanGetFullUserList()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));

@@ -63,6 +63,7 @@ class ResourceController extends Controller
     public function addAction($type, $id)
     {
         $request = $this->get('request');
+        $user = $this->get('security.context')->getToken()->getUser();
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
         $name = $this->findRsrcServ($resourceType);
         $form = $this->get($name)->getForm();
