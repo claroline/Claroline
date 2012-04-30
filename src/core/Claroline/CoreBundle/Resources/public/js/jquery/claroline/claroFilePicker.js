@@ -35,6 +35,7 @@ getResourceTypeJSON();
             }
         }, options);          
         return this.each(function(){ 
+            //must be changed with sthg like $(this).setAttribute.doSthg
             document.getElementById('filepicker').setAttribute("class", 'modal fade');
             var modalContent = ""
             +'<div class="modal-header">'
@@ -51,12 +52,7 @@ getResourceTypeJSON();
             +'</div>'
             +'</div>';
             $(this).append(modalContent);
-            
-            $('#cfp_dialog').modal({
-                show: 'false',
-                backdrop: true
-            });
-            
+                     
             $('#cfp_form').append(params.getForm());
             $('#cfp_form').hide();
             $('#cfp_form').submit(function(e){
@@ -125,8 +121,8 @@ getResourceTypeJSON();
             });
 
             $(this).modal({
-                show:false,
-                backdrop:params.autoOpen
+                show:params.autoOpen,
+                backdrop:params.backdrop
             });  
             return (this);
             

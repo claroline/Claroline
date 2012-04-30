@@ -7,10 +7,10 @@
     subItems = {};
     $(function(){
         
-        var dialog = createTreeDialog();
+        var modal = createTreeDialog();
              
         $('#dialog_tree_button').click(function(){
-            dialog.dialog("open");
+            modal.modal("show");
         });
      
         $.ajax({
@@ -28,7 +28,10 @@
                 }
                 subItems = generateSubItems();
                 createTree();
-            }
+            },
+        error: function(data){
+            alert("oh crap");
+        }
        });
         
         //créé après la récupération de resourceType~ à changer
@@ -119,7 +122,7 @@
                     isFolder:true
                 });
             }
-            $('#ct_form').dialog("close");
+           // $('#ct_form').dialog("close");
             $('#ct_form').empty();
         }
         catch(err)
@@ -146,7 +149,6 @@
                 success: function(data){
                     $('#ct_form').empty();
                     $('#ct_form').append(data);
-                    $("#ct_form").dialog('open');
                     //ici je change l'event du submit
                     $("#generic_form").submit(function(e){
                         e.preventDefault();
@@ -247,16 +249,7 @@
 
     $.contextMenu(additionalMenuOptions);
     }
-    
-    $('#ct_form').dialog({
-        width: 'auto',
-        height: 'auto',
-        autoOpen:false,
-        resizable: false,
-        close: function(ev, ui){
-            $('#ct_form').empty();}
-    });
-      
+     
     function sendForm(route, routeParameters, form)
     {
         var formData = new FormData(form);
@@ -289,15 +282,26 @@
     
     function createTreeDialog()
     {
-        var divContentHTML = "<div id='ct_content'><div id='ct_tree'></div><div id='ct_form'></div></div>";
-        $('#ct_dialog').append(divContentHTML);
-        var dialog = $('#ct_dialog').dialog({
-            autoOpen:false,
-            width: 400,
-            height: 300,
-            resizable: false
+        document.getElementById('ct_dialog').setAttribute("class", 'modal fade');
+        var modalContent = ""
+        +'<div class="modal-header">'
+            +'<button id="close_dialog_button" class="close" data-dismiss="modal">×</button>'
+            +'<h3>Modal header</h3>'
+        +'</div>'
+        +'<div class="modal-body">'
+            +"<div id='ct_form'></div><div id='ct_tree'></div>"
+        +'</div>'
+        +'<div class="modal-footer">'
+            +'FOOTER'
+        +'</div>';
+        
+        $('#ct_dialog').append(modalContent);
+    
+        var modal = $('#ct_dialog').modal({
+            show: false,
+            backdrop: false
         });
         
-        return dialog;
+        return modal;
     }
 });
