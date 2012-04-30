@@ -2,15 +2,15 @@
 $(function(){
     twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId');
     var params = {
-        autoOpen:false,
         submitHandler: function(oForm, id){
                 addResource(id, twigWorkspaceId);
             }
-        }
+        };
+        
     picker = $('#filepicker').claroFilePicker(params);
     
     $('#show_filepicker_button').click(function(){
-        picker.dialog("open");
+        picker.modal("show");
     });
 }); 
 

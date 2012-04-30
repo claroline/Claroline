@@ -10,10 +10,8 @@ getResourceTypeJSON();
     $.fn.extend({
         claroFilePicker:function(options){
         var params = $.extend({
-            autoOpen: true,
-            resizable: false,
-            width: 600,
-            height: 350,
+            autoOpen: false,
+            backdrop: false,
            // leftClickMenu: true,
             getForm: function(){
                 var formHTML =
@@ -36,21 +34,27 @@ getResourceTypeJSON();
                 alert("DEFAULT SUBMIT HANDLER! IT MUST BE CHANGED");
             }
         }, options);          
-        return this.each(function(){   
-            var divTopHTML = "<div id='cfp_top_bar'><button id='local_tree_button'>local</button><button>others</button></div><br>"
-            $(this).append(divTopHTML);
-            var divContentHTML = "<div id='cfp_content'><div id='cfp_tree'></div><div id='cfp_form'></div></div>";
-            $(this).append(divContentHTML);
-            var divDialogHTML = "<div id='cfp_dialog'></div>";
-            $(this).append(divDialogHTML);
-            $('#cfp_dialog').dialog({
-                width: 'auto',
-                height: 'auto',
-                autoOpen:false,
-                resizable: false,
-                close: function(ev, ui){
-                    $('#cfp_dialog').empty();
-                }
+        return this.each(function(){ 
+            document.getElementById('filepicker').setAttribute("class", 'modal fade');
+            var modalContent = ""
+            +'<div class="modal-header">'
+                +'<button id="close_dialog_button" class="close" data-dismiss="modal">×</button>'
+                +'<h3>Modal header</h3>'
+           +'</div>'
+           +'<div class="modal-body">'
+                +'<div id="cfp_dialog"></div>'
+                +'<div id="cfp_top_bar"><button id="local_tree_button">local</button><button>others</button></div><br>'
+                +'<div id="cfp_content"><div id="cfp_tree"></div><div id="cfp_form"></div></div>'
+            +'</div>'
+           +'<div class="modal-footer">'
+               +'FOOTER'
+            +'</div>'
+            +'</div>';
+            $(this).append(modalContent);
+            
+            $('#cfp_dialog').modal({
+                show: 'false',
+                backdrop: true
             });
             
             $('#cfp_form').append(params.getForm());
@@ -71,6 +75,7 @@ getResourceTypeJSON();
                     bindContextMenu(node);
                 },
                 onDblClick: function(node){
+                    $('#cfp_dialog').hide();  
                     params.dblClickItem(node);
                 },
                 onCustomRender: function(node){               
@@ -114,14 +119,16 @@ getResourceTypeJSON();
                 $('#cfp_form').hide();
                 $('#cfp_tree').show();
             });
+            
+            $('#close_dialog_button').click(function(){
+                alert("close");
+            });
 
-            $(this).dialog({
-                autoOpen: params.autoOpen,
-                resizable: params.resizable,
-                width: params.width,
-                height: params.height
+            $(this).modal({
+                show:false,
+                backdrop:params.autoOpen
             });  
-            return this; 
+            return (this);
             
         });}
     });
@@ -268,7 +275,7 @@ function createFormDialog(type, id){
             success: function(data){
                 $('#cfp_dialog').empty();
                 $('#cfp_dialog').append(data);
-                $("#cfp_dialog").dialog('open');
+                //$("#cfp_dialog").modal('show');
                 //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
@@ -299,7 +306,7 @@ function submissionHandler(data, route, routeParameters)
                 isFolder:true
             });
         }
-        $('#cfp_dialog').dialog("close");
+        //$('#cfp_dialog').dialog("close");
         $('#cfp_dialog').empty();
     }
     catch(err)
@@ -340,3 +347,5 @@ function sendRequest(route, routeParams, successHandler){
 function successHandler(){
     alert("success");
 }
+
+
