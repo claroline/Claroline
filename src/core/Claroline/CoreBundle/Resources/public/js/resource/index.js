@@ -235,7 +235,21 @@
             }
        },
        "view": {name: "view", accesskey:"v"},
-       "delete": {name: "delete", icon: "delete", accesskey:"d"}
+       "delete": {
+           name: "delete", 
+           accesskey:"d",
+           disabled: function(){
+               node = $.ui.dynatree.getNode(this);
+                if(node.data.key != 0)
+                    {
+                    return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }           
+                }
+           }
        }
     }
    
