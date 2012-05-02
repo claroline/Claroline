@@ -19,7 +19,6 @@ class DatabaseWriterTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        //$this->markTestSkipped('The MySQLi extension is not available.');
         $container = $this->client->getContainer();
         $this->dbWriter = $container->get('claroline.plugin.recorder_database_writer');
         $this->loader = $container->get('claroline.plugin.loader');
@@ -83,7 +82,7 @@ class DatabaseWriterTest extends TransactionalTestCase
     
     public function testCustomResourceTypesArePersisted()
     {
-        //$this->markTestSkipped("should be removed ?");
+        $this->markTestSkipped("should this test be removed ?");
         $pluginFQCN = 'Valid\WithCustomResources\ValidWithCustomResources';
         $plugin = $this->loader->load($pluginFQCN);
         $this->dbWriter->insert($plugin);

@@ -23,7 +23,17 @@ class VendorXResourceXExtension extends Extension
             $serviceArray[$name]='';
         }
         
-        
+        /*
         $container->setParameter("resource.service.list", $serviceArray);
+        
+        $em = $container->get('doctrine.orm.entity_manager');
+        $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        
+        var_dump('hello world');
+        
+        foreach($resourcesType as $resourceType)
+        {
+            var_dump($resourceType->getType());
+        }*/
     }
 }

@@ -5,3 +5,4 @@ resource_x:
     controller: ResourceX
     listable: true
     navigable: true
+    name: ResourceX

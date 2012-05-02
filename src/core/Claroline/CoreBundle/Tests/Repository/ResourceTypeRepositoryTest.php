@@ -39,20 +39,20 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $this->assertEquals('Type x', $lastType->getType());
     }
     
-    public function testFindPluginResourceTypeFqcns()
+    public function testFindPluginResourceNameFqcns()
     {
-        $typeCount = count($this->repo->findPluginResourceTypeFqcns());
+        $typeCount = count($this->repo->findPluginResourceNameFqcns());
         
         $this->createResourceTypes();
         
-        $newTypeCount = count($types = $this->repo->findPluginResourceTypeFqcns());
+        $newTypeCount = count($types = $this->repo->findPluginResourceNameFqcns());
         
         // see previous test
         $this->assertEquals($newTypeCount, $typeCount + 2);
         $lastType = array_pop($types);
-        $this->assertEquals('Type y', $lastType['type']);
+        $this->assertEquals('YYY/YYY/YYY', $lastType['class']);
         $lastType = array_pop($types);
-        $this->assertEquals('Type x', $lastType['type']);
+        $this->assertEquals('XXX/XXX/XXX', $lastType['class']);
     }
     
     private function createResourceTypes()
@@ -67,12 +67,14 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         
         $firstType = new ResourceType();
         $firstType->setType('Type x');
+        $firstType->setClass('XXX/XXX/XXX');
         $firstType->setListable(true);
         $firstType->setNavigable(false);
         $firstType->setPlugin($plugin);
         
         $secondType = new ResourceType();
         $secondType->setType('Type y');
+        $secondType->setClass('YYY/YYY/YYY');
         $secondType->setListable(true);
         $secondType->setNavigable(false);
         $secondType->setPlugin($plugin);

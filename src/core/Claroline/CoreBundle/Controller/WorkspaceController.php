@@ -381,5 +381,5 @@ class WorkspaceController extends Controller
         }
         
         throw new \Exception("ajax error");
-    }          
+    }     
 }

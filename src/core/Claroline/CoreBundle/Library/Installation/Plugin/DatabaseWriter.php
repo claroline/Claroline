@@ -114,12 +114,8 @@ class DatabaseWriter
             foreach ($resources as $resource)
             {
                 $resourceType = new ResourceType();
-                /*
-                $pathArray = explode('\\', $resource['class']);
-                $arraySize = count($pathArray);
-                $class = $pathArray[--$arraySize];
-                var_dump($pathArray);*/
-                $resourceType->setType($resource['class']);
+                $resourceType->setClass($resource['class']);
+                $resourceType->setType($resource['name']);
                 $resourceType->setListable($resource['listable']);
                 $resourceType->setNavigable($resource['navigable']);
                 $resourceType->setPlugin($pluginEntity);
