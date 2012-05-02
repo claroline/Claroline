@@ -60,6 +60,11 @@ class ResourceType
         return $this->type;
     }
     
+    public function getStringType()
+    {
+        return addSlashes($this->type);
+    }
+    
     public function setType($type)
     {
         $this->type=$type;

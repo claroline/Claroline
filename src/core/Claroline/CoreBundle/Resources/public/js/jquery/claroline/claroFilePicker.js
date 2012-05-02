@@ -138,7 +138,7 @@ function generateSubItems()
     subItems+='{'
     while(cpt<resourceTypeArray.length)
     {
-        subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+resourceTypeArray[cpt].type+'"}';                
+        subItems+= '"'+resourceTypeArray[cpt].type.addSlashes()+'": {"name":"'+resourceTypeArray[cpt].type.addSlashes()+'"}';                
         cpt++;
         if(cpt<resourceTypeArray.length)
         {
