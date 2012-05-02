@@ -32,7 +32,7 @@ class LayoutController extends Controller
         if ($user instanceof User)
         {
             $connected = true;
-            $username = $user->getFirstName() . ' ' . $user->getLastName();
+            $username = $user->getUsername();
         }
         else
         {

@@ -194,6 +194,7 @@ class WorkspaceController extends Controller
     
     public function deleteUserFromWorkspaceAction($userId, $workspaceId)
     {
+        
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
@@ -285,8 +286,10 @@ class WorkspaceController extends Controller
             $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
             $user->addRole($workspace->getCollaboratorRole());
             $em->flush();
+            //set the user in a array for the twig template
+            $users = array( 0 => $user);
             
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $user, 'workspace' => $workspace));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $users, 'workspace' => $workspace));
         }
         
         throw new \Exception("ajax error");
@@ -354,8 +357,10 @@ class WorkspaceController extends Controller
             $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);   
             $group->addRole($workspace->getCollaboratorRole());
             $em->flush();
+            //set the group in a array for the twig template
+            $groups = array( 0 => $group);
             
-            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $group, 'workspace' => $workspace));
+            return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $groups, 'workspace' => $workspace));
         }
         
         throw new \Exception("ajax error");
@@ -370,10 +375,11 @@ class WorkspaceController extends Controller
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
             $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
+            //return new Response(var_dump(count($groups)));
             
             return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $groups));
         }
         
         throw new \Exception("ajax error");
-    }          
+    }     
 }

@@ -1,5 +1,6 @@
 resource_x:
     class: Valid\WithCustomResources\Entity\ResourceX
+    name: ResourceX
     manager_service_id: resource_x.manager
     controller: ResourceX
     listable: true
@@ -7,6 +8,7 @@ resource_x:
     
 resource_y:
     class: Valid\WithCustomResources\Entity\ResourceY
+    name: ResourceY
     manager_service_id: resource_y.manager
     controller: ResourceY
     listable: false

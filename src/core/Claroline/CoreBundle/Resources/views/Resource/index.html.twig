@@ -5,8 +5,7 @@
 <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
 <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.js')}}'></script>
 <script src='{{ asset('bundles/clarolinecore/js/resource/index.js') }}' type="text/javascript"></script>
-
-     {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
+{% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
         {{ form_errors(form_resource) }}
         {{ form_widget(form_resource) }}
@@ -27,7 +26,6 @@
         {% endif %}
     {% endfor %}         
             
-    <button id="dialog_tree_button" onclick="openTreeDialog();"C>resources</button>
-    <div id="formDialog"></div>
-    <div id="treeDialog"></div>
+    <button id="dialog_tree_button">resources</button>
+    <div id="ct_dialog"></div>
 {% endblock %}

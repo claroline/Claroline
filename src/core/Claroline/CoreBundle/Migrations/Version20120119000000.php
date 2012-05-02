@@ -182,6 +182,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('is_listable', 'boolean');
         $table->addColumn('is_navigable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
+        $table->addColumn('class', 'string', array('notnull' => false));
         $table->addUniqueIndex(array('type'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), array('plugin_id'), array('id'), array("onDelete" => "CASCADE")

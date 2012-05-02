@@ -279,6 +279,7 @@ class CommonChecker
             $resources = (array) $this->yamlParser->parse($resourceFile);
             $expectedKeys = array(
                 'class' => 'string',
+                'name' => 'string',
                 'manager_service_id' => 'string',
                 'controller' => 'string',
                 'listable' => 'boolean',

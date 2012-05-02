@@ -27,7 +27,14 @@ class ResourceType
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resource_type")
      */
+    
     private $resources;
+    
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    
+    private $class;
     
     /**
      * @ORM\Column(type="boolean", name="is_navigable")
@@ -44,7 +51,7 @@ class ResourceType
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
      */
     private $plugin;
-        
+     
     public function __construct()
     {
         $this->resources = new ArrayCollection();
@@ -58,6 +65,11 @@ class ResourceType
     public function getType()
     {
         return $this->type;
+    }
+    
+    public function getStringType()
+    {
+        return addSlashes($this->type);
     }
     
     public function setType($type)
@@ -106,4 +118,14 @@ class ResourceType
     {
         return $this->plugin;
     }
+    
+    public function getClass()
+    {
+        return $this->class;
+    }
+    
+    public function setClass($class)
+    {
+        $this->class=$class;
+    }            
 }
