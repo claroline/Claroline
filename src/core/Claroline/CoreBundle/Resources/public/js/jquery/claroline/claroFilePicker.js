@@ -197,13 +197,26 @@ function bindContextMenu(node){
                     return false;
                 }
                 else
-                {
+                {                   
                     return true;
                 }
             }
        },
        "view": {name: "view", accesskey:"v"},
-       "delete": {name: "delete", icon: "delete", accesskey:"d"}
+       "delete": {
+           name: "delete", 
+           accesskey:"d",
+           disabled: function(){ 
+                node = $.ui.dynatree.getNode(this);
+                if(node.data.key != 0){
+                    return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+           }
        }
    }
     $.contextMenu(menuDefaultOptions);
@@ -234,8 +247,12 @@ function getResourceTypeJSON()
                     cpt++;
                 }
                 subItems = generateSubItems();
+            },
+            error: function(xhr){
+            alert("resource type loading failed");
             }
        });
+
 }
 
 function deleteNode(node)
