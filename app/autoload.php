@@ -1,15 +1,13 @@
 <?php
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-if ( defined('GID_EXTENSION_LOADED_APC') )
-{
+if ( extension_loaded('apc') ) {
     require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
     $loader = new ApcUniversalClassLoader('apc.prefix.');
-}
-else 
-{
+} else {
     $loader = new UniversalClassLoader();
 }
 
