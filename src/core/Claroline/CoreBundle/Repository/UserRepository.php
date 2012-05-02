@@ -64,7 +64,7 @@ class UserRepository extends EntityRepository
             JOIN us.workspaceRoles wr JOIN wr.workspace w WHERE w.id = '{$workspace->getId()}')
         ";    
         $query = $this->_em->createQuery($dql);
-        
+   
         return $query->getResult();   
     }
       
@@ -134,6 +134,7 @@ class UserRepository extends EntityRepository
         "; 
             
         $query = $this->_em->createQuery($dql);
+        $query->setMaxResults(200);
         
         return $query->getResult(); 
     }

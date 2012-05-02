@@ -2,9 +2,7 @@
 
 {% block global_content %}
     
-    <div id="top_bar">
     {% render 'ClarolineCoreBundle:Layout:topBar' %}
-    </div>
 
     {% if app.session.hasFlash('notice') %}
     <div class="flash_msg flash_notice">
@@ -18,8 +16,9 @@
     </div>
     {% endif %}
 
-    <div id="content">
-    {% block content %}{% endblock %}
+    <div id="content" class="container-fluid">
+    {% block content %}
+    {% endblock %}
     </div>
 
 {% endblock %}

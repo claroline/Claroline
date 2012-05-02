@@ -10,6 +10,7 @@ class AuthenticationController extends Controller
     public function loginAction()
     {
         $request = $this->get('request');
+        //return new Response("CONNECTED");
         
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR))
         {
@@ -21,7 +22,7 @@ class AuthenticationController extends Controller
         }
 
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
-        
+            
         return $this->render(
             'ClarolineCoreBundle:Authentication:login.html.twig', 
             array(

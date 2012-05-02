@@ -10,8 +10,6 @@ use Claroline\CoreBundle\Form\DirectoryType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-
-//todo ASSERT RESSOURCE NAME NOT NULL: pq ça fonctionne pas ?
 class ResourceController extends Controller
 {
     public function indexAction()
@@ -65,6 +63,7 @@ class ResourceController extends Controller
     public function addAction($type, $id)
     {
         $request = $this->get('request');
+        $user = $this->get('security.context')->getToken()->getUser();
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
         $name = $this->findRsrcServ($resourceType);
         $form = $this->get($name)->getForm();
@@ -72,8 +71,6 @@ class ResourceController extends Controller
  
         if($form->isValid())
         {   
-            
-            $user = $this->get('security.context')->getToken()->getUser();
             $resource = $this->get($name)->add($form, $id, $user);
             
             if($request->isXmlHttpRequest())
@@ -91,13 +88,21 @@ class ResourceController extends Controller
         }
         else
         {
-            return $this->render(
-                'ClarolineCoreBundle:Resource:form_page.html.twig', array ('form' => $form->createView(), 'type' => $type, 'id' => $id)
-            );
+            if($request->isXmlHttpRequest())
+            {
+                return $this->render(
+                    'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
+                );
+            }
+            else
+            {
+                return $this->render(
+                    'ClarolineCoreBundle:Resource:form_page.html.twig', array ('form' => $form->createView(), 'type' => $type, 'id' => $id)
+                );
+            }
         }
     }
     
-    //pas de vérification xmlHttp; je vois pas encore comment gérer ça, je sais même pas si c'est important
     public function defaultClickAction($type, $id)
     {
         if($type!="null")
@@ -169,7 +174,20 @@ class ResourceController extends Controller
         if($id==0)
         {
             $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
-            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $resources));
+            $root = new Directory();
+            $root->setName('root');
+            $root->setId(0);
+            $em = $this->getDoctrine()->getEntityManager();
+            $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
+            $root->setResourceType($directoryType[0]);
+            foreach($resources as $resource)
+            {
+                $root->addChildren($resource);
+            }
+            //must add root in an array for the json response
+            $root = array( 0 => $root);
+            
+            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $root));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');      
         }
@@ -180,6 +198,7 @@ class ResourceController extends Controller
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');     
         }
+        
         return $response;
     }
     
@@ -193,23 +212,38 @@ class ResourceController extends Controller
         return new Response("success");
     }
     
-    public function addToWorkspaceAction($idResource, $idWorkspace)
+    public function addToWorkspaceAction($resourceId, $workspaceId)
     {
-        $resource = $this->get('claroline.resource.manager')->find($idResource);
         $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($idWorkspace);        
-        $workspace->addResource($resource);
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
+        
+        if($resourceId == 0)
+        {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
+            
+            foreach($resources as $resource)
+            {
+                $workspace->addResource($resource);
+            }           
+        }
+        else
+        {
+            $resource = $this->get('claroline.resource.manager')->find($resourceId);
+            $em = $this->getDoctrine()->getEntityManager();   
+            $workspace->addResource($resource);
+        }        
         $em->flush();
         
         return new Response("success");
     }
         
-    public function removeFromWorkspaceAction($idResource, $idWorkspace)
+    public function removeFromWorkspaceAction($resourceId, $workspaceId)
     {
-        $resource = $this->get('claroline.resource.manager')->find($idResource);
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($idWorkspace);     
+        $resource = $this->get('claroline.resource.manager')->find($resourceId);
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);     
         $workspace->removeResource($resource);
+        $em = $this->getDoctrine()->getEntityManager();        
         $em->flush();
         
         return new Response("success");
