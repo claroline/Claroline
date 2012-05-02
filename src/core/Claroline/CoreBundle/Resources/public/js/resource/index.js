@@ -42,7 +42,7 @@
                 initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key })});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -268,7 +268,7 @@
         subItems+='{'
         while(cpt<resourceTypeArray.length)
         {
-            subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+resourceTypeArray[cpt].type+'"}';                
+            subItems+= '"'+resourceTypeArray[cpt].type.addSlashes()+'": {"name":"'+resourceTypeArray[cpt].type.addSlashes()+'"}';                
             cpt++;
             if(cpt<resourceTypeArray.length)
             {
@@ -276,7 +276,9 @@
             }       
         }    
         subItems+='}'
+        console.debug(subItems);
         object = JSON.parse(subItems);
+        console.debug(object);
         return object;
     }
     
