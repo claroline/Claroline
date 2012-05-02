@@ -194,6 +194,7 @@ class WorkspaceController extends Controller
     
     public function deleteUserFromWorkspaceAction($userId, $workspaceId)
     {
+        
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);

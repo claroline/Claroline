@@ -22,7 +22,7 @@ class AuthenticationController extends Controller
         }
 
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
-        
+            
         return $this->render(
             'ClarolineCoreBundle:Authentication:login.html.twig', 
             array(

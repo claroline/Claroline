@@ -30,7 +30,7 @@
                 createTree();
             },
         error: function(data){
-            alert("oh crap");
+            alert("resource type loading failed");
         }
        });
         
