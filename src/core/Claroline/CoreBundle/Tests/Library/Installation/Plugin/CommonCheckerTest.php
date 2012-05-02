@@ -146,7 +146,7 @@ class CommonCheckerTest extends WebTestCase
         $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_TYPE);
     }
-    
+      
     /**
      * @dataProvider validPluginProvider
      */
