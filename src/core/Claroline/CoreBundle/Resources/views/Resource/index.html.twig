@@ -1,9 +1,9 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block section_content %}
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.css') }}'>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
 <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
-<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.js')}}'></script>
+<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
 <script src='{{ asset('bundles/clarolinecore/js/resource/index.js') }}' type="text/javascript"></script>
 {% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
