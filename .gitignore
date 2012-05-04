@@ -1,4 +1,5 @@
 !placeholder
+!.gitempty
 catalog.xml
 nbproject/*
 app/cache/*
