@@ -84,9 +84,10 @@ class DirectoryManager implements ResourceInterface
     {
         $formResource = $this->formFactory->create(new SelectResourceType(), new ResourceType());
         $resources = $this->resourceManager->getChildrenById($id);
+        $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
         $resourcesType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => $id, 'resourcesType' => $resourcesType));
+            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => $id, 'resourcesType' => $resourcesType, 'directory' => $directory));
         $response = new Response($content);
         
         return $response;
