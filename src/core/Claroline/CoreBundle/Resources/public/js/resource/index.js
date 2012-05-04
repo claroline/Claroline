@@ -26,6 +26,7 @@
                     resourceTypeArray[cpt]=JSONObject[cpt];
                     cpt++;
                 }
+                //setSubItemsTranslations();
                 subItems = generateSubItems();
                 createTree();
             },
@@ -141,7 +142,8 @@
     }
     
     function createFormDialog(type, id){
-            route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
+            console.debug(type);
+            var route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
             $.ajax({
                 type: 'POST',
                 url: route,
@@ -282,7 +284,9 @@
         subItems+='{'
         while(cpt<resourceTypeArray.length)
         {
-            subItems+= '"'+resourceTypeArray[cpt].type.addSlashes()+'": {"name":"'+resourceTypeArray[cpt].type.addSlashes()+'"}';                
+            var name = resourceTypeArray[cpt].type;
+            var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
+            subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';                
             cpt++;
             if(cpt<resourceTypeArray.length)
             {
@@ -319,5 +323,19 @@
         });
         
         return modal;
+    }
+    
+    function setSubItemsTranslations()
+    {
+        var cpt = 0;
+        var name = "";
+        while(cpt < resourceTypeArray.length)
+        {
+            name = resourceTypeArray[cpt].type;
+            var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
+            console.debug(translation);
+            resourceTypeArray[cpt].type=translation;
+            cpt++;    
+        }
     }
 });

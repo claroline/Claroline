@@ -29,7 +29,7 @@ class AdminSecurityTest extends FunctionalTestCase
     public function testAccessToAdminSectionIsAllowedToAdminUsers()
     {
         $this->markTestIncomplete(
-          "login form layout not done yet"
+            "login form layout not done yet"
         );
         
         $this->logUser($this->getFixtureReference('user/admin'));

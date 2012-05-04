@@ -18,7 +18,11 @@ class VendorXResourceXExtension extends Extension
         $taggedServices = $container->findTaggedServiceIds("resource.manager");
         
         $serviceArray = $container->getParameter('resource.service.list');
-        foreach($taggedServices as $name => $service)
+        
+        $names = array_keys($taggedServices);
+        
+        foreach($names as $name)
+        foreach($names as $name)
         {
             $serviceArray[$name]='';
         }

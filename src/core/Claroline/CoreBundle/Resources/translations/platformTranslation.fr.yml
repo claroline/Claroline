@@ -113,3 +113,10 @@ move : bouger
 settings: paramètres
 register: s'inscrire
 unregister: se désinscrire
+
+#chat
+chatbox: chatbox
+
+#resource type
+directory: répertoire
+file: fichier

@@ -95,7 +95,7 @@ class DirectoryManager implements ResourceInterface
     public function indexAction($id)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Directory:index.html.twig');
+            'ClarolineCoreBundle:Directory:index.html.twig', array('id' => $id));
         $response = new Response($content);
         
         return $response;
@@ -186,9 +186,10 @@ class DirectoryManager implements ResourceInterface
     private function findRsrcServ($resourceType)
     {
         $services = $this->container->getParameter("resource.service.list");
+        $names = array_keys($services);
         $serviceName = null;
         
-        foreach($services as $name => $service)
+        foreach($names as $name)
         {
             $type = $this->container->get($name)->getResourceType();
             

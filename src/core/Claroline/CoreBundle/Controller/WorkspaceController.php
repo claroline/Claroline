@@ -128,6 +128,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
         $authorization = false;  
+        $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
         
         foreach ($workspace->getWorkspaceRoles() as $role)
         {
@@ -143,7 +144,7 @@ class WorkspaceController extends Controller
          }
                   
          //$resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findBy(array('workspace' => $id));         
-         return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace));
+         return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType));
     }
     
     public function registerAction($id)

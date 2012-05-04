@@ -5,12 +5,23 @@
 <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
 <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.js')}}'></script>
 <script src='{{ asset('bundles/clarolinecore/js/resource/index.js') }}' type="text/javascript"></script>
-{% form_theme form_resource 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" {{ form_enctype(form_resource) }} id="form_resource">
-        {{ form_errors(form_resource) }}
-        {{ form_widget(form_resource) }}
-        <input type="submit" />
-    </form>
+
+
+<div id="translation-claroline" 
+        {% for resourceType in resourcesType %}    
+        data-{{resourceType.getType()}}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
+        {% endfor %}
+></div>
+
+
+<form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" id="form_resource">
+    <select id="select_resource_form_type" required="required" name="select_resource_form[type]">
+        {% for resourceType in resourcesType %}
+            <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>          
+        {% endfor %}
+    </select> 
+    <input type="submit" />
+</form>
     <br><br>
     NAVIGABLE
     {% for resource in resources %}

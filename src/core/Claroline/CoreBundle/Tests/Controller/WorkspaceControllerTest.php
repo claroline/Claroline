@@ -250,7 +250,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         
         //json
         
-        /*
+        
         $this->client->request(
             'POST', 
             "/workspace/ajax/search/group/a/{$this->getFixtureReference('workspace/ws_a')->getId()}",
@@ -262,7 +262,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $response = $this->client->getResponse()->getContent();
         $groups = json_decode($response);
         
-        $this->assertEquals(1, count($groups)); */
+        $this->assertEquals(1, count($groups)); 
       
         $this->client->request(
             'POST', 
@@ -355,7 +355,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(0, $crawler->filter(".row_group")->count()); 
     }
-    
+        
     /*
     public function resourceCanBeAddedToWorkspaceTest()
     {

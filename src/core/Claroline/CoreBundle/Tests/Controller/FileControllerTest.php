@@ -70,7 +70,7 @@ class FileControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/resource/directory');
         
         $form = $crawler->filter('input[type=submit]')->form();
-        $form['choose_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
+        $form['select_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
         $crawler = $this->client->submit($form);
         $form = $crawler->filter('input[type=submit]')->form(); 
         return $this->client->submit($form, array('file_form[name]' => $filePath));
