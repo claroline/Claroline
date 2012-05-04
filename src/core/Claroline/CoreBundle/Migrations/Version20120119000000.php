@@ -319,11 +319,16 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('user_id', 'integer');
         $table->addColumn('content', 'text');
         $table->addColumn('date_creation', 'datetime');
+        $table->addColumn('date_modification', 'datetime');
+        $table->addColumn('last_modif_user_id', 'integer');
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'), array('last_modif_user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
         
         
