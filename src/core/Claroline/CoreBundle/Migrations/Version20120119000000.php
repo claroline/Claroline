@@ -318,6 +318,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('user_id', 'integer');
         $table->addColumn('content', 'text');
+        $table->addColumn('date_creation', 'datetime');
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
