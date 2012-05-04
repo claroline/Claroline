@@ -282,7 +282,7 @@
         subItems+='{'
         while(cpt<resourceTypeArray.length)
         {
-            subItems+= '"'+resourceTypeArray[cpt].type.addSlashes()+'": {"name":"'+resourceTypeArray[cpt].type.addSlashes()+'"}';                
+            subItems+= '"'+resourceTypeArray[cpt].type +'": {"name":"'+resourceTypeArray[cpt].type +'"}';                
             cpt++;
             if(cpt<resourceTypeArray.length)
             {
