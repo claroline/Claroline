@@ -1,11 +1,20 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/claroline/claroFilePicker.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
+    <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_show.js')}}'></script>
+{% endblock %}
+
 {% block section_content %}
-<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
-<script src='{{ asset('bundles/clarolinecore/js/jquery/claroline/claroFilePicker.js') }}' type="text/javascript"></script>
-<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.js')}}'></script>
-<script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_show.js')}}'></script>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-rod/src/jquery.contextMenu.css') }}'>
 <div id="twig_attributes" 
         data-workspaceId="{{workspace.getId()}}"
 ></div>
@@ -27,5 +36,4 @@
     <button id="show_filepicker_button">filePicker</button>  
     <div id="filepicker"></div>  
 </div>    
-    
 {% endblock %}

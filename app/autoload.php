@@ -1,15 +1,14 @@
 <?php
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-if ( defined('GID_EXTENSION_LOADED_APC') )
-{
+if ( extension_loaded('apc') ) {
     require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
     $loader = new ApcUniversalClassLoader('apc.prefix.');
-}
-else 
-{
+} else {
+    require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
     $loader = new UniversalClassLoader();
 }
 
@@ -18,7 +17,7 @@ $coreNamespaces = array(
     'FOS'              =>__DIR__.'/../vendor/bundles',
     'Sensio'           => __DIR__.'/../vendor/bundles',
     'JMS'              => __DIR__.'/../vendor/bundles',
-    'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',    
+    'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',
     'Doctrine\\DBAL'   => __DIR__.'/../vendor/doctrine-dbal/lib',
     'Doctrine\\DBAL\\Migrations' => __DIR__.'/../vendor/doctrine-migrations/lib',
     'Doctrine\\Common\\DataFixtures' => __DIR__.'/../vendor/doctrine-fixtures/lib',
