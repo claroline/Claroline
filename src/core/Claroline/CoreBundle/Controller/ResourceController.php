@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class ResourceController extends Controller
 {
@@ -69,6 +70,8 @@ class ResourceController extends Controller
         if($form->isValid())
         {   
             $resource = $this->get($name)->add($form, $id, $user);
+            $rightManager = $this->get('claroline.security.right_manager');
+            $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);
             
             if($request->isXmlHttpRequest())
             {
@@ -102,19 +105,32 @@ class ResourceController extends Controller
     
     public function defaultClickAction($type, $id)
     {
-        if($type!="null")
-        {
-            $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                'Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
-        }
-        else
-        {
-            $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id)->getResourceType();
-        }
-        $name = $this->findRsrcServ($resourceType);
-        $response = $this->get($name)->getDefaultAction($id);
         
+          $resource = $this->getDoctrine()->getEntityManager()->getRepository(
+                  'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+          
+          $securityContext = $this->get('security.context');
+          
+          if(false == $securityContext->isGranted('VIEW', $resource))
+          {
+              throw new \Exception("must be changed later");
+          }
+          else
+          {
+              if($type!="null")
+              {
+                  $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
+                      'Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
+              }
+              else
+              {
+                  $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
+                      'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id)->getResourceType();
+              }
+              $name = $this->findRsrcServ($resourceType);
+              $response = $this->get($name)->getDefaultAction($id);
+          }
+
         return $response;
     }
     
@@ -197,7 +213,9 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
-        
+        $rightManager = $this->get('claroline.security.right_manager');
+        $roleCollaborator = $workspace->getCollaboratorRole();
+            
         if($resourceId == 0)
         {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -206,6 +224,13 @@ class ResourceController extends Controller
             foreach($resources as $resource)
             {
                 $workspace->addResource($resource);
+                $children = $resource->getChildren();
+                $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                
+                foreach($children as $child)
+                {
+                    $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                }
             }           
         }
         else
@@ -213,6 +238,13 @@ class ResourceController extends Controller
             $resource = $this->get('claroline.resource.manager')->find($resourceId);
             $em = $this->getDoctrine()->getEntityManager();   
             $workspace->addResource($resource);
+            $children = $resource->getChildren();
+            $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            
+            foreach($children as $child)
+            {
+                $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            }
         }        
         $em->flush();
         
@@ -221,10 +253,10 @@ class ResourceController extends Controller
         
     public function removeFromWorkspaceAction($resourceId, $workspaceId)
     {
+        $em = $this->getDoctrine()->getEntityManager();  
         $resource = $this->get('claroline.resource.manager')->find($resourceId);
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);     
-        $workspace->removeResource($resource);
-        $em = $this->getDoctrine()->getEntityManager();        
+        $workspace->removeResource($resource);       
         $em->flush();
         
         return new Response("success");
