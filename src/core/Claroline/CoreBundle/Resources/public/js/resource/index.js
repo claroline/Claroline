@@ -26,7 +26,6 @@
                     resourceTypeArray[cpt]=JSONObject[cpt];
                     cpt++;
                 }
-                //setSubItemsTranslations();
                 subItems = generateSubItems();
                 createTree();
             },
@@ -302,11 +301,12 @@
     
     function createTreeDialog()
     {
+        console.debug("MOI PASSER");
         document.getElementById('ct_dialog').setAttribute("class", 'modal fade');
         var modalContent = ""
         +'<div class="modal-header">'
             +'<button id="close_dialog_button" class="close" data-dismiss="modal">×</button>'
-            +'<h3>Modal header</h3>'
+            +'<h3> header</h3>'
         +'</div>'
         +'<div class="modal-body">'
             +"<div id='ct_form'></div><div id='ct_tree'></div>"

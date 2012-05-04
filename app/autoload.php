@@ -8,7 +8,7 @@ if ( extension_loaded('apc') ) {
     require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
     $loader = new ApcUniversalClassLoader('apc.prefix.');
 } else {
-    require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+    //require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
     $loader = new UniversalClassLoader();
 }
 
