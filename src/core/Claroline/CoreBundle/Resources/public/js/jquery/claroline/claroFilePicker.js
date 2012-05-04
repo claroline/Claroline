@@ -138,7 +138,9 @@ function generateSubItems()
     subItems+='{'
     while(cpt<resourceTypeArray.length)
     {
-        subItems+= '"'+resourceTypeArray[cpt].type.addSlashes()+'": {"name":"'+resourceTypeArray[cpt].type.addSlashes()+'"}';                
+        var name = resourceTypeArray[cpt].type;
+        var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
+        subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';              
         cpt++;
         if(cpt<resourceTypeArray.length)
         {

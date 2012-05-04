@@ -17,17 +17,7 @@ class ResourceTypeRepository extends EntityRepository
             
         return $query->getResult();       
     }
-    /*
-    public function findPluginResourceTypeFqcns()
-    {
-        $sql = 'SELECT type FROM claro_resource_type WHERE plugin_id IS NOT NULL';
-        
-        return $this->_em
-            ->getConnection()
-            ->query($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC);
-    }
-    */
+    
     public function findPluginResourceNameFqcns()
     {
         $sql = 'SELECT class FROM claro_resource_type WHERE plugin_id IS NOT NULL';

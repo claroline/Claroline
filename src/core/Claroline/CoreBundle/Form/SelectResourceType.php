@@ -10,11 +10,26 @@ class SelectResourceType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-         $builder->add('type', 'entity', array('class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType', 'expanded' => false, 'multiple' => false, 'property' => 'type', 'read_only' => false));
+         $builder->add('type', 
+             'entity', array(
+             'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType', 
+             'expanded' => false, 
+             'multiple' => false, 
+             'property' => 'type', 
+             'read_only' => false
+                     )
+         );
+    }
+    
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'data_class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
+        );
     }
     
     public function getName()
     {
-        return 'choose_resource_form';
+        return 'select_resource_form';
     }
 }

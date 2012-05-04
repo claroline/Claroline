@@ -15,9 +15,9 @@ class ResourceController extends Controller
     public function indexAction()
     {
         $user = $this->get('security.context')->getToken()->getUser(); 
+        $em = $this->getDoctrine()->getEntityManager();
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
-        $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
-        $em = $this->getDoctrine()->getEntityManager();        
+        $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);                
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
@@ -28,21 +28,18 @@ class ResourceController extends Controller
     public function showResourceFormAction($id)
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new SelectResourceType());
-        $form->bindRequest($request);
+        $params = $request->request->all();
+        $idType = $params['select_resource_form']['type'];
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($idType);
+        $rsrcServName = $this->findRsrcServ($resourceType);
+        $rsrcServ = $this->get($rsrcServName);
+        $form = $rsrcServ->getForm();
 
-        if ($form->isValid())
-        {       
-            $resourceType = $form['type']->getData();
-            $rsrcServName = $this->findRsrcServ($resourceType);
-            $rsrcServ = $this->get($rsrcServName);
-            $form = $rsrcServ->getForm();
-            
-            return $this->render(
-                'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $resourceType->getType())
-            );
-        }
-        
+        return $this->render(
+            'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $resourceType->getType())
+        );
+              
         throw new \Exception("form error");
     }
     
@@ -149,24 +146,7 @@ class ResourceController extends Controller
        return $response;
     }
     
-    //vieux, pas changé; utilisé à cause de dojo. Le case PUT ne sert pls à rien
     public function getJSONResourceNodeAction($id)
-    {
-        $method = $_SERVER['REQUEST_METHOD'];
-        
-        switch($method){
-            case 'PUT':
-                return $this->PUTNode($this->getRequest()->getContent());
-                break;
-            default:
-                return $this->GETNode($id);     
-                break;
-        }  
-        
-        throw new \Exception("ResourceController getJSONResourceNode didn't work");
-    }
-    
-    public function getNode($id)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $response = new Response();
@@ -180,6 +160,7 @@ class ResourceController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
             $root->setResourceType($directoryType[0]);
+            
             foreach($resources as $resource)
             {
                 $root->addChildren($resource);
@@ -253,9 +234,10 @@ class ResourceController extends Controller
     private function findRsrcServ($resourceType)
     {
         $services = $this->container->getParameter("resource.service.list");
+        $names = array_keys($services);
         $serviceName = null;
         
-        foreach($services as $name => $service)
+        foreach($names as $name)
         {
             $type = $this->get($name)->getResourceType();
             

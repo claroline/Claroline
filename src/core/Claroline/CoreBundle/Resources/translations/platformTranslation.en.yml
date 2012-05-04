@@ -117,3 +117,10 @@ move : move
 settings: settings
 register: register
 unregister: unregister
+
+#chat
+chatbox: chatbox
+
+#resource type
+directory: directory
+file: file
