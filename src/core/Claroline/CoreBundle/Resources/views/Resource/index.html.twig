@@ -1,6 +1,4 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
-{% block section_content %}
-
 {% block stylesheets %}
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
@@ -13,8 +11,8 @@
     <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
     <script src='{{ asset('bundles/clarolinecore/js/resource/index.js') }}' type="text/javascript"></script>
 {% endblock %}
-    
-    
+{% block section_content %}
+
 <div id="translation-claroline" 
         {% for resourceType in resourcesType %}    
         data-{{resourceType.getType()}}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
