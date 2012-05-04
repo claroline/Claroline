@@ -1,35 +1,45 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/claroline/claroFilePicker.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
+    <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_show.js')}}'></script>
+{% endblock %}
+
 {% block section_content %}
-<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
-<script src='{{ asset('bundles/clarolinecore/js/jquery/claroline/claroFilePicker.js') }}' type="text/javascript"></script>
-<script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
-<script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_show.js')}}'></script>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
-    <div id="twig_attributes" 
-         data-workspaceId="{{workspace.getId()}}"
-    ></div>
+    <div id="twig_attributes" data-workspaceId="{{workspace.getId()}}"></div>
     <div id="div_WS_show">
     {{ 'workspace'|trans({}, 'platformTranslation') }}: {{workspace.getName()}}
     {% if is_granted(workspace.getManagerRole().getName()) %}
-        | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
+        | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" 
+             id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} 
+          </a>
+        |
     {% endif %}
-          <div id='div_resource'>
-              {% for resource in workspace.getResources() %}
-                  <div id="resource_row"> <div class="row_resource"><a href="{{path('claro_resource_default_click', {'type':resource.getResourceType().getType(), 'id':resource.getId()})}}" id="link_resource_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> <a href="{{path('claro_resource_remove_workspace',{'resourceId':resource.getId(), 'workspaceId':workspace.getId()})}}"> delete </a></div></div>
-              {% endfor %}
-          </div>             
+        <div id='div_resource'>
+            {% for resource in workspace.getResources() %}
+                <div id="resource_row"> 
+                    <div class="row_resource">
+                        <a href="{{path('claro_resource_default_click', {'type':resource.getResourceType().getType(), 'id':resource.getId()})}}" 
+                           id="link_resource_{{resource.getId()}}" 
+                           class="link_resource_view">{{resource.getName()}}
+                        </a> 
+                        <a href="{{path('claro_resource_remove_workspace',{'resourceId':resource.getId(), 'workspaceId':workspace.getId()})}}"> 
+                            delete 
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>             
         <button id="show_filepicker_button">filePicker</button>  
-        <div id="filepicker"></div> 
-        <!--
-        <div id='cfp_dialog' class="modal fade">
-            <div class="modal-header">
-                <button id="close_dialog_button" class="close" data-dismiss="modal">×</button>
-                <h3>Modal header</h3>
-            </div>
-            <div class="modal-body">hello</div>
-            <div class="modal-footer">footer</div>
-       </div> -->    
-    </div>    
-    
+        <div id="filepicker"></div>    
+    </div>
 {% endblock %}
