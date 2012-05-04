@@ -310,16 +310,5 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')    
         );
     }
-    
-    private function createTranslationTable(Schema $schema)
-    {
-        $table = $schema->createTable('ext_translations');
-        $this->addId($table);
-        $table->addColumn('content', 'string');
-        $table->addColumn('field', 'string');
-        $table->addColumn('locale', 'string');
-        $table->addColumn('foreign_key', 'integer');
-        $table->addColumn('object_class', 'string');
-    }
 
 }
