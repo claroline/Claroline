@@ -105,15 +105,14 @@ class ResourceController extends Controller
     
     public function defaultClickAction($type, $id)
     {
-        
           $resource = $this->getDoctrine()->getEntityManager()->getRepository(
-                  'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+              'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
           
           $securityContext = $this->get('security.context');
           
           if(false == $securityContext->isGranted('VIEW', $resource))
           {
-              throw new \Exception("must be changed later");
+               throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
           }
           else
           {
@@ -138,28 +137,46 @@ class ResourceController extends Controller
     {
        $request = $this->get('request');
        $resource = $this->get('claroline.resource.manager')->find($id);
-       $resourceType = $resource->getResourceType();
-       $name = $this->findRsrcServ($resourceType);
-       $this->get($name)->delete($resource);
+       $securityContext = $this->get('security.context');
        
-       if($request->isXmlHttpRequest())
+       if(false == $securityContext->isGranted('OWNER', $resource))
        {
-           return new Response("delete");
+           throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
        }
-       
-       $route = $this->get('router')->generate("claro_resource_index");
-       
-       return new RedirectResponse($route);
+       else
+       {    
+            $resourceType = $resource->getResourceType();
+            $name = $this->findRsrcServ($resourceType);
+            $this->get($name)->delete($resource);
+
+            if($request->isXmlHttpRequest())
+            {
+                return new Response("delete");
+            }
+
+            $route = $this->get('router')->generate("claro_resource_index");
+
+            return new RedirectResponse($route);
+       }
     }
     
     public function openAction($id)
-    {
+    {      
        $resource = $this->get('claroline.resource.manager')->find($id);
-       $resourceType = $resource->getResourceType();
-       $name = $this->findRsrcServ($resourceType);
-       $response = $this->get($name)->indexAction($resource);
+       $securityContext = $this->get('security.context');
        
-       return $response;
+       if(false == $securityContext->isGranted('VIEW', $resource))
+       {
+           throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+       }
+       else
+       {
+           $resourceType = $resource->getResourceType();
+           $name = $this->findRsrcServ($resourceType);
+           $response = $this->get($name)->indexAction($resource);
+
+           return $response;
+       }
     }
     
     public function getJSONResourceNodeAction($id)
