@@ -110,9 +110,24 @@ class FileManager implements ResourceInterface
     
     public function getDefaultAction($id)
     {
-        $response = new Response();
+        $response = new Response();     
         $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
-        $response = $this->setDownloadHeaders($file, $response);
+        $extension = pathInfo($file->getName(), PATHINFO_EXTENSION);
+        
+        switch($extension)
+        {
+            case "txt":
+                var_dump("this is a txt");
+                break;
+            case "png":
+                var_dump("this is a png");
+                break;
+            default:
+                var_dump("this is something else");
+                break;
+        }
+        
+        $response = $this->setDownloadHeaders($file, $response); 
         
         return $response; 
     }
