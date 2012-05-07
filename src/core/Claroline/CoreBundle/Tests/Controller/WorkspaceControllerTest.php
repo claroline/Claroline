@@ -355,15 +355,4 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(0, $crawler->filter(".row_group")->count()); 
     }
-        
-    /*
-    public function resourceCanBeAddedToWorkspaceTest()
-    {
-        $this->loadFixture(new LoadDirectoryData());
-        
-    }
-      
-    public function resourceViewerCantDeleteResource()
-    {*/
-    
 }
