@@ -90,6 +90,8 @@ add_group: ajouter un groupe
 resource: ressource
 resources: ressources
 resource_manager: gestionnaire de ressource
+owner: propriétaire
+open: ouvrir
 
 #workspace
 workspace: Espace d'activité

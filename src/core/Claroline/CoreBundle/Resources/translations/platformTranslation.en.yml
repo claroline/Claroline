@@ -94,6 +94,8 @@ add_group: add group
 resource: resource
 resources: resources
 resource_manager: resource manager
+owner: owner
+open: ouvrir
 
 #workspace
 workspace: Workspaces
