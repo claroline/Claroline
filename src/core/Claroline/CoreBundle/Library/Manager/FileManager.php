@@ -86,7 +86,8 @@ class FileManager implements ResourceInterface
          $fileName = $tmpFile->getClientOriginalName();
          $parent = $this->resourceManager->find($id);
          $size = filesize($tmpFile);
-         $hashName = $this->GUID();
+         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+         $hashName = $this->GUID().".".$extension;
          $tmpFile->move($this->dir, $hashName);
          $file = new File();
          $file->setSize($size);
