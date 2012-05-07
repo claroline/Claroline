@@ -54,15 +54,17 @@
                 <a id="link_resource_delete_{{resource.getId()}}" 
                    href="{{path('claro_resource_delete', {'id':resource.getId()})}}" 
                    class="link_delete_resource">
-                    delete
+                   {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a>
                 {% endif %}
                 | 
                 <a id="link_resource_open_{{resource.getId()}}" 
                    href="{{path('claro_resource_open', {'id':resource.getId()})}}" 
                    class="link_open_resource">
-                    open
+                    {{ 'open'|trans({}, 'platformTranslation') }}
                 </a> 
+                |
+                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
             </div>
         {% endif %}
     {% endfor %}            
@@ -81,15 +83,17 @@
                 <a id="link_resource_delete_{{resource.getId()}}" 
                    href="{{path('claro_resource_delete', {'id':resource.getId()})}}" 
                    class="link_delete_resource">
-                    delete
+                   {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a> 
                 {% endif %}
                 | 
                 <a id="link_resource_open_{{resource.getId()}}" 
                    href="{{path('claro_resource_open', {'id':resource.getId()})}}" 
                    class="link_open_resource">
-                    open
+                   {{ 'open'|trans({}, 'platformTranslation') }}
                 </a>
+                |
+                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
             </div>
         {% endif %}
     {% endfor %}          

@@ -30,7 +30,19 @@
 {% endif %}
         <div id='div_resource'>
             {% for resource in workspace.getResources() %}
-                <div id="resource_row"> <div class="row_resource"><a href="{{path('claro_resource_default_click', {'type':resource.getResourceType().getType(), 'id':resource.getId()})}}" id="link_resource_{{resource.getId()}}" class="link_resource_view">{{resource.getName()}}</a> <a href="{{path('claro_resource_remove_workspace',{'resourceId':resource.getId(), 'workspaceId':workspace.getId()})}}"> delete from workspace </a></div></div>
+                <div id="resource_row"> 
+                    <div class="row_resource">
+                        <a href="{{path('claro_resource_default_click', {'type':resource.getResourceType().getType(), 'id':resource.getId()})}}" 
+                           id="link_resource_{{resource.getId()}}" 
+                           class="link_resource_view">
+                          {{resource.getName()}}
+                        </a> 
+                        <a href="{{path('claro_resource_remove_workspace',{'resourceId':resource.getId(), 'workspaceId':workspace.getId()})}}"> 
+                            delete from workspace 
+                        </a>
+                        {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
+                   </div>
+                </div>
             {% endfor %}
         </div>             
     <button id="show_filepicker_button">filePicker</button>  
