@@ -21,16 +21,12 @@ class WorkspaceSecurityTest extends FunctionalTestCase
     
     public function testWorkspaceCreationIsReservedToWorkspaceCreators()
     {
-        $this->markTestIncomplete(
-            "login form layout not done yet"
-        );
-               
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/workspace/new/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', '/workspace/new/form');
-        $this->assertTrue($crawler->filter('#workspaces.section')->count() > 0);
+        $this->assertTrue($crawler->filter('#ws_creation_form')->count() > 0);
     }
 }

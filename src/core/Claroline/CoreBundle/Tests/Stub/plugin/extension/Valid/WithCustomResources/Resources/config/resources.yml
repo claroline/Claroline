@@ -1,15 +1,15 @@
-resource_x:
-    class: Valid\WithCustomResources\Entity\ResourceX
-    name: ResourceX
-    manager_service_id: resource_x.manager
-    controller: ResourceX
+resource_a:
+    class: Valid\WithCustomResources\Entity\ResourceA
+    name: ResourceA
+    manager_service_id: resource_a.manager
+    controller: ResourceA
     listable: true
     navigable: true
     
-resource_y:
-    class: Valid\WithCustomResources\Entity\ResourceY
-    name: ResourceY
-    manager_service_id: resource_y.manager
-    controller: ResourceY
+resource_b:
+    class: Valid\WithCustomResources\Entity\ResourceB
+    name: ResourceB
+    manager_service_id: resource_b.manager
+    controller: ResourceB
     listable: false
     navigable: false

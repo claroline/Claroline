@@ -7,9 +7,9 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="valid_custom_resource_x")
+ * @ORM\Table(name="valid_custom_resource_b")
  */
-class ResourceX extends AbstractResource
+class ResourceB extends AbstractResource
 {
     /**
      * @ORM\Column(type="string", length=255)

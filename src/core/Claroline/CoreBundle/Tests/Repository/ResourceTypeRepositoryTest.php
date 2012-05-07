@@ -17,7 +17,6 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        //$this->markTestSkipped('columnType cannot be null');
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
     }
