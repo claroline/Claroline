@@ -4,11 +4,17 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-if ( extension_loaded('apc') ) {
+if (extension_loaded('apc') && ini_get('apc.enabled') == 1)
+{
     require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
     $loader = new ApcUniversalClassLoader('claroline.');
-} else {
-    require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+} 
+else 
+{
+    if (!class_exists('Symfony\Component\ClassLoader\UniversalClassLoader'))
+    {
+        require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+    }
     $loader = new UniversalClassLoader();
 }
 
