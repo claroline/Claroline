@@ -283,7 +283,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('date_upload', 'datetime');
         $table->addColumn('size', 'integer', array('notnull' => true));
-        $table->addColumn('hash_name', 'string', array('length' => 36));
+        $table->addColumn('hash_name', 'string', array('length' => 50));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
