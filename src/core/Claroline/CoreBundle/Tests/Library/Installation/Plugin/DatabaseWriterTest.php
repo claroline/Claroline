@@ -82,24 +82,20 @@ class DatabaseWriterTest extends TransactionalTestCase
     
     public function testCustomResourceTypesArePersisted()
     {
-        $this->markTestSkipped("should this test be removed ?");
         $pluginFQCN = 'Valid\WithCustomResources\ValidWithCustomResources';
         $plugin = $this->loader->load($pluginFQCN);
         $this->dbWriter->insert($plugin);
-       /* 
-        $expectedTypes = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findByBundle('WithCustomResources');*/
         
-        //var_dump($this->client->getContainer()->getParameter('resource.service.list'));
-        //$type = $this->client->getContainer()->get('vendorx.resourcex.manager')->geResourceType();
-        //var_dump($type);
+        $dql = "
+            SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+            JOIN rt.plugin p
+            WHERE p.bundleName = 'WithCustomResources'
+        ";
+        $pluginResourceTypes = $this->em->createQuery($dql)->getResult();
         
-        $expectedTypes = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
-
-        $this->assertEquals(4, count($expectedTypes));
-        $this->assertEquals('Valid\WithCustomResources\Entity\ResourceX', $expectedTypes[2]->getType());
-        $this->assertEquals('Valid\WithCustomResources\Entity\ResourceY', $expectedTypes[3]->getType());
+        $this->assertEquals(2, count($pluginResourceTypes));
+        $this->assertEquals('ResourceA', $pluginResourceTypes[0]->getType());
+        $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getType());
     }
     
     public function pluginPropertiesProvider()
