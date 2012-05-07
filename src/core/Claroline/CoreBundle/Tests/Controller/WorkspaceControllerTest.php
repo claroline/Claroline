@@ -362,5 +362,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadDirectoryData());
         
     }
-    */
+      
+    public function resourceViewerCantDeleteResource()
+    {*/
+    
 }

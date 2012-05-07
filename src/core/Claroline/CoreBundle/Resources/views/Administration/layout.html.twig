@@ -1,8 +1,8 @@
 {% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
 {% block content %}
-<div class="row-fluid">
+<div class="row-fluid administration">
     <div class="span2">
-        <div class="administration well sidebar-nav">
+        <div class="well sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">{{ 'administration'|trans({}, 'platformTranslation') }}</li>
             <li><a href="{{ path('claro_admin_user_add_form') }}" id="link_add_user"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a></li>

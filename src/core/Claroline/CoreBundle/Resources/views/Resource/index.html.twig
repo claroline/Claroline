@@ -43,7 +43,7 @@
     NAVIGABLE
     {% for resource in resources %}
         {% if resource.getResourceType.getNavigable() == true %}
-            <div class="row_resource">
+            <div class="row_resource" data-resource_id={{resource.getId()}}>
                 <a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" 
                    id="link_resource_{{resource.getId()}}" 
                    class="link_resource_view">{{resource.getName()}}
@@ -69,7 +69,7 @@
     NOT NAVIGABLE
     {%for resource in resources %}
         {% if resource.getResourceType.getNavigable() == false %}
-            <div class="row_resource">
+            <div class="row_resource" data-resource_id={{resource.getId()}}>
                 <a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" 
                    id="link_resource_view_{{resource.getId()}}" 
                    class="link_resource_view">
