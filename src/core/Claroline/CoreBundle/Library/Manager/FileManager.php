@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Library\Services\ThumbnailGenerator;
 
 class FileManager implements ResourceInterface
 {
@@ -26,10 +27,12 @@ class FileManager implements ResourceInterface
     protected $resourceManager;
     
     protected $templating;
+    /** @var ThumbnilGenerator **/
+    protected $thumbnailGenerator;
     
     
     
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, ResourceManager $resourceManager, $templating)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, ResourceManager $resourceManager, $templating, ThumbnailGenerator $thumbnailGenerator)
     {   
         $this->em = $em;
         $this->rightManager = $rightManager;
@@ -37,6 +40,7 @@ class FileManager implements ResourceInterface
         $this->dir = $dir;
         $this->resourceManager = $resourceManager;
         $this->templating = $templating;
+        $this->thumbnailGenerator = $thumbnailGenerator;
     }
     /*
     public function deleteById($id)
@@ -84,9 +88,9 @@ class FileManager implements ResourceInterface
     {
          $tmpFile = $form['name']->getData();
          $fileName = $tmpFile->getClientOriginalName();
-         $parent = $this->resourceManager->find($id);
-         $size = filesize($tmpFile);
          $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+         $parent = $this->resourceManager->find($id);
+         $size = filesize($tmpFile); 
          $hashName = $this->GUID().".".$extension;
          $tmpFile->move($this->dir, $hashName);
          $file = new File();
@@ -99,6 +103,7 @@ class FileManager implements ResourceInterface
          $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
+         $this->thumbnailGenerator->createThumb("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", 50, 50);
          
          return $file;
     }
@@ -113,21 +118,6 @@ class FileManager implements ResourceInterface
         $response = new Response();     
         $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
         $extension = pathInfo($file->getName(), PATHINFO_EXTENSION);
-        
-        switch($extension)
-        {
-            case "txt":
-                var_dump("this is a txt");
-                break;
-            case "png":
-                var_dump("this is a png");
-                break;
-            default:
-                var_dump("this is something else");
-                break;
-        }
-        
-        $response = $this->setDownloadHeaders($file, $response); 
         
         return $response; 
     }

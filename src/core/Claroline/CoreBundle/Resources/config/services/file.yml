@@ -13,6 +13,7 @@ services:
             - %claroline.files.directory%
             - "@claroline.resource.manager"
             - "@templating"
+            - "@claroline.thumbnail.creator"
             
         tags:
            - { name: resource.manager}

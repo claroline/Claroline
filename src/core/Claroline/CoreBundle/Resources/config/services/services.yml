@@ -1,0 +1,3 @@
+services:
+    claroline.thumbnail.creator:
+        class: Claroline\CoreBundle\Library\Services\ThumbnailGenerator
