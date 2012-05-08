@@ -7,71 +7,70 @@ class ThumbnailGenerator
     /** @var string */
     private $dir;
     
-    const WIDTH = 1;
-    const HEIGHT = 1;
+    const WIDTH = 50;
+    const HEIGHT = 50;
     
     public function __construct ($dir)
     {
         $this->dir = $dir;
     }
     
-    public function createThumb($name, $filename, $new_w, $new_h)
+    public function createThumb($name, $filename, $newWidth, $newHeight)
     {
         $extension = pathinfo($name, PATHINFO_EXTENSION);
         
         switch($extension)
         {
             case "jpeg":
-                $src_img = imagecreatefromjpeg($name);
+                $srcImg = imagecreatefromjpeg($name);
                 break;
             case "jpg":
-                var_dump("je passe");
-                $src_img = imagecreatefromjpeg($name);
+                $srcImg = imagecreatefromjpeg($name);
                 break;
             case "pnj":    
-                $src_img = imagecreatefrompng($name);
+                $srcImg = imagecreatefrompng($name);
                 break;
             default:
                 return null;
         }
         
-        $old_x=imageSX($src_img);
-        $old_y=imageSY($src_img);
+        $oldX = imagesx($srcImg);
+        $oldY = imagesy($srcImg);
         
-        if ($old_x > $old_y) 
+        if ($oldX > $oldY) 
         {
-            $thumb_w=$new_w;
-            $thumb_h=$old_y*($new_h/$old_x);
+            $thumbWidth = $newWidth;
+            $thumbHeight = $oldY*($newHeight/$oldX);
         }
-        if ($old_x < $old_y) 
+        if ($oldX < $oldY) 
         {
-            $thumb_w=$old_x*($new_w/$old_y);
-            $thumb_h=$new_h;
+            $thumbWidth = $oldX*($newWidth/$oldY);
+            $thumbHeight = $newHeight;
         }
-        if ($old_x == $old_y)
+        if ($oldX == $oldY)
         {
-            $thumb_w=$new_w;
-            $thumb_h=$new_h;
+            $thumbWidth = $newWidth;
+            $thumbHeight = $newHeight;
         }
         
-        $dst_img=ImageCreateTrueColor($thumb_w,$thumb_h);
-        imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
+        $dstImg = imagecreatetruecolor($thumbWidth, $thumbHeight);
+        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $oldX, $oldY);
         
         switch($extension)
         {
             case "jpeg":
-                return $src_img = imagejpeg($dst_img,$filename); 
+                return $srcImg = imagejpeg($dstImg, $filename); 
                 break;
             case "jpg":
-                return $src_img = imagejpeg($dst_img,$filename); 
+                return $srcImg = imagejpeg($dstImg, $filename); 
                 break;
             case "pnj":    
-                return $src_img = imagepng($dst_img,$filename);
+                return $srcImg = imagepng($dstImg, $filename);
                 break;
         }
         
-        imagedestroy($dst_img); 
-        imagedestroy($src_img);     
+        imagedestroy($dstImg); 
+        imagedestroy($srcImg);     
     }
     
     public function parseAllAndGenerate()
