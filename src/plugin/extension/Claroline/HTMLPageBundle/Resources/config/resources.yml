@@ -1,0 +1,8 @@
+html_element:
+    class: Claroline\HTMLPageBundle\Entity\HTMLElement
+    name: HTMLElement
+    manager_service_id: htmlpage.manager
+    controller: HTMLElement
+    listable: true
+    navigable: true
+    vendor: Claroline

@@ -1,0 +1,5 @@
+services:
+  claroline.html_element.manager:
+        class: Claroline\HTMLPageBundle\Manager\HTMLPageManager
+        tags:
+           - { name: resource.manager}
