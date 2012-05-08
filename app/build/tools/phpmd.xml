@@ -27,5 +27,10 @@
         <!-- removed this rule because it gives false positives with private methods --> 
         <exclude name="TooManyMethods" />
     </rule>
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="10" />
+        </properties>
+    </rule>
     
 </ruleset>
