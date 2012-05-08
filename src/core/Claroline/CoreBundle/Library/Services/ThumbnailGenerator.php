@@ -4,7 +4,18 @@ namespace Claroline\CoreBundle\Library\Services;
 
 class ThumbnailGenerator
 {
-    function createThumb($name, $filename, $new_w, $new_h)
+    /** @var string */
+    private $dir;
+    
+    const WIDTH = 1;
+    const HEIGHT = 1;
+    
+    public function __construct ($dir)
+    {
+        $this->dir = $dir;
+    }
+    
+    public function createThumb($name, $filename, $new_w, $new_h)
     {
         $extension = pathinfo($name, PATHINFO_EXTENSION);
         
@@ -62,4 +73,26 @@ class ThumbnailGenerator
         imagedestroy($dst_img); 
         imagedestroy($src_img);     
     }
+    
+    public function parseAllAndGenerate()
+    {
+        $iterator = new \DirectoryIterator($this->dir);
+        $i=0;
+        
+        foreach($iterator as $fileInfo)
+        {
+            if($fileInfo->isFile())
+            {
+                $pathName = $fileInfo->getPathname();
+                $path = $fileInfo->getPath();
+                $fileName = $fileInfo->getFileName();
+                $this->createThumb("{$pathName}", "{$path}/tn_{$fileName}", 50, 50);
+                
+                var_dump($i);
+                $i++;
+                
+            }
+        }
+    }
+   
 }

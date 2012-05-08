@@ -103,7 +103,7 @@ class FileManager implements ResourceInterface
          $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
-         $this->thumbnailGenerator->createThumb("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", 50, 50);
+         $this->thumbnailGenerator->createThumb("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", ThumbnailGenerator::WIDTH, ThumbnailGenerator::HEIGHT);
          
          return $file;
     }
