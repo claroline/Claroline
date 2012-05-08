@@ -128,7 +128,7 @@ class ThumbnailGenerator
                 $pathName = $fileInfo->getPathname();
                 $path = $fileInfo->getPath();
                 $fileName = $fileInfo->getFileName();
-                $this->createThumb("{$pathName}", "{$path}/thumbs/tn@{$fileName}", self::WIDTH, self::HEIGHT);
+                $this->createThumbNail("{$pathName}", "{$path}/thumbs/tn@{$fileName}", self::WIDTH, self::HEIGHT);
                 
                 echo("{$i}: thumbnail {$fileName} \n");
                 $i++;
