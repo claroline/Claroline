@@ -295,6 +295,9 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_directory');
         $this->addId($table);
         $this->storeTable($table);
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
+        );
     }
     
     private function createWorkspaceResourceTable(Schema $schema)
