@@ -117,7 +117,7 @@ class FileManager implements ResourceInterface
     {
         $response = new Response();     
         $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
-        $extension = pathInfo($file->getName(), PATHINFO_EXTENSION);
+        $response = $this->setDownloadHeaders($file, $response);
         
         return $response; 
     }
