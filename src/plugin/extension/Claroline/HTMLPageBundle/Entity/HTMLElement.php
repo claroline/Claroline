@@ -4,6 +4,7 @@ namespace Claroline\HTMLPageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
@@ -12,5 +13,18 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class HTMLElement extends AbstractResource
 {
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    private $archive;
     
+    public function setArchive($archive)
+    {
+        $this->archive=$archive;
+    }
+    
+    public function getArchive()
+    {
+        return $this->archive;
+    }
 }
