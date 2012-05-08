@@ -20,6 +20,8 @@ class ThumbnailGenerator
             case "pnj":    
                 $src_img = imagecreatefrompng($name);
                 break;
+            default:
+                return null;
         }
         
         $old_x=imageSX($src_img);
