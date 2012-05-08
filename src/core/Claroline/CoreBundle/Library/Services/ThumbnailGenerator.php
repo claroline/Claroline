@@ -6,9 +6,7 @@ class ThumbnailGenerator
 {
     function createThumb($name, $filename, $new_w, $new_h)
     {
-        var_dump($filename);
         $extension = pathinfo($name, PATHINFO_EXTENSION);
-        var_dump($extension);
         
         switch($extension)
         {
@@ -23,11 +21,9 @@ class ThumbnailGenerator
                 $src_img = imagecreatefrompng($name);
                 break;
         }
-        var_dump("je suis passé");
         
         $old_x=imageSX($src_img);
         $old_y=imageSY($src_img);
-        var_dump("old y = $old_y");
         
         if ($old_x > $old_y) 
         {
