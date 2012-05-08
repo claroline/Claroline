@@ -48,7 +48,7 @@ class ThumbnailGenerator
     }
     
     //the end could be refactored
-    public function createThumb($name, $filename, $newWidth, $newHeight)
+    public function createThumbNail($name, $filename, $newWidth, $newHeight)
     { 
         $extension = pathinfo($name, PATHINFO_EXTENSION);
         
@@ -80,7 +80,7 @@ class ThumbnailGenerator
                     return null;
             }
 
-            return $this->createThumbNail($newWidth, $newHeight, $srcImg, $filename);
+            return $this->getFormatedImg($newWidth, $newHeight, $srcImg, $filename);
             
             //imagedestroy($dstImg); 
             //imagedestroy($srcImg);
@@ -91,7 +91,7 @@ class ThumbnailGenerator
         }
     }
     
-    public function createThumbNail($newWidth, $newHeight, $srcImg, $filename)
+    private function getFormatedImg($newWidth, $newHeight, $srcImg, $filename)
     {
         $oldX = imagesx($srcImg);
         $oldY = imagesy($srcImg);
@@ -132,7 +132,6 @@ class ThumbnailGenerator
                 
                 echo("{$i}: thumbnail {$fileName} \n");
                 $i++;
-                
             }
         }
     }
