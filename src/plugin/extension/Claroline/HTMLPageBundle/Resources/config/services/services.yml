@@ -1,5 +1,8 @@
 services:
   claroline.html_element.manager:
         class: Claroline\HTMLPageBundle\Manager\HTMLPageManager
+        arguments:
+          - %claroline.files.directory%
+          - "@form.factory"
         tags:
            - { name: resource.manager}

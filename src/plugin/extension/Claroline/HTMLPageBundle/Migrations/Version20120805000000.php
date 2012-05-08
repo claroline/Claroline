@@ -22,7 +22,7 @@ class Version20120805000000 extends BundleMigration
         $table = $schema->createTable('claro_html_element');
         
         $this->addId($table);        
-        //nothing out of the ordinary yet
+        $table->addColumn('archive', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource'),
             array('id'), 
