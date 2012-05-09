@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class HTMLPageManager// implements ResourceInterface
+class HTMLPageManager //implements ResourceInterface
 {
     /** @var string */
     private $filesDir;
@@ -66,6 +66,17 @@ class HTMLPageManager// implements ResourceInterface
         return $htmlElement;
     }
     
+    public function delete($resource)
+    {
+        $this->emptyDir($this->pageDir.'/'.pathinfo($resource->getHashName(), PATHINFO_FILENAME));
+        rmdir($this->pageDir.'/'.pathinfo($resource->getHashName(), PATHINFO_FILENAME));
+        $pathName = $this->filesDir . DIRECTORY_SEPARATOR . $resource->getHashName();
+        chmod($pathName, 0777);
+        unlink($pathName);
+        $this->em->remove($resource);  
+        $this->em->flush();
+    }
+    
     public function getDefaultAction($id)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -107,5 +118,24 @@ class HTMLPageManager// implements ResourceInterface
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
             mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
             mt_rand(0, 65535), mt_rand(0, 65535));
-    }  
+    } 
+    
+    private function emptyDir($dir)
+    {
+         $iterator = new \DirectoryIterator($dir);
+         
+         foreach ($iterator as $item)
+         {
+             if($item->isFile() && $item->getFileName()!='placeholder' && $item->getFileName()!='.gitignore')
+             {
+                 chmod($item->getPathname(), 0777);
+                 unlink($item->getPathname());
+             }
+             if($item->isDir() && ($item->isDot()==null) && $item->getFilename() !="tmp" && $item->getFilename()!="thumbs")
+             {
+                 $this->emptyDir($item->getPathname());
+                 rmdir($item->getPathname());
+             }
+         }
+    }
 }
