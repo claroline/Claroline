@@ -52,7 +52,7 @@ class HTMLPageManager// implements ResourceInterface
         $tmpZip = $form['archive']->getData();
         $zipName = $tmpZip->getClientOriginalName();
         $hashName = $this->GUID().".zip";
-        $form['archive']->getData()->move($this->dir, $hashName);
+        $form['archive']->getData()->move($this->filesDir, $hashName);
         $htmlElement = new HTMLElement();
         $htmlElement->setUser($user);
         $htmlElement->setHashName($hashName);
