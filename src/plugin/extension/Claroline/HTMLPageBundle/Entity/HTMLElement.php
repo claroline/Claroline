@@ -23,6 +23,11 @@ class HTMLElement extends AbstractResource
      */
     private $hashName;
     
+    /**
+     * @ORM\Column(type="string", length=36, name="index") 
+     */
+    private $index;
+    
     public function setArchive($archive)
     {
         $this->archive=$archive;
@@ -42,4 +47,16 @@ class HTMLElement extends AbstractResource
     {
         return $this->hashName;
     }
+    
+    public function setIndex($index)
+    {
+        $this->index=$index;
+    }
+    
+    public function getIndex()
+    {
+        return $this->index;
+    }
+            
+          
 }
