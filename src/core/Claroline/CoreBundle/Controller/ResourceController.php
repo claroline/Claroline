@@ -18,7 +18,7 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser(); 
         $em = $this->getDoctrine()->getEntityManager();
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
-        $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);                
+        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getUserListableRootResource($user);                
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
@@ -191,7 +191,7 @@ class ResourceController extends Controller
         
         if($id==0)
         {
-            $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
+            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getUserListableRootResource($user);
             $root = new Directory();
             $root->setName('root');
             $root->setId(0);
