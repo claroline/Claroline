@@ -22,6 +22,9 @@ class CleanUploadDirectoryCommand extends ContainerAwareCommand
         $this->emptyDir($dir);
         $dir = $this->getContainer()->getParameter('claroline.html_page.directory');
         $this->emptyDir($dir);
+        $dir = $this->getContainer()->getParameter('claroline.files.directory');
+        $dir.='/../test/files';
+        $this->emptyDir($dir);   
     }
     
     private function emptyDir($dir)
