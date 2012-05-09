@@ -22,10 +22,7 @@ class ThumbnailGenerator
         
         if (!extension_loaded('gd')) 
         {
-            if (!dl('gd.so')) 
-            {
-                $this->hasGdExtension = false;
-            }
+            $this->hasGdExtension = false;
         }
         else
         {
@@ -35,10 +32,7 @@ class ThumbnailGenerator
 
         if (!extension_loaded('ffmpeg')) 
         {
-            if (!dl('ffmpeg.so')) 
-            {
-                $this->hasFfmpegExtension = false;
-            }
+            $this->hasFfmpegExtension = false;
         }
         else
         {
