@@ -188,6 +188,7 @@ class ResourceController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $response = new Response();
+        $em = $this->getDoctrine()->getEntityManager();
         
         if($id==0)
         {
@@ -195,7 +196,6 @@ class ResourceController extends Controller
             $root = new Directory();
             $root->setName('root');
             $root->setId(0);
-            $em = $this->getDoctrine()->getEntityManager();
             $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
             $root->setResourceType($directoryType[0]);
             
