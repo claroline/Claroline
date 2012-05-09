@@ -53,17 +53,17 @@ class HTMLPageManager// implements ResourceInterface
         $zipName = $tmpZip->getClientOriginalName();
         $hashName = $this->GUID().".zip";
         $form['archive']->getData()->move($this->dir, $hashName);
-        $HtmlElement = new HTMLElement();
-        $HtmlElement->setUser($user);
-        $HtmlElement->setHashName($hashName);
-        $HtmlElement->setName(pathinfo($zipName, PATHINFO_FILENAME));
-        $HtmlElement->setIndex($form['index_page']->getData());
+        $htmlElement = new HTMLElement();
+        $htmlElement->setUser($user);
+        $htmlElement->setHashName($hashName);
+        $htmlElement->setName(pathinfo($zipName, PATHINFO_FILENAME));
+        $htmlElement->setIndex($form['index_page']->getData());
         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'HTMLElement'));
-        $HtmlElement->setResourceType($resourceType);        
-        $this->em->persist($HtmlElement);
+        $htmlElement->setResourceType($resourceType);        
+        $this->em->persist($htmlElement);
         $this->em->flush();
         
-        return $HtmlElement;
+        return $htmlElement;
     }
     
     public function getDefaultAction($id)
