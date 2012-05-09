@@ -23,6 +23,7 @@ class Version20120805000000 extends BundleMigration
         
         $this->addId($table);        
         $table->addColumn('archive', 'string', array('length' => 255));
+        $table->addColumn('hashName', 'string', array('length' => 255));
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource'),
             array('id'), 

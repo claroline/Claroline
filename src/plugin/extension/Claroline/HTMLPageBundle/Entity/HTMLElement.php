@@ -18,6 +18,9 @@ class HTMLElement extends AbstractResource
      */
     private $archive;
     
+    /** @var string */
+    private $hashName;
+    
     public function setArchive($archive)
     {
         $this->archive=$archive;
@@ -26,5 +29,15 @@ class HTMLElement extends AbstractResource
     public function getArchive()
     {
         return $this->archive;
+    }
+            
+    public function setHashName($hashName)
+    {
+        $this->hashName = $hashName;
+    }
+    
+    public function getHashName()
+    {
+        return $this->hashName;
     }
 }
