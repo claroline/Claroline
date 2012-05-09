@@ -1,3 +1,7 @@
+parameters:
+  
+   claroline.html_page.directory: "%kernel.root_dir%/../web/HTMLPage"
+
 services:
   claroline.html_element.manager:
         class: Claroline\HTMLPageBundle\Manager\HTMLPageManager
@@ -5,5 +9,7 @@ services:
           - %claroline.files.directory%
           - "@form.factory"
           - "@doctrine.orm.entity_manager"
+          - "@router"
+          - %claroline.html_page.directory%
         tags:
            - { name: resource.manager}

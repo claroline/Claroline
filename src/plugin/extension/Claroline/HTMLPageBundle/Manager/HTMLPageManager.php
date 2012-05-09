@@ -8,11 +8,15 @@ use Claroline\HTMLPageBundle\Form\HTMLPageType;
 use Claroline\HTMLPageBundle\Entity\HTMLElement;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HTMLPageManager// implements ResourceInterface
 {
     /** @var string */
-    private $dir;
+    private $filesDir;
+    
+    /**@ var string */
+    private $pageDir;
     
     /** @var FormFactory */
     private $formFactory;
@@ -20,11 +24,15 @@ class HTMLPageManager// implements ResourceInterface
     /** @var EntityManager */
     private $em;
     
-    public function __construct($dir, FormFactory $formFactory, EntityManager $em)
+    private $router;
+    
+    public function __construct($filesDir, FormFactory $formFactory, EntityManager $em, $router, $pageDir)
     {
-        $this->dir = $dir;
+        $this->filesDir = $filesDir;
         $this->formFactory = $formFactory;
         $this->em = $em;
+        $this->router = $router;
+        $this->pageDir = $pageDir;
     }
             
     public function getForm()
@@ -51,7 +59,8 @@ class HTMLPageManager// implements ResourceInterface
         $HTMLElement = new HTMLElement();
         $HTMLElement->setUser($user);
         $HTMLElement->setHashName($hashName);
-        $HTMLElement->setName(pathinfo($zipName, PATHINFO_FILENAME).".htm");
+        $HTMLElement->setName(pathinfo($zipName, PATHINFO_FILENAME));
+        $HTMLElement->setIndex($form['index_page']->getData());
         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'HTMLElement'));
         $HTMLElement->setResourceType($resourceType);        
         $this->em->persist($HTMLElement);
@@ -62,36 +71,33 @@ class HTMLPageManager// implements ResourceInterface
     
     public function getDefaultAction($id)
     {
-        $response = new Response(); 
+        $ds = DIRECTORY_SEPARATOR;
         
         $resource = $this->em->getRepository('Claroline\HTMLPageBundle\Entity\HTMLElement')->find($id);
         $hashName = $resource->getHashName();
         $this->unzipTmpFile($hashName);
+        $relativePath = pathinfo($resource->getHashName(), PATHINFO_FILENAME).$ds.$resource->getName().$ds.$resource->getIndex();
+        $route = $this->router->getContext()->getBaseUrl();
+        $fp = preg_replace('"/web/app_dev.php$"', "/web/HTMLPage/$relativePath", $route);
         
-        return $response;
+        return $response = new RedirectResponse($fp);
     }    
     
     private function unzipTmpFile($hashName)
     {
-        $dir = $this->dir;
-        $path = $dir . DIRECTORY_SEPARATOR . $hashName;
+        $path = $this->filesDir . DIRECTORY_SEPARATOR . $hashName;
         $zip = new \ZipArchive();
         
         if ($zip->open($path) === true)
         {
-            $zip->extractTo($this->dir . DIRECTORY_SEPARATOR . pathinfo($hashName, PATHINFO_FILENAME) . DIRECTORY_SEPARATOR);
+            $zip->extractTo($this->pageDir . DIRECTORY_SEPARATOR . pathinfo($hashName, PATHINFO_FILENAME) . DIRECTORY_SEPARATOR);
             $zip->close();
         }
         else
         {
+            return 0;
             return new \Exception("zip extraction error");
         }
-
-        //$this->uploadDirectory($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir, $root);
-        //$this->emptyDir($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir);
-        //rmdir($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $hashDir);
-        //chmod($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName, 0777);
-        //unlink($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName);
     }
     
     private function GUID()
@@ -104,6 +110,12 @@ class HTMLPageManager// implements ResourceInterface
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
             mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
             mt_rand(0, 65535), mt_rand(0, 65535));
+    }
+    
+    //THIS MUST BE CHANGED LATER as it looks like the worst way to do this
+    private function getFileDirectoryUrl()
+    {
+        
     }
     
 }
