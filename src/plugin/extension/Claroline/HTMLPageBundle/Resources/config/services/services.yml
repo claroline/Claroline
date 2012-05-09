@@ -4,5 +4,6 @@ services:
         arguments:
           - %claroline.files.directory%
           - "@form.factory"
+          - "@doctrine.orm.entity_manager"
         tags:
            - { name: resource.manager}
