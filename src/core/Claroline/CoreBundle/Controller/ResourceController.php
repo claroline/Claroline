@@ -71,16 +71,21 @@ class ResourceController extends Controller
         {   
             $resource = $this->get($name)->add($form, $id, $user);
             $rightManager = $this->get('claroline.security.right_manager');
-            $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);
             
-            if($request->isXmlHttpRequest())
+            if(null!=$resource)   
             {
-                $content = '{"key":'.$resource->getId().', "name":"'.$resource->getName().'", "type":"'.$resource->getResourceType()->getType().'"}';
-                $response = new Response($content);
-                $response->headers->set('Content-Type', 'application/json');  
-                
-                return $response;
-            }                   
+                $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);
+            
+            
+                if($request->isXmlHttpRequest())
+                {
+                    $content = '{"key":'.$resource->getId().', "name":"'.$resource->getName().'", "type":"'.$resource->getResourceType()->getType().'"}';
+                    $response = new Response($content);
+                    $response->headers->set('Content-Type', 'application/json');  
+
+                    return $response;
+                } 
+            }
             
             $route = $this->get('router')->generate("claro_resource_index");
        
