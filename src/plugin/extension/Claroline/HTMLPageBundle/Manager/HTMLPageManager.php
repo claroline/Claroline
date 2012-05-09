@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class HTMLPageManager //implements ResourceInterface
+class HTMLPageManager implements ResourceInterface
 {
     /** @var string */
     private $filesDir;
@@ -75,6 +75,11 @@ class HTMLPageManager //implements ResourceInterface
         unlink($pathName);
         $this->em->remove($resource);  
         $this->em->flush();
+    }
+    
+    public function indexAction($id)
+    {
+        return new Response("index HTML");
     }
     
     public function getDefaultAction($id)
