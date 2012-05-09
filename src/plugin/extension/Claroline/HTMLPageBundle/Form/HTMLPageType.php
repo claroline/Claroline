@@ -10,7 +10,7 @@ class HTMLPageType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('archive', 'file');
-        $builder->add('index', 'string');
+        $builder->add('index_page', 'string');
     }
 
     public function getName()

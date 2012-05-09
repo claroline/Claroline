@@ -19,14 +19,14 @@ class HTMLElement extends AbstractResource
     private $archive;
     
     /**
-     * @ORM\Column(type="string", length=36, name="hash_name") 
+     * @ORM\Column(type="string", length=255, name="hash_name") 
      */
     private $hashName;
     
     /**
-     * @ORM\Column(type="string", length=36, name="index") 
+     * @ORM\Column(type="string", length=255, name="index_page") 
      */
-    private $index;
+    private $indexPage;
     
     public function setArchive($archive)
     {
@@ -48,14 +48,14 @@ class HTMLElement extends AbstractResource
         return $this->hashName;
     }
     
-    public function setIndex($index)
+    public function setIndex($indexPage)
     {
-        $this->index=$index;
+        $this->indexPage=$indexPage;
     }
     
     public function getIndex()
     {
-        return $this->index;
+        return $this->indexPage;
     }
             
           
