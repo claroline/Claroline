@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormFactory;
 use Claroline\HTMLPageBundle\Form\HTMLPageType;
 use Claroline\HTMLPageBundle\Entity\HTMLElement;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Response;
 
 class HTMLPageManager// implements ResourceInterface
 {
@@ -42,30 +43,43 @@ class HTMLPageManager// implements ResourceInterface
     {
         $tmpZip = $form['archive']->getData();
         $zipName = $tmpZip->getClientOriginalName();
-        $hashNameWithoutExtension = $this->GUID();
-        $form['archive']->getData()->move($this->dir, "{$hashNameWithoutExtension}.zip");
-        $this->unzipTmpFile($hashNameWithoutExtension);
-        $this->setExtractedContent($this->dir.DIRECTORY_SEPARATOR.$hashNameWithoutExtension, $user);
+        $hashName = $this->GUID().".zip";
+        $form['archive']->getData()->move($this->dir, $hashName);
+        //$this->unzipTmpFile($hashNameWithoutExtension);
+        //$this->setExtractedContent($this->dir.DIRECTORY_SEPARATOR.$hashNameWithoutExtension, $user);
         //$iterator = new \DirectoryIterator($t);
         $HTMLElement = new HTMLElement();
         $HTMLElement->setUser($user);
-        $HTMLElement->setHashName($hashNameWithoutExtension.".zip");
-        $HTMLElement->setName($zipName);
+        $HTMLElement->setHashName($hashName);
+        $HTMLElement->setName(pathinfo($zipName, PATHINFO_FILENAME).".htm");
         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'HTMLElement'));
         $HTMLElement->setResourceType($resourceType);        
         $this->em->persist($HTMLElement);
         $this->em->flush();
+        
+        return $HTMLElement;
     }
     
-    private function unzipTmpFile($hashNameWithoutExtension)
+    public function getDefaultAction($id)
+    {
+        $response = new Response(); 
+        
+        $resource = $this->em->getRepository('Claroline\HTMLPageBundle\Entity\HTMLElement')->find($id);
+        $hashName = $resource->getHashName();
+        $this->unzipTmpFile($hashName);
+        
+        return $response;
+    }    
+    
+    private function unzipTmpFile($hashName)
     {
         $dir = $this->dir;
-        $path = $dir . DIRECTORY_SEPARATOR . $hashNameWithoutExtension.".zip";
+        $path = $dir . DIRECTORY_SEPARATOR . $hashName;
         $zip = new \ZipArchive();
         
         if ($zip->open($path) === true)
         {
-            $zip->extractTo($this->dir . DIRECTORY_SEPARATOR . $hashNameWithoutExtension . DIRECTORY_SEPARATOR);
+            $zip->extractTo($this->dir . DIRECTORY_SEPARATOR . pathinfo($hashName, PATHINFO_FILENAME) . DIRECTORY_SEPARATOR);
             $zip->close();
         }
         else
@@ -79,94 +93,6 @@ class HTMLPageManager// implements ResourceInterface
         //chmod($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName, 0777);
         //unlink($dir . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $zipName);
     }
-    
-    private function addHTMLElement($dir, \DirectoryIterator $item, $user)
-    {
-        $HTMLElement = new HTMLElement();
-        $HTMLElement->setUser($user);
-        $hashName = $this->GUID();
-        $HTMLElement->setHashName($hashName);
-        $pathName = $item->getPathname();
-        $HTMLElement->setName($pathName);
-        $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'HTMLElement'));
-        $HTMLElement->setResourceType($resourceType);   
-        rename($pathName, $this->dir.DIRECTORY_SEPARATOR.$hashName);
-        $this->em->persist($HTMLElement);
-    }
-    
-    private function setExtractedContent($dir, $user)
-    {
-        $iterator = new \DirectoryIterator($dir);
-        foreach($iterator as $item)
-        {
-            if($item->isFile())
-            {
-                $this->addHTMLElement($dir, $item, $user);  
-            }
-            if ($item->isDir() == true && $item->isDot() != true)
-            {
-                $this->setExtractedContent($item->getPathname(),$user);
-            }
-        }
-        
-        $this->em->flush();
-        rmdir($dir);        
-    }
-    /*
-    private function uploadDirectory($dir, Directory $root)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $iterator = new \DirectoryIterator($dir);
-        foreach ($iterator as $item)
-        {
-            if ($item->isFile())
-            {
-                $this->uploadDocumentItem($item, $root);
-            }
-            if ($item->isDir() == true && $item->isDot() != true)
-            {
-                $directory = new Directory();
-                $directory->setName($item->getBasename());
-                $directory->setParent($root);
-                $em->persist($root);
-                $em->persist($directory);
-                $this->uploadDirectory($dir . DIRECTORY_SEPARATOR . $directory->getName(), $directory);
-            }
-        }
-    }
-
-    private function uploadDocumentItem(\DirectoryIterator $file, $root)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $document = new Document();
-        $hashName = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $document->setName($file->getFileName());
-        $document->setSize($file->getSize());
-        $document->setHashName($hashName);
-        $root->addDocument($document);
-        $em->persist($root);
-        $em->persist($document);
-        copy($file->getPathName(), $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hashName);
-    }
-    
-    private function emptyDir($dir)
-    {
-         $iterator = new \DirectoryIterator($dir);
-         
-         foreach ($iterator as $item)
-         {
-             if($item->isFile())
-             {
-                 chmod($item->getPathname(), 0777);
-                 unlink($item->getPathname());
-             }
-             if($item->isDir() && ($item->isDot()==null))
-             {
-                 $this->emptyDir($item->getPathname());
-                 rmdir($item->getPathname());
-             }
-         }
-    }*/
     
     private function GUID()
     {

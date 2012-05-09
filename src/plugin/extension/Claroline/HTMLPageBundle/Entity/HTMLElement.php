@@ -18,7 +18,9 @@ class HTMLElement extends AbstractResource
      */
     private $archive;
     
-    /** @var string */
+    /**
+     * @ORM\Column(type="string", length=36, name="hash_name") 
+     */
     private $hashName;
     
     public function setArchive($archive)

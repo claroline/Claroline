@@ -3,6 +3,6 @@ html_element:
     name: HTMLElement
     manager_service_id: htmlpage.manager
     controller: HTMLElement
-    listable: false
+    listable: true
     navigable: false
     vendor: Claroline
