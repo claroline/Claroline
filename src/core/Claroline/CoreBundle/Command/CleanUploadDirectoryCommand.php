@@ -20,6 +20,8 @@ class CleanUploadDirectoryCommand extends ContainerAwareCommand
     {
         $dir = $this->getContainer()->getParameter('claroline.files.directory');
         $this->emptyDir($dir);
+        $dir = $this->getContainer()->getParameter('claroline.html_page.directory');
+        $this->emptyDir($dir);
     }
     
     private function emptyDir($dir)
@@ -28,7 +30,7 @@ class CleanUploadDirectoryCommand extends ContainerAwareCommand
          
          foreach ($iterator as $item)
          {
-             if($item->isFile() && $item->getFileName()!='placeholder')
+             if($item->isFile() && $item->getFileName()!='placeholder' && $item->getFileName()!='.gitignore')
              {
                  chmod($item->getPathname(), 0777);
                  unlink($item->getPathname());
