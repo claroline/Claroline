@@ -108,6 +108,27 @@ class FileManager implements ResourceInterface
          return $file;
     }
     
+    public function copy($resource)
+    {
+        $newFile = new File();
+        $newFile->setSize($resource->getSize());
+        $newFile->setName($resource->getName());
+        //$newFile->setHashName($resource->getHashName());
+        $newFile->setUser($resource->getUser());
+        $newFile->setParent($resource->getParent());
+        $newFile->setResourceType($resource->getResourceType());
+        $hashName = $this->GUID().".".pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+        $newFile->setHashName($hashName);
+        //copy the old File
+        $filePath = $this->dir . DIRECTORY_SEPARATOR . $resource->getHashName();
+        $newPath = $this->dir . DIRECTORY_SEPARATOR . $hashName;
+        copy($filePath, $newPath);
+        $this->em->persist($newFile);
+        $this->em->flush();
+        
+        return $newFile;
+    }
+    
     public function getResourceType()
     {
         return "file";

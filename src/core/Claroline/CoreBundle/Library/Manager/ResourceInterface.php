@@ -9,4 +9,5 @@ interface ResourceInterface
     public function delete($rsrc);
     public function getDefaultAction($id);
     public function indexAction($id);
+    public function copy($resource);
 }
