@@ -105,6 +105,11 @@ abstract class AbstractResource
      */
     protected $workspaces;
     
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $copy;
+    
     public function __construct()
     {
         $this->workspaces = new ArrayCollection();
@@ -197,5 +202,15 @@ abstract class AbstractResource
         {
             $this.__set($parameter, $value);
         }
+    }
+    
+    public function setCopy($copy)
+    {
+        $this->copy = $copy;
+    }
+    
+    public function getCopy()
+    {
+        return $this->copy;
     }
 }

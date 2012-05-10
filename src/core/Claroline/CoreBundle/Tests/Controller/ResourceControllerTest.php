@@ -129,7 +129,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $link =  $crawler->filter("#link_show_{$id}")->link();
        $this->client->click($link);
        //add root to workspace
-       $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+       $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/ref");
        
        return $rootId;
     }

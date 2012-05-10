@@ -71,11 +71,13 @@ class ResourceController extends Controller
         {   
             $resource = $this->get($name)->add($form, $id, $user);
             $rightManager = $this->get('claroline.security.right_manager');
+            $resource->setCopy(false);
+            $this->getDoctrine()->getEntityManager()->persist($resource);
+            $this->getDoctrine()->getEntityManager()->flush();
             
             if(null!=$resource)   
             {
-                $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);
-            
+                $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);           
             
                 if($request->isXmlHttpRequest())
                 {
@@ -274,6 +276,14 @@ class ResourceController extends Controller
         }
         else
         {
+           if($resourceId == 0)
+           {
+               
+           }
+           else
+           {
+               
+           }
            return new Response("you're not trying to copy this are you ?"); 
         }
         
@@ -318,7 +328,11 @@ class ResourceController extends Controller
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json'); 
         
-        return $response;
+        return $response;   
+    }
+    
+    public function createResourceCopy($resource)
+    {
         
     }
 }
