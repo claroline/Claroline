@@ -77,7 +77,7 @@ class ResourceController extends Controller
             
             if(null!=$resource)   
             {
-                $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);           
+                $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);    
             
                 if($request->isXmlHttpRequest())
                 {
@@ -304,8 +304,7 @@ class ResourceController extends Controller
         $workspace->removeResource($resource);       
         $em->flush();
         
-        return new Response("success");
-        
+        return new Response("success"); 
     }
    
     private function findRsrcServ($resourceType)

@@ -118,7 +118,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="user")
      */
     private $resources;
-
+    
     public function __construct()
     {
         parent::__construct();

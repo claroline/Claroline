@@ -213,4 +213,9 @@ abstract class AbstractResource
     {
         return $this->copy;
     }
+    
+    public function getRepositories()
+    {
+        return $this->repositories;
+    }
 }
