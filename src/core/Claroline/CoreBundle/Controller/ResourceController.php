@@ -282,7 +282,13 @@ class ResourceController extends Controller
            }
            else
            {
-               
+               $resource = $this->get('claroline.resource.manager')->find($resourceId);
+               $newResource = $this->createResourceCopy($resource, $workspace);
+               $user = $this->get('security.context')->getToken()->getUser();
+               //$rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
+               $newResource->setCopy(true);
+               $workspace->addResource($newResource);
+               $em->flush();
            }
            return new Response("you're not trying to copy this are you ?"); 
         }
@@ -333,6 +339,10 @@ class ResourceController extends Controller
     
     public function createResourceCopy($resource)
     {
+        $resourceType = $resource->getResourceType();
+        $name = $this->findRsrcServ($resourceType);
+        $newResource = $this->get($name)->copy($resource);
         
+        return $newResource;
     }
 }

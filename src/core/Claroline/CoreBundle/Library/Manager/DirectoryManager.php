@@ -101,6 +101,11 @@ class DirectoryManager implements ResourceInterface
         
         return $response;
     }
+    
+    public function copy($resource)
+    {
+        
+    }
     // FIN DES METHODES OBLIGATOIRES
      
     public function getDirectoriesOfUser($user)

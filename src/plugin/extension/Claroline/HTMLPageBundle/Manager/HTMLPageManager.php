@@ -96,6 +96,11 @@ class HTMLPageManager implements ResourceInterface
         return new RedirectResponse($fp);
     }    
     
+    public function copy($resource)
+    {
+        
+    }
+    
     private function unzipTmpFile($hashName)
     {
         $path = $this->filesDir . DIRECTORY_SEPARATOR . $hashName;
