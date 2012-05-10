@@ -15,7 +15,10 @@ getResourceTypeJSON();
            // leftClickMenu: true,
             getForm: function(){
                 var formHTML =
-                    "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"ahah"+"'/><input type='submit' id='cfp_form_submit'></form>";
+                    "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"ahah"+"'/><br>"
+                    formHTML += "<input type='radio' name='options' value='copy' checked>copy<br>"
+                    formHTML += "<input type='radio' name='options' value='ref'>ref<br>"
+                    formHTML +="<input type='submit' id='cfp_form_submit'></form>";
                 return formHTML;
             },
             onSubmit: function(form){
@@ -282,22 +285,22 @@ function viewNode(node)
 }
 
 function createFormDialog(type, id){
-        route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
-        $.ajax({
-            type: 'POST',
-            url: route,
-            cache: false,
-            success: function(data){
-                $('#cfp_dialog').empty();
-                $('#cfp_dialog').append(data);
-                //$("#cfp_dialog").modal('show');
-                //ici je change l'event du submit
-                $("#generic_form").submit(function(e){
-                    e.preventDefault();
-                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id}, document.getElementById("generic_form"));
-                    });
-                }
-            });
+    route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
+    $.ajax({
+        type: 'POST',
+        url: route,
+        cache: false,
+        success: function(data){
+            $('#cfp_dialog').empty();
+            $('#cfp_dialog').append(data);
+            //$("#cfp_dialog").modal('show'); 
+            //ici je change l'event du submit
+            $("#generic_form").submit(function(e){
+                e.preventDefault();
+                sendForm("claro_resource_add_resource",  {'type':type, 'id':id}, document.getElementById("generic_form"));
+                });
+            }
+        });
 }
 
 function submissionHandler(data, route, routeParameters)
@@ -343,8 +346,6 @@ function sendForm(route, routeParameters, form)
     xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
     xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters)};
     xhr.send(formData);
-    
-    
 }
 
 function sendRequest(route, routeParams, successHandler){

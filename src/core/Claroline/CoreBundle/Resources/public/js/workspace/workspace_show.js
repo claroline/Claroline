@@ -3,7 +3,8 @@ $(function(){
     twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId');
     var params = {
         submitHandler: function(oForm, id){
-                addResource(id, twigWorkspaceId);
+                var option =  getCheckedValue(oForm["options"]);
+                addResource(id, twigWorkspaceId, option);
             }
         };
         
@@ -14,11 +15,11 @@ $(function(){
     });
 }); 
 
-function addResource(resourceId, workspaceId)
+function addResource(resourceId, workspaceId, option)
 {
 $.ajax({
     type: 'POST',
-    url: Routing.generate('claro_resource_add_workspace', {'resourceId':resourceId,'workspaceId':workspaceId}),
+    url: Routing.generate('claro_resource_add_workspace', {'resourceId':resourceId,'workspaceId':workspaceId, 'option':option}),
     cache: false,
     success: function(data){
             alert(data);
@@ -27,4 +28,21 @@ $.ajax({
     error: function(xhr){
         alert(xhr.status);
     }});
+}
+
+function getCheckedValue(radioObj) {
+	if(!radioObj)
+		return "";
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return radioObj.value;
+		else
+			return "";
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return radioObj[i].value;
+		}
+	}
+	return "";
 }

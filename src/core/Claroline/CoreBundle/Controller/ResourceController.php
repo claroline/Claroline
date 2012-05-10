@@ -231,44 +231,51 @@ class ResourceController extends Controller
         return new Response("success");
     }
     
-    public function addToWorkspaceAction($resourceId, $workspaceId)
+    public function addToWorkspaceAction($resourceId, $workspaceId, $option)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
         $rightManager = $this->get('claroline.security.right_manager');
         $roleCollaborator = $workspace->getCollaboratorRole();
-            
-        if($resourceId == 0)
+        
+        if($option == 'ref' )
         {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
-            
-            foreach($resources as $resource)
+            if($resourceId == 0)
             {
+                $user = $this->get('security.context')->getToken()->getUser();
+                $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
+
+                foreach($resources as $resource)
+                {
+                    $workspace->addResource($resource);
+                    $children = $resource->getChildren();
+                    $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+
+                    foreach($children as $child)
+                    {
+                        $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                    }
+                }           
+            }
+            else
+            {
+                $resource = $this->get('claroline.resource.manager')->find($resourceId);
+                $em = $this->getDoctrine()->getEntityManager();   
                 $workspace->addResource($resource);
                 $children = $resource->getChildren();
                 $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-                
+
                 foreach($children as $child)
                 {
                     $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
                 }
-            }           
+            }        
+            $em->flush();
         }
         else
         {
-            $resource = $this->get('claroline.resource.manager')->find($resourceId);
-            $em = $this->getDoctrine()->getEntityManager();   
-            $workspace->addResource($resource);
-            $children = $resource->getChildren();
-            $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-            
-            foreach($children as $child)
-            {
-                $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
-            }
-        }        
-        $em->flush();
+           return new Response("you're not trying to copy this are you ?"); 
+        }
         
         return new Response("success");
     }
