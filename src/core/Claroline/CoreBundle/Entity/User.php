@@ -119,6 +119,12 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      */
     private $resources;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Repository")
+     * @ORM\JoinColumn(name="repository_id", referencedColumnName="id")
+     */
+    private $repository;
+    
     public function __construct()
     {
         parent::__construct();
@@ -368,5 +374,15 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     {
         $this->resources[] = $resource;
         $resource->setUser($this);
+    }
+    
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+    
+    public function getRepository()
+    {
+        return $this->repository;
     }
 }

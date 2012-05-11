@@ -69,6 +69,12 @@ abstract class AbstractWorkspace
      */
     protected $resources;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Repository")
+     * @ORM\JoinColumn(name="repository_id", referencedColumnName="id")
+     */
+    private $repository;
+    
     private static $visitorPrefix = 'ROLE_WS_VISITOR';
     private static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
     private static $managerPrefix = 'ROLE_WS_MANAGER';
@@ -307,5 +313,15 @@ abstract class AbstractWorkspace
     {
         $this->resources->removeElement($resource);
         $resource->getWorkspace()->removeElement($this);
+    }
+       
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+    
+    public function getRepository()
+    {
+        return $this->repository;
     }
 }
