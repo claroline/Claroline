@@ -84,6 +84,9 @@ class DirectoryManager implements ResourceInterface
             $this->container->get($name)->copy($child);
         }
         
+        $this->em->persist($newDirectory);
+        $this->em->flush();
+        
         return $newDirectory;
     }
     
