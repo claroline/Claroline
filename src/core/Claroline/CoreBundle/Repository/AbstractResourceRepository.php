@@ -21,7 +21,7 @@ class AbstractResourceRepository extends NestedTreeRepository
         $query = $this->_em->createQuery($dql);
         return $query->getResult();
     } 
-    
+        
     public function getUserRootResource($user)
     {
         $dql = "
@@ -40,6 +40,21 @@ class AbstractResourceRepository extends NestedTreeRepository
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
             WHERE r.lvl = 0
             AND r.user = '{$user->getId()}'
+            AND r.resourceType
+            IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+                WHERE rt.isListable = 1)"
+            ;
+            
+            $query = $this->_em->createQuery($dql);
+            
+            return $query->getResult(); 
+    }
+    
+    public function getRepositoryListableRootResource($repository)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
+            JOIN r.repositories repo WHERE repo.id = {$repository->getId()}
             AND r.resourceType
             IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
                 WHERE rt.isListable = 1)"
