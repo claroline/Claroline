@@ -94,18 +94,6 @@ abstract class AbstractResource
     protected $children;
     
     /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", 
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinTable(name="claro_workspace_resource",
-     *      joinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id")}
-     * )
-     */
-    protected $workspaces;
-    
-    /**
      * @ORM\Column(type="boolean")
      */
     protected $copy;
@@ -196,17 +184,6 @@ abstract class AbstractResource
     public function addChildren(AbstractResource $resource)
     {
         $this->children[] = $resource;
-    }
-    
-    public function getWorkspace()
-    {
-        return $this->workspaces;
-    }
-    
-    public function removeWorkspace($workspace)
-    {
-        $this->workspaces->removeElement($workspace);
-        $workspace->getResources()->removeElement($this);        
     }
       
     public function setResource(array $options)
