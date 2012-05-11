@@ -57,7 +57,8 @@ class AbstractResourceRepository extends NestedTreeRepository
             JOIN r.repositories repo WHERE repo.id = {$repository->getId()}
             AND r.resourceType
             IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-                WHERE rt.isListable = 1)"
+                WHERE rt.isListable = 1)
+            AND r.copy = 0";
             ;
             
             $query = $this->_em->createQuery($dql);

@@ -195,12 +195,13 @@ class ResourceController extends Controller
     public function getJSONResourceNodeAction($id)
     {
         $user = $this->get('security.context')->getToken()->getUser();
+        $repository = $user->getRepository();
         $response = new Response();
         $em = $this->getDoctrine()->getEntityManager();
         
         if($id==0)
         {
-            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getUserListableRootResource($user);
+            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableRootResource($repository);
             $root = new Directory();
             $root->setName('root');
             $root->setId(0);
@@ -292,10 +293,22 @@ class ResourceController extends Controller
                $resource = $this->get('claroline.resource.manager')->find($resourceId);
                $newResource = $this->createResourceCopy($resource, $workspace);
                $user = $this->get('security.context')->getToken()->getUser();
-               //$rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
+               $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $newResource->setCopy(true);
                $repository = $workspace->getRepository();
-               $repository->addRessource($newResource);
+               $repository->addResource($newResource);     
+               $children = $resource->getChildren();
+               
+               foreach($children as $child)
+               {
+                   $newChild = $this->createResourceCopy($child);
+                   $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
+                   $newChild->setCopy(true);
+                   $repository = $resource->getChildren();
+               }
+               
+               $newResource->setParent(null);
+               
                $em->flush();
            }
            return new Response("you're not trying to copy this are you ?"); 
@@ -308,9 +321,18 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();  
         $resource = $this->get('claroline.resource.manager')->find($resourceId);
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);   
-        $repository = $workspace->getRepository();
-        $repository->removeResource($resource);       
+        if($resource->getCopy()==false)
+        {
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
+            $repository = $workspace->getRepository();
+            $repository->removeResource($resource);
+        }
+        else
+        {
+            $resourceType = $resource->getResourceType();
+            $name = $this->findRsrcServ($resourceType);
+            $this->get($name)->delete($resource); 
+        }
         $em->flush();
         
         return new Response("success"); 

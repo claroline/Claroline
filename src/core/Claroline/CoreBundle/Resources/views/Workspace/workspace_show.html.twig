@@ -41,6 +41,12 @@
                             delete from workspace 
                         </a>
                         {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
+                        | 
+                        {% if resource.getCopy() == true %}
+                        COPY
+                        {% else %}
+                        ORIGNAL
+                        {% endif %}
                    </div>
                 </div>
             {% endfor %}
