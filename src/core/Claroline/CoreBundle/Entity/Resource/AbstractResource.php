@@ -110,9 +110,22 @@ abstract class AbstractResource
      */
     protected $copy;
     
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Repository", 
+     *      inversedBy="resources"
+     * )
+     * @ORM\JoinTable(name="claro_resource_repository",
+     *      joinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="repository_id", referencedColumnName="id")}
+     * )
+     */
+    protected $repositories;
+    
     public function __construct()
     {
         $this->workspaces = new ArrayCollection();
+        $this->repositories = new ArrayCollection();
     }
     
     public function setId($id)
@@ -217,5 +230,17 @@ abstract class AbstractResource
     public function getRepositories()
     {
         return $this->repositories;
+    }
+    
+    public function addRepository(Repository $repository)
+    {
+        $this->repository->add($repository);
+        $repository->getResources()->add($this);
+    }
+    
+    public function removeRepository(Repository $repository)
+    {
+        $this->repository->removeElement($repository);
+        $repository->removeElement()->add($this);
     }
 }
