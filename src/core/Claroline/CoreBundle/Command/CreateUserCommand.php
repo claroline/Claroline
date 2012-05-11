@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -107,6 +108,9 @@ class CreateUserCommand extends ContainerAwareCommand
             $user->addRole($userRole);
         }
         
+        $repository = new Repository();
+        $user->setRepository($repository);
+        $em->persist($repository);
         $em->persist($user);
         $em->flush();
     }
