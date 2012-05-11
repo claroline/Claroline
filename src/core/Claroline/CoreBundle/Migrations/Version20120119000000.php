@@ -26,7 +26,6 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceTable($schema);
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
-        $this->createWorkspaceResourceTable($schema);
         $this->createMessageTable($schema);
         $this->createResourceRepositoryTable($schema);
     }
@@ -48,7 +47,6 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace');
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
-        $schema->dropTable('claro_workspace_resource');
         $schema->dropTable('claro_workspace_message');
     }
 
@@ -312,21 +310,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
-    
-    private function createWorkspaceResourceTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_workspace_resource');
-        $this->addId($table);
-        $table->addColumn('workspace_id', 'integer');
-        $table->addColumn('resource_id', 'integer');
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')    
-        );
-    }
-    
+      
     private function createMessageTable(Schema $schema)
     {
         $table = $schema->createTable('claro_workspace_message');
