@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,8 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser(); 
         $em = $this->getDoctrine()->getEntityManager();
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
-        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getUserListableRootResource($user);                
+        $repository = $user->getRepository();
+        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableRootResource($repository); 
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
@@ -79,6 +81,9 @@ class ResourceController extends Controller
             if(null!=$resource)   
             {
                 $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);    
+                $repository = $user->getRepository();
+                $repository->addResource($resource);
+                $em->flush();
             
                 if($request->isXmlHttpRequest())
                 {
