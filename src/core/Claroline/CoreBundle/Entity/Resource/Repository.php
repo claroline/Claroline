@@ -36,7 +36,7 @@ class Repository
         $this->resources = new ArrayCollection();
     }
     
-    
+
     public function getId()
     {
         return $this->id;
@@ -49,13 +49,13 @@ class Repository
     
     public function addResource(AbstractResource $resource)
     {
-        $this->$resource->add($resource);
+        $this->resources->add($resource);
         $resource->getRepositories()->add($this);
     }
     
     public function removeResource(AbstractResource $resource)
     {
-        $this->$resource->removeElement($resource);
+        $this->resource->removeElement($resource);
         $resource->removeElement($this);
     }
 }
