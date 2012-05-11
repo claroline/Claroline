@@ -68,6 +68,25 @@ class DirectoryManager implements ResourceInterface
         return $directory;
     }
     
+    public function copy($resource)
+    {
+        $newDirectory = new Directory();
+        $newDirectory->setName($resource->getName());
+        $newDirectory->setUser($resource->getUser());
+        $newDirectory->setResourceType($resource->getResourceType()); 
+        //must be changed later
+        $newDirectory->setParent($resource->getParent());
+        $children = $resource->getChildren();
+        
+        foreach($children as $child)
+        {
+            $name = $this->findRsrcServ($child->getResourceType());
+            $this->container->get($name)->copy($child);
+        }
+        
+        return $newDirectory;
+    }
+    
     public function delete($directory)
     {
         $this->removeResourcesFromSubDirectories($directory);
@@ -102,10 +121,6 @@ class DirectoryManager implements ResourceInterface
         return $response;
     }
     
-    public function copy($resource)
-    {
-        
-    }
     // FIN DES METHODES OBLIGATOIRES
      
     public function getDirectoriesOfUser($user)
