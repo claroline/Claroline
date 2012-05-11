@@ -26,11 +26,12 @@
     <rule ref="rulesets/codesize.xml" >
         <!-- removed this rule because it gives false positives with private methods --> 
         <exclude name="TooManyMethods" />
+        <!-- removed this rule because ORM classes need *a lot* of fields --> 
+        <exclude name="TooManyFields" />
     </rule>
     <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
         <properties>
             <property name="reportLevel" value="10" />
         </properties>
     </rule>
-    
 </ruleset>
