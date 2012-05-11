@@ -55,7 +55,6 @@ class Repository
     
     public function removeResource(AbstractResource $resource)
     {
-        $this->resource->removeElement($resource);
-        $resource->removeElement($this);
+        $this->resources->removeElement($resource);
     }
 }
