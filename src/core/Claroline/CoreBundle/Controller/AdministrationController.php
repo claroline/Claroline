@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\ClarolineSettingsType;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 
 class AdministrationController extends Controller
 {
@@ -43,6 +44,9 @@ class AdministrationController extends Controller
             $user = $form->getData();
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
+            $repository = new Repository();
+            $user->setRepository($repository);
+            $em->persist($repository);
             $em->flush();
         }
 

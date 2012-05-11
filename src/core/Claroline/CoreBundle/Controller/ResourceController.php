@@ -66,14 +66,15 @@ class ResourceController extends Controller
         $name = $this->findRsrcServ($resourceType);
         $form = $this->get($name)->getForm();
         $form->bindRequest($request);
+        $em = $this->getDoctrine()->getEntityManager();
  
         if($form->isValid())
         {   
             $resource = $this->get($name)->add($form, $id, $user);
             $rightManager = $this->get('claroline.security.right_manager');
             $resource->setCopy(false);
-            $this->getDoctrine()->getEntityManager()->persist($resource);
-            $this->getDoctrine()->getEntityManager()->flush();
+            $em->persist($resource);
+            $em->flush();
             
             if(null!=$resource)   
             {

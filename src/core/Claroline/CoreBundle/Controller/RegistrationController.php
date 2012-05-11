@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 //use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
@@ -39,6 +40,9 @@ class RegistrationController extends Controller
             $userRole = $em->getRepository('Claroline\CoreBundle\Entity\Role')
                 ->findOneByName(PlatformRoles::USER);
             $user->addRole($userRole);
+            $repository = new Repository();
+            $user->setRepository($repository);
+            $em->persist($repository);
             $em->persist($user);
             $em->flush();
             

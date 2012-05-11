@@ -70,7 +70,8 @@ class CreatorTest extends FunctionalTestCase
         $config->setWorkspaceName('Workspace Test');
         
         $workspace = $this->creator->createWorkspace($config, $manager);
-        
+        $repository = $workspace->getRepository();
+        $this->assertEquals(1, count($repository));
         $this->logUser($manager);
         
         $this->assertTrue($this->getSecurityContext()->isGranted('OWNER', $workspace));
