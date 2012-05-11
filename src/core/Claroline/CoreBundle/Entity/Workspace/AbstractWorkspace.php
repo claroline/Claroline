@@ -58,18 +58,6 @@ abstract class AbstractWorkspace
     private $tools;
     
     /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", 
-     *      cascade={"persist"}
-     * )
-     * @ORM\JoinTable(name="claro_workspace_resource",
-     *      joinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")}
-     * )
-     */
-    protected $resources;
-    
-    /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Repository")
      * @ORM\JoinColumn(name="repository_id", referencedColumnName="id")
      */
@@ -298,23 +286,6 @@ abstract class AbstractWorkspace
         return $this->roles;
     }
     
-    public function getResources()
-    {
-        return $this->resources;
-    }
-    
-    public function addResource(AbstractResource $resource)
-    {
-        $this->resources->add($resource);
-        //$resource->getWorkspace()->add($this);
-    }
-    
-    public function removeResource(AbstractResource $resource)
-    {
-        $this->resources->removeElement($resource);
-        $resource->getWorkspace()->removeElement($this);
-    }
-       
     public function setRepository($repository)
     {
         $this->repository = $repository;

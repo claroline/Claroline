@@ -161,7 +161,7 @@ class ResourceController extends Controller
             $resourceType = $resource->getResourceType();
             $name = $this->findRsrcServ($resourceType);
             $this->get($name)->delete($resource);
-
+            
             if($request->isXmlHttpRequest())
             {
                 return new Response("delete");
@@ -269,7 +269,8 @@ class ResourceController extends Controller
             {
                 $resource = $this->get('claroline.resource.manager')->find($resourceId);
                 $em = $this->getDoctrine()->getEntityManager();   
-                $workspace->addResource($resource);
+                $repository = $workspace->getRepository();
+                $repository->addResource($resource);
                 $children = $resource->getChildren();
                 $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
 
@@ -293,7 +294,8 @@ class ResourceController extends Controller
                $user = $this->get('security.context')->getToken()->getUser();
                //$rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $newResource->setCopy(true);
-               $workspace->addResource($newResource);
+               $repository = $workspace->getRepository();
+               $repository->addRessource($newResource);
                $em->flush();
            }
            return new Response("you're not trying to copy this are you ?"); 
@@ -306,8 +308,9 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();  
         $resource = $this->get('claroline.resource.manager')->find($resourceId);
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);     
-        $workspace->removeResource($resource);       
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);   
+        $repository = $workspace->getRepository();
+        $repository->removeResource($resource);       
         $em->flush();
         
         return new Response("success"); 
