@@ -59,6 +59,9 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['user_form[plainPassword][second]'] = 'abc';
         $form['user_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
         $crawler = $this->client->submit($form);
+        $user = $this->getUser('tototata');
+        $repository = $user->getRepository();
+        $this->assertEquals(1, count($repository));
         $this->assertEquals(6, $crawler->filter('.row_user')->count());
     }
     
@@ -159,5 +162,14 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->submit($form);
         
         $this->assertEquals('Déconnexion', trim($crawler->filter("#link_logout")->text()));
+    }
+    
+    private function getUser($username)
+    {
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')
+            ->findOneByUsername($username);
+        
+        return $user;
     }
 }

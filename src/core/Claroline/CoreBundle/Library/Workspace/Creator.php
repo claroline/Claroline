@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 
 class Creator
 {
@@ -43,6 +44,9 @@ class Creator
             $this->rightManager->addRight($workspace, $manager, MaskBuilder::MASK_OWNER);
         }
         
+        $repository = new Repository();
+        $workspace->setRepository($repository);
+        $this->entityManager->persist($repository);
         $this->entityManager->flush();
         
         return $workspace;

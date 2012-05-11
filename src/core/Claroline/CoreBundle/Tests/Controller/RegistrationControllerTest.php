@@ -52,13 +52,21 @@ class RegistrationControllerTest extends FunctionalTestCase
         $this->configHandler->setParameter('allow_self_registration', false);        
         $this->client->request('GET', '/user/register');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-        
         $this->configHandler->setParameter('allow_self_registration', true);        
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $crawler = $this->logUser($this->getUser('bdoe'));
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
     
+    public function testSelfRegisteredUserHasOneRepository()
+    {
+        $this->configHandler->setParameter('allow_self_registration', true);        
+        $this->registerUser('Bill', 'Doe', 'bdoe', '123');
+        $user = $this->getUser(('bdoe'));
+        $repository = $user->getRepository();
+        $this->assertEquals(1, count($repository));
+    }
+       
     private function registerUser($firstName, $lastName, $username, $password)
     {
         $crawler = $this->client->request('GET', '/user/register');

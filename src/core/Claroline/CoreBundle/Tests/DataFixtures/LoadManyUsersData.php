@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 
 class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -52,9 +53,12 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
         $user->setUserName("userName{$number}");
         $user->setPlainPassword("password{$number}");
         $user->addRole($role);
+        $repository = new Repository();
+        $user->setRepository($repository);
         
         $this->addReference("user/manyUser{$number}", $user);
         
+        $manager->persist($repository);
         $manager->persist($user);
     }
     

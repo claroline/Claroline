@@ -8,6 +8,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Resource\Repository;
 
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -40,6 +41,8 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $user->setUserName('user');
         $user->setPlainPassword('123');
         $user->addRole($userRole);
+        $repository1 = new Repository();
+        $user->setRepository($repository1);
         
         $secondUser = new User();
         $secondUser->setFirstName('Bob');
@@ -47,6 +50,8 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $secondUser->setUserName('user_2');
         $secondUser->setPlainPassword('123');
         $secondUser->addRole($userRole);
+        $repository2 = new Repository();
+        $secondUser->setRepository($repository2);
 
         $thirdUser = new User();
         $thirdUser->setFirstName('Bill');
@@ -54,6 +59,8 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $thirdUser->setUserName('user_3');
         $thirdUser->setPlainPassword('123');
         $thirdUser->addRole($userRole);
+        $repository3 = new Repository();
+        $thirdUser->setRepository($repository3);
         
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
@@ -61,6 +68,8 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $wsCreator->setUserName('ws_creator');
         $wsCreator->setPlainPassword('123');
         $wsCreator->addRole($wsCreatorRole);
+        $repository4 = new Repository();
+        $wsCreator->setRepository($repository4);
         
         $admin = new User();
         $admin->setFirstName('John');
@@ -68,12 +77,19 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $admin->setUserName('admin');
         $admin->setPlainPassword('123');
         $admin->addRole($adminRole);
+        $repository5 = new Repository();
+        $admin->setRepository($repository5);
         
         $manager->persist($user);
         $manager->persist($secondUser);
         $manager->persist($thirdUser);
         $manager->persist($wsCreator);
         $manager->persist($admin);
+        $manager->persist($repository1);
+        $manager->persist($repository2);
+        $manager->persist($repository3);
+        $manager->persist($repository4);
+        $manager->persist($repository5);
        
         $manager->flush();
 
