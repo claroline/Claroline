@@ -110,4 +110,12 @@ claro_workspace_ajax_delete_group_workspace:
    requirements:
      _method: POST
    options:
-      expose: true      
+      expose: true    
+      
+claro_workspace_JSON_workspace_user_list:
+   pattern: /JSON/list
+   defaults: { _controller: ClarolineCoreBundle:Workspace:JSONlistWorkspaceForUser }
+   requirements:
+     _method: POST
+   options:
+      expose: true

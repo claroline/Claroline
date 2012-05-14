@@ -53,6 +53,23 @@ class WorkspaceController extends Controller
         );
     }
     
+    public function JSONlistWorkspaceForUserAction()
+    {
+        if (false === $this->get('security.context')->isGranted('ROLE_USER'))
+        {
+            throw new AccessDeniedHttpException();
+        }
+     
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getWorkspacesOfUser($user);
+        
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:workspace_list.json.twig',
+            array('workspaces' => $workspaces)
+        );
+    }
+    
     public function newAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR'))

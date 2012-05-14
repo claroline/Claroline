@@ -47,7 +47,7 @@ getResourceTypeJSON();
            +'</div>'
            +'<div class="modal-body">'
                 +'<div id="cfp_dialog"></div>'
-                +'<div id="cfp_top_bar"><button id="local_tree_button">local</button><button>others</button></div><br>'
+                +'<div id="cfp_top_bar"><button id="local_tree_button">local</button><button id="workspace_tree_button">workspace</button><button>others</button></div><br>'
                 +'<div id="cfp_content"><div id="cfp_tree"></div><div id="cfp_form"></div></div>'
             +'</div>'
            +'<div class="modal-footer">'
@@ -117,6 +117,11 @@ getResourceTypeJSON();
                 $('#cfp_tree').dynatree(defaultsDynatree); 
                 $('#cfp_form').hide();
                 $('#cfp_tree').show();
+            });
+            
+            $('#workspace_tree_button').click(function(){
+                alert("hello workspace !");
+                appendRegisteredWorkspacesList();
             });
             
             $('#close_dialog_button').click(function(){
@@ -358,6 +363,21 @@ function sendRequest(route, routeParams, successHandler){
             alert(xhr.status);
         }
     });
+}
+
+function appendRegisteredWorkspacesList()
+{
+    $.ajax({
+        type: 'POST',
+        url: Routing.generate('claro_workspace_JSON_workspace_user_list'),
+        cache: false,
+        success: function(data){
+            JSONObject = JSON.parse(data);
+            alert(JSONObject);},
+        error: function(xhr){
+            alert(xhr.status);
+        }
+    })
 }
 
 function successHandler(){

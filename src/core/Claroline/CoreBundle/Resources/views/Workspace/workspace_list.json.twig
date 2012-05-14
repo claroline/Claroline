@@ -1,0 +1,7 @@
+{% set i = 0 %}
+[
+{% for workspace in workspaces %}
+{% set i = i+1 %}
+{"id": {{workspace.getId()}}, "name": "{{workspace.getName()}}"}{% if i < workspaces|length %}, {% endif %}
+{% endfor %}
+]
