@@ -293,12 +293,20 @@ class ResourceController extends Controller
                $resource = $this->get('claroline.resource.manager')->find($resourceId);
                $newResource = $this->createResourceCopy($resource, $workspace);
                $user = $this->get('security.context')->getToken()->getUser();
-               $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $newResource->setCopy(true);
                $repository = $workspace->getRepository();
                $repository->addResource($newResource);     
                $newResource->setParent(null);
+               $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
+               $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+               $children = $resource->getChildren();
                
+               foreach($children as $child)
+               {
+                   $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                   $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
+                   $repository->addResource($child);
+               } 
                $em->flush();
            }
            return new Response("you're not trying to copy this are you ?"); 
