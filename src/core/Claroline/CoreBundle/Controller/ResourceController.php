@@ -31,8 +31,8 @@ class ResourceController extends Controller
     public function showResourceFormAction($id)
     {
         $request = $this->get('request');
-        $params = $request->request->all();
-        $idType = $params['select_resource_form']['type'];
+        $form = $request->request->get('select_resource_form');
+        $idType = $form['type'];
         $em = $this->getDoctrine()->getEntityManager();
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($idType);
         $rsrcServName = $this->findRsrcServ($resourceType);
