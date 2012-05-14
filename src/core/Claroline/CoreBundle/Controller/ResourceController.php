@@ -262,6 +262,7 @@ class ResourceController extends Controller
 
                     foreach($children as $child)
                     {
+                        $workspace->addResource($child);
                         $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
                     }
                 }           
@@ -299,13 +300,13 @@ class ResourceController extends Controller
                $newResource->setParent(null);
                $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-               $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, false);
+               $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($newResource, false);
                       
                foreach($children as $child)
                {
                    $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
                    $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
-                  // $repository->addResource($child);
+                   $repository->addResource($child);
                } 
                
                $em->flush();

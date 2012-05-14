@@ -29,7 +29,7 @@
     | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
 {% endif %}
         <div id='div_resource'>
-            {% for resource in workspace.getRepository().getResources() %}
+            {% for resource in resources %}
                 <div id="resource_row"> 
                     <div class="row_resource">
                         <a href="{{path('claro_resource_default_click', {'type':resource.getResourceType().getType(), 'id':resource.getId()})}}" 
