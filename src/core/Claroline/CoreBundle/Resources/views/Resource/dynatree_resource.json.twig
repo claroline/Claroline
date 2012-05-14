@@ -4,14 +4,16 @@
 {% set cptchild = 0 %}
 {
     "title": "{{root.getName()}}",
-    "key": {{root.getId()}}
+    "key": {{root.getId()}},
+    "copy": "{{root.getCopy()}}"
     {% if root.getResourceType.getNavigable() == 1 %}
         ,"isFolder": true
         ,"children": [ 
         {% for child in root.getChildren() %}
             {
                 "title": "{{child.getName()}}",
-                "key": {{child.getId()}}
+                "key": {{child.getId()}},
+                "copy": "{{child.getCopy()}}"
                 {% if child.getResourceType.getNavigable() == 1  %}
                 ,"isFolder": true
                 ,"isLazy": true
