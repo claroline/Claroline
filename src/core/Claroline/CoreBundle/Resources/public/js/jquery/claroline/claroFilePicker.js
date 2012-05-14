@@ -65,10 +65,10 @@ getResourceTypeJSON();
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'options': 'user'})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': 'user'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'options': 'user'})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'repoOptions': 'user'})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -112,7 +112,7 @@ getResourceTypeJSON();
                     }  
                 }
             }
-            
+                                
             $('#local_tree_button').click(function(){            
                 $('#cfp_tree').dynatree(defaultsDynatree); 
                 $('#cfp_form').hide();
@@ -125,6 +125,20 @@ getResourceTypeJSON();
                 $('#cfp_form').hide();
                 $('#cfp_tree').hide();
                 $('#cfp_data').show();
+            });
+            
+            $('.cfp_workspace_show_tree').live("click", function (event){
+                var idWorkspace = event.target.attributes[0].value;
+                var customWorkspaceDynatree = 
+                    $.extend(defaultsDynatree, 
+                        {
+                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': idWorkspace})},
+                            onDblClick: function(){alert("dblClick");}
+                        })
+                $('#cfp_tree').dynatree(customWorkspaceDynatree);
+                $('#cfp_form').hide();
+                $('#cfp_data').hide();
+                $('#cfp_tree').show();
             });
             
             $('#close_dialog_button').click(function(){
@@ -385,7 +399,7 @@ function appendRegisteredWorkspacesList()
             {
                 var name = JSONObject[cpt].name;
                 var id = JSONObject[cpt].id;
-                html +="<a href='#' onClick='getWorkspaceTree("+id+");'>"
+                html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+">"
                 html += name
                 html +="</a></br>";
                 cpt++;
@@ -397,13 +411,7 @@ function appendRegisteredWorkspacesList()
             error: function(xhr){
                 alert(xhr.status);
             }
-    })
-}
-
-function getWorkspaceTree(id)
-{
-    alert("id du workspace :"+id);
-    
+    });
 }
 
 function successHandler(){
