@@ -108,12 +108,11 @@ class FileManager implements ResourceInterface
          return $file;
     }
     
-    public function copy($resource)
+    public function copy($resource, $user)
     {
         $newFile = new File();
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
-        //$newFile->setHashName($resource->getHashName());
         $newFile->setUser($resource->getUser());
         $newFile->setParent($resource->getParent());
         $newFile->setResourceType($resource->getResourceType());
