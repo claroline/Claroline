@@ -77,9 +77,19 @@ getResourceTypeJSON();
                     $('#cfp_dialog').hide();  
                     params.dblClickItem(node);
                 },
-                onCustomRender: function(node){               
-                    var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" </a>";
-                    html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
+                onCustomRender: function(node){   
+                    var copy = node.data.copy;
+                    var html ='';
+                    if(copy == 1)
+                    {
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" </a>";
+                        html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
+                    }
+                    else
+                    {
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" </a>";
+                        html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";                        
+                    }
                     return html; 
                 },
                 dnd: {
@@ -133,7 +143,7 @@ getResourceTypeJSON();
                     $.extend(defaultsDynatree, 
                         {
                             initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': idWorkspace})},
-                            onDblClick: function(){alert("dblClick");}
+                            onDblClick: function(node){console.debug(node);}
                         })
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
