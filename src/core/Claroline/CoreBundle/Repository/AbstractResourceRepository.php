@@ -58,8 +58,10 @@ class AbstractResourceRepository extends NestedTreeRepository
             AND r.resourceType
             IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
                 WHERE rt.isListable = 1)
-            AND r.copy = 0";
-            ;
+            AND r.copy = 0
+            AND r.lvl = 0
+            ";
+            
             
             $query = $this->_em->createQuery($dql);
             
