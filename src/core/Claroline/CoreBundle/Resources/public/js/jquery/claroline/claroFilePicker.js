@@ -48,7 +48,7 @@ getResourceTypeJSON();
            +'<div class="modal-body">'
                 +'<div id="cfp_dialog"></div>'
                 +'<div id="cfp_top_bar"><button id="local_tree_button">local</button><button id="workspace_tree_button">workspace</button><button>others</button></div><br>'
-                +'<div id="cfp_content"><div id="cfp_tree"></div><div id="cfp_form"></div></div>'
+                +'<div id="cfp_content"><div id="cfp_data"></div><div id="cfp_tree"></div><div id="cfp_form"></div></div>'
             +'</div>'
            +'<div class="modal-footer">'
                +'FOOTER'
@@ -116,12 +116,15 @@ getResourceTypeJSON();
             $('#local_tree_button').click(function(){            
                 $('#cfp_tree').dynatree(defaultsDynatree); 
                 $('#cfp_form').hide();
+                $('#cfp_data').hide();
                 $('#cfp_tree').show();
             });
             
             $('#workspace_tree_button').click(function(){
-                alert("hello workspace !");
                 appendRegisteredWorkspacesList();
+                $('#cfp_form').hide();
+                $('#cfp_tree').hide();
+                $('#cfp_data').show();
             });
             
             $('#close_dialog_button').click(function(){
@@ -372,11 +375,28 @@ function appendRegisteredWorkspacesList()
         url: Routing.generate('claro_workspace_JSON_workspace_user_list'),
         cache: false,
         success: function(data){
+            
+            $('#cfp_data').empty();
             JSONObject = JSON.parse(data);
-            alert(JSONObject);},
-        error: function(xhr){
-            alert(xhr.status);
-        }
+            var html="WORKSPACES : <br>";
+            var cpt = 0;
+            
+            while (cpt<JSONObject.length)
+            {
+                var name = JSONObject[cpt].name;
+                var id = JSONObject[cpt].id;
+                html +="<a href='todo'>"
+                html += name
+                html +="</a></br>";
+                cpt++;
+            }
+            
+            $('#cfp_data').append(html);
+
+            },
+            error: function(xhr){
+                alert(xhr.status);
+            }
     })
 }
 
