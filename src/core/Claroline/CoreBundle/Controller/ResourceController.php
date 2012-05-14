@@ -272,7 +272,7 @@ class ResourceController extends Controller
                 $em = $this->getDoctrine()->getEntityManager();   
                 $repository = $workspace->getRepository();
                 $repository->addResource($resource);
-                $children = $resource->getChildren();
+                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, false);
                 $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
 
                 foreach($children as $child)
@@ -299,14 +299,15 @@ class ResourceController extends Controller
                $newResource->setParent(null);
                $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-               $children = $resource->getChildren();
-               
+               $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, false);
+                      
                foreach($children as $child)
                {
                    $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
                    $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
-                   $repository->addResource($child);
+                  // $repository->addResource($child);
                } 
+               
                $em->flush();
            }
            return new Response("you're not trying to copy this are you ?"); 

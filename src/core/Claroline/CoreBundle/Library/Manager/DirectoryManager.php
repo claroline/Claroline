@@ -77,7 +77,7 @@ class DirectoryManager implements ResourceInterface
         $newDirectory->setParent($resource->getParent());
         $children = $resource->getChildren();
         $this->em->persist($newDirectory);
-        
+
         foreach($children as $child)
         {
             $name = $this->findRsrcServ($child->getResourceType());
@@ -86,6 +86,7 @@ class DirectoryManager implements ResourceInterface
             $newChild->setCopy(true);
             $this->em->persist($newChild);
         }
+        
         $this->em->flush();
         
         return $newDirectory;
