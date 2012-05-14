@@ -192,10 +192,17 @@ class ResourceController extends Controller
        }
     }
     
-    public function getJSONResourceNodeAction($id)
+    public function getJSONResourceNodeAction($id, $options)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $repository = $user->getRepository();
+        if($options=='user')
+        {
+            $repository = $user->getRepository();
+        }
+        else
+        {
+            //getworkspace 
+        }
         $response = new Response();
         $em = $this->getDoctrine()->getEntityManager();
         
@@ -229,7 +236,7 @@ class ResourceController extends Controller
         
         return $response;
     }
-    
+       
     public function moveResourceAction ($idChild, $idParent)
     {
         $parent = $this->get('claroline.resource.manager')->find($idParent);
