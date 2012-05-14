@@ -50,7 +50,7 @@ class AbstractResourceRepository extends NestedTreeRepository
             return $query->getResult(); 
     }
     
-    public function getRepositoryListableRootResource($repository)
+    public function getRepositoryListableOriginalRootResource($repository)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
@@ -59,6 +59,23 @@ class AbstractResourceRepository extends NestedTreeRepository
             IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
                 WHERE rt.isListable = 1)
             AND r.copy = 0
+            AND r.lvl = 0
+            ";
+            
+            
+            $query = $this->_em->createQuery($dql);
+            
+            return $query->getResult(); 
+    }
+    
+    public function getRepositoryListableRootResource($repository)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
+            JOIN r.repositories repo WHERE repo.id = {$repository->getId()}
+            AND r.resourceType
+            IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+                WHERE rt.isListable = 1)
             AND r.lvl = 0
             ";
             

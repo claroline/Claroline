@@ -159,9 +159,11 @@ class WorkspaceController extends Controller
          {
             throw new AccessDeniedHttpException();
          }
-                  
-         //$resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findBy(array('workspace' => $id));         
-         return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType));
+         
+         $repository = $workspace->getRepository();
+         $resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->getRepositoryListableRootResource($repository);   
+         
+         return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType, 'resources' => $resources));
     }
     
     public function registerAction($id)
