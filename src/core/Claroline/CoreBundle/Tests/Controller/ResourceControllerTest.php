@@ -20,7 +20,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $ds = DIRECTORY_SEPARATOR; 
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
     }
-    
     //this test works with the file controller
     public function testUserCanCreateFileResource()
     {
@@ -83,20 +82,20 @@ class ResourceControllerTest extends FunctionalTestCase
     }
     
     
-    public function testResourceCanBeAddedToWorkspace()
+    public function testResourceCanBeAddedToWorkspaceByRef()
     {
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTests();
+       $this->initWorkspacesTestsByRef();
        $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
        $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
     }
     
-    public function testRegisterUserHasAccessToWorkspaceResources()
+    public function testRegisterUserHasAccessToWorkspaceResourcesByRef()
     {
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTests();
+       $this->initWorkspacesTestsByRef();
        $this->logUser($this->getFixtureReference('user/user_2'));
        $this->registerToWorkspaceA();
        $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
@@ -108,11 +107,11 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
     }
     
-    public function testUnregisteredUserLostAccessToWorkspaceResources()
+    public function testUnregisteredUserLostAccessToWorkspaceResourcesByRef()
     {
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
-       $rootId = $this->initWorkspacesTests();
+       $rootId = $this->initWorkspacesTestsByRef();
        $this->logUser($this->getFixtureReference('user/user_2'));
        $this->registerToWorkspaceA();
        $this->unregisterFromWorkspaceA();
@@ -120,7 +119,66 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
-    private function initWorkspacesTests()
+    public function testResourceCanBeAddedToWorkspaceByCopy()
+    {
+       $this->loadFixture(new LoadWorkspaceData());
+       $this->logUser($this->getFixtureReference('user/user'));
+       $this->initWorkspacesTestsByCopy();
+       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+       $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
+    }
+    
+    public function testRegisterUserHasAccessToWorkspaceResourcesByCopy()
+    {
+       $this->loadFixture(new LoadWorkspaceData());
+       $this->logUser($this->getFixtureReference('user/user'));
+       $this->initWorkspacesTestsByCopy();
+       $this->logUser($this->getFixtureReference('user/user_2'));
+       $this->registerToWorkspaceA();
+       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+       $link = $crawler->filter('.link_resource_view')->first()->link();
+       $this->client->click($link);
+       $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
+       $link = $crawler->filter('.link_resource_view')->first()->link();
+       $this->client->click($link);
+       $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
+    }
+    
+    public function testUnregisteredUserLostAccessToWorkspaceResourcesByCopy()
+    {
+       $this->loadFixture(new LoadWorkspaceData());
+       $this->logUser($this->getFixtureReference('user/user'));
+       $this->initWorkspacesTestsByCopy();
+       $this->logUser($this->getFixtureReference('user/user_2'));
+       $this->registerToWorkspaceA();
+       $this->unregisterFromWorkspaceA();
+       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+       $link = $crawler->filter('.link_resource_view')->first()->link();
+       $this->client->click($link);
+       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+    
+    public function testRegisteredUserHasAccesToWorkspaceResourcesByCopy()
+    {
+       $this->loadFixture(new LoadWorkspaceData());
+       $this->logUser($this->getFixtureReference('user/user'));
+       $this->registerToWorkspaceA();
+       $this->logUser($this->getFixtureReference('user/user_2'));
+       $this->initWorkspacesTestsByCopy();
+       $this->logUser($this->getFixtureReference('user/user'));
+       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+       $link = $crawler->filter('.link_resource_view')->first()->link();
+       $this->client->click($link);
+       $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
+       $link = $crawler->filter('.link_resource_view')->first()->link();
+       $this->client->click($link);
+       $this->assertEquals(1, $crawler->filter('.row_resource')->count()); 
+       $link = $crawler->filter('.link_resource_view')->first()->link();
+       $this->client->click($link);
+       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+    
+    private function initWorkspacesTestsByRef()
     {
        $rootId = $this->createResourcesTree();
        $this->registerToWorkspaceA();
@@ -132,6 +190,18 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/ref");
        
        return $rootId;
+    }
+    
+    private function initWorkspacesTestsByCopy()
+    {
+       $rootId = $this->createResourcesTree();
+       $this->registerToWorkspaceA();
+       $crawler = $this->client->request('GET', '/workspace/list');
+       $id = $crawler->filter(".row_workspace")->first()->attr('data-workspace_id');
+       $link =  $crawler->filter("#link_show_{$id}")->link();
+       $this->client->click($link);
+       //add root to workspace
+       $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/copyt");
     }
         
     private function addRootFile($filePath)
