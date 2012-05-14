@@ -65,10 +65,10 @@ getResourceTypeJSON();
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'options': 'user'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'options': 'user'})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -385,7 +385,7 @@ function appendRegisteredWorkspacesList()
             {
                 var name = JSONObject[cpt].name;
                 var id = JSONObject[cpt].id;
-                html +="<a href='todo'>"
+                html +="<a href='#' onClick='getWorkspaceTree("+id+");'>"
                 html += name
                 html +="</a></br>";
                 cpt++;
@@ -398,6 +398,12 @@ function appendRegisteredWorkspacesList()
                 alert(xhr.status);
             }
     })
+}
+
+function getWorkspaceTree(id)
+{
+    alert("id du workspace :"+id);
+    
 }
 
 function successHandler(){
