@@ -25,7 +25,7 @@ claro_resource_JSON_tree:
        expose: true
        
 claro_resource_JSON_node:
-    pattern: tree/JSON/{id}/{options}
+    pattern: tree/JSON/{id}/{repoOptions}
     defaults: { _controller: ClarolineCoreBundle:Resource:getJSONResourceNode }
     options:
       expose: true

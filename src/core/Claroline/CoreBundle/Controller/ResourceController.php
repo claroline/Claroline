@@ -192,20 +192,23 @@ class ResourceController extends Controller
        }
     }
     
-    public function getJSONResourceNodeAction($id, $options)
+    public function getJSONResourceNodeAction($id, $repoOptions)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        if($options=='user')
+        $em = $this->getDoctrine()->getEntityManager();
+        //if options = 'user" => user; else: workspaceId()
+        if($repoOptions=='user')
         {
             $repository = $user->getRepository();
         }
         else
         {
-            //getworkspace 
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($repoOptions);
+            $repository = $workspace->getRepository();
         }
-        $response = new Response();
-        $em = $this->getDoctrine()->getEntityManager();
         
+        $response = new Response();
+              
         if($id==0)
         {
             $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableRootResource($repository);
