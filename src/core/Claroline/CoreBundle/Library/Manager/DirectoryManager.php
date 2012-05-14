@@ -84,7 +84,6 @@ class DirectoryManager implements ResourceInterface
             $newChild = $this->container->get($name)->copy($child, $user);
             $newChild->setParent($newDirectory);
             $newChild->setCopy(true);
-            $this->rightManager->addRight($newChild, $user, MaskBuilder::MASK_OWNER);
             $this->em->persist($newChild);
         }
         $this->em->flush();
