@@ -297,16 +297,6 @@ class ResourceController extends Controller
                $newResource->setCopy(true);
                $repository = $workspace->getRepository();
                $repository->addResource($newResource);     
-               $children = $resource->getChildren();
-               
-               foreach($children as $child)
-               {
-                   $newChild = $this->createResourceCopy($child);
-                   $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
-                   $newChild->setCopy(true);
-                   $repository = $resource->getChildren();
-               }
-               
                $newResource->setParent(null);
                
                $em->flush();
@@ -369,9 +359,10 @@ class ResourceController extends Controller
     
     public function createResourceCopy($resource)
     {
+        $user = $this->get('security.context')->getToken()->getUser();
         $resourceType = $resource->getResourceType();
         $name = $this->findRsrcServ($resourceType);
-        $newResource = $this->get($name)->copy($resource);
+        $newResource = $this->get($name)->copy($resource, $user);
         
         return $newResource;
     }

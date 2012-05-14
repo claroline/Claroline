@@ -68,23 +68,25 @@ class DirectoryManager implements ResourceInterface
         return $directory;
     }
     
-    public function copy($resource)
+    public function copy($resource, $user)
     {
         $newDirectory = new Directory();
         $newDirectory->setName($resource->getName());
         $newDirectory->setUser($resource->getUser());
-        $newDirectory->setResourceType($resource->getResourceType()); 
-        //must be changed later
+        $newDirectory->setResourceType($resource->getResourceType());
         $newDirectory->setParent($resource->getParent());
         $children = $resource->getChildren();
+        $this->em->persist($newDirectory);
         
         foreach($children as $child)
         {
             $name = $this->findRsrcServ($child->getResourceType());
-            $this->container->get($name)->copy($child);
+            $newChild = $this->container->get($name)->copy($child, $user);
+            $newChild->setParent($newDirectory);
+            $newChild->setCopy(true);
+            $this->rightManager->addRight($newChild, $user, MaskBuilder::MASK_OWNER);
+            $this->em->persist($newChild);
         }
-        
-        $this->em->persist($newDirectory);
         $this->em->flush();
         
         return $newDirectory;

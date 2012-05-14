@@ -96,7 +96,7 @@ class HTMLPageManager implements ResourceInterface
         return new RedirectResponse($fp);
     }    
     
-    public function copy($resource)
+    public function copy($resource, $user)
     {
         
     }
