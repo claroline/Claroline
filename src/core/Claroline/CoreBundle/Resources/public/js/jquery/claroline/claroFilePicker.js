@@ -121,10 +121,18 @@ getResourceTypeJSON();
                     onDragLeave: function(node, sourceNode){
                     }  
                 }
-            }
-                                
-            $('#local_tree_button').click(function(){            
-                $('#cfp_tree').dynatree(defaultsDynatree); 
+            }  
+            
+            $('#local_tree_button').live("click", function(event){  
+                $('#cfp_tree').dynatree("destroy");
+                $('#cfp_tree').empty();
+                //this is weird but I have to do that, idk where the bug come form
+                var customWorkspaceDynatree = 
+                   $.extend(defaultsDynatree, 
+                       {
+                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': 'user'})}
+                       });
+                $('#cfp_tree').dynatree(customWorkspaceDynatree); 
                 $('#cfp_form').hide();
                 $('#cfp_data').hide();
                 $('#cfp_tree').show();
@@ -138,13 +146,15 @@ getResourceTypeJSON();
             });
             
             $('.cfp_workspace_show_tree').live("click", function (event){
+                $('#cfp_tree').dynatree("destroy");
+                $('#cfp_tree').empty();
                 var idWorkspace = event.target.attributes[0].value;
                 var customWorkspaceDynatree = 
                     $.extend(defaultsDynatree, 
                         {
                             initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': idWorkspace})},
                             onDblClick: function(node){console.debug(node);}
-                        })
+                        });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
                 $('#cfp_data').hide();
