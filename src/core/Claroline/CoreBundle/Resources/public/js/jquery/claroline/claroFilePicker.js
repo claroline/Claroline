@@ -134,6 +134,7 @@ getResourceTypeJSON();
                        });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree); 
                 $('#cfp_form').hide();
+                $('#cfp_dialog').hide();
                 $('#cfp_data').hide();
                 $('#cfp_tree').show();
             });
@@ -142,6 +143,7 @@ getResourceTypeJSON();
                 appendRegisteredWorkspacesList();
                 $('#cfp_form').hide();
                 $('#cfp_tree').hide();
+                $('#cfp_dialog').hide();
                 $('#cfp_data').show();
             });
             
@@ -158,6 +160,7 @@ getResourceTypeJSON();
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
                 $('#cfp_data').hide();
+                $('#cfp_dialog').hide();
                 $('#cfp_tree').show();
             });
             
@@ -335,6 +338,7 @@ function createFormDialog(type, id){
         success: function(data){
             $('#cfp_dialog').empty();
             $('#cfp_dialog').append(data);
+            $('#cfp_dialog').show();
             //$("#cfp_dialog").modal('show'); 
             //ici je change l'event du submit
             $("#generic_form").submit(function(e){
