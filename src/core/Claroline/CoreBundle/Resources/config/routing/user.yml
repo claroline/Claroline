@@ -21,3 +21,9 @@ claro_profile_edit:
 claro_profile_delete:
    pattern: /profile/delete/{id}
    defaults: { _controller: ClarolineCoreBundle:User:deleteProfile }
+   
+claro_current_user_repository_id:
+   pattern: /user/repository/id
+   defaults: { _controller: ClarolineCoreBundle:User:getCurrentUserRepositoryId }
+   options:
+       expose: true

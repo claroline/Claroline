@@ -1,12 +1,14 @@
 /*
  * dependencies: dynatree & rod-contextMenu + jquery
  */
-
+//should be changed later. Global datas: not good
 resourceTypeArray = new Array();
 subItems = {};
 getResourceTypeJSON();
+getUserRepositoryId();
+idUserRepository = "";
 
-(function($){
+(function($){ 
     $.fn.extend({
         claroFilePicker:function(options){
         var params = $.extend({
@@ -65,10 +67,10 @@ getResourceTypeJSON();
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': 'user'})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'repoOptions': 'user'})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idUserRepository})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -130,7 +132,7 @@ getResourceTypeJSON();
                 var customWorkspaceDynatree = 
                    $.extend(defaultsDynatree, 
                        {
-                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': 'user'})}
+                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})}
                        });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree); 
                 $('#cfp_form').hide();
@@ -150,11 +152,11 @@ getResourceTypeJSON();
             $('.cfp_workspace_show_tree').live("click", function (event){
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
-                var idWorkspace = event.target.attributes[0].value;
+                var idRepository = event.target.attributes[0].value;
                 var customWorkspaceDynatree = 
                     $.extend(defaultsDynatree, 
                         {
-                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': idWorkspace})},
+                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idRepository})},
                             onDblClick: function(node){console.debug(node);}
                         });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
@@ -423,7 +425,8 @@ function appendRegisteredWorkspacesList()
             {
                 var name = JSONObject[cpt].name;
                 var id = JSONObject[cpt].id;
-                html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+">"
+                var id_repository = JSONObject[cpt].id_repository;
+                html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+" data-workspace_repository="+id_repository+">"
                 html += name
                 html +="</a></br>";
                 cpt++;
@@ -442,4 +445,18 @@ function successHandler(){
     alert("success");
 }
 
+function getUserRepositoryId()
+{
+    $.ajax({
+        type: 'POST',
+        url: Routing.generate("claro_current_user_repository_id"),
+        cache: false,
+        success: function(data){
+            idUserRepository = data;
+        },
+        error: function(xhr){
+            alert(xhr.status);
+        }
+    });
+}
 
