@@ -79,9 +79,10 @@ class UserController extends Controller
         }
     }
 
-    //TODO: self explanatory
-    public function searchUserAction($options)
+    public function getCurrentUserRepositoryIdAction()
     {
-        
-    }          
+         $repositoryId = $this->get('security.context')->getToken()->getUser()->getRepository()->getId();
+         
+         return new Response($repositoryId);
+    }
 }

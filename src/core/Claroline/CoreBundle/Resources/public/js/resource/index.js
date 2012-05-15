@@ -5,6 +5,9 @@
     //variable globales = pas bon
     resourceTypeArray = new Array();
     subItems = {};
+    getUserRepositoryId();
+    idUserRepository = "";
+    
     $(function(){
         
         var modal = createTreeDialog();
@@ -36,13 +39,13 @@
         
         //créé après la récupération de resourceType~ à changer
         function createTree()
-        {
+        {     
             $("#ct_tree").dynatree({
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'repoOptions': 'user'})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'repoOptions': 'user'})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idUserRepository})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -339,3 +342,18 @@
         }
     }
 });
+
+function getUserRepositoryId()
+{
+    $.ajax({
+        type: 'POST',
+        url: Routing.generate("claro_current_user_repository_id"),
+        cache: false,
+        success: function(data){
+            idUserRepository = data;
+        },
+        error: function(xhr){
+            alert(xhr.status);
+        }
+    });
+}
