@@ -1,14 +1,14 @@
 /*
  * dependencies: dynatree & rod-contextMenu + jquery
  */
-//should be changed later. Global datas: not good
-resourceTypeArray = new Array();
-subItems = {};
-getResourceTypeJSON();
-getUserRepositoryId();
-idUserRepository = "";
-
 (function($){ 
+    var idUserRepository ="";
+    var resourceTypeArray = new Array();
+    subItems = {};
+    getResourceTypeJSON();
+    getUserRepositoryId();
+    var idClickedRepository = "";
+    
     $.fn.extend({
         claroFilePicker:function(options){
         var params = $.extend({
@@ -57,7 +57,7 @@ idUserRepository = "";
             +'</div>'
             +'</div>';
             $(this).append(modalContent);
-                     
+            
             $('#cfp_form').append(params.getForm());
             $('#cfp_form').hide();
             $('#cfp_form').submit(function(e){
@@ -129,10 +129,14 @@ idUserRepository = "";
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 //this is weird but I have to do that, idk where the bug come form
+                idClickedRepository = idUserRepository;
                 var customWorkspaceDynatree = 
                    $.extend(defaultsDynatree, 
                        {
-                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})}
+                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
+                           onCreate: function(node, span){
+                               bindContextMenu(node);
+                           }
                        });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree); 
                 $('#cfp_form').hide();
@@ -153,11 +157,15 @@ idUserRepository = "";
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
+                idClickedRepository = idRepository;
                 var customWorkspaceDynatree = 
                     $.extend(defaultsDynatree, 
                         {
                             initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idRepository})},
-                            onDblClick: function(node){console.debug(node);}
+                            onDblClick: function(node){console.debug(node);},
+                            onCreate: function(node, span){
+                               bindContextMenu(node);
+                            }
                         });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
@@ -178,285 +186,284 @@ idUserRepository = "";
             
         });}
     });
-})(jQuery);
-
-//pas terrible la création... une manière plus propre de le faire en js ?
-function generateSubItems()
-{
-    var cpt = 0;
-    var subItems='';
-    subItems+='{'
-    while(cpt<resourceTypeArray.length)
-    {
-        var name = resourceTypeArray[cpt].type;
-        var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
-        subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';              
-        cpt++;
-        if(cpt<resourceTypeArray.length)
-        {
-            subItems+=",";
-        }       
-    }    
-    subItems+='}'
-    object = JSON.parse(subItems);
-    return object;
-}
-
-function bindContextMenu(node){
     
-    var menuDefaultOptions = {
-    selector: 'a.dynatree-title', 
-        callback: function(key, options) {
-            switch(key)
-            {
-                case "open":
-                    openNode(node);
-                    break;
-                case "delete":
-                    deleteNode(node);
-                    break;
-                     
-                case "view":
-                    viewNode(node, key);
-                    break;
-                default:
-                    node = $.ui.dynatree.getNode(this);
-                    createFormDialog(key, node.data.key);    
+    function getUserRepositoryId()
+    {
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate("claro_current_user_repository_id"),
+            cache: false,
+            success: function(data){
+                idUserRepository = data;
+            },
+            error: function(xhr){
+                alert(xhr.status);
             }
-        },
-    items: {
-        "new": {name: "new",
-            disabled: function(){
-                node = $.ui.dynatree.getNode(this);
-                if(node.data.isFolder == true)
+        });
+    }
+    
+    function generateSubItems()
+    {
+        var cpt = 0;
+        var subItems='';
+        subItems+='{'
+        while(cpt<resourceTypeArray.length)
+        {
+            var name = resourceTypeArray[cpt].type;
+            var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
+            subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';              
+            cpt++;
+            if(cpt<resourceTypeArray.length)
+            {
+                subItems+=",";
+            }       
+        }    
+        subItems+='}'
+        object = JSON.parse(subItems);
+        return object;
+    }
+
+    function bindContextMenu(node){
+        var menuDefaultOptions = {
+        selector: 'a.dynatree-title', 
+            callback: function(key, options) {
+                switch(key)
                 {
-                    return false;
-                }
-                else
-                {
-                    return true;
+                    case "open":
+                        openNode(node);
+                        break;
+                    case "delete":
+                        deleteNode(node);
+                        break;
+
+                    case "view":
+                        viewNode(node, key);
+                        break;
+                    default:
+                        node = $.ui.dynatree.getNode(this);
+                        createFormDialog(key, node.data.key);    
                 }
             },
-            items:subItems
-        },
-        "open": {
-            name: "open",
-            accesskey:"o",
-            disabled: function(){
-                node = $.ui.dynatree.getNode(this);
-                if(node.data.isFolder != true)
-                {
-                    return false;
-                }
-                else
-                {                   
-                    return true;
-                }
-            }
-       },
-       "view": {name: "view", accesskey:"v"},
-       "delete": {
-           name: "delete", 
-           accesskey:"d",
-           disabled: function(){ 
-                node = $.ui.dynatree.getNode(this);
-                if(node.data.key != 0){
-                    return false;
+        items: {
+            "new": {name: "new",
+                disabled: function(){
+                    node = $.ui.dynatree.getNode(this);
+                    if(node.data.isFolder == true)
+                    {
+                        return false;
                     }
                     else
                     {
                         return true;
                     }
-                }
-           }
-       }
-   }
-    $.contextMenu(menuDefaultOptions);
-    
-    
-    var additionalMenuOptions = $.extend(menuDefaultOptions,
-    {
-        selector: 'span.dynatree-custom-claro-menu', 
-        trigger: 'left'
-    });
-
-    $.contextMenu(additionalMenuOptions);
-}
-
-function getResourceTypeJSON()
-{
-    $.ajax({
-        type: 'POST',
-        url: Routing.generate('claro_resource_type_resource'),
-        success: function(data){
-                //JSON.parse doesn't work: why ?
-                var JSONObject = eval(data);
-                var cpt = 0;
-                
-                while (cpt<JSONObject.length)
-                {
-                    resourceTypeArray[cpt]=JSONObject[cpt];
-                    cpt++;
-                }
-                subItems = generateSubItems();
+                },
+                items:subItems
             },
-            error: function(xhr){
-            alert("resource type loading failed");
+            "open": {
+                name: "open",
+                accesskey:"o",
+                disabled: function(){
+                    node = $.ui.dynatree.getNode(this);
+                    if(node.data.isFolder != true)
+                    {
+                        return false;
+                    }
+                    else
+                    {                   
+                        return true;
+                    }
+                }
+        },
+        "view": {name: "view", accesskey:"v"},
+        "delete": {
+            name: "delete", 
+            accesskey:"d",
+            disabled: function(){ 
+                    node = $.ui.dynatree.getNode(this);
+                    if(node.data.key != 0){
+                        return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
             }
-       });
-
-}
-
-function deleteNode(node)
-{
-    $.ajax({
-    type: 'POST',
-    url: Routing.generate('claro_resource_delete',{'id':node.data.key}),
-    success: function(data){
-        if(data=="delete")
-        {
-            node.remove();
-        }       
+        }
     }
-    });
-}
-    
-function openNode(node)
-{
-    window.location = Routing.generate('claro_resource_open',{'id':node.data.key});
-}   
-    
-function viewNode(node)
-{
-    window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
-}
+        $.contextMenu(menuDefaultOptions);
 
-function createFormDialog(type, id){
-    route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
-    $.ajax({
+
+        var additionalMenuOptions = $.extend(menuDefaultOptions,
+        {
+            selector: 'span.dynatree-custom-claro-menu', 
+            trigger: 'left'
+        });
+
+        $.contextMenu(additionalMenuOptions);
+    }
+
+    function getResourceTypeJSON()
+    {
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('claro_resource_type_resource'),
+            success: function(data){
+                    //JSON.parse doesn't work: why ?
+                    var JSONObject = eval(data);
+                    var cpt = 0;
+
+                    while (cpt<JSONObject.length)
+                    {
+                        resourceTypeArray[cpt]=JSONObject[cpt];
+                        cpt++;
+                    }
+                    subItems = generateSubItems();
+                },
+                error: function(xhr){
+                alert("resource type loading failed");
+                }
+        });
+
+    }
+
+    function deleteNode(node)
+    {
+        $.ajax({
         type: 'POST',
-        url: route,
-        cache: false,
+        url: Routing.generate('claro_resource_delete',{'id':node.data.key}),
         success: function(data){
-            $('#cfp_dialog').empty();
-            $('#cfp_dialog').append(data);
-            $('#cfp_dialog').show();
-            //$("#cfp_dialog").modal('show'); 
-            //ici je change l'event du submit
-            $("#generic_form").submit(function(e){
-                e.preventDefault();
-                sendForm("claro_resource_add_resource",  {'type':type, 'id':id}, document.getElementById("generic_form"));
+            if(data=="delete")
+            {
+                node.remove();
+            }       
+        }
+        });
+    }
+
+    function openNode(node)
+    {
+        window.location = Routing.generate('claro_resource_open',{'id':node.data.key});
+    }   
+
+    function viewNode(node)
+    {
+        window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
+    }
+
+    function createFormDialog(type, id){
+        alert(idClickedRepository);
+        route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
+        $.ajax({
+            type: 'POST',
+            url: route,
+            cache: false,
+            success: function(data){
+                $('#cfp_dialog').empty();
+                $('#cfp_dialog').append(data);
+                $('#cfp_dialog').show();
+                //$("#cfp_dialog").modal('show'); 
+                //ici je change l'event du submit
+                $("#generic_form").submit(function(e){
+                    e.preventDefault();
+                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'idRepository':idRepository}, document.getElementById("generic_form"));
+                    });
+                }
+            });
+    }
+
+    function submissionHandler(data, route, routeParameters)
+    {
+        console.debug(data);
+        try{
+            var JSONObject = JSON.parse(data);
+            var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.id);
+            if(JSONObject.type != 'directory')
+            {
+                var childNode = node.addChild({
+                    title:JSONObject.name,
+                    key:JSONObject.key
                 });
             }
-        });
-}
-
-function submissionHandler(data, route, routeParameters)
-{
-    console.debug(data);
-    try{
-        var JSONObject = JSON.parse(data);
-        var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.id);
-        if(JSONObject.type != 'directory')
-        {
-            var childNode = node.addChild({
-                title:JSONObject.name,
-                key:JSONObject.key
-            });
-        }
-        else
-        {
-            var childNode = node.addChild({
-                title:JSONObject.name,
-                key:JSONObject.key,
-                isFolder:true
-            });
-        }
-        //$('#cfp_dialog').dialog("close");
-        $('#cfp_dialog').empty();
-    }
-    catch(err)
-    {
-        $('#cfp_dialog').empty();
-        $('#cfp_dialog').append(data);
-        $("#generic_form").submit(function(e){
-            e.preventDefault();
-            sendForm(route, routeParameters, document.getElementById("generic_form"));
-            });
-    }
-}
-
-function sendForm(route, routeParameters, form)
-{
-    var formData = new FormData(form);
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', Routing.generate(route, routeParameters), true);
-    xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-    xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters)};
-    xhr.send(formData);
-}
-
-function sendRequest(route, routeParams, successHandler){
-    $.ajax({
-        type: 'POST',
-        url: Routing.generate(route, routeParams),
-        cache: false,
-        success: successHandler,
-        error: function(xhr){
-            alert(xhr.status);
-        }
-    });
-}
-
-function appendRegisteredWorkspacesList()
-{
-    $.ajax({
-        type: 'POST',
-        url: Routing.generate('claro_workspace_JSON_workspace_user_list'),
-        cache: false,
-        success: function(data){
-            
-            $('#cfp_data').empty();
-            JSONObject = JSON.parse(data);
-            var html="WORKSPACES : <br>";
-            var cpt = 0;
-            
-            while (cpt<JSONObject.length)
+            else
             {
-                var name = JSONObject[cpt].name;
-                var id = JSONObject[cpt].id;
-                var id_repository = JSONObject[cpt].id_repository;
-                html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+" data-workspace_repository="+id_repository+">"
-                html += name
-                html +="</a></br>";
-                cpt++;
+                var childNode = node.addChild({
+                    title:JSONObject.name,
+                    key:JSONObject.key,
+                    isFolder:true
+                });
             }
-            
-            $('#cfp_data').append(html);
+            //$('#cfp_dialog').dialog("close");
+            $('#cfp_dialog').empty();
+        }
+        catch(err)
+        {
+            $('#cfp_dialog').empty();
+            $('#cfp_dialog').append(data);
+            $("#generic_form").submit(function(e){
+                e.preventDefault();
+                sendForm(route, routeParameters, document.getElementById("generic_form"));
+                });
+        }
+    }
 
-            },
+    function sendForm(route, routeParameters, form)
+    {
+        var formData = new FormData(form);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', Routing.generate(route, routeParameters), true);
+        xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
+        xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters)};
+        xhr.send(formData);
+    }
+
+    function sendRequest(route, routeParams, successHandler){
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate(route, routeParams),
+            cache: false,
+            success: successHandler,
             error: function(xhr){
                 alert(xhr.status);
             }
-    });
-}
+        });
+    }
 
-function successHandler(){
-    alert("success");
-}
+    function appendRegisteredWorkspacesList()
+    {
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('claro_workspace_JSON_workspace_user_list'),
+            cache: false,
+            success: function(data){
 
-function getUserRepositoryId()
-{
-    $.ajax({
-        type: 'POST',
-        url: Routing.generate("claro_current_user_repository_id"),
-        cache: false,
-        success: function(data){
-            idUserRepository = data;
-        },
-        error: function(xhr){
-            alert(xhr.status);
-        }
-    });
-}
+                $('#cfp_data').empty();
+                JSONObject = JSON.parse(data);
+                var html="WORKSPACES : <br>";
+                var cpt = 0;
 
+                while (cpt<JSONObject.length)
+                {
+                    var name = JSONObject[cpt].name;
+                    var id = JSONObject[cpt].id;
+                    var id_repository = JSONObject[cpt].id_repository;
+                    html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+" data-workspace_repository="+id_repository+">"
+                    html += name
+                    html +="</a></br>";
+                    cpt++;
+                }
+
+                $('#cfp_data').append(html);
+
+                },
+                error: function(xhr){
+                    alert(xhr.status);
+                }
+        });
+    }
+
+    function successHandler(){
+        alert("success");
+    }
+
+})(jQuery);
