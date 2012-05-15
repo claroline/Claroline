@@ -81,7 +81,7 @@ class ResourceController extends Controller
             if(null!=$resource)   
             {
                 $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);    
-                $repository =$em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
+                //$repository =$em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
                 $repository = $user->getRepository();
                 $repository->addResource($resource);
                 $em->flush();

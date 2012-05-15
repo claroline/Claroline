@@ -24,7 +24,7 @@ class Repository
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", 
      *      cascade={"persist"}
      * )
-     * @ORM\JoinTable(name="claro_resource_repository",
+     * @ORM\JoinTable(name="claro_resource_instance",
      *      joinColumns={@ORM\JoinColumn(name="repository_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")}
      * )
