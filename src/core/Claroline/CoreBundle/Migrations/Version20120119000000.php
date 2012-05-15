@@ -27,7 +27,7 @@ class Version20120119000000 extends BundleMigration
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
         $this->createMessageTable($schema);
-        $this->createResourceRepositoryTable($schema);
+        $this->createResourceInstance($schema);
     }
 
     public function down(Schema $schema)
@@ -48,6 +48,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
         $schema->dropTable('claro_workspace_message');
+        $schema->dropTable('claro_resource_instance');
     }
 
     private function createUserTable(Schema $schema)
@@ -340,9 +341,9 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
     
-    private function createResourceRepositoryTable(Schema $schema)
+    private function createResourceInstance(Schema $schema)
     {
-        $table = $schema->createTable('claro_resource_repository');
+        $table = $schema->createTable('claro_resource_instance');
         $this->addId($table);
         $table->addColumn('resource_id', 'integer', array('notnull' => false));
         $table->addColumn('repository_id', 'integer', array('notnull' => false));
