@@ -60,7 +60,7 @@ class ResourceController extends Controller
     }
     
     //TODO: check return type; la partie js doit savoir si on retourne du json ou pas pour réafficher (ou non le formulaire)
-    public function addAction($type, $id)
+    public function addAction($type, $id, $idRepository)
     {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -81,6 +81,7 @@ class ResourceController extends Controller
             if(null!=$resource)   
             {
                 $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);    
+                $repository =$em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
                 $repository = $user->getRepository();
                 $repository->addResource($resource);
                 $em->flush();
