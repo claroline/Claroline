@@ -282,7 +282,7 @@ class ResourceController extends Controller
         if($option == 'ref' )
         {
             if($resourceId == 0)
-            {
+            {/*
                 $user = $this->get('security.context')->getToken()->getUser();
                 $resources = $this->get('claroline.resource.manager')->getRootResourcesOfUser($user);
 
@@ -297,7 +297,7 @@ class ResourceController extends Controller
                         $workspace->addResource($child);
                         $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
                     }
-                }           
+                }    */       
             }
             else
             {
@@ -311,6 +311,7 @@ class ResourceController extends Controller
                 foreach($children as $child)
                 {
                     $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                    $repository->addResource($child);
                 }
             }        
             $em->flush();
