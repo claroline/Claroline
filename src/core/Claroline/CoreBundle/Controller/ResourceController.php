@@ -64,6 +64,10 @@ class ResourceController extends Controller
     {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
+        if(null == $idRepository)
+        {
+            $idRepository = $user->getRepository()->getId();
+        }
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
         $name = $this->findRsrcServ($resourceType);
         $form = $this->get($name)->getForm();
