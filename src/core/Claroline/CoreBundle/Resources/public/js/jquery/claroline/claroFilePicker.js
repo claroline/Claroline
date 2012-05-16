@@ -71,7 +71,7 @@
                 initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idUserRepository})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idClickedRepository})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
