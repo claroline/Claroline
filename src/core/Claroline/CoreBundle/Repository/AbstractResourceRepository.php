@@ -71,16 +71,7 @@ class AbstractResourceRepository extends NestedTreeRepository
     //ou dont le père est null.
     //Comme le père peut être null, il faut utiliser LEFT JOIN
     public function getRepositoryListableRootResource($repository)
-    {/*
-        $dql = "
-            SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
-            JOIN r.repositories repo
-            LEFTJOIN r.parent par
-            WHERE
-            r.lvl = 0
-        ";*/
-            
-          
+    {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
             JOIN r.repositories repo
