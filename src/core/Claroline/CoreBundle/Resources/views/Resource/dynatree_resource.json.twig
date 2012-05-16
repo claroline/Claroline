@@ -5,7 +5,8 @@
 {
     "title": "{{root.getName()}}",
     "key": {{root.getId()}},
-    "copy": "{{root.getCopy()}}"
+    "copy": "{{root.getCopy()}}",
+    "instanceAmount": {{root.getInstanceAmount()}}
     {% if root.getResourceType.getNavigable() == 1 %}
         ,"isFolder": true
         ,"children": [ 
@@ -13,7 +14,8 @@
             {
                 "title": "{{child.getName()}}",
                 "key": {{child.getId()}},
-                "copy": "{{child.getCopy()}}"
+                "copy": "{{child.getCopy()}}",
+                "instanceAmount": {{root.getInstanceAmount()}}
                 {% if child.getResourceType.getNavigable() == 1  %}
                 ,"isFolder": true
                 ,"isLazy": true
