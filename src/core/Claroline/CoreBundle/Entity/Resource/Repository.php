@@ -50,11 +50,13 @@ class Repository
     public function addResource(AbstractResource $resource)
     {
         $this->resources->add($resource);
+        $resource->addInstance();
         //$resource->getRepositories()->add($this);
     }
     
     public function removeResource(AbstractResource $resource)
     {
         $this->resources->removeElement($resource);
+        $resource->removeInstance();
     }
 }

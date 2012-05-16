@@ -21,6 +21,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
     }
     //this test works with the file controller
+    
     public function testUserCanCreateFileResource()
     {
         //test

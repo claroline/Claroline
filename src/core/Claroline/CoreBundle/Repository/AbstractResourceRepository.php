@@ -19,6 +19,7 @@ class AbstractResourceRepository extends NestedTreeRepository
              ";
         
         $query = $this->_em->createQuery($dql);
+        
         return $query->getResult();
     } 
         
@@ -67,26 +68,21 @@ class AbstractResourceRepository extends NestedTreeRepository
             return $query->getResult(); 
     }
     
-    //Dans un repository, une racine est une resource dont le père ne fait pas partie du repository en question 
-    //ou dont le père est null.
-    //Comme le père peut être null, il faut utiliser LEFT JOIN
+    //deep magic here
     public function getRepositoryListableRootResource($repository)
-    {
-        $dql = "
+    {   
+         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
             JOIN r.repositories repo
             LEFT JOIN r.parent par
             LEFT JOIN par.repositories repoPar
-            WHERE
-            r.lvl = 0
-            and repo.id = {$repository->getId()}
+            WHERE r.lvl = 0
+            AND repo.id = {$repository->getId()}
             OR
             repo.id = {$repository->getId()}
-            AND r.resourceType
-            IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-                WHERE rt.isListable = 1)
-            AND repoPar.id != {$repository->getId()}
-            ";
+            AND repoPar != {$repository->getId()}
+            AND r.amountInstance = 1
+           ";
             
             $query = $this->_em->createQuery($dql);
             
@@ -94,16 +90,16 @@ class AbstractResourceRepository extends NestedTreeRepository
     }
     
     public function getRepositoryListableChildren($repository, $resource)
-    {
+    {        
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
             JOIN r.repositories repo 
             JOIN r.parent par 
             WHERE par.id = {$resource->getId()}
-            AND repo.id = {$repository->getId()}
+            AND repo.id =  {$repository->getId()}
             AND r.resourceType
             IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-                WHERE rt.isListable = 1)
+                WHERE rt.isListable = 1) 
             ";
             
             $query = $this->_em->createQuery($dql);
