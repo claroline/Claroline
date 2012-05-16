@@ -2,12 +2,13 @@
  * dependencies: dynatree & rod-contextMenu + jquery
  */
 (function($){ 
-    var idUserRepository ="";
+    var idUserRepository = "";
     var resourceTypeArray = new Array();
     subItems = {};
     getResourceTypeJSON();
     getUserRepositoryId();
     var idClickedRepository = "";
+    var idClickedWorkspace = "";
     
     $.fn.extend({
         claroFilePicker:function(options){
@@ -130,6 +131,7 @@
                 $('#cfp_tree').empty();
                 //this is weird but I have to do that, idk where the bug come form
                 idClickedRepository = idUserRepository;
+                idClickedWorkspace = null;
                 var customWorkspaceDynatree = 
                    $.extend(defaultsDynatree, 
                        {
@@ -157,12 +159,13 @@
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
+                var idWorkspace = event.target.attributes[1].value;
+                idClickedWorkspace = idWorkspace;
                 idClickedRepository = idRepository;
                 var customWorkspaceDynatree = 
                     $.extend(defaultsDynatree, 
                         {
                             initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idRepository})},
-                            onDblClick: function(node){console.debug(node);},
                             onCreate: function(node, span){
                                bindContextMenu(node);
                             }
@@ -239,6 +242,9 @@
                     case "view":
                         viewNode(node, key);
                         break;
+                    case "edit":
+                        editNode(node, key);
+                        break;
                     default:
                         node = $.ui.dynatree.getNode(this);
                         createFormDialog(key, node.data.key);    
@@ -275,6 +281,8 @@
                 }
         },
         "view": {name: "view", accesskey:"v"},
+        "edit": {name: "edit", accesskey:"e"},
+        "remove": {name: "remove", accesskey:"r"},
         "delete": {
             name: "delete", 
             accesskey:"d",
@@ -340,12 +348,30 @@
         }
         });
     }
+    
+    function editNode(node)
+    {
+        //copy
+        alert("this will create a copy")
+        alert('clickedWorkspace = '+idClickedWorkspace);
+        
+        $.ajax({
+        type: 'POST',
+        url: Routing.generate('claro_resource_edit',{'idResource':node.data.key, 'idWorkspace': idClickedWorkspace, 'options':'copy'}),
+        success: function(data){
+            if(data=="edit")
+            {
+                alert("this was edited");
+            }       
+        }
+        });
+    }
 
     function openNode(node)
     {
         window.location = Routing.generate('claro_resource_open',{'id':node.data.key});
-    }   
-
+    } 
+    
     function viewNode(node)
     {
         window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
@@ -366,7 +392,7 @@
                 //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'idRepository':idRepository}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'idRepository':idClickedRepository}, document.getElementById("generic_form"));
                     });
                 }
             });
