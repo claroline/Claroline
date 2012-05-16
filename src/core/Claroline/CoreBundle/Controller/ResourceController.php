@@ -81,8 +81,8 @@ class ResourceController extends Controller
             if(null!=$resource)   
             {
                 $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);    
-                //$repository =$em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
-                $repository = $user->getRepository();
+                $repository =$em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
+                //$repository = $user->getRepository();
                 $repository->addResource($resource);
                 $em->flush();
             
@@ -191,6 +191,38 @@ class ResourceController extends Controller
 
            return $response;
        }
+    }
+    
+    public function editAction($idResource, $idWorkspace, $options)
+    {
+        //resource copy
+        if($options == 'copy')
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($idResource);;
+            $newResource = $this->createResourceCopy($resource);
+            $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idWorkspace);
+            $repository = $workspace->getRepository();
+            $repository->addResource($newResource);
+            $newResource->setCopy(true);
+            //acls
+            $roleCollaborator = $workspace->getCollaboratorRole();
+            $rightManager = $this->get('claroline.security.right_manager');
+            $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            //remove right on the old resource
+            $repository->removeResource($resource);
+            $rightManager->removeRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            $em->flush();
+            
+            return new Response("copied");
+        }
+        else
+        {
+            //do sthg else
+        }
+        
+        return new Response("shouldn't go there");
+        
     }
     
     public function getJSONResourceNodeAction($id, $idRepository)
