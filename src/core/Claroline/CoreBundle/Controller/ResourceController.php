@@ -333,7 +333,6 @@ class ResourceController extends Controller
                $newResource->setCopy(true);
                $repository = $workspace->getRepository();
                $repository->addResource($newResource);     
-               $newResource->setParent(null);
                $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($newResource, false);
