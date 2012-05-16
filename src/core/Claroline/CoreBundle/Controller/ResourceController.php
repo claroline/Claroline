@@ -211,6 +211,7 @@ class ResourceController extends Controller
             $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
             //remove right on the old resource
             $repository->removeResource($resource);
+            $repository->removeResource($resource);
             $rightManager->removeRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
             $em->flush();
             
@@ -253,7 +254,9 @@ class ResourceController extends Controller
         }
         else
         {
-            $resources = $this->get('claroline.resource.manager')->find($id)->getChildren();
+            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableChildren($repository, $parent);
+            //ne fait plus que récupérer les resources du repository
             $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $resources));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');     
