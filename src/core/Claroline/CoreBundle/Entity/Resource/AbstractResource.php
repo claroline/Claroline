@@ -110,10 +110,16 @@ abstract class AbstractResource
      */
     protected $repositories;
     
+    /**
+     * @ORM\Column(name="count_instance", type="integer")
+     */
+    protected $amountInstance;
+    
     public function __construct()
     {
         $this->workspaces = new ArrayCollection();
         $this->repositories = new ArrayCollection();
+        $this->amountInstance = 0;
     }
     
     public function setId($id)
@@ -207,5 +213,20 @@ abstract class AbstractResource
     public function getRepositories()
     {
         return $this->repositories;
+    }
+    
+    public function addInstance()
+    {
+        $this->amountInstance++;
+    }
+    
+    public function removeInstance()
+    {
+        $this->amountInstance;
+    }
+    
+    public function getInstance()
+    {
+        return $this->amountInstance;
     }
 }
