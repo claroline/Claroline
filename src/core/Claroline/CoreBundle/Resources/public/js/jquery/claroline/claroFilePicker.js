@@ -19,8 +19,8 @@
             getForm: function(){
                 var formHTML =
                     "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"ahah"+"'/><br>"
-                    formHTML += "<input type='radio' name='options' value='copy' checked>copy<br>"
-                    formHTML += "<input type='radio' name='options' value='ref'>ref<br>"
+                    formHTML += "<input type='radio' name='options' value='copy'>copy<br>"
+                    formHTML += "<input type='radio' name='options' value='ref' checked>ref<br>"
                     formHTML +="<input type='submit' id='cfp_form_submit'></form>";
                 return formHTML;
             },
