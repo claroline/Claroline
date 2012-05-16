@@ -208,16 +208,4 @@ abstract class AbstractResource
     {
         return $this->repositories;
     }
-    
-    public function addRepository(Repository $repository)
-    {
-        $this->repository->add($repository);
-        $repository->getResources()->add($this);
-    }
-    
-    public function removeRepository(Repository $repository)
-    {
-        $this->repository->removeElement($repository);
-        $repository->removeElement()->add($this);
-    }
 }
