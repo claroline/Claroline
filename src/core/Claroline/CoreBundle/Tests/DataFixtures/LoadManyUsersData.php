@@ -7,13 +7,24 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
 
     /** @var ContainerInterface $container */
     private $container;
+    
+    private $config;
+    
+    public function __construct()
+    {
+      
+        $type = Configuration::TYPE_SIMPLE;
+        $this->config = new Configuration();
+        $this->config->setWorkspaceType($type);
+        $this->config->setWorkspaceName("my workspace");
+    }
     
     public function setContainer(ContainerInterface $container = null)
     {
@@ -53,13 +64,16 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
         $user->setUserName("userName{$number}");
         $user->setPlainPassword("password{$number}");
         $user->addRole($role);
-        $repository = new Repository();
-        $user->setRepository($repository);
+        $manager->persist($user);
+        $wsCreatorService = $this->container->get('claroline.workspace.creator');
+        $ws = $wsCreatorService->createWorkspace($this->config, $user);
+        $ws->setType('user_repository');
+        $user->addRole($ws->getManagerRole());
+        $user->setPersonnalWorkspace($ws);
+        $manager->persist($ws);
         
         $this->addReference("user/manyUser{$number}", $user);
-        
-        $manager->persist($repository);
-        $manager->persist($user);
+
     }
     
     public function getOrder()
