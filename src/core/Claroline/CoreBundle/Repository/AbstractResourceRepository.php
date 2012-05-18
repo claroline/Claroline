@@ -68,7 +68,14 @@ class AbstractResourceRepository extends NestedTreeRepository
             return $query->getResult(); 
     }
     
-    //deep magic here
+    /*
+     * 3 differents type of roots
+     * 1) they don't have parent and are in the current repository
+     * 2) they are copied by copy and only have 1 instance + their parent are in a different repository
+     * 3) they are copied by reference, have strictly more than 1 instance and their parent are in a different repository
+     * => this is quite a problem because it's a N to N relation, wich mean that once there is at least 2 instances, 
+     * there is always some family in somewhere else
+     */
     public function getRepositoryListableRootResource($repository)
     {   
          $dql = "
@@ -80,8 +87,11 @@ class AbstractResourceRepository extends NestedTreeRepository
             AND repo.id = {$repository->getId()}
             OR
             repo.id = {$repository->getId()}
-            AND repoPar != {$repository->getId()}
+            AND repoPar.id != {$repository->getId()}
             AND r.amountInstance = 1
+            OR 
+            repo.id = {$repository->getId()}
+            AND repoPar.id != {$repository->getId()}
            ";
             
             $query = $this->_em->createQuery($dql);

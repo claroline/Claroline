@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 // TODO: Implements AdvancedUserInterface
 
@@ -115,15 +115,9 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     protected $workspaceRoles;
     
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="user")
      */
-    private $resources;
-    
-    /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Repository")
-     * @ORM\JoinColumn(name="repository_id", referencedColumnName="id")
-     */
-    private $repository;
+    private $resourcesInstance;
     
     public function __construct()
     {
@@ -131,7 +125,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
-        $this->resources = new ArrayCollection();
+        $this->resourcesInstance = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
@@ -365,24 +359,14 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         ) = unserialize($serialized);
     }
     
-    public function getResources()
+    public function getResourcesInstance()
     {
-        return $this->resources;
+        return $this->resourcesInstance;
     }
 
-    public function addResource(AbstractResource $resource)
+    public function addResourceInstance(ResourceInstance $resourcesInstance)
     {
-        $this->resources[] = $resource;
-        $resource->setUser($this);
-    }
-    
-    public function setRepository($repository)
-    {
-        $this->repository = $repository;
-    }
-    
-    public function getRepository()
-    {
-        return $this->repository;
+        $this->resourcesInstance[] = $resourcesInstance;
+        $resourcesInstance->setUser($this);
     }
 }

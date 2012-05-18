@@ -83,14 +83,15 @@
                 onCustomRender: function(node){   
                     var copy = node.data.copy;
                     var html ='';
+                    console.debug(node);
                     if(copy == 1)
                     {
-                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" </a>";
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
                     else
                     {
-                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" </a>";
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";                        
                     }
                     return html; 
