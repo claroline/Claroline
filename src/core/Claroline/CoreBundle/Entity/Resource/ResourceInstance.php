@@ -46,11 +46,6 @@ class ResourceInstance
     protected $resourceType;
     
     /**
-     * @ORM\Column(name="resource_name", type="string", length=255)
-     */
-    protected $name;
-    
-    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -132,16 +127,6 @@ class ResourceInstance
     {
        $this->resourceType=$resourceType;
     } 
-    
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
     
     public function setParent(AbstractResource $parent = null)
     {

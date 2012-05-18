@@ -18,6 +18,12 @@ abstract class AbstractResource
      * @ORM\generatedValue(strategy="AUTO")
      */
     protected $id;
+    
+    /**
+     * @ORM\Column(type="string", name="name") 
+     * @ORM\generatedValue(strategy="AUTO")
+     */
+    protected $name;
         
     public function setId($id)
     {
@@ -28,4 +34,15 @@ abstract class AbstractResource
     {
         return $this->id;
     }
+    
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
+    }
+          
 }
