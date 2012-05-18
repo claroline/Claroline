@@ -16,6 +16,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->configHandler = $this->client
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
+        var_dump($this->configHandler);
         $this->client->followRedirects();
     }
 

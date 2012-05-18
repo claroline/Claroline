@@ -8,7 +8,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -35,14 +36,22 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $wsCreatorRole = $this->getReference('role/ws_creator');
         $adminRole = $this->getReference('role/admin');
         
+        $wsCreatorService = $this->container->get('claroline.workspace.creator');
+        $type = Configuration::TYPE_SIMPLE;
+        $config = new Configuration();
+        $config->setWorkspaceType($type);
+        $config->setWorkspaceName("my workspace");
+        
         $user = new User();
         $user->setFirstName('Jane');
         $user->setLastName('Doe');
         $user->setUserName('user');
         $user->setPlainPassword('123');
         $user->addRole($userRole);
-        $repositoryOne = new Repository();
-        $user->setRepository($repositoryOne);
+        $manager->persist($user);
+        $repositoryOne = $wsCreatorService->createWorkspace($config, $user);
+        $repositoryOne->setType('user_repository');
+        $user->addRole($repositoryOne->getManagerRole());
         
         $secondUser = new User();
         $secondUser->setFirstName('Bob');
@@ -50,8 +59,10 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $secondUser->setUserName('user_2');
         $secondUser->setPlainPassword('123');
         $secondUser->addRole($userRole);
-        $repositoryTwo = new Repository();
-        $secondUser->setRepository($repositoryTwo);
+        $manager->persist($secondUser);
+        $repositoryTwo = $wsCreatorService->createWorkspace($config, $secondUser);
+        $repositoryTwo->setType('user_repository');
+        $secondUser->addRole($repositoryTwo->getManagerRole());
 
         $thirdUser = new User();
         $thirdUser->setFirstName('Bill');
@@ -59,8 +70,10 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $thirdUser->setUserName('user_3');
         $thirdUser->setPlainPassword('123');
         $thirdUser->addRole($userRole);
-        $repositoryThree = new Repository();
-        $thirdUser->setRepository($repositoryThree);
+        $manager->persist($thirdUser);
+        $repositoryThree = $wsCreatorService->createWorkspace($config, $thirdUser);
+        $repositoryThree->setType('user_repository');
+        $thirdUser->addRole($repositoryThree->getManagerRole());
         
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
@@ -68,8 +81,10 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $wsCreator->setUserName('ws_creator');
         $wsCreator->setPlainPassword('123');
         $wsCreator->addRole($wsCreatorRole);
-        $repositoryFour = new Repository();
-        $wsCreator->setRepository($repositoryFour);
+        $manager->persist($wsCreator);
+        $repositoryFour = $wsCreatorService->createWorkspace($config, $wsCreator);
+        $repositoryFour->setType('user_repository');
+        $wsCreator->addRole($repositoryFour->getManagerRole());
         
         $admin = new User();
         $admin->setFirstName('John');
@@ -77,8 +92,10 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $admin->setUserName('admin');
         $admin->setPlainPassword('123');
         $admin->addRole($adminRole);
-        $repositoryFive = new Repository();
-        $admin->setRepository($repositoryFive);
+        $manager->persist($admin);
+        $repositoryFive = $wsCreatorService->createWorkspace($config, $wsCreator);
+        $repositoryFive->setType('user_repository');
+        $admin->addRole($repositoryFive->getManagerRole());
         
         $manager->persist($user);
         $manager->persist($secondUser);

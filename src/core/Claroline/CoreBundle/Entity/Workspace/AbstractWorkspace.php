@@ -36,6 +36,11 @@ abstract class AbstractWorkspace
     private $name;
     
     /**
+     * @ORM\Column(type="string", length="255")
+     */
+    private $type;
+    
+    /**
      * @ORM\Column(name="is_public", type="boolean")
      */
     protected $isPublic = true;
@@ -294,5 +299,15 @@ abstract class AbstractWorkspace
     {
         $this->resourcesInstance[] = $resourcesInstance;
         $resourcesInstance->setUser($this);
+    }
+    
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    
+    public function getType()
+    {
+        return $this->type;
     }
 }

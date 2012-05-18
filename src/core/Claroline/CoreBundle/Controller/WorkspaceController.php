@@ -9,7 +9,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-
 //TODO : ajax error handling
 
 class WorkspaceController extends Controller
@@ -159,9 +158,9 @@ class WorkspaceController extends Controller
          {
             throw new AccessDeniedHttpException();
          }
-         
+         /*
          $repository = $workspace->getRepository();
-         $resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->getRepositoryListableRootResource($repository);   
+         $resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->getRepositoryListableRootResource($repository); */  
          
          return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType, 'resources' => $resources));
     }

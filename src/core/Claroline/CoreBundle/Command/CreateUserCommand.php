@@ -9,7 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -88,7 +89,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLastName($lastName);
         $user->setUsername($username);
         $user->setPlainPassword($password);
-        
+        echo"user created \n";
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
         
@@ -108,10 +109,16 @@ class CreateUserCommand extends ContainerAwareCommand
             $user->addRole($userRole);
         }
         
-        $repository = new Repository();
-        $user->setRepository($repository);
-        $em->persist($repository);
         $em->persist($user);
+        $type = Configuration::TYPE_SIMPLE;
+        $config = new Configuration();
+        $config->setWorkspaceType($type);
+        $config->setWorkspaceName("my workspace");
+        $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
+        $workspace = $wsCreator->createWorkspace($config, $user);
+        $workspace->setType("user_repository");
+        $user->addRole($workspace->getManagerRole());
+        $em->persist($workspace);
         $em->flush();
     }
 }

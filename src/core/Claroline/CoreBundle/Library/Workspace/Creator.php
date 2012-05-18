@@ -43,12 +43,6 @@ class Creator
             $manager->addRole($workspace->getManagerRole());
             $this->rightManager->addRight($workspace, $manager, MaskBuilder::MASK_OWNER);
         }
-        
-        $repository = new Repository();
-        $workspace->setRepository($repository);
-        $this->entityManager->persist($repository);
-        $this->entityManager->flush();
-        
         return $workspace;
     }
 }
