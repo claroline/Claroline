@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\ClarolineSettingsType;
-use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class AdministrationController extends Controller
 {
@@ -44,9 +44,15 @@ class AdministrationController extends Controller
             $user = $form->getData();
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($user);
-            $repository = new Repository();
-            $user->setRepository($repository);
-            $em->persist($repository);
+            $type = Configuration::TYPE_SIMPLE;
+            $config = new Configuration();
+            $config->setWorkspaceType($type);
+            $config->setWorkspaceName("my workspace");
+            $wsCreator = $this->get('claroline.workspace.creator');
+            $workspace = $wsCreator->createWorkspace($config, $user);
+            $workspace->setType("user_repository");
+            $user->addRole($workspace->getManagerRole());
+            $em->persist($workspace);
             $em->flush();
         }
 
