@@ -28,9 +28,9 @@ class ResourceType
     private $type; 
     
     /*
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resource_type")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="resource_type")
      */ 
-    private $resources;
+    private $resourcesInstance;
     
     /**
      * @ORM\Column(type="string", length=255)
@@ -64,8 +64,7 @@ class ResourceType
    
     public function __construct()
     {
-        $this->resources = new ArrayCollection();
-        $this->translations = new ArrayCollection();
+        $this->resourcesInstance = new ArrayCollection();
     }
     
     public function getId()
@@ -85,13 +84,13 @@ class ResourceType
         
     public function getResources()
     {
-        return $this->resources;
+        return $this->resourcesInstance;
     }
     
-    public function addResource(AbstractResource $resource)
+    public function addResource(ResourceInstance $resourceInstance)
     {
-        $this->resources[] = $resource;
-        $resource->setUser($this);
+        $this->resourcesInstance[] = $resourceInstance;
+        $resourceInstance->setUser($this);
     }
          
     
@@ -133,10 +132,5 @@ class ResourceType
     public function setClass($class)
     {
         $this->class=$class;
-    }
-    
-    public function setTranslatableLocale($locale)
-    {
-        $this->locale = $locale;
     }
 }

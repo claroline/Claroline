@@ -9,7 +9,6 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $this->createRepositoryTable($schema);
         $this->createUserTable($schema);
         $this->createGroupTable($schema);
         $this->createUserGroupTable($schema);
@@ -27,7 +26,7 @@ class Version20120119000000 extends BundleMigration
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
         $this->createMessageTable($schema);
-        $this->createResourceInstance($schema);
+        $this->createResourceInstanceTable($schema);
     }
 
     public function down(Schema $schema)
@@ -65,13 +64,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('note', 'string', array('length' => 1000, 'notnull' => false));
         $table->addColumn('mail', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('administrative_code', 'string', array('length' => 255, 'notnull' => false));
-        $table->addColumn('repository_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('username'));
         
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_repository'), array('repository_id'), array('id'), array("onDelete" => "CASCADE")    
-        );
-
         $this->storeTable($table);
     }
 
@@ -113,12 +107,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => false));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
-        $table->addColumn('repository_id', 'integer', array('notnull' => false));
         
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_repository'), array('repository_id'), array('id'), array("onDelete" => "CASCADE")    
-        );
-
         $this->storeTable($table);
     }
 
@@ -208,30 +197,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource');
 
         $this->addId($table);
-        $table->addColumn('name', 'string', array('notnull' => false));
         $this->addDiscriminator($table);
-        $table->addColumn('created', 'datetime');
-        $table->addColumn('updated', 'datetime');
-        $table->addColumn('lft', 'integer', array('notnull' => true));
-        $table->addColumn('rgt', 'integer', array('notnull' => true));
-        $table->addColumn('lvl', 'integer', array('notnull' => true));
-        $table->addColumn('root', 'integer', array('notnull' => false));
-        $table->addColumn('parent_id', 'integer', array('notnull' => false));
-        $table->addColumn('user_id', 'integer', array('notnull' => true));
-        $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
-        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
-        $table->addColumn('copy', 'boolean', array('notnull' => false));
-        $table->addColumn('count_instance', 'integer', array('notnull' => false));
-        
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array("onDelete" => "CASCADE")
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'), array('user_id'), array('id'), array("onDelete" => "CASCADE")
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array("onDelete" => "CASCADE")    
-        );
         $this->storeTable($table);
     }
 
@@ -329,32 +295,37 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'), array('last_modif_user_id'), array('id'), array('onDelete' => 'CASCADE')
-        ); 
     }
-    
-    private function createRepositoryTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_repository');
-        $this->addId($table);
-        
-        $this->storeTable($table);
-    }
-    
-    private function createResourceInstance(Schema $schema)
+     
+    private function createResourceInstanceTable(Schema $schema)
     {
         $table = $schema->createTable('claro_resource_instance');
         $this->addId($table);
-        $table->addColumn('resource_id', 'integer', array('notnull' => false));
-        $table->addColumn('repository_id', 'integer', array('notnull' => false));
+        $table->addColumn('resource_type_id', 'integer');
+        $table->addColumn('name_resource', 'string');
+        $table->addColumn('resource_id', 'integer');
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('user_id', 'integer', array('notnull' => true));
+        $table->addColumn('created', 'datetime');
+        $table->addColumn('updated', 'datetime');
+        $table->addColumn('lft', 'integer', array('notnull' => true));
+        $table->addColumn('rgt', 'integer', array('notnull' => true));
+        $table->addColumn('lvl', 'integer', array('notnull' => true));
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('count_instance', 'integer', array('not_null' => false));
+        $table->addColumn('copy', 'boolean', array('not_null' => false));
         
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_repository'), array('repository_id'), array('id'), array('onDelete' => 'CASCADE')
+            $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
-    }
-
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
+        ); 
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_type'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
+        ); 
+    }     
 }

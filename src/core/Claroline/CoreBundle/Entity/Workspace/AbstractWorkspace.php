@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Exception\ClarolineException;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -58,10 +58,9 @@ abstract class AbstractWorkspace
     private $tools;
     
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Repository")
-     * @ORM\JoinColumn(name="repository_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="workspace")
      */
-    private $repository;
+    private $resourcesInstance;
     
     private static $visitorPrefix = 'ROLE_WS_VISITOR';
     private static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -72,7 +71,7 @@ abstract class AbstractWorkspace
     {
         $this->roles = new ArrayCollection();
         $this->tools = new ArrayCollection();
-        $this->resources = new ArrayCollection();
+        $this->resourcesInstance = new ArrayCollection();
     }
     
     public function getId()
@@ -286,13 +285,14 @@ abstract class AbstractWorkspace
         return $this->roles;
     }
     
-    public function setRepository($repository)
+    public function getResourcesInstance()
     {
-        $this->repository = $repository;
+        return $this->resourcesInstance;
     }
-    
-    public function getRepository()
+
+    public function addResourceInstance(ResourceInstance $resourcesInstance)
     {
-        return $this->repository;
+        $this->resourcesInstance[] = $resourcesInstance;
+        $resourcesInstance->setUser($this);
     }
 }
