@@ -307,7 +307,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_instance');
         $this->addId($table);
         $table->addColumn('resource_type_id', 'integer');
-        $table->addColumn('name_resource', 'string');
+        $table->addColumn('resource_name', 'string');
         $table->addColumn('resource_id', 'integer');
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('user_id', 'integer', array('notnull' => true));
@@ -319,6 +319,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('count_instance', 'integer', array('not_null' => false));
         $table->addColumn('copy', 'boolean', array('not_null' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
          
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
