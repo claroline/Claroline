@@ -4,8 +4,9 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 
-/*
+/**
  * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AbstractResourceRepository")
  * @ORM\Table(name="claro_resource_instance")
@@ -46,7 +47,6 @@ class ResourceInstance
     
     /**
      * @ORM\Column(name="resource_name", type="string", length=255)
-     * @Assert\NotBlank()
      */
     protected $name;
     
@@ -98,13 +98,9 @@ class ResourceInstance
      */
     protected $workspace;
     
-    //
-    
-    
-
     public function __construct()
     {
-        //$this->workspaces = new ArrayCollection();
+        $this->workspaces = new ArrayCollection();
     }
     
     public function getCreationDate()
