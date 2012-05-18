@@ -8,7 +8,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\UserType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
-use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 //use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
@@ -40,10 +41,16 @@ class RegistrationController extends Controller
             $userRole = $em->getRepository('Claroline\CoreBundle\Entity\Role')
                 ->findOneByName(PlatformRoles::USER);
             $user->addRole($userRole);
-            $repository = new Repository();
-            $user->setRepository($repository);
-            $em->persist($repository);
             $em->persist($user);
+            $type = Configuration::TYPE_SIMPLE;
+            $config = new Configuration();
+            $config->setWorkspaceType($type);
+            $config->setWorkspaceName("my workspace");
+            $wsCreator = $this->get('claroline.workspace.creator');
+            $workspace = $wsCreator->createWorkspace($config, $user);
+            $workspace->setType("user_repository");
+            $user->addRole($workspace->getManagerRole());
+            $em->persist($workspace);
             $em->flush();
             
             $msg = $this->get('translator')->trans('account_created', array(), 'user');
