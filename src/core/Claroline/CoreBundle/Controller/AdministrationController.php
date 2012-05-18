@@ -52,6 +52,7 @@ class AdministrationController extends Controller
             $workspace = $wsCreator->createWorkspace($config, $user);
             $workspace->setType("user_repository");
             $user->addRole($workspace->getManagerRole());
+            $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);
             $em->flush();
         }

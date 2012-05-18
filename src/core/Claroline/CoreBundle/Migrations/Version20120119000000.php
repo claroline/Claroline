@@ -9,10 +9,10 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
+        $this->createWorkspaceTable($schema);
         $this->createUserTable($schema);
         $this->createGroupTable($schema);
         $this->createUserGroupTable($schema);
-        $this->createWorkspaceTable($schema);
         $this->createWorkspaceAggregationTable($schema);
         $this->createRoleTable($schema);
         $this->createUserRoleTable($schema);
@@ -64,8 +64,12 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('note', 'string', array('length' => 1000, 'notnull' => false));
         $table->addColumn('mail', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('administrative_code', 'string', array('length' => 255, 'notnull' => false));
+        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('username'));
         
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array("onDelete" => "CASCADE")
+        );
         $this->storeTable($table);
     }
 
@@ -315,7 +319,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('count_instance', 'integer', array('not_null' => false));
         $table->addColumn('copy', 'boolean', array('not_null' => false));
-        
+         
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );

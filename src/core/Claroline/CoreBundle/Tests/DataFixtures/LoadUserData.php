@@ -52,6 +52,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryOne = $wsCreatorService->createWorkspace($config, $user);
         $repositoryOne->setType('user_repository');
         $user->addRole($repositoryOne->getManagerRole());
+        $user->setPersonnalWorkspace($repositoryOne);
         
         $secondUser = new User();
         $secondUser->setFirstName('Bob');
@@ -63,6 +64,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryTwo = $wsCreatorService->createWorkspace($config, $secondUser);
         $repositoryTwo->setType('user_repository');
         $secondUser->addRole($repositoryTwo->getManagerRole());
+        $secondUser->setPersonnalWorkspace($repositoryTwo);
 
         $thirdUser = new User();
         $thirdUser->setFirstName('Bill');
@@ -74,6 +76,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryThree = $wsCreatorService->createWorkspace($config, $thirdUser);
         $repositoryThree->setType('user_repository');
         $thirdUser->addRole($repositoryThree->getManagerRole());
+        $thirdUser->setPersonnalWorkspace($repositoryThree);
         
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
@@ -85,6 +88,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryFour = $wsCreatorService->createWorkspace($config, $wsCreator);
         $repositoryFour->setType('user_repository');
         $wsCreator->addRole($repositoryFour->getManagerRole());
+        $wsCreator->setPersonnalWorkspace($repositoryFour);
         
         $admin = new User();
         $admin->setFirstName('John');
@@ -96,6 +100,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryFive = $wsCreatorService->createWorkspace($config, $wsCreator);
         $repositoryFive->setType('user_repository');
         $admin->addRole($repositoryFive->getManagerRole());
+        $admin->setPersonnalWorkspace($repositoryFive);
         
         $manager->persist($user);
         $manager->persist($secondUser);
