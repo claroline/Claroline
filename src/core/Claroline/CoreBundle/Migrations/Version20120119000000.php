@@ -203,6 +203,7 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $this->addDiscriminator($table);
+        $table->addColumn('name', 'string');
         $this->storeTable($table);
     }
 
@@ -307,7 +308,6 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_instance');
         $this->addId($table);
         $table->addColumn('resource_type_id', 'integer');
-        $table->addColumn('resource_name', 'string');
         $table->addColumn('resource_id', 'integer');
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('user_id', 'integer', array('notnull' => true));
