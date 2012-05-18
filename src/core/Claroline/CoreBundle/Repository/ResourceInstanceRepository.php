@@ -8,15 +8,16 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class ResourceInstanceRepository extends EntityRepository
 {
-    public function getResourceInstanceFromRepository($repository)
+    public function getPersonnalWSListableRootResource($ws)
     {
         $dql = "
-            SELECT r FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance r
-            JOIN r.repository repo WHERE repo.id = {$repository->getId()}
+            SELECT re FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance re
+            WHERE re.lvl = 0
+            AND re.workspace = {$ws->getId()}
             ";
             
         $query = $this->_em->createQuery($dql);
-            
-        return $query->getResult(); 
+        
+        return $query->getResult();
     }
 }
