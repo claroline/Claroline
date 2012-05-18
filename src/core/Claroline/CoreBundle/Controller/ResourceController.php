@@ -19,8 +19,8 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser(); 
         $em = $this->getDoctrine()->getEntityManager();
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
-        $repository = $user->getRepository();
-        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableRootResource($repository); 
+        $personnalWS = $user->getPersonnalWorkspace();
+        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getPersonnalWSListableRootResource($personnalWS); 
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
