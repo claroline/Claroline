@@ -323,21 +323,14 @@ class ResourceController extends Controller
             {
                 $em = $this->getDoctrine()->getEntityManager();  
                 $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
-                $resourceInstanceCopy = $this->copyResourceIntance($resourceInstance);
+                $resourceInstanceCopy = $this->copyReferenceResourceInstance($resourceInstance);
                 $resourceInstanceCopy->setWorkspace($workspace);
                 $em->persist($resourceInstanceCopy);
-                $em->flush();
-                
-                /*
-                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, false);*/
+                $em->flush();                               
                 $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
-                /*
-                foreach($children as $child)
-                {
-                    $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
-                    $repository->addResource($child);
-                }*/
-            }        
+                $this->setChildrenReferenceCopy($resourceInstance, $workspace, $resourceInstanceCopy);
+            }  
+            
             $em->flush();
         }
         else
@@ -433,7 +426,7 @@ class ResourceController extends Controller
         return $newResource;
     }
     
-    private function copyResourceIntance($resourceInstance)
+    private function copyReferenceResourceInstance($resourceInstance)
     {
         $ric = new ResourceInstance();
         $ric->setUser($this->get('security.context')->getToken()->getUser());
@@ -444,5 +437,24 @@ class ResourceController extends Controller
         $ric->setParent(null);
         
         return $ric;
+    }
+    
+    private function setChildrenReferenceCopy($parentInstance, $workspace, $parentCopy)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
+        $rightManager = $this->get('claroline.security.right_manager');
+        $roleCollaborator = $workspace->getCollaboratorRole(); 
+        
+        foreach($children as $child)
+        {
+            $copy = $this->copyReferenceResourceInstance($child);
+            $copy->setParent($parentCopy);
+            $copy->setWorkspace($workspace);
+            $em->persist($copy);
+            $em->flush();
+            $this->setChildrenReferenceCopy($child, $workspace, $copy);
+            $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+        }
     }
 }
