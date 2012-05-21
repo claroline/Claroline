@@ -11,6 +11,7 @@ class ResourceTest extends FixtureTestCase
     {
         parent::setUp();
         $this->loadUserFixture();
+        $this->markTestSkipped('Resource are "replaced" by ResourceInstance');
     }
     
     public function testANewResourceHasCreationAndModificationDatesWhenFlushed()
