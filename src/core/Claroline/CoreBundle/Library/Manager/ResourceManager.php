@@ -29,7 +29,7 @@ class ResourceManager
     
     public function createResource(AbstractResource $resource, User $owner)
     {
-        $resource->setUser($owner);
+        //$resource->setUser($owner);
         $this->em->persist($resource);
         $this->em->flush();
         $this->rightManager->addRight($resource, $owner, MaskBuilder::MASK_OWNER);
