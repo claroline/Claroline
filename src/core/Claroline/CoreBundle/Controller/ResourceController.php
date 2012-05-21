@@ -320,14 +320,18 @@ class ResourceController extends Controller
                 }    */       
             }
             else
-            {/*
-                $resource = $this->get('claroline.resource.manager')->find($resourceId);
-                $em = $this->getDoctrine()->getEntityManager();   
-                $repository = $workspace->getRepository();
-                $repository->addResource($resource);
-                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, false);
-                $rightManager->addRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-
+            {
+                $em = $this->getDoctrine()->getEntityManager();  
+                $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+                $resourceInstanceCopy = $this->copyResourceIntance($resourceInstance);
+                $resourceInstanceCopy->setWorkspace($workspace);
+                $em->persist($resourceInstanceCopy);
+                $em->flush();
+                
+                /*
+                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, false);*/
+                $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                /*
                 foreach($children as $child)
                 {
                     $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
@@ -419,7 +423,7 @@ class ResourceController extends Controller
         return $response;   
     }
     
-    public function createResourceCopy($resource)
+    private function createResourceCopy($resource)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $resourceType = $resource->getResourceType();
@@ -427,5 +431,18 @@ class ResourceController extends Controller
         $newResource = $this->get($name)->copy($resource, $user);
         
         return $newResource;
+    }
+    
+    private function copyResourceIntance($resourceInstance)
+    {
+        $ric = new ResourceInstance();
+        $ric->setUser($this->get('security.context')->getToken()->getUser());
+        $ric->setCopy(false);
+        $ric->setWorkspace($resourceInstance->getWorkspace());
+        $ric->setResource($resourceInstance->getResource());
+        $ric->setResourceType($resourceInstance->getResourceType());
+        $ric->setParent(null);
+        
+        return $ric;
     }
 }
