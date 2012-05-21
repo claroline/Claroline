@@ -367,7 +367,7 @@ class ResourceController extends Controller
     }
         
     public function removeFromWorkspaceAction($resourceId, $workspaceId)
-    {
+    {/*
         $em = $this->getDoctrine()->getEntityManager();  
         $resource = $this->get('claroline.resource.manager')->find($resourceId);
         if($resource->getCopy()==false)
@@ -384,7 +384,7 @@ class ResourceController extends Controller
         }
         $em->flush();
         
-        return new Response("success"); 
+        return new Response("success"); */
     }
    
     private function findRsrcServ($resourceType)
