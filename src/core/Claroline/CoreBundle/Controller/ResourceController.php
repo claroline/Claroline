@@ -163,16 +163,17 @@ class ResourceController extends Controller
     public function deleteAction($id)
     {
        $request = $this->get('request');
-       $resource = $this->get('claroline.resource.manager')->find($id);
+       $em = $this->getDoctrine()->getEntityManager();
+       $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id);
        $securityContext = $this->get('security.context');
        
-       if(false == $securityContext->isGranted('OWNER', $resource))
+       if(false == $securityContext->isGranted('OWNER', $resourceInstance))
        {
            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
        }
        else
        {    
-            $resourceType = $resource->getResourceType();
+            $resourceType = $resourceInstance->getResourceType();
             $name = $this->findRsrcServ($resourceType);
             $this->get($name)->delete($resource);
             
@@ -316,7 +317,7 @@ class ResourceController extends Controller
                 }    */       
             }
             else
-            {
+            {/*
                 $resource = $this->get('claroline.resource.manager')->find($resourceId);
                 $em = $this->getDoctrine()->getEntityManager();   
                 $repository = $workspace->getRepository();
@@ -328,7 +329,7 @@ class ResourceController extends Controller
                 {
                     $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
                     $repository->addResource($child);
-                }
+                }*/
             }        
             $em->flush();
         }
@@ -339,7 +340,7 @@ class ResourceController extends Controller
                
            }
            else
-           {
+           {/*
                $resource = $this->get('claroline.resource.manager')->find($resourceId);
                $newResource = $this->createResourceCopy($resource, $workspace);
                $user = $this->get('security.context')->getToken()->getUser();
@@ -356,7 +357,7 @@ class ResourceController extends Controller
                    $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                    $repository->addResource($child);
                } 
-               
+               */
                $em->flush();
            }
            return new Response("you're not trying to copy this are you ?"); 
