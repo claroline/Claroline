@@ -244,21 +244,23 @@ class ResourceController extends Controller
     public function getJSONResourceNodeAction($id, $idRepository)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $repository = $em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
+        $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idRepository);
         $response = new Response();
               
         if($id==0)
         {
-            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableRootResource($repository);
-            $root = new Directory();
-            $root->setName('root');
+            $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($workspace);
+            $root = new ResourceInstance();
+            $rootDir = new Directory();
+            $rootDir->setName('root');
+            $root->setResource($rootDir);
             $root->setId(0);
             $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
             $root->setResourceType($directoryType[0]);
             
-            foreach($resources as $resource)
+            foreach($resourcesInstance as $resourceInstance)
             {
-                $root->addChildren($resource);
+                $root->addChildren($resourceInstance);
             }
             //must add root in an array for the json response
             $root = array( 0 => $root);

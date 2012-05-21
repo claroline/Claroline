@@ -3,7 +3,7 @@
 {% for root in resources %}
 {% set cptchild = 0 %}
 {
-    "title": "{{root.getName()}}",
+    "title": "{{root.getResource().getName()}}",
     "key": {{root.getId()}},
     "copy": "{{root.getCopy()}}",
     "instanceAmount": {{root.getInstanceAmount()}}
@@ -12,7 +12,7 @@
         ,"children": [ 
         {% for child in root.getChildren() %}
             {
-                "title": "{{child.getName()}}",
+                "title": "{{child.getResource().getName()}}",
                 "key": {{child.getId()}},
                 "copy": "{{child.getCopy()}}",
                 "instanceAmount": {{root.getInstanceAmount()}}

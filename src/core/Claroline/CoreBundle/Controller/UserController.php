@@ -81,8 +81,7 @@ class UserController extends Controller
 
     public function getCurrentUserRepositoryIdAction()
     {
-         $repositoryId = $this->get('security.context')->getToken()->getUser()->getRepository()->getId();
-         
+         $repositoryId = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();       
          return new Response($repositoryId);
     }
 }
