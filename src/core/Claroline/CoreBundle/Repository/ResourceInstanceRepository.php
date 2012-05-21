@@ -7,7 +7,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class ResourceInstanceRepository extends NestedTreeRepository
 {
-    public function getPersonnalWSListableRootResource($ws)
+    public function getWSListableRootResource($ws)
     {
         $dql = "
             SELECT re FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance re
