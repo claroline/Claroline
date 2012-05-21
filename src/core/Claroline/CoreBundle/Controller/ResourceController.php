@@ -190,18 +190,19 @@ class ResourceController extends Controller
     
     public function openAction($id)
     {      
-       $resource = $this->get('claroline.resource.manager')->find($id);
+       $em = $this->getDoctrine()->getEntityManager(); 
+       $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id);
        $securityContext = $this->get('security.context');
        
-       if(false == $securityContext->isGranted('VIEW', $resource))
+       if(false == $securityContext->isGranted('VIEW', $resourceInstance))
        {
            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
        }
        else
        {
-           $resourceType = $resource->getResourceType();
+           $resourceType = $resourceInstance->getResourceType();
            $name = $this->findRsrcServ($resourceType);
-           $response = $this->get($name)->indexAction($resource);
+           $response = $this->get($name)->indexAction($resourceInstance);
 
            return $response;
        }
