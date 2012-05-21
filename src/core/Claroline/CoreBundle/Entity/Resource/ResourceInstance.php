@@ -119,6 +119,11 @@ class ResourceInstance
         return $this->id;
     }
     
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    
     public function getCreationDate()
     {
         return $this->created;
@@ -206,7 +211,7 @@ class ResourceInstance
     
     public function getInstanceAmount()
     {
-        return $this->getInstanceAmount();
+        return 0;
     }
     
     public function setResource(AbstractResource $abstractResource)
