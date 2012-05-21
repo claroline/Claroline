@@ -203,6 +203,7 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('name', 'string', array('notnull' => false));
+        $table->addColumn('count_instance', 'integer', array('not_null' => false));
         $this->addDiscriminator($table);
         $this->storeTable($table);
     }
@@ -317,7 +318,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('rgt', 'integer', array('notnull' => true));
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
-        $table->addColumn('count_instance', 'integer', array('not_null' => false));
         $table->addColumn('copy', 'boolean', array('not_null' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
          

@@ -27,7 +27,7 @@ class DirectoryControllerTest extends FunctionalTestCase
        parent::tearDown();
        $this->cleanDirectory($this->upDir);
     }
-    
+    /*
     public function testUserCanCreateRootDirectory()
     {
         $this->logUser($this->getFixtureReference('user/admin'));   
@@ -70,7 +70,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/resource/click/directory/{$id}");
         $this->assertEquals(1, count($crawler->filter(".row_resource")));
     }
-    
+    */
     
     public function testUserCanRemoveDirectoryAndItsContent()
     {

@@ -298,13 +298,13 @@ abstract class AbstractWorkspace
     public function addResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourcesInstance->add($resourceInstance);
-        $resourceInstance->addInstance();
+        $resourceInstance->getResource()->addInstance();
     }
     
     public function removeResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourcesInstance->removeElement($resourceInstance);
-        $resourceInstance->removeInstance();
+        $resourceInstance->getResource->removeInstance();
     }
     
     public function setType($type)

@@ -95,6 +95,7 @@ class ResourceController extends Controller
                 $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idRepository);
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
+                $resource->addInstance();
                 $em->persist($ri);
                 $em->flush();
                 $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);  
@@ -324,7 +325,8 @@ class ResourceController extends Controller
                 $em = $this->getDoctrine()->getEntityManager();  
                 $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
                 $resourceInstanceCopy = $this->copyReferenceResourceInstance($resourceInstance);
-                $resourceInstanceCopy->setWorkspace($workspace);
+                //$resourceInstanceCopy->setWorkspace($workspace);
+                $workspace->addResourceInstance($resourceInstanceCopy);
                 $em->persist($resourceInstanceCopy);
                 $em->flush();                               
                 $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
@@ -435,6 +437,8 @@ class ResourceController extends Controller
         $ric->setResource($resourceInstance->getResource());
         $ric->setResourceType($resourceInstance->getResourceType());
         $ric->setParent(null);
+        
+        //$resourceInstance->set
         
         return $ric;
     }
