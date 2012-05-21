@@ -22,7 +22,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
         $personnalWS = $user->getPersonnalWorkspace();
-        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getPersonnalWSListableRootResource($personnalWS); 
+        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($personnalWS); 
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
