@@ -271,10 +271,10 @@ class ResourceController extends Controller
         }
         else
         {
-            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
-            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getRepositoryListableChildren($repository, $parent);
+            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+            $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getListableChildren($parent);
             //ne fait plus que récupérer les resources du repository
-            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $resources));
+            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $resourcesInstance));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');     
         }
