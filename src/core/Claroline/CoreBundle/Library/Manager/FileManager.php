@@ -89,7 +89,6 @@ class FileManager implements ResourceInterface
          $tmpFile = $form['name']->getData();
          $fileName = $tmpFile->getClientOriginalName();
          $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-         $parent = $this->resourceManager->find($id);
          $size = filesize($tmpFile); 
          $hashName = $this->GUID().".".$extension;
          $tmpFile->move($this->dir, $hashName);
@@ -97,10 +96,6 @@ class FileManager implements ResourceInterface
          $file->setSize($size);
          $file->setName($fileName);
          $file->setHashName($hashName);
-         $file->setUser($user);
-         $file->setParent($parent);
-         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'file'));
-         $file->setResourceType($resourceType);
          $this->em->persist($file);
          $this->em->flush();
          //$this->thumbnailGenerator->createThumbNail("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", ThumbnailGenerator::WIDTH, ThumbnailGenerator::HEIGHT);
