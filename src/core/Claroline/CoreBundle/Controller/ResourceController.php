@@ -86,7 +86,7 @@ class ResourceController extends Controller
             {
                 $ri = new ResourceInstance();
                 $ri->setUser($user);
-                $dir = $em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
+                $dir = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id);
                 $ri->setParent($dir);
                 $resourceType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $type));
                 $ri->setResourceType($resourceType);        
@@ -96,7 +96,9 @@ class ResourceController extends Controller
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
                 $em->persist($ri);
+                var_dump('persist');
                 $em->flush();
+                var_dump('flush');
                 $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);  
                 
                 if($request->isXmlHttpRequest())
