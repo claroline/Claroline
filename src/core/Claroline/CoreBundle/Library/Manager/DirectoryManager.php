@@ -174,7 +174,7 @@ class DirectoryManager implements ResourceInterface
     
     private function removeResourcesFromDirectory($directory)
     {
-        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory');
+        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $resources = $rep->getNotDirectoryDirectChildren($directory);
         
         foreach ($resources as $resource)
@@ -187,7 +187,7 @@ class DirectoryManager implements ResourceInterface
     
     private function removeResourcesFromSubDirectories($directory)
     {
-        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory');
+        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $directories = $rep->getDirectoryDirectChildren($directory);
         $this->removeResourcesFromDirectory($directory);
         

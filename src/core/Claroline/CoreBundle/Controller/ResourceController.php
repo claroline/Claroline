@@ -175,7 +175,7 @@ class ResourceController extends Controller
        {    
             $resourceType = $resourceInstance->getResourceType();
             $name = $this->findRsrcServ($resourceType);
-            $this->get($name)->delete($resource);
+            $this->get($name)->delete($resourceInstance);
             
             if($request->isXmlHttpRequest())
             {
