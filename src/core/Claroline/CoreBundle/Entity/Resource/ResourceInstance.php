@@ -5,6 +5,9 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @Gedmo\Tree(type="nested")
@@ -44,6 +47,13 @@ class ResourceInstance
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     protected $resourceType;
+    
+    //add * to make it works
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="resourcesInstance")
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
+     */
+    protected $abstractResource;
     
     /**
      * @Gedmo\TreeLeft
@@ -93,9 +103,20 @@ class ResourceInstance
      */
     protected $workspace;
     
+    /**
+     * @ORM\Column(type="integer", name="count_instance") 
+     */
+    protected $instanceAmount;
+    
     public function __construct()
     {
         $this->workspaces = new ArrayCollection();
+        $this->instanceAmount = 0;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
     }
     
     public function getCreationDate()
@@ -163,7 +184,7 @@ class ResourceInstance
         return $this->repositories;
     }
     
-    public function setWorkspace($workspace)
+    public function setWorkspace(AbstractWorkspace $workspace)
     {
         $this->workspace = $workspace;
     }
@@ -171,5 +192,30 @@ class ResourceInstance
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+    
+    public function addInstance()
+    {
+        $this->instanceAmount++;
+    }
+    
+    public function removeInstance()
+    {
+        $this->instanceAmount--;
+    }
+    
+    public function getInstanceAmount()
+    {
+        return $this->getInstanceAmount();
+    }
+    
+    public function setResource(AbstractResource $abstractResource)
+    {
+        $this->abstractResource = $abstractResource;
+    }
+    
+    public function getResource()
+    {
+        return $this->abstractResource;
     }
 }

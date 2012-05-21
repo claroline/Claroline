@@ -3,8 +3,12 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -20,10 +24,20 @@ abstract class AbstractResource
     protected $id;
     
     /**
-     * @ORM\Column(type="string", name="name") 
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank() 
      */
     protected $name;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource")
+     */
+    protected $resourcesInstance;
+    
+    public function __construct()
+    {
+        $this->resourcesInstance = new ArrayCollection();
+    }
         
     public function setId($id)
     {
@@ -43,6 +57,18 @@ abstract class AbstractResource
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function addResourceInstance(ResourceInstance $resourceInstance)
+    {
+        $this->resourcesInstance->add($resourceInstance);
+        $resourceInstance->addInstance();
+    }
+    
+    public function removeResourceInstance(ResourceInstance $resourceInstance)
+    {
+        $this->resourcesInstance->removeElement($resourceInstance);
+        $resourceInstance->removeInstance();
     }
           
 }

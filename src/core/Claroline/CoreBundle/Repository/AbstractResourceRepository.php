@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class AbstractResourceRepository extends NestedTreeRepository
+class AbstractResourceRepository extends EntityRepository
 {
     public function getNavigableChildren(AbstractResource $rsrc = null)
     {

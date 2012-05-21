@@ -2,11 +2,10 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class ResourceInstanceRepository extends EntityRepository
+class ResourceInstanceRepository extends NestedTreeRepository
 {
     public function getPersonnalWSListableRootResource($ws)
     {
