@@ -103,15 +103,9 @@ class ResourceInstance
      */
     protected $workspace;
     
-    /**
-     * @ORM\Column(type="integer", name="count_instance") 
-     */
-    protected $instanceAmount;
-    
     public function __construct()
     {
         $this->workspaces = new ArrayCollection();
-        $this->instanceAmount = 0;
     }
     
     public function getId()
@@ -199,19 +193,9 @@ class ResourceInstance
         return $this->workspace;
     }
     
-    public function addInstance()
-    {
-        $this->instanceAmount++;
-    }
-    
-    public function removeInstance()
-    {
-        $this->instanceAmount--;
-    }
-    
     public function getInstanceAmount()
     {
-        return 0;
+        return $this->instanceAmount;
     }
     
     public function setResource(AbstractResource $abstractResource)

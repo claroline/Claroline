@@ -34,9 +34,15 @@ abstract class AbstractResource
      */
     protected $resourcesInstance;
     
+    /**
+     * @ORM\Column(type="integer", name="count_instance") 
+     */
+    protected $instanceAmount;
+    
     public function __construct()
     {
         $this->resourcesInstance = new ArrayCollection();
+        $this->instanceAmount = 0;
     }
         
     public function setId($id)
@@ -62,13 +68,26 @@ abstract class AbstractResource
     public function addResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourcesInstance->add($resourceInstance);
-        $resourceInstance->addInstance();
     }
     
     public function removeResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourcesInstance->removeElement($resourceInstance);
-        $resourceInstance->removeInstance();
+    }
+    
+    public function addInstance()
+    {
+        $this->instanceAmount++;
+    }
+    
+    public function removeInstance()
+    {
+        $this->instanceAmount--;
+    }
+    
+    public function getInstanceAmount()
+    {
+        return $this->instanceAmount();
     }
           
 }
