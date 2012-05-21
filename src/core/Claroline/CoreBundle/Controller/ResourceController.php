@@ -133,7 +133,7 @@ class ResourceController extends Controller
     public function defaultClickAction($type, $id)
     {
           $resource = $this->getDoctrine()->getEntityManager()->getRepository(
-              'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+              'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
           
           $securityContext = $this->get('security.context');
           
