@@ -87,7 +87,7 @@ abstract class AbstractResource
     
     public function getInstanceAmount()
     {
-        return $this->instanceAmount();
+        return $this->instanceAmount;
     }
           
 }
