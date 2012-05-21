@@ -7,6 +7,8 @@ use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,14 +62,17 @@ class ResourceController extends Controller
     }
     
     //TODO: check return type; la partie js doit savoir si on retourne du json ou pas pour réafficher (ou non le formulaire)
+    //TODO: renommer idRepository en idWorkspace
     public function addAction($type, $id, $idRepository)
     {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
+        
         if(null == $idRepository)
         {
-            $idRepository = $user->getRepository()->getId();
+            $idRepository = $user->getPersonnalWorkspace()->getId();
         }
+        
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
         $name = $this->findRsrcServ($resourceType);
         $form = $this->get($name)->getForm();
@@ -77,19 +82,23 @@ class ResourceController extends Controller
         if($form->isValid())
         {   
             $resource = $this->get($name)->add($form, $id, $user);
-            $rightManager = $this->get('claroline.security.right_manager');
-            $resource->setCopy(false);
-            $em->persist($resource);
-            $em->flush();
-            
             if(null!=$resource)   
             {
-                $rightManager->addRight($resource, $user, MaskBuilder::MASK_OWNER);    
-                $repository =$em->getRepository('Claroline\CoreBundle\Entity\Resource\Repository')->find($idRepository);
-                //$repository = $user->getRepository();
-                $repository->addResource($resource);
+                $ri = new ResourceInstance();
+                $ri->setUser($user);
+                $dir = $em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
+                $ri->setParent($dir);
+                $resourceType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $type));
+                $ri->setResourceType($resourceType);        
+                $rightManager = $this->get('claroline.security.right_manager');
+                $ri->setCopy(false);  
+                $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idRepository);
+                $ri->setWorkspace($workspace);
+                $ri->setResource($resource);
+                $em->persist($ri);
                 $em->flush();
-            
+                $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);  
+                
                 if($request->isXmlHttpRequest())
                 {
                     $content = '{"key":'.$resource->getId().', "name":"'.$resource->getName().'", "type":"'.$resource->getResourceType()->getType().'"}';

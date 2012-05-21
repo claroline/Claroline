@@ -5,9 +5,8 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class DirectoryRepository extends NestedTreeRepository
+class DirectoryRepository extends EntityRepository
 {
     public function getDirectoryDirectChildren(Directory $directory)
     {

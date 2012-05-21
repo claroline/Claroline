@@ -46,7 +46,7 @@
             <div class="row_resource" data-resource_id={{resource.getId()}}>
                 <a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" 
                    id="link_resource_{{resource.getId()}}" 
-                   class="link_resource_view">{{resource.getName()}}
+                   class="link_resource_view">{{resource.getResource().getName()}}
                 </a> | 
                 {{resource.getResourceType().getType()}} 
                 {% if is_granted('OWNER', resource) %}
@@ -81,7 +81,7 @@
                 <a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" 
                    id="link_resource_view_{{resource.getId()}}" 
                    class="link_resource_view">
-                    {{resource.getName()}}
+                    {{resource.getResource().getName()}}
                 </a> | 
                 {{resource.getResourceType().getType()}} 
                 {% if is_granted('OWNER', resource) %}

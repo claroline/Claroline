@@ -295,10 +295,16 @@ abstract class AbstractWorkspace
         return $this->resourcesInstance;
     }
 
-    public function addResourceInstance(ResourceInstance $resourcesInstance)
+    public function addResourceInstance(ResourceInstance $resourceInstance)
     {
-        $this->resourcesInstance[] = $resourcesInstance;
-        $resourcesInstance->setUser($this);
+        $this->resourcesInstance->add($resourceInstance);
+        $resourceInstance->addInstance();
+    }
+    
+    public function removeResourceInstance(ResourceInstance $resourceInstance)
+    {
+        $this->resourcesInstance->removeElement($resourceInstance);
+        $resourceInstance->removeInstance();
     }
     
     public function setType($type)

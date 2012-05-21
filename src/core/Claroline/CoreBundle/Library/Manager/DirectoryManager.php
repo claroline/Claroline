@@ -57,11 +57,6 @@ class DirectoryManager implements ResourceInterface
         $directory = new Directory();
         $name = $form['name']->getData();
         $directory->setName($name);
-        $directory->setUser($user);
-        $dir =$this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
-        $directory->setParent($dir);
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
-        $directory->setResourceType($resourceType);
         $this->em->persist($directory);
         $this->em->flush();
         
