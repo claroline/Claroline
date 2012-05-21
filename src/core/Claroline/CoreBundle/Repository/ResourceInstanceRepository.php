@@ -50,4 +50,20 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();   
     }
     
+    public function getListableChildren($resourceInstance)
+    {        
+        $dql = "
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
+            JOIN ri.parent par 
+            WHERE par.id = {$resourceInstance->getId()} 
+            AND ri.resourceType
+            IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+                WHERE rt.isListable = 1) 
+            ";
+            
+            $query = $this->_em->createQuery($dql);
+            
+            return $query->getResult();
+    }
+    
 }
