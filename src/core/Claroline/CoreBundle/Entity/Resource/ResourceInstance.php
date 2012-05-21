@@ -149,7 +149,7 @@ class ResourceInstance
        $this->resourceType=$resourceType;
     } 
     
-    public function setParent(AbstractResource $parent = null)
+    public function setParent(ResourceInstance $parent = null)
     {
         $this->parent = $parent;
     }
@@ -164,7 +164,7 @@ class ResourceInstance
         return $this->children;
     }
 
-    public function addChildren(AbstractResource $resource)
+    public function addChildren(ResourceInstance $resource)
     {
         $this->children[] = $resource;
     }
