@@ -96,9 +96,7 @@ class ResourceController extends Controller
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
                 $em->persist($ri);
-                var_dump('persist');
                 $em->flush();
-                var_dump('flush');
                 $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);  
                 
                 if($request->isXmlHttpRequest())
