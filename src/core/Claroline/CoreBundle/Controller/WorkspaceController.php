@@ -25,7 +25,7 @@ class WorkspaceController extends Controller
         }
         
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findAll();
+        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
         
         return $this->render(
             'ClarolineCoreBundle:Workspace:workspace_list.html.twig', 
@@ -102,12 +102,10 @@ class WorkspaceController extends Controller
             
               $config = new Configuration();
               $config->setWorkspaceType($type);
-              $config->setWorkspaceName($form->get('name')->getData());
-              
+              $config->setWorkspaceName($form->get('name')->getData()); 
               $user = $this->get('security.context')->getToken()->getUser();
               $wsCreator = $this->get('claroline.workspace.creator');
               $wsCreator->createWorkspace($config, $user);
-              
               $this->get('session')->setFlash('notice', 'Workspace created');
               $route = $this->get('router')->generate('claro_desktop_index');
             

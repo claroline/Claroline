@@ -41,7 +41,7 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
         $wsD = $this->createSimpleWorkspace('Workspace_D', $wsCreator);
         $wsE = $this->createSimpleWorkspace('Workspace_E', $admin);
         $wsF = $this->createSimpleWorkspace('Workspace_F', $admin);
-        
+            
         $wsD->setPublic(false);
         $wsE->setPublic(false);
         $wsF->setPublic(false);
