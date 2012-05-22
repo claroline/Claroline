@@ -184,7 +184,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $rootId = $this->createResourcesTree();
        $this->registerToWorkspaceA();
        $crawler = $this->client->request('GET', '/workspace/list');
-       $id = $crawler->filter(".row_workspace")->last()->attr('data-workspace_id');
+       $id = $crawler->filter(".row_workspace")->first()->attr('data-workspace_id');
        $link =  $crawler->filter("#link_show_{$id}")->link();
        $this->client->click($link);
        //add root to workspace

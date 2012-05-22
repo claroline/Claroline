@@ -329,8 +329,7 @@ class ResourceController extends Controller
                 $em = $this->getDoctrine()->getEntityManager();  
                 $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
                 $resourceInstanceCopy = $this->copyReferenceResourceInstance($resourceInstance);
-                //$resourceInstanceCopy->setWorkspace($workspace);
-                $workspace->addResourceInstance($resourceInstanceCopy);
+                $resourceInstanceCopy->setWorkspace($workspace);
                 $em->persist($resourceInstanceCopy);
                 $em->flush();                               
                 $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
