@@ -78,10 +78,10 @@ class ResourceControllerTest extends FunctionalTestCase
     {
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
-       $this->client->request('GET', "/resource/delete/{$id}");
+       $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
+
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode()); 
     }
-    
     
     public function testResourceCanBeAddedToWorkspaceByRef()
     {
@@ -220,6 +220,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
         $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
+        //var_dump($this->client->getResponse()->getContent());
 
         return $id;
     }
