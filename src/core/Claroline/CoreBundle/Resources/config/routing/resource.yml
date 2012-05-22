@@ -52,7 +52,7 @@ claro_resource_add_workspace:
       
 claro_resource_remove_workspace:
    pattern: workspace/remove/{resourceId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:removeFromWorkspace }
+   defaults: { _controller: ClarolineCoreBundle:Resource:removeFromWorkspace, workspaceId:null }
    options:
       expose: true 
    
