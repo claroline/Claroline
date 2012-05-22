@@ -24,7 +24,7 @@ abstract class AbstractResource
     protected $id;
     
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="name")
      * @Assert\NotBlank() 
      */
     protected $name;

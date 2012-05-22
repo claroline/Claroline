@@ -88,7 +88,7 @@ class ResourceInstance
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="parent")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $children;
     
@@ -201,5 +201,10 @@ class ResourceInstance
     public function getResource()
     {
         return $this->abstractResource;
+    }
+    
+    public function getName()
+    {
+        return $this->abstractResource->getName();
     }
 }
