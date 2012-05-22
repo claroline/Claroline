@@ -23,8 +23,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
     public function getDirectoryDirectChildren($ri)
     {
        $dql = "
-            SELECT r FROM Claroline\CoreBundle\Entity\Resource\Directory r
-            JOIN r.resourcesInstance ri
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
             JOIN ri.resourceType rt
             WHERE rt.type = 'directory'
             AND ri.parent = {$ri->getId()}
@@ -38,8 +37,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
     public function getNotDirectoryDirectChildren($ri)
     {
        $dql = "
-            SELECT r FROM Claroline\CoreBundle\Entity\Resource\Directory r
-            JOIN r.resourcesInstance ri
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
             JOIN ri.resourceType rt
             WHERE rt.type != 'directory'
             AND ri.parent = {$ri->getId()}
