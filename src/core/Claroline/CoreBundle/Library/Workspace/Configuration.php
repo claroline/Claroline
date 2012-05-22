@@ -92,7 +92,7 @@ class Configuration
         return $this->managerTranslationKey;
     }
     
-    public function setType()
+    public function setType($type)
     {
         $this->type = $type;
     }
