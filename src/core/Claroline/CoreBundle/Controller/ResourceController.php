@@ -298,8 +298,9 @@ class ResourceController extends Controller
        
     public function moveResourceAction ($idChild, $idParent)
     {
-        $parent = $this->get('claroline.resource.manager')->find($idParent);
-        $child = $this->get('claroline.resource.manager')->find($idChild);
+        $em = $this->getDoctrine()->getEntityManager();
+        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idParent);
+        $child = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idChild);
         $child->setParent($parent);
         $this->getDoctrine()->getEntityManager()->flush();
         
