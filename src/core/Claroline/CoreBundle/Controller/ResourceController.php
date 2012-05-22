@@ -155,7 +155,15 @@ class ResourceController extends Controller
                       'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id)->getResourceType();
               }
               $name = $this->findRsrcServ($resourceType);
-              $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
+              
+              if($type!='directory')
+              {    
+                  $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
+              }
+              else
+              {
+                  $response = $this->get($name)->getDefaultAction($id);
+              }
           }
 
         return $response;
