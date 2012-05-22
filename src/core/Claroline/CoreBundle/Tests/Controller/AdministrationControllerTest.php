@@ -60,7 +60,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['user_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
         $crawler = $this->client->submit($form);
         $user = $this->getUser('tototata');
-        $repositoryWs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getWorkspacesOfUser($user);
+        $repositoryWs = $user->getPersonnalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
         $this->assertEquals(6, $crawler->filter('.row_user')->count());
     }
