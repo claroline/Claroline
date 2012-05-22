@@ -63,7 +63,7 @@ class RegistrationControllerTest extends FunctionalTestCase
         $this->configHandler->setParameter('allow_self_registration', true);        
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $user = $this->getUser(('bdoe'));
-        $repositoryWs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getWorkspacesOfUser($user);
+        $repositoryWs = $user->getPersonnalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
     }
        
