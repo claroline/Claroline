@@ -169,6 +169,7 @@ class ResourceController extends Controller
         return $response;
     }
     
+    /*
     public function deleteAction($id)
     {
        $request = $this->get('request');
@@ -199,7 +200,7 @@ class ResourceController extends Controller
 
             return new RedirectResponse($route);
        }
-    }
+    }*/
     
     public function openAction($id)
     {      

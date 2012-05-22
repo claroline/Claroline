@@ -166,9 +166,9 @@
     {
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_delete',{'id':node.data.key}),
+        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key}),
         success: function(data){
-            if(data=="delete")
+            if(data=="success")
             {
                 node.remove();
             }       
