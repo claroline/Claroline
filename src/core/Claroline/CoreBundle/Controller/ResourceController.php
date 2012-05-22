@@ -102,7 +102,7 @@ class ResourceController extends Controller
                 
                 if($request->isXmlHttpRequest())
                 {
-                    $content = '{"key":'.$resource->getId().', "name":"'.$resource->getName().'", "type":"'.$resource->getResourceType()->getType().'"}';
+                    $content = '{"key":'.$ri->getId().', "name":"'.$ri->getResource()->getName().'", "type":"'.$ri->getResourceType()->getType().'"}';
                     $response = new Response($content);
                     $response->headers->set('Content-Type', 'application/json');  
 
