@@ -133,12 +133,12 @@ class ResourceController extends Controller
     
     public function defaultClickAction($type, $id)
     {
-          $resource = $this->getDoctrine()->getEntityManager()->getRepository(
+          $resourceInstance = $this->getDoctrine()->getEntityManager()->getRepository(
               'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
           
           $securityContext = $this->get('security.context');
           
-          if(false == $securityContext->isGranted('VIEW', $resource))
+          if(false == $securityContext->isGranted('VIEW', $resourceInstance))
           {
                throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
           }
@@ -155,7 +155,7 @@ class ResourceController extends Controller
                       'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id)->getResourceType();
               }
               $name = $this->findRsrcServ($resourceType);
-              $response = $this->get($name)->getDefaultAction($id);
+              $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
           }
 
         return $response;
