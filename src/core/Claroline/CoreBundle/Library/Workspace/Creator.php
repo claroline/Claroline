@@ -28,21 +28,23 @@ class Creator
         $workspace = new $workspaceType;
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
-        
+        $workspace->setType($config->getType());    
         $this->entityManager->persist($workspace);
-        $this->entityManager->flush();
-        
-        $workspace->initBaseRoles();
-        
+        $this->entityManager->flush();   
+        $workspace->initBaseRoles(); 
         $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
         $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
         $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
-        $this->entityManager->flush();     
+        $this->entityManager->flush();  
+        
         if (null !== $manager)
         {
             $manager->addRole($workspace->getManagerRole());
             $this->rightManager->addRight($workspace, $manager, MaskBuilder::MASK_OWNER);
         }
+        
+        $this->entityManager->flush();
+        
         return $workspace;
     }
 }

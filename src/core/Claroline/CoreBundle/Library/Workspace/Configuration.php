@@ -15,6 +15,7 @@ class Configuration
     private $visitorTranslationKey;
     private $collaboratorTranslationKey;
     private $managerTranslationKey;
+    private $type;
     
     public function __construct()
     {
@@ -23,6 +24,7 @@ class Configuration
         $this->visitorTranslationKey = 'Visitor';
         $this->collaboratorTranslationKey = 'Collaborator';
         $this->managerTranslationKey = 'Manager';
+        $this->type = 'standard';
     }
     
     public static function fromTemplate($templateFile)
@@ -88,6 +90,16 @@ class Configuration
     public function getManagerTranslationKey()
     {
         return $this->managerTranslationKey;
+    }
+    
+    public function setType()
+    {
+        $this->type = $type;
+    }
+    
+    public function getType()
+    {
+        return $this->type;
     }
     
     public function check()

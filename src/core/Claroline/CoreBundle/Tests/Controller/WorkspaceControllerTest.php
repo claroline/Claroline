@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadManyGroupsData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
+//TODO add tests for personnalWS
 class WorkspaceControllerTest extends FunctionalTestCase
 {
     protected function setUp()
@@ -43,6 +44,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSCreatorCanCreateWS()
     {
          $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
+         $crawler = $this->client->request('GET', "/workspace/list/{$this->getFixtureReference('user/ws_creator')->getId()}");
          $link = $crawler->filter('#link_workspace')->link();
          $crawler = $this->client->click($link);
          $link = $crawler->filter('#link_create_WS_form')->link();
@@ -50,7 +52,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
          $form = $crawler->filter('input[type=submit]')->form(); 
          $form['workspace_form[name]'] = 'new_workspace';
          $form['workspace_form[type]'] = 'simple';
-         $this->client->submit($form);
+         $this->client->submit($form); 
          $crawler = $this->client->request('GET', "/workspace/list/{$this->getFixtureReference('user/ws_creator')->getId()}");
          $this->assertEquals(5, $crawler->filter('.row_workspace')->count()); 
     }
