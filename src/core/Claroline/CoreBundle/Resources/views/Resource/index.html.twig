@@ -52,7 +52,7 @@
                 {% if is_granted('OWNER', resource) %}
                 | 
                 <a id="link_resource_delete_{{resource.getId()}}" 
-                   href="{{path('claro_resource_delete', {'id':resource.getId()})}}" 
+                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resource.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}" 
                    class="link_delete_resource">
                    {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a>
@@ -87,7 +87,7 @@
                 {% if is_granted('OWNER', resource) %}
                 | 
                 <a id="link_resource_delete_{{resource.getId()}}" 
-                   href="{{path('claro_resource_delete', {'id':resource.getId()})}}" 
+                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resource.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}" 
                    class="link_delete_resource">
                    {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a> 

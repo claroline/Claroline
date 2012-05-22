@@ -87,10 +87,38 @@ class DirectoryManager implements ResourceInterface
         return $newDirectory;
     }
     
-    public function delete($directory)
+    //different than other resourcesmanager: it must works with resource instances
+    public function delete($resourceInstance)
     {
-        $this->removeResourcesFromSubDirectories($directory);
-        $this->em->remove($directory);
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
+        
+        foreach($children as $child)
+        {
+            if($child->getResourceType()->getType()!='directory')
+            {
+                $rsrc = $child->getResource();
+                $this->em->remove($child);
+                $rsrc->removeInstance(); 
+                
+                if($rsrc->getInstanceAmount() == 0)
+                {
+                    $type = $child->getResourceType();
+                    $srv = $this->findRsrcServ($type);
+                    $this->container->get($srv)->delete($child->getResource());
+                }
+            }
+            else
+            {
+                $rsrc = $child->getResource();
+                $ws = $child->getWorkspace();
+                $this->em->remove($child);
+                $this->em->remove($rsrc);
+            }
+        }
+        
+        $rsrc = $resourceInstance->getResource();
+        $this->em->remove($rsrc);
+        
         $this->em->flush();
     }
     
@@ -171,39 +199,7 @@ class DirectoryManager implements ResourceInterface
        $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
        $this->delete($directory);
     }
-    
-    private function removeResourcesFromDirectory($directory)
-    {
-        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
-        $resources = $rep->getNotDirectoryDirectChildren($directory);
-        
-        foreach ($resources as $resource)
-        {
-            $rsrcServName = $this->findRsrcServ($resource->getResourceType());
-            $rsrcServ = $this->container->get($rsrcServName);
-            $rsrcServ->delete($resource);           
-        }
-    }
-    
-    private function removeResourcesFromSubDirectories($directory)
-    {
-        $rep = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
-        $directories = $rep->getDirectoryDirectChildren($directory);
-        $this->removeResourcesFromDirectory($directory);
-        
-        foreach ($directories as $directory)
-        {
-            $resources = $rep->getNotDirectoryDirectChildren($directory);
-        
-            foreach ($resources as $resource)
-            {
-                $rsrcServName = $this->findRsrcServ($resource->getResourceType());
-                $rsrcServ = $this->container->get($rsrcServName);
-                $rsrcServ->delete($resource);           
-            }
-        }
-    }
-    
+       
     private function findRsrcServ($resourceType)
     {
         $services = $this->container->getParameter("resource.service.list");

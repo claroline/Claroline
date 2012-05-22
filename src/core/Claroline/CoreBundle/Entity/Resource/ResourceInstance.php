@@ -192,12 +192,7 @@ class ResourceInstance
     {
         return $this->workspace;
     }
-    
-    public function getInstanceAmount()
-    {
-        return $this->instanceAmount;
-    }
-    
+     
     public function setResource(AbstractResource $abstractResource)
     {
         $this->abstractResource = $abstractResource;

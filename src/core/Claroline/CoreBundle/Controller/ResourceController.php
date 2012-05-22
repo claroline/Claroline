@@ -176,7 +176,11 @@ class ResourceController extends Controller
        {    
             $resourceType = $resourceInstance->getResourceType();
             $name = $this->findRsrcServ($resourceType);
-            $this->get($name)->delete($resourceInstance);
+            
+            if($resourceInstance->getResource()->getInstanceAmount() == 1)
+            {
+                $this->get($name)->delete($resourceInstance->getResource());
+            }
             
             if($request->isXmlHttpRequest())
             {
@@ -369,24 +373,27 @@ class ResourceController extends Controller
     }
         
     public function removeFromWorkspaceAction($resourceId, $workspaceId)
-    {/*
+    {
         $em = $this->getDoctrine()->getEntityManager();  
-        $resource = $this->get('claroline.resource.manager')->find($resourceId);
-        if($resource->getCopy()==false)
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+        $resourceType = $resourceInstance->getResourceType();
+        $name = $this->findRsrcServ($resourceType);  
+        $em->remove($resourceInstance);
+        $resourceInstance->getResource()->removeInstance();
+        
+        if($resourceInstance->getResourceType()->getType()=='directory')
         {
-            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
-            $repository = $workspace->getRepository();
-            $repository->removeResource($resource);
+            
+            $this->get($name)->delete($resourceInstance);
         }
         else
         {
-            $resourceType = $resource->getResourceType();
-            $name = $this->findRsrcServ($resourceType);
-            $this->get($name)->delete($resource); 
+             $this->get($name)->delete($resourceInstance->getResource());
         }
+
         $em->flush();
         
-        return new Response("success"); */
+        return new Response("success"); 
     }
    
     private function findRsrcServ($resourceType)
@@ -432,7 +439,7 @@ class ResourceController extends Controller
     {
         $ric = new ResourceInstance();
         $ric->setUser($this->get('security.context')->getToken()->getUser());
-        $ric->setCopy(false);
+        $ric->setCopy(true);
         $ric->setWorkspace($resourceInstance->getWorkspace());
         $ric->setResource($resourceInstance->getResource());
         $ric->setResourceType($resourceInstance->getResourceType());
