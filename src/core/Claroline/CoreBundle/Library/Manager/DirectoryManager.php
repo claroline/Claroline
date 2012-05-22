@@ -110,7 +110,6 @@ class DirectoryManager implements ResourceInterface
             else
             {
                 $rsrc = $child->getResource();
-                $ws = $child->getWorkspace();
                 $this->em->remove($child);
                 $this->em->remove($rsrc);
             }
