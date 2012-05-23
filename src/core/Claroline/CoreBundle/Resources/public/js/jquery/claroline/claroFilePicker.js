@@ -473,8 +473,7 @@
                 {
                     var name = JSONObject[cpt].name;
                     var id = JSONObject[cpt].id;
-                    var id_repository = JSONObject[cpt].id_repository;
-                    html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+" data-workspace_repository="+id_repository+">"
+                    html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+">"
                     html += name
                     html +="</a></br>";
                     cpt++;
