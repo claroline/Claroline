@@ -250,7 +250,7 @@ class ResourceController extends Controller
             $em->flush();
             
             $roleCollaborator = $workspace->getCollaboratorRole();
-            $rightManager = $this->get('claroline;security.right_manager');
+            $rightManager = $this->get('claroline.security.right_manager');
             $rightManager->addRight($instanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
             
             return new Response("copied");
@@ -366,34 +366,37 @@ class ResourceController extends Controller
            }
            else
            {
-               /*
-               $em = $this->getDoctrine()->getEntityManager();  
-               $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
-               $name = $this->findRsrcServ($resourceInstance->getResourceType());  
-               $user = $this->get('security.context')->getToken()->getUser();
-               
-               if('directory' == $resourceInstance->getResourceType())
-               {
-                   $this->get($name)->copy($resourceInstance);
-               }
-               else
-               {
-                   $newResource = $this->get($name)->copy($resourceInstance->getResource());
-               }
-                 */
-               /*
-               $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
-               $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-               $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($newResource, false);
-                      
-               foreach($children as $child)
-               {
-                   $rightManager->addRight($child, $roleCollaborator, MaskBuilder::MASK_VIEW);
-                   $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
-                   $repository->addResource($child);
-               } 
-               
-               $em->flush();*/
+                $em = $this->getDoctrine()->getEntityManager();
+                $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+                
+                if($resourceInstance->getResourceType() != 'directory')
+                {
+                    $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
+                    $user = $this->get('security.context')->getToken()->getUser();
+                    $name = $this->findRsrcServ($resourceInstance->getResourceType());
+                    $copy = $this->get($name)->copy($resourceInstance->getResource(), $user);
+
+                    $instanceCopy = new ResourceInstance();
+                    $instanceCopy->setParent(null);
+                    $instanceCopy->setResource($copy);
+                    $instanceCopy->setCopy(false);
+                    $instanceCopy->setWorkspace($workspace);
+                    $instanceCopy->setResourceType($resourceInstance->getResourceType());
+                    $instanceCopy->setUser($user);
+                    $copy->addInstance();
+                    
+                    $em->persist($copy);
+                    $em->persist($instanceCopy);
+                    $em->flush();
+
+                    $roleCollaborator = $workspace->getCollaboratorRole();
+                    $rightManager = $this->get('claroline.security.right_manager');
+                    $rightManager->addRight($instanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+                }
+                else
+                {
+                    return new Response('not done yet');
+                }
            }
            return new Response("you're not trying to copy this are you ?"); 
         }
