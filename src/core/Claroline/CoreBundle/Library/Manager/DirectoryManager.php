@@ -65,26 +65,12 @@ class DirectoryManager implements ResourceInterface
     
     public function copy($resource, $user)
     {
-        $newDirectory = new Directory();
-        $newDirectory->setName($resource->getName());
-        $newDirectory->setUser($resource->getUser());
-        $newDirectory->setResourceType($resource->getResourceType());
-        $newDirectory->setParent($resource->getParent());
-        $children = $resource->getChildren();
-        $this->em->persist($newDirectory);
-
-        foreach($children as $child)
-        {
-            $name = $this->findRsrcServ($child->getResourceType());
-            $newChild = $this->container->get($name)->copy($child, $user);
-            $newChild->setParent($newDirectory);
-            $newChild->setCopy(true);
-            $this->em->persist($newChild);
-        }
-        
+        $directory = new Directory();
+        $directory->setName($resource->getName());
+        $this->em->persist($directory);
         $this->em->flush();
         
-        return $newDirectory;
+        return $directory;
     }
     
     //different than other resourcesmanager: it must works with resource instances
@@ -147,9 +133,7 @@ class DirectoryManager implements ResourceInterface
         
         return $response;
     }
-    
-    // FIN DES METHODES OBLIGATOIRES
-     
+        
     public function getDirectoriesOfUser($user)
     {
         $directories = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->findBy(array('user' => $user->getId()));
@@ -217,6 +201,4 @@ class DirectoryManager implements ResourceInterface
         
         return $serviceName;
     }
-    
-    
 }
