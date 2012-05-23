@@ -19,7 +19,7 @@ claro_resource_open:
       expose: true   
       
 claro_resource_edit:
-   pattern: /edit/{idResource}/{workspaceId}/{options}
+   pattern: /edit/{resourceId}/{workspaceId}/{options}
    defaults: { _controller: ClarolineCoreBundle:Resource:edit}
    options:
       expose: true
