@@ -246,7 +246,7 @@ class ResourceController extends Controller
             $resourceInstance->getResource()->removeInstance();
             $em->persist($copy);
             $em->persist($instanceCopy);
-            //$em->remove($resourceInstance);
+            $em->remove($resourceInstance);
             $em->flush();
             
             $roleCollaborator = $workspace->getCollaboratorRole();
