@@ -34,8 +34,7 @@ class Creator
         $workspace->initBaseRoles(); 
         $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
         $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
-        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());  
-        $this->entityManager->flush(); 
+        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
         
         if (null !== $manager)
         {
