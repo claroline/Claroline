@@ -390,7 +390,7 @@
                 //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'idRepository':idClickedWorkspace}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'workspaceId':idClickedWorkspace}, document.getElementById("generic_form"));
                     });
                 }
             });
