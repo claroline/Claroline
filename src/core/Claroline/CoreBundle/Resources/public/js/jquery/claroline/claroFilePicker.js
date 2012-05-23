@@ -7,7 +7,6 @@
     subItems = {};
     getResourceTypeJSON();
     getUserRepositoryId();
-    var idClickedRepository = "";
     var idClickedWorkspace = "";
     
     $.fn.extend({
@@ -71,7 +70,7 @@
                 initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idClickedRepository})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idClickedWorkspace})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -160,9 +159,8 @@
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
-                var idWorkspace = event.target.attributes[1].value;
-                idClickedWorkspace = idWorkspace;
-                idClickedRepository = idRepository;
+                console.debug(event);
+                idClickedWorkspace = idRepository;
                 var customWorkspaceDynatree = 
                     $.extend(defaultsDynatree, 
                         {
@@ -340,7 +338,7 @@
     {
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_delete',{'id':node.data.key}),
+        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':idClickedWorkspace}),
         success: function(data){
             if(data=="delete")
             {
@@ -379,7 +377,6 @@
     }
 
     function createFormDialog(type, id){
-        alert(idClickedRepository);
         route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
         $.ajax({
             type: 'POST',
@@ -393,7 +390,7 @@
                 //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'idRepository':idClickedRepository}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'idRepository':idClickedWorkspace}, document.getElementById("generic_form"));
                     });
                 }
             });
