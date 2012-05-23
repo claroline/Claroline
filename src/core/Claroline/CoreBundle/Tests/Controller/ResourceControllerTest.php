@@ -20,8 +20,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $ds = DIRECTORY_SEPARATOR; 
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
     }
-    //this test works with the file controller
     
+    //this test works with the file controller
     public function testUserCanCreateFileResource()
     {
         //test
@@ -122,7 +122,7 @@ class ResourceControllerTest extends FunctionalTestCase
     
     public function testResourceCanBeAddedToWorkspaceByCopy()
     {
-       $this->markTestSkipped("copy not implemented yet"); 
+       //$this->markTestSkipped("copy not implemented yet"); 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->initWorkspacesTestsByCopy();
@@ -132,7 +132,7 @@ class ResourceControllerTest extends FunctionalTestCase
     
     public function testRegisterUserHasAccessToWorkspaceResourcesByCopy()
     {
-       $this->markTestSkipped("copy not implemented yet"); 
+       //$this->markTestSkipped("copy not implemented yet"); 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->initWorkspacesTestsByCopy();
@@ -149,7 +149,7 @@ class ResourceControllerTest extends FunctionalTestCase
     
     public function testUnregisteredUserLostAccessToWorkspaceResourcesByCopy()
     {
-       $this->markTestSkipped("copy not implemented yet"); 
+       //$this->markTestSkipped("copy not implemented yet"); 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->initWorkspacesTestsByCopy();
@@ -164,7 +164,7 @@ class ResourceControllerTest extends FunctionalTestCase
     
     public function testRegisteredUserHasAccesToWorkspaceResourcesByCopy()
     {
-       $this->markTestSkipped("copy not implemented yet");    
+       //$this->markTestSkipped("copy not implemented yet");    
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->registerToWorkspaceA();
@@ -202,7 +202,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $rootId = $this->createResourcesTree();
        $this->registerToWorkspaceA();
        $crawler = $this->client->request('GET', '/workspace/list');
-       $id = $crawler->filter(".row_workspace")->last()->attr('data-workspace_id');
+       $id = $crawler->filter(".row_workspace")->first()->attr('data-workspace_id');
        $link =  $crawler->filter("#link_show_{$id}")->link();
        $this->client->click($link);
        //add root to workspace
@@ -220,7 +220,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
         $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
-        //var_dump($this->client->getResponse()->getContent());
 
         return $id;
     }

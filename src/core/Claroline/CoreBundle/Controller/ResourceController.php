@@ -287,8 +287,6 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId); 
-        $rightManager = $this->get('claroline.security.right_manager');
-        $roleCollaborator = $workspace->getCollaboratorRole();
         
         if($option == 'ref' )
         {
@@ -313,23 +311,17 @@ class ResourceController extends Controller
         {
            if($resourceId == 0)
            {
-               
+               $userWorkspace = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace();
+               $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($userWorkspace);
+
+               foreach($resourcesInstance as $resourceInstance)
+               {
+                   $this->copyFirstCopyInstance($workspace, $resourceInstance->getId());
+               }    
            }
            else
            {
-                $em = $this->getDoctrine()->getEntityManager();
-                $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
-                
-                if($resourceInstance->getResourceType() != 'directory')
-                {
-                    $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-                    
-                    $resourceInstanceCopy = $this->copyCopyResourceInstance($resourceInstance);
-                    $resourceInstanceCopy->setWorkspace($workspace);
-                    $em->persist($resourceInstanceCopy);              
-                    $em->flush();
-                    $this->setChildrenCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
-                }
+               $this->copyFirstCopyInstance($workspace, $resourceId);
            }
            return new Response("you're not trying to copy this are you ?"); 
         }
@@ -483,5 +475,19 @@ class ResourceController extends Controller
         $rightManager = $this->get('claroline.security.right_manager');
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         $this->setChildrenReferenceCopy($resourceInstance, $workspace, $resourceInstanceCopy);
+    }
+    
+    private function copyFirstCopyInstance($workspace, $instanceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $roleCollaborator = $workspace->getCollaboratorRole();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);          
+        $resourceInstanceCopy = $this->copyCopyResourceInstance($resourceInstance);
+        $resourceInstanceCopy->setWorkspace($workspace);
+        $em->persist($resourceInstanceCopy);              
+        $em->flush();
+        $rightManager = $this->get('claroline.security.right_manager');
+        $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+        $this->setChildrenCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
     }
 }
