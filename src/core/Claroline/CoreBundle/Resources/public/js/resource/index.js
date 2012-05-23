@@ -42,10 +42,10 @@
         {     
             $("#ct_tree").dynatree({
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idUserRepository})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': idUserRepository})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
