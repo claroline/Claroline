@@ -228,21 +228,30 @@ class ResourceController extends Controller
         if($options == 'copy')
         {
             $em = $this->getDoctrine()->getEntityManager();
-            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($idResource);;
-            $newResource = $this->createResourceCopy($resource);
+            $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idResource);
             $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idWorkspace);
-            $repository = $workspace->getRepository();
-            $repository->addResource($newResource);
-            $newResource->setCopy(true);
-            //acls
-            $roleCollaborator = $workspace->getCollaboratorRole();
-            $rightManager = $this->get('claroline.security.right_manager');
-            $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
-            //remove right on the old resource
-            $repository->removeResource($resource);
-            $repository->removeResource($resource);
-            $rightManager->removeRight($resource, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            $user = $this->get('security.context')->getToken()->getUser();
+            $name = $this->findRsrcServ($resourceInstance->getResourceType());
+            $copy = $this->get($name)->copy($resourceInstance->getResource(), $user);
+            
+            $instanceCopy = new ResourceInstance();
+            $instanceCopy->setParent($resourceInstance->getParent());
+            $instanceCopy->setResource($copy);
+            $instanceCopy->setCopy(false);
+            $instanceCopy->setWorkspace($resourceInstance->getWorkspace());
+            $instanceCopy->setResourceType($resourceInstance->getResourceType());
+            $instanceCopy->setUser($user);
+            
+            $copy->addInstance();
+            $resourceInstance->getResource()->removeInstance();
+            $em->persist($copy);
+            $em->persist($instanceCopy);
+            //$em->remove($resourceInstance);
             $em->flush();
+            
+            $roleCollaborator = $workspace->getCollaboratorRole();
+            $rightManager = $this->get('claroline;security.right_manager');
+            $rightManager->addRight($instanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
             
             return new Response("copied");
         }
@@ -453,6 +462,7 @@ class ResourceController extends Controller
         return $response;   
     }
     
+    //set parent to null
     private function copyReferenceResourceInstance(ResourceInstance $resourceInstance)
     {
         $ric = new ResourceInstance();
