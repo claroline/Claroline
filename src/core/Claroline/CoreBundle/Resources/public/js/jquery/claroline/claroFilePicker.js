@@ -356,7 +356,7 @@
         
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_edit',{'idResource':node.data.key, 'idWorkspace': idClickedWorkspace, 'options':'copy'}),
+        url: Routing.generate('claro_resource_edit',{'idResource':node.data.key, 'workspaceId': idClickedWorkspace, 'options':'copy'}),
         success: function(data){
             if(data=="edit")
             {
