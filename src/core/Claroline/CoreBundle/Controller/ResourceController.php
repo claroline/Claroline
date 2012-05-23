@@ -231,10 +231,10 @@ class ResourceController extends Controller
         
     }
     
-    public function getJSONResourceNodeAction($id, $idRepository)
+    public function getJSONResourceNodeAction($id, $workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idRepository);
+        $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $response = new Response();
               
         if($id==0)
@@ -356,7 +356,6 @@ class ResourceController extends Controller
     public function removeFromWorkspaceAction($resourceId, $workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();  
-                var_dump($workspaceId);
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $managerRole = $workspace->getManagerRole();
          

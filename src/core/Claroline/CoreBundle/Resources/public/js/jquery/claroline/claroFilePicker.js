@@ -67,10 +67,10 @@
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'idRepository': idClickedWorkspace})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': idClickedWorkspace})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -135,7 +135,7 @@
                 var customWorkspaceDynatree = 
                    $.extend(defaultsDynatree, 
                        {
-                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idUserRepository})},
+                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
                            onCreate: function(node, span){
                                bindContextMenu(node);
                            }
@@ -164,7 +164,7 @@
                 var customWorkspaceDynatree = 
                     $.extend(defaultsDynatree, 
                         {
-                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'idRepository': idRepository})},
+                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idRepository})},
                             onCreate: function(node, span){
                                bindContextMenu(node);
                             }
