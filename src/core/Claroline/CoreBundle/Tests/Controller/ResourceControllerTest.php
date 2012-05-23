@@ -64,14 +64,13 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->request('GET', "/resource/open/{$id}");
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-            
+    
     public function testResourceDeleteActionIsProtected()
     {
-       $this->markTestSkipped('no protection yet'); 
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
        $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->client->request('GET', "/resource/workspace/remove/{$id}");
+       $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
