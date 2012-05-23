@@ -152,7 +152,7 @@ class ResourceController extends Controller
               else
               {
                   $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                      'Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id)->getResourceType();
+                      'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id)->getResourceType();
               }
               $name = $this->findRsrcServ($resourceType);
               
