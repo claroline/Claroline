@@ -54,12 +54,9 @@ class HTMLPageManager implements ResourceInterface
         $hashName = $this->GUID().".zip";
         $form['archive']->getData()->move($this->filesDir, $hashName);
         $htmlElement = new HTMLElement();
-        $htmlElement->setUser($user);
         $htmlElement->setHashName($hashName);
         $htmlElement->setName(pathinfo($zipName, PATHINFO_FILENAME));
         $htmlElement->setIndex($form['index_page']->getData());
-        $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'HTMLElement'));
-        $htmlElement->setResourceType($resourceType);        
         $this->em->persist($htmlElement);
         $this->em->flush();
         
