@@ -63,14 +63,14 @@ class ResourceController extends Controller
     
     //TODO: check return type; la partie js doit savoir si on retourne du json ou pas pour réafficher (ou non le formulaire)
     //TODO: renommer idRepository en idWorkspace
-    public function addAction($type, $id, $idRepository)
+    public function addAction($type, $id, $workspaceId)
     {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         
-        if(null == $idRepository)
+        if(null == $workspaceId)
         {
-            $idRepository = $user->getPersonnalWorkspace()->getId();
+            $workspaceId = $user->getPersonnalWorkspace()->getId();
         }
         
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
@@ -92,7 +92,7 @@ class ResourceController extends Controller
                 $ri->setResourceType($resourceType);        
                 $rightManager = $this->get('claroline.security.right_manager');
                 $ri->setCopy(false);  
-                $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idRepository);
+                $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
                 $resource->addInstance();

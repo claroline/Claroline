@@ -57,8 +57,8 @@ claro_resource_remove_workspace:
       expose: true 
    
 claro_resource_add_resource:
-   pattern: /add/{type}/{id}/{idRepository}
-   defaults: { _controller: ClarolineCoreBundle:Resource:add, id:null, idRepository:null }  
+   pattern: /add/{type}/{id}/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:add, id:null, workspaceId:null }  
    options:
       expose: true
    
