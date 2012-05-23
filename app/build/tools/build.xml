@@ -44,6 +44,7 @@
             <arg path="${basedir}/../logs/clover.xml" />
             <arg value="--log-junit" />
             <arg path="${basedir}/../logs/junit.xml" />
+            <arg value="--verbose" />
         </exec>
     </target>
 
