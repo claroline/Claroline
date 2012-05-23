@@ -164,9 +164,11 @@
          
     function deleteNode(node)
     {
+        var repoId = document.getElementById('data-claroline').getAttribute('data-workspace_id');
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key}),
+        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':repoId}),
+        
         success: function(data){
             if(data=="success")
             {
