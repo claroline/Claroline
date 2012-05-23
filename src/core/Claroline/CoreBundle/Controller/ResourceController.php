@@ -356,9 +356,10 @@ class ResourceController extends Controller
     public function removeFromWorkspaceAction($resourceId, $workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();  
+                var_dump($workspaceId);
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $managerRole = $workspace->getManagerRole();
-        
+         
         if(false == $this->get('security.context')->isGranted($managerRole->getName()))
         {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
