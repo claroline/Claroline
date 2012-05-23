@@ -341,6 +341,7 @@ class ResourceController extends Controller
                 $resourceInstanceCopy = $this->copyReferenceResourceInstance($resourceInstance);
                 $resourceInstanceCopy->setWorkspace($workspace);
                 $em->persist($resourceInstanceCopy);
+                $resourceInstance->getResource()->addInstance();
                 $em->flush();                               
                 $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
                 $this->setChildrenReferenceCopy($resourceInstance, $workspace, $resourceInstanceCopy);
@@ -355,13 +356,23 @@ class ResourceController extends Controller
                
            }
            else
-           {/*
-               $resource = $this->get('claroline.resource.manager')->find($resourceId);
-               $newResource = $this->createResourceCopy($resource, $workspace);
+           {
+               /*
+               $em = $this->getDoctrine()->getEntityManager();  
+               $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+               $name = $this->findRsrcServ($resourceInstance->getResourceType());  
                $user = $this->get('security.context')->getToken()->getUser();
-               $newResource->setCopy(true);
-               $repository = $workspace->getRepository();
-               $repository->addResource($newResource);     
+               
+               if('directory' == $resourceInstance->getResourceType())
+               {
+                   $this->get($name)->copy($resourceInstance);
+               }
+               else
+               {
+                   $newResource = $this->get($name)->copy($resourceInstance->getResource());
+               }
+                 */
+               /*
                $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                $rightManager->addRight($newResource, $roleCollaborator, MaskBuilder::MASK_VIEW);
                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($newResource, false);
@@ -372,8 +383,8 @@ class ResourceController extends Controller
                    $rightManager->addRight($newResource, $user, MaskBuilder::MASK_OWNER);
                    $repository->addResource($child);
                } 
-               */
-               $em->flush();
+               
+               $em->flush();*/
            }
            return new Response("you're not trying to copy this are you ?"); 
         }
@@ -413,7 +424,7 @@ class ResourceController extends Controller
         return new Response("success"); 
     }
    
-    private function findRsrcServ($resourceType)
+    private function findRsrcServ(ResourceType $resourceType)
     {
         $services = $this->container->getParameter("resource.service.list");
         $names = array_keys($services);
@@ -442,17 +453,7 @@ class ResourceController extends Controller
         return $response;   
     }
     
-    private function createResourceCopy($resource)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $resourceType = $resource->getResourceType();
-        $name = $this->findRsrcServ($resourceType);
-        $newResource = $this->get($name)->copy($resource, $user);
-        
-        return $newResource;
-    }
-    
-    private function copyReferenceResourceInstance($resourceInstance)
+    private function copyReferenceResourceInstance(ResourceInstance $resourceInstance)
     {
         $ric = new ResourceInstance();
         $ric->setUser($this->get('security.context')->getToken()->getUser());
@@ -461,8 +462,6 @@ class ResourceController extends Controller
         $ric->setResource($resourceInstance->getResource());
         $ric->setResourceType($resourceInstance->getResourceType());
         $ric->setParent(null);
-        
-        //$resourceInstance->set
         
         return $ric;
     }
@@ -480,6 +479,7 @@ class ResourceController extends Controller
             $copy->setParent($parentCopy);
             $copy->setWorkspace($workspace);
             $em->persist($copy);
+            $copy->getResource()->addInstance();
             $em->flush();
             $this->setChildrenReferenceCopy($child, $workspace, $copy);
             $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);

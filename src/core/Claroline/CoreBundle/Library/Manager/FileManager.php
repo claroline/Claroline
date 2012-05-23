@@ -108,9 +108,6 @@ class FileManager implements ResourceInterface
         $newFile = new File();
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
-        $newFile->setUser($resource->getUser());
-        $newFile->setParent($resource->getParent());
-        $newFile->setResourceType($resource->getResourceType());
         $hashName = $this->GUID().".".pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
         //copy the old File
