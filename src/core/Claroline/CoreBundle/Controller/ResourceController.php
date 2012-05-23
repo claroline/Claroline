@@ -189,14 +189,14 @@ class ResourceController extends Controller
        }
     }
     
-    public function editAction($idResource, $idWorkspace, $options)
+    public function editAction($idResource, $workspaceId, $options)
     {
         //resource copy
         if($options == 'copy')
         {
             $em = $this->getDoctrine()->getEntityManager();
             $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idResource);
-            $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($idWorkspace);
+            $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
             $user = $this->get('security.context')->getToken()->getUser();
             $name = $this->findRsrcServ($resourceInstance->getResourceType());
             $copy = $this->get($name)->copy($resourceInstance->getResource(), $user);
