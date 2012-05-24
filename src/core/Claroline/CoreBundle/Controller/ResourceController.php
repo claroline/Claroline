@@ -472,7 +472,9 @@ class ResourceController extends Controller
         $em->persist($resourceInstanceCopy);
         $resourceInstance->getResource()->addInstance();
         $em->flush();     
+        $user = $this->get('security.context')->getToken()->getUser();
         $rightManager = $this->get('claroline.security.right_manager');
+        $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         $this->setChildrenReferenceCopy($resourceInstance, $workspace, $resourceInstanceCopy);
     }
@@ -486,8 +488,20 @@ class ResourceController extends Controller
         $resourceInstanceCopy->setWorkspace($workspace);
         $em->persist($resourceInstanceCopy);              
         $em->flush();
+        $user = $this->get('security.context')->getToken()->getUser();
         $rightManager = $this->get('claroline.security.right_manager');
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+        $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
         $this->setChildrenCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
+    }
+    
+    public function getResourcesReferenceAction($instanceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('abstractResource' => $resourceInstance->getId()));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resourcesInstance' => $resourcesInstance));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');  
     }
 }
