@@ -500,7 +500,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('abstractResource' => $resourceInstance->getId()));
-        $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resourcesInstance' => $resourcesInstance));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:resource_instance.json.twig', array('resourcesInstance' => $resourcesInstance));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');  
     }
