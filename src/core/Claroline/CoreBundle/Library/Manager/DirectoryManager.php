@@ -76,6 +76,8 @@ class DirectoryManager implements ResourceInterface
     //different than other resourcesmanager: it must works with resource instances
     public function delete($resourceInstance)
     {
+        /*  recursive suppression
+       
         $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
         
         foreach($children as $child)
@@ -103,7 +105,50 @@ class DirectoryManager implements ResourceInterface
         
         $rsrc = $resourceInstance->getResource();
         $this->em->remove($rsrc);
+        */
         
+        //non recursive suppression: not sure if it works
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
+        {
+            foreach($children as $child)
+            {
+                if($child->getResourceType()->getType()!='directory')
+                {
+                    $rsrc = $child->getResource();
+                    $this->em->remove($child);
+                    $rsrc->removeInstance(); 
+                
+                    if($rsrc->getInstanceAmount() == 0)
+                    {
+                        $type = $child->getResourceType();
+                        $srv = $this->findRsrcServ($type);
+                        $this->container->get($srv)->delete($child->getResource());
+                    }
+                }            
+                else
+                {
+                    $rsrc = $child->getResource();
+                    $this->em->remove($child);
+                    $rsrc->removeInstance(); 
+                    
+                    if($rsrc->getInstanceAmount() == 0)
+                    {
+                        $type = $child->getResourceType();
+                        $this->em->remove($rsrc);
+                    }
+                }
+            }
+        }
+        
+        $rsrc = $resourceInstance->getResource();
+        $this->em->remove($resourceInstance);
+        $rsrc->removeInstance(); 
+
+        if($rsrc->getInstanceAmount() == 0)
+        {
+            $type = $resourceInstance->getResourceType();
+            $this->em->remove($rsrc);
+        }
         $this->em->flush();
     }
     
