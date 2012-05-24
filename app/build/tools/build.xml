@@ -38,10 +38,6 @@
         <exec executable="phpunit" failonerror="true">
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
-            <arg value="--coverage-html" />
-            <arg path="${basedir}/../coverage" />
-            <arg value="--coverage-clover" />
-            <arg path="${basedir}/../logs/clover.xml" />
             <arg value="--log-junit" />
             <arg path="${basedir}/../logs/junit.xml" />
             <arg value="--verbose" />
@@ -114,6 +110,7 @@
     <target name="phpdoc"
             description="Generate API documentation using PHPDocumentor">
         <exec executable="phpdoc">
+            <arg value="--quiet" />
             <arg value="--directory" />
             <arg path="${srcdir}" />
             <arg value="--target" />
