@@ -9,6 +9,7 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
+        $this->createLicenseTable($schema);      
         $this->createWorkspaceTable($schema);
         $this->createUserTable($schema);
         $this->createGroupTable($schema);
@@ -48,6 +49,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_user');
         $schema->dropTable('claro_workspace_message');
         $schema->dropTable('claro_resource_instance');
+        $schema->dropTable('claro_license');
     }
 
     private function createUserTable(Schema $schema)
@@ -187,6 +189,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('type', 'string');
         $table->addColumn('is_listable', 'boolean');
         $table->addColumn('is_navigable', 'boolean');
+        $table->addColumn('is_document', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
         $table->addColumn('class', 'string', array('notnull' => false));
         $table->addUniqueIndex(array('type'));
@@ -203,8 +206,14 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('name', 'string', array('notnull' => false));
-        $table->addColumn('count_instance', 'integer', array('not_null' => false));
+        $table->addColumn('count_instance', 'integer', array('notnull' => false));
+        $table->addColumn('license_id', 'integer', array('notnull' => false));
         $this->addDiscriminator($table);
+        
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_license'), array('license_id'), array('id'), array("onDelete" => "CASCADE")
+        );
+        
         $this->storeTable($table);
     }
 
@@ -333,5 +342,14 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'CASCADE')
         ); 
-    }     
+    }   
+    
+    private function createLicenseTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_license');
+        $this->addId($table);
+        $table->addColumn('name');
+        
+        $this->storeTable($table);
+    }
 }
