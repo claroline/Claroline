@@ -3,13 +3,14 @@
     //todo: l'event close de la boite de dialogue
     
     //variable globales = pas bon
-    resourceTypeArray = new Array();
-    subItems = {};
-    getUserRepositoryId();
-    idUserRepository = "";
-    
+
     $(function(){
         
+        resourceTypeArray = new Array();
+        subItems = {};
+        idUserRepository = "";
+        getUserRepositoryId();
+            
         var modal = createTreeDialog();
              
         $('#dialog_tree_button').click(function(){
@@ -30,22 +31,40 @@
                     cpt++;
                 }
                 subItems = generateSubItems();
-                createTree();
+                //createTree('#source_tree');
+                //createTree('#tree_destination');
             },
         error: function(data){
             alert("resource type loading failed");
         }
-       });
+      });
+            
         
+      $('#workspace_source_list_button').click(function(){
+          appendRegisteredWorkspacesList('#source_tree');
+      });
+      
+      $('#workspace_destination_list_button').click(function(){
+          appendRegisteredWorkspacesList('#destination_tree');
+      });
+      
+      $('.cfp_workspace_show_tree').live("click", function (event){
+          var divId = event.target.parentElement.attributes[0].nodeValue;
+          $('#'+divId).empty();
+          var repositoryId = event.target.attributes[0].value;
+          $('#'+divId).dynatree("destroy");
+          createTree('#'+divId, repositoryId);
+       });
+       
         //créé après la récupération de resourceType~ à changer
-        function createTree()
+        function createTree(treeId, repositoryId)
         {     
-            $("#ct_tree").dynatree({
+            $(treeId).dynatree({
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
+                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': repositoryId})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': idUserRepository})});
+                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': repositoryId})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -78,12 +97,39 @@
                         }
                     },
                     onDrop: function(node, sourceNode, hitMode, ui, draggable){
-                        if(node.isDescendantOf(sourceNode)){
-                            return false;
+//                    if(node.isDescendantOf(sourceNode)){
+//                            return false;
+//                        }
+//                        else{
+//                        sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
+//                        sourceNode.move(node, hitMode);
+//                            return true;
+//                        }
+
+                       /**This function MUST be defined to enable dropping of items on the tree.
+                        * sourceNode may be null, if it is a non-Dynatree droppable.
+                        */
+                        logMsg("tree.onDrop(%o, %o)", node, sourceNode);
+                        var copynode;
+                        if(sourceNode) {
+                        copynode = sourceNode.toDict(true, function(dict){
+                            dict.title = "Copy of " + dict.title;
+                            delete dict.key; // Remove key, so a new one will be created
+                        });
+                        }else{
+                        copynode = {title: "This node was dropped here (" + ui.helper + ")."};
                         }
-                        else{
-                        sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
-                        sourceNode.move(node, hitMode);
+                        if(hitMode == "over"){
+                        // Append as child node
+                        node.addChild(copynode);
+                        // expand the drop target
+                        node.expand(true);
+                        }else if(hitMode == "before"){
+                        // Add before this, i.e. as child of current parent
+                        node.parent.addChild(copynode, node);
+                        }else if(hitMode == "after"){
+                        // Add after this, i.e. as child of current parent
+                        node.parent.addChild(copynode, node.getNextSibling());
                         }
                     },
                     onDragLeave: function(node, sourceNode){
@@ -314,7 +360,9 @@
             +'<h3> header</h3>'
         +'</div>'
         +'<div class="modal-body">'
-            +"<div id='ct_form'></div><div id='ct_tree'></div>"
+            +"<div id='ct_form'><table id='ct_tree'><thead><tr><th><button id='workspace_source_list_button'>workspace source list</button></th>"
+            +"<th><button id='workspace_destination_list_button'>workspace destination list</button></th></th></thead><tbody><tr valign='top'>"
+            +"<td><div id='source_tree'></div></td><td><div id='destination_tree'></div></td></tr></tbody></table>"
         +'</div>'
         +'<div class="modal-footer">'
             +'FOOTER'
@@ -343,19 +391,57 @@
             cpt++;    
         }
     }
-});
+    
+    function getUserRepositoryId()
+    {
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate("claro_current_user_repository_id"),
+            cache: false,
+            success: function(data){
+                idUserRepository = data;
+            },
+            error: function(xhr){
+                alert(xhr.status);
+            }
+        });
+    }
 
-function getUserRepositoryId()
-{
-    $.ajax({
-        type: 'POST',
-        url: Routing.generate("claro_current_user_repository_id"),
-        cache: false,
-        success: function(data){
-            idUserRepository = data;
-        },
-        error: function(xhr){
-            alert(xhr.status);
-        }
-    });
-}
+    function appendRegisteredWorkspacesList(tableSelector)
+    {
+        
+        $(tableSelector).empty();
+        
+        var html="WORKSPACES : <br>";
+        html += "<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+idUserRepository+">"
+        html += "local"
+        html += "</a></br>";
+        
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('claro_workspace_JSON_workspace_user_list'),
+            cache: false,
+            success: function(data){
+
+                JSONObject = JSON.parse(data);
+                var cpt = 0;
+
+                while (cpt<JSONObject.length)
+                {
+                    var name = JSONObject[cpt].name;
+                    var id = JSONObject[cpt].id;
+                    html +="<a class='cfp_workspace_show_tree' href='#' data-workspace_id="+id+">"
+                    html += name
+                    html +="</a></br>";
+                    cpt++;
+                }
+
+                $(tableSelector).append(html);
+
+                },
+                error: function(xhr){
+                    alert(xhr.status);
+                }
+        });
+    }
+});
