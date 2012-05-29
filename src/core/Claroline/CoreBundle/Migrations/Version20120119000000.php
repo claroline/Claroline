@@ -9,6 +9,7 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
+        $this->createMetaTypeTable($schema);
         $this->createLicenseTable($schema);      
         $this->createWorkspaceTable($schema);
         $this->createUserTable($schema);
@@ -28,6 +29,7 @@ class Version20120119000000 extends BundleMigration
         $this->createFileTable($schema);
         $this->createMessageTable($schema);
         $this->createResourceInstanceTable($schema);
+        $this->createMetaTypeResourceTypeTable($schema);
     }
 
     public function down(Schema $schema)
@@ -50,6 +52,8 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace_message');
         $schema->dropTable('claro_resource_instance');
         $schema->dropTable('claro_license');
+        $schema->dropTable('claro_meta_type');
+        $schema->dropTable('claro_meta_type_resource_type');
     }
 
     private function createUserTable(Schema $schema)
@@ -348,8 +352,32 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_license');
         $this->addId($table);
-        $table->addColumn('name');
+        $table->addColumn('name', 'string', array('notnull' => true));
         
         $this->storeTable($table);
     }
+    
+    private function createMetaTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_meta_type');
+        $this->addId($table);
+        $table->addColumn('meta_type', 'string', array('notnull' => true));     
+        
+        $this->storeTable($table);
+    }
+    
+    private function createMetaTypeResourceTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable("claro_meta_type_resource_type");
+        $this->addId($table);
+        $table->addColumn('meta_type_id', 'integer', array('notnull' => true));
+        $table->addColumn('resource_type_id', 'integer', array('notnull' => true));
+           
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_meta_type'), array('meta_type_id'), array('id'), array('onDelete' => 'CASCADE')
+        ); 
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+    } 
 }
