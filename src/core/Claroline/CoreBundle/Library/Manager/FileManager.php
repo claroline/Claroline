@@ -23,8 +23,6 @@ class FileManager implements ResourceInterface
     protected $formFactory;
     /** @var RightManagerInterface */
     protected $rightManager;
-    /** @var ResourseManager */
-    protected $resourceManager;
     
     protected $templating;
     /** @var ThumbnilGenerator **/
@@ -32,13 +30,12 @@ class FileManager implements ResourceInterface
     
     
     
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, ResourceManager $resourceManager, $templating, ThumbnailGenerator $thumbnailGenerator)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, $templating, ThumbnailGenerator $thumbnailGenerator)
     {   
         $this->em = $em;
         $this->rightManager = $rightManager;
         $this->formFactory = $formFactory; 
         $this->dir = $dir;
-        $this->resourceManager = $resourceManager;
         $this->templating = $templating;
         $this->thumbnailGenerator = $thumbnailGenerator;
     }
