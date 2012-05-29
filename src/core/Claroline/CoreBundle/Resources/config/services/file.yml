@@ -11,7 +11,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.restricted_owner_right_manager"
             - %claroline.files.directory%
-            - "@claroline.resource.manager"
             - "@templating"
             - "@claroline.thumbnail.creator"
             
