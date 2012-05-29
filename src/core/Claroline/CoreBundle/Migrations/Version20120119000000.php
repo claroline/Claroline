@@ -333,6 +333,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('copy', 'boolean', array('not_null' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addColumn('mime', 'string', array('notnull' => false));
          
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
