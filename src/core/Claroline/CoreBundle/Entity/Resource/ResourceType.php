@@ -148,4 +148,9 @@ class ResourceType
     {
         $this->metaTypes->removeElement($metaType);
     }
+    
+    public function getMetaTypes()
+    {
+        return $this->metaTypes;
+    }
 }
