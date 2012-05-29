@@ -182,10 +182,27 @@ class ResourceController extends Controller
        else
        {
            $resourceType = $resourceInstance->getResourceType();
-           $name = $this->findRsrcServ($resourceType);
+           $metaTypes = $resourceType->getMetaTypes();
+           $name = null;
+           
+           foreach($metaTypes as $metaType)
+           {
+               if($metaType->getMetaType()=='file')
+               {
+                   $extension = pathinfo($resourceInstance->getResource()->getName(),PATHINFO_EXTENSION);
+                   $name = $this->findPlayerServ($extension);
+                   
+//                   return new Response($name);
+                   
+                   if($name == null)
+                   {
+                      $name = $this->findRsrcServ($resourceType);
+                   }
+               }
+           }
            $response = $this->get($name)->indexAction($resourceInstance);
-
-           return $response;
+           
+           return new Response($response);
        }
     }
     
@@ -383,6 +400,26 @@ class ResourceController extends Controller
         return $serviceName;
     }
     
+    private function findPlayerServ($extension)
+    {
+        $services = $this->container->getParameter("player.service.list");
+        $names = array_keys($services);
+        $serviceName = null;
+        
+        foreach($names as $name)
+        {
+            $type = $this->get($name)->getExtension();
+            $serviceName = null;
+            
+            if($extension == $type)
+            {
+                $serviceName = $name;
+            }
+        }
+        
+        return $serviceName;
+    }
+    
     public function getResourcesTypeAction()
     {
         $resourcesType = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
@@ -443,6 +480,7 @@ class ResourceController extends Controller
             $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         }
     }
+    
     private function setChildrenCopyCopy($parentInstance, $workspace, $parentCopy)
     {
         $em = $this->getDoctrine()->getEntityManager();
