@@ -1,0 +1,5 @@
+services:
+  claroline.video_player:
+        class: Claroline\VideoPlayerBundle\Player\VideoPlayer
+        tags:
+           - { name: resource.player}
