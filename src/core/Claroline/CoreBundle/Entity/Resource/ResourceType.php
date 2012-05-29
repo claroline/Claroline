@@ -55,16 +55,21 @@ class ResourceType
     private $plugin;
     
     /**
-     * @Gedmo\Locale
-     * Used locale to override Translation listener`s locale
-     * this is not a mapped field of entity metadata, just a simple property
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\MetaType",
+     *      cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="claro_meta_type_resource_type",
+     *      joinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="meta_type_id", referencedColumnName="id")}
+     * )
      */
-    private $locale;
-
-   
+    protected $metaTypes;
+    
     public function __construct()
     {
         $this->resourcesInstance = new ArrayCollection();
+        $this->metaTypes = new ArrayCollection();
     }
     
     public function getId()
@@ -132,5 +137,15 @@ class ResourceType
     public function setClass($class)
     {
         $this->class=$class;
+    }
+    
+    public function addMetaType($metaType)
+    {
+        $this->metaTypes->add($metaType);
+    }
+    
+    public function removeMetaType($metaType)
+    {
+        $this->metaTypes->removeElement($metaType);
     }
 }
