@@ -45,6 +45,7 @@ services:
             - "@claroline.plugin.migrator"
             - "@claroline.plugin.recorder"
             - "@kernel"
+            - "@doctrine.orm.entity_manager"
     
     claroline.plugin.loader:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Loader
@@ -78,7 +79,7 @@ services:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Migrator
         arguments:
             - "@claroline.install.bundle_migrator"
-           
+          
     claroline.plugin.recorder:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Recorder
         arguments:
