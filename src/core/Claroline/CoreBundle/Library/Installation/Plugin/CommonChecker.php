@@ -308,7 +308,8 @@ class CommonChecker
                
                 if(isset($resource['class']))
                 {    
-                    $expectedClassLocation = __DIR__.'/../../../../../'.str_replace('\\','/',$resource['class']).'.php';
+                    $expectedClassLocation = $this->plugin->getPath() . '/../../'
+                    . str_replace('\\', '/', $resource['class']) . '.php';
 
                     if (! file_exists($expectedClassLocation))
                     {
