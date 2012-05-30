@@ -119,12 +119,17 @@ class DatabaseWriter
                 {
                     $resourceType->setClass($resource['class']);
                 }
+                if(isset($resource['extends']))
+                {
+                    $resourceExtended = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resource['extends']);
+                    $resourceType->setParent($resourceExtended);
+                }
                 
                 $resourceType->setType($resource['name']);
                 $resourceType->setListable($resource['listable']);
                 $resourceType->setNavigable($resource['navigable']);
                 $resourceType->setPlugin($pluginEntity);
-                
+                         
                 $this->em->persist($resourceType);
             }
         }
