@@ -112,9 +112,14 @@ class DatabaseWriter
             $resources = (array) $this->yamlParser->parse($resourceFile);
 
             foreach ($resources as $resource)
-            {
+            {              
                 $resourceType = new ResourceType();
-                $resourceType->setClass($resource['class']);
+                
+                if(isset($resource['class']))
+                {
+                    $resourceType->setClass($resource['class']);
+                }
+                
                 $resourceType->setType($resource['name']);
                 $resourceType->setListable($resource['listable']);
                 $resourceType->setNavigable($resource['navigable']);

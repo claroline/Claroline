@@ -278,7 +278,6 @@ class CommonChecker
         {
             $resources = (array) $this->yamlParser->parse($resourceFile);
             $expectedKeys = array(
-                'class' => 'string',
                 'name' => 'string',
                 'manager_service_id' => 'string',
                 'controller' => 'string',
@@ -306,30 +305,33 @@ class CommonChecker
                         );
                     }
                 }
-                
-                $expectedClassLocation = $this->plugin->getPath() . '/../../' 
-                    . str_replace('\\', '/', $resource['class']) . '.php';
-                
-                if (! file_exists($expectedClassLocation))
-                {
-                    throw new InstallationException(
-                        "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) " 
-                        . "cannot be found (looked for {$expectedClassLocation}).",
-                        InstallationException::INVALID_RESOURCE_LOCATION
-                    );
-                }
-                
-                require_once $expectedClassLocation;
-                
-                $classInstance = new $resource['class'];
-                
-                if (! $classInstance instanceof AbstractResource)
-                {
-                    throw new InstallationException(
-                        "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) "
-                        . "must extend Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource.",
-                        InstallationException::INVALID_RESOURCE_TYPE
-                    );
+               
+                if(isset($resource['class']))
+                {    
+                    $expectedClassLocation = __DIR__.'/../../../../../'.str_replace('\\','/',$resource['class']).'.php';
+
+                    if (! file_exists($expectedClassLocation))
+                    {
+
+                        throw new InstallationException(
+                            "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) " 
+                            . "cannot be found (looked for {$expectedClassLocation}).",
+                            InstallationException::INVALID_RESOURCE_LOCATION
+                        );
+                    }
+
+                    require_once $expectedClassLocation;
+
+                    $classInstance = new $resource['class'];
+
+                    if (! $classInstance instanceof AbstractResource)
+                    {
+                        throw new InstallationException(
+                            "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) "
+                            . "must extend Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource.",
+                            InstallationException::INVALID_RESOURCE_TYPE
+                        );
+                    }
                 }
             }
         }
