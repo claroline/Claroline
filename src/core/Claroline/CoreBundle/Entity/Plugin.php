@@ -72,7 +72,12 @@ abstract class Plugin
     {
         return $this->bundleFQCN;
     }
-
+    
+    public function getGeneratedId()
+    {
+        return $this->id;
+    }
+     
     public function getType()
     {
         return $this->type;
