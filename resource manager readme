@@ -1,0 +1,25 @@
+1/ articulé autour des tables :
+    - meta_type : donne dans quel "gestionnaire" utilisera la ressource
+    - resource_type : un genre de mime_type pour savoir comment la gérer
+    - resource : la manière dont est stockée la ressource ~
+        ~ plusieurs types prédéfinis (avec déjà leur propre ressource_type)
+            - file (logique)
+            - directory (logique)
+            - liens (à définir plus tard)
+            - d'autres futurs types défini dans des plugin (cf précédent système de plugin)
+    - resource_instance : instance de la ressource associée à un workspace
+    - workspace : logique
+
+2/ gestion des plugin :
+un plugin doit être capable selon les cas de :
+    - créer un nouveau type de player (cf VideoPlayer): Lorsque le gestionnaire de ressource veut
+      en ouvrir une, il va regarder le type de ressource. Si le type est "File" il va voir s'il n'a 
+      pas un player qu'il s'en charge en fct de l'extension.
+    - permettre plusieurs players différent pour une même extension (style zip). Pour celà le gestionnaire
+      délègue au manager associé au type de ressource.
+    - créer un nouveau type à partir de rien (cf gestionnaire précédent).
+
+Suppression d'un plugin:
+    - lors de la suppression d'un plugin qui permettait de définir un player pour une ressource, la ressource n'est pas supprimée.
+      Dans le cas ou le type de ressource est "file" c'est simple car le plugin est indépendant, sinon il est associé au nouveau 
+      type de ressource et doit garder en mémoire quel était le type original de cette ressource.
