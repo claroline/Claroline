@@ -1,4 +1,5 @@
 html_element:
+    extends: 2
     name: HTMLElement
     manager_service_id: htmlpage.manager
     controller: HTMLElement
