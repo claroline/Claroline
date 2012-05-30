@@ -6,9 +6,12 @@ services:
   claroline.html_element.manager:
         class: Claroline\HTMLPageBundle\Manager\HTMLPageManager
         arguments:
-          - %claroline.files.directory%
           - "@form.factory"
           - "@doctrine.orm.entity_manager"
+          - "@claroline.security.restricted_owner_right_manager"
+          - %claroline.files.directory%
+          - "@templating"
+          - "@claroline.thumbnail.creator"
           - "@router"
           - %claroline.html_page.directory%
         tags:
