@@ -66,6 +66,18 @@ class ResourceType
      */
     protected $metaTypes;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", mappedBy="parent")
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    protected $children;
+    
     public function __construct()
     {
         $this->resourcesInstance = new ArrayCollection();
@@ -153,4 +165,20 @@ class ResourceType
     {
         return $this->metaTypes;
     }
+    
+    public function setParent(ResourceType $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
 }
