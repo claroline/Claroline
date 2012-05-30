@@ -169,6 +169,7 @@ class ResourceController extends Controller
         return $response;
     }
 
+    //todo: refactor openAction
     public function openAction($id)
     {      
        $em = $this->getDoctrine()->getEntityManager(); 
