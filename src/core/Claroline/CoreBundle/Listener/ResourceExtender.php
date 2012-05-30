@@ -25,8 +25,11 @@ class ResourceExtender implements EventSubscriber
             
             foreach ($pluginTypes as $pluginType)
             {
-                $classMetadata->discriminatorMap[$pluginType['class']] = $pluginType['class'];
-                $classMetadata->subClasses[] = $pluginType['class'];
+                if($pluginType['class']!='')
+                {
+                    $classMetadata->discriminatorMap[$pluginType['class']] = $pluginType['class'];
+                    $classMetadata->subClasses[] = $pluginType['class'];
+                }
             }
         }
     }
