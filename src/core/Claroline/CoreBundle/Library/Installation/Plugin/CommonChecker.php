@@ -334,6 +334,12 @@ class CommonChecker
                         );
                     }
                 }
+                
+                //todo check resource extends
+                if(isset($resource['extends']))
+                {
+                    //should check if it extends a valid entity
+                }
             }
         }
     }
