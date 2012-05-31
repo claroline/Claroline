@@ -22,6 +22,7 @@ class ResourceControllerTest extends FunctionalTestCase
     }
     
     //this test works with the file controller
+    
     public function testUserCanCreateFileResource()
     {
         //test
