@@ -13,6 +13,6 @@ class VideoPlayer implements PlayerInterface
     
     public function indexAction()
     {
-        return new Response ("redéfini openAction pour mp4");
+        return new Response("redéfini openAction pour mp4");
     }
 }
