@@ -356,7 +356,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_license');
         $this->addId($table);
         $table->addColumn('name', 'string', array('notnull' => true));
-        $table->addColumn('acronym', 'string', array('notnull' => true));
+        $table->addColumn('acronym', 'string', array('notnull' => false));
         
         $this->storeTable($table);
     }
