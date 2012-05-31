@@ -1,0 +1,11 @@
+[
+{% set cpt = 0 %}
+{% for license in licenses %}
+{
+    "id":{{license.getId()}},
+    "name":"{{license.getName()}}"
+}
+{% set cpt = cpt + 1 %}
+{% if cpt < licenses|length %},{% endif %}
+{% endfor %}
+]
