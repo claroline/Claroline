@@ -306,6 +306,13 @@ class CommonChecker
                     }
                 }
                
+                if(false==isset($resource['class']) && false==isset($resource['extends']))
+                {
+                    throw new InstallationException(
+                            "{$this->pluginFQCN} : must have requires a field 'class' or a field 'extends'"
+                            );
+                }
+                
                 if(isset($resource['class']))
                 {    
                     $expectedClassLocation = $this->plugin->getPath() . '/../../'
