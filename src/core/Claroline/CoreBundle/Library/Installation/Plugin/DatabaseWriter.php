@@ -121,7 +121,8 @@ class DatabaseWriter
                 }
                 if(isset($resource['extends']))
                 {
-                    $resourceExtended = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resource['extends']);
+                    //resource Type ex
+                    $resourceExtended = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $resource['extends']));
                     $resourceType->setParent($resourceExtended);
                 }
                 
