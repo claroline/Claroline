@@ -336,6 +336,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('copy', 'boolean', array('not_null' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('mime', 'string', array('notnull' => false));
+        $table->addColumn('license_id', 'integer', array('notnull' => false));
          
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
@@ -348,6 +349,9 @@ class Version20120119000000 extends BundleMigration
         ); 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'SET NULL')
+        ); 
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_license'), array('license_id'), array('id'), array('onDelete' => 'SET NULL')
         ); 
     }   
     
