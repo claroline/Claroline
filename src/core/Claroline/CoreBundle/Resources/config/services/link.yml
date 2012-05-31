@@ -1,0 +1,8 @@
+services:
+    claroline.link.manager:
+        class: Claroline\CoreBundle\Library\Manager\LinkManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+        tags:
+           - { name: resource.manager}

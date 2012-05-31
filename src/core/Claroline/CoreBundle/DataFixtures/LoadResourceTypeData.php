@@ -22,24 +22,23 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
         $dirType->setListable(true);
         $dirType->setNavigable(true);
         
-        $fileMeta = new MetaType();
-        $fileMeta->setMetaType('file');
+        $linkType = new ResourceType();
+        $linkType->setType('link');
+        $linkType->setListable(true);
+        $linkType->setNavigable(false);
         
-        $archiveMeta = new MetaType();
-        $archiveMeta->setMetaType('archive');
-        
-        $eventMeta = new MetaType();
-        $eventMeta->setMetaType('event');
-         
+        $documentMeta = new MetaType();
+        $documentMeta->setMetaType('document');
+
         $manager->persist($dirType);
         $manager->persist($fileType);
-        $manager->persist($fileMeta);
-        $manager->persist($archiveMeta);
-        $manager->persist($eventMeta);
+        $manager->persist($linkType);
+        $manager->persist($documentMeta);
         
-        $fileType->addMetaType($fileMeta);
-        $dirType->addMetaType($fileMeta);
-        
+        $fileType->addMetaType($documentMeta);
+        $dirType->addMetaType($documentMeta);
+        $linkType->addMetaType($documentMeta);
+         
         $manager->flush();
         
         $this->addReference('resource_type/file', $fileType);
