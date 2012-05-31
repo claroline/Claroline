@@ -10,6 +10,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class License 
 {
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\generatedValue(strategy="AUTO")
+     */
+    protected $id;
+    
     /**
      * @ORM\Column(name="name", type="string") 
      */
@@ -19,6 +27,11 @@ class License
      * @ORM\Column(name="acronym", type="string") 
      */
     protected $acronym;
+    
+    public function getId()
+    {
+        return $this->id;
+    }
     
     public function setName($name)
     {
