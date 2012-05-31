@@ -44,7 +44,7 @@ class HTMLPageManager extends FileManager
         $resource = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
         $hashName = $resource->getHashName();
         $this->unzipTmpFile($hashName);
-        $relativePath = pathinfo($resource->getHashName(), PATHINFO_FILENAME).$ds.pathinfo($resource->getName(),PATHINFO_FILENAME).$ds."index.html";
+        $relativePath = pathinfo($resource->getHashName(), PATHINFO_FILENAME).$ds.pathinfo($resource->getName(), PATHINFO_FILENAME).$ds."index.html";
         $route = $this->router->getContext()->getBaseUrl();
         $fp = preg_replace('"/web/app_dev.php$"', "/web/HTMLPage/$relativePath", $route);
         

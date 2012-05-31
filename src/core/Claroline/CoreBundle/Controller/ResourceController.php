@@ -190,7 +190,7 @@ class ResourceController extends Controller
            {
                if($metaType->getMetaType()=='file')
                {
-                   $extension = pathinfo($resourceInstance->getResource()->getName(),PATHINFO_EXTENSION);
+                   $extension = pathinfo($resourceInstance->getResource()->getName(), PATHINFO_EXTENSION);
                    $name = $this->findPlayerServ($extension);
                    
 //                   return new Response($name);
