@@ -541,4 +541,15 @@ class ResourceController extends Controller
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');  
     }
+    
+    public function getJsonLicensesListAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $licenses = $em->getRepository('Claroline\CoreBundle\Entity\License')->findAll();
+        $content = $this->renderView('ClarolineCoreBundle:Resource:license_list.json.twig', array('licenses' => $licenses));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');  
+        
+        return $response;
+    }
 }

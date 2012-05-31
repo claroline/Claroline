@@ -86,3 +86,9 @@ claro_resource_get_instances:
    defaults: { _controller: ClarolineCoreBundle:Resource:getResourcesReference }
    options:
      expose: true
+     
+claro_get_license_list:
+   pattern: /license/list
+   defaults: { _controller: ClarolineCoreBundle:Resource:getJsonLicensesList }
+   options:
+     expose: true
