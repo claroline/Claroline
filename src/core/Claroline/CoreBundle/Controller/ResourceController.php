@@ -182,25 +182,23 @@ class ResourceController extends Controller
        }
        else
        {
-           $resourceType = $resourceInstance->getResourceType();
-           $metaTypes = $resourceType->getMetaTypes();
-           $name = null;
-           
-           foreach($metaTypes as $metaType)
-           {
-               if($metaType->getMetaType()=='file')
-               {
-                   $extension = pathinfo($resourceInstance->getResource()->getName(), PATHINFO_EXTENSION);
-                   $name = $this->findPlayerServ($extension);
-                   
+            $resourceType = $resourceInstance->getResourceType();
+            
+            if($resourceType->getType()=='file')
+            {
+                $name = null;
+                $extension = pathinfo($resourceInstance->getResource()->getName(), PATHINFO_EXTENSION);
+                $name = $this->findPlayerServ($extension);
 //                   return new Response($name);
-                   
-                   if($name == null)
-                   {
-                      $name = $this->findRsrcServ($resourceType);
-                   }
-               }
-           }
+                if($name == null)
+                {
+                    $name = $this->findRsrcServ($resourceType);
+                }
+            }
+            else
+            {
+                $name = $this->findRsrcServ($resourceType);
+            }
            $response = $this->get($name)->indexAction($resourceInstance);
            
            return new Response($response);
