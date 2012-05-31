@@ -1,7 +1,7 @@
 <?php
 namespace Claroline\CoreBundle\Library\Manager;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\Link;
 use Claroline\CoreBundle\Form\LinkType;
@@ -23,12 +23,13 @@ class LinkManager //implements ResourceInterface
     
     public function getDefaultAction($id)
     {
-        //redirection vers lien
+        $link = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\Link')->find($id);
+        return new RedirectResponse($link->getUrl());
     }
     
     public function getIndexAction($id)
     {
-        
+
     }
     
     public function delete($id)
@@ -44,8 +45,8 @@ class LinkManager //implements ResourceInterface
     public function add($form, $id, $user)
     {
         $link = new Link();
-        $name = $form['name'];
-        $url = $form['url'];
+        $name = $form['name']->getData();
+        $url = $form['url']->getData();
         $link->setName($name.'.url');
         $link->setUrl($url);
         $this->em->persist($link);

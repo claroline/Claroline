@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory"})
+ * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory", "link" ="Link"} )
  */
 abstract class AbstractResource
 {
