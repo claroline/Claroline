@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -49,6 +50,18 @@ abstract class AbstractResource
      * @ORM\Column(type="boolean", name="is_sharable") 
      */
     protected $isSharable;
+    
+    /**
+    * @ORM\Column(type="datetime")
+    * @Gedmo\Timestampable(on="create")
+    */
+    protected $created;
+
+        /**
+    * @ORM\Column(type="datetime")
+    * @Gedmo\Timestampable(on="update")
+    */
+    protected $updated;
     
     public function __construct()
     {
@@ -119,6 +132,16 @@ abstract class AbstractResource
     public function setSharable($isSharable)
     {
         $this->isSharable=$isSharable;
+    }
+    
+    public function getCreationDate()
+    {
+        return $this->created;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->updated;
     }
           
 }
