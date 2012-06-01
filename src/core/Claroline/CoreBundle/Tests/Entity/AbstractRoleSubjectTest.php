@@ -63,13 +63,12 @@ class AbstractRoleSubjectTest extends FixtureTestCase
     
     public function testRemoveAChildrenRoleDoesntAffectParentRole()
     {
-        $this->markTestSkipped("don't understand");
         $user = $this->getFixtureReference('user/ws_creator');
         $wsCreatorRole = $this->getFixtureReference('role/ws_creator');       
         $user->removeRole($wsCreatorRole);
         $userRoles = $user->getOwnedRoles(true);
-        $this->assertEquals(1, count($userRoles));
-        $this->assertEquals(PlatformRoles::USER, $userRoles[0]->getName());
+        $this->assertEquals(3, count($userRoles));
+        $this->assertEquals(PlatformRoles::USER, $userRoles[2]->getName());
         
         $groupB = $this->getFixtureReference('group/group_b');
         $roleD = $this->getFixtureReference('role/role_d');       
