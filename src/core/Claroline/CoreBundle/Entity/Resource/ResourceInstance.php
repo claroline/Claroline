@@ -102,12 +102,7 @@ class ResourceInstance
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
-    
-    /**
-     * @ORM\Column(type="string") 
-     */
-    protected $mime;
-    
+      
     public function __construct()
     {
         $this->workspaces = new ArrayCollection();
@@ -211,15 +206,5 @@ class ResourceInstance
     public function getName()
     {
         return $this->abstractResource->getName();
-    }
-    
-    public function getMime()
-    {
-        return $this->mime;
-    }
-    
-    public function setMime($mime)
-    {
-        $this->mime= $mime;
-    }
+    }  
 }

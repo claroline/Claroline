@@ -288,6 +288,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('date_upload', 'datetime');
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
+        $table->addColumn('mime', 'string', array('notnull' => false));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
@@ -338,7 +339,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('copy', 'boolean', array('not_null' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
-        $table->addColumn('mime', 'string', array('notnull' => false));
         $table->addColumn('license_id', 'integer', array('notnull' => false));
          
         $table->addForeignKeyConstraint(
