@@ -189,8 +189,8 @@ class ResourceController extends Controller
             if($resourceType->getType()=='file')
             {
                 $name = null;
-                $extension = pathinfo($resourceInstance->getResource()->getName(), PATHINFO_EXTENSION);
-                $name = $this->findPlayerServ($extension);
+                $mime = $resourceInstance->getResource()->getMime();
+                $name = $this->findPlayerServ($mime);
 //                   return new Response($name);
                 if($name == null)
                 {
@@ -401,7 +401,7 @@ class ResourceController extends Controller
         return $serviceName;
     }
     
-    private function findPlayerServ($extension)
+    private function findPlayerServ($mime)
     {
         $services = $this->container->getParameter("player.service.list");
         $names = array_keys($services);
@@ -409,10 +409,10 @@ class ResourceController extends Controller
         
         foreach($names as $name)
         {
-            $type = $this->get($name)->getExtension();
+            $fileMime = $this->get($name)->getMime();
             $serviceName = null;
             
-            if($extension == $type)
+            if($fileMime == $mime)
             {
                 $serviceName = $name;
             }
