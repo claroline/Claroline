@@ -29,7 +29,9 @@ class LinkManager //implements ResourceInterface
     
     public function getIndexAction($id)
     {
-
+        //openAction
+        //check mime type ?
+        //check resource type ?
     }
     
     public function delete($id)
@@ -47,8 +49,10 @@ class LinkManager //implements ResourceInterface
         $link = new Link();
         $name = $form['name']->getData();
         $url = $form['url']->getData();
+        $type = $form['type']->getData();
         $link->setName($name.'.url');
         $link->setUrl($url);
+        $link->setResourceType($type);
         $this->em->persist($link);
         $this->em->flush();
         
@@ -57,7 +61,7 @@ class LinkManager //implements ResourceInterface
     
     public function getForm()
     {
-        $form = $this->formFactory->create(new LinkType, new Link());
+        $form = $this->formFactory->create(new LinkType(), new Link());
         
         return $form;
     }

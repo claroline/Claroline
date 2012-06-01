@@ -11,6 +11,7 @@ class LinkType extends AbstractType
     {
         $builder->add('url', 'text');
         $builder->add('name', 'text');
+        $builder->add('resourceType', 'entity',  array('class' => 'ClarolineCoreBundle:Resource\ResourceType', 'property' => 'type'));
     }
 
     public function getName()
