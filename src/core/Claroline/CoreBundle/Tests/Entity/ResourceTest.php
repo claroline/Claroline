@@ -11,14 +11,14 @@ class ResourceTest extends FixtureTestCase
     {
         parent::setUp();
         $this->loadUserFixture();
-        $this->markTestSkipped('Resource are "replaced" by ResourceInstance');
+        //$this->markTestSkipped('Resource are "replaced" by ResourceInstance');
     }
     
     public function testANewResourceHasCreationAndModificationDatesWhenFlushed()
     {
         $resource = new Directory();
         $resource->setName('Test');
-        $resource->setUser($this->getFixtureReference('user/admin'));
+        //$resource->setUser($this->getFixtureReference('user/admin'));
         $this->getEntityManager()->persist($resource);
         $this->getEntityManager()->flush();
         $creationTime = new \DateTime(); 
@@ -36,7 +36,7 @@ class ResourceTest extends FixtureTestCase
     {
         $resource = new Directory();
         $resource->setName('Test');
-        $resource->setUser($this->getFixtureReference('user/admin'));
+        //$resource->setUser($this->getFixtureReference('user/admin'));
         $this->getEntityManager()->persist($resource);
         $this->getEntityManager()->flush();
         
