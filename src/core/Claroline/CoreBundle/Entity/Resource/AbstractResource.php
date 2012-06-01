@@ -39,6 +39,12 @@ abstract class AbstractResource
      */
     protected $instanceAmount;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResource")
+     * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
+     */
+    protected $license;
+    
     public function __construct()
     {
         $this->resourcesInstance = new ArrayCollection();
@@ -88,6 +94,16 @@ abstract class AbstractResource
     public function getInstanceAmount()
     {
         return $this->instanceAmount;
+    }
+    
+    public function getLicense()
+    {
+        return $this->license;
+    }
+    
+    public function setLicense($license)
+    {
+        $this->license = $license;
     }
           
 }
