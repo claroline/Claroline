@@ -17,7 +17,7 @@ class ResourceExtenderTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->markTestSkipped("AbstractResource 'replaced' by ResourceInstace");
+        //$this->markTestSkipped("AbstractResource 'replaced' by ResourceInstace");
     }
 
     public function testResourceExtenderIsSubscribed()
@@ -87,25 +87,26 @@ class ResourceExtenderTest extends FunctionalTestCase
         $conn->exec($sql);
     }
     
+    //resources don't have a user anymore. ResourceInstances do
     private function createSpecificResources()
     {      
         $this->loadUserFixture();
       
         $firstRes = new SpecificResource1();
         $firstRes->setSomeField('Test');
-        $firstRes->setUser($this->getFixtureReference('user/user'));
+        //$firstRes->setUser($this->getFixtureReference('user/user'));
         
         $secondRes = new SpecificResource2();
         $secondRes->setSomeField('Test');
-        $secondRes->setUser($this->getFixtureReference('user/ws_creator'));
+        //$secondRes->setUser($this->getFixtureReference('user/ws_creator'));
         
         $thirdRes = new SpecificResource2();
         $thirdRes->setSomeField('Test');
-        $thirdRes->setUser($this->getFixtureReference('user/admin'));
+        //$thirdRes->setUser($this->getFixtureReference('user/admin'));
         
         $fourthRes = new Directory();
         $fourthRes->setName('Test');
-        $fourthRes->setUser($this->getFixtureReference('user/admin'));
+        //$fourthRes->setUser($this->getFixtureReference('user/admin'));
         
         $this->em->persist($firstRes);
         $this->em->persist($secondRes);
