@@ -6,13 +6,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VideoPlayer implements PlayerInterface
 {
+    /*
     public function getExtension()
     {
         return "mp4";
-    }
+    }*/
     
     public function indexAction()
     {
         return new Response("redéfini openAction pour mp4");
+    }
+    
+    public function getMime()
+    {
+        return "video/mp4";
     }
 }
