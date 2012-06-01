@@ -309,7 +309,7 @@ class CommonChecker
                 if(false==isset($resource['class']) && false==isset($resource['extends']))
                 {
                     throw new InstallationException(
-                            "{$this->pluginFQCN} : must have requires a field 'class' or a field 'extends'"
+                            "{$this->pluginFQCN} : requires a field 'class' or a field 'extends'"
                             );
                 }
                 
@@ -345,7 +345,17 @@ class CommonChecker
                 //todo check resource extends
                 if(isset($resource['extends']))
                 {
-                    //should check if it extends a valid entity
+                    $expectedClassLocation = __DIR__.'/../../../Entity/Resource/'
+                    .str_replace('\\', '/', $resource['extends']).'.php';
+                    
+                    if (! file_exists($expectedClassLocation))
+                    {
+                        throw new InstallationException(
+                            "{$this->pluginFQCN} : {$resource['extends']} (declared in {$resourceFile}) " 
+                            . "cannot be found (looked for {$expectedClassLocation}).",
+                            InstallationException::INVALID_RESOURCE_LOCATION
+                                );
+                    }              
                 }
             }
         }
