@@ -9,7 +9,9 @@ class FileType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'file');;
+        $builder->add('name', 'file');
+        $builder->add('license', 'entity', array('class' => 'ClarolineCoreBundle:License', 'property' => 'name'));
+        
     }
 
     public function getName()

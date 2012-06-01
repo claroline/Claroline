@@ -28,6 +28,11 @@ class License
      */
     protected $acronym;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="license")
+     */
+    protected $abstractResources;
+    
     public function getId()
     {
         return $this->id;
@@ -53,5 +58,8 @@ class License
         return $this->acronym;
     }
     
-          
+    public function getResources()
+    {
+        return $this->abstractResources;
+    }        
 }
