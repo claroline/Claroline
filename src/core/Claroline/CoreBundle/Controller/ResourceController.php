@@ -96,6 +96,8 @@ class ResourceController extends Controller
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
                 $resource->addInstance();
+                //set sharable to sthg
+                $resource->setSharable(false);
                 $em->persist($ri);
                 $em->flush();
                 $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);  

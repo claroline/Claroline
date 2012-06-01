@@ -118,7 +118,7 @@ abstract class AbstractResource
     
     public function setSharable($isSharable)
     {
-        $this->isSharable=$sharable;
+        $this->isSharable=$isSharable;
     }
           
 }
