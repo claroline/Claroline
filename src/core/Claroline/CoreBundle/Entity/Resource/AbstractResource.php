@@ -44,6 +44,11 @@ abstract class AbstractResource
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
     protected $license;
+   
+    /**
+     * @ORM\Column(type="boolean", name="is_sharable") 
+     */
+    protected $isSharable;
     
     public function __construct()
     {
@@ -104,6 +109,16 @@ abstract class AbstractResource
     public function setLicense($license)
     {
         $this->license = $license;
+    }
+    
+    public function isSharable()
+    {
+        return $this->isSharable;
+    }
+    
+    public function setSharable($isSharable)
+    {
+        $this->isSharable=$sharable;
     }
           
 }
