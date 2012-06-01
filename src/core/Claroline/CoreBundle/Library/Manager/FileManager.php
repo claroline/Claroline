@@ -95,6 +95,7 @@ class FileManager implements ResourceInterface
          $file->setHashName($hashName);
          $this->em->persist($file);
          $this->em->flush();
+         $file->createAndSetMime($extension);
          //$this->thumbnailGenerator->createThumbNail("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", ThumbnailGenerator::WIDTH, ThumbnailGenerator::HEIGHT);
          
          return $file;
