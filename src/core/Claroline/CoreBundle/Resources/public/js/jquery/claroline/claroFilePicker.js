@@ -368,7 +368,8 @@
 
     function openNode(node)
     {
-        window.location = Routing.generate('claro_resource_open',{'id':node.data.key});
+        console.debug(node);
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
     } 
     
     function viewNode(node)

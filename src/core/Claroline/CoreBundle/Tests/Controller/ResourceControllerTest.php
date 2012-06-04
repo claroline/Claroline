@@ -54,7 +54,8 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
        $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->client->request('GET', "/resource/open/{$id}");
+       $workspace = $this->findResourceWorkspace($id);
+       $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
@@ -62,7 +63,8 @@ class ResourceControllerTest extends FunctionalTestCase
     {
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
-       $this->client->request('GET', "/resource/open/{$id}");
+       $workspace = $this->findResourceWorkspace($id);
+       $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
     
@@ -271,5 +273,15 @@ class ResourceControllerTest extends FunctionalTestCase
          $link = $crawler->filter("#link_unregistration_{$this->getFixtureReference('workspace/ws_a')->getId()}")->link();
          $this->client->click($link);
      }
+     
+     private function findResourceWorkspace($resourceId)
+     {
+         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+         $workspace = $resourceInstance->getWorkspace();
+         
+         return $workspace;
+     }
+         
 }    
     

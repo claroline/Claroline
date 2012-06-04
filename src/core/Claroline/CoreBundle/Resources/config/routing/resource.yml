@@ -13,7 +13,7 @@ claro_resource_delete:
       expose: true
       
 claro_resource_open:
-   pattern: /open/{id}
+   pattern: /open/{workspaceId}/{id}
    defaults: { _controller: ClarolineCoreBundle:Resource:open }
    options:
       expose: true   

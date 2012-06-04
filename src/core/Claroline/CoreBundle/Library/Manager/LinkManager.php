@@ -27,7 +27,7 @@ class LinkManager //implements ResourceInterface
         return new RedirectResponse($link->getUrl());
     }
     
-    public function getIndexAction($id)
+    public function getIndexAction($workspaceId, $id)
     {
         //openAction
         //check mime type ?

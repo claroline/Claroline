@@ -67,7 +67,7 @@
                     node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': repositoryId})});
                 },
                 onCreate: function(node, span){
-                    bindContextMenu(node);
+                    bindContextMenu(node, repositoryId);
                 },
                 onDblClick: function(node)
                 {
@@ -224,9 +224,9 @@
         });
     }
     
-    function openNode(node)
+    function openNode(node, repositoryId)
     {
-        window.location = Routing.generate('claro_resource_open',{'id':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': repositoryId, 'id':node.data.key});
     }   
     
     function viewNode(node)
@@ -234,7 +234,7 @@
         window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
     }
     
-   function bindContextMenu(node){
+   function bindContextMenu(node, repositoryId){
     
     var menuDefaultOptions = {
     selector: 'a.dynatree-title', 
@@ -242,7 +242,7 @@
             switch(key)
             {
                 case "open":
-                    openNode(node);
+                    openNode(node, repositoryId);
                     break;
                 case "delete":
                     deleteNode(node);

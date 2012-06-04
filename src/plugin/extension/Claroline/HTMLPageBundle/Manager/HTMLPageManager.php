@@ -32,7 +32,7 @@ class HTMLPageManager extends FileManager
         return "HTMLElement";
     }
  
-    public function indexAction($id)
+    public function indexAction($workspaceId, $id)
     {
         return new Response("index PAGEMANAGER HTML");
     }

@@ -132,7 +132,7 @@ class FileManager implements ResourceInterface
         return $response; 
     }
     
-    public function indexAction($id)
+    public function indexAction($workspaceId, $id)
     {
         $content = $this->templating->render(
             'ClarolineCoreBundle:File:index.html.twig');
