@@ -41,7 +41,7 @@ abstract class AbstractResource
     protected $instanceAmount;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResource", cascade={"persist"})
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
     protected $license;
@@ -57,11 +57,17 @@ abstract class AbstractResource
     */
     protected $created;
 
-        /**
+   /**
     * @ORM\Column(type="datetime")
     * @Gedmo\Timestampable(on="update")
     */
     protected $updated;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="abstractResource", cascade={"persist"})
+     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     */
+    protected $resourceType;
     
     public function __construct()
     {
@@ -143,5 +149,14 @@ abstract class AbstractResource
     {
         return $this->updated;
     }
-          
+    
+    public function getResourceType()
+    {
+        return $this->resourceType;
+    }                      
+    
+    public function setResourceType($resourceType)
+    {
+        $this->resourceType = $resourceType;
+    }
 }

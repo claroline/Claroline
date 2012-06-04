@@ -17,10 +17,7 @@ class Link extends AbstractResource
      * @ORM\Column(type="string")
      */
     private $url;
-    
-    /** @var ResourceType */
-    private $resourceType;
-    
+      
     public function getUrl()
     {
         return $this->url;
@@ -29,15 +26,5 @@ class Link extends AbstractResource
     public function setUrl($url)
     {
         $this->url = $url;
-    }
-    
-    public function getResourceType()
-    {
-        return $this->resourceType;
-    }
-    
-    public function setResourceType(ResourceType $resourceType)
-    {
-        $this->resourceType = $resourceType;
     }
 }

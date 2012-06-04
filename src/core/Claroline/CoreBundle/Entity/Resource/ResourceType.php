@@ -27,10 +27,10 @@ class ResourceType
      */
     private $type; 
     
-    /*
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="resource_type")
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resourceType", cascade={"persist"})
      */ 
-    private $resourcesInstance;
+    private $abstractResource;
     
     /**
      * @ORM\Column(type="string", length=255)
@@ -180,5 +180,14 @@ class ResourceType
     {
         return $this->children;
     }
-
+    
+    public function getResource()
+    {
+        return $this->abstractResource;
+    }
+    
+    public function setResource($abstractResource)
+    {
+        $this->abstractResource = $abstractResource;
+    }
 }

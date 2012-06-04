@@ -43,13 +43,6 @@ class ResourceInstance
     protected $user;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="resourcesInstance")
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
-     */
-    protected $resourceType;
-    
-    //add * to make it works
-    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="resourcesInstance")
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */
@@ -137,17 +130,7 @@ class ResourceInstance
     {
        $this->user=$user;
     }
-    
-    public function getResourceType()
-    {
-        return $this->resourceType;
-    }
-    
-    public function setResourceType(ResourceType $resourceType)
-    {
-       $this->resourceType=$resourceType;
-    } 
-    
+
     public function setParent(ResourceInstance $parent = null)
     {
         $this->parent = $parent;
@@ -207,4 +190,14 @@ class ResourceInstance
     {
         return $this->abstractResource->getName();
     }  
+    
+    public function setResourceType($resourceType)
+    {
+        $this->abstractResource->setResourceType($resourceType);
+    }
+    
+    public function getResourceType()
+    {
+        return $this->abstractResource->getResourceType();
+    }
 }

@@ -29,7 +29,7 @@ class License
     protected $acronym;
     
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="license")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="license", cascade={"persist"})
      */
     protected $abstractResources;
     
