@@ -21,4 +21,9 @@ class VideoPlayer implements PlayerInterface
     {
         return "video/mp4";
     }
+    
+    public function getPlayerName()
+    {
+        return "mp4Player";
+    }
 }
