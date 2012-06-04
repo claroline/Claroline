@@ -146,6 +146,11 @@ class FileManager implements ResourceInterface
         return $response;
     }
     
+    public function getPlayerName()
+    {
+        return "default file player";
+    }
+    
     private function GUID()
     {
         if (function_exists('com_create_guid') === true)
