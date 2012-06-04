@@ -31,11 +31,13 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceInstanceTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
+        $this->createMimeTable($schema);
     }
 
     public function down(Schema $schema)
     {
         $schema->dropTable('claro_link');
+        $schema->dropTable('claro_mime');
         $schema->dropTable('claro_file');
         $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
@@ -394,5 +396,14 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable("claro_link");
         $this->addId($table);
         $table->addColumn('url', 'string');
+    }
+    
+    private function createMimeTable(Schema $schema)
+    {
+        $table = $schema->createTable("claro_mime");
+        $this->addId($table);
+        $table->addColumn('name', 'string');
+        $table->addColumn('type', 'string');
+        $table->addColumn('extension', 'string');
     }
 }
