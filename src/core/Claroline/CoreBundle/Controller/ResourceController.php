@@ -412,7 +412,11 @@ class ResourceController extends Controller
             $fileMime = $this->get($name)->getMime();
             $serviceName = null;
             
-            if($fileMime == $mime)
+            if( $fileMime == $mime->getType() && $serviceName == null)
+            {
+                $serviceName = $name;
+            }
+            if($fileMime == $mime->getName() || $fileMime == $mime->getExtension())
             {
                 $serviceName = $name;
             }
@@ -554,7 +558,7 @@ class ResourceController extends Controller
         
         return $response;
     }
-    
+     
     public function getJsonPlayerListAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
