@@ -97,13 +97,13 @@ class Installer
         $plugin = $this->em->getRepository('Claroline\CoreBundle\Entity\Plugin')->findOneBy(array('bundleFQCN' => $pluginFQCN));
         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('plugin' => $plugin->getGeneratedId()));
         $parentType = $resourceType->getParent();
-        $resourcesInstances = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('resourceType' => $resourceType->getId()));
+        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findBy(array('resourceType' => $resourceType->getId()));
         
-        if(null != $resourcesInstances)
+        if(null != $resources)
         {
-            foreach ($resourcesInstances as $resourceInstance)
+            foreach ($resources as $resource)
             {
-                $resourceInstance->setResourceType($parentType);
+                $resource->setResourceType($parentType);
             }
         }
         
