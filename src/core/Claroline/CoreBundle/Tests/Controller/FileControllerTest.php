@@ -3,6 +3,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
+use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
 
 class FileControllerTest extends FunctionalTestCase
 {
@@ -16,6 +17,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->loadFixture(new LoadResourceTypeData());
+        $this->loadFixture(new LoadMimeTypeData());
         $this->loadUserFixture();
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
