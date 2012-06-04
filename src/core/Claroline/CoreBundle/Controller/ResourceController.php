@@ -554,4 +554,31 @@ class ResourceController extends Controller
         
         return $response;
     }
+    
+    public function getJsonPlayerListAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+        $mime = $resourceInstance->getResource()->getMime();
+        $services = $this->container->getParameter("player.service.list");
+        $names = array_keys($services);
+        $i = 1;
+        $arrayPlayer[0][0] = 'claroline.file.manager';
+        $arrayPlayer[0][1] = $this->get('claroline.file.manager')->getPlayerName();
+        
+        foreach($names as $name)
+        {
+            $srvMime = $this->get($name)->getMime();
+            
+            if($mime->getName() == $srvMime || $mime->getType() == $srvMime)
+            {
+                $arrayPlayer[$i][0] = $name;
+                $arrayPlayer[$i][1] = $this->get($name)->getPlayerName();
+                $i++;
+            }
+        }
+        
+        return new Response(var_dump($arrayPlayer));
+        
+    }
 }
