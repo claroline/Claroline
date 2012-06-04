@@ -80,7 +80,6 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
        $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
-
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode()); 
     }
     

@@ -89,7 +89,7 @@ class ResourceController extends Controller
                 $dir = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id);
                 $ri->setParent($dir);
                 $resourceType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $type));
-                $ri->setResourceType($resourceType);        
+                $resource->setResourceType($resourceType);        
                 $rightManager = $this->get('claroline.security.right_manager');
                 $ri->setCopy(false);  
                 $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
@@ -224,7 +224,7 @@ class ResourceController extends Controller
             $instanceCopy->setResource($copy);
             $instanceCopy->setCopy(false);
             $instanceCopy->setWorkspace($resourceInstance->getWorkspace());
-            $instanceCopy->setResourceType($resourceInstance->getResourceType());
+            $copy->setResourceType($resourceInstance->getResourceType());
             $instanceCopy->setUser($user);
             
             $copy->addInstance();
