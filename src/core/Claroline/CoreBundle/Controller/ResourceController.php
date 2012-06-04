@@ -21,12 +21,12 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser(); 
         $em = $this->getDoctrine()->getEntityManager();
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
-        $personnalWS = $user->getPersonnalWorkspace();
-        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($personnalWS); 
+        $personnalWs = $user->getPersonnalWorkspace();
+        $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($personnalWs); 
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => null, 'resourcesType' => $resourcesType)
+            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resources' => $resources, 'id' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
         );
     }
     
@@ -172,7 +172,7 @@ class ResourceController extends Controller
     }
 
     //todo: refactor openAction
-    public function openAction($id)
+    public function openAction($id, $workspaceId)
     {      
        $em = $this->getDoctrine()->getEntityManager(); 
        $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id);
@@ -201,7 +201,7 @@ class ResourceController extends Controller
             {
                 $name = $this->findRsrcServ($resourceType);
             }
-           $response = $this->get($name)->indexAction($resourceInstance);
+           $response = $this->get($name)->indexAction($workspaceId, $resourceInstance);
            
            return new Response($response);
        }

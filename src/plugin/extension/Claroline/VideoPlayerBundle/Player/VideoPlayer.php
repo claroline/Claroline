@@ -12,9 +12,9 @@ class VideoPlayer implements PlayerInterface
         return "mp4";
     }*/
     
-    public function indexAction()
+    public function indexAction($workspaceId)
     {
-        return new Response("redéfini openAction pour mp4");
+        return new Response("redéfini openAction pour mp4, l'id de mon workspace est {$workspaceId}");
     }
     
     public function getMime()

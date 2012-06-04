@@ -8,6 +8,6 @@ interface ResourceInterface
     public function add($form, $id, $user);
     public function delete($rsrc);
     public function getDefaultAction($id);
-    public function indexAction($id);
+    public function indexAction($workspaceId, $id);
     public function copy($resource, $user);
 }
