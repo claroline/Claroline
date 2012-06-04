@@ -96,7 +96,7 @@ class FileManager implements ResourceInterface
          $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\Mime')->findOneBy(array('extension' => $extension));
          if(null == $mime)
          {
-             $mime = $em->getRepository('Claroline\CoreBundle\Entity\Resource\Mime')->findOneBy(array('extension' => 'default'));
+             $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\Mime')->findOneBy(array('extension' => 'default'));
          }
          $file->setMime($mime);
          $this->em->persist($file);
