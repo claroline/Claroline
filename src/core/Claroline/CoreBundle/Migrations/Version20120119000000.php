@@ -9,6 +9,7 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
+        $this->createMimeTable($schema);
         $this->createMetaTypeTable($schema);
         $this->createLicenseTable($schema);      
         $this->createWorkspaceTable($schema);
@@ -31,7 +32,6 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceInstanceTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
-        $this->createMimeTable($schema);
     }
 
     public function down(Schema $schema)
@@ -295,10 +295,13 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('date_upload', 'datetime');
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
-        $table->addColumn('mime', 'string', array('notnull' => false));
+        $table->addColumn('mime_id', 'integer', array('notnull' => true));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_mime'), array('mime_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
     
@@ -405,5 +408,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string');
         $table->addColumn('type', 'string');
         $table->addColumn('extension', 'string');
+        
+         $this->storeTable($table);
     }
 }
