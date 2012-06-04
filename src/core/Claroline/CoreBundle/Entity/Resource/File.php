@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Resource\Mime;
 
 /**
  * @ORM\Entity
@@ -34,10 +35,11 @@ class File extends AbstractResource
     private $hashName;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Mime", inversedBy="files", cascade={"persist"})
+     * @ORM\JoinColumn(name="mime_id", referencedColumnName="id")
      */
     protected $mime;
-    
+
     public function getSize()
     {
         return $this->size;
@@ -112,44 +114,8 @@ class File extends AbstractResource
         return $this->mime;
     }
     
-    public function setMime($mime)
+    public function setMime(Mime $mime)
     {
         $this->mime= $mime;
-    }
-    
-    //this function will create a mime type for the resource !
-    public function createAndSetMime($extension)
-    {
-        //~
-        switch($extension)
-        {
-            //videos
-            case "mp4":
-                $this->mime = 'video/mp4';break;
-            case "mov":
-                $this->mime = 'video/mov';break;
-            case "flv":
-                $this->mime = 'video/flv';break;
-            //audio
-            case "ogg":
-                $this->mime = 'audio/ogg';break;
-            //application
-            case "zip":
-                $this->mime = 'application/zip';break;
-            //images
-            case "pnj":
-                $this->mime = 'image/pnj';break;
-            case "bmp":
-                $this->mime = 'image/bmp';break;
-            case "jpg":
-                $this->mime = 'image/jpg';break;
-            case "jpeg":
-                $this->mime = 'image/jpeg';break;
-            //text
-            case "txt":
-                $this->mime = 'text/txt';break;
-            default:
-                $this->mime = null; 
-        }
-    }
+    }    
 }

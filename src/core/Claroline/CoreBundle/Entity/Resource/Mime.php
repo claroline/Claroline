@@ -32,6 +32,11 @@ class Mime
     */
     private $extension;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\File", mappedBy="mime", cascade={"persist"})
+     */
+    protected $files;
+    
     public function getName()
     {
         return $this->name;
@@ -69,5 +74,10 @@ class Mime
     public function setExtension($extension)
     {
         $this->extension = $extension;
+    }
+    
+    public function getFiles()
+    {
+        return $this->files;
     }
 }
