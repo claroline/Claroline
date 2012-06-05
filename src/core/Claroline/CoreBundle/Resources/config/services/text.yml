@@ -1,0 +1,8 @@
+services:
+    claroline.text.manager:
+        class: Claroline\CoreBundle\Library\Manager\TextManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+        tags:
+           - { name: resource.manager }
