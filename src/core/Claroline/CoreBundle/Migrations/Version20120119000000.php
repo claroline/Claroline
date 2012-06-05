@@ -28,6 +28,8 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceTable($schema);
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
+        $this->createTextTable($schema);
+        //$this->createDiffTable($schema);
         $this->createMessageTable($schema);
         $this->createResourceInstanceTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
@@ -39,6 +41,8 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_link');
         $schema->dropTable('claro_mime');
         $schema->dropTable('claro_file');
+        //$schema->dropTable('claro_diff');
+        $schema->dropTable('claro_text');
         $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
         $schema->dropTable('claro_resource_type');
@@ -410,5 +414,32 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('extension', 'string');
         
          $this->storeTable($table);
+    }
+    
+    private function createTextTable(Schema $schema)
+    {
+        $table = $schema->createTable("claro_text");
+        $this->addId($table);
+        $table->addColumn('text', 'text');
+        $table->addColumn('old_id', 'integer', array('notnull' => false));
+        $table->addColumn('version', 'integer');
+        /*$table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_text'), array('old_id'), array('id'), array('onDelete' => 'CASCADE')
+        );*/
+        
+        $this->storeTable($table);
+    }
+    
+    private function createDiffTable(Schema $schema)
+    {
+        $table = $schema->createTable("claro_diff");
+        $this->addId($table);
+        $table->addColumn('diff', 'text');
+        $table->addColumn('version', 'integer');
+        $table->addColumn('text_id', 'integer', array('notnull' => false));
+        
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_text'), array('text_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
     }
 }
