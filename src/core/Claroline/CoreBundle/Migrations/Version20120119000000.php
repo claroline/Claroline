@@ -29,7 +29,7 @@ class Version20120119000000 extends BundleMigration
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
         $this->createTextTable($schema);
-        //$this->createDiffTable($schema);
+        $this->createDiffTable($schema);
         $this->createMessageTable($schema);
         $this->createResourceInstanceTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
@@ -41,7 +41,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_link');
         $schema->dropTable('claro_mime');
         $schema->dropTable('claro_file');
-        //$schema->dropTable('claro_diff');
+        $schema->dropTable('claro_diff');
         $schema->dropTable('claro_text');
         $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
@@ -423,10 +423,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('text', 'text');
         $table->addColumn('old_id', 'integer', array('notnull' => false));
         $table->addColumn('version', 'integer');
-        /*$table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_text'), array('old_id'), array('id'), array('onDelete' => 'CASCADE')
-        );*/
-        
+
         $this->storeTable($table);
     }
     

@@ -27,14 +27,21 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
         $linkType->setListable(true);
         $linkType->setNavigable(false);
         
+        $textType = new ResourceType();
+        $textType->setType('text');
+        $textType->setListable(true);
+        $textType->setNavigable(false);
+        
         $documentMeta = new MetaType();
         $documentMeta->setMetaType('document');
 
         $manager->persist($dirType);
         $manager->persist($fileType);
         $manager->persist($linkType);
+        $manager->persist($textType);
         $manager->persist($documentMeta);
         
+        $textType->addMetaType($documentMeta);
         $fileType->addMetaType($documentMeta);
         $dirType->addMetaType($documentMeta);
         $linkType->addMetaType($documentMeta);
