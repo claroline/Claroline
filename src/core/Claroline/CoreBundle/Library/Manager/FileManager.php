@@ -67,11 +67,14 @@ class FileManager implements ResourceInterface
         return $file;
     }
     
-    public function getForm()
+    public function getFormPage($twigFile, $id, $type)
     {
         $form = $this->formFactory->create(new FileType, new File());
+        $content = $this->templating->render(
+            $twigFile, array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
+        );
         
-        return $form;
+        return $content;
     }
     
     public function getResourcesOfUser($user)

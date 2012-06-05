@@ -4,6 +4,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@form.factory"
+            - "@templating"
         tags:
            - { name: resource.manager }
            

@@ -13,12 +13,14 @@ class LinkManager //implements ResourceInterface
     /** @var EntityManager */
     protected $em;
     protected $formFactory;
+    protected $templating;
     
     
-    public function __construct(EntityManager $em, $formFactory)
+    public function __construct(EntityManager $em, $formFactory, $templating)
     {
         $this->em = $em;
         $this->formFactory = $formFactory;
+        $this->templating = $templating;
     }
     
     public function getDefaultAction($id)
@@ -59,11 +61,14 @@ class LinkManager //implements ResourceInterface
         return $link;
     }
     
-    public function getForm()
+    public function getFormPage($twigFile, $id, $type)
     {
         $form = $this->formFactory->create(new LinkType(), new Link());
+        $content = $this->templating->render(
+            $twigFile, array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
+        );
         
-        return $form;
+        return $content;;
     }
     
     public function getResourceType()

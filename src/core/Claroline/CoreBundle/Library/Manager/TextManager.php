@@ -9,8 +9,9 @@ class TextManager //implements ResourceInterface
 {
     /** @var EntityManager */
     protected $em;
+    /** @var FormFactory */
     protected $formFactory;
-    
+    protected $templating;
     
     public function __construct(EntityManager $em, $formFactory)
     {
