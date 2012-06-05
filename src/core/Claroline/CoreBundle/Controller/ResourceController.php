@@ -39,13 +39,10 @@ class ResourceController extends Controller
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($idType);
         $rsrcServName = $this->findRsrcServ($resourceType);
         $rsrcServ = $this->get($rsrcServName);
-        $form = $rsrcServ->getForm();
+        $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig';
+        $content = $rsrcServ->getFormPage($twigFile, $id, $resourceType->getType());
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $resourceType->getType())
-        );
-              
-        throw new \Exception("form error");
+        return new Response($content); 
     }
     
         
@@ -54,11 +51,10 @@ class ResourceController extends Controller
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository("Claroline\CoreBundle\Entity\Resource\ResourceType")->findOneBy(array('type' => $type));
         $name = $this->findRsrcServ($resourceType);
         $rsrcServ = $this->get($name);
-        $form = $rsrcServ->getForm();
+        $twigFile = 'ClarolineCoreBundle:Resource:generic_form.html.twig';
+        $content = $rsrcServ->getFormPage($twigFile, $id, $type);
         
-        return $this->render(
-            'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
-        );
+        return new Response($content);
     }
     
     //TODO: check return type; la partie js doit savoir si on retourne du json ou pas pour réafficher (ou non le formulaire)

@@ -45,11 +45,14 @@ class DirectoryManager implements ResourceInterface
     }
     
     //METHODES OBLIGATOIRE A PARTIR D'ICI
-    public function getForm()
+    public function getFormPage($twigFile, $id, $type)
     {
-        $form = $this->formFactory->create(new DirectoryType, new Directory());
+        $form = $this->formFactory->create(new DirectoryType(), new Directory());
+        $content = $this->templating->render(
+            $twigFile, array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
+        );
         
-        return $form;
+        return $content;
     }
     
     public function add($form, $id, $user)
