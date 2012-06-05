@@ -5,4 +5,9 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@form.factory"
         tags:
-           - { name: resource.manager}
+           - { name: resource.manager }
+           
+    claroline.linker:
+         class: Claroline\CoreBundle\Library\Linker\Linker
+         arguments:
+             - "@doctrine.orm.entity_manager"
