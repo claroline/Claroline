@@ -25,6 +25,7 @@ class ClarolineCoreExtension extends Extension
         $loader->load('directory.yml');
         $loader->load('services.yml');
         $loader->load('link.yml');
+        $loader->load('text.yml');
         
         $taggedService = $container->findTaggedServiceIds("resource.manager");
         //var_dump("uncomment to crash");
