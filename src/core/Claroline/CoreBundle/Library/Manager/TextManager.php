@@ -13,10 +13,11 @@ class TextManager //implements ResourceInterface
     protected $formFactory;
     protected $templating;
     
-    public function __construct(EntityManager $em, $formFactory)
+    public function __construct(EntityManager $em, $formFactory, $templating)
     {
         $this->em = $em;
         $this->formFactory = $formFactory;
+        $this->templating = $templating;
     }
     
     public function getResourceType()
@@ -24,10 +25,12 @@ class TextManager //implements ResourceInterface
         return "text";
     }
     
-    public function getForm()
+    public function getFormPage()
     {
-        //~ tinyMCE Editor here.
-        return $form;
+        //$form = $this->formFactory->create(new FileType, new File());
+        $content = $this->templating->render('ClarolineCoreBundle:Text:form_page.html.twig');
+
+        return $content;
     }
     
 }
