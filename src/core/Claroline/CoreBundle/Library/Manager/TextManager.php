@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Library\Manager;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Form\TextType;
 
 class TextManager //implements ResourceInterface
 {
@@ -25,12 +27,16 @@ class TextManager //implements ResourceInterface
         return "text";
     }
     
-    public function getFormPage()
+    public function getForm()
     {
-        //$form = $this->formFactory->create(new FileType, new File());
-        $content = $this->templating->render('ClarolineCoreBundle:Text:form_page.html.twig');
-
-        return $content;
+        return $this->formFactory->create(new TextType, new Text());
     }
     
+    public function getFormPage($twigTemp, $id, $type)
+    {
+        $form = $this->formFactory->create(new TextType, new Text());
+        $content = $this->templating->render('ClarolineCoreBundle:Text:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $type));
+        
+        return $content;
+    }  
 }

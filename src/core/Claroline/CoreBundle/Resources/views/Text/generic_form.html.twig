@@ -1,8 +1,5 @@
-{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
-{% block content %}
-<!-- editeur wysiwyg -->
-    <script src='{{asset('bundles/clarolinecore/js/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}' type='text/javascript'></script>
-    <script type="text/javascript">
+<script src='{{asset('bundles/clarolinecore/js/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}' type='text/javascript'></script>
+<script type="text/javascript">
 tinyMCE.init({
     // General options
     mode : "textareas"
@@ -13,4 +10,3 @@ tinyMCE.init({
    {{ form_widget(form) }}
         <input type="submit" formnovalidate="formnovalidate" />
 </form>
-{% endblock %}
