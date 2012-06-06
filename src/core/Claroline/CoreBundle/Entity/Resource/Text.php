@@ -32,6 +32,12 @@ class Text extends AbstractResource
      */
     protected $children;
     
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setVersion(1);
+    }
+    
     public function getText()
     {
         return $this->text;

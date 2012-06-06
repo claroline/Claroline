@@ -39,4 +39,17 @@ class TextManager //implements ResourceInterface
         
         return $content;
     }  
+    
+    public function add($form, $id, $user)
+    {
+         $name = $form['name']->getData();
+         $data = $form['text']->getData();
+         $text = new Text();
+         $text->setName($name);
+         $text->setText($data);
+         $this->em->persist($text);
+         $this->em->flush();
+         
+         return $text;
+    }
 }
