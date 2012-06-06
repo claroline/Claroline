@@ -49,6 +49,7 @@ class TextManager //implements ResourceInterface
          $data = $form['text']->getData();
          $content = new TextContent();
          $content->setContent($data);
+         $content->setUser($user);
          $this->em->persist($content);
          $text = new Text();
          $text->setName($name);

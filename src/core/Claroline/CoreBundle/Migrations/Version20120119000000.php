@@ -435,6 +435,11 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('content', 'text');
         $table->addColumn('version', 'integer');
         $table->addColumn('text_id', 'integer', array('notnull' => false));
+        $table->addColumn('user_id', 'integer', array('notnull' => false));
+        
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'SET NULL')
+        );
 
         $this->storeTable($table); 
     }
