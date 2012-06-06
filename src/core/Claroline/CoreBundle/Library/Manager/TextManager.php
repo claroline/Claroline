@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Form\TextType;
+use Symfony\Component\HttpFoundation\Response;
 
 class TextManager //implements ResourceInterface
 {
@@ -51,5 +52,13 @@ class TextManager //implements ResourceInterface
          $this->em->flush();
          
          return $text;
+    }
+    
+    public function getDefaultAction($id)
+    {
+        $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
+        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getText()));
+        
+        return new Response($content);
     }
 }
