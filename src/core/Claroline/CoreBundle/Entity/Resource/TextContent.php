@@ -32,6 +32,13 @@ class TextContent
     */
     protected $content;
     
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+    
     public function __construct()
     {
         $this->version = 1;
@@ -69,5 +76,15 @@ class TextContent
     public function getContent()
     {
         return $this->content;
+    }
+    
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+    
+    public function getUser()
+    {
+        return $this->user;
     }
 }
