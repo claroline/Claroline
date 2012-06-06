@@ -5,9 +5,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_text_content")
+ * @ORM\Table(name="claro_text_revision")
  */
-class TextContent
+class Revision
 {
    /**
     * @ORM\Id
@@ -22,7 +22,7 @@ class TextContent
     protected $version;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Text", inversedBy="contents", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Text", inversedBy="revisions", cascade={"persist"})
      * @ORM\JoinColumn(name="text_id", referencedColumnName="id")
      */
     protected $text;
