@@ -1,0 +1,3 @@
+claro_text_edit:
+    pattern: /edit/{id}
+    defaults: { _controller: ClarolineCoreBundle:Text:edit }

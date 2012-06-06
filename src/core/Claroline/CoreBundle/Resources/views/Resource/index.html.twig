@@ -103,6 +103,12 @@
                    {{ 'open'|trans({}, 'platformTranslation') }}
                 </a>
                 |
+                <a id="link_resource_edit_{{resource.getId()}}"
+                   href="{{path('claro_resource_edit', {'workspaceId':workspace.getId(), 'resourceId':resource.getId(), 'options':'ref'})}}"
+                   class="link_edit_resource">
+                   edit
+                </a>
+                |
                 {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
                 | 
                 {% if resource.getCopy() == true %}

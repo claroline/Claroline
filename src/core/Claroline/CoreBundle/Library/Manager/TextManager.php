@@ -61,4 +61,12 @@ class TextManager //implements ResourceInterface
         
         return new Response($content);
     }
+    
+    public function editAction($id)
+    {
+        $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
+        $content = $this->templating->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getText(), 'id' => $id));
+        
+        return new Response($content);
+    }
 }

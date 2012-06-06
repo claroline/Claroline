@@ -37,5 +37,9 @@ claro_resource:
     resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
     prefix: resource
     
+claro_text:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/text.yml"
+    prefix: text
+    
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

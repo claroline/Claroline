@@ -238,7 +238,12 @@ class ResourceController extends Controller
         }
         else
         {
-            //do sthg else
+            $em = $this->getDoctrine()->getEntityManager();
+            $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+            $name = $this->findRsrcServ($resourceInstance->getResourceType());
+            $response = $this->get($name)->editAction($resourceInstance->getResource()->getId());
+            
+            return new Response($response);
         }
         
         return new Response("shouldn't go there");
