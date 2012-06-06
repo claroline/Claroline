@@ -27,6 +27,8 @@ class TextController extends Controller
         $text->setParent($old);
         $text->setResourceType($old->getResourceType());
         $em->persist($text);
+        
+        //edit the current resourceInstance
         $em->flush();
         
         return new Response('edited');        

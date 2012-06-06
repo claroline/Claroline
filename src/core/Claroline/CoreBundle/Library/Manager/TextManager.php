@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Entity\Resource\TextContent;
 use Claroline\CoreBundle\Form\TextType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,12 +44,17 @@ class TextManager //implements ResourceInterface
     
     public function add($form, $id, $user)
     {
+        //
          $name = $form['name']->getData();
          $data = $form['text']->getData();
+         $content = new TextContent();
+         $content->setContent($data);
+         $this->em->persist($content);
          $text = new Text();
          $text->setName($name);
-         $text->setText($data);
+         $text->setText($content);
          $this->em->persist($text);
+         $content->setText($text);
          $this->em->flush();
          
          return $text;
@@ -57,7 +63,7 @@ class TextManager //implements ResourceInterface
     public function getDefaultAction($id)
     {
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
-        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getText()));
+        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getText()->getContent()));
         
         return new Response($content);
     }
@@ -65,7 +71,7 @@ class TextManager //implements ResourceInterface
     public function editAction($id)
     {
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
-        $content = $this->templating->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getText(), 'id' => $id));
+        $content = $this->templating->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getText()->getContent(), 'id' => $id));
         
         return new Response($content);
     }

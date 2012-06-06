@@ -1,7 +1,7 @@
 <?php
-
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,42 +10,27 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Text extends AbstractResource
 {
-    /**
-     * @ORM\Column(type="text", nullable=false)
-     */
-    protected $text;
-    
+
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $version;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Text", inversedBy="children")
-     * @ORM\JoinColumn(name="old_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\TextContent", mappedBy="text", cascade={"persist"})
      */
-    protected $parent;
+    protected $contents;
     
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Text", mappedBy="parent")
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\TextContent", cascade={"persist"})
+     * @ORM\JoinColumn(name="current_text_id", referencedColumnName="id")
      */
-    protected $children;
+    protected $text;
     
     public function __construct()
     {
-        parent::__construct();
-        $this->setVersion(1);
-    }
-    
-    public function getText()
-    {
-        return $this->text;
-    }
-    
-    public function setText($text)
-    {
-        $this->text = $text;
+        $this->version = 1;
+        $this->contents = new ArrayCollection();
     }
     
     public function getVersion()
@@ -56,25 +41,30 @@ class Text extends AbstractResource
     public function setVersion($version)
     {
         $this->version = $version;
+    }   
+    
+    public function getContents()
+    {
+        return $this->contents;
     }
     
-    public function addVersion()
+    public function setText($text)
     {
-        $this->version++;
-    }       
+        $this->text = $text;
+    }
     
-    public function setParent(Text $parent = null)
+    public function getText()
     {
-        $this->parent = $parent;
+        return $this->text;
     }
-
-    public function getParent()
+    
+    public function addContent($content)
     {
-        return $this->parent;
+        $this->contents->add($content);
     }
-
-    public function getChildren()
+    
+    public function removeUser($content)
     {
-        return $this->children;
-    }    
+        $this->contents->removeElement($content);
+    }
 }
