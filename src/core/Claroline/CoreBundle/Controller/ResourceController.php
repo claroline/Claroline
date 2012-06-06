@@ -129,6 +129,7 @@ class ResourceController extends Controller
         }
     }
     
+    //TODO: remove type from defaultClickAction
     public function defaultClickAction($type, $id)
     {
           $resourceInstance = $this->getDoctrine()->getEntityManager()->getRepository(
