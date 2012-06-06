@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Claroline\CoreBundle\Entity\Resource\TextContent;
+use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Form\TextType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,12 +31,12 @@ class TextManager //implements ResourceInterface
     
     public function getForm()
     {
-        return $this->formFactory->create(new TextType, new Text());
+        return $this->formFactory->create(new TextType);
     }
     
     public function getFormPage($twigTemp, $id, $type)
     {
-        $form = $this->formFactory->create(new TextType, new Text());
+        $form = $this->formFactory->create(new TextType);
         $content = $this->templating->render('ClarolineCoreBundle:Text:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $type));
         
         return $content;
@@ -47,15 +47,15 @@ class TextManager //implements ResourceInterface
         //
          $name = $form['name']->getData();
          $data = $form['text']->getData();
-         $content = new TextContent();
-         $content->setContent($data);
-         $content->setUser($user);
-         $this->em->persist($content);
+         $revision = new Revision();
+         $revision->setContent($data);
+         $revision->setUser($user);
+         $this->em->persist($revision);
          $text = new Text();
          $text->setName($name);
-         $text->setText($content);
+         $text->setLastRevision($revision);
          $this->em->persist($text);
-         $content->setText($text);
+         $revision->setText($text);
          $this->em->flush();
          
          return $text;
@@ -64,7 +64,7 @@ class TextManager //implements ResourceInterface
     public function getDefaultAction($id)
     {
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
-        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getText()->getContent()));
+        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent()));
         
         return new Response($content);
     }
@@ -72,7 +72,7 @@ class TextManager //implements ResourceInterface
     public function editAction($id)
     {
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
-        $content = $this->templating->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getText()->getContent(), 'id' => $id));
+        $content = $this->templating->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'id' => $id));
         
         return new Response($content);
     }

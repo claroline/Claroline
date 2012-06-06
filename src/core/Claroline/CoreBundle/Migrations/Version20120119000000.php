@@ -430,7 +430,7 @@ class Version20120119000000 extends BundleMigration
     //ADD FOREIGN KEY
     private function createTextContentTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_text_content");
+        $table = $schema->createTable("claro_text_revision");
         $this->addId($table);
         $table->addColumn('content', 'text');
         $table->addColumn('version', 'integer');

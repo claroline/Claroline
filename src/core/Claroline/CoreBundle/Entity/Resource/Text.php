@@ -17,15 +17,15 @@ class Text extends AbstractResource
     protected $version;
     
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\TextContent", mappedBy="text", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Revision", mappedBy="text", cascade={"persist"})
      */
-    protected $contents;
+    protected $revisions;
     
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\TextContent", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Revision", cascade={"persist"})
      * @ORM\JoinColumn(name="current_text_id", referencedColumnName="id")
      */
-    protected $text;
+    protected $lastRevision;
     
     public function __construct()
     {
@@ -43,28 +43,28 @@ class Text extends AbstractResource
         $this->version = $version;
     }   
     
-    public function getContents()
+    public function getRevisions()
     {
-        return $this->contents;
+        return $this->revisions;
     }
     
-    public function setText($text)
+    public function setLastRevision($revision)
     {
-        $this->text = $text;
+        $this->lastRevision = $revision;
     }
     
-    public function getText()
+    public function getLastRevision()
     {
-        return $this->text;
+        return $this->lastRevision;
     }
     
-    public function addContent($content)
+    public function addRevision($revision)
     {
-        $this->contents->add($content);
+        $this->revisions->add($revision);
     }
     
-    public function removeUser($content)
+    public function removeUser($revision)
     {
-        $this->contents->removeElement($content);
+        $this->revisions->removeElement($revision);
     }
 }
