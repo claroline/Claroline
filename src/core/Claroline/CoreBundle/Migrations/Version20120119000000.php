@@ -28,8 +28,8 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceTable($schema);
         $this->createDirectoryTable($schema);
         $this->createFileTable($schema);
+        $this->createTextContentTable($schema);
         $this->createTextTable($schema);
-        $this->createDiffTable($schema);
         $this->createMessageTable($schema);
         $this->createResourceInstanceTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
@@ -41,7 +41,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_link');
         $schema->dropTable('claro_mime');
         $schema->dropTable('claro_file');
-        $schema->dropTable('claro_diff');
+        $schema->dropTable('claro_text_content');
         $schema->dropTable('claro_text');
         $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
@@ -413,30 +413,29 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('type', 'string');
         $table->addColumn('extension', 'string');
         
-         $this->storeTable($table);
+        $this->storeTable($table);
     }
     
+    //ADD FOREIGN KEY
     private function createTextTable(Schema $schema)
     {
         $table = $schema->createTable("claro_text");
         $this->addId($table);
-        $table->addColumn('text', 'text');
-        $table->addColumn('old_id', 'integer', array('notnull' => false));
         $table->addColumn('version', 'integer');
-
-        $this->storeTable($table);
+        $table->addColumn('current_text_id', 'integer');       
+        
+        $this->storeTable($table); 
     }
     
-    private function createDiffTable(Schema $schema)
+    //ADD FOREIGN KEY
+    private function createTextContentTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_diff");
+        $table = $schema->createTable("claro_text_content");
         $this->addId($table);
-        $table->addColumn('diff', 'text');
+        $table->addColumn('content', 'text');
         $table->addColumn('version', 'integer');
         $table->addColumn('text_id', 'integer', array('notnull' => false));
-        
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_text'), array('text_id'), array('id'), array('onDelete' => 'CASCADE')
-        );
+
+        $this->storeTable($table); 
     }
 }
