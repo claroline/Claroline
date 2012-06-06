@@ -15,6 +15,6 @@ class TextType extends AbstractType
 
     public function getName()
     {
-        return 'claro_text_form';
+        return 'text_form';
     }
 }
