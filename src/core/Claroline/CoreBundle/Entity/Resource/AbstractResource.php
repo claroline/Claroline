@@ -13,7 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory", "link" ="Link"} )
+ * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory", "link" = "Link", "text" = "Text"} )
  */
 abstract class AbstractResource
 {
