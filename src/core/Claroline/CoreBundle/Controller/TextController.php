@@ -32,4 +32,42 @@ class TextController extends Controller
         
         return new Response('edited');        
     }
+    
+    public function historyAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
+        $revisions = $text->getRevisions();        
+        $size = count($revisions);
+        $size--;
+        $i=0;
+        
+        $patterns = array();
+        $patterns[0] = '/<br\/>/';
+        $patterns[1] = '/<\/p>/';
+        
+        $replacements = array();
+        $replacements[1] = '&tokenbr';
+        $replacements[0] = '&tokenp';
+        
+        while ($i < $size)
+        {
+            $old = $revisions[$i]->getContent();
+            $i++;
+            $new = $revisions[$i]->getContent();
+            //echo($old);
+            //echo($new);
+            //preg replace
+            $sold = preg_replace($patterns, $replacements, $old);
+            //echo ($sold);
+            $snew = preg_replace($patterns, $replacements, $new);
+            //echo($snew);
+            
+            $diff = $this->get('claroline.text.manager')->PHPDiff($snew, $sold);
+            echo($diff);
+            echo'<br/>///////////////////////////////////////////////////////////////////<br/>';
+        }
+        
+        return $this->render('ClarolineCoreBundle:Text:history.html.twig', array("revisions" => $revisions));
+    }
 }

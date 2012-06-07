@@ -18,6 +18,7 @@ class Text extends AbstractResource
     
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Revision", mappedBy="text", cascade={"persist"})
+     * @ORM\OrderBy({"version" = "DESC"})
      */
     protected $revisions;
     
