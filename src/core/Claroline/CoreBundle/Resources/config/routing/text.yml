@@ -1,3 +1,7 @@
 claro_text_edit:
     pattern: /edit/{id}
     defaults: { _controller: ClarolineCoreBundle:Text:edit }
+    
+claro_text_history:
+   pattern: /history/{id}
+   defaults: { _controller: ClarolineCoreBundle:Text:history }

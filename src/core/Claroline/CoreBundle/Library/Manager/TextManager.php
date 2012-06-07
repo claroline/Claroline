@@ -64,7 +64,7 @@ class TextManager //implements ResourceInterface
     public function getDefaultAction($id)
     {
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
-        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent()));
+        $content = $this->templating->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'id' => $id));
         
         return new Response($content);
     }
@@ -75,5 +75,5 @@ class TextManager //implements ResourceInterface
         $content = $this->templating->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'id' => $id));
         
         return new Response($content);
-    }
+    }  
 }
