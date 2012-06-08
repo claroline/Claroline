@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\User;
 
 class WorkspaceRepository extends EntityRepository
 {
-    //a changer
     public function getWorkspacesOfUser(User $user)
     {
         $dql = "

@@ -41,9 +41,8 @@ class RegistrationController extends Controller
                 ->findOneByName(PlatformRoles::USER);
             $user->addRole($userRole);
             $em->persist($user);
-            $type = Configuration::TYPE_SIMPLE;
             $config = new Configuration();
-            $config->setWorkspaceType($type);
+            $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
             $config->setWorkspaceName("my workspace");
             $wsCreator = $this->get('claroline.workspace.creator');
             $workspace = $wsCreator->createWorkspace($config, $user);

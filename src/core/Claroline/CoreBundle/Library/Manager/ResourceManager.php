@@ -3,10 +3,10 @@
 namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Form\FormFactory;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Entity\User;
 
 class ResourceManager

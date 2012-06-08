@@ -2,15 +2,13 @@
 
 namespace Claroline\HTMLPageBundle\Manager;
 
-use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
-use Claroline\CoreBundle\Library\Services\ThumbnailGenerator;
-use Symfony\Component\Form\FormFactory;
-use Claroline\CoreBundle\Form\FileType;
-use Claroline\CoreBundle\Library\Manager\FileManager;
-use Claroline\HTMLPageBundle\Entity\HTMLElement;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormFactory;
+use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
+use Claroline\CoreBundle\Library\Manager\FileManager;
+use Claroline\CoreBundle\Library\Services\ThumbnailGenerator;
 
 class HTMLPageManager extends FileManager
 {
@@ -64,7 +62,6 @@ class HTMLPageManager extends FileManager
         else
         {
             return 0;
-            return new \Exception("zip extraction error");
         }
     }
 }

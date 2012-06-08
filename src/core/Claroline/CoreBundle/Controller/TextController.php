@@ -3,10 +3,10 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Form\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
+use Claroline\CoreBundle\Form\TextType;
 
 class TextController extends Controller
 {

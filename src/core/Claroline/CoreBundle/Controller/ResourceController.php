@@ -2,16 +2,16 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DirectoryType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Claroline\CoreBundle\Form\SelectResourceType;
 
 class ResourceController extends Controller
 {
@@ -89,7 +89,7 @@ class ResourceController extends Controller
                 $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
-                $resource->addInstance();
+                $resource->incrInstance();
                 //set sharable to sthg
                 $resource->setSharable(false);
                 $em->persist($ri);
@@ -221,8 +221,8 @@ class ResourceController extends Controller
             $copy->setResourceType($resourceInstance->getResourceType());
             $instanceCopy->setUser($user);
             
-            $copy->addInstance();
-            $resourceInstance->getResource()->removeInstance();
+            $copy->incrInstance();
+            $resourceInstance->getResource()->decrInstance();
             $em->persist($copy);
             $em->persist($instanceCopy);
             $em->remove($resourceInstance);
@@ -247,7 +247,7 @@ class ResourceController extends Controller
         
     }
     
-    public function getJSONResourceNodeAction($id, $workspaceId)
+    public function getJsonResourceNodeAction($id, $workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
@@ -336,7 +336,7 @@ class ResourceController extends Controller
            {
                $this->copyFirstCopyInstance($workspace, $resourceId);
            }
-           return new Response("you're not trying to copy this are you ?"); 
+           return new Response("copied"); 
         }
         
         return new Response("success");
@@ -348,7 +348,7 @@ class ResourceController extends Controller
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $managerRole = $workspace->getManagerRole();
          
-        if(false == $this->get('security.context')->isGranted($managerRole->getName()))
+        if(false === $this->get('security.context')->isGranted($managerRole->getName()))
         {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
@@ -357,7 +357,7 @@ class ResourceController extends Controller
         $resourceType = $resourceInstance->getResourceType();
         $name = $this->findResService($resourceType);  
         $em->remove($resourceInstance);
-        $resourceInstance->getResource()->removeInstance();
+        $resourceInstance->getResource()->decrInstance();
         
         if($resourceInstance->getResourceType()->getType()=='directory')
         {
@@ -409,7 +409,8 @@ class ResourceController extends Controller
         
         return $response;
     }
-     
+    
+    //the response is a test: it should be changed 
     public function getJsonPlayerListAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -457,7 +458,7 @@ class ResourceController extends Controller
         $ric->setWorkspace($resourceInstance->getWorkspace());
         $name = $this->findResService($resourceInstance->getResourceType());
         $resourceCopy = $this->get($name)->copy($resourceInstance->getResource(), $user);
-        $resourceCopy->addInstance();
+        $resourceCopy->incrInstance();
         $ric->setResource($resourceCopy);
         $ric->setResourceType($resourceInstance->getResourceType());
         
@@ -477,7 +478,7 @@ class ResourceController extends Controller
             $copy->setParent($parentCopy);
             $copy->setWorkspace($workspace);
             $em->persist($copy);
-            $copy->getResource()->addInstance();
+            $copy->getResource()->incrInstance();
             $em->flush();
             $this->setChildrenReferenceCopy($child, $workspace, $copy);
             $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
@@ -511,7 +512,7 @@ class ResourceController extends Controller
         $resourceInstanceCopy = $this->copyByReferenceResourceInstance($resourceInstance);
         $resourceInstanceCopy->setWorkspace($workspace);
         $em->persist($resourceInstanceCopy);
-        $resourceInstance->getResource()->addInstance();
+        $resourceInstance->getResource()->incrInstance();
         $em->flush();     
         $user = $this->get('security.context')->getToken()->getUser();
         $rightManager = $this->get('claroline.security.right_manager');

@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 /**
  * @ORM\Entity
@@ -105,12 +105,12 @@ abstract class AbstractResource
         $this->resourcesInstance->removeElement($resourceInstance);
     }
     
-    public function addInstance()
+    public function incrInstance()
     {
         $this->instanceAmount++;
     }
     
-    public function removeInstance()
+    public function decrInstance()
     {
         $this->instanceAmount--;
     }

@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 class CreateThumbnailCommand extends ContainerAwareCommand
 {
@@ -21,6 +20,6 @@ class CreateThumbnailCommand extends ContainerAwareCommand
         $thumbnailGeneration = $this->getContainer()->get('claroline.thumbnail.creator');
         $output->writeln("starting...");
         $thumbnailGeneration->parseAllAndGenerate();
-        $outup->writeln("done");
+        $output->writeln("done");
     }
 }

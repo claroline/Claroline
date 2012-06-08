@@ -89,7 +89,6 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLastName($lastName);
         $user->setUsername($username);
         $user->setPlainPassword($password);
-        echo"user created \n";
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
         
@@ -110,9 +109,8 @@ class CreateUserCommand extends ContainerAwareCommand
         }
         
         $em->persist($user);
-        $type = Configuration::TYPE_SIMPLE;
         $config = new Configuration();
-        $config->setWorkspaceType($type);
+        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $config->setWorkspaceName("my workspace");
         $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
         $workspace = $wsCreator->createWorkspace($config, $user);

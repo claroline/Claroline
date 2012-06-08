@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilder;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Symfony\Component\Form\AbstractType;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class SelectResourceType extends AbstractType
 {

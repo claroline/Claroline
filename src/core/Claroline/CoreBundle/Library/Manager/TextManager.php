@@ -1,13 +1,13 @@
 <?php
 namespace Claroline\CoreBundle\Library\Manager;
 
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
-use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Form\TextType;
-use Symfony\Component\HttpFoundation\Response;
 
 class TextManager //implements ResourceInterface
 {

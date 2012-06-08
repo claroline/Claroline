@@ -24,15 +24,9 @@ claro_resource_edit:
    options:
       expose: true
     
-claro_resource_JSON_tree:
-    pattern: /JSONTree/{id}
-    defaults: { _controller: ClarolineCoreBundle:Resource:getJSONTree }
-    options:
-       expose: true
-       
 claro_resource_JSON_node:
     pattern: tree/JSON/{id}/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:getJSONResourceNode }
+    defaults: { _controller: ClarolineCoreBundle:Resource:getJsonResourceNode }
     options:
       expose: true
       

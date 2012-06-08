@@ -2,24 +2,21 @@
 namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormFactory;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
-use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Library\Services\ThumbnailGenerator;
 
 class FileManager implements ResourceInterface
 {
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     protected $em;
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $dir;
+    /** @var FormFactory */
     protected $formFactory;
     /** @var RightManagerInterface */
     protected $rightManager;
@@ -27,8 +24,6 @@ class FileManager implements ResourceInterface
     protected $templating;
     /** @var ThumbnilGenerator **/
     protected $thumbnailGenerator;
-    
-    
     
     public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, $templating, ThumbnailGenerator $thumbnailGenerator)
     {   
@@ -39,12 +34,6 @@ class FileManager implements ResourceInterface
         $this->templating = $templating;
         $this->thumbnailGenerator = $thumbnailGenerator;
     }
-    /*
-    public function deleteById($id)
-    {
-        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
-        $this->delete($file);
-    }*/
        
     public function delete($file)
     {
@@ -53,20 +42,6 @@ class FileManager implements ResourceInterface
         $this->em->flush();
     }
      
-    public function findAll()
-    {
-        $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findAll();
-        
-        return $files;
-    }
-    
-    public function findById($id)
-    {
-        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
-        
-        return $file;
-    }
-    
     public function getForm()
     {
         return $this->formFactory->create(new FileType, new File());
@@ -82,30 +57,25 @@ class FileManager implements ResourceInterface
         return $content;
     }
     
-    public function getResourcesOfUser($user)
-    {
-        $files = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->findBy(array('user' => $user->getId()));
-        
-        return $files;        
-    }
-    
     public function add($form, $id, $user)
     {
          $tmpFile = $form['name']->getData();
          $fileName = $tmpFile->getClientOriginalName();
          $extension = pathinfo($fileName, PATHINFO_EXTENSION);
          $size = filesize($tmpFile); 
-         $hashName = $this->GUID().".".$extension;
+         $hashName = $this->generateGuid().".".$extension;
          $tmpFile->move($this->dir, $hashName);
          $file = new File();
          $file->setSize($size);
          $file->setName($fileName);
          $file->setHashName($hashName);
          $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => $extension));
-         if(null == $mime)
+         
+         if(null === $mime)
          {
              $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => 'default'));
          }
+         
          $file->setMimeType($mime);
          $this->em->persist($file);
          $this->em->flush();
@@ -119,9 +89,8 @@ class FileManager implements ResourceInterface
         $newFile = new File();
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
-        $hashName = $this->GUID().".".pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+        $hashName = $this->generateGuid().".".pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
-        //copy the old File
         $filePath = $this->dir . DIRECTORY_SEPARATOR . $resource->getHashName();
         $newPath = $this->dir . DIRECTORY_SEPARATOR . $hashName;
         copy($filePath, $newPath);
@@ -140,9 +109,8 @@ class FileManager implements ResourceInterface
     {
         $response = new Response();     
         $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($id);
-        $response = $this->setDownloadHeaders($file, $response);
-        
-        return $response; 
+           
+        return $this->setDownloadHeaders($file, $response);; 
     }
     
     public function indexAction($workspaceId, $id)
@@ -159,7 +127,10 @@ class FileManager implements ResourceInterface
         return "default file player";
     }
     
-    private function GUID()
+    /*
+     * found on http://php.net/manual/fr/function.com-create-guid.php
+     */
+    private function generateGuid()
     {
         if (function_exists('com_create_guid') === true)
         {
