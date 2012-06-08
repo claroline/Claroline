@@ -1,11 +1,12 @@
-var nbIterationUsers=0;
-var nbIterationGroups=0;
-  
 $(function()
-{     
-    twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId');
-    twigDeleteTranslation = document.getElementById('twig_attributes').getAttribute('data-translation.delete');
+{   
     
+    var twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId'); 
+    var twigDeleteTranslation = document.getElementById('twig_attributes').getAttribute('data-translation.delete');
+    
+    var nbIterationUsers=0;
+    var nbIterationGroups=0;
+
     $(".loading").hide();
     $('#user_dialog').dialog({ 
         autoOpen: false,

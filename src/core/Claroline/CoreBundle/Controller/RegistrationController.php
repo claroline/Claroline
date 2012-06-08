@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-//use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
 {

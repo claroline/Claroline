@@ -18,17 +18,18 @@ class CleanUploadDirectoryCommand extends ContainerAwareCommand
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        echo "cleaning {$this->getContainer()->getParameter('claroline.files.directory')}\n";
+        
+        $output->writeln("cleaning {$this->getContainer()->getParameter('claroline.files.directory')}\n");
         $dir = $this->getContainer()->getParameter('claroline.files.directory');
         $this->emptyDir($dir);
-        echo "cleaning {$this->getContainer()->getParameter('claroline.html_page.directory')}\n";
+        $output->writeln("cleaning {$this->getContainer()->getParameter('claroline.html_page.directory')}\n");
         $dir = $this->getContainer()->getParameter('claroline.html_page.directory');
         $this->emptyDir($dir);
-        echo "cleaning {$this->getContainer()->getParameter('claroline.files.directory')}\n";
+        $output->writeln("cleaning {$this->getContainer()->getParameter('claroline.files.directory')}\n");
         $dir = $this->getContainer()->getParameter('claroline.files.directory');
         $dir.='/../test/files';
         $this->emptyDir($dir);   
-        echo "done\n";
+        $output->writeln("done\n");
     }
     
     private function emptyDir($dir)

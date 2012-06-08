@@ -17,7 +17,7 @@ class VideoPlayer implements PlayerInterface
         return new Response("redéfini openAction pour mp4, l'id de mon workspace est {$workspaceId}");
     }
     
-    public function getMime()
+    public function getMimeType()
     {
         return "video/mp4";
     }

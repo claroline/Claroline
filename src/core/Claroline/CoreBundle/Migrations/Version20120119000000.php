@@ -9,7 +9,7 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $this->createMimeTable($schema);
+        $this->createMimeTypeTable($schema);
         $this->createMetaTypeTable($schema);
         $this->createLicenseTable($schema);      
         $this->createWorkspaceTable($schema);
@@ -39,7 +39,7 @@ class Version20120119000000 extends BundleMigration
     public function down(Schema $schema)
     {
         $schema->dropTable('claro_link');
-        $schema->dropTable('claro_mime');
+        $schema->dropTable('claro_mime_type');
         $schema->dropTable('claro_file');
         $schema->dropTable('claro_text_content');
         $schema->dropTable('claro_text');
@@ -305,7 +305,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
         );
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_mime'), array('mime_id'), array('id'), array("onDelete" => "CASCADE")
+            $this->getStoredTable('claro_mime_type'), array('mime_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
     
@@ -405,9 +405,9 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('url', 'string');
     }
     
-    private function createMimeTable(Schema $schema)
+    private function createMimeTypeTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_mime");
+        $table = $schema->createTable("claro_mime_type");
         $this->addId($table);
         $table->addColumn('name', 'string');
         $table->addColumn('type', 'string');

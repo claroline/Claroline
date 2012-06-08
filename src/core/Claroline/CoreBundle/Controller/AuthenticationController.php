@@ -10,7 +10,6 @@ class AuthenticationController extends Controller
     public function loginAction()
     {
         $request = $this->get('request');
-        //return new Response("CONNECTED");
         
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR))
         {

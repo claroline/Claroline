@@ -19,8 +19,8 @@ class CreateThumbnailCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $thumbnailGeneration = $this->getContainer()->get('claroline.thumbnail.creator');
-        echo "starting...";
+        $output->writeln("starting...");
         $thumbnailGeneration->parseAllAndGenerate();
-        echo "done";
+        $outup->writeln("done");
     }
 }

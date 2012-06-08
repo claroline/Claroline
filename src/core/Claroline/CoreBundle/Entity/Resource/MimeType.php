@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_mime")
+ * @ORM\Table(name="claro_mime_type")
  */
-class Mime
+class MimeType
 {
     /**
      * @ORM\Id

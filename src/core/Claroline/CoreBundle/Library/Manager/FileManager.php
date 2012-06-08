@@ -101,12 +101,12 @@ class FileManager implements ResourceInterface
          $file->setSize($size);
          $file->setName($fileName);
          $file->setHashName($hashName);
-         $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\Mime')->findOneBy(array('extension' => $extension));
+         $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => $extension));
          if(null == $mime)
          {
-             $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\Mime')->findOneBy(array('extension' => 'default'));
+             $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => 'default'));
          }
-         $file->setMime($mime);
+         $file->setMimeType($mime);
          $this->em->persist($file);
          $this->em->flush();
          //$this->thumbnailGenerator->createThumbNail("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", ThumbnailGenerator::WIDTH, ThumbnailGenerator::HEIGHT);

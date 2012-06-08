@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Entity\Resource\Mime;
+use Claroline\CoreBundle\Entity\Resource\MimeType;
 
 /**
  * @ORM\Entity
@@ -35,10 +35,10 @@ class File extends AbstractResource
     private $hashName;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Mime", inversedBy="files", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\MimeType", inversedBy="files", cascade={"persist"})
      * @ORM\JoinColumn(name="mime_id", referencedColumnName="id")
      */
-    protected $mime;
+    protected $mimeType;
 
     public function getSize()
     {
@@ -109,13 +109,13 @@ class File extends AbstractResource
         $this->hashName = $hashName;
     }
     
-    public function getMime()
+    public function getMimeType()
     {
-        return $this->mime;
+        return $this->mimeType;
     }
     
-    public function setMime(Mime $mime)
+    public function setMimeType(MimeType $mimeType)
     {
-        $this->mime= $mime;
+        $this->mimeType= $mimeType;
     }    
 }

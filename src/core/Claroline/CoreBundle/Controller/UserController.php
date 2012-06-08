@@ -8,8 +8,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\UserType;
 
-//TODO redirections
-
 class UserController extends Controller
 {
     public function showEditProfileAction()
@@ -70,18 +68,16 @@ class UserController extends Controller
             $em->remove($user);
             $em->flush();
         
-            //this will be changed later
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
-        else
-        {
-            throw new \Exception("You can't delete yourself");
-        }
+        
+        throw new \Exception("You can't delete yourself");
     }
 
     public function getCurrentUserRepositoryIdAction()
     {
-         $repositoryId = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();       
+         $repositoryId = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();    
+         
          return new Response($repositoryId);
     }
 }

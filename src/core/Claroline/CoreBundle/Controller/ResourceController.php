@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\Repository;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DirectoryType;
@@ -37,7 +36,7 @@ class ResourceController extends Controller
         $idType = $form['type'];
         $em = $this->getDoctrine()->getEntityManager();
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($idType);
-        $rsrcServName = $this->findRsrcServ($resourceType);
+        $rsrcServName = $this->findResService($resourceType);
         $rsrcServ = $this->get($rsrcServName);
         $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig';
         $content = $rsrcServ->getFormPage($twigFile, $id, $resourceType->getType());
@@ -49,7 +48,7 @@ class ResourceController extends Controller
     public function getFormAction($id, $type)
     {
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository("Claroline\CoreBundle\Entity\Resource\ResourceType")->findOneBy(array('type' => $type));
-        $name = $this->findRsrcServ($resourceType);
+        $name = $this->findResService($resourceType);
         $rsrcServ = $this->get($name);
         $twigFile = 'ClarolineCoreBundle:Resource:generic_form.html.twig';
         $content = $rsrcServ->getFormPage($twigFile, $id, $type);
@@ -57,8 +56,7 @@ class ResourceController extends Controller
         return new Response($content);
     }
     
-    //TODO: check return type; la partie js doit savoir si on retourne du json ou pas pour réafficher (ou non le formulaire)
-    //TODO: renommer idRepository en idWorkspace
+    //TODO: check return type; js must know if some json is returned
     public function addAction($type, $id, $workspaceId)
     {
         $request = $this->get('request');
@@ -70,7 +68,7 @@ class ResourceController extends Controller
         }
         
         $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
-        $name = $this->findRsrcServ($resourceType);
+        $name = $this->findResService($resourceType);
         $form = $this->get($name)->getForm();
         $form->bindRequest($request);
         $em = $this->getDoctrine()->getEntityManager();
@@ -153,7 +151,7 @@ class ResourceController extends Controller
                   $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
                       'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id)->getResourceType();
               }
-              $name = $this->findRsrcServ($resourceType);
+              $name = $this->findResService($resourceType);
               
               if($type!='directory')
               {    
@@ -168,7 +166,6 @@ class ResourceController extends Controller
         return $response;
     }
 
-    //todo: refactor openAction
     public function openAction($id, $workspaceId)
     {      
        $em = $this->getDoctrine()->getEntityManager(); 
@@ -186,18 +183,19 @@ class ResourceController extends Controller
             if($resourceType->getType()=='file')
             {
                 $name = null;
-                $mime = $resourceInstance->getResource()->getMime();
-                $name = $this->findPlayerServ($mime);
-//                   return new Response($name);
+                $mime = $resourceInstance->getResource()->getMimeType();
+                $name = $this->findPlayerService($mime);
+
                 if($name == null)
                 {
-                    $name = $this->findRsrcServ($resourceType);
+                    $name = $this->findResService($resourceType);
                 }
             }
             else
             {
-                $name = $this->findRsrcServ($resourceType);
+                $name = $this->findResService($resourceType);
             }
+            
            $response = $this->get($name)->indexAction($workspaceId, $resourceInstance);
            
            return new Response($response);
@@ -206,14 +204,13 @@ class ResourceController extends Controller
     
     public function editAction($resourceId, $workspaceId, $options)
     {
-        //resource copy
         if($options == 'copy')
         {
             $em = $this->getDoctrine()->getEntityManager();
             $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
             $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
             $user = $this->get('security.context')->getToken()->getUser();
-            $name = $this->findRsrcServ($resourceInstance->getResourceType());
+            $name = $this->findResService($resourceInstance->getResourceType());
             $copy = $this->get($name)->copy($resourceInstance->getResource(), $user);
             
             $instanceCopy = new ResourceInstance();
@@ -241,13 +238,12 @@ class ResourceController extends Controller
         {
             $em = $this->getDoctrine()->getEntityManager();
             $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
-            $name = $this->findRsrcServ($resourceInstance->getResourceType());
+            $name = $this->findResService($resourceInstance->getResourceType());
             $response = $this->get($name)->editAction($resourceInstance->getResource()->getId());
             
             return new Response($response);
         }
         
-        return new Response("shouldn't go there");
         
     }
     
@@ -257,7 +253,7 @@ class ResourceController extends Controller
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $response = new Response();
               
-        if($id==0)
+        if($id == 0)
         {
             $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($workspace);
             $root = new ResourceInstance();
@@ -272,10 +268,8 @@ class ResourceController extends Controller
             {
                 $root->addChildren($resourceInstance);
             }
-            //must add root in an array for the json response
-            $root = array( 0 => $root);
             
-            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $root));
+            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => (array) $root));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');      
         }
@@ -283,7 +277,6 @@ class ResourceController extends Controller
         {
             $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
             $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getListableChildren($parent);
-            //ne fait plus que récupérer les resources du repository
             $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => $resourcesInstance));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');     
@@ -362,7 +355,7 @@ class ResourceController extends Controller
  
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
         $resourceType = $resourceInstance->getResourceType();
-        $name = $this->findRsrcServ($resourceType);  
+        $name = $this->findResService($resourceType);  
         $em->remove($resourceInstance);
         $resourceInstance->getResource()->removeInstance();
         
@@ -383,49 +376,6 @@ class ResourceController extends Controller
         
         return new Response("success"); 
     }
-   
-    private function findRsrcServ(ResourceType $resourceType)
-    {
-        $services = $this->container->getParameter("resource.service.list");
-        $names = array_keys($services);
-        $serviceName = null;
-        
-        foreach($names as $name)
-        {
-            $type = $this->get($name)->getResourceType();
-            
-            if($type == $resourceType->getType())
-            {
-                $serviceName = $name;
-            }
-        }
-        
-        return $serviceName;
-    }
-    
-    private function findPlayerServ($mime)
-    {
-        $services = $this->container->getParameter("player.service.list");
-        $names = array_keys($services);
-        $serviceName = null;
-        
-        foreach($names as $name)
-        {
-            $fileMime = $this->get($name)->getMime();
-            $serviceName = null;
-            
-            if( $fileMime == $mime->getType() && $serviceName == null)
-            {
-                $serviceName = $name;
-            }
-            if($fileMime == $mime->getName() || $fileMime == $mime->getExtension())
-            {
-                $serviceName = $name;
-            }
-        }
-        
-        return $serviceName;
-    }
     
     public function getResourcesTypeAction()
     {
@@ -437,8 +387,56 @@ class ResourceController extends Controller
         return $response;   
     }
     
-    //set parent to null
-    private function copyReferenceResourceInstance(ResourceInstance $resourceInstance)
+    public function getResourcesReferenceAction($instanceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('abstractResource' => $resourceInstance->getId()));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:resource_instance.json.twig', array('resourcesInstance' => $resourcesInstance));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json'); 
+        
+        return $response;
+    }
+    
+    public function getJsonLicensesListAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $licenses = $em->getRepository('Claroline\CoreBundle\Entity\License')->findAll();
+        $content = $this->renderView('ClarolineCoreBundle:Resource:license_list.json.twig', array('licenses' => $licenses));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');  
+        
+        return $response;
+    }
+     
+    public function getJsonPlayerListAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+        $mime = $resourceInstance->getResource()->getMimeType();
+        $services = $this->container->getParameter("player.service.list");
+        $names = array_keys($services);
+        $i = 1;
+        $arrayPlayer[0][0] = 'claroline.file.manager';
+        $arrayPlayer[0][1] = $this->get('claroline.file.manager')->getPlayerName();
+        
+        foreach($names as $name)
+        {
+            $srvMime = $this->get($name)->getMimeType();
+            
+            if($mime->getName() == $srvMime || $mime->getType() == $srvMime)
+            {
+                $arrayPlayer[$i][0] = $name;
+                $arrayPlayer[$i][1] = $this->get($name)->getPlayerName();
+                $i++;
+            }
+        }
+        
+        return new Response(var_dump($arrayPlayer));
+    }
+      
+    private function copyByReferenceResourceInstance(ResourceInstance $resourceInstance)
     {
         $ric = new ResourceInstance();
         $ric->setUser($this->get('security.context')->getToken()->getUser());
@@ -446,24 +444,22 @@ class ResourceController extends Controller
         $ric->setWorkspace($resourceInstance->getWorkspace());
         $ric->setResource($resourceInstance->getResource());
         $ric->setResourceType($resourceInstance->getResourceType());
-        $ric->setParent(null);
         
         return $ric;
     }
     
-    private function copyCopyResourceInstance(ResourceInstance $resourceInstance)
+    private function copyByCopyResourceInstance(ResourceInstance $resourceInstance)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
         $ric->setUser($this->get('security.context')->getToken()->getUser());
         $ric->setCopy(false);
         $ric->setWorkspace($resourceInstance->getWorkspace());
-        $name = $this->findRsrcServ($resourceInstance->getResourceType());
+        $name = $this->findResService($resourceInstance->getResourceType());
         $resourceCopy = $this->get($name)->copy($resourceInstance->getResource(), $user);
         $resourceCopy->addInstance();
         $ric->setResource($resourceCopy);
         $ric->setResourceType($resourceInstance->getResourceType());
-        $ric->setParent(null);
         
         return $ric;
     }
@@ -477,7 +473,7 @@ class ResourceController extends Controller
         
         foreach($children as $child)
         {
-            $copy = $this->copyReferenceResourceInstance($child);
+            $copy = $this->copyByReferenceResourceInstance($child);
             $copy->setParent($parentCopy);
             $copy->setWorkspace($workspace);
             $em->persist($copy);
@@ -497,7 +493,7 @@ class ResourceController extends Controller
         
         foreach($children as $child)
         {
-            $copy = $this->copyCopyResourceInstance($child);
+            $copy = $this->copyByCopyResourceInstance($child);
             $copy->setParent($parentCopy);
             $copy->setWorkspace($workspace);
             $em->persist($copy);
@@ -512,7 +508,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();  
         $roleCollaborator = $workspace->getCollaboratorRole();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $resourceInstanceCopy = $this->copyReferenceResourceInstance($resourceInstance);
+        $resourceInstanceCopy = $this->copyByReferenceResourceInstance($resourceInstance);
         $resourceInstanceCopy->setWorkspace($workspace);
         $em->persist($resourceInstanceCopy);
         $resourceInstance->getResource()->addInstance();
@@ -529,7 +525,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $roleCollaborator = $workspace->getCollaboratorRole();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);          
-        $resourceInstanceCopy = $this->copyCopyResourceInstance($resourceInstance);
+        $resourceInstanceCopy = $this->copyByCopyResourceInstance($resourceInstance);
         $resourceInstanceCopy->setWorkspace($workspace);
         $em->persist($resourceInstanceCopy);              
         $em->flush();
@@ -540,51 +536,47 @@ class ResourceController extends Controller
         $this->setChildrenCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
     }
     
-    public function getResourcesReferenceAction($instanceId)
+    private function findPlayerService($mime)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('abstractResource' => $resourceInstance->getId()));
-        $content = $this->renderView('ClarolineCoreBundle:Resource:resource_instance.json.twig', array('resourcesInstance' => $resourcesInstance));
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');  
-    }
-    
-    public function getJsonLicensesListAction()
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $licenses = $em->getRepository('Claroline\CoreBundle\Entity\License')->findAll();
-        $content = $this->renderView('ClarolineCoreBundle:Resource:license_list.json.twig', array('licenses' => $licenses));
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');  
-        
-        return $response;
-    }
-     
-    public function getJsonPlayerListAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
-        $mime = $resourceInstance->getResource()->getMime();
         $services = $this->container->getParameter("player.service.list");
         $names = array_keys($services);
-        $i = 1;
-        $arrayPlayer[0][0] = 'claroline.file.manager';
-        $arrayPlayer[0][1] = $this->get('claroline.file.manager')->getPlayerName();
+        $serviceName = null;
         
         foreach($names as $name)
         {
-            $srvMime = $this->get($name)->getMime();
+            $fileMime = $this->get($name)->getMimeType();
+            $serviceName = null;
             
-            if($mime->getName() == $srvMime || $mime->getType() == $srvMime)
+            if( $fileMime == $mime->getType() && $serviceName == null)
             {
-                $arrayPlayer[$i][0] = $name;
-                $arrayPlayer[$i][1] = $this->get($name)->getPlayerName();
-                $i++;
+                $serviceName = $name;
+            }
+            if($fileMime == $mime->getName() || $fileMime == $mime->getExtension())
+            {
+                $serviceName = $name;
             }
         }
         
-        return new Response(var_dump($arrayPlayer));
-        
+        return $serviceName;
     }
+     
+    private function findResService(ResourceType $resourceType)
+    {
+        $services = $this->container->getParameter("resource.service.list");
+        $names = array_keys($services);
+        $serviceName = null;
+        
+        foreach($names as $name)
+        {
+            $type = $this->get($name)->getResourceType();
+            
+            if($type == $resourceType->getType())
+            {
+                $serviceName = $name;
+            }
+        }
+        
+        return $serviceName;
+    }
+    
 }
