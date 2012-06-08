@@ -30,8 +30,6 @@ class AdministrationController extends Controller
         );
     }
     
-    //TODO change getOwnedRole method
-
     public function addUserAction()
     {      
         $request = $this->get('request');

@@ -17,9 +17,6 @@ class ResourceManager
     /** @var RightManagerInterface */
     protected $rightManager;
     
-    /** @var string */
-    protected $controller;    
-
     public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager)
     {
         $this->em = $em;
@@ -33,53 +30,5 @@ class ResourceManager
         $this->em->persist($resource);
         $this->em->flush();
         $this->rightManager->addRight($resource, $owner, MaskBuilder::MASK_OWNER);
-    }
-    
-    public function getControllerName()
-    {
-        return $this->controller;
-    }
-
-    public function getResourcesOfUser($user)
-    {
-        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findBy(array('user' => $user->getId()));
-        
-        return $resources;        
-    }
-    
-    public function findAll()
-    {
-        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findAll();
-        
-        return $resources; 
-    }
-    
-    public function getChildren($resource)
-    {
-        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->children($resource, true);
-                
-        return $resources;    
-    }
-    
-    public function getChildrenById($id)
-    {
-        $resource = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
-        $resources = $this->getChildren($resource);
-        
-        return $resources;
-    }
-    
-    public function getRootResourcesOfUser($user)
-    {
-        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getUserRootResource($user);
-        
-        return $resources;
-    }
-      
-    public function find($id)
-    { 
-        $resource = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
-        
-        return $resource;
     }
 }

@@ -27,12 +27,12 @@ class TextController extends Controller
         $old->setVersion($version);
         $old->setLastRevision($revision);
         
-        //edit the current resourceInstance
         $em->flush();
         
         return new Response('edited');        
     }
     
+    //must be refactored: test function
     public function historyAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();

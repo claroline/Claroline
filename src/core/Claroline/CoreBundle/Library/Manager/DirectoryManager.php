@@ -85,38 +85,6 @@ class DirectoryManager implements ResourceInterface
     //different than other resourcesmanager: it must works with resource instances
     public function delete($resourceInstance)
     {
-        /*  recursive suppression
-       
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
-        
-        foreach($children as $child)
-        {
-            if($child->getResourceType()->getType()!='directory')
-            {
-                $rsrc = $child->getResource();
-                $this->em->remove($child);
-                $rsrc->removeInstance(); 
-                
-                if($rsrc->getInstanceAmount() == 0)
-                {
-                    $type = $child->getResourceType();
-                    $srv = $this->findRsrcServ($type);
-                    $this->container->get($srv)->delete($child->getResource());
-                }
-            }
-            else
-            {
-                $rsrc = $child->getResource();
-                $this->em->remove($child);
-                $this->em->remove($rsrc);
-            }
-        }
-        
-        $rsrc = $resourceInstance->getResource();
-        $this->em->remove($rsrc);
-        */
-        
-        //non recursive suppression: not sure if it works
         $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
         {
             foreach($children as $child)
@@ -130,7 +98,7 @@ class DirectoryManager implements ResourceInterface
                     if($rsrc->getInstanceAmount() == 0)
                     {
                         $type = $child->getResourceType();
-                        $srv = $this->findRsrcServ($type);
+                        $srv = $this->findResService($type);
                         $this->container->get($srv)->delete($child->getResource());
                     }
                 }            
@@ -189,42 +157,6 @@ class DirectoryManager implements ResourceInterface
         return $response;
     }
         
-    public function getDirectoriesOfUser($user)
-    {
-        $directories = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->findBy(array('user' => $user->getId()));
-        
-        return $directories;
-    }
-    
-    public function getDirectoryContentById($id)
-    {
-        $dir =$this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
-        $resources = $this->getDirectoryContent($dir);
-        
-        return $resources;
-    }
-    
-    public function getDirectoryContent($dir)
-    {         
-        $resources = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->children($dir, true, 'name');
-        return $resources;
-    }
-    
-    public function getNavigableDirectoryContentById($id)
-    {
-         $dir =$this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
-         $resources = $this->getNavigableDirectoryContent($dir);
-         
-         return $resources;
-    }
-    
-    public function getNavigableDirectoryContent($dir)
-    {
-        $resources = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->getNavigableChildren($dir);
-        
-        return $resources;
-    }
-    
     public function findAll()
     {
         $resources = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->findAll();
@@ -238,7 +170,7 @@ class DirectoryManager implements ResourceInterface
        $this->delete($directory);
     }
        
-    private function findRsrcServ($resourceType)
+    private function findResService($resourceType)
     {
         $services = $this->container->getParameter("resource.service.list");
         $names = array_keys($services);

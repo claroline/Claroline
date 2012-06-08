@@ -4,8 +4,6 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 /**
  * @ORM\Entity
