@@ -2,18 +2,18 @@
 
 namespace Claroline\CoreBundle\Library\Manager;
 
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Symfony\Component\Form\FormFactory;
-use Claroline\CoreBundle\Form\DirectoryType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Form\DirectoryType;
+use Claroline\CoreBundle\Form\SelectResourceType;
 
 class DirectoryManager implements ResourceInterface
 {
@@ -32,6 +32,7 @@ class DirectoryManager implements ResourceInterface
     /** @var ResourseManager */
     protected $resourceManager;
     
+    /** */
     protected $templating;
 
     public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container, ResourceManager $resourceManager, $templating)
@@ -43,9 +44,7 @@ class DirectoryManager implements ResourceInterface
         $this->resourceManager = $resourceManager;
         $this->templating = $templating;
     }
-    
-    //METHODES OBLIGATOIRE A PARTIR D'ICI
-    
+        
     public function getForm()
     {
         return $this->formFactory->create(new DirectoryType(), new Directory());
@@ -93,7 +92,7 @@ class DirectoryManager implements ResourceInterface
                 {
                     $rsrc = $child->getResource();
                     $this->em->remove($child);
-                    $rsrc->removeInstance(); 
+                    $rsrc->decrInstance(); 
                 
                     if($rsrc->getInstanceAmount() == 0)
                     {
@@ -106,7 +105,7 @@ class DirectoryManager implements ResourceInterface
                 {
                     $rsrc = $child->getResource();
                     $this->em->remove($child);
-                    $rsrc->removeInstance(); 
+                    $rsrc->decrInstance(); 
                     
                     if($rsrc->getInstanceAmount() == 0)
                     {
@@ -119,7 +118,7 @@ class DirectoryManager implements ResourceInterface
         
         $rsrc = $resourceInstance->getResource();
         $this->em->remove($resourceInstance);
-        $rsrc->removeInstance(); 
+        $rsrc->decrInstance(); 
 
         if($rsrc->getInstanceAmount() == 0)
         {
@@ -164,12 +163,6 @@ class DirectoryManager implements ResourceInterface
         return $resources; 
     }
     
-    public function deleteById($id)
-    {
-       $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\Directory')->find($id);
-       $this->delete($directory);
-    }
-       
     private function findResService($resourceType)
     {
         $services = $this->container->getParameter("resource.service.list");

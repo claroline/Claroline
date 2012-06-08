@@ -51,7 +51,7 @@ class WorkspaceController extends Controller
         );
     }
     
-    public function JSONlistWorkspaceForUserAction()
+    public function JsonlistWorkspaceForUserAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER'))
         {
@@ -151,7 +151,7 @@ class WorkspaceController extends Controller
             }
         }
         
-         if ($authorization == false)
+         if ($authorization === false)
          {
             throw new AccessDeniedHttpException();
          }
@@ -278,8 +278,6 @@ class WorkspaceController extends Controller
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $user->addRole($workspace->getCollaboratorRole());
         $em->flush();
-
-        $users = array( 0 => $user);
         
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => array($user), 'workspace' => $workspace));
     }

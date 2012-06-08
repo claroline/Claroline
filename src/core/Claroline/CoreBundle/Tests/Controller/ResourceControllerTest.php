@@ -125,8 +125,7 @@ class ResourceControllerTest extends FunctionalTestCase
     }
     
     public function testResourceCanBeAddedToWorkspaceByCopy()
-    {
-       //$this->markTestSkipped("copy not implemented yet"); 
+    { 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->initWorkspacesTestsByCopy();
@@ -136,7 +135,6 @@ class ResourceControllerTest extends FunctionalTestCase
     
     public function testRegisterUserHasAccessToWorkspaceResourcesByCopy()
     {
-       //$this->markTestSkipped("copy not implemented yet"); 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->initWorkspacesTestsByCopy();
@@ -153,7 +151,6 @@ class ResourceControllerTest extends FunctionalTestCase
     
     public function testUnregisteredUserLostAccessToWorkspaceResourcesByCopy()
     {
-       //$this->markTestSkipped("copy not implemented yet"); 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->initWorkspacesTestsByCopy();
@@ -167,8 +164,7 @@ class ResourceControllerTest extends FunctionalTestCase
     }
     
     public function testRegisteredUserHasAccesToWorkspaceResourcesByCopy()
-    {
-       //$this->markTestSkipped("copy not implemented yet");    
+    { 
        $this->loadFixture(new LoadWorkspaceData());
        $this->logUser($this->getFixtureReference('user/user'));
        $this->registerToWorkspaceA();

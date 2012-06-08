@@ -2,11 +2,11 @@
 namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormFactory;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\Link;
 use Claroline\CoreBundle\Form\LinkType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
-use Symfony\Component\Form\FormFactory;
 
 class LinkManager //implements ResourceInterface
 {
