@@ -15,20 +15,13 @@ class PluginDependencyInjection extends Extension
     protected function setUp($container)
     {
         $taggedServices = $container->findTaggedServiceIds("resource.manager");
-        
         $serviceArray = $container->getParameter('resource.service.list');
-        //$names = array_keys($serviceArray);
          
         foreach($taggedServices as $name => $service)
         {
             $serviceArray[$name]='';
         }
-        /*
-        foreach($names as $name)
-        {
-            $serviceArray[$name]='';
-        }
-        */
+        
         $container->setParameter("resource.service.list", $serviceArray);
     }
 }

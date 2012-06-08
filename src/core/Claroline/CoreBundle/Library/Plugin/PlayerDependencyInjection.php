@@ -15,21 +15,12 @@ class PlayerDependencyInjection extends Extension
     protected function setUp($container)
     {
         $taggedServices = $container->findTaggedServiceIds("resource.player");
-        
-
         $serviceArray = $container->getParameter('player.service.list');
-        //$names = array_keys($serviceArray);
 
         foreach($taggedServices as $name => $service)
         {
             $serviceArray[$name]='';
         }
-        /*
-        foreach($names as $name)
-        {
-            $serviceArray[$name]='';
-        }
-        */
         
         $container->setParameter("player.service.list", $serviceArray);
     }

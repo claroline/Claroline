@@ -57,8 +57,8 @@ claro_resource_add_resource:
       expose: true
    
 claro_resource_default_click:
-   pattern: /click/{type}/{id}
-   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick, type:null }
+   pattern: /click/{id}
+   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
    options:
        expose: true
     

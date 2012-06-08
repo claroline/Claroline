@@ -43,7 +43,7 @@ class ResourceInstance
     protected $user;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="resourcesInstance")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="resourceInstances")
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */
     protected $abstractResource;

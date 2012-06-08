@@ -40,9 +40,7 @@ class WorkspaceController extends Controller
         }
      
         $em = $this->get('doctrine.orm.entity_manager');
-        
         $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getWorkspacesOfUser($user);
         
         return $this->render(
@@ -97,8 +95,7 @@ class WorkspaceController extends Controller
         {
               $type = $form->get('type')->getData() == 'simple' ? 
                   Configuration::TYPE_SIMPLE : 
-                  Configuration::TYPE_AGGREGATOR;
-            
+                  Configuration::TYPE_AGGREGATOR;           
               $config = new Configuration();
               $config->setWorkspaceType($type);
               $config->setWorkspaceName($form->get('name')->getData()); 

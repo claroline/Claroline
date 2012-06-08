@@ -39,7 +39,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
        $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->client->request('GET', "/resource/click/file/{$id}");
+       $this->client->request('GET', "/resource/click/{$id}");
        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
@@ -47,7 +47,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
-       $this->client->request('GET', "/resource/click/file/{$id}");
+       $this->client->request('GET', "/resource/click/{$id}");
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
     
@@ -120,7 +120,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->logUser($this->getFixtureReference('user/user_2'));
        $this->registerToWorkspaceA();
        $this->unregisterFromWorkspaceA();
-       $this->client->request('GET', "/resource/click/directory/{$rootId}");
+       $this->client->request('GET', "/resource/click/{$rootId}");
        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
     
@@ -193,7 +193,6 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->click($link);
        //add root to workspace
        $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/ref");
-       
        return $rootId;
     }
     
@@ -206,7 +205,8 @@ class ResourceControllerTest extends FunctionalTestCase
        $link =  $crawler->filter("#link_show_{$id}")->link();
        $this->client->click($link);
        //add root to workspace
-       $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/copyt");
+       $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/copy");
+              
     }
         
     private function addRootFile($filePath)
@@ -274,8 +274,7 @@ class ResourceControllerTest extends FunctionalTestCase
      
      private function findResourceWorkspace($resourceId)
      {
-         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
+         $resourceInstance = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
          $workspace = $resourceInstance->getWorkspace();
          
          return $workspace;

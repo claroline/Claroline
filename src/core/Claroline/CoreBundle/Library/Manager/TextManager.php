@@ -3,6 +3,7 @@ namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Claroline\CoreBundle\Entity\Resource\Text;
@@ -15,9 +16,10 @@ class TextManager //implements ResourceInterface
     protected $em;
     /** @var FormFactory */
     protected $formFactory;
+    /** @var TwigEngine */
     protected $templating;
     
-    public function __construct(EntityManager $em, $formFactory, $templating)
+    public function __construct(EntityManager $em, FormFactory $formFactory, TwigEngine $templating)
     {
         $this->em = $em;
         $this->formFactory = $formFactory;
@@ -44,7 +46,6 @@ class TextManager //implements ResourceInterface
     
     public function add($form, $id, $user)
     {
-        //
          $name = $form['name']->getData();
          $data = $form['text']->getData();
          $revision = new Revision();

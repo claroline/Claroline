@@ -10,14 +10,9 @@ use Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2;
 
 class ResourceExtenderTest extends FunctionalTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
-    private $em;
-
     protected function setUp()
     {
         parent::setUp();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        //$this->markTestSkipped("AbstractResource 'replaced' by ResourceInstace");
     }
 
     public function testResourceExtenderIsSubscribed()

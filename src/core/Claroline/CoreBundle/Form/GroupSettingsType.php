@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

@@ -1,10 +1,10 @@
 <?php
+
 namespace Claroline\CoreBundle\Library\Configuration;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
 
 class PlatformConfiguration
 {

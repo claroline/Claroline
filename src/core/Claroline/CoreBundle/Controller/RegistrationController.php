@@ -29,7 +29,6 @@ class RegistrationController extends Controller
     public function createAction()
     {
         $this->checkAccess();    
-        $msg = null;
         $user = new User();
         $form = $this->get('form.factory')->create(new UserType(), $user);
         $form->bindRequest($this->get('request'));

@@ -7,16 +7,12 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 
 class TextManagerTest extends FunctionalTestCase
 {
-    /** @ var EntityManager */
-    private $em;
-    
     protected function setUp()
     {
         parent::setUp();
         $this->loadUserFixture();
         $this->loadFixture(new LoadResourceTypeData());
         $this->client->followRedirects();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
     
     public function testAdd()
@@ -35,8 +31,9 @@ class TextManagerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $id = $this->addText('HELLO WORLD');
-        $crawler = $this->client->request('GET', "/resource/click/text/{$id}");
+        $crawler = $this->client->request('GET', "/resource/click/{$id}");
         $node = $crawler->filter('#content');
+        
         $this->assertTrue(strpos($node->text(), 'HELLO WORLD')!=false);
     }
     
@@ -47,7 +44,7 @@ class TextManagerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/resource/edit/{$id}/{$this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId()}/ref");
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => "the answer is 42"));
-        $crawler = $this->client->request('GET', "/resource/click/text/{$id}");
+        $crawler = $this->client->request('GET', "/resource/click/{$id}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id)->getResource();

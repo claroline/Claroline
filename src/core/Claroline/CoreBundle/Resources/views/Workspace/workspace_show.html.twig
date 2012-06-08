@@ -32,7 +32,7 @@
             {% for resource in resources %}
                 <div id="resource_row"> 
                     <div class="row_resource">
-                        <a href="{{path('claro_resource_default_click', {'type':resource.getResourceType().getType(), 'id':resource.getId()})}}" 
+                        <a href="{{path('claro_resource_default_click',{'id':resource.getId()})}}" 
                            id="link_resource_{{resource.getId()}}" 
                            class="link_resource_view">
                           {{resource.getResource().getName()}}

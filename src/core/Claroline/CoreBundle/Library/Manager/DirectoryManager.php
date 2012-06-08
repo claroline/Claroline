@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -15,27 +16,22 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
 
-class DirectoryManager implements ResourceInterface
+class DirectoryManager implements ResourceManagerInterface
 {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
-    
     /** @var RightManagerInterface */
     protected $rightManager;  
-    
     /** @var FormFactory */
     protected $formFactory;
-    
     /** @var ContainerInterface */
     protected $container;
-    
     /** @var ResourseManager */
     protected $resourceManager;
-    
-    /** */
+    /** @var TwigEngine */
     protected $templating;
 
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container, ResourceManager $resourceManager, $templating)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container, ResourceManager $resourceManager, TwigEngine $templating)
     {
         $this->em = $em;
         $this->rightManager = $rightManager;

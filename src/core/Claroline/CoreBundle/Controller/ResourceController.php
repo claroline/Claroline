@@ -62,7 +62,7 @@ class ResourceController extends Controller
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         
-        if(null == $workspaceId)
+        if(null === $workspaceId)
         {
             $workspaceId = $user->getPersonnalWorkspace()->getId();
         }
@@ -76,7 +76,8 @@ class ResourceController extends Controller
         if($form->isValid())
         {   
             $resource = $this->get($name)->add($form, $id, $user);
-            if(null!=$resource)   
+            
+            if(null !== $resource)   
             {
                 $ri = new ResourceInstance();
                 $ri->setUser($user);
@@ -127,8 +128,7 @@ class ResourceController extends Controller
         }
     }
     
-    //TODO: remove type from defaultClickAction
-    public function defaultClickAction($type, $id)
+    public function defaultClickAction($id)
     {
           $resourceInstance = $this->getDoctrine()->getEntityManager()->getRepository(
               'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
@@ -141,19 +141,12 @@ class ResourceController extends Controller
           }
           else
           {
-              if($type!="null")
-              {
-                  $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                      'Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
-              }
-              else
-              {
-                  $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                      'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id)->getResourceType();
-              }
+              $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
+                  'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id)->getResourceType();
               $name = $this->findResService($resourceType);
+              $type = $resourceType->getType();
               
-              if($type!='directory')
+              if($type != 'directory')
               {    
                   $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
               }
@@ -172,7 +165,7 @@ class ResourceController extends Controller
        $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id);
        $securityContext = $this->get('security.context');
        
-       if(false == $securityContext->isGranted('VIEW', $resourceInstance))
+       if(false === $securityContext->isGranted('VIEW', $resourceInstance))
        {
            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
        }
@@ -180,13 +173,13 @@ class ResourceController extends Controller
        {
             $resourceType = $resourceInstance->getResourceType();
             
-            if($resourceType->getType()=='file')
+            if($resourceType->getType() == 'file')
             {
                 $name = null;
                 $mime = $resourceInstance->getResource()->getMimeType();
                 $name = $this->findPlayerService($mime);
 
-                if($name == null)
+                if(null === $name)
                 {
                     $name = $this->findResService($resourceType);
                 }
@@ -202,6 +195,7 @@ class ResourceController extends Controller
        }
     }
     
+    //option: must be 'ref' or 'copy'
     public function editAction($resourceId, $workspaceId, $options)
     {
         if($options == 'copy')
@@ -269,7 +263,7 @@ class ResourceController extends Controller
                 $root->addChildren($resourceInstance);
             }
             
-            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => (array) $root));
+            $content = $this->renderView('ClarolineCoreBundle:Resource:dynatree_resource.json.twig', array('resources' => array(0 => $root)));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');      
         }
@@ -296,6 +290,7 @@ class ResourceController extends Controller
         return new Response("success");
     }
     
+    //option: must be 'ref' or 'copy'
     public function addToWorkspaceAction($resourceId, $workspaceId, $option)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -465,7 +460,7 @@ class ResourceController extends Controller
         return $ric;
     }
     
-    private function setChildrenReferenceCopy($parentInstance, $workspace, $parentCopy)
+    private function setChildrenByReferenceCopy($parentInstance, $workspace, $parentCopy)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
@@ -480,12 +475,12 @@ class ResourceController extends Controller
             $em->persist($copy);
             $copy->getResource()->incrInstance();
             $em->flush();
-            $this->setChildrenReferenceCopy($child, $workspace, $copy);
+            $this->setChildrenByReferenceCopy($child, $workspace, $copy);
             $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         }
     }
     
-    private function setChildrenCopyCopy($parentInstance, $workspace, $parentCopy)
+    private function setChildrenByCopyCopy($parentInstance, $workspace, $parentCopy)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
@@ -499,7 +494,7 @@ class ResourceController extends Controller
             $copy->setWorkspace($workspace);
             $em->persist($copy);
             $em->flush();
-            $this->setChildrenReferenceCopy($child, $workspace, $copy);
+            $this->setChildrenByReferenceCopy($child, $workspace, $copy);
             $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         }
     }
@@ -518,7 +513,7 @@ class ResourceController extends Controller
         $rightManager = $this->get('claroline.security.right_manager');
         $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
-        $this->setChildrenReferenceCopy($resourceInstance, $workspace, $resourceInstanceCopy);
+        $this->setChildrenByReferenceCopy($resourceInstance, $workspace, $resourceInstanceCopy);
     }
     
     private function copyFirstCopyInstance($workspace, $instanceId)
@@ -534,7 +529,7 @@ class ResourceController extends Controller
         $rightManager = $this->get('claroline.security.right_manager');
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
-        $this->setChildrenCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
+        $this->setChildrenByCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
     }
     
     private function findPlayerService($mime)

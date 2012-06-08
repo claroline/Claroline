@@ -33,7 +33,7 @@ abstract class AbstractResource
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource")
      */
-    protected $resourcesInstance;
+    protected $resourceInstances;
     
     /**
      * @ORM\Column(type="integer", name="count_instance") 
@@ -71,7 +71,7 @@ abstract class AbstractResource
     
     public function __construct()
     {
-        $this->resourcesInstance = new ArrayCollection();
+        $this->resourceInstances = new ArrayCollection();
         $this->instanceAmount = 0;
     }
         
@@ -97,12 +97,12 @@ abstract class AbstractResource
     
     public function addResourceInstance(ResourceInstance $resourceInstance)
     {
-        $this->resourcesInstance->add($resourceInstance);
+        $this->resourceInstances->add($resourceInstance);
     }
     
     public function removeResourceInstance(ResourceInstance $resourceInstance)
     {
-        $this->resourcesInstance->removeElement($resourceInstance);
+        $this->resourceInstances->removeElement($resourceInstance);
     }
     
     public function incrInstance()

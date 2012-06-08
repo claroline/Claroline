@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 abstract class FixtureTestCase extends TransactionalTestCase
 {
     /** @var Doctrine\ORM\EntityManager */
-    private $em;
+    protected $em;
 
     /** @var ReferenceRepository */
     private $referenceRepo;
