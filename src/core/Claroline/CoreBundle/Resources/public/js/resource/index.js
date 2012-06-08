@@ -96,16 +96,7 @@
                             return false;
                         }
                     },
-                    onDrop: function(node, sourceNode, hitMode, ui, draggable){
-//                    if(node.isDescendantOf(sourceNode)){
-//                            return false;
-//                        }
-//                        else{
-//                        sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
-//                        sourceNode.move(node, hitMode);
-//                            return true;
-//                        }
-
+                    onDrop: function(node, sourceNode, hitMode, ui, draggable){d
                        /**This function MUST be defined to enable dropping of items on the tree.
                         * sourceNode may be null, if it is a non-Dynatree droppable.
                         */
@@ -171,7 +162,7 @@
                     isFolder:true
                 });
             }
-           // $('#ct_form').dialog("close");
+            
             $('#ct_form').empty();
         }
         catch(err)

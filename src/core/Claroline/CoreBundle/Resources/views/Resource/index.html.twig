@@ -21,7 +21,7 @@
 <div id="data-claroline"
      data-workspace_id = {{app.user.getPersonnalWorkspace().getId()}}
 ></div>
-<!-- not that beatifull ------------------------------------------------------->
+
 {% if directory is defined and is_granted('OWNER', directory)  %}
 <form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" id="form_resource">
     <select id="select_resource_form_type" required="required" name="select_resource_form[type]">
@@ -48,7 +48,7 @@
     {% for resource in resources %}
         {% if resource.getResourceType.getNavigable() == true %}
             <div class="row_resource" data-resource_id={{resource.getId()}}>
-                <a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" 
+                <a href="{{path('claro_resource_default_click', {'id':resource.getId()})}}" 
                    id="link_resource_{{resource.getId()}}" 
                    class="link_resource_view">{{resource.getResource().getName()}}
                 </a> | 
@@ -82,7 +82,7 @@
     {%for resource in resources %}
         {% if resource.getResourceType.getNavigable() == false %}
             <div class="row_resource" data-resource_id={{resource.getId()}}>
-                <a href="{{path('claro_resource_default_click', {'id':resource.getId(), 'type':resource.getResourceType().getType()})}}" 
+                <a href="{{path('claro_resource_default_click', {'id':resource.getId()})}}" 
                    id="link_resource_view_{{resource.getId()}}" 
                    class="link_resource_view">
                     {{resource.getResource().getName()}}

@@ -27,7 +27,6 @@ class ThumbnailGenerator
         else
         {
             $this->hasGdExtension = true;
-            //echo "gd extension is loaded\n";
         }
 
         if (!extension_loaded('ffmpeg')) 
@@ -37,11 +36,10 @@ class ThumbnailGenerator
         else
         {
             $this->hasFfmpegExtension = true;
-           // echo "ffmpeg extension is loaded\n";
         }
     }
     
-    //the end could be refactored
+    //the end could be refactored: what does imagedestroy should do ? is everything clean ?
     public function createThumbNail($name, $filename, $newWidth, $newHeight)
     { 
         $extension = pathinfo($name, PATHINFO_EXTENSION);
@@ -81,7 +79,8 @@ class ThumbnailGenerator
         }
         else
         {
-            return "gdExtension is missing";
+            //something went wrong.
+            return 1;
         }
     }
     
@@ -113,7 +112,6 @@ class ThumbnailGenerator
     public function parseAllAndGenerate()
     {
         $iterator = new \DirectoryIterator($this->dir);
-        $i=0;
           
         foreach($iterator as $fileInfo)
         {
@@ -123,9 +121,6 @@ class ThumbnailGenerator
                 $path = $fileInfo->getPath();
                 $fileName = $fileInfo->getFileName();
                 $this->createThumbNail("{$pathName}", "{$path}/thumbs/tn@{$fileName}", self::WIDTH, self::HEIGHT);
-                
-                echo("{$i}: thumbnail {$fileName} \n");
-                $i++;
             }
         }
     }
@@ -143,7 +138,8 @@ class ThumbnailGenerator
         }
         else
         {
-            return "ffMpegExtension is missing";
+            //something went wrong
+            return "1";
         }
     }
    

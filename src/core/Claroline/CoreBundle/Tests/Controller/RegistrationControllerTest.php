@@ -38,11 +38,9 @@ class RegistrationControllerTest extends FunctionalTestCase
     {
         $rm = $this->client->getContainer()->get('claroline.security.right_manager');
         $user = $this->getFixtureReference('user/user');
-        $rm->addRight('Claroline\CoreBundle\Entity\User', $user, MaskBuilder::MASK_CREATE);    
-        
+        $rm->addRight('Claroline\CoreBundle\Entity\User', $user, MaskBuilder::MASK_CREATE);      
         $this->logUser($user);
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
-        
         $crawler = $this->logUser($this->getUser('bdoe'));
         $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
     }
@@ -82,8 +80,8 @@ class RegistrationControllerTest extends FunctionalTestCase
     
     private function getUser($username)
     {
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        //Question: why can't I use the $this->em EntityManager ?
+        $user = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\User')
             ->findOneByUsername($username);
         
         return $user;

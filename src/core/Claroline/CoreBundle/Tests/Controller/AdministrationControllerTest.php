@@ -17,6 +17,7 @@ class AdministrationControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
         $this->client->followRedirects();
+        
     }
 
     protected function tearDown()
@@ -166,8 +167,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     
     private function getUser($username)
     {
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')
             ->findOneByUsername($username);
         
         return $user;

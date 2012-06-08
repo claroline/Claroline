@@ -1,8 +1,8 @@
 <?php
+
 namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * @ORM\Entity

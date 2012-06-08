@@ -3,6 +3,7 @@ namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -10,7 +11,7 @@ use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
 use Claroline\CoreBundle\Library\Services\ThumbnailGenerator;
 
-class FileManager implements ResourceInterface
+class FileManager implements ResourceManagerInterface
 {
     /** @var EntityManager */
     protected $em;
@@ -20,12 +21,12 @@ class FileManager implements ResourceInterface
     protected $formFactory;
     /** @var RightManagerInterface */
     protected $rightManager;
-    
+    /** @var TwigEngine */
     protected $templating;
     /** @var ThumbnilGenerator **/
     protected $thumbnailGenerator;
     
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, $templating, ThumbnailGenerator $thumbnailGenerator)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, TwigEngine $templating, ThumbnailGenerator $thumbnailGenerator)
     {   
         $this->em = $em;
         $this->rightManager = $rightManager;
@@ -50,11 +51,10 @@ class FileManager implements ResourceInterface
     public function getFormPage($twigFile, $id, $type)
     {
         $form = $this->formFactory->create(new FileType, new File());
-        $content = $this->templating->render(
+        
+        return $this->templating->render(
             $twigFile, array('form' => $form->createView(), 'id' => $id, 'type' =>$type)
         );
-        
-        return $content;
     }
     
     public function add($form, $id, $user)
@@ -117,9 +117,8 @@ class FileManager implements ResourceInterface
     {
         $content = $this->templating->render(
             'ClarolineCoreBundle:File:index.html.twig');
-        $response = new Response($content);
         
-        return $response;
+        return new Response($content);
     }
     
     public function getPlayerName()

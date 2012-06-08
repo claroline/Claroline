@@ -3,6 +3,7 @@ namespace Claroline\CoreBundle\Library\Manager;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\Link;
 use Claroline\CoreBundle\Form\LinkType;
@@ -12,11 +13,13 @@ class LinkManager //implements ResourceInterface
 {
     /** @var EntityManager */
     protected $em;
+    /** @var FormFactory */
     protected $formFactory;
+    /** @var TwigEngine */
     protected $templating;
     
     
-    public function __construct(EntityManager $em, $formFactory, $templating)
+    public function __construct(EntityManager $em, FormFactory $formFactory, TwigEngine $templating)
     {
         $this->em = $em;
         $this->formFactory = $formFactory;
