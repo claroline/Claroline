@@ -1,16 +1,8 @@
 {% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
 {% block content %}
-REVISIONS:
-{% for revision in revisions %}
-version {{revision.getVersion()}}
-<br/>
---------------------------------
-{{revision.getContent()|raw}}
-================================
-<br/>
-{{revision.getContent()}}
-<br/>
-++++++++++++++++++++++++++++++++
-<br/>
+{% for difference in differences %}
+{{difference|raw}}
+</br>-------------------------------</br>
 {% endfor %}
+{{original|raw}}
 {% endblock %}
