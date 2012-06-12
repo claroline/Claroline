@@ -1,121 +1,79 @@
-claro_workspace_new_workspace:
+claro_ws_show_creation_form:
     pattern: /new/form
-    defaults: { _controller: ClarolineCoreBundle:Workspace:new }
+    defaults: { _controller: ClarolineCoreBundle:Workspace:creationForm }
 
-claro_workspace_create_workspace:
+claro_ws_create:
     pattern: /new/create
     defaults: { _controller: ClarolineCoreBundle:Workspace:create }
     requirements:
         _method: POST
 
-claro_workspace_delete_workspace:
-    pattern: /delete/{id}
+claro_ws_delete:
+    pattern: /delete/{workspaceId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:delete }
-    
-claro_workspace_user_workspace:
-    pattern: /list/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:listForUser }
-    
-claro_workspace_list_all:
+
+claro_ws_list_user_workspaces:
+    pattern: /{userId}/list.{format}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:listWorkspacesByUser, userId:null }
+    options:
+      expose: true
+
+claro_ws_list:
     pattern: /list
     defaults: { _controller: ClarolineCoreBundle:Workspace:list }
-    
-claro_workspace_show_workspace:
-    pattern: /show/{id}
+
+claro_ws_show:
+    pattern: /show/{workspaceId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:show }
-    
-claro_workspace_register_workspace:
-    pattern: /register/{id}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:register }
-    
-claro_workspace_unregister_workspace:
-    pattern: /unregister/{id}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:unregister }
-    
-claro_workspace_show_user_list_workspace:
-    pattern: /show/list/user/{id}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:listUserPerWorkspace }
-    
-claro_workspace_delete_user_workspace:
+
+claro_ws_users_ws:
+    pattern: /show/list/user/{workspaceId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:listUserByWs }
+
+claro_ws_remove_user:
     pattern: /delete/user/{userId}/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:deleteUserFromWorkspace } 
+    defaults: { _controller: ClarolineCoreBundle:Workspace:removeUser, userId:null }
     options:
        expose: true
-        
-claro_workspace_delete_group_workspace:
+
+claro_ws_remove_group:
     pattern: /delete/group/{groupId}/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:deleteGroupFromWorkspace }
+    defaults: { _controller: ClarolineCoreBundle:Workspace:removeGroup }
     options:
-      expose: true  
-    
-claro_workspace_ajax_get_add_users_workspace:
-   pattern: /ajax/get/add/user/{id}/{nbIteration}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetAddUser }
-   requirements:
-       _method: POST
+      expose: true
+
+claro_ws_users_limited_list:
+   pattern: /user/{workspaceId}/{nbIteration}/limited-list.{format}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:limitedUserList }
    options:
        expose: true
 
-claro_workspace_ajax_add_user_workspace:
-   pattern: /ajax/add/user/{userId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxAddUserToWorkspace }
-   requirements:
-      _method: POST
+claro_ws_add_user:
+   pattern: /add/user/{userId}/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:addUser, userId:null }
    options:
       expose: true
-      
-claro_workspace_ajax_delete_user_workspace:
-   pattern: /ajax/delete/user/{userId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxDeleteUserFromWorkspace }
-   requirements:
-     _method: POST
-   options:
-      expose: true
-          
-claro_workspace_ajax_get_add_groups_workspace:
-    pattern: /ajax/get/add/group/{id}/{nbIteration}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetAddGroup }
-    requirements:
-        _method: POST
+
+claro_ws_groups_limited_list:
+    pattern: /group/{workspaceId}/{nbIteration}/limited-list.{format}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:limitedGroupList }
     options:
         expose: true
-        
-claro_workspace_ajax_generic_user_search_workspace:
-    pattern: /ajax/search/user/{search}/{id}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetGenericSearchUnregisteredUser }
-    requirements:
-        _method: POST
+
+claro_ws_search_unregistered_users_by_names:
+    pattern: /search/user/{search}/{workspaceId}/list.{format}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredUsersByNames }
     options:
-         expose: TRUE 
-         
-claro_workspace_ajax_generic_group_search_workspace:
-    pattern: /ajax/search/group/{search}/{id}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxGetGenericSearchUnregisteredGroup }
-    requirements:
-        _method: POST
+         expose: TRUE
+
+claro_ws_search_unregistered_groups_by_name:
+    pattern: /search/group/{search}/{workspaceId}/list.{format}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredGroupsByName }
     options:
-         expose: TRUE          
-       
-claro_workspace_ajax_add_group_workspace:
-   pattern: /ajax/add/group/{groupId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxAddGroupToWorkspace }
-   requirements:
-      _method : POST
-   options:
-      expose: true
-      
-claro_workspace_ajax_delete_group_workspace:
-   pattern: /ajax/delete/group/{groupId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:ajaxDeleteGroupFromWorkspace }
-   requirements:
-     _method: POST
-   options:
-      expose: true    
-      
-claro_workspace_JSON_workspace_user_list:
-   pattern: /JSON/list
-   defaults: { _controller: ClarolineCoreBundle:Workspace:JSONlistWorkspaceForUser }
-   requirements:
-     _method: POST
+         expose: TRUE
+
+claro_ws_add_group:
+   pattern: /add/group/{groupId}/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:addGroup }
    options:
       expose: true

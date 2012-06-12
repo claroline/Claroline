@@ -1,14 +1,14 @@
 /*
  * dependencies: dynatree & rod-contextMenu + jquery
  */
-(function($){ 
+(function($){
     var idUserRepository = "";
     var resourceTypeArray = new Array();
     subItems = {};
     getResourceTypeJSON();
     getUserRepositoryId();
     var idClickedWorkspace = "";
-    
+
     $.fn.extend({
         claroFilePicker:function(options){
         var params = $.extend({
@@ -38,8 +38,8 @@
             submitHandler: function(form, resourceId){
                 alert("DEFAULT SUBMIT HANDLER! IT MUST BE CHANGED");
             }
-        }, options);          
-        return this.each(function(){ 
+        }, options);
+        return this.each(function(){
             //must be changed with sthg like $(this).setAttribute.doSthg
             document.getElementById('filepicker').setAttribute("class", 'modal fade');
             var modalContent = ""
@@ -57,13 +57,13 @@
             +'</div>'
             +'</div>';
             $(this).append(modalContent);
-            
+
             $('#cfp_form').append(params.getForm());
             $('#cfp_form').hide();
             $('#cfp_form').submit(function(e){
                 e.preventDefault();
                 params.onSubmit(document.forms['cfp_form']);
-            }); 
+            });
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
@@ -76,10 +76,10 @@
                     bindContextMenu(node);
                 },
                 onDblClick: function(node){
-                    $('#cfp_dialog').hide();  
+                    $('#cfp_dialog').hide();
                     params.dblClickItem(node);
                 },
-                onCustomRender: function(node){   
+                onCustomRender: function(node){
                     var copy = node.data.copy;
                     var html ='';
                     console.debug(node);
@@ -91,9 +91,9 @@
                     else
                     {
                         html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" </a>";
-                        html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";                        
+                        html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
-                    return html; 
+                    return html;
                 },
                 dnd: {
                     onDragStart: function(node){
@@ -103,7 +103,7 @@
                     },
                     autoExpandMS: 1000,
                     preventVoidMoves: true,
-            
+
                     onDragEnter: function(node, sourceNode){
                         return true;
                     },
@@ -122,31 +122,31 @@
                         }
                     },
                     onDragLeave: function(node, sourceNode){
-                    }  
+                    }
                 }
-            }  
-            
-            $('#local_tree_button').live("click", function(event){  
+            }
+
+            $('#local_tree_button').live("click", function(event){
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 //this is weird but I have to do that, idk where the bug come form
                 idClickedRepository = idUserRepository;
                 idClickedWorkspace = null;
-                var customWorkspaceDynatree = 
-                   $.extend(defaultsDynatree, 
+                var customWorkspaceDynatree =
+                   $.extend(defaultsDynatree,
                        {
                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
                            onCreate: function(node, span){
                                bindContextMenu(node);
                            }
                        });
-                $('#cfp_tree').dynatree(customWorkspaceDynatree); 
+                $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
                 $('#cfp_dialog').hide();
                 $('#cfp_data').hide();
                 $('#cfp_tree').show();
             });
-            
+
             $('#workspace_tree_button').click(function(){
                 appendRegisteredWorkspacesList();
                 $('#cfp_form').hide();
@@ -154,15 +154,15 @@
                 $('#cfp_dialog').hide();
                 $('#cfp_data').show();
             });
-            
+
             $('.cfp_workspace_show_tree').live("click", function (event){
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
                 console.debug(event);
                 idClickedWorkspace = idRepository;
-                var customWorkspaceDynatree = 
-                    $.extend(defaultsDynatree, 
+                var customWorkspaceDynatree =
+                    $.extend(defaultsDynatree,
                         {
                             initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idRepository})},
                             onCreate: function(node, span){
@@ -175,7 +175,7 @@
                 $('#cfp_dialog').hide();
                 $('#cfp_tree').show();
             });
-            
+
             $('#close_dialog_button').click(function(){
                 alert("close");
             });
@@ -183,12 +183,12 @@
             $(this).modal({
                 show:params.autoOpen,
                 backdrop:params.backdrop
-            });  
+            });
             return (this);
-            
+
         });}
     });
-    
+
     function getUserRepositoryId()
     {
         $.ajax({
@@ -203,7 +203,7 @@
             }
         });
     }
-    
+
     function generateSubItems()
     {
         var cpt = 0;
@@ -213,13 +213,13 @@
         {
             var name = resourceTypeArray[cpt].type;
             var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
-            subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';              
+            subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';
             cpt++;
             if(cpt<resourceTypeArray.length)
             {
                 subItems+=",";
-            }       
-        }    
+            }
+        }
         subItems+='}'
         object = JSON.parse(subItems);
         return object;
@@ -227,7 +227,7 @@
 
     function bindContextMenu(node){
         var menuDefaultOptions = {
-        selector: 'a.dynatree-title', 
+        selector: 'a.dynatree-title',
             callback: function(key, options) {
                 switch(key)
                 {
@@ -246,7 +246,7 @@
                         break;
                     default:
                         node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key);    
+                        createFormDialog(key, node.data.key);
                 }
             },
         items: {
@@ -274,7 +274,7 @@
                         return false;
                     }
                     else
-                    {                   
+                    {
                         return true;
                     }
                 }
@@ -283,9 +283,9 @@
         "edit": {name: "edit", accesskey:"e"},
         "remove": {name: "remove", accesskey:"r"},
         "delete": {
-            name: "delete", 
+            name: "delete",
             accesskey:"d",
-            disabled: function(){ 
+            disabled: function(){
                     node = $.ui.dynatree.getNode(this);
                     if(node.data.key != 0){
                         return false;
@@ -303,7 +303,7 @@
 
         var additionalMenuOptions = $.extend(menuDefaultOptions,
         {
-            selector: 'span.dynatree-custom-claro-menu', 
+            selector: 'span.dynatree-custom-claro-menu',
             trigger: 'left'
         });
 
@@ -343,17 +343,17 @@
             if(data=="delete")
             {
                 node.remove();
-            }       
+            }
         }
         });
     }
-    
+
     function editNode(node)
     {
         //copy
         alert("this will create a copy")
         alert('clickedWorkspace = '+idClickedWorkspace);
-        
+
         $.ajax({
         type: 'POST',
         url: Routing.generate('claro_resource_edit',{'resourceId':node.data.key, 'workspaceId': idClickedWorkspace, 'options':'copy'}),
@@ -361,7 +361,7 @@
             if(data=="edit")
             {
                 alert("this was edited");
-            }       
+            }
         }
         });
     }
@@ -370,8 +370,8 @@
     {
         console.debug(node);
         window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
-    } 
-    
+    }
+
     function viewNode(node)
     {
         window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
@@ -387,7 +387,7 @@
                 $('#cfp_dialog').empty();
                 $('#cfp_dialog').append(data);
                 $('#cfp_dialog').show();
-                //$("#cfp_dialog").modal('show'); 
+                //$("#cfp_dialog").modal('show');
                 //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
@@ -458,7 +458,7 @@
     {
         $.ajax({
             type: 'POST',
-            url: Routing.generate('claro_workspace_JSON_workspace_user_list'),
+            url: Routing.generate('claro_ws_list_user_workspaces', {format:'json'}),
             cache: false,
             success: function(data){
 

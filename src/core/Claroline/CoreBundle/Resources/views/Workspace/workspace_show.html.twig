@@ -15,33 +15,33 @@
 {% endblock %}
 
 {% block section_content %}
-<div id="twig_attributes" 
+<div id="twig_attributes"
         data-workspaceId="{{workspace.getId()}}"
 ></div>
-<div id="translation-claroline" 
-        {% for resourceType in resourcesType %}    
+<div id="translation-claroline"
+        {% for resourceType in resourcesType %}
         data-{{resourceType.getType()}}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
         {% endfor %}
 ></div>
 <div id="div_WS_show">
 {{ 'workspace'|trans({}, 'platformTranslation') }}: {{workspace.getName()}}
 {% if is_granted(workspace.getManagerRole().getName()) %}
-    | <a href ="{{path('claro_workspace_show_user_list_workspace', {'id':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
+    | <a href ="{{path('claro_ws_users_ws', {'workspaceId':workspace.getId()})}}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
 {% endif %}
         <div id='div_resource'>
             {% for resource in resources %}
-                <div id="resource_row"> 
+                <div id="resource_row">
                     <div class="row_resource">
-                        <a href="{{path('claro_resource_default_click',{'id':resource.getId()})}}" 
-                           id="link_resource_{{resource.getId()}}" 
+                        <a href="{{path('claro_resource_default_click',{'id':resource.getId()})}}"
+                           id="link_resource_{{resource.getId()}}"
                            class="link_resource_view">
                           {{resource.getResource().getName()}}
-                        </a> 
-                        <a href="{{path('claro_resource_remove_workspace',{'resourceId':resource.getId(), 'workspaceId':workspace.getId()})}}"> 
-                            delete from workspace 
+                        </a>
+                        <a href="{{path('claro_resource_remove_workspace',{'resourceId':resource.getId(), 'workspaceId':workspace.getId()})}}">
+                            delete from workspace
                         </a>
                         {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
-                        | 
+                        |
                         {% if resource.getCopy() == true %}
                         COPY
                         {% else %}
@@ -50,8 +50,8 @@
                    </div>
                 </div>
             {% endfor %}
-        </div>             
-    <button id="show_filepicker_button">filePicker</button>  
-    <div id="filepicker"></div>  
-</div>    
+        </div>
+    <button id="show_filepicker_button">filePicker</button>
+    <div id="filepicker"></div>
+</div>
 {% endblock %}
