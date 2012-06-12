@@ -242,7 +242,6 @@ class WorkspaceController extends Controller
         }
 
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $roles = $workspace->getWorkspaceRoles();
 
         foreach ($roles as $role) {

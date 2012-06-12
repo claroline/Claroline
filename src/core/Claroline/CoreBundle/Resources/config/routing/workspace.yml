@@ -14,7 +14,7 @@ claro_ws_delete:
 
 claro_ws_list_user_workspaces:
     pattern: /{userId}/list.{format}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:listWorkspacesByUser, userId:null }
+    defaults: { _controller: ClarolineCoreBundle:Workspace:listWorkspacesByUser, userId:'null' }
     options:
       expose: true
 
@@ -32,7 +32,7 @@ claro_ws_users_ws:
 
 claro_ws_remove_user:
     pattern: /delete/user/{userId}/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:removeUser, userId:null }
+    defaults: { _controller: ClarolineCoreBundle:Workspace:removeUser, userId:'null' }
     options:
        expose: true
 
@@ -50,7 +50,7 @@ claro_ws_users_limited_list:
 
 claro_ws_add_user:
    pattern: /add/user/{userId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:addUser, userId:null }
+   defaults: { _controller: ClarolineCoreBundle:Workspace:addUser, userId:'null' }
    options:
       expose: true
 
