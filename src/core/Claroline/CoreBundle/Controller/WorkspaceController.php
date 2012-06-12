@@ -27,7 +27,7 @@ class WorkspaceController extends Controller
      * Renders the workspace list page with its claroline layout.
      *
      * @throws AccessDeniedHttpException
-     * 
+     *
      * @return Response
      */
     public function listAction()
@@ -40,7 +40,7 @@ class WorkspaceController extends Controller
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_list.html.twig', array('workspaces' => $workspaces)
+            'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
         );
     }
 
@@ -74,11 +74,11 @@ class WorkspaceController extends Controller
 
         if ('page' == $format) {
             return $this->render(
-                'ClarolineCoreBundle:Workspace:workspace_list.html.twig', array('workspaces' => $workspaces)
+                'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
             );
         }
 
-        return $this->render("ClarolineCoreBundle:Workspace:workspace_list.{$format}.twig", array('workspaces' => $workspaces));
+        return $this->render("ClarolineCoreBundle:Workspace:list.{$format}.twig", array('workspaces' => $workspaces));
     }
 
     /**
@@ -95,7 +95,7 @@ class WorkspaceController extends Controller
         $form = $this->get('form.factory')->create(new WorkspaceType());
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -132,7 +132,7 @@ class WorkspaceController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -191,7 +191,7 @@ class WorkspaceController extends Controller
 
         $resourcesInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getWSListableRootResource($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType, 'resources' => $resourcesInstance));
+        return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType, 'resources' => $resourcesInstance));
     }
 
     /**
@@ -215,7 +215,7 @@ class WorkspaceController extends Controller
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
+        return $this->render('ClarolineCoreBundle:Workspace:user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
     }
 
     /**
@@ -434,6 +434,6 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
 
-        return $this->container->get('templating')->renderResponse("ClarolineCoreBundle:Workspace:dialog_group_list.{$format}.twig", array('groups' => $groups));
+        return $this->render("ClarolineCoreBundle:Workspace:dialog_group_list.{$format}.twig", array('groups' => $groups));
     }
 }
