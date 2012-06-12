@@ -4,11 +4,11 @@
 <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_user_list.js') }}' type="text/javascript"></script>
 {% endblock %}
 {% block section_content %}
- <a href="{{path('claro_workspace_show_workspace', {'id': workspace.getId()})}}" class="link_show" id="link_show_{{workspace.getId}}">{{workspace.getName()}}</a>
+ <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" class="link_show" id="link_show_{{workspace.getId}}">{{workspace.getName()}}</a>
 {{ 'registered_users'|trans({}, 'platformTranslation') }}
 <!-- twig variables are here in order to make javascript happy -->
-<div id="twig_attributes" 
-     data-workspaceId="{{workspace.getId()}}" 
+<div id="twig_attributes"
+     data-workspaceId="{{workspace.getId()}}"
      data-translation.delete="{{ 'delete'|trans({}, 'platformTranslation') }}"
 />
 
@@ -19,8 +19,8 @@
     {% for user in users %}
         <li class="row_user" id="user_{{user.getId()}}" >
             {{user.getUsername()}}
-            <a href="{{path('claro_workspace_delete_user_workspace', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_user_{{user.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
-        </li>    
+            <a href="{{path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_user_{{user.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
+        </li>
     {% endfor %}
 </ul>
 
@@ -29,7 +29,7 @@
     {% for group in groups %}
         <li class="row_group" id="group_{{group.getId()}}">
  <!--           <a href="todo">{{group.getName()}}</a> -->
-           |<a href ="{{path('claro_workspace_delete_group_workspace', {'groupId':group.getId(), 'workspaceId':workspace.getId()})}}" id="link_delete_group_{{group.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
+           |<a href ="{{path('claro_ws_remove_group', {'groupId':group.getId(), 'workspaceId':workspace.getId()})}}" id="link_delete_group_{{group.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
         </li>
     {% endfor %}
 </ul>

@@ -4,11 +4,11 @@
     <div class="span2">
         <div class="well sidebar-nav">
         <ul class="nav nav-list">
-        <li><a href="{{ path('claro_workspace_user_workspace', {'userId': app.user.id})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platformTranslation') }} </a></li>
-        <li><a href="{{ path('claro_workspace_list_all') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platformTranslation') }}</a></li> 
+        <li><a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platformTranslation') }} </a></li>
+        <li><a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platformTranslation') }}</a></li>
         {% if is_granted('ROLE_WS_CREATOR') %}
-        
-        <li><a href="{{ path('claro_workspace_new_workspace') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platformTranslation') }}</a>
+
+        <li><a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platformTranslation') }}</a>
         {% endif %}
     <!--    <li><a href="todo" id="link_WS_chat">chatbox</a></li>-->
         </ul>
@@ -19,6 +19,6 @@
         TITLE: (workspace.layout.html.twig) WORKSPACE
         {% block section_content %}
         {% endblock %}
-    </div> 
+    </div>
 </div>
 {% endblock %}
