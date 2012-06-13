@@ -1,5 +1,5 @@
 
-    //var route = Routing.generate('claro_resource_JSON_node',{'id':0});
+    //var route = Routing.generate('claro_resource_node',{'instanceId':0, 'format':'json'});
     //todo: l'event close de la boite de dialogue
 
     //variable globales = pas bon
@@ -19,7 +19,7 @@
 
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_type_resource'),
+        url: Routing.generate('claro_resource_type_resource', {'format':'json'}),
         success: function(data){
                 //JSON.parse doesn't work: why ?
                 var JSONObject = eval(data);
@@ -61,10 +61,10 @@
         {
             $(treeId).dynatree({
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': repositoryId})},
+                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': repositoryId, 'format':'json'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': repositoryId})});
+                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': repositoryId, 'format': 'json'})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node, repositoryId);
@@ -182,7 +182,7 @@
 
     function createFormDialog(type, id){
             console.debug(type);
-            var route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
+            var route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
             $.ajax({
                 type: 'POST',
                 url: route,
@@ -193,7 +193,7 @@
                     //ici je change l'event du submit
                     $("#generic_form").submit(function(e){
                         e.preventDefault();
-                        sendForm("claro_resource_add_resource",  {'type':type, 'id':id}, document.getElementById("generic_form"));
+                        sendForm("claro_resource_create",  {'type':type, 'id':id}, document.getElementById("generic_form"));
                         });
                     }
                 });
@@ -217,12 +217,12 @@
 
     function openNode(node, repositoryId)
     {
-        window.location = Routing.generate('claro_resource_open',{'workspaceId': repositoryId, 'id':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': repositoryId, 'instanceId':node.data.key});
     }
 
     function viewNode(node)
     {
-        window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
+        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
     }
 
    function bindContextMenu(node, repositoryId){

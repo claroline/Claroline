@@ -7,9 +7,9 @@ tinyMCE.init({
     // General options
     mode : "textareas"
 });
-</script> 
-<form novalidate="validate" method="post" action="{{path('claro_text_edit', {'id':id})}}" id="edit_form">
-    <textarea name="content" cols="50" rows="15">{{text|raw}}</textarea>  
+</script>
+<form novalidate="validate" method="post" action="{{path('claro_text_edit', {'textId':textId})}}" id="edit_form">
+    <textarea name="content" cols="50" rows="15">{{text|raw}}</textarea>
     <input type="submit" formnovalidate="formnovalidate" />
 </form>
 {% endblock %}

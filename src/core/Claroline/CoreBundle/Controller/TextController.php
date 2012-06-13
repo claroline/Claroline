@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -7,15 +8,26 @@ use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Form\TextType;
 
+/**
+ * TextManager will redirect to this controller once a directory is "open" or "edit".
+ */
 class TextController extends Controller
 {
-    public function editAction($id)
+
+    /**
+     * Edits a text.
+     *
+     * @param integer $textId
+     *
+     * @return Response
+     */
+    public function editAction($textId)
     {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $text = $request->request->get('content');
         $em = $this->getDoctrine()->getEntityManager();
-        $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
+        $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $version = $old->getVersion();
         $revision = new Revision();
         $revision->setContent($text);
@@ -31,17 +43,23 @@ class TextController extends Controller
         return new Response('edited');
     }
 
-    public function historyAction($id)
+    /**
+     * Show the diff between every text verion. This function is a test.
+     *
+     * @param integer $textId
+     *
+     * @return type
+     */
+    public function historyAction($textId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($id);
+        $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $revisions = $text->getRevisions();
         $size = count($revisions);
         $size--;
         $d = $i = 0;
 
-        while ($i < $size)
-        {
+        while ($i < $size) {
             $new = $revisions[$i]->getContent();
             $i++;
             $old = $revisions[$i]->getContent();
@@ -60,9 +78,9 @@ class TextController extends Controller
             $d++;
         }
 
-        return $this->render('ClarolineCoreBundle:Text:history.html.twig',
-                array('differences' => $differences,
-                      'original' =>$revisions[$size]->getContent())
+        return $this->render('ClarolineCoreBundle:Text:history.html.twig', array('differences' => $differences,
+                    'original' => $revisions[$size]->getContent())
         );
     }
+
 }
