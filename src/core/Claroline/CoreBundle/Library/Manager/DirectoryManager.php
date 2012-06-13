@@ -35,9 +35,6 @@ class DirectoryManager
     /** @var ContainerInterface */
     protected $container;
 
-    /** @var ResourseManager */
-    protected $resourceManager;
-
     /** @var TwigEngine */
     protected $templating;
 
@@ -51,13 +48,12 @@ class DirectoryManager
      * @param ResourceManager $resourceManager
      * @param TwigEngine $templating
      */
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container, ResourceManager $resourceManager, TwigEngine $templating)
+    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, ContainerInterface $container, TwigEngine $templating)
     {
         $this->em = $em;
         $this->rightManager = $rightManager;
         $this->formFactory = $formFactory;
         $this->container = $container;
-        $this->resourceManager = $resourceManager;
         $this->templating = $templating;
     }
 
