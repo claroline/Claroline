@@ -17,7 +17,6 @@ class ClarolineCoreExtension extends Extension
         $loader->load('listeners.yml');
         $loader->load('installation.yml');
         $loader->load('browsing.yml');
-        $loader->load('resource.yml');
         $loader->load('security.yml');
         $loader->load('workspace.yml');
         $loader->load('file.yml');

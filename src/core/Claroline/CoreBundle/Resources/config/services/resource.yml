@@ -1,7 +1,0 @@
-services:
-    claroline.resource.manager:
-        class: Claroline\CoreBundle\Library\Manager\ResourceManager
-        arguments:
-            - "@form.factory"
-            - "@doctrine.orm.entity_manager"
-            - "@claroline.security.restricted_owner_right_manager"
