@@ -221,7 +221,7 @@ class WorkspaceController extends Controller
     /**
      * Removes a user from a workspace.
      * if user id is null, the user will be the current logged user.
-     * if it was requested through ajax, it will response "success".
+     * if it was requested through ajax, it will respond "success".
      * otherwise it'll redirect to the workspace list for a user.
      *
      * @param integer $userId
@@ -261,7 +261,7 @@ class WorkspaceController extends Controller
 
     /**
      * Removes a group from a workspace.
-     * if it was requested through ajax, it'll responde "success"
+     * if it was requested through ajax, it'll respond "success"
      * otherwise it'll redirect to the user workspace list
      *
      * @param integer $groupId
@@ -324,6 +324,7 @@ class WorkspaceController extends Controller
      * @param integer $workspaceId
      * @param integer $nbIteration
      * @param string $format
+     *
      * @return Response
      */
     public function limitedGroupListAction($workspaceId, $nbIteration, $format)
@@ -357,7 +358,7 @@ class WorkspaceController extends Controller
     /**
      * Adds a user to a workspace
      * if $userId = 'null', the user will be the current logged user
-     * if requested through ajax, it'll responde with a json object containing the user datas
+     * if requested through ajax, it'll respond with a json object containing the user datas
      * otherwise it'll redirect to the workspace list.
      *
      * @param integer $userId
@@ -391,7 +392,7 @@ class WorkspaceController extends Controller
 
     /**
      * Adds a group to a workspace
-     * if requested through ajax, it'll responde with a json object containing the group datas
+     * if requested through ajax, it'll respond with a json object containing the group datas
      * otherwise it'll redirect to the workspace list.
      *
      * @param integer $groupId

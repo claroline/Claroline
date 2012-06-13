@@ -1,5 +1,5 @@
 
-<form novalidate="validate" action="{{path('claro_resource_add_resource', {'type':type, 'id':id} )}}" method="post" {{ form_enctype(form) }} id="generic_form">
+<form novalidate="validate" action="{{path('claro_resource_create', {'type':type, 'instanceParentId':parentId} )}}" method="post" {{ form_enctype(form) }} id="generic_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
         <input type="submit" formnovalidate="formnovalidate" />

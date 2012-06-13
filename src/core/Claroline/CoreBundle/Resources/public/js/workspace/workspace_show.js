@@ -7,19 +7,19 @@ $(function(){
                 addResource(id, twigWorkspaceId, option);
             }
         };
-        
+
     picker = $('#filepicker').claroFilePicker(params);
-    
+
     $('#show_filepicker_button').click(function(){
         picker.modal("show");
     });
-}); 
+});
 
 function addResource(resourceId, workspaceId, option)
 {
 $.ajax({
     type: 'POST',
-    url: Routing.generate('claro_resource_add_workspace', {'resourceId':resourceId,'workspaceId':workspaceId, 'option':option}),
+    url: Routing.generate('claro_resource_add_workspace', {'resourceId':resourceId,'workspaceId':workspaceId, 'options':option}),
     cache: false,
     success: function(data){
             alert(data);

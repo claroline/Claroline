@@ -23,11 +23,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
     }
 
-    //this test works with the file controller
-    /*
     public function testUserCanCreateFileResource()
     {
-        //test
         $this->logUser($this->getFixtureReference('user/user'));
         $this->addRootFile($this->filePath);
         $crawler = $this->client->request('GET', '/resource/directory/null');
@@ -86,7 +83,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-*/
+
     public function testResourceCanBeAddedToWorkspaceByRef()
     {
        $this->loadFixture(new LoadWorkspaceData());
@@ -94,7 +91,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->initWorkspacesTestsByRef();
        $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-    }/*
+    }
 
     public function testRegisterUserHasAccessToWorkspaceResourcesByRef()
     {
@@ -182,14 +179,13 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->click($link);
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-    */
+    
     private function initWorkspacesTestsByRef()
     {
        $rootId = $this->createResourcesTree();
        $this->registerToWorkspaceA();
        $crawler = $this->client->request('GET', '/workspace/list');
        $id = $crawler->filter(".row_workspace")->first()->attr('data-workspace_id');
-       var_dump($this->client->getResponse()->getContent());
        $link =  $crawler->filter("#link_show_{$id}")->link();
        $this->client->click($link);
        //add root to workspace
@@ -262,7 +258,6 @@ class ResourceControllerTest extends FunctionalTestCase
      private function registerToWorkspaceA()
      {
          $crawler = $this->client->request('GET', '/workspace/list');
-         var_dump($this->client->getResponse()->getContent());
          $link = $crawler->filter("#link_registration_{$this->getFixtureReference('workspace/ws_a')->getId()}")->link();
          $this->client->click($link);
      }

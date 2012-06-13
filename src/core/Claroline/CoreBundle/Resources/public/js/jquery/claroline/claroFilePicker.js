@@ -67,10 +67,10 @@
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
+                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idUserRepository, 'format': 'json'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_JSON_node', {'id':node.data.key, 'workspaceId': idClickedWorkspace})});
+                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'format': 'json'})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -135,7 +135,7 @@
                 var customWorkspaceDynatree =
                    $.extend(defaultsDynatree,
                        {
-                           initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idUserRepository})},
+                           initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idUserRepository, 'format':'json'})},
                            onCreate: function(node, span){
                                bindContextMenu(node);
                            }
@@ -164,7 +164,7 @@
                 var customWorkspaceDynatree =
                     $.extend(defaultsDynatree,
                         {
-                            initAjax:{url:Routing.generate('claro_resource_JSON_node',{'id':0, 'workspaceId': idRepository})},
+                            initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idRepository, 'format': 'json'})},
                             onCreate: function(node, span){
                                bindContextMenu(node);
                             }
@@ -314,7 +314,7 @@
     {
         $.ajax({
             type: 'POST',
-            url: Routing.generate('claro_resource_type_resource'),
+            url: Routing.generate('claro_resource_type_resource', {'format':'json'}),
             success: function(data){
                     //JSON.parse doesn't work: why ?
                     var JSONObject = eval(data);
@@ -356,7 +356,7 @@
 
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_edit',{'resourceId':node.data.key, 'workspaceId': idClickedWorkspace, 'options':'copy'}),
+        url: Routing.generate('claro_resource_edit',{'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'options':'copy'}),
         success: function(data){
             if(data=="edit")
             {
@@ -369,16 +369,16 @@
     function openNode(node)
     {
         console.debug(node);
-        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'instanceId':node.data.key});
     }
 
     function viewNode(node)
     {
-        window.location = Routing.generate('claro_resource_default_click',{'id':node.data.key});
+        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
     }
 
     function createFormDialog(type, id){
-        route = Routing.generate('claro_resource_form_resource', {'type':type, 'id':id});
+        route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
         $.ajax({
             type: 'POST',
             url: route,
@@ -391,7 +391,7 @@
                 //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_add_resource",  {'type':type, 'id':id, 'workspaceId':idClickedWorkspace}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':idClickedWorkspace}, document.getElementById("generic_form"));
                     });
                 }
             });

@@ -12,113 +12,113 @@
 {% endblock %}
 {% block section_content %}
 
-<div id="translation-claroline" 
-        {% for resourceType in resourcesType %}    
+<div id="translation-claroline"
+        {% for resourceType in resourcesType %}
         data-{{resourceType.getType()}}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
         {% endfor %}
 ></div>
-    
+
 <div id="data-claroline"
      data-workspace_id = {{app.user.getPersonnalWorkspace().getId()}}
 ></div>
-
+<!-- a user can only create a resource if he's the owner of the directory or adding a resource at the root of his workspace -->
 {% if directory is defined and is_granted('OWNER', directory)  %}
-<form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" id="form_resource">
+<form action="{{ path('claro_resource_show_creation_form', {'instanceParentId':parentId}) }}" method="post" id="form_resource">
     <select id="select_resource_form_type" required="required" name="select_resource_form[type]">
         {% for resourceType in resourcesType %}
-            <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>          
+            <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>
         {% endfor %}
-    </select> 
+    </select>
     <input type="submit" />
 </form>
 {% else %}
     {% if directory is not defined %}
-        <form action="{{ path('claro_resource_show_form', {'id':id}) }}" method="post" id="form_resource">
+        <form action="{{ path('claro_resource_show_creation_form', {'instanceParentId':parentId}) }}" method="post" id="form_resource">
         <select id="select_resource_form_type" required="required" name="select_resource_form[type]">
             {% for resourceType in resourcesType %}
-                <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>          
+                <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>
             {% endfor %}
-        </select> 
+        </select>
         <input type="submit" />
-        </form>    
+        </form>
     {% endif %}
 {% endif %}
     <br><br>
     NAVIGABLE
-    {% for resource in resources %}
-        {% if resource.getResourceType.getNavigable() == true %}
-            <div class="row_resource" data-resource_id={{resource.getId()}}>
-                <a href="{{path('claro_resource_default_click', {'id':resource.getId()})}}" 
-                   id="link_resource_{{resource.getId()}}" 
-                   class="link_resource_view">{{resource.getResource().getName()}}
-                </a> | 
-                {{resource.getResourceType().getType()}} 
-                {% if is_granted('OWNER', resource) %}
-                | 
-                <a id="link_resource_delete_{{resource.getId()}}" 
-                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resource.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}" 
+    {% for resourceInstance in resourceInstances %}
+        {% if resourceInstance.getResourceType.getNavigable() == true %}
+            <div class="row_resource" data-resource_id={{resourceInstance.getId()}}>
+                <a href="{{path('claro_resource_default_click', {'instanceId':resourceInstance.getId()})}}"
+                   id="link_resource_{{resourceInstance.getId()}}"
+                   class="link_resource_view">{{resourceInstance.getResource().getName()}}
+                </a> |
+                {{resourceInstance.getResourceType().getType()}}
+                {% if is_granted('OWNER', resourceInstance) %}
+                |
+                <a id="link_resource_delete_{{resourceInstance.getId()}}"
+                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resourceInstance.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}"
                    class="link_delete_resource">
                    {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a>
                 {% endif %}
-                | 
-                <a id="link_resource_open_{{resource.getId()}}" 
-                   href="{{path('claro_resource_open', {'workspaceId':workspace.getId(), 'id':resource.getId()})}}" 
+                |
+                <a id="link_resource_open_{{resourceInstance.getId()}}"
+                   href="{{path('claro_resource_open', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId()})}}"
                    class="link_open_resource">
                     {{ 'open'|trans({}, 'platformTranslation') }}
-                </a> 
+                </a>
                 |
-                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
-                | 
-                {% if resource.getCopy() == true %}
+                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resourceInstance.getUser().getUsername()}}
+                |
+                {% if resourceInstance.getCopy() == true %}
                 COPY
                 {% else %}
                 ORIGNAL
                 {% endif %}
             </div>
         {% endif %}
-    {% endfor %}            
+    {% endfor %}
     NOT NAVIGABLE
-    {%for resource in resources %}
-        {% if resource.getResourceType.getNavigable() == false %}
-            <div class="row_resource" data-resource_id={{resource.getId()}}>
-                <a href="{{path('claro_resource_default_click', {'id':resource.getId()})}}" 
-                   id="link_resource_view_{{resource.getId()}}" 
+    {%for resourceInstance in resourceInstances %}
+        {% if resourceInstance.getResourceType.getNavigable() == false %}
+            <div class="row_resource" data-resource_id={{resourceInstance.getId()}}>
+                <a href="{{path('claro_resource_default_click', {'instanceId':resourceInstance.getId()})}}"
+                   id="link_resource_view_{{resourceInstance.getId()}}"
                    class="link_resource_view">
-                    {{resource.getResource().getName()}}
-                </a> | 
-                {{resource.getResourceType().getType()}} 
-                {% if is_granted('OWNER', resource) %}
-                | 
-                <a id="link_resource_delete_{{resource.getId()}}" 
-                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resource.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}" 
+                    {{resourceInstance.getResource().getName()}}
+                </a> |
+                {{resourceInstance.getResourceType().getType()}}
+                {% if is_granted('OWNER', resourceInstance) %}
+                |
+                <a id="link_resource_delete_{{resourceInstance.getId()}}"
+                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resourceInstance.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}"
                    class="link_delete_resource">
                    {{ 'delete'|trans({}, 'platformTranslation') }}
-                </a> 
+                </a>
                 {% endif %}
-                | 
-                <a id="link_resource_open_{{resource.getId()}}" 
-                   href="{{path('claro_resource_open', {'workspaceId':workspace.getId(), 'id':resource.getId()})}}" 
+                |
+                <a id="link_resource_open_{{resourceInstance.getId()}}"
+                   href="{{path('claro_resource_open', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId()})}}"
                    class="link_open_resource">
                    {{ 'open'|trans({}, 'platformTranslation') }}
                 </a>
                 |
-                <a id="link_resource_edit_{{resource.getId()}}"
-                   href="{{path('claro_resource_edit', {'workspaceId':workspace.getId(), 'resourceId':resource.getId(), 'options':'ref'})}}"
+                <a id="link_resource_edit_{{resourceInstance.getId()}}"
+                   href="{{path('claro_resource_edit', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId(), 'options':'ref'})}}"
                    class="link_edit_resource">
                    edit
                 </a>
                 |
-                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resource.getUser().getUsername()}}
-                | 
-                {% if resource.getCopy() == true %}
+                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resourceInstance.getUser().getUsername()}}
+                |
+                {% if resourceInstance.getCopy() == true %}
                 COPY
                 {% else %}
                 ORIGNAL
                 {% endif %}
             </div>
         {% endif %}
-    {% endfor %}          
+    {% endfor %}
     <button id="dialog_tree_button">resources</button>
     <div id="ct_dialog"></div>
 {% endblock %}
