@@ -20,6 +20,12 @@ use Claroline\CoreBundle\Form\SelectResourceType;
  * It'll delegate create/update/delete/click actions for the different resource types
  * to the specified resource "manager" service.
  * It can add/remove a resource to a workspace.
+ *
+ * NOT DONE YET:
+ * "sharable resource"
+ * "javascript interface d&d between 2 trees"
+ * "text diff"
+ * "linker"
  */
 class ResourceController extends Controller
 {
