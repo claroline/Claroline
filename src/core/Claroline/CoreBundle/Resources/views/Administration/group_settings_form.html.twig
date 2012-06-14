@@ -1,0 +1,15 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+<h6>
+    {{group.getName()}}: {{ 'settings'|trans({}, 'platformTranslation') }} |
+    <a id="link_add_user_to_group" href="{{ path('claro_admin_user_list_addable_to_group', {'groupId' : group.getId()}) }}">{{ 'add_user'|trans({}, 'platformTranslation') }}</a> |
+    <a id="link_setting" href="{{ path('claro_admin_group_settings_form', {'groupId':group.getId()}) }}">{{ 'settings'|trans({}, 'platformTranslation') }}</a>
+</h6>
+{% form_theme form_settings 'ClarolineCoreBundle::form_theme.html.twig' %}
+<form action="{{path('claro_admin_update_group_settings', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
+    {{ form_errors(form_settings) }}
+    {{ form_widget(form_settings) }}
+    <input type="submit" />
+</form>
+{% endblock %}

@@ -1,4 +1,5 @@
-{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% extends "ClarolineCoreBundle:Administration:index.html.twig" %}
+
 {% block content %}
 <!-- editeur wysiwyg -->
     <script src='{{asset('bundles/clarolinecore/js/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}' type='text/javascript'></script>
@@ -7,9 +8,9 @@ tinyMCE.init({
     // General options
     mode : "textareas"
 });
-</script> 
+</script>
 <form novalidate="validate" method="post" action="{{path('claro_text_edit', {'id':id})}}" id="edit_form">
-    <textarea name="content" cols="50" rows="15">{{text|raw}}</textarea>  
+    <textarea name="content" cols="50" rows="15">{{text|raw}}</textarea>
     <input type="submit" formnovalidate="formnovalidate" />
 </form>
 {% endblock %}
