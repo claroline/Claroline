@@ -50,15 +50,14 @@ class ResourceController extends Controller
         );
     }
 
-    //todo: refactor getFormPage
     /**
-     * Renders the resource type selection form with its claroline layout
+     * Renders the resource form with its claroline layout
      *
      * @param integer $instanceParentId the parent resourceInstance id. It can be 'null' if there is no parent.
      *
      * @return Response
      */
-    public function creationSelectResourceFormAction($instanceParentId)
+    public function creationResourceFormAction($instanceParentId)
     {
         $request = $this->get('request');
         $form = $request->request->get('select_resource_form');
