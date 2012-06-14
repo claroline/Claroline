@@ -30,7 +30,7 @@ class ResourceType
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resourceType", cascade={"persist"})
      */
-    private $abstractResource;
+    private $abstractResources;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -80,7 +80,8 @@ class ResourceType
 
     public function __construct()
     {
-        $this->resourcesInstance = new ArrayCollection();
+        $this->abstractResources = new ArrayCollection();
+        $this->resourceInstances = new ArrayCollection();
         $this->metaTypes = new ArrayCollection();
     }
 
@@ -99,14 +100,14 @@ class ResourceType
         $this->type=$type;
     }
 
-    public function getResources()
+    public function getResourceInstances()
     {
-        return $this->resourcesInstance;
+        return $this->resourceInstances;
     }
 
-    public function addResource(ResourceInstance $resourceInstance)
+    public function addResourceInstance(ResourceInstance $resourceInstance)
     {
-        $this->resourcesInstance[] = $resourceInstance;
+        $this->resourceInstances[] = $resourceInstance;
         $resourceInstance->setUser($this);
     }
 
@@ -181,13 +182,13 @@ class ResourceType
         return $this->children;
     }
 
-    public function getResource()
+    public function getAbstractResources()
     {
-        return $this->abstractResource;
+        return $this->abstractResources;
     }
 
-    public function setResource($abstractResource)
+    public function addAbstractResource($abstractResource)
     {
-        $this->abstractResource = $abstractResource;
+        $this->abstractResource->add($abstractResource);
     }
 }

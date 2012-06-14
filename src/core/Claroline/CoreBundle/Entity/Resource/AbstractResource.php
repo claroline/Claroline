@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity
@@ -41,7 +42,7 @@ abstract class AbstractResource
     protected $instanceAmount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResource", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
     protected $license;
@@ -68,6 +69,12 @@ abstract class AbstractResource
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     protected $resourceType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\user", inversedBy="abstractResource", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
 
     public function __construct()
     {
@@ -158,5 +165,15 @@ abstract class AbstractResource
     public function setResourceType($resourceType)
     {
         $this->resourceType = $resourceType;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 }
