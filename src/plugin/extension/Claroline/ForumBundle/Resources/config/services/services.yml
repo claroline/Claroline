@@ -1,0 +1,9 @@
+services:
+  claroline.forum.manager:
+        class: Claroline\ForumBundle\Manager\ForumManager
+        arguments:
+          - "@form.factory"
+          - "@templating"
+          - "@doctrine.orm.entity_manager"
+        tags:
+           - { name: resource.manager}
