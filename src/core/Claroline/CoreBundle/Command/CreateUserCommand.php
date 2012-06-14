@@ -12,12 +12,15 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 
+/**
+ * Creates an user, optionaly with a specific role (default to simple user).
+ */
 class CreateUserCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this->setName('claroline:user:create')
-             ->setDescription('Creates a new user.');
+            ->setDescription('Creates a new user.');
         $this->setDefinition(array(
             new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
             new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
@@ -25,19 +28,13 @@ class CreateUserCommand extends ContainerAwareCommand
             new InputArgument('user_password', InputArgument::REQUIRED, 'The user password')
         ));
         $this->addOption(
-            'ws_creator', 
-            'wsc', 
-            InputOption::VALUE_NONE, 
-            "When set to true, created user will have the workspace creator role"
+            'ws_creator', 'wsc', InputOption::VALUE_NONE, "When set to true, created user will have the workspace creator role"
         );
         $this->addOption(
-            'admin', 
-            'a', 
-            InputOption::VALUE_NONE, 
-            "When set to true, created user will have the admin role"
+            'admin', 'a', InputOption::VALUE_NONE, "When set to true, created user will have the admin role"
         );
     }
-    
+
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
@@ -46,14 +43,11 @@ class CreateUserCommand extends ContainerAwareCommand
             'user_username' => 'username',
             'user_password' => 'password'
         );
-        
-        foreach ($params as $argument => $argumentName)
-        {
-            if (!$input->getArgument($argument))
-            {
+
+        foreach ($params as $argument => $argumentName) {
+            if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                    $argument, 
-                    $this->askArgument($output, $argumentName)
+                    $argument, $this->askArgument($output, $argumentName)
                 );
             }
         }
@@ -62,18 +56,15 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            "Enter the user {$argumentName}: ",
-            function($argument)
-            {
-                if (empty($argument))
-                {
+            $output, "Enter the user {$argumentName}: ", function($argument) {
+                if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
+
                 return $argument;
             }
         );
-        
+
         return $argument;
     }
 
@@ -83,7 +74,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $lastName = $input->getArgument('user_last_name');
         $username = $input->getArgument('user_username');
         $password = $input->getArgument('user_password');
-        
+
         $user = new User();
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
@@ -91,30 +82,25 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setPlainPassword($password);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
-        
-        if ($input->getOption('admin'))
-        {
+
+        if ($input->getOption('admin')) {
             $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
             $user->addRole($adminRole);
-        }
-        elseif ($input->getOption('ws_creator'))
-        {
+        } elseif ($input->getOption('ws_creator')) {
             $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
             $user->addRole($wsCreatorRole);
-        }
-        else
-        {
+        } else {
             $userRole = $roleRepo->findOneByName(PlatformRoles::USER);
             $user->addRole($userRole);
         }
-        
+
         $em->persist($user);
         $config = new Configuration();
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-        $config->setWorkspaceName("my workspace");
+        $config->setWorkspaceName('my workspace');
         $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
         $workspace = $wsCreator->createWorkspace($config, $user);
-        $workspace->setType("user_repository");
+        $workspace->setType('user_repository');
         $user->addRole($workspace->getManagerRole());
         $user->setPersonnalWorkspace($workspace);
         $em->persist($workspace);

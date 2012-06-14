@@ -1,7 +1,8 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
 {% block section_content %}
-     {% form_theme form_group 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{ path('claro_admin_group_create') }}" method="post" {{ form_enctype(form_group) }} id="form_group">
+    {% form_theme form_group 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form action="{{ path('claro_admin_create_group') }}" method="post" {{ form_enctype(form_group) }} id="form_group">
         {{ form_errors(form_group) }}
         {{ form_widget(form_group) }}
         <input type="submit" />

@@ -4,16 +4,12 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-if (extension_loaded('apc') && ini_get('apc.enabled') == 1)
-{
-    require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
+if (extension_loaded('apc') && ini_get('apc.enabled') == 1) {
+    require_once __DIR__ . '/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
     $loader = new ApcUniversalClassLoader('claroline.');
-} 
-else 
-{
-    if (!class_exists('Symfony\Component\ClassLoader\UniversalClassLoader'))
-    {
-        require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+} else {
+    if (!class_exists('Symfony\Component\ClassLoader\UniversalClassLoader')) {
+        require_once __DIR__ . '/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
     }
     $loader = new UniversalClassLoader();
 }
@@ -37,23 +33,21 @@ $coreNamespaces = array(
     'org\\bovigo\\vfs' => __DIR__.'/../vendor/vfsstream/src/main/php',
     'Claroline'        => array(
         __DIR__.'/../src/core',
-        __DIR__.'/../src/plugin/extension', 
-        __DIR__.'/../src/plugin/application', 
+        __DIR__.'/../src/plugin/extension',
+        __DIR__.'/../src/plugin/application',
         __DIR__.'/../src/plugin/tool'
     ),
 );
 
 $pluginNamespaces = array();
 
-if (file_exists(__DIR__.'/config/local/plugin/namespaces'))
-{
-    $namespaceValues = file(__DIR__.'/config/local/plugin/namespaces', FILE_IGNORE_NEW_LINES);
+if (file_exists(__DIR__ . '/config/local/plugin/namespaces')) {
+    $namespaceValues = file(__DIR__ . '/config/local/plugin/namespaces', FILE_IGNORE_NEW_LINES);
     $pluginNamespaces = array_fill_keys(
-        $namespaceValues, 
-        array(
-            __DIR__.'/../src/plugin/extension',
-            __DIR__.'/../src/plugin/application', 
-            __DIR__.'/../src/plugin/tool'
+        $namespaceValues, array(
+            __DIR__ . '/../src/plugin/extension',
+            __DIR__ . '/../src/plugin/application',
+            __DIR__ . '/../src/plugin/tool'
         )
     );
 }

@@ -3,14 +3,19 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\User;
 
+/**
+ * Controller of the user's desktop.
+ */
 class DesktopController extends Controller
 {
+    /**
+     * Displays the desktop index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction()
     {
-        $this->get('claroline.common.history_browser')->keepCurrentContext('desktop');
-        
-        return $this->render('ClarolineCoreBundle:Desktop:desktop.html.twig');
+        return $this->render('ClarolineCoreBundle:Desktop:index.html.twig');
     }
 }

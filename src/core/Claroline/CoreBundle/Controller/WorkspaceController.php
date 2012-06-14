@@ -15,96 +15,96 @@ class WorkspaceController extends Controller
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
     const NUMBER_GROUP_PER_ITERATION = 10;
-    
+
     public function listAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER'))
         {
             throw new AccessDeniedHttpException();
         }
-        
+
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
-        
+
         return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_list.html.twig', 
+            'ClarolineCoreBundle:Workspace:workspace_list.html.twig',
             array('workspaces' => $workspaces)
         );
     }
-    
+
     public function listForUserAction($userId)
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER'))
         {
             throw new AccessDeniedHttpException();
         }
-     
+
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getWorkspacesOfUser($user);
-        
+
         return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_list.html.twig', 
+            'ClarolineCoreBundle:Workspace:workspace_list.html.twig',
             array('workspaces' => $workspaces)
         );
     }
-    
+
     public function JsonlistWorkspaceForUserAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER'))
         {
             throw new AccessDeniedHttpException();
         }
-     
+
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getWorkspacesOfUser($user);
-        
+
         return $this->render(
             'ClarolineCoreBundle:Workspace:workspace_list.json.twig',
             array('workspaces' => $workspaces)
         );
     }
-    
+
     public function newAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR'))
         {
             throw new AccessDeniedHttpException();
         }
-        
+
         $form = $this->get('form.factory')->create(new WorkspaceType());
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_form.html.twig', 
+            'ClarolineCoreBundle:Workspace:workspace_form.html.twig',
             array('form' => $form->createView())
         );
     }
-    
+
     public function createAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR'))
         {
             throw new AccessDeniedHttpException();
         }
-        
+
         $form = $this->get('form.factory')->create(new WorkspaceType());
         $form->bindRequest($this->getRequest());
 
         if ($form->isValid())
         {
-              $type = $form->get('type')->getData() == 'simple' ? 
-                  Configuration::TYPE_SIMPLE : 
-                  Configuration::TYPE_AGGREGATOR;           
+              $type = $form->get('type')->getData() == 'simple' ?
+                  Configuration::TYPE_SIMPLE :
+                  Configuration::TYPE_AGGREGATOR;
               $config = new Configuration();
               $config->setWorkspaceType($type);
-              $config->setWorkspaceName($form->get('name')->getData()); 
+              $config->setWorkspaceName($form->get('name')->getData());
               $user = $this->get('security.context')->getToken()->getUser();
               $wsCreator = $this->get('claroline.workspace.creator');
               $wsCreator->createWorkspace($config, $user);
               $this->get('session')->setFlash('notice', 'Workspace created');
               $route = $this->get('router')->generate('claro_desktop_index');
-            
+
               return new RedirectResponse($route);
         }
 
@@ -113,33 +113,33 @@ class WorkspaceController extends Controller
             array('form' => $form->createView())
         );
     }
-    
+
     public function deleteAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-        
+
         if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$id}", $workspace))
         {
             throw new AccessDeniedHttpException();
         }
-        
+
         $em->remove($workspace);
         $em->flush();
-        
-        $this->get('session')->setFlash('notice', 'Workspace deleted');            
+
+        $this->get('session')->setFlash('notice', 'Workspace deleted');
         $route = $this->get('router')->generate('claro_desktop_index');
-       
+
         return new RedirectResponse($route);
     }
-    
+
     public function showAction($id)
-    { 
+    {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-        $authorization = false;  
+        $authorization = false;
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
-        
+
         foreach ($workspace->getWorkspaceRoles() as $role)
         {
             $this->get('security.context')->isGranted($role->getName());
@@ -147,17 +147,17 @@ class WorkspaceController extends Controller
                 $authorization = true;
             }
         }
-        
+
          if ($authorization === false)
          {
             throw new AccessDeniedHttpException();
          }
 
-         $resourcesInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getWSListableRootResource($workspace); 
-         
+         $resourcesInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getWSListableRootResource($workspace);
+
          return $this->render('ClarolineCoreBundle:Workspace:workspace_show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType, 'resources' => $resourcesInstance));
     }
-    
+
     public function registerAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -166,81 +166,81 @@ class WorkspaceController extends Controller
         $user->addRole($workspace->getCollaboratorRole());
         $em->flush();
         $route = $this->get('router')->generate('claro_workspace_list_all');
-        
+
         return new RedirectResponse($route);
     }
-    
+
     public function unregisterAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
         $roles = $workspace->getWorkspaceRoles();
-        
+
         foreach ($roles as $role)
         {
             $user->removeRole($role);
         }
-        
+
         $route = $this->get('router')->generate('claro_workspace_list_all');
         $em->flush();
-        
+
         return new RedirectResponse($route);
     }
-    
+
     public function listUserPerWorkspaceAction($id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
-        
+
         if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$id}", $workspace))
         {
             throw new AccessDeniedHttpException();
         }
-        
+
         $groups= $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);           
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:workspace_user_list.html.twig', array('workspace' => $workspace, 'users' => $users, 'groups' => $groups));
     }
-    
+
     public function deleteUserFromWorkspaceAction($userId, $workspaceId)
     {
-        
+
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $roles = $workspace->getWorkspaceRoles();
-        
+
         foreach ($roles as $role)
         {
             $user->removeRole($role);
         }
-        
+
         $em->flush();
         $route = $this->get('router')->generate('claro_workspace_show_user_list_workspace', array('id' => $workspaceId));
-        
+
         return new RedirectResponse($route);
     }
-    
+
     public function deleteGroupFromWorkspaceAction($groupId, $workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
         $roles = $workspace->getWorkspaceRoles();
-        
+
         foreach ($roles as $role)
         {
             $group->removeRole($role);
         }
-        
+
         $em->flush();
         $route = $this->get('router')->generate('claro_workspace_show_user_list_workspace', array('id' => $workspaceId));
-        
+
         return new RedirectResponse($route);
     }
-    
+
     public function ajaxGetAddUserAction($id, $nbIteration)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -249,7 +249,7 @@ class WorkspaceController extends Controller
 
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $users));
     }
-    
+
     public function ajaxGetAddGroupAction($id, $nbIteration)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -258,16 +258,16 @@ class WorkspaceController extends Controller
 
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $groups));
     }
-    
+
     public function ajaxGetGenericSearchUnregisteredUserAction($search, $id)
-    {  
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($id);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace);
 
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => $users));
     }
-    
+
     public function ajaxAddUserToWorkspaceAction($userId, $workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -275,10 +275,10 @@ class WorkspaceController extends Controller
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $user->addRole($workspace->getCollaboratorRole());
         $em->flush();
-        
+
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => array($user), 'workspace' => $workspace));
     }
-    
+
     public function ajaxDeleteUserFromWorkspaceAction($userId, $workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -291,11 +291,11 @@ class WorkspaceController extends Controller
             $user->removeRole($role);
         }
 
-        $em->flush(); 
+        $em->flush();
 
         return new Response("success");
     }
-    
+
     public function ajaxDeleteGroupFromWorkspaceAction($groupId, $workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -308,23 +308,23 @@ class WorkspaceController extends Controller
             $user->removeRole($role);
         }
 
-        $em->flush(); 
+        $em->flush();
 
         return new Response("success");
     }
-        
-    
+
+
     public function ajaxAddGroupToWorkspaceAction($groupId, $workspaceId)
     {
-        $em = $this->get('doctrine.orm.entity_manager');              
+        $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);   
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
         $group->addRole($workspace->getCollaboratorRole());
         $em->flush();
 
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => array ($group), 'workspace' => $workspace));
     }
-    
+
     public function ajaxGetGenericSearchUnregisteredGroupAction($search, $id)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -332,5 +332,12 @@ class WorkspaceController extends Controller
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
 
         return $this->container->get('templating')->renderResponse('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => $groups));
-    }     
+    }
+
+    public function userWorkspaceIdAction()
+    {
+         $id = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();
+
+         return new Response($id);
+    }
 }

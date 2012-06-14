@@ -2,25 +2,25 @@
 # LINKS #
 #########
 
-# topbar links
+# top bar links
 administration: Administration
 desktop: Desktop
 home: Home
 my_account: My account
 
-#administration links
+# administration links
 add_user: Add user
 list_users: List users
 create_group: Create group
 list_groups: List groups
 claro_settings: Claroline settings
 
-#registration
+# registration
 login: Login
 logout: Logout
 register: Register
 
-#workspace links
+# workspace links
 create_workspace: New workspace
 my_workspaces: My workspaces
 list_workspaces: List workspaces
@@ -41,19 +41,31 @@ user_form_phone: "Phone :"
 user_form_ownedRoles: "Role(s) :"
 user_form_note: "Personnal note :"
 
-#claro settings form field labels
+# profile form field labels
+profile_form_firstName: "First name :"
+profile_form_lastName: "Last name :"
+profile_form_username: "Username :"
+profile_form_plainPassword_first: "Password :"
+profile_form_plainPassword_second: "Verification :"
+profile_form_administrativeCode: "Administrative code :"
+profile_form_mail: "Mail :"
+profile_form_phone: "Phone :"
+profile_form_ownedRoles: "Role(s) :"
+profile_form_note: "Personnal note :"
+
+# platform settings form field labels
 claro_settings_form_selfRegistration: Auto-inscription
 claro_settings_form_localLanguage: Langue
 
-#claro group form fields labels
+# group form field labels
 group_form_name: Name
 group_form_ownedRoles: Roles
 
-#claro_workspace_form_fields_labels
+# workspace form field labels
 workspace_form_name: Name
 workspace_form_type: Type
 
-#file manager form field labels
+# file manager form field labels
 choose_resource_form_type: "Resource type :"
 
 ############
@@ -72,7 +84,7 @@ workspace.name_not_blank: The workspace's name is required.
 # MISC #
 ########
 
-#user
+# user
 first_name: first name
 last_name: lastname
 mail: mail
@@ -85,44 +97,40 @@ user: user
 users: users
 administrative_code: administrative code
 
-#group
+# group
 group: group
 groups: groups
 add_group: add group
 
-#resource
+# resource
 resource: resource
 resources: resources
 resource_manager: resource manager
 owner: owner
 open: ouvrir
 
-#workspace
+# workspace
 workspace: Workspaces
 workspaces: Workspaces
 workspace.create: Create a new workspace
 registered_users: Registered users
 registered_groups: Registered groups
 
-#file
-file: fichier
-files: fichiers
+# file
+file: Fichier
+files: Fichiers
 
-#common
-name: name
-id: id
-add: add
-delete: delete
-show: show
-login_as: login as
-move : move
-settings: settings
-register: register
-unregister: unregister
+# common
+name: Name
+id: Id
+add: Add
+delete: Delete
+show: Show
+move : Move
+settings: Settings
+register: Register
+unregister: Unregister
 
-#chat
-chatbox: chatbox
-
-#resource type
-directory: directory
-file: file
+# resource type
+directory: Directory
+file: File
