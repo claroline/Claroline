@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 // TODO: Implements AdvancedUserInterface
 
@@ -58,30 +59,30 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      * @Assert\NotBlank()
      */
     protected $plainPassword;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", length="1000", nullable=true) 
+     * @ORM\Column(type="string", length="1000", nullable=true)
      */
     protected $note;
 
     /**
-     * @ORM\Column(type="string", nullable=true) 
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $mail;
 
     /**
-     * @ORM\Column(name="administrative_code", type="string", nullable=true)  
+     * @ORM\Column(name="administrative_code", type="string", nullable=true)
      */
     protected $administrativeCode;
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Group", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Group",
      *      inversedBy="users"
      * )
      * @ORM\JoinTable(name="claro_user_group",
@@ -104,7 +105,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
+     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
      *      inversedBy="users"
      * )
      * @ORM\JoinTable(name="claro_user_role",
@@ -113,18 +114,23 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      * )
      */
     protected $workspaceRoles;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="user")
      */
     private $resourcesInstance;
-    
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="user")
+     */
+    private $abstractResources;
+
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     private $personnalWorkspace;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -132,6 +138,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
         $this->resourcesInstance = new ArrayCollection();
+        $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
@@ -207,10 +214,10 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     }
 
     /**
-     * Returns the user's roles (including role's ancestors) as an array 
+     * Returns the user's roles (including role's ancestors) as an array
      * of string values (needed for Symfony security checks). The roles
      * owned by groups which the user belong to are also included.
-     * 
+     *
      * @return array[string]
      */
     public function getRoles()
@@ -236,9 +243,9 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     /**
      * Checks if the user has a given role. This method will explore
      * role hierarchies if necessary.
-     * 
+     *
      * @param string $roleName
-     * 
+     *
      * @return boolean
      */
     public function hasRole($roleName)
@@ -349,7 +356,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
             $this->administrativeCode
         ));
     }
-    
+
     public function unserialize($serialized)
     {
         list(
@@ -364,7 +371,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
             $this->administrativeCode
         ) = unserialize($serialized);
     }
-    
+
     public function getResourcesInstance()
     {
         return $this->resourcesInstance;
@@ -375,14 +382,24 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->resourcesInstance[] = $resourcesInstance;
         $resourcesInstance->setUser($this);
     }
-    
+
     public function setPersonnalWorkspace($workspace)
     {
         $this->personnalWorkspace = $workspace;
     }
-    
+
     public function getPersonnalWorkspace()
     {
         return $this->personnalWorkspace;
+    }
+
+    public function getAbstractResources()
+    {
+        return $this->abstractResources;
+    }
+
+    public function addAbstractResource(AbstractResource $abstractResource)
+    {
+        $this->abstractResources->add($abstractResource);
     }
 }
