@@ -25,15 +25,15 @@
                     </a>
                     <ul class="dropdown-menu">
                     <li>
-                        <a href="{{ path('claro_profile_show_edit') }}" id="link_account">
+                        <a href="{{ path('claro_profile_form') }}" id="link_account">
                         {{ 'my_account'|trans({}, 'platformTranslation') }}
                         </a>
                     </li>
                     <li class="divider"></li>
                     <li><a href="{{ path('claro_security_logout') }}" id="link_logout">{{ 'logout'|trans({}, 'platformTranslation') }}</a></li>
                     </ul>
-                 </div>    
-                    {% else %}   
+                 </div>
+                    {% else %}
                     <div class="nav-collapse">
                         <ul class="nav pull-right">
                     {% if register_target is not null %}
@@ -45,7 +45,7 @@
                         {{ 'login'|trans({}, 'platformTranslation') }}
                         </a></li>
                         </div>
-                    {% endif %}        
+                    {% endif %}
                 <div class="nav-collapse">
                     <ul class="nav">
                 {% if connected %}
@@ -64,12 +64,12 @@
                             <a href="{{ path('claro_admin_index') }}" id="link_administration">
                             {{ 'administration'|trans({}, 'platformTranslation') }}
                             </a>
-                        </li>        
-                    {% endif %} 
+                        </li>
+                    {% endif %}
                     </ul>
                 </div>
            </div>
-           {% endif %}   
+           {% endif %}
         </div>
     </nav>
 {% endblock %}

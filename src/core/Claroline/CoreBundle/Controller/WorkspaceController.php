@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
  */
 class WorkspaceController extends Controller
 {
-
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
     const NUMBER_GROUP_PER_ITERATION = 10;
@@ -40,7 +39,7 @@ class WorkspaceController extends Controller
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
+                'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
         );
     }
 
@@ -48,9 +47,9 @@ class WorkspaceController extends Controller
      * Renders the registered workspace list for a user.
      *
      * @param integer $userId
-     * @param string  $format the format
-     *     - 'page': renders the html page with its claroline layout.
-     *     - 'json': renders a json response.
+     * @param string $format the format
+     * - 'page': renders the html page with its claroline layout.
+     * - 'json': renders a json response.
      *
      * @throws AccessDeniedHttpException
      *
@@ -74,7 +73,7 @@ class WorkspaceController extends Controller
 
         if ('page' == $format) {
             return $this->render(
-                'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
+                    'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
             );
         }
 
@@ -95,7 +94,7 @@ class WorkspaceController extends Controller
         $form = $this->get('form.factory')->create(new WorkspaceType());
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
+                'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -117,8 +116,8 @@ class WorkspaceController extends Controller
 
         if ($form->isValid()) {
             $type = $form->get('type')->getData() == 'simple' ?
-                    Configuration::TYPE_SIMPLE :
-                    Configuration::TYPE_AGGREGATOR;
+                Configuration::TYPE_SIMPLE :
+                Configuration::TYPE_AGGREGATOR;
             $config = new Configuration();
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
@@ -132,7 +131,7 @@ class WorkspaceController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
+                'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -180,7 +179,8 @@ class WorkspaceController extends Controller
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         foreach ($workspace->getWorkspaceRoles() as $role) {
-            $this->get('security.context')->isGranted($role->getName()); {
+            $this->get('security.context')->isGranted($role->getName());
+            {
                 $authorization = true;
             }
         }
@@ -435,5 +435,17 @@ class WorkspaceController extends Controller
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
 
         return $this->render("ClarolineCoreBundle:Workspace:dialog_group_list.{$format}.twig", array('groups' => $groups));
+    }
+
+    /**
+     * Returns the id of the current user workspace.
+     * 
+     * @return Response
+     */
+    public function userWorkspaceIdAction()
+    {
+        $id = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();
+
+        return new Response($id);
     }
 }

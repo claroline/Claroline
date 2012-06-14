@@ -2,25 +2,25 @@
 # LINKS #
 #########
 
-#topbar links
+# top bar links
 administration: Administration
 desktop: Bureau
 home: Accueil
 my_account: Mon compte
 
-#administration links
+# administration links
 add_user: Ajouter un utilisateur
 list_users: Lister les utilisateurs
 create_group: Créer un groupe
 list_groups: Lister les groupes
 claro_settings: Paramètres de la plateforme
 
-#workspace links
+# workspace links
 create_workspace: Ajouter un espace d'activité
 my_workspaces: Mes espaces d'activités
 list_workspaces: Lister les espaces d'activités
 
-#registration
+# registration
 login: Connexion
 logout: Déconnexion
 register: Inscription
@@ -29,7 +29,7 @@ register: Inscription
 # FORMS #
 #########
 
-#users form field labels 
+# user form field labels
 user_form_firstName: "Nom :"
 user_form_lastName: "Prénom :"
 user_form_username: "Nom d'utilisateur:"
@@ -41,19 +41,31 @@ user_form_phone: "Téléphone :"
 user_form_ownedRoles: "Role(s) :"
 user_form_note: "Note personnelle :"
 
-#claro settings form field labels
+# profile form field labels
+profile_form_firstName: "Nom :"
+profile_form_lastName: "Prénom :"
+profile_form_username: "Nom d'utilisateur:"
+profile_form_plainPassword_first: "Mot de passe :"
+profile_form_plainPassword_second: "Vérification :"
+profile_form_administrativeCode: "Code administratif :"
+profile_form_mail: "Mail :"
+profile_form_phone: "Téléphone :"
+profile_form_ownedRoles: "Role(s) :"
+profile_form_note: "Note personnelle :"
+
+# platform settings form field labels
 claro_settings_form_selfRegistration: Auto-inscription
 claro_settings_form_localLanguage: Langue
 
-#claro group form fields labels
+# group form field labels
 group_form_name: Nom
 group_form_ownedRoles: Roles
 
-#claro_workspace_form_fields_labels
+# workspace form field labels
 workspace_form_name: Name
 workspace_form_type: Type
 
-#file manager form field labels
+# file manager form field labels
 choose_resource_form_type: "Type de ressource:"
 
 ############
@@ -68,57 +80,53 @@ workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
 # MISC #
 ########
 
-#user
-first_name: prénom
-last_name: nom
-mail: mail
-phone: téléphone
-note: note
-username: nom d'utilisateur
-password: mot de passe
-role: role
-user: utilisateur
-users: utilisateurs
-administrative_code: code administratif
+# user
+first_name: Prénom
+last_name: Nom
+mail: Mail
+phone: Téléphone
+note: Note
+username: Nom d'utilisateur
+password: Mot de passe
+role: Rôle
+user: Utilisateur
+users: Utilisateurs
+administrative_code: Code administratif
 
-#group
-group: groupe
-groups: groupes
-add_group: ajouter un groupe
+# group
+group: Groupe
+groups: Groupes
+add_group: Ajouter un groupe
 
-#resource
-resource: ressource
-resources: ressources
-resource_manager: gestionnaire de ressource
-owner: propriétaire
-open: ouvrir
+# resource
+resource: Ressource
+resources: Ressources
+resource_manager: Gestionnaire de ressources
+owner: Propriétaire
+open: Ouvrir
 
-#workspace
+# workspace
 workspace: Espace d'activité
 workspaces: Espace d'activités
 workspace.create: Créer un nouvel espace d'activités
 registered_users: Utilisateurs enregistrés
 registered_groups: Groupes enregistrés
 
-#file
-file: fichier
-files: fichiers
+# file
+file: Fichier
+files: Fichiers
 
-#common
-name: nom
-id: id
-add: ajouter
-delete: supprimer
-show: voir
-login_as: login as
-move : bouger
-settings: paramètres
-register: s'inscrire
-unregister: se désinscrire
+# common
+name: Nom
+id: Id
+add: Ajouter
+delete: Supprimer
+show: Voir
+move : Déplacer
+settings: Paramètres
+register: Inscription
+unregister: Désinscription
 
-#chat
-chatbox: chatbox
-
-#resource type
-directory: répertoire
-file: fichier
+# resource type
+directory: Répertoire
+file: Fichier

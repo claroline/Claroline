@@ -1,4 +1,5 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
 {% block section_content %}
 <h6>
     {{group.getName()}}: {{ 'add_user'|trans({}, 'platformTranslation') }}
@@ -20,7 +21,7 @@
         <td align="center" headers="c1 L0">{{user.getUsername()}}</td>
         <td align="center" headers="c2 L0">{{user.getLastName()}}</td>
         <td align="center" headers="c3 L0">{{user.getFirstName()}}</td>
-        <td align="center" headers="c4 L0"><a id="link_add_user_{{user.getId()}}" href="{{path('claro_admin_add_user_to_group', {'idGroup': group.getId(), 'idUser': user.getId()})}}">{{ 'add'|trans({}, 'platformTranslation') }}</td>
+        <td align="center" headers="c4 L0"><a id="link_add_user_{{ user.getId() }}" href="{{ path('claro_admin_add_user_to_group', {'groupId': group.getId(), 'userId': user.getId()}) }}">{{ 'add'|trans({}, 'platformTranslation') }}</td>
     </tr>
     {% endfor %}
 </table>

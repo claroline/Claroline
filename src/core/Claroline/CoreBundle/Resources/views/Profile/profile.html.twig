@@ -1,4 +1,5 @@
 {% extends "ClarolineCoreBundle::content_layout.html.twig" %}
+
 {% block content %}
     {{ 'first_name'|trans({}, 'platformTranslation') }}: {{user.getFirstName()}}<br/>
     {{ 'last_name'|trans({}, 'platformTranslation') }}: {{user.getLastName()}}<br/>
