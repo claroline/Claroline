@@ -1,15 +1,14 @@
 {% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
 
 {% block content %}
-
-<div class="section" id="workspaces">    
+<div class="section" id="workspaces">
     <h4>{{ 'workspace'|trans({}, 'platformTranslation') }}</h4>
-    <h5> 
-        <a href="{{ path('claro_workspace_user_workspace', {'userId': app.user.id})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platformTranslation') }} </a> |
-        <a href="{{ path('claro_workspace_list_all') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platformTranslation') }}</a> 
+    <h5>
+        <a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platformTranslation') }} </a> |
+        <a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platformTranslation') }}</a>
         {% if is_granted('ROLE_WS_CREATOR') %}
         |
-        <a href="{{ path('claro_workspace_new_workspace') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platformTranslation') }}</a>
+        <a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platformTranslation') }}</a>
         {% endif %}
     </h5>
     {% block section_content %}
