@@ -1,0 +1,11 @@
+claro_profile_form:
+    pattern: /form
+    defaults: { _controller: ClarolineCoreBundle:Profile:form }
+
+claro_profile_update:
+   pattern: /update
+   defaults: { _controller: ClarolineCoreBundle:Profile:update }
+
+claro_profile_view:
+   pattern: /view/{userId}
+   defaults: { _controller: ClarolineCoreBundle:Profile:view }

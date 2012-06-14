@@ -3,21 +3,17 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilder;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Form\UserType;
 
 //TODO: phone verification
 
-class ProfileType extends UserType
+class ProfileType extends BaseProfileType
 {
     private $grantRole;
 
     public function __construct($platformRoles)
     {
-        foreach ($platformRoles as $role)
-        {
-            if ($role->getTranslationKey() == 'ROLE_ADMIN')
-            {
+        foreach ($platformRoles as $role) {
+            if ($role->getTranslationKey() == 'ROLE_ADMIN') {
                 $this->grantRole = true;
             }
         }
@@ -28,14 +24,11 @@ class ProfileType extends UserType
         parent::buildForm($builder, $options);
         $builder->add('administrativeCode', 'text', array('required' => false))
             ->add('plainPassword', 'repeated', array('type' => 'password'))
-            ->add('mail', 'email', array('required' =>false))
+            ->add('mail', 'email', array('required' => false))
             ->add('phone', 'text', array('required' => false));
-        if ($this->grantRole == true)
-        {
+        if ($this->grantRole == true) {
             $builder->add('ownedRoles', 'entity', array('class' => 'ClarolineCoreBundle:Role', 'expanded' => false, 'multiple' => true, 'property' => 'name', 'read_only' => false));
-        }
-        else
-        {
+        } else {
             $builder->add('ownedRoles', 'entity', array('class' => 'ClarolineCoreBundle:Role', 'expanded' => false, 'multiple' => true, 'property' => 'name', 'read_only' => true));
         }
         $builder->add('note', 'textarea', array('required' => false));
@@ -43,8 +36,6 @@ class ProfileType extends UserType
 
     public function getName()
     {
-        return 'user_form';
+        return 'profile_form';
     }
-
 }
-

@@ -6,21 +6,38 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * Note : Actions of this controller are not routed. They're intended to be
+ * Actions of this controller are not routed. They're intended to be
  * rendered directly in the "common_layout" and "content_layout" templates.
  */
 class LayoutController extends Controller
 {
+    /**
+     * Displays the platform header.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function headerAction()
     {
         return $this->render('ClarolineCoreBundle:Layout:header.html.twig');
     }
 
+    /**
+     * Displays the platform footer.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function footerAction()
     {
         return $this->render('ClarolineCoreBundle:Layout:footer.html.twig');
     }
 
+    /**
+     * Displays the platform top bar. Its content depends on the user status
+     * (anonymous/connected, profile, etc.) and the platform options (e.g. self-
+     * registration allowed/prohibited).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function topBarAction()
     {
         $connected = false;
@@ -29,26 +46,22 @@ class LayoutController extends Controller
         $loginTarget = null;
         $user = $this->container->get('security.context')->getToken()->getUser();
 
-        if ($user instanceof User)
-        {
+        if ($user instanceof User) {
             $connected = true;
             $username = $user->getUsername();
-        }
-        else
-        {
+        } else {
             $configHandler = $this->get('claroline.config.platform_config_handler');
-            
-            if (true === $configHandler->getParameter('allow_self_registration'))
-            {
-                $registerTarget = 'claro_user_registration_form';
+
+            if (true === $configHandler->getParameter('allow_self_registration')) {
+                $registerTarget = 'claro_registration_user_registration_form';
             }
-            
-            // TODO : use a configuration option (-> admin)
+
+            // TODO : use a platform option to make this target configurable
             $loginTarget = 'claro_desktop_index';
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Layout:top_bar.html.twig', 
+            'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
                 'connected' => $connected,
                 'username' => $username,

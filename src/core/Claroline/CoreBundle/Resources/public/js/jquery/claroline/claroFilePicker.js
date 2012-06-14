@@ -193,7 +193,7 @@
     {
         $.ajax({
             type: 'POST',
-            url: Routing.generate("claro_current_user_repository_id"),
+            url: Routing.generate("claro_ws_user_workspace_id"),
             cache: false,
             success: function(data){
                 idUserRepository = data;
@@ -369,7 +369,7 @@
     function openNode(node)
     {
         console.debug(node);
-        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'instanceId':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
     }
 
     function viewNode(node)

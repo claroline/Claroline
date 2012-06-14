@@ -24,19 +24,16 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Claroline\CoreBundle\ClarolineCoreBundle()   
+            new Claroline\CoreBundle\ClarolineCoreBundle()
         );
 
-        if (file_exists(__DIR__.'/config/local/plugin/bundles'))
-        {
-            foreach (file(__DIR__.'/config/local/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle)
-            {
+        if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {
+            foreach (file(__DIR__ . '/config/local/plugin/bundles', FILE_IGNORE_NEW_LINES) as $bundle) {
                 $bundles[] = new $bundle;
             }
         }
 
-        if (in_array($this->getEnvironment(), array('dev', 'test'))) 
-        {
+        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }

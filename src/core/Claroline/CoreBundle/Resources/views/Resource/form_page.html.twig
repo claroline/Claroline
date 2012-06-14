@@ -1,4 +1,5 @@
-{% extends "ClarolineCoreBundle:Administration:administration.html.twig" %}
+{% extends "ClarolineCoreBundle:Administration:index.html.twig" %}
+
 {% block content %}
     {% include 'ClarolineCoreBundle:Resource:generic_form.html.twig' with {'form': form, 'instanceParentId':parentId} %}
 {% endblock %}

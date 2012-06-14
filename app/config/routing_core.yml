@@ -5,41 +5,45 @@ claro_index:
 claro_security:
     resource: "@ClarolineCoreBundle/Resources/config/routing/security.yml"
 
-claro_user:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/user.yml"
-    prefix: user
-    
+claro_profile:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/profile.yml"
+    prefix: profile
+
+claro_registration:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/registration.yml"
+    prefix: register
+
 claro_home:
     resource: "@ClarolineCoreBundle/Resources/config/routing/home.yml"
-    prefix: home    
+    prefix: home
 
 claro_desktop:
     resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
     prefix: desktop
-    
+
 claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
     prefix: workspace
-    
+
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
-    prefix: admin    
+    prefix: admin
 
 claro_file:
     resource: "@ClarolineCoreBundle/Resources/config/routing/file.yml"
-    prefix: file    
-    
+    prefix: file
+
 claro_directory:
     resource: "@ClarolineCoreBundle/Resources/config/routing/directory.yml"
-    prefix: directory        
-    
+    prefix: directory
+
 claro_resource:
     resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
     prefix: resource
-    
+
 claro_text:
     resource: "@ClarolineCoreBundle/Resources/config/routing/text.yml"
     prefix: text
-    
+
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

@@ -1,7 +1,8 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
 {% block section_content %}
     {% form_theme form_settings 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{path('claro_admin_claro_settings_edit')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
+    <form action="{{path('claro_admin_update_platform_settings')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
         {{ form_errors(form_settings) }}
         {{ form_widget(form_settings) }}
         <input type="submit" />

@@ -1,4 +1,53 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
 {% block section_content %}
-    {% render  "ClarolineCoreBundle:User:getListProfile" %}
+    <table class="claroTable userList" width="100%" cellspacing="2" border="0">
+        <thead>
+            <tr class="headerX" align="center" valign"=top">
+                <th>{{ 'id'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'username'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'last_name'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'first_name'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'mail'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'role'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'delete'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'show'|trans({}, 'platformTranslation') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        <tr id="{{ user.getId() }}" class="row_user">
+            <td align="center">{{ user.getId() }}</td>
+            <td align="center">{{ user.getUsername() }}</td>
+            <td align="center">{{ user.getLastName() }}</td>
+            <td align="center">{{ user.getFirstName() }}</td>
+            <td align="center">{{ user.getMail() }}</td>
+            <td align="center">
+                <div>
+                    {%for role in user.getOwnedRoles() %}
+                        {{role.getTranslationKey()}}<br/>
+                    {% endfor %}
+                </div>
+            </td>
+            {% if is_granted('user', 'EDIT') %}
+                {% if app.user.id == user.getId() %}
+                    <td align="center"> - </td>
+                {% else %}
+                    <td align="center">
+                        <a class="link_delete"
+                           href="{{ path('claro_admin_delete_user', {'userId': user.getId()}) }}">
+                            {{ 'delete'|trans({}, 'platformTranslation') }}
+                        </a>
+                    </td>
+                {% endif %}
+            {% endif %}
+            <td align="center">
+                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
+                    {{ 'show'|trans({}, 'platformTranslation') }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

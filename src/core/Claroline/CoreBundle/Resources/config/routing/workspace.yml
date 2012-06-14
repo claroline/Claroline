@@ -77,3 +77,9 @@ claro_ws_add_group:
    defaults: { _controller: ClarolineCoreBundle:Workspace:addGroup }
    options:
       expose: true
+
+claro_ws_user_workspace_id:
+   pattern: /user/workspace/id
+   defaults: { _controller: ClarolineCoreBundle:Workspace:userWorkspaceId }
+   options:
+       expose: true

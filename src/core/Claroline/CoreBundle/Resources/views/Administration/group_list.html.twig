@@ -1,4 +1,5 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
 {% block section_content %}
 <table class="claroTable group" width="100%" cellspacing="2" border="0">
     <thead class="headerX" align="center" valign="top">
@@ -22,11 +23,11 @@
                     {{role.getName}}
                 {% endfor %}
                 </div>
-                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_user_per_group_list', {'id': group.getId()}) }}" id="link_show_{{group.getId()}}">{{ 'show'|trans({}, 'platformTranslation') }}</a></td>
+                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link_show_{{ group.getId() }}">{{ 'show'|trans({}, 'platformTranslation') }}</a></td>
                 <td align="center" headers="c2 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c3 L0"><a href="{{path('claro_admin_group_settings_form', {'id':group.getId()})}}" id="link_settings_{{group.getId()}}">{{ 'settings'|trans({}, 'platformTranslation') }}</a></td>
+                <td align="center" headers="c3 L0"><a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link_settings_{{ group.getId() }}">{{ 'settings'|trans({}, 'platformTranslation') }}</a></td>
                 <td align="center" headers="c4 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'id':group.getId()}) }}" id="link_delete_{{group.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a></td>
+                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" id="link_delete_{{ group.getId() }}">{{ 'delete'|trans({}, 'platformTranslation') }}</a></td>
             <tr>
         {% endfor %}
     </tbody>

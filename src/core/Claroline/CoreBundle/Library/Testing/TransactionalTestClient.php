@@ -7,18 +7,20 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\BrowserKit\History;
 use Symfony\Component\BrowserKit\CookieJar;
 
-/* @SEE http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests */
+/**
+ * @see http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests
+ */
 class TransactionalTestClient extends Client
 {
-    /* @var \Doctrine\DBAL\Connection */
+    /** @var \Doctrine\DBAL\Connection */
     protected $connection;
-    
+
+    /** @var boolean */
     protected $requested;
 
-    public function __construct(HttpKernelInterface $kernel, array $server = array(), History $history = null, CookieJar $cookieJar = null) 
+    public function __construct(HttpKernelInterface $kernel, array $server = array(), History $history = null, CookieJar $cookieJar = null)
     {
         parent::__construct($kernel, $server, $history, $cookieJar);
-
         $this->connection = $this->getContainer()->get('doctrine.dbal.default_connection');
     }
 
@@ -26,31 +28,29 @@ class TransactionalTestClient extends Client
     {
         $this->connection->beginTransaction();
     }
-    
+
     public function rollback()
     {
-       $this->connection->rollback(); 
+        $this->connection->rollback();
     }
-    
+
     public function getConnection()
     {
         return $this->connection;
     }
-    
+
     public function shutdown()
     {
-        if ($this->connection->isTransactionActive())
-        {            
+        if ($this->connection->isTransactionActive()) {
             $this->rollback();
         }
-        
+
         $this->connection->close();
     }
 
     protected function doRequest($request)
     {
-        if ($this->requested) 
-        {
+        if ($this->requested) {
             $this->kernel->shutdown();
             $this->kernel->boot();
         }
