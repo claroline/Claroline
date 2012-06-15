@@ -1,7 +1,0 @@
-services:
-    claroline.text.manager:
-        class: Claroline\CoreBundle\Controller\TextController
-        calls:
-          - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.manager }

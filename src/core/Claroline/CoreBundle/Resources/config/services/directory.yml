@@ -1,7 +1,0 @@
-services:
-    claroline.directory.manager:
-        class: Claroline\CoreBundle\Controller\DirectoryController
-        calls:
-          - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.manager}

@@ -23,40 +23,40 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
     }
 
-    public function testUserCanCreateFileResource()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->addRootFile($this->filePath);
-        $crawler = $this->client->request('GET', '/resource/directory/null');
-        $this->assertEquals($crawler->filter('.row_resource')->count(), 1);
-    }
-
-    public function testResourceDefaultActionIsProtected()
-    {
-       $this->logUser($this->getFixtureReference('user/user'));
-       $id = $this->addRootFile($this->filePath);
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->client->request('GET', "/resource/click/{$id}");
-       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testCreatorCanAccessResourceDefaultAction()
-    {
-       $this->logUser($this->getFixtureReference('user/user'));
-       $id = $this->addRootFile($this->filePath);
-       $this->client->request('GET', "/resource/click/{$id}");
-       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testResourceOpenActionIsProtected()
-    {
-       $this->logUser($this->getFixtureReference('user/user'));
-       $id = $this->addRootFile($this->filePath);
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $workspace = $this->findResourceWorkspace($id);
-       $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
-       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
+//    public function testUserCanCreateFileResource()
+//    {
+//        $this->logUser($this->getFixtureReference('user/user'));
+//        $this->addRootFile($this->filePath);
+//        $crawler = $this->client->request('GET', '/resource/directory/null');
+//        $this->assertEquals($crawler->filter('.row_resource')->count(), 1);
+//    }
+//
+//    public function testResourceDefaultActionIsProtected()
+//    {
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $id = $this->addRootFile($this->filePath);
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->client->request('GET', "/resource/click/{$id}");
+//       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testCreatorCanAccessResourceDefaultAction()
+//    {
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $id = $this->addRootFile($this->filePath);
+//       $this->client->request('GET', "/resource/click/{$id}");
+//       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testResourceOpenActionIsProtected()
+//    {
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $id = $this->addRootFile($this->filePath);
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $workspace = $this->findResourceWorkspace($id);
+//       $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
+//       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+//    }
 
     public function testCreatorCanAccessResourceOpenAction()
     {
@@ -64,122 +64,125 @@ class ResourceControllerTest extends FunctionalTestCase
        $id = $this->addRootFile($this->filePath);
        $workspace = $this->findResourceWorkspace($id);
        $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
+
+       var_dump($this->client->getResponse()->getContent());
+
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testResourceDeleteActionIsProtected()
-    {
-       $this->logUser($this->getFixtureReference('user/user'));
-       $id = $this->addRootFile($this->filePath);
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
-       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
+//    public function testResourceDeleteActionIsProtected()
+//    {
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $id = $this->addRootFile($this->filePath);
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
+//       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testCreatorCanAccessDeleteAction()
+//    {
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $id = $this->addRootFile($this->filePath);
+//       $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
+//       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testResourceCanBeAddedToWorkspaceByRef()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $this->initWorkspacesTestsByRef();
+//       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//    }
+//
+//    public function testRegisterUserHasAccessToWorkspaceResourcesByRef()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $this->initWorkspacesTestsByRef();
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->registerToWorkspaceA();
+//       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//    }
+//
+//    public function testUnregisteredUserLostAccessToWorkspaceResourcesByRef()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $rootId = $this->initWorkspacesTestsByRef();
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->registerToWorkspaceA();
+//       $this->unregisterFromWorkspaceA();
+//       $this->client->request('GET', "/resource/click/{$rootId}");
+//       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testResourceCanBeAddedToWorkspaceByCopy()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $this->initWorkspacesTestsByCopy();
+//       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//    }
+//
+//    public function testRegisterUserHasAccessToWorkspaceResourcesByCopy()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $this->initWorkspacesTestsByCopy();
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->registerToWorkspaceA();
+//       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//    }
+//
+//    public function testUnregisteredUserLostAccessToWorkspaceResourcesByCopy()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $this->initWorkspacesTestsByCopy();
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->registerToWorkspaceA();
+//       $this->unregisterFromWorkspaceA();
+//       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testRegisteredUserHasAccesToWorkspaceResourcesByCopy()
+//    {
+//       $this->loadFixture(new LoadWorkspaceData());
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $this->registerToWorkspaceA();
+//       $this->logUser($this->getFixtureReference('user/user_2'));
+//       $this->initWorkspacesTestsByCopy();
+//       $this->logUser($this->getFixtureReference('user/user'));
+//       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+//       $link = $crawler->filter('.link_resource_view')->first()->link();
+//       $this->client->click($link);
+//       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+//    }
 
-    public function testCreatorCanAccessDeleteAction()
-    {
-       $this->logUser($this->getFixtureReference('user/user'));
-       $id = $this->addRootFile($this->filePath);
-       $this->client->request('GET', "/resource/workspace/remove/{$id}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
-       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testResourceCanBeAddedToWorkspaceByRef()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTestsByRef();
-       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-    }
-
-    public function testRegisterUserHasAccessToWorkspaceResourcesByRef()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTestsByRef();
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->registerToWorkspaceA();
-       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-    }
-
-    public function testUnregisteredUserLostAccessToWorkspaceResourcesByRef()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $rootId = $this->initWorkspacesTestsByRef();
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->registerToWorkspaceA();
-       $this->unregisterFromWorkspaceA();
-       $this->client->request('GET', "/resource/click/{$rootId}");
-       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testResourceCanBeAddedToWorkspaceByCopy()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTestsByCopy();
-       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-    }
-
-    public function testRegisterUserHasAccessToWorkspaceResourcesByCopy()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTestsByCopy();
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->registerToWorkspaceA();
-       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-    }
-
-    public function testUnregisteredUserLostAccessToWorkspaceResourcesByCopy()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $this->initWorkspacesTestsByCopy();
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->registerToWorkspaceA();
-       $this->unregisterFromWorkspaceA();
-       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testRegisteredUserHasAccesToWorkspaceResourcesByCopy()
-    {
-       $this->loadFixture(new LoadWorkspaceData());
-       $this->logUser($this->getFixtureReference('user/user'));
-       $this->registerToWorkspaceA();
-       $this->logUser($this->getFixtureReference('user/user_2'));
-       $this->initWorkspacesTestsByCopy();
-       $this->logUser($this->getFixtureReference('user/user'));
-       $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-       $link = $crawler->filter('.link_resource_view')->first()->link();
-       $this->client->click($link);
-       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-    
     private function initWorkspacesTestsByRef()
     {
        $rootId = $this->createResourcesTree();

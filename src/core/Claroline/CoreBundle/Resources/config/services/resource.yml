@@ -1,0 +1,31 @@
+parameters:
+   # next line is overriden by app config_test.yml in test environment
+   claroline.files.directory: "%kernel.root_dir%/../files"
+
+services:
+
+    claroline.file.manager:
+        class: Claroline\CoreBundle\Controller\FileController
+        calls:
+           - [ setContainer, [ "@service_container" ] ]
+        tags:
+           - { name: resource.controller }
+
+    claroline.directory.manager:
+        class: Claroline\CoreBundle\Controller\DirectoryController
+        calls:
+          - [ setContainer, [ "@service_container" ] ]
+        tags:
+           - { name: resource.controller }
+
+    claroline.text.manager:
+        class: Claroline\CoreBundle\Controller\TextController
+        calls:
+          - [ setContainer, [ "@service_container" ] ]
+        tags:
+           - { name: resource.controller }
+
+    claroline.thumbnail.creator:
+        class: Claroline\CoreBundle\Library\Services\ThumbnailGenerator
+        arguments:
+          - %claroline.files.directory%
