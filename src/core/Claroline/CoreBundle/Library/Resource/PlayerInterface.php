@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Player;
+namespace Claroline\CoreBundle\Library\Resource;
 
 /*
  * implements method wich will be used by the Claroline\CoreBunde\Controller\ResourceController
@@ -13,12 +13,12 @@ interface PlayerInterface
      * It should render the called player
      */
     public function indexAction($workspaceId);
-    
+
     /*
      * returns the mime type of the files played
      */
     public function getMimeType();
-    
+
     /*
      * returns the played name
      */

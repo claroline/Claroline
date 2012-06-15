@@ -30,7 +30,7 @@ class HTMLPageController extends FileController
      *
      * @return RedirectResponse
      */
-    public function indexAction($workspaceId, ResourceInstance $resourceInstance)
+    public function indexAction($workspaceId, $resourceId)
     {
         return new Response("index PAGEMANAGER HTML");
     }

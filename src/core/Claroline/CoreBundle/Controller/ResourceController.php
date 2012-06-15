@@ -208,7 +208,7 @@ class ResourceController extends Controller
 
     /**
      * This method will redirect to the ResourceInstance ResourceType manager
-     * indexAction or the related player service.
+     * indexAction.
      *
      * @param integer $instanceId
      * @param integer $workspaceId
@@ -227,20 +227,8 @@ class ResourceController extends Controller
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         } else {
             $resourceType = $resourceInstance->getResourceType();
-
-            if ($resourceType->getType() == 'file') {
-                $name = null;
-                $mime = $resourceInstance->getResource()->getMimeType();
-                $name = $this->findPlayerService($mime);
-
-                if (null === $name) {
-                    $name = $this->findResService($resourceType);
-                }
-            } else {
-                $name = $this->findResService($resourceType);
-            }
-
-            $response = $this->get($name)->indexAction($workspaceId, $resourceInstance);
+            $name = $this->findResService($resourceType);
+            $response = $this->get($name)->indexAction($workspaceId, $resourceInstance->getResource()->getId());
 
             return new Response($response);
         }
@@ -663,34 +651,6 @@ class ResourceController extends Controller
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
         $this->setChildrenByCopyCopy($resourceInstance, $workspace, $resourceInstanceCopy);
-    }
-
-    /**
-     * Returns the service's name for the MimeType $mimeType
-     *
-     * @param MimeType $mimeType
-     *
-     * @return string
-     */
-    private function findPlayerService(MimeType $mimeType)
-    {
-        $services = $this->container->getParameter("player.service.list");
-        $names = array_keys($services);
-        $serviceName = null;
-
-        foreach ($names as $name) {
-            $fileMime = $this->get($name)->getMimeType();
-            $serviceName = null;
-
-            if ($fileMime == $mimeType->getType() && $serviceName == null) {
-                $serviceName = $name;
-            }
-            if ($fileMime == $mimeType->getName() || $fileMime == $mimeType->getExtension()) {
-                $serviceName = $name;
-            }
-        }
-
-        return $serviceName;
     }
 
     /**

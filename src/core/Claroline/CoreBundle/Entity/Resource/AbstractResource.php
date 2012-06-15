@@ -76,6 +76,11 @@ abstract class AbstractResource
      */
     protected $user;
 
+    /**
+     * @ORM\Column(type="string", length=255, name="mime_type")
+     */
+    private $mimeType;
+
     public function __construct()
     {
         $this->resourceInstances = new ArrayCollection();
@@ -175,5 +180,15 @@ abstract class AbstractResource
     public function setUser($user)
     {
         $this->user = $user;
+    }
+
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+    }
+
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 }
