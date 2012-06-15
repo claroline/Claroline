@@ -496,7 +496,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
         $mime = $resourceInstance->getResource()->getMimeType();
-        $services = $this->container->getParameter("player.service.list");
+        $services = $this->container->getParameter('claroline.resource_players');
         $names = array_keys($services);
         $i = 1;
         $arrayPlayer[0][0] = 'claroline.file.manager';
@@ -662,18 +662,15 @@ class ResourceController extends Controller
      */
     private function findResService(ResourceType $resourceType)
     {
-        $services = $this->container->getParameter("resource.service.list");
+        $services = $this->container->getParameter('claroline.resource_controllers');
         $names = array_keys($services);
-        $serviceName = null;
 
         foreach ($names as $name) {
             $type = $this->get($name)->getResourceType();
 
             if ($type == $resourceType->getType()) {
-                $serviceName = $name;
+                return $name;
             }
         }
-
-        return $serviceName;
     }
 }

@@ -1,5 +1,0 @@
-services:
-    claroline.thumbnail.creator:
-        class: Claroline\CoreBundle\Library\Resource\ThumbnailGenerator
-        arguments:
-          - %claroline.files.directory%

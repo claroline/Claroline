@@ -11,17 +11,16 @@ class PlayerDependencyInjection extends Extension
     {
         $this->setService($container);
     }
-    
+
     protected function setUp($container)
     {
-        $taggedServices = $container->findTaggedServiceIds("resource.player");
-        $serviceArray = $container->getParameter('player.service.list');
+        $taggedServices = $container->findTaggedServiceIds('resource.player');
+        $serviceArray = $container->getParameter('claroline.resource_players');
 
-        foreach($taggedServices as $name => $service)
-        {
-            $serviceArray[$name]='';
+        foreach($taggedServices as $name => $service) {
+            $serviceArray[$name] = '';
         }
-        
-        $container->setParameter("player.service.list", $serviceArray);
+
+        $container->setParameter('claroline.resource_players', $serviceArray);
     }
 }

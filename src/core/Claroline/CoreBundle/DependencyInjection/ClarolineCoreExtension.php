@@ -7,27 +7,29 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 
+/**
+ * Loads the core services configuration files.
+ */
 class ClarolineCoreExtension extends Extension
 {
+    /**
+     * {@inheritDoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('configuration.yml');
+        $loader->load('browsing.yml');
         $loader->load('listeners.yml');
         $loader->load('installation.yml');
-        $loader->load('browsing.yml');
         $loader->load('security.yml');
         $loader->load('workspace.yml');
-        $loader->load('file.yml');
-        $loader->load('routing.yml');
-        $loader->load('directory.yml');
-        $loader->load('services.yml');
-        $loader->load('text.yml');
+        $loader->load('resource.yml');
 
-        $taggedService = $container->findTaggedServiceIds("resource.manager");
-        $container->setParameter("resource.service.list", $taggedService);
-        //must be initialized somewhere
-        $container->setParameter("player.service.list", null);
+        // TODO : try to use a compiler pass
+        $resourceControllers = $container->findTaggedServiceIds('resource.controller');
+        $container->setParameter('claroline.resource_controllers', $resourceControllers);
+        $container->setParameter('claroline.resource_players', null);
     }
 }
