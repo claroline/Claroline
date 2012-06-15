@@ -20,6 +20,12 @@ use Claroline\CoreBundle\Form\SelectResourceType;
  * It'll delegate create/update/delete/click actions for the different resource types
  * to the specified resource "manager" service.
  * It can add/remove a resource to a workspace.
+ *
+ * NOT DONE YET:
+ * "sharable resource"
+ * "javascript interface d&d between 2 trees"
+ * "text diff"
+ * "linker"
  */
 class ResourceController extends Controller
 {
@@ -44,15 +50,14 @@ class ResourceController extends Controller
         );
     }
 
-    //todo: refactor getFormPage
     /**
-     * Renders the resource type selection form with its claroline layout
+     * Renders the resource form with its claroline layout
      *
      * @param integer $instanceParentId the parent resourceInstance id. It can be 'null' if there is no parent.
      *
      * @return Response
      */
-    public function creationSelectResourceFormAction($instanceParentId)
+    public function creationResourceFormAction($instanceParentId)
     {
         $request = $this->get('request');
         $form = $request->request->get('select_resource_form');
@@ -134,6 +139,7 @@ class ResourceController extends Controller
                 $resource->incrInstance();
                 //set sharable to sthg
                 $resource->setSharable(false);
+                $resource->setUser($user);
                 $em->persist($ri);
                 $em->flush();
                 $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);
