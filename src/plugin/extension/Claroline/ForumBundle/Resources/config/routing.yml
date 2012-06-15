@@ -1,6 +1,6 @@
 claro_forum_form_subject_creation:
     pattern: /form/subject/{forumId}
-    defaults: { _controller: ClarolineForumBundle:Forum:forumSubjectCreation }
+    defaults: { _controller: claroline.forum.manager:forumSubjectCreationAction }
 
 claro_forum_form_create_subject:
     pattern: /subject/create/{forumId}
