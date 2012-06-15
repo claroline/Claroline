@@ -29,14 +29,6 @@ claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
     prefix: admin
 
-claro_file:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/file.yml"
-    prefix: file
-
-claro_directory:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/directory.yml"
-    prefix: directory
-
 claro_resource:
     resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
     prefix: resource
