@@ -11,17 +11,16 @@ class PluginDependencyInjection extends Extension
     {
         $this->setService($container);
     }
-    
+
     protected function setUp($container)
     {
-        $taggedServices = $container->findTaggedServiceIds("resource.manager");
-        $serviceArray = $container->getParameter('resource.service.list');
-         
-        foreach($taggedServices as $name => $service)
-        {
-            $serviceArray[$name]='';
+        $taggedServices = $container->findTaggedServiceIds('resource.controller');
+        $serviceArray = $container->getParameter('claroline.resource_controllers');
+
+        foreach($taggedServices as $name => $service) {
+            $serviceArray[$name] = '';
         }
-        
-        $container->setParameter("resource.service.list", $serviceArray);
+
+        $container->setParameter('claroline.resource_controllers', $serviceArray);
     }
 }

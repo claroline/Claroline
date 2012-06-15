@@ -1,6 +1,0 @@
-services:
-    claroline.routing:
-        class: Claroline\CoreBundle\Library\Browsing\ClaroRouting
-        arguments:
-            - "@router"
-            - "@doctrine.orm.entity_manager"
