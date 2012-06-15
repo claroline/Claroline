@@ -21,11 +21,12 @@ use Claroline\CoreBundle\Form\SelectResourceType;
  * to the specified resource "manager" service.
  * It can add/remove a resource to a workspace.
  *
- * NOT DONE YET:
+ * TODO:
  * "sharable resource"
  * "javascript interface d&d between 2 trees"
  * "text diff"
  * "linker"
+ * "edit by copy"
  */
 class ResourceController extends Controller
 {
