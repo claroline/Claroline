@@ -28,17 +28,11 @@ class File extends AbstractResource
      * @ORM\Column(type="integer", nullable=false)
      */
     private $size;
-    
+
     /**
-     * @ORM\Column(type="string", length=36, name="hash_name") 
+     * @ORM\Column(type="string", length=36, name="hash_name")
      */
     private $hashName;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\MimeType", inversedBy="files", cascade={"persist"})
-     * @ORM\JoinColumn(name="mime_id", referencedColumnName="id")
-     */
-    protected $mimeType;
 
     public function getSize()
     {
@@ -98,24 +92,14 @@ class File extends AbstractResource
             return round($this->size / 1099511627776, 2) . ' TB';
         }
     }
-    
+
     public function getHashName()
     {
         return $this->hashName;
     }
-    
+
     public function setHashName($hashName)
     {
         $this->hashName = $hashName;
     }
-    
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-    
-    public function setMimeType(MimeType $mimeType)
-    {
-        $this->mimeType= $mimeType;
-    }    
 }

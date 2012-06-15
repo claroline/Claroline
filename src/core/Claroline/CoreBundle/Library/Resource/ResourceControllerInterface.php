@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Library\Resource;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -62,9 +62,9 @@ interface ResourceControllerInterface
 * note: the resource controller wich redirects to this manager method is the openAction() one.
 *
 * @param integer $workspaceId
-* @param ResourceInstance $resourceInstance
+* @param integer $resourceId
 */
-    public function indexAction($workspaceId, ResourceInstance $resourceInstance);
+    public function indexAction($workspaceId, $resourceId);
 
     /**
 * copy a resource. $resource should have AbstractResource sub type.

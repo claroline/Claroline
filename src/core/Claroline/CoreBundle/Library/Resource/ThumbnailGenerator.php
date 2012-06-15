@@ -1,26 +1,26 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Services;
+namespace Claroline\CoreBundle\Library\Resource;
 
 class ThumbnailGenerator
 {
     /** @var string */
     private $dir;
-    
+
     /** @var bool */
     private $hasGdExtension;
-    
+
     /** @var bool */
     private $hasFfmpegExtension;
-    
+
     const WIDTH = 50;
     const HEIGHT = 50;
-    
+
     public function __construct ($dir)
     {
         $this->dir = $dir;
-        
-        if (!extension_loaded('gd')) 
+
+        if (!extension_loaded('gd'))
         {
             $this->hasGdExtension = false;
         }
@@ -29,7 +29,7 @@ class ThumbnailGenerator
             $this->hasGdExtension = true;
         }
 
-        if (!extension_loaded('ffmpeg')) 
+        if (!extension_loaded('ffmpeg'))
         {
             $this->hasFfmpegExtension = false;
         }
@@ -38,12 +38,12 @@ class ThumbnailGenerator
             $this->hasFfmpegExtension = true;
         }
     }
-    
+
     //the end could be refactored: what does imagedestroy should do ? is everything clean ?
     public function createThumbNail($name, $filename, $newWidth, $newHeight)
-    { 
+    {
         $extension = pathinfo($name, PATHINFO_EXTENSION);
-        
+
         if($this->hasGdExtension)
         {
             switch($extension)
@@ -56,7 +56,7 @@ class ThumbnailGenerator
                     $srcImg = imagecreatefromjpeg($name);
                     $filename = preg_replace('"\.jpg$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
                     break;
-                case "png":    
+                case "png":
                     $srcImg = imagecreatefrompng($name);
                     $filename = preg_replace('"\.png$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
                     break;
@@ -73,8 +73,8 @@ class ThumbnailGenerator
             }
 
             return $this->getFormatedImg($newWidth, $newHeight, $srcImg, $filename);
-            
-            //imagedestroy($dstImg); 
+
+            //imagedestroy($dstImg);
             //imagedestroy($srcImg);
         }
         else
@@ -83,20 +83,20 @@ class ThumbnailGenerator
             return 1;
         }
     }
-    
+
     private function getFormatedImg($newWidth, $newHeight, $srcImg, $filename)
     {
         $oldX = imagesx($srcImg);
         $oldY = imagesy($srcImg);
 
-        if ($oldX > $oldY) 
+        if ($oldX > $oldY)
         {
             $thumbWidth = $newWidth;
             $thumbHeight = $oldY*($newHeight/$oldX);
         }
         else
         {
-            if ($oldX < $oldY) 
+            if ($oldX < $oldY)
             {
                 $thumbWidth = $oldX*($newWidth/$oldY);
                 $thumbHeight = $newHeight;
@@ -106,17 +106,17 @@ class ThumbnailGenerator
         $dstImg = imagecreatetruecolor($thumbWidth, $thumbHeight);
         imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $oldX, $oldY);
 
-        return $srcImg = imagepng($dstImg, $filename); 
+        return $srcImg = imagepng($dstImg, $filename);
     }
-    
+
     public function parseAllAndGenerate()
     {
         $iterator = new \DirectoryIterator($this->dir);
-          
+
         foreach($iterator as $fileInfo)
         {
             if($fileInfo->isFile())
-            {      
+            {
                 $pathName = $fileInfo->getPathname();
                 $path = $fileInfo->getPath();
                 $fileName = $fileInfo->getFileName();
@@ -124,7 +124,7 @@ class ThumbnailGenerator
             }
         }
     }
-    
+
     private function createMpegGDI($name)
     {
         if($this->hasFfmpegExtension)
@@ -142,5 +142,5 @@ class ThumbnailGenerator
             return "1";
         }
     }
-   
+
 }

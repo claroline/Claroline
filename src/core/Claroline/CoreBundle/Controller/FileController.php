@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\FileType;
+use Claroline\CoreBundle\Library\Resource\MimeTypes;
 
 class FileController extends Controller
 {
@@ -76,14 +77,9 @@ class FileController extends Controller
         $file->setSize($size);
         $file->setName($fileName);
         $file->setHashName($hashName);
+        $mimeType = MimeTypes::getMimeType($extension);
+        $file->setMimeType($mimeType);
         $em = $this->getDoctrine()->getEntityManager();
-        $mime = $em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => $extension));
-
-        if (null === $mime) {
-            $mime = $em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => 'default'));
-        }
-
-        $file->setMimeType($mime);
         $em->persist($file);
         $em->flush();
         //$this->thumbnailGenerator->createThumbNail("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", ThumbnailGenerator::WIDTH, ThumbnailGenerator::HEIGHT);
@@ -145,18 +141,31 @@ class FileController extends Controller
 
     /**
      * Fired when OpenAction is fired for a directory in the resource controller.
-     * It's send with the workspaceId to keep the context
+     * It's send with the workspaceId to keep the context. Thr workspaceId should
+     * be removed.
      *
      * @param integer          $workspaceId
      * @param ResourceInstance $resourceInstance
      *
      * @return Response
      */
-    public function indexAction($workspaceId, ResourceInstance $resourceInstance)
+    public function indexAction($workspaceId,  $resourceId)
     {
+        $resource = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($resourceId);
+        $mime = $resource->getMimeType();
+
+        if($mime != 'claroline\default')
+        {
+            $name = $this->findPlayerService($mime);
+            if(null != $name)
+            {
+                return $this->get($name)->indexAction($workspaceId, $resourceId);
+            }
+
+        }
+
         $content = $this->render(
             'ClarolineCoreBundle:File:index.html.twig');
-
         return new Response($content);
     }
 
@@ -218,4 +227,28 @@ class FileController extends Controller
         unlink($pathName);
     }
 
+    /**
+     * Returns the service's name for the MimeType $mimeType
+     *
+     * @param string $mimeType
+     *
+     * @return string
+     */
+    private function findPlayerService($mimeType)
+    {
+        $services = $this->container->getParameter("player.service.list");
+        $names = array_keys($services);
+        $serviceName = null;
+
+        foreach ($names as $name) {
+            $fileMime = $this->get($name)->getMimeType();
+            $serviceName = null;
+
+            if ($fileMime == $mimeType && $serviceName == null) {
+                $serviceName = $name;
+            }
+        }
+
+        return $serviceName;
+    }
 }

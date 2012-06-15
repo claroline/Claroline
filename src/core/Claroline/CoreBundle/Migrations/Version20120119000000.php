@@ -9,7 +9,6 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $this->createMimeTypeTable($schema);
         $this->createMetaTypeTable($schema);
         $this->createLicenseTable($schema);
         $this->createWorkspaceTable($schema);
@@ -39,7 +38,6 @@ class Version20120119000000 extends BundleMigration
     public function down(Schema $schema)
     {
         $schema->dropTable('claro_link');
-        $schema->dropTable('claro_mime_type');
         $schema->dropTable('claro_file');
         $schema->dropTable('claro_text_content');
         $schema->dropTable('claro_text');
@@ -225,6 +223,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => false));
+        $table->addColumn('mime_type', 'string', array('notnull' => false));
+
         $this->addDiscriminator($table);
 
         $table->addForeignKeyConstraint(
@@ -302,13 +302,9 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('date_upload', 'datetime');
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
-        $table->addColumn('mime_id', 'integer', array('notnull' => true));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_mime_type'), array('mime_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
 
@@ -406,17 +402,6 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable("claro_link");
         $this->addId($table);
         $table->addColumn('url', 'string');
-    }
-
-    private function createMimeTypeTable(Schema $schema)
-    {
-        $table = $schema->createTable("claro_mime_type");
-        $this->addId($table);
-        $table->addColumn('name', 'string');
-        $table->addColumn('type', 'string');
-        $table->addColumn('extension', 'string');
-
-        $this->storeTable($table);
     }
 
     //ADD FOREIGN KEY
