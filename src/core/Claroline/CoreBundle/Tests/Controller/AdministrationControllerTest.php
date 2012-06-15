@@ -81,7 +81,6 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $admin = $this->getFixtureReference('user/admin');
         $crawler = $this->logUser($admin);
-        $link = $crawler->filter('#link_administration')->link();
         $crawler = $this->client->request('GET', 'admin/user/list');
         $this->assertEquals(5, $crawler->filter('.row_user')->count());
         $this->assertEquals(0, count($crawler->filter('.link_delete')->eq(4)));
