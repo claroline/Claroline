@@ -9,9 +9,6 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Form\ForumType;
 
