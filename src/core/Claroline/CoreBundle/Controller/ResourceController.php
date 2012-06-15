@@ -288,7 +288,7 @@ class ResourceController extends Controller
             return new Response("copied");
         } else {
             $name = $this->findResService($resourceInstance->getResourceType());
-            $response = $this->get($name)->editAction($resourceInstance->getResource()->getId());
+            $response = $this->get($name)->editFormPageAction($resourceInstance->getResource()->getId());
 
             return new Response($response);
         }

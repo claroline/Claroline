@@ -1,63 +1,17 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Manager;
+namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\FileType;
-use Claroline\CoreBundle\Library\Security\RightManager\RightManagerInterface;
-use Claroline\CoreBundle\Library\Services\ThumbnailGenerator;
 
-/**
- * this service is called when the resource controller is using a "file" resource
- */
-class FileManager implements ResourceManagerInterface
+class FileController extends Controller
 {
-
-    /** @var EntityManager */
-    protected $em;
-
-    /** @var string */
-    protected $dir;
-
-    /** @var FormFactory */
-    protected $formFactory;
-
-    /** @var RightManagerInterface */
-    protected $rightManager;
-
-    /** @var TwigEngine */
-    protected $templating;
-
-    /** @var ThumbnilGenerator * */
-    protected $thumbnailGenerator;
-
-    /**
-     * Constructor
-     *
-     * @param FormFactory $formFactory
-     * @param EntityManager $em
-     * @param RightManagerInterface $rightManager
-     * @param string $dir
-     * @param TwigEngine $templating
-     * @param ThumbnailGenerator $thumbnailGenerator
-     */
-    public function __construct(FormFactory $formFactory, EntityManager $em, RightManagerInterface $rightManager, $dir, TwigEngine $templating, ThumbnailGenerator $thumbnailGenerator)
-    {
-        $this->em = $em;
-        $this->rightManager = $rightManager;
-        $this->formFactory = $formFactory;
-        $this->dir = $dir;
-        $this->templating = $templating;
-        $this->thumbnailGenerator = $thumbnailGenerator;
-    }
-
     /**
      * Deletes a file
      *
@@ -66,8 +20,9 @@ class FileManager implements ResourceManagerInterface
     public function delete(AbstractResource $file)
     {
         $this->removeFile($file);
-        $this->em->remove($file);
-        $this->em->flush();
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->remove($file);
+        $em->flush();
     }
 
     /**
@@ -77,7 +32,7 @@ class FileManager implements ResourceManagerInterface
      */
     public function getForm()
     {
-        return $this->formFactory->create(new FileType, new File());
+        return $this->get('form.factory')->create(new FileType, new File());
     }
 
     /**
@@ -92,9 +47,9 @@ class FileManager implements ResourceManagerInterface
      */
     public function getFormPage($twigFile, $id, $type)
     {
-        $form = $this->formFactory->create(new FileType, new File());
+        $form = $this->get('form.factory')->create(new FileType, new File());
 
-        return $this->templating->render(
+        return $this->render(
             $twigFile, array('form' => $form->createView(), 'parentId' => $id, 'type' => $type)
         );
     }
@@ -116,20 +71,21 @@ class FileManager implements ResourceManagerInterface
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $size = filesize($tmpFile);
         $hashName = $this->generateGuid() . "." . $extension;
-        $tmpFile->move($this->dir, $hashName);
+        $tmpFile->move($this->container->getParameter('claroline.files.directory'), $hashName);
         $file = new File();
         $file->setSize($size);
         $file->setName($fileName);
         $file->setHashName($hashName);
-        $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => $extension));
+        $em = $this->getDoctrine()->getEntityManager();
+        $mime = $em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => $extension));
 
         if (null === $mime) {
-            $mime = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => 'default'));
+            $mime = $em->getRepository('Claroline\CoreBundle\Entity\Resource\MimeType')->findOneBy(array('extension' => 'default'));
         }
 
         $file->setMimeType($mime);
-        $this->em->persist($file);
-        $this->em->flush();
+        $em->persist($file);
+        $em->flush();
         //$this->thumbnailGenerator->createThumbNail("{$this->dir}/$hashName", "{$this->dir}/tn_{$hashName}", ThumbnailGenerator::WIDTH, ThumbnailGenerator::HEIGHT);
 
         return $file;
@@ -141,7 +97,7 @@ class FileManager implements ResourceManagerInterface
      *
      * @param type $resource
      * @param User $user
-     * 
+     *
      * @return \Claroline\CoreBundle\Entity\Resource\File
      */
     public function copy($resource, User $user)
@@ -151,11 +107,12 @@ class FileManager implements ResourceManagerInterface
         $newFile->setName($resource->getName());
         $hashName = $this->generateGuid() . "." . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
-        $filePath = $this->dir . DIRECTORY_SEPARATOR . $resource->getHashName();
-        $newPath = $this->dir . DIRECTORY_SEPARATOR . $hashName;
+        $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
+        $newPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hashName;
         copy($filePath, $newPath);
-        $this->em->persist($newFile);
-        $this->em->flush();
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($newFile);
+        $em->flush();
 
         return $newFile;
     }
@@ -180,7 +137,7 @@ class FileManager implements ResourceManagerInterface
     public function getDefaultAction($resourceId)
     {
         $response = new Response();
-        $file = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($resourceId);
+        $file = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($resourceId);
 
         return $this->setDownloadHeaders($file, $response);
         ;
@@ -197,7 +154,7 @@ class FileManager implements ResourceManagerInterface
      */
     public function indexAction($workspaceId, ResourceInstance $resourceInstance)
     {
-        $content = $this->templating->render(
+        $content = $this->render(
             'ClarolineCoreBundle:File:index.html.twig');
 
         return new Response($content);
@@ -238,7 +195,7 @@ class FileManager implements ResourceManagerInterface
      */
     private function setDownloadHeaders(File $file, Response $response)
     {
-        $response->setContent(file_get_contents($this->dir . DIRECTORY_SEPARATOR . $file->getHashName()));
+        $response->setContent(file_get_contents($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName()));
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $file->getName());
@@ -256,8 +213,9 @@ class FileManager implements ResourceManagerInterface
      */
     private function removeFile(File $file)
     {
-        $pathName = $this->dir . DIRECTORY_SEPARATOR . $file->getHashName();
+        $pathName = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
         chmod($pathName, 0777);
         unlink($pathName);
     }
+
 }
