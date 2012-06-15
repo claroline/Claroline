@@ -1,10 +1,11 @@
 <?php
-namespace Claroline\VideoPlayerBundle\Player;
+namespace Claroline\VideoPlayerBundle\Controller;
 
 use Claroline\CoreBundle\Library\Resource\PlayerInterface;
+use Claroline\CoreBundle\Controller\FileController;
 use Symfony\Component\HttpFoundation\Response;
 
-class VideoPlayer //implements PlayerInterface
+class VideoController extends FileController
 {
     public function indexAction($workspaceId, $resourceId)
     {
