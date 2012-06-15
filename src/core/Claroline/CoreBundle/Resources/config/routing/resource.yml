@@ -4,7 +4,7 @@ claro_resource_index:
 
 claro_resource_show_creation_form:
     pattern: /form/show/{instanceParentId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:creationSelectResourceForm, instanceParentId:null }
+    defaults: { _controller: ClarolineCoreBundle:Resource:creationResourceForm, instanceParentId:null }
 
 claro_resource_delete:
     pattern: /delete/{id}

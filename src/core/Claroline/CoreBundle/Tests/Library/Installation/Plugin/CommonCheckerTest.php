@@ -10,10 +10,10 @@ class CommonCheckerTest extends WebTestCase
 {
     /** @var CommonChecker */
     private $checker;
-    
+
     /** @var Loader */
     private $loader;
-    
+
     protected function setUp()
     {
         $container = self::createClient()->getContainer();
@@ -22,7 +22,7 @@ class CommonCheckerTest extends WebTestCase
         $stubDir = $container->getParameter('claroline.stub_plugin_directory');
         $this->overrideDefaultPluginDirectories($stubDir, $this->loader, $this->checker);
     }
-    
+
     /**
      * @dataProvider invalidFQCNProvider
      */
@@ -30,7 +30,7 @@ class CommonCheckerTest extends WebTestCase
     {
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_FQCN);
     }
-    
+
     /**
      * @dataProvider invalidPluginTypeProvider
      */
@@ -46,7 +46,7 @@ class CommonCheckerTest extends WebTestCase
     {
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_PLUGIN_LOCATION);
     }
-    
+
     /**
      * @dataProvider invalidRoutingPrefixProvider
      */
@@ -54,7 +54,7 @@ class CommonCheckerTest extends WebTestCase
     {
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ROUTING_PREFIX);
     }
-    
+
     /**
      * @dataProvider invalidAlreadyRegisteredPrefixProvider
      */
@@ -65,20 +65,20 @@ class CommonCheckerTest extends WebTestCase
             . "    prefix: sharedPrefix\n";
         vfsStream::setup('virtual', null, array('routing.yml' => $pluginRoutingEntry));
         $this->checker->setPluginRoutingFilePath(vfsStream::url('virtual/routing.yml'));
-       
+
         $locator = $this->getMockBuilder('\Symfony\Component\HttpKernel\Config\FileLocator')
                 ->disableOriginalConstructor()
                 ->getMock();
-        
+
         $locator->expects($this->once())
                 ->method('locate')
                 ->with($this->equalTo("@FakePluginBundle/Resources/config/routing.yml"))
                 ->will($this->returnValue("Fake/PluginBundle/Resources/Resources/config/routing.yml"));
         $this->checker->setFileLocator($locator);
-        
+
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ALREADY_REGISTERED_PREFIX);
     }
-    
+
     /**
      * @dataProvider nonExistentRoutingResourceTypeProvider
      */
@@ -110,7 +110,7 @@ class CommonCheckerTest extends WebTestCase
     {
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_YAML_RESOURCE);
     }
-    
+
     /**
      * @dataProvider unexpectedTranslationKeyProvider
      */
@@ -125,35 +125,36 @@ class CommonCheckerTest extends WebTestCase
         $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_KEY);
     }
-    
+
     public function testCheckThrowsAnExceptionOnInvalidResourceValue()
     {
+        $this->markTestSkipped("CommonChecker changed; it doesn't require a service and a controller anymore");
         $pluginFQCN = 'Invalid\UnexpectedResourceValue\InvalidUnexpectedResourceValue';
         $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_VALUE);
     }
-    
+
     public function testCheckThrowsAnExceptionOnInvalidResourceLocation()
     {
         $pluginFQCN = 'Invalid\UnloadableResourceClass\InvalidUnloadableResourceClass';
         $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_LOCATION);
     }
-    
+
     public function testCheckThrowsAnExceptionOnInvalidResourceType()
     {
         $pluginFQCN = 'Invalid\UnexpectedResourceType\InvalidUnexpectedResourceType';
         $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_TYPE);
     }
-      
+
     /**
      * @dataProvider validPluginProvider
      */
     public function testCheckDoesntThrowAnyExceptionOnValidPluginArgument($pluginFQCN)
     {
         $plugin = $this->loader->load($pluginFQCN);
-        
+
         try
         {
             $this->checker->check($plugin);
@@ -164,7 +165,7 @@ class CommonCheckerTest extends WebTestCase
             $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
         }
     }
-    
+
     public function invalidFQCNProvider()
     {
         return array(
@@ -172,21 +173,21 @@ class CommonCheckerTest extends WebTestCase
             array('Invalid\NonConventionalFQCN2\UnexpectedBundleClassName')
         );
     }
-    
+
     public function invalidPluginTypeProvider()
     {
         return array(
             array('Invalid\ClarolinePluginDirectInheritance\InvalidClarolinePluginDirectInheritance')
         );
     }
-    
+
     public function invalidPluginLocationProvider()
     {
         return array(
             array('Invalid\UnexpectedPluginLocation\InvalidUnexpectedPluginLocation')
         );
     }
-    
+
     public function invalidRoutingPrefixProvider()
     {
         return array(
@@ -195,14 +196,14 @@ class CommonCheckerTest extends WebTestCase
             array('Invalid\UnexpectedRoutingPrefix3\InvalidUnexpectedRoutingPrefix3')
         );
     }
-    
+
     public function invalidAlreadyRegisteredPrefixProvider()
     {
         return array(
             array('Incompatible\AlreadyRegisteredRoutingPrefix\IncompatibleAlreadyRegisteredRoutingPrefix')
         );
     }
-    
+
     public function nonExistentRoutingResourceTypeProvider()
     {
         return array(
@@ -231,7 +232,7 @@ class CommonCheckerTest extends WebTestCase
             array('Invalid\UnloadableRoutingResource1\InvalidUnloadableRoutingResource1')
         );
     }
-    
+
     public function unexpectedTranslationKeyProvider()
     {
         return array(
@@ -251,7 +252,7 @@ class CommonCheckerTest extends WebTestCase
             array('Valid\WithCustomResources\ValidWithCustomResources')
         );
     }
-    
+
     private function overrideDefaultPluginDirectories($stubDir, Loader $loader, CommonChecker $checker)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -259,15 +260,15 @@ class CommonCheckerTest extends WebTestCase
             'extension' => "{$stubDir}{$ds}extension",
             'tool' => "{$stubDir}{$ds}tool"
         );
-        
+
         $loader->setPluginDirectories($pluginDirs);
         $checker->setPluginDirectories($pluginDirs);
     }
-    
+
     private function assertInstallationExceptionIsThrown($pluginFQCN, $exceptionCode)
     {
         $plugin = $this->loader->load($pluginFQCN);
-        
+
         try
         {
             $this->checker->check($plugin);
