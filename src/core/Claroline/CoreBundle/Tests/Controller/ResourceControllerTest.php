@@ -21,7 +21,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $ds = DIRECTORY_SEPARATOR;
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
     }
-/*
+
     public function testUserCanCreateFileResource()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -56,17 +56,16 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
-*/
+
     public function testCreatorCanAccessResourceOpenAction()
     {
        $this->logUser($this->getFixtureReference('user/user'));
        $id = $this->addRootFile($this->filePath);
        $workspace = $this->findResourceWorkspace($id);
        $this->client->request('GET', "/resource/open/{$workspace->getId()}/{$id}");
-       var_dump($this->client->getResponse()->getContent());
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-/*
+
     public function testResourceDeleteActionIsProtected()
     {
        $this->logUser($this->getFixtureReference('user/user'));
@@ -179,7 +178,7 @@ class ResourceControllerTest extends FunctionalTestCase
        $this->client->click($link);
        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-*/
+
     private function initWorkspacesTestsByRef()
     {
        $rootId = $this->createResourcesTree();
@@ -276,5 +275,4 @@ class ResourceControllerTest extends FunctionalTestCase
 
          return $workspace;
      }
-
 }

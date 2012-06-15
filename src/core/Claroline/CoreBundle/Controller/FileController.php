@@ -236,7 +236,7 @@ class FileController extends Controller
      */
     private function findPlayerService($mimeType)
     {
-        $services = $this->container->getParameter("player.service.list");
+        $services = $this->container->getParameter("claroline.resource_players");
         $names = array_keys($services);
         $serviceName = null;
 

@@ -203,7 +203,7 @@ class DirectoryController extends Controller
      */
     private function findResService($resourceType)
     {
-        $services = $this->container->getParameter("resource.service.list");
+        $services = $this->container->getParameter('claroline.resource_controllers');
         $names = array_keys($services);
         $serviceName = null;
 
