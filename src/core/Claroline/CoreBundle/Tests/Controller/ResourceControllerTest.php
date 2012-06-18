@@ -87,7 +87,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspacesTestsByRef();
+        $rootId = $this->initWorkspacesTestsByRef();
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
     }
@@ -187,8 +187,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $id = $crawler->filter(".row_workspace")->first()->attr('data-workspace_id');
         $link = $crawler->filter("#link_show_{$id}")->link();
         $this->client->click($link);
-        //add root to workspace
         $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/ref");
+
         return $rootId;
     }
 
@@ -200,8 +200,9 @@ class ResourceControllerTest extends FunctionalTestCase
         $id = $crawler->filter(".row_workspace")->first()->attr('data-workspace_id');
         $link = $crawler->filter("#link_show_{$id}")->link();
         $this->client->click($link);
-        //add root to workspace
         $this->client->request('GET', "/resource/workspace/add/{$rootId}/{$this->getFixtureReference('workspace/ws_a')->getId()}/copy");
+
+        return $rootId;
     }
 
     private function addRootFile($filePath)
@@ -226,19 +227,27 @@ class ResourceControllerTest extends FunctionalTestCase
         $fileTypeId = $this->getFixtureReference('resource_type/directory')->getId();
         $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('directory_form[name]' => $name));
+        $form['directory_form[name]'] = $name;
+        $form['directory_form[shareType][1]']->tick();
+        $crawler = $this->client->submit($form);
         $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
 
         return $id;
     }
 
-    private function addFileInCurrentDirectory($filePath, $crawler)
+    private function addFileInCurrentDirectory($filePath, $crawler, $isSharable)
     {
         $form = $crawler->filter('input[type=submit]')->form();
         $fileTypeId = $this->getFixtureReference('resource_type/file')->getId();
         $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
+        $form['file_form[name]'] = $filePath;
+
+        if ($isSharable) {
+            $form['file_form[shareType][1]']->tick();
+        }
+
+        $crawler = $this->client->submit($form);
         $crawler->filter(".row_resource")->last()->attr('data-resource_id');
     }
 
@@ -248,7 +257,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/resource/directory/null');
         $link = $crawler->filter("#link_resource_{$id}")->link();
         $crawler = $this->client->click($link);
-        $this->addFileInCurrentDirectory($this->filePath, $crawler);
+        $this->addFileInCurrentDirectory($this->filePath, $crawler, true);
+        $this->addFileInCurrentDirectory($this->filePath, $crawler, false);
 
         return $id;
     }

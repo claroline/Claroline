@@ -369,34 +369,43 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function addToWorkspaceAction($resourceId, $workspaceId, $options)
+    public function addToWorkspaceAction($instanceId, $workspaceId, $options)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResource();
 
         if ($options == 'ref') {
-            if ($resourceId == 0) {
+            if ($instanceId == 0) {
                 $userWorkspace = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace();
                 $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($userWorkspace);
 
                 foreach ($resourcesInstance as $resourceInstance) {
-                    $this->copyFirstReferenceInstance($workspace, $resourceInstance->getId());
+                    if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+                        $this->copyFirstReferenceInstance($workspace, $resourceInstance->getId());
+                    }
                 }
             } else {
-                $this->copyFirstReferenceInstance($workspace, $resourceId);
+                if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+                    $this->copyFirstReferenceInstance($workspace, $instanceId);
+                }
             }
 
             $em->flush();
         } else {
-            if ($resourceId == 0) {
+            if ($instanceId == 0) {
                 $userWorkspace = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace();
                 $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($userWorkspace);
 
                 foreach ($resourcesInstance as $resourceInstance) {
-                    $this->copyFirstCopyInstance($workspace, $resourceInstance->getId());
+                    if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+                        $this->copyFirstCopyInstance($workspace, $resourceInstance->getId());
+                    }
                 }
             } else {
-                $this->copyFirstCopyInstance($workspace, $resourceId);
+                if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+                    $this->copyFirstCopyInstance($workspace, $instanceId);
+                }
             }
 
             return new Response('copied');
@@ -431,10 +440,12 @@ class ResourceController extends Controller
 
         if ($resourceInstance->getResourceType()->getType() === 'directory') {
             $this->get($name)->delete($resourceInstance);
-        } else if (0 === $resourceInstance->getResource()->getInstanceCount()) {
-            $em->remove($resourceInstance);
+        } else {
             $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
-            $this->get($name)->delete($resourceInstance->getResource());
+            if (0 === $resourceInstance->getResource()->getInstanceCount()) {
+                $em->remove($resourceInstance);
+                $this->get($name)->delete($resourceInstance->getResource());
+            }
         }
 
         $em->flush();

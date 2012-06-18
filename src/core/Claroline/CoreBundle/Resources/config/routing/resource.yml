@@ -37,7 +37,7 @@ claro_resource_move:
       expose: true
 
 claro_resource_add_workspace:
-   pattern: workspace/add/{resourceId}/{workspaceId}/{options}
+   pattern: workspace/add/{instanceId}/{workspaceId}/{options}
    defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
    options:
       expose: true

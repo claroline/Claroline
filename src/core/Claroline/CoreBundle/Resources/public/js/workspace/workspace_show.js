@@ -15,11 +15,11 @@ $(function(){
     });
 });
 
-function addResource(resourceId, workspaceId, option)
+function addResource(instanceId, workspaceId, option)
 {
 $.ajax({
     type: 'POST',
-    url: Routing.generate('claro_resource_add_workspace', {'resourceId':resourceId,'workspaceId':workspaceId, 'options':option}),
+    url: Routing.generate('claro_resource_add_workspace', {'instanceId':instanceId,'workspaceId':workspaceId, 'options':option}),
     cache: false,
     success: function(data){
             $('#div_resource').append("append something");
