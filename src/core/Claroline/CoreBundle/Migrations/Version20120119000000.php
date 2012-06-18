@@ -216,7 +216,6 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('name', 'string', array('notnull' => false));
-        $table->addColumn('count_instance', 'integer', array('notnull' => false));
         $table->addColumn('license_id', 'integer', array('notnull' => false));
         $table->addColumn('share_type', 'integer', array('notnull' => false));
         $table->addColumn('created', 'datetime');

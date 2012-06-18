@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\MimeType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
@@ -427,12 +428,12 @@ class ResourceController extends Controller
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
         $resourceType = $resourceInstance->getResourceType();
         $name = $this->findResService($resourceType);
-        $em->remove($resourceInstance);
-        $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
 
         if ($resourceInstance->getResourceType()->getType() === 'directory') {
             $this->get($name)->delete($resourceInstance);
         } else if (0 === $resourceInstance->getResource()->getInstanceCount()) {
+            $em->remove($resourceInstance);
+            $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
             $this->get($name)->delete($resourceInstance->getResource());
         }
 
@@ -583,12 +584,14 @@ class ResourceController extends Controller
         $roleCollaborator = $workspace->getCollaboratorRole();
 
         foreach ($children as $child) {
-            $copy = $this->copyByReferenceResourceInstance($child);
-            $copy->setParent($parentCopy);
-            $copy->setWorkspace($workspace);
-            $em->persist($copy);
-            $this->setChildrenByReferenceCopy($child, $workspace, $copy);
-            $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            if ($child->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+                $copy = $this->copyByReferenceResourceInstance($child);
+                $copy->setParent($parentCopy);
+                $copy->setWorkspace($workspace);
+                $em->persist($copy);
+                $this->setChildrenByReferenceCopy($child, $workspace, $copy);
+                $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            }
         }
 
         $em->flush();
@@ -609,13 +612,15 @@ class ResourceController extends Controller
         $roleCollaborator = $workspace->getCollaboratorRole();
 
         foreach ($children as $child) {
-            $copy = $this->copyByCopyResourceInstance($child);
-            $copy->setParent($parentCopy);
-            $copy->setWorkspace($workspace);
-            $em->persist($copy);
-            $em->flush();
-            $this->setChildrenByReferenceCopy($child, $workspace, $copy);
-            $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            if ($child->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+                $copy = $this->copyByCopyResourceInstance($child);
+                $copy->setParent($parentCopy);
+                $copy->setWorkspace($workspace);
+                $em->persist($copy);
+                $em->flush();
+                $this->setChildrenByReferenceCopy($child, $workspace, $copy);
+                $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
+            }
         }
     }
 
