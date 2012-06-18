@@ -298,8 +298,6 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_file');
         $this->addId($table);
-        $table->addColumn('name', 'string', array('length' => 255));
-        $table->addColumn('date_upload', 'datetime');
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
         $table->addColumn('mime_id', 'integer', array('notnull' => true));

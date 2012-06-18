@@ -13,7 +13,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
 
-
 /**
  * DirectoryManager will redirect to this controller once a directory is "open".
  */
@@ -50,7 +49,7 @@ class DirectoryController extends Controller
     }
 
     /**
-     * Create a directory. Right/user/parent are set by the resource controller
+     * Creates a directory. Right/user/parent are set by the resource controller
      * but you can use them here aswell.
      *
      * @param Form    $form
@@ -73,7 +72,7 @@ class DirectoryController extends Controller
 
     //todo: refactor this. See below.
     /**
-     * Copy a directory.
+     * Copies a directory.
      * /!\ not totally done yet. Copy a directory by ref or by copy isn't the same and
      * children must be copied aswell.
      *
@@ -98,7 +97,7 @@ class DirectoryController extends Controller
     }
 
     /**
-     * Remove a directory and its children. If the instance number of an instance is 0,
+     * Removes a directory and its children. If the instance number of an instance is 0,
      * the resource will be removed aswell.
      *
      * @param resourceInstance $resourceInstance
@@ -106,39 +105,34 @@ class DirectoryController extends Controller
     public function delete(ResourceInstance $resourceInstance)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true); {
-            foreach ($children as $child) {
-                if ($child->getResourceType()->getType() != 'directory') {
-                    $rsrc = $child->getResource();
-                    $em->remove($child);
-                    $rsrc->decrInstance();
+        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
 
-                    if ($rsrc->getInstanceAmount() == 0) {
-                        $type = $child->getResourceType();
-                        $srv = $this->findResService($type);
-                        $this->get($srv)->delete($child->getResource());
-                    }
+        foreach ($children as $child) {
+            $rsrc = $child->getResource();
+            $rsrc->removeResourceInstance($child);
+            $em->remove($child);
+
+            if ($rsrc->getInstanceCount() === 0) {
+                $type = $child->getResourceType();
+
+                if ($child->getResourceType()->getType() === 'directory') {
+                    $em->remove($rsrc);
                 } else {
-                    $rsrc = $child->getResource();
-                    $em->remove($child);
-                    $rsrc->decrInstance();
-
-                    if ($rsrc->getInstanceAmount() == 0) {
-                        $type = $child->getResourceType();
-                        $em->remove($rsrc);
-                    }
+                    $srv = $this->findResService($type);
+                    $this->get($srv)->delete($rscr);
                 }
             }
         }
 
         $rsrc = $resourceInstance->getResource();
+        $rsrc->removeResourceInstance($resourceInstance);
         $em->remove($resourceInstance);
-        $rsrc->decrInstance();
 
-        if ($rsrc->getInstanceAmount() == 0) {
+        if ($rsrc->getInstanceCount() === 0) {
             $type = $resourceInstance->getResourceType();
             $em->remove($rsrc);
         }
+
         $em->flush();
     }
 
@@ -216,5 +210,4 @@ class DirectoryController extends Controller
 
         return $serviceName;
     }
-
 }

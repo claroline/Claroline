@@ -3,19 +3,19 @@
 {% for root in resources %}
 {% set cptchild = 0 %}
 {
-    "title": "{{root.getName()}}",
-    "key": {{root.getId()}},
-    "copy": "{{root.getCopy()}}",
-    "instanceAmount": {{root.getResource().getInstanceAmount()}}
+    "title": "{{ root.getName() }}",
+    "key": {{ root.getId() }},
+    "copy": "{{ root.getCopy() }}",
+    "instanceCount": {{ root.getResource().getInstanceCount() }}
     {% if root.getResourceType.getNavigable() == 1 %}
         ,"isFolder": true
-        ,"children": [ 
+        ,"children": [
         {% for child in root.getChildren() %}
             {
-                "title": "{{child.getName()}}",
-                "key": {{child.getId()}},
-                "copy": "{{child.getCopy()}}",
-                "instanceAmount": {{child.getResource().getInstanceAmount()}}
+                "title": "{{ child.getName() }}",
+                "key": {{ child.getId() }},
+                "copy": "{{ child.getCopy() }}",
+                "instanceCount": {{ child.getResource().getInstanceCount() }}
                 {% if child.getResourceType.getNavigable() == 1 %}
                 ,"isFolder": true
                 ,"isLazy": true

@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\Resource\MimeType;
 
 /**
@@ -14,68 +13,47 @@ use Claroline\CoreBundle\Entity\Resource\MimeType;
 class File extends AbstractResource
 {
     /**
-     * @Assert\File(maxSize="6000000")
-     */
-    private $file;
-
-    /**
-     * @ORM\Column(type="datetime", name="date_upload")
-     * @Gedmo\Timestampable(on="update")
-     */
-    private $dateUpload;
-
-    /**
      * @ORM\Column(type="integer", nullable=false)
      */
     private $size;
-    
+
     /**
-     * @ORM\Column(type="string", length=36, name="hash_name") 
+     * @ORM\Column(type="string", length=36, name="hash_name")
      */
     private $hashName;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\MimeType", inversedBy="files", cascade={"persist"})
      * @ORM\JoinColumn(name="mime_id", referencedColumnName="id")
      */
     protected $mimeType;
 
+    /**
+     * Returns the file size.
+     *
+     * @return integer
+     */
     public function getSize()
     {
         return $this->size;
     }
 
+    /**
+     * Sets the file size.
+     *
+     * @param integer $size
+     */
     public function setSize($size)
     {
         $this->size = $size;
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    public function setFile($file)
-    {
-        $this->file = $file;
-    }
-
-    public function setDateUpload($dateUpload)
-    {
-        $this->dateUpload = $dateUpload;
-    }
-
-    public function getDateUpload()
-    {
-        return $this->dateUpload;
-    }
-
-    public function getFormatSize()
+    /**
+     * Returns the file size with unit and in a readable format.
+     *
+     * @return string
+     */
+    public function getFormattedSize()
     {
         if ($this->size < 1024)
         {
@@ -98,24 +76,48 @@ class File extends AbstractResource
             return round($this->size / 1099511627776, 2) . ' TB';
         }
     }
-    
+
+    /**
+     * Returns the name of the file actually stored in the file directory (as
+     * opposed to the file original name, which is kept in the entity name
+     * attribute).
+     *
+     * @return string
+     */
     public function getHashName()
     {
         return $this->hashName;
     }
-    
+
+    /**
+     * Sets the name of the physical file that will be stored in the file directory.
+     * To prevent file name issues (e.g. with special characters), the original
+     * file should be renamed with a standard unique identifier.
+     *
+     * @param string $hashName
+     */
     public function setHashName($hashName)
     {
         $this->hashName = $hashName;
     }
-    
+
+    /**
+     * Returns the file mime type.
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\MimeType
+     */
     public function getMimeType()
     {
         return $this->mimeType;
     }
-    
+
+    /**
+     * Sets the file mime type.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\MimeType $mimeType
+     */
     public function setMimeType(MimeType $mimeType)
     {
         $this->mimeType= $mimeType;
-    }    
+    }
 }

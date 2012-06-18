@@ -88,11 +88,11 @@ class ForumController extends Controller
         $message->setResourceType($messageType);
         $subject->setResourceType($subjectType);
         $subject->setTitle($title);
-        $subject->setUser($user);
+        $subject->setCreator($user);
         $message->setContent($content);
         $subject->setForum($forum);
         $message->setSubject($subject);
-        $message->setUser($user);
+        $message->setCreator($user);
         $em->persist($message);
         $em->persist($subject);
 
