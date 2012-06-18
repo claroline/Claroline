@@ -191,4 +191,25 @@ abstract class AbstractResource
     {
         return $this->mimeType;
     }
+
+    /**
+     * required for the sf2 form component
+     *
+     * @return boolean
+     */
+    public function getIsSharable()
+    {
+        return $this->isSharable;
+    }
+
+    /**
+     * required for the sf2 form component
+     *
+     * @param boolean $isSharable
+     */
+    public function setIsSharable($isSharable)
+    {
+        $this->isSharable = $isSharable;
+    }
+
 }

@@ -126,6 +126,18 @@ class ResourceController extends Controller
             $resource = $this->get($name)->add($form, $instanceParentId, $user);
 
             if (null !== $resource) {
+
+                if ($form->hasAttribute('isSharable')) {
+                    $sharable = $form['isSharable']->getData();
+                    if (count($sharable == 1)) {
+                        $resource->setSharable(true);
+                    } else {
+                        $resource->setSharable(false);
+                    }
+                } else {
+                    $resource->setSharable(false);
+                }
+
                 $ri = new ResourceInstance();
                 $ri->setUser($user);
                 $dir = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceParentId);
@@ -138,8 +150,6 @@ class ResourceController extends Controller
                 $ri->setWorkspace($workspace);
                 $ri->setResource($resource);
                 $resource->incrInstance();
-                //set sharable to sthg
-                $resource->setSharable(false);
                 $resource->setUser($user);
                 $em->persist($ri);
                 $em->flush();

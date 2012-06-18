@@ -17,7 +17,7 @@
            // leftClickMenu: true,
             getForm: function(){
                 var formHTML =
-                    "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"ahah"+"'/><br>"
+                    "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"name"+"'/><br>"
                     formHTML += "<input type='radio' name='options' value='copy'>copy<br>"
                     formHTML += "<input type='radio' name='options' value='ref' checked>ref<br>"
                     formHTML +="<input type='submit' id='cfp_form_submit'></form>";
@@ -387,8 +387,6 @@
                 $('#cfp_dialog').empty();
                 $('#cfp_dialog').append(data);
                 $('#cfp_dialog').show();
-                //$("#cfp_dialog").modal('show');
-                //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
                     sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':idClickedWorkspace}, document.getElementById("generic_form"));
@@ -418,7 +416,6 @@
                     isFolder:true
                 });
             }
-            //$('#cfp_dialog').dialog("close");
             $('#cfp_dialog').empty();
         }
         catch(err)
