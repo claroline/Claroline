@@ -7,15 +7,22 @@ use Symfony\Component\Form\FormBuilder;
 
 class FileType extends AbstractType
 {
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'file');
         $builder->add('license', 'entity', array('class' => 'ClarolineCoreBundle:License', 'property' => 'name'));
-        
+        $builder->add('isSharable', 'choice', array(
+            'choices' => array(true => ' '),
+            'multiple' => true,
+            'expanded' => true,
+            'label' => 'sharable'
+        ));
     }
 
     public function getName()
     {
         return 'file_form';
     }
+
 }

@@ -1,12 +1,5 @@
-
-//var route = Routing.generate('claro_resource_node',{'instanceId':0, 'format':'json'});
-
 //todo: l'event close de la boite de dialogue
-
-//variable globales = pas bon
-
 $(function(){
-
     resourceTypeArray = new Array();
     subItems = {};
     idUserRepository = "";
