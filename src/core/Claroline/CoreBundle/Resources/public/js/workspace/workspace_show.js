@@ -22,7 +22,6 @@ $.ajax({
     url: Routing.generate('claro_resource_add_workspace', {'resourceId':resourceId,'workspaceId':workspaceId, 'options':option}),
     cache: false,
     success: function(data){
-            alert(data);
             $('#div_resource').append("append something");
         },
     error: function(xhr){

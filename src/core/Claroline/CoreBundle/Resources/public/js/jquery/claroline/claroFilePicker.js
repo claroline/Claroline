@@ -77,7 +77,14 @@
                 },
                 onDblClick: function(node){
                     $('#cfp_dialog').hide();
-                    params.dblClickItem(node);
+                    if(node.data.shareType == 1)
+                    {
+                        params.dblClickItem(node);
+                    }
+                    else
+                    {
+                        alert("you can't share this resource");
+                    }
                 },
                 onCustomRender: function(node){
                     var copy = node.data.copy;
@@ -85,12 +92,12 @@
                     console.debug(node);
                     if(copy == 1)
                     {
-                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" </a>";
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" share "+node.data.shareType+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
                     else
                     {
-                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" </a>";
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" share "+node.data.shareType+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
                     return html;
@@ -399,6 +406,7 @@
     {
         console.debug(data);
         try{
+            alert("TRY");
             var JSONObject = JSON.parse(data);
             var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.id);
             if(JSONObject.type != 'directory')
@@ -420,6 +428,7 @@
         }
         catch(err)
         {
+            alert("error");
             $('#cfp_dialog').empty();
             $('#cfp_dialog').append(data);
             $("#generic_form").submit(function(e){
@@ -473,9 +482,7 @@
                     html +="</a></br>";
                     cpt++;
                 }
-
-                $('#cfp_data').append(html);
-
+                    $('#cfp_data').append(html);
                 },
                 error: function(xhr){
                     alert(xhr.status);
@@ -484,7 +491,7 @@
     }
 
     function successHandler(){
-        alert("success");
+        alert("successHANDLER");
     }
 
 })(jQuery);

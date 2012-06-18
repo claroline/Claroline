@@ -7,7 +7,7 @@
     "key": {{root.getId()}},
     "copy": "{{root.getCopy()}}",
     "instanceAmount": "{{root.getResource().getInstanceAmount()}}",
-    "getShareType": "{{root.getResource().getShareType()}}"
+    "shareType": "{{root.getResource().getShareType()}}"
     {% if root.getResourceType.getNavigable() == 1 %}
         ,"isFolder": true
         ,"children": [
@@ -17,7 +17,7 @@
                 "key": {{child.getId()}},
                 "copy": "{{child.getCopy()}}",
                 "instanceAmount": {{child.getResource().getInstanceAmount()}},
-                "getShareType": "{{child.getResource().getShareType()}}"
+                "shareType": "{{child.getResource().getShareType()}}"
                 {% if child.getResourceType.getNavigable() == 1 %}
                 ,"isFolder": true
                 ,"isLazy": true
