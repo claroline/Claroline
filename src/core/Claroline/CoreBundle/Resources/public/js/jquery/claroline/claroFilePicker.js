@@ -26,16 +26,16 @@
             onSubmit: function(form){
                 $('#cfp_form').hide();
                 $('#cfp_tree').show();
-                this.submitHandler(form, document.getElementById('resource_name_value').getAttribute('data-id'));
+                this.submitHandler(form, document.getElementById('resource_name_value').getAttribute('data-instanceId'));
             },
             dblClickItem: function(node){
                 $('#cfp_tree').hide();
                 $('#cfp_form').show();
                 document.getElementById('resource_name_value').value=node.data.title;
-                document.getElementById('resource_name_value').setAttribute('data-id', node.data.key);
+                document.getElementById('resource_name_value').setAttribute('data-instanceId', node.data.key);
                 document.getElementById('resource_name_value').setAttribute('readonly', 'readonly');
             },
-            submitHandler: function(form, resourceId){
+            submitHandler: function(form, instanceId){
                 alert("DEFAULT SUBMIT HANDLER! IT MUST BE CHANGED");
             }
         }, options);
@@ -92,12 +92,12 @@
                     console.debug(node);
                     if(copy == 1)
                     {
-                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" share "+node.data.shareType+" </a>";
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceCount+" share "+node.data.shareType+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
                     else
                     {
-                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceAmount+" share "+node.data.shareType+" </a>";
+                        html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceCount+" share "+node.data.shareType+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
                     return html;
