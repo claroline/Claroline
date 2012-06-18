@@ -15,12 +15,22 @@ class Link extends AbstractResource
      * @ORM\Column(type="string")
      */
     private $url;
-      
+
+    /**
+     * Returns the link url.
+     *
+     * @return string
+     */
     public function getUrl()
     {
         return $this->url;
     }
-    
+
+    /**
+     * Set the link url.
+     *
+     * @param string $url
+     */
     public function setUrl($url)
     {
         $this->url = $url;

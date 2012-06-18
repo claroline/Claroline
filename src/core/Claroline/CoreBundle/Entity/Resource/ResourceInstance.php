@@ -121,12 +121,13 @@ class ResourceInstance
         return $this->updated;
     }
 
-    public function getUser()
+
+    public function getCreator()
     {
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setCreator(User $user)
     {
        $this->user=$user;
     }

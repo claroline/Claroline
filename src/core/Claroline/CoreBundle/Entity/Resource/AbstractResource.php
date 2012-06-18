@@ -8,13 +8,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\License;
 
 /**
+ * Base entity for all resources.
+ *
  * @ORM\Entity
  * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"file" = "File", "directory" = "Directory", "link" = "Link", "text" = "Text"} )
+ * @ORM\DiscriminatorMap({
+ *     "file" = "File",
+ *     "directory" = "Directory",
+ *     "link" = "Link",
+ *     "text" = "Text"
+ * })
  */
 abstract class AbstractResource
 {
@@ -23,58 +31,58 @@ abstract class AbstractResource
      * @ORM\Column(type="integer")
      * @ORM\generatedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, name="name")
      * @Assert\NotBlank()
      */
-    protected $name;
+    private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource", cascade={"persist", "remove"})
      */
-    protected $resourceInstances;
+    private $resourceInstances;
 
     /**
      * @ORM\Column(type="integer", name="count_instance")
      */
-    protected $instanceAmount;
+    private $instanceCount;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
-    protected $license;
+    private $license;
 
     /**
      * @ORM\Column(type="integer", name="share_type")
      */
-    protected $shareType;
+    private $shareType;
+    
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $created;
 
     /**
-    * @ORM\Column(type="datetime")
-    * @Gedmo\Timestampable(on="create")
-    */
-    protected $created;
-
-   /**
-    * @ORM\Column(type="datetime")
-    * @Gedmo\Timestampable(on="update")
-    */
-    protected $updated;
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updated;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="abstractResource", cascade={"persist"})
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
-    protected $resourceType;
+    private $resourceType;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\user", inversedBy="abstractResource", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    protected $user;
+    private $creator;
 
     /**
      * @ORM\Column(type="string", length=255, name="mime_type")
@@ -84,114 +92,194 @@ abstract class AbstractResource
     const PRIVATE_RESOURCE = 0;
     const PUBLIC_RESOURCE = 1;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->resourceInstances = new ArrayCollection();
-        $this->instanceAmount = 0;
+        $this->instanceCount = 0;
     }
 
-    public function setId($id)
-    {
-        $this->id=$id;
-    }
-
+    /**
+     * Returns the resource id.
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Sets the resource name.
+     *
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Returns the resource name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Adds a resource instance and increments the instances count.
+     *
+     * @param ResourceInstance $resourceInstance
+     */
     public function addResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourceInstances->add($resourceInstance);
+        $this->instanceCount++;
     }
 
+    /**
+     * Removes a resource instance and decrements the instances count.
+     *
+     * @param ResourceInstance $resourceInstance
+     */
     public function removeResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourceInstances->removeElement($resourceInstance);
+        $this->instanceCount--;
     }
 
-    public function incrInstance()
+    /**
+     * Returns the number of instances of the resource.
+     *
+     * @return integer
+     */
+    public function getInstanceCount()
     {
-        $this->instanceAmount++;
+        return $this->instanceCount;
     }
 
-    public function decrInstance()
-    {
-        $this->instanceAmount--;
-    }
-
-    public function getInstanceAmount()
-    {
-        return $this->instanceAmount;
-    }
-
+    /**
+     * Returns the resource license.
+     *
+     * @return \Claroline\CoreBundle\Entity\License
+     */
     public function getLicense()
     {
         return $this->license;
     }
 
-    public function setLicense($license)
+    /**
+     * Sets the resource license.
+     *
+     * @param \Claroline\CoreBundle\Entity\License
+     */
+    public function setLicense(License $license)
     {
         $this->license = $license;
     }
 
+    /**
+     * Gets the share type
+     *
+     * @return integer
+     */
+    public function getShareType()
+    {
+        return $this->shareType;
+    }
+
+    /**
+     * Sets the share type
+     *
+     * @param integer $shareType
+     */
     public function setShareType($shareType)
     {
         $this->shareType=$shareType;
     }
 
+    /**
+     * Returns the resource creation date.
+     *
+     * @return \DateTime
+     */
     public function getCreationDate()
     {
         return $this->created;
     }
 
+    /**
+     * Returns the resource modification date.
+     *
+     * @return \DateTime
+     */
     public function getModificationDate()
     {
         return $this->updated;
     }
 
+    /**
+     * Returns the resource type.
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
+     */
     public function getResourceType()
     {
         return $this->resourceType;
     }
 
+    /**
+     * Sets the resource type.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType
+     */
     public function setResourceType($resourceType)
     {
         $this->resourceType = $resourceType;
     }
 
-    public function getUser()
+    /**
+     * Returns the resource creator.
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getCreator()
     {
-        return $this->user;
+        return $this->creator;
     }
 
-    public function setUser($user)
+    /**
+     * Sets the resource creator.
+     *
+     * @param \Claroline\CoreBundle\Entity\User
+     */
+    public function setCreator(User $creator)
     {
-        $this->user = $user;
+        $this->creator = $creator;
     }
 
+    /**
+     * Sets the resource mime type.
+     *
+     * @param string $mimeType
+     */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
     }
 
+    /**
+     * Returns the resource mime type.
+     *
+     * @return string
+     */
     public function getMimeType()
     {
         return $this->mimeType;
-    }
-
-    public function getShareType()
-    {
-        return $this->shareType;
     }
 }
