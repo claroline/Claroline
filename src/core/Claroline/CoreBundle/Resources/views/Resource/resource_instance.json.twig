@@ -2,13 +2,13 @@
     {% set cpt = 0 %}
     {% for resourceInstance in resourcesInstance %}
     {
-        "id": {{resourceInstance.getId()}},
-        "name": "{{resourceInstance.getResource().getName()}}",
-        "type": "{{resourceInstance.getResourceType().getType()}}",
-        "instanceAmount": {{resourceInstance.getInstaneAmount()}}",
-        "workspaceId": {{resourceInstance.getWorkspace().getId()}},
-        "workspaceName": "{{resourceInstance.getWorkspace().getName()}}",
-        "workspaceType": "{{resourceInstance.getWorkspace().getType()}}"
+        "id": {{ resourceInstance.getId() }},
+        "name": "{{ resourceInstance.getResource().getName() }}",
+        "type": "{{ resourceInstance.getResourceType().getType() }}",
+        "instanceCount": {{ resourceInstance.getInstaneAmount() }}",
+        "workspaceId": {{ resourceInstance.getWorkspace().getId() }},
+        "workspaceName": "{{ resourceInstance.getWorkspace().getName() }}",
+        "workspaceType": "{{ resourceInstance.getWorkspace().getType() }}"
     }
     {% set cpt = cpt+1 %}
     {% if cpt< resourcesInstance|length %},{% endif %}

@@ -20,10 +20,14 @@ class FileController extends Controller
      */
     public function delete(AbstractResource $file)
     {
-        $this->removeFile($file);
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($file);
         $em->flush();
+        $pathName = $this->container->getParameter('claroline.files.directory')
+            . DIRECTORY_SEPARATOR
+            . $file->getHashName();
+        chmod($pathName, 0777);
+        unlink($pathName);
     }
 
     /**
@@ -181,7 +185,9 @@ class FileController extends Controller
     }
 
     /**
-     * found on http://php.net/manual/fr/function.com-create-guid.php
+     * Generated an unique identifier.
+     *
+     * @see http://php.net/manual/fr/function.com-create-guid.php
      *
      * @return string;
      */
@@ -213,18 +219,6 @@ class FileController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response;
-    }
-
-    /**
-     * removes a file physically
-     *
-     * @param File $file
-     */
-    private function removeFile(File $file)
-    {
-        $pathName = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
-        chmod($pathName, 0777);
-        unlink($pathName);
     }
 
     /**
