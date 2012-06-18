@@ -13,7 +13,7 @@ class LinkType extends AbstractType
         $builder->add('url', 'text');
         $builder->add('name', 'text');
         $builder->add('resourceType', 'entity', array('class' => 'ClarolineCoreBundle:Resource\ResourceType', 'property' => 'type'));
-        $builder->add('isSharable', 'choice', array(
+        $builder->add('shareType', 'choice', array(
             'choices' => array(true => ' '),
             'multiple' => true,
             'expanded' => true,

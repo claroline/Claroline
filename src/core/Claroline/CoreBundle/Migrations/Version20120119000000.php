@@ -218,7 +218,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('notnull' => false));
         $table->addColumn('count_instance', 'integer', array('notnull' => false));
         $table->addColumn('license_id', 'integer', array('notnull' => false));
-        $table->addColumn('is_sharable', 'boolean', array('notnull' => false));
+        $table->addColumn('share_type', 'integer', array('notnull' => false));
         $table->addColumn('created', 'datetime');
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));

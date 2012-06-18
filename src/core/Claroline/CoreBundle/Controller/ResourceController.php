@@ -127,16 +127,16 @@ class ResourceController extends Controller
 
             if (null !== $resource) {
 
-                if ($form->offsetExists('isSharable')) {
-                    $sharable = $form['isSharable']->getData();
+                if ($form->offsetExists('shareType')) {
+                    $sharable = $form['shareType']->getData();
 
                     if (count($sharable) == 1) {
-                        $resource->setSharable(true);
+                        $resource->setShareType(true);
                     } else {
-                        $resource->setSharable(false);
+                        $resource->setShareType(false);
                     }
                 } else {
-                    $resource->setSharable(false);
+                    $resource->setShareType(false);
                 }
 
                 $ri = new ResourceInstance();
@@ -314,7 +314,7 @@ class ResourceController extends Controller
             $root = new ResourceInstance();
             $rootDir = new Directory();
             $rootDir->setName('root');
-            $rootDir->setSharable(0);
+            $rootDir->setShareType(0);
             $root->setResource($rootDir);
             $root->setId(0);
             $root->setCopy(0);
