@@ -127,9 +127,10 @@ class ResourceController extends Controller
 
             if (null !== $resource) {
 
-                if ($form->hasAttribute('isSharable')) {
+                if ($form->offsetExists('isSharable')) {
                     $sharable = $form['isSharable']->getData();
-                    if (count($sharable == 1)) {
+                    var_dump(count($sharable));
+                    if (count($sharable) == 1) {
                         $resource->setSharable(true);
                     } else {
                         $resource->setSharable(false);
