@@ -130,7 +130,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         $input = new ArrayInput(array(
                 'command' => 'assets:install',
                 'target' => realpath(__DIR__ . '/../../../../../web'),
-                '--symlink' => false
+                '--symlink' => true
             ));
         $command->run($input, $output);
     }

@@ -62,7 +62,7 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $assetInput = new ArrayInput(array(
             'command' => 'assets:install',
             'target' => realpath(__DIR__ . '/../../../../../web'),
-            '--symlink' => false
+            '--symlink' => true
         ));
         $assetCommand->run($assetInput, $output);
 
