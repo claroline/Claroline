@@ -10,7 +10,7 @@ class ForumType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name');
-        $builder->add('isSharable', 'choice', array(
+        $builder->add('shareType', 'choice', array(
             'choices' => array(true => ' '),
             'multiple' => true,
             'expanded' => true,

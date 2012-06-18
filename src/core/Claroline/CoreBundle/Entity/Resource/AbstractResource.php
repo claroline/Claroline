@@ -48,9 +48,9 @@ abstract class AbstractResource
     protected $license;
 
     /**
-     * @ORM\Column(type="integer", name="is_sharable")
+     * @ORM\Column(type="integer", name="share_type")
      */
-    protected $isSharable;
+    protected $shareType;
 
     /**
     * @ORM\Column(type="datetime")
@@ -80,6 +80,9 @@ abstract class AbstractResource
      * @ORM\Column(type="string", length=255, name="mime_type")
      */
     private $mimeType;
+
+    const PRIVATE_RESOURCE = 0;
+    const PUBLIC_RESOURCE = 1;
 
     public function __construct()
     {
@@ -142,14 +145,9 @@ abstract class AbstractResource
         $this->license = $license;
     }
 
-    public function isSharable()
+    public function setShareType($shareType)
     {
-        return $this->isSharable;
-    }
-
-    public function setSharable($isSharable)
-    {
-        $this->isSharable=$isSharable;
+        $this->shareType=$shareType;
     }
 
     public function getCreationDate()
@@ -192,24 +190,8 @@ abstract class AbstractResource
         return $this->mimeType;
     }
 
-    /**
-     * required for the sf2 form component
-     *
-     * @return boolean
-     */
-    public function getIsSharable()
+    public function getShareType()
     {
-        return $this->isSharable;
+        return $this->shareType;
     }
-
-    /**
-     * required for the sf2 form component
-     *
-     * @param boolean $isSharable
-     */
-    public function setIsSharable($isSharable)
-    {
-        $this->isSharable = $isSharable;
-    }
-
 }
