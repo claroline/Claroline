@@ -6,16 +6,18 @@
     "title": "{{root.getName()}}",
     "key": {{root.getId()}},
     "copy": "{{root.getCopy()}}",
-    "instanceAmount": {{root.getResource().getInstanceAmount()}}
+    "instanceAmount": "{{root.getResource().getInstanceAmount()}}",
+    "isSharable": "{{root.getResource().isSharable()}}"
     {% if root.getResourceType.getNavigable() == 1 %}
         ,"isFolder": true
-        ,"children": [ 
+        ,"children": [
         {% for child in root.getChildren() %}
             {
                 "title": "{{child.getName()}}",
                 "key": {{child.getId()}},
                 "copy": "{{child.getCopy()}}",
-                "instanceAmount": {{child.getResource().getInstanceAmount()}}
+                "instanceAmount": {{child.getResource().getInstanceAmount()}},
+                "isSharable": "{{child.getResource().isSharable()}}"
                 {% if child.getResourceType.getNavigable() == 1 %}
                 ,"isFolder": true
                 ,"isLazy": true

@@ -314,8 +314,10 @@ class ResourceController extends Controller
             $root = new ResourceInstance();
             $rootDir = new Directory();
             $rootDir->setName('root');
+            $rootDir->setSharable(0);
             $root->setResource($rootDir);
             $root->setId(0);
+            $root->setCopy(0);
             $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
             $root->setResourceType($directoryType[0]);
 
