@@ -17,7 +17,6 @@ class ResourceControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->loadFixture(new LoadResourceTypeData());
-        $this->loadFixture(new LoadMimeTypeData());
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";

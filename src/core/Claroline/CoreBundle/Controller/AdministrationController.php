@@ -314,8 +314,6 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
 
-        $url = $this->generateUrl('claro_admin_group_list');
-
         return $this->render(
             'ClarolineCoreBundle:Administration:group_settings_form.html.twig',
             array('group' => $group, 'form_settings' => $form->createView())

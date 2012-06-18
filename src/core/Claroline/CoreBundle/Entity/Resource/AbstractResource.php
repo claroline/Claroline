@@ -85,6 +85,11 @@ abstract class AbstractResource
     private $creator;
 
     /**
+     * @ORM\Column(type="string", length=255, name="mime_type")
+     */
+    private $mimeType;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -253,5 +258,25 @@ abstract class AbstractResource
     public function setCreator(User $creator)
     {
         $this->creator = $creator;
+    }
+
+    /**
+     * Sets the resource mime type.
+     *
+     * @param string $mimeType
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+    }
+
+    /**
+     * Returns the resource mime type.
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 }
