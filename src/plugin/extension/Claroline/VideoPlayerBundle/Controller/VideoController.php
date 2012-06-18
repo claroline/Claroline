@@ -1,21 +1,22 @@
 <?php
-namespace Claroline\VideoPlayerBundle\Player;
+namespace Claroline\VideoPlayerBundle\Controller;
 
-use Claroline\CoreBundle\Library\Player\PlayerInterface;
+use Claroline\CoreBundle\Library\Resource\PlayerInterface;
+use Claroline\CoreBundle\Controller\FileController;
 use Symfony\Component\HttpFoundation\Response;
 
-class VideoPlayer implements PlayerInterface
+class VideoController extends FileController
 {
-    public function indexAction($workspaceId)
+    public function indexAction($workspaceId, $resourceId)
     {
         return new Response("redéfini openAction pour mp4, l'id de mon workspace est {$workspaceId}");
     }
-    
+
     public function getMimeType()
     {
         return "video/mp4";
     }
-    
+
     public function getPlayerName()
     {
         return "mp4Player";

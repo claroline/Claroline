@@ -23,12 +23,6 @@ class File extends AbstractResource
     private $hashName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\MimeType", inversedBy="files", cascade={"persist"})
-     * @ORM\JoinColumn(name="mime_id", referencedColumnName="id")
-     */
-    protected $mimeType;
-
-    /**
      * Returns the file size.
      *
      * @return integer
@@ -88,7 +82,7 @@ class File extends AbstractResource
     {
         return $this->hashName;
     }
-
+    
     /**
      * Sets the name of the physical file that will be stored in the file directory.
      * To prevent file name issues (e.g. with special characters), the original
@@ -99,25 +93,5 @@ class File extends AbstractResource
     public function setHashName($hashName)
     {
         $this->hashName = $hashName;
-    }
-
-    /**
-     * Returns the file mime type.
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\MimeType
-     */
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-
-    /**
-     * Sets the file mime type.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\MimeType $mimeType
-     */
-    public function setMimeType(MimeType $mimeType)
-    {
-        $this->mimeType= $mimeType;
     }
 }

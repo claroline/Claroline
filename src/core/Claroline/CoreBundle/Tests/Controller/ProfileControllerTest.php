@@ -47,7 +47,7 @@ class ProfileControllerTest extends FunctionalTestCase
     {
         $adminId = $this->getFixtureReference('user/admin')->getId();
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/profile/view/{$adminId}");
+        $this->client->request('GET', "/profile/view/{$adminId}");
         $this->assertRegExp(
             '/John.+Doe.+admin/s',
             $this->client->getResponse()->getContent()

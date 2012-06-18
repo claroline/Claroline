@@ -178,10 +178,11 @@ class DirectoryController extends Controller
      *
      * @return Response
      */
-    public function indexAction($workspaceId, $resourceInstance)
+    public function indexAction($workspaceId, $resourceId)
     {
+
         $content = $this->render(
-            'ClarolineCoreBundle:Directory:index.html.twig', array('directory' => $resourceInstance));
+            'ClarolineCoreBundle:Directory:index.html.twig');
         $response = new Response($content);
 
         return $response;
