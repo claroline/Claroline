@@ -48,7 +48,7 @@ abstract class AbstractResource
     protected $license;
 
     /**
-     * @ORM\Column(type="boolean", name="is_sharable")
+     * @ORM\Column(type="integer", name="is_sharable")
      */
     protected $isSharable;
 
