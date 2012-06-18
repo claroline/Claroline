@@ -125,11 +125,8 @@ class DirectoryController extends Controller
         }
 
         $rsrc = $resourceInstance->getResource();
-        $rsrc->removeResourceInstance($resourceInstance);
-        $em->remove($resourceInstance);
-
+        
         if ($rsrc->getInstanceCount() === 0) {
-            $type = $resourceInstance->getResourceType();
             $em->remove($rsrc);
         }
 
