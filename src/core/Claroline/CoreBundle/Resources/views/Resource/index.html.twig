@@ -15,7 +15,7 @@
 
 <div id="translation-claroline"
         {% for resourceType in resourcesType %}
-        data-{{resourceType.getType()}}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
+        data-{{ resourceType.getType() }}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
         {% endfor %}
 ></div>
 
@@ -27,7 +27,7 @@
 <form action="{{ path('claro_resource_show_creation_form', {'instanceParentId':parentId}) }}" method="post" id="form_resource">
     <select id="select_resource_form_type" required="required" name="select_resource_form[type]">
         {% for resourceType in resourcesType %}
-            <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>
+            <option value={{ resourceType.getId() }}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>
         {% endfor %}
     </select>
     <input type="submit" />
@@ -37,7 +37,7 @@
         <form action="{{ path('claro_resource_show_creation_form', {'instanceParentId':parentId}) }}" method="post" id="form_resource">
         <select id="select_resource_form_type" required="required" name="select_resource_form[type]">
             {% for resourceType in resourcesType %}
-                <option value={{ resourceType.getId()}}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>
+                <option value={{ resourceType.getId() }}>{{ resourceType.getType() |trans({}, 'platformTranslation') }}</option>
             {% endfor %}
         </select>
         <input type="submit" />
@@ -48,28 +48,28 @@
     NAVIGABLE
     {% for resourceInstance in resourceInstances %}
         {% if resourceInstance.getResourceType.getNavigable() == true %}
-            <div class="row_resource" data-resource_id={{resourceInstance.getId()}}>
-                <a href="{{path('claro_resource_default_click', {'instanceId':resourceInstance.getId()})}}"
-                   id="link_resource_{{resourceInstance.getId()}}"
-                   class="link_resource_view">{{resourceInstance.getResource().getName()}}
+            <div class="row_resource" data-resource_id={{resourceInstance.getId() }}>
+                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId()}) }}"
+                   id="link_resource_{{ resourceInstance.getId() }}"
+                   class="link_resource_view">{{ resourceInstance.getResource().getName() }}
                 </a> |
-                {{resourceInstance.getResourceType().getType()}}
+                {{ resourceInstance.getResourceType().getType() }}
                 {% if is_granted('OWNER', resourceInstance) %}
                 |
-                <a id="link_resource_delete_{{resourceInstance.getId()}}"
-                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resourceInstance.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}"
+                <a id="link_resource_delete_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_remove_workspace',  {'resourceId':resourceInstance.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()}) }}"
                    class="link_delete_resource">
                    {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a>
                 {% endif %}
                 |
-                <a id="link_resource_open_{{resourceInstance.getId()}}"
-                   href="{{path('claro_resource_open', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId()})}}"
+                <a id="link_resource_open_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_open', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId()}) }}"
                    class="link_open_resource">
                     {{ 'open'|trans({}, 'platformTranslation') }}
                 </a>
                 |
-                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resourceInstance.getUser().getUsername()}}
+                {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resourceInstance.getCreator().getUsername() }}
                 |
                 {% if resourceInstance.getCopy() == true %}
                 COPY
@@ -80,37 +80,37 @@
         {% endif %}
     {% endfor %}
     NOT NAVIGABLE
-    {%for resourceInstance in resourceInstances %}
+    {% for resourceInstance in resourceInstances %}
         {% if resourceInstance.getResourceType.getNavigable() == false %}
-            <div class="row_resource" data-resource_id={{resourceInstance.getId()}}>
-                <a href="{{path('claro_resource_default_click', {'instanceId':resourceInstance.getId()})}}"
+            <div class="row_resource" data-resource_id={{ resourceInstance.getId() }}>
+                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId()}) }}"
                    id="link_resource_view_{{resourceInstance.getId()}}"
                    class="link_resource_view">
-                    {{resourceInstance.getResource().getName()}}
+                    {{ resourceInstance.getResource().getName() }}
                 </a> |
-                {{resourceInstance.getResourceType().getType()}}
+                {{ resourceInstance.getResourceType().getType() }}
                 {% if is_granted('OWNER', resourceInstance) %}
                 |
-                <a id="link_resource_delete_{{resourceInstance.getId()}}"
-                   href="{{path('claro_resource_remove_workspace',  {'resourceId':resourceInstance.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()})}}"
+                <a id="link_resource_delete_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_remove_workspace',  {'resourceId':resourceInstance.getId(), 'workspaceId':app.user.getPersonnalWorkspace.getId()}) }}"
                    class="link_delete_resource">
                    {{ 'delete'|trans({}, 'platformTranslation') }}
                 </a>
                 {% endif %}
                 |
-                <a id="link_resource_open_{{resourceInstance.getId()}}"
-                   href="{{path('claro_resource_open', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId()})}}"
+                <a id="link_resource_open_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_open', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId()}) }}"
                    class="link_open_resource">
                    {{ 'open'|trans({}, 'platformTranslation') }}
                 </a>
                 |
-                <a id="link_resource_edit_{{resourceInstance.getId()}}"
-                   href="{{path('claro_resource_edit', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId(), 'options':'ref'})}}"
+                <a id="link_resource_edit_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_edit', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId(), 'options':'ref'}) }}"
                    class="link_edit_resource">
                    edit
                 </a>
                 |
-                {{ 'owner'|trans({}, 'platformTranslation') }}: {{resourceInstance.getUser().getUsername()}}
+                {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resourceInstance.getCreator().getUsername( )}}
                 |
                 {% if resourceInstance.getCopy() == true %}
                 COPY

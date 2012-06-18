@@ -19,10 +19,14 @@ class FileController extends Controller
      */
     public function delete(AbstractResource $file)
     {
-        $this->removeFile($file);
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($file);
         $em->flush();
+        $pathName = $this->container->getParameter('claroline.files.directory')
+            . DIRECTORY_SEPARATOR
+            . $file->getHashName();
+        chmod($pathName, 0777);
+        unlink($pathName);
     }
 
     /**
@@ -205,17 +209,4 @@ class FileController extends Controller
 
         return $response;
     }
-
-    /**
-     * removes a file physically
-     *
-     * @param File $file
-     */
-    private function removeFile(File $file)
-    {
-        $pathName = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
-        chmod($pathName, 0777);
-        unlink($pathName);
-    }
-
 }

@@ -1,11 +1,11 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 {% block content %}
-SUBJECT: {{subject.getName()}}
+SUBJECT: {{ subject.getName() }}
 {% for message in subject.getMessages() %}
 <br/>
-{{subject.getUser().getUsername()}}
+{{ subject.getCreator().getUsername() }}
 <br/>
-{{message.getContent()}}
+{{ message.getContent() }}
 <br/>
 <a href='todo'>ajouter un message</a>
 {% endfor %}

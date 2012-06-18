@@ -15,17 +15,17 @@ class MetaType
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     */    
+     */
     private $id;
-    
+
     /**
      * @ORM\Column(name="meta_type", type="string", length=50)
      */
     protected $metaType;
-    
+
     /*
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\ResourceType", 
+     *      targetEntity="Claroline\CoreBundle\Entity\ResourceType",
      *      inversedBy="metaTypes"
      * )
      * @ORM\JoinTable(name="claro_meta_type_resource_type",
@@ -34,17 +34,17 @@ class MetaType
      * )
      */
     protected $resourceTypes;
-    
+
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function setMetaType($metaType)
     {
         $this->metaType = $metaType;
     }
-    
+
     public function getMetaType()
     {
         return $this->metaType;

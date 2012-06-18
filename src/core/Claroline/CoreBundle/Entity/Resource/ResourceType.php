@@ -105,6 +105,7 @@ class ResourceType
         return $this->resourceInstances;
     }
 
+    // TRASH
     public function addResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourceInstances[] = $resourceInstance;
