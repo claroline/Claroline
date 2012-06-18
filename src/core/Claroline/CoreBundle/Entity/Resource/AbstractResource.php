@@ -45,11 +45,6 @@ abstract class AbstractResource
     private $resourceInstances;
 
     /**
-     * @ORM\Column(type="integer", name="count_instance")
-     */
-    private $instanceCount;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
@@ -59,7 +54,7 @@ abstract class AbstractResource
      * @ORM\Column(type="integer", name="share_type")
      */
     private $shareType;
-    
+
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
@@ -160,7 +155,7 @@ abstract class AbstractResource
      */
     public function getInstanceCount()
     {
-        return $this->instanceCount;
+        return count($this->resourceInstances);
     }
 
     /**

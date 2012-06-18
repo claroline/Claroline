@@ -17,7 +17,7 @@ class DirectoryControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->loadUserFixture();
-        $this->loadFixture(new LoadResourceTypeData());     
+        $this->loadFixture(new LoadResourceTypeData());
         $this->client->followRedirects();
         $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);
