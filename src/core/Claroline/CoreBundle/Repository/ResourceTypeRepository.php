@@ -12,16 +12,16 @@ class ResourceTypeRepository extends EntityRepository
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
             WHERE rt.plugin IS NOT NULL
         ";
-            
+
         $query = $this->_em->createQuery($dql);
-            
-        return $query->getResult();       
+
+        return $query->getResult();
     }
-    
+
     public function findPluginResourceNameFqcns()
     {
         $sql = 'SELECT class FROM claro_resource_type WHERE plugin_id IS NOT NULL';
-        
+
         return $this->_em
             ->getConnection()
             ->query($sql)

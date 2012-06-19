@@ -316,7 +316,7 @@
     {
         $.ajax({
             type: 'POST',
-            url: Routing.generate('claro_resource_type_resource', {'format':'json'}),
+            url: Routing.generate('claro_resource_type_resource', {'format':'json', 'listable':'true'}),
             success: function(data){
                     //JSON.parse doesn't work: why ?
                     var JSONObject = eval(data);
