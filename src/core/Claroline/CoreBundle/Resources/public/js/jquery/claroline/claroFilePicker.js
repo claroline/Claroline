@@ -2,7 +2,6 @@
  * dependencies: dynatree & rod-contextMenu + jquery
  */
 (function($){
-    var idUserRepository = "";
     var resourceTypeArray = new Array();
     subItems = {};
     getResourceTypeJSON();
@@ -67,7 +66,7 @@
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idUserRepository, 'format': 'json'})},
+                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format': 'json'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
                     node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'format': 'json'})});
@@ -137,12 +136,11 @@
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 //this is weird but I have to do that, idk where the bug come form
-                idClickedRepository = idUserRepository;
-                idClickedWorkspace = null;
+                idClickedWorkspace = document.getElementById("local_tree_button").getAttribute("data-userRepositoryId");
                 var customWorkspaceDynatree =
                    $.extend(defaultsDynatree,
                        {
-                           initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idUserRepository, 'format':'json'})},
+                           initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format':'json'})},
                            onCreate: function(node, span){
                                bindContextMenu(node);
                            }
@@ -183,9 +181,7 @@
                 $('#cfp_tree').show();
             });
 
-            $('#close_dialog_button').click(function(){
-                alert("close");
-            });
+            $('#close_dialog_button').click(function(){});
 
             $(this).modal({
                 show:params.autoOpen,
@@ -203,7 +199,7 @@
             url: Routing.generate("claro_ws_user_workspace_id"),
             cache: false,
             success: function(data){
-                idUserRepository = data;
+                document.getElementById('local_tree_button').setAttribute('data-userRepositoryId', data);
             },
             error: function(xhr){
                 alert(xhr.status);
@@ -288,7 +284,6 @@
         },
         "view": {name: "view", accesskey:"v"},
         "edit": {name: "edit", accesskey:"e"},
-        "remove": {name: "remove", accesskey:"r"},
         "delete": {
             name: "delete",
             accesskey:"d",
@@ -345,9 +340,9 @@
     {
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':idClickedWorkspace}),
+        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':document.getElementById("local_tree_button").getAttribute("data-userRepositoryId")}),
         success: function(data){
-            if(data=="delete")
+            if(data == "success")
             {
                 node.remove();
             }
@@ -357,7 +352,6 @@
 
     function editNode(node)
     {
-        //copy
         alert("this will create a copy")
         alert('clickedWorkspace = '+idClickedWorkspace);
 
@@ -375,7 +369,6 @@
 
     function openNode(node)
     {
-        console.debug(node);
         window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
     }
 
@@ -406,9 +399,9 @@
     {
         console.debug(data);
         try{
-            alert("TRY");
             var JSONObject = JSON.parse(data);
-            var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.id);
+            var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.instanceParentId);
+            console.debug(node);
             if(JSONObject.type != 'directory')
             {
                 var childNode = node.addChild({
@@ -428,7 +421,6 @@
         }
         catch(err)
         {
-            alert("error");
             $('#cfp_dialog').empty();
             $('#cfp_dialog').append(data);
             $("#generic_form").submit(function(e){
