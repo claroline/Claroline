@@ -441,8 +441,9 @@ class ResourceController extends Controller
             $this->get($name)->delete($resourceInstance);
         } else {
             $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
+            $em->remove($resourceInstance);
+            
             if (0 === $resourceInstance->getResource()->getInstanceCount()) {
-                $em->remove($resourceInstance);
                 $this->get($name)->delete($resourceInstance->getResource());
             }
         }
