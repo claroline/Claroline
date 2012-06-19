@@ -70,7 +70,7 @@ claro_resource_form:
       expose: true
 
 claro_resource_type_resource:
-   pattern: /type/list.{format}
+   pattern: /type/{listable}/list.{format}
    defaults: { _controller: ClarolineCoreBundle:Resource:getResourceTypes }
    options:
       expose: true

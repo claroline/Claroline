@@ -455,14 +455,24 @@ class ResourceController extends Controller
     /**
      * Returns the resource types defined in the platform (currently only json)
      *
+     * $listable can be "all", "false" and "true"
+     *
      * @param string $format
+     * @param string $listable
      *
      * @return Response
      */
-    public function getResourceTypesAction($format)
+    public function getResourceTypesAction($format, $listable)
     {
-        $resourcesType = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-        $content = $this->renderView("ClarolineCoreBundle:Resource:resource_type.{$format}.twig", array('resourcesType' => $resourcesType));
+        $repo = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        if ($listable == 'all') {
+            $resourceTypes = $repo->findAll();
+        } else if ($listable == 'true') {
+            $resourceTypes = $repo->findBy(array('isListable' => '1'));
+        } else if ($listable == 'false') {
+            $resourceTypes = $repo->findBy(array('isListable' => '0'));
+        }
+        $content = $this->renderView("ClarolineCoreBundle:Resource:resource_type.{$format}.twig", array('resourceTypes' => $resourceTypes));
         $response = new Response($content);
 
         return $response;
