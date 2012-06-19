@@ -6,7 +6,7 @@
     subItems = {};
     getResourceTypeJSON();
     getUserRepositoryId();
-    var idClickedWorkspace = "";
+    var workspaceClickedId = "";
 
     $.fn.extend({
         claroFilePicker:function(options){
@@ -69,7 +69,7 @@
                 initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format': 'json'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'format': 'json'})});
+                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'format': 'json'})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
@@ -82,7 +82,14 @@
                     }
                     else
                     {
-                        alert("you can't share this resource");
+                        if(workspaceClickedId ==  document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"))
+                        {
+                            alert("this resource is already in the current workspace");
+                        }
+                        else
+                        {
+                            alert("you can't share this resource");
+                        }
                     }
                 },
                 onCustomRender: function(node){
@@ -136,7 +143,7 @@
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 //this is weird but I have to do that, idk where the bug come form
-                idClickedWorkspace = document.getElementById("local_tree_button").getAttribute("data-userRepositoryId");
+                workspaceClickedId = document.getElementById("local_tree_button").getAttribute("data-userRepositoryId");
                 var customWorkspaceDynatree =
                    $.extend(defaultsDynatree,
                        {
@@ -165,7 +172,7 @@
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
                 console.debug(event);
-                idClickedWorkspace = idRepository;
+                workspaceClickedId = idRepository;
                 var customWorkspaceDynatree =
                     $.extend(defaultsDynatree,
                         {
@@ -340,7 +347,7 @@
     {
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':document.getElementById("local_tree_button").getAttribute("data-userRepositoryId")}),
+        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':workspaceClickedId}),
         success: function(data){
             if(data == "success")
             {
@@ -353,11 +360,11 @@
     function editNode(node)
     {
         alert("this will create a copy")
-        alert('clickedWorkspace = '+idClickedWorkspace);
+        alert('clickedWorkspace = '+workspaceClickedId);
 
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_edit',{'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'options':'copy'}),
+        url: Routing.generate('claro_resource_edit',{'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'options':'copy'}),
         success: function(data){
             if(data=="edit")
             {
@@ -369,7 +376,7 @@
 
     function openNode(node)
     {
-        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': workspaceClickedId, 'id':node.data.key});
     }
 
     function viewNode(node)
@@ -389,7 +396,7 @@
                 $('#cfp_dialog').show();
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':idClickedWorkspace}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':workspaceClickedId}, document.getElementById("generic_form"));
                     });
                 }
             });
