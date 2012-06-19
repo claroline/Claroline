@@ -97,7 +97,7 @@
                 onCustomRender: function(node){
                     var copy = node.data.copy;
                     var html ='';
-                    console.debug(node);
+
                     if(copy == 1)
                     {
                         html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceCount+" share "+node.data.shareType+" </a>";
@@ -144,7 +144,6 @@
             $('#local_tree_button').live("click", function(event){
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
-                //this is weird but I have to do that, idk where the bug come form
                 workspaceClickedId = document.getElementById("local_tree_button").getAttribute("data-userRepositoryId");
                 var customWorkspaceDynatree =
                    $.extend(defaultsDynatree,
@@ -173,7 +172,6 @@
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
-                console.debug(event);
                 workspaceClickedId = idRepository;
                 var customWorkspaceDynatree =
                     $.extend(defaultsDynatree,
@@ -191,11 +189,11 @@
             });
 
             $('#close_dialog_button').click(function(){});
-
             $(this).modal({
                 show:params.autoOpen,
                 backdrop:params.backdrop
             });
+
             return (this);
 
         });}
@@ -406,11 +404,10 @@
 
     function submissionHandler(data, route, routeParameters)
     {
-        console.debug(data);
         try{
             var JSONObject = JSON.parse(data);
             var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.instanceParentId);
-            console.debug(node);
+
             if(JSONObject.type != 'directory')
             {
                 var childNode = node.addChild({

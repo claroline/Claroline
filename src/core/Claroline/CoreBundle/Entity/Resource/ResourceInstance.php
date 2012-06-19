@@ -96,11 +96,6 @@ class ResourceInstance
      */
     protected $workspace;
 
-    public function __construct()
-    {
-        $this->workspaces = new ArrayCollection();
-    }
-
     public function getId()
     {
         return $this->id;
