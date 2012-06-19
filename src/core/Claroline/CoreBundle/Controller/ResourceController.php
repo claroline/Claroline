@@ -23,10 +23,16 @@ use Claroline\CoreBundle\Form\SelectResourceType;
  * It can add/remove a resource to a workspace.
  *
  * TODO:
- * "javascript interface d&d between 2 trees"
- * "text diff"
- * "linker"
- * "edit by copy"
+ * adding a resource with the js index in a workspace wich isn't a personnalWorkspace
+ * check if a resource is sharable for the js index
+ * edition for sharable (could be set to sharable)
+ * improved tests for move/add to workspace
+ * when a resource is added, the json response should have more data (instanceCount & shareType)
+ * text diff
+ * linker
+ * edit by copy
+ * not using jquery from twitter bootstrap ? currently there is not enough room for 2 data trees
+ * in the js index and it should be fixed
  */
 class ResourceController extends Controller
 {
@@ -341,18 +347,34 @@ class ResourceController extends Controller
 
     /**
      * Moves an resource instance (changes his parent)
+     * When it's moved to the root with javascript, the workspaceId isn't know so it must be passed as a parameter
+     * otherwise child and parent workspace are equals.
      *
      * @param integer $idChild
      * @param integer $idParent
+     * @param integer $workspaceDestinationId
      *
      * @return Response
      */
-    public function moveResourceAction($idChild, $idParent)
+    public function moveResourceAction($idChild, $idParent, $workspaceDestinationId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idParent);
         $child = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idChild);
+
+        //when it's moved to the root with javascript, the workspaceId isn't know so it must be passed as a parameter
+        if ($workspaceDestinationId != null) {
+            $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceDestinationId);
+            $child->setWorkspace($workspace);
+        }
+
         $child->setParent($parent);
+
+        //otherwise child and parent workspace are equals
+        if ($parent != null && $workspaceDestinationId != null) {
+            $child->setWorkspace($parent->getWorkspace());
+        }
+
         $this->getDoctrine()->getEntityManager()->flush();
 
         return new Response('success');
@@ -361,18 +383,22 @@ class ResourceController extends Controller
     /**
      * Adds a resource instance to a workspace.
      * Options must be must be 'ref' or 'copy'.
+     * If $instanceId = 0, every resource is added
+     * If $instanceDestinationId = 0, everything is added to the root
      *
      * @param integer $resourceId
      * @param integer $workspaceId
      * @param string  $options
+     * @param integer $instanceDestinationId
      *
      * @return Response
      */
-    public function addToWorkspaceAction($instanceId, $workspaceId, $options)
+    public function addToWorkspaceAction($instanceId, $workspaceId, $options, $instanceDestinationId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResource();
+        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
 
         if ($options == 'ref') {
             if ($instanceId == 0) {
@@ -381,12 +407,12 @@ class ResourceController extends Controller
 
                 foreach ($resourcesInstance as $resourceInstance) {
                     if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-                        $this->copyFirstReferenceInstance($workspace, $resourceInstance->getId());
+                        $this->copyFirstReferenceInstance($workspace, $resourceInstance->getId(), $parent);
                     }
                 }
             } else {
                 if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-                    $this->copyFirstReferenceInstance($workspace, $instanceId);
+                    $this->copyFirstReferenceInstance($workspace, $instanceId, $parent);
                 }
             }
 
@@ -398,12 +424,12 @@ class ResourceController extends Controller
 
                 foreach ($resourcesInstance as $resourceInstance) {
                     if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-                        $this->copyFirstCopyInstance($workspace, $resourceInstance->getId());
+                        $this->copyFirstCopyInstance($workspace, $resourceInstance->getId(), $parent);
                     }
                 }
             } else {
                 if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-                    $this->copyFirstCopyInstance($workspace, $instanceId);
+                    $this->copyFirstCopyInstance($workspace, $instanceId, $parent);
                 }
             }
 
@@ -442,7 +468,7 @@ class ResourceController extends Controller
         } else {
             $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
             $em->remove($resourceInstance);
-            
+
             if (0 === $resourceInstance->getResource()->getInstanceCount()) {
                 $this->get($name)->delete($resourceInstance->getResource());
             }
@@ -649,15 +675,17 @@ class ResourceController extends Controller
      * Copy a resource instance by reference and put it in a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param integer $instanceId
+     * @param integer           $instanceId
+     * @param ResourceInstance  $parent
      */
-    private function copyFirstReferenceInstance(AbstractWorkspace $workspace, $instanceId)
+    private function copyFirstReferenceInstance(AbstractWorkspace $workspace, $instanceId, $parent)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $roleCollaborator = $workspace->getCollaboratorRole();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $resourceInstanceCopy = $this->copyByReferenceResourceInstance($resourceInstance);
         $resourceInstanceCopy->setWorkspace($workspace);
+        $resourceInstanceCopy->setParent($parent);
         $em->persist($resourceInstanceCopy);
         $resourceInstance->getResource()->addResourceInstance($resourceInstance);
         $em->flush();
@@ -672,15 +700,17 @@ class ResourceController extends Controller
      * Copy a resource instance by copy and put it in a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param integer $instanceId
+     * @param integer           $instanceId
+     * @param ResourceInstance  $parent
      */
-    private function copyFirstCopyInstance(AbstractWorkspace $workspace, $instanceId)
+    private function copyFirstCopyInstance(AbstractWorkspace $workspace, $instanceId, $parent)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $roleCollaborator = $workspace->getCollaboratorRole();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $resourceInstanceCopy = $this->copyByCopyResourceInstance($resourceInstance);
         $resourceInstanceCopy->setWorkspace($workspace);
+        $resourceInstanceCopy->setParent($parent);
         $em->persist($resourceInstanceCopy);
         $em->flush();
         $user = $this->get('security.context')->getToken()->getUser();

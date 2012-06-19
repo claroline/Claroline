@@ -31,14 +31,14 @@ claro_resource_node:
       expose: true
 
 claro_resource_move:
-   pattern: move/{idChild}/{idParent}
-   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource }
+   pattern: move/{idChild}/{idParent}/{workspaceDestinationId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource, workspaceDestinationId:null }
    options:
       expose: true
 
 claro_resource_add_workspace:
-   pattern: workspace/add/{instanceId}/{workspaceId}/{options}
-   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
+   pattern: workspace/add/{instanceId}/{workspaceId}/{options}/{instanceDestinationId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace, instanceDestinationId:null }
    options:
       expose: true
    requirements:
