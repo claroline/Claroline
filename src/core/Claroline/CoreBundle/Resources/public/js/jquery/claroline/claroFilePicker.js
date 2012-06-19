@@ -13,6 +13,7 @@
         var params = $.extend({
             autoOpen: false,
             backdrop: false,
+            currentWorspaceId: null,
            // leftClickMenu: true,
             getForm: function(){
                 var formHTML =
@@ -76,21 +77,22 @@
                 },
                 onDblClick: function(node){
                     $('#cfp_dialog').hide();
-                    if(node.data.shareType == 1)
+                    if(workspaceClickedId == params.currentWorkspaceId)
                     {
-                        params.dblClickItem(node);
+                        alert("you can't a resource this workspace in the current workspace");
                     }
                     else
                     {
-                        if(workspaceClickedId ==  document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"))
+                        if(node.data.shareType == 1)
                         {
-                            alert("this resource is already in the current workspace");
+                            params.dblClickItem(node);
                         }
                         else
                         {
                             alert("you can't share this resource");
                         }
                     }
+
                 },
                 onCustomRender: function(node){
                     var copy = node.data.copy;
