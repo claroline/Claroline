@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Form\SelectResourceType;
  * It can add/remove a resource to a workspace.
  *
  * TODO:
- * "sharable resource"
  * "javascript interface d&d between 2 trees"
  * "text diff"
  * "linker"

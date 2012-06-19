@@ -150,10 +150,9 @@ $(function(){
 
     function submissionHandler(data, route, routeParameters)
     {
-        console.debug(data);
         try{
             var JSONObject = JSON.parse(data);
-            var node = $("#ct_tree").dynatree("getTree").selectKey(routeParameters.id);
+            var node = $("#ct_tree").dynatree("getTree").selectKey(routeParameters.instanceParentId);
             if(JSONObject.type != 'directory') {
                 var childNode = node.addChild({
                     title:JSONObject.name,
@@ -201,7 +200,6 @@ $(function(){
             success: function(data){
                 $('#ct_form').empty();
                 $('#ct_form').append(data);
-                //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
                     sendForm("claro_resource_create",  {
@@ -345,7 +343,6 @@ $(function(){
         xhr.send(formData);
     }
 
-    //pas terrible la création... une manière plus propre de le faire en js ?
     function generateSubItems()
     {
         var cpt = 0;
