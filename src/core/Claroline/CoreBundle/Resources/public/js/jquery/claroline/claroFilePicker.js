@@ -259,7 +259,7 @@
                         break;
                     default:
                         node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key);
+                        createFormDialog(key, node.data.key, node);
                 }
             },
         items: {
@@ -402,13 +402,13 @@
                 $('#cfp_dialog').show();
                 $("#resource_options_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_edit_options",  {'resourceId': node.data.resourceId}, document.getElementById("resource_options_form"));
+                    sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
                     });
                 }
             });
     }
 
-    function createFormDialog(type, id){
+    function createFormDialog(type, id, node){
         var route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
         $.ajax({
             type: 'POST',
@@ -420,35 +420,44 @@
                 $('#cfp_dialog').show();
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':workspaceClickedId}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':workspaceClickedId}, document.getElementById("generic_form"), node);
                     });
                 }
             });
     }
 
-    function submissionHandler(xhr, route, routeParameters)
+    function submissionHandler(xhr, route, routeParameters, node)
     {
-
         if(xhr.getResponseHeader('Content-Type') == 'application/json')
         {
             var JSONObject = JSON.parse(xhr.responseText);
-            var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.instanceParentId);
+            var instance = JSONObject[0];
 
-            if(JSONObject.type != 'directory')
+            var newNode = {
+                    title:instance.title,
+                    key:instance.key,
+                    copy:instance.copy,
+                    instanceCount:instance.instanceCount,
+                    shareType:instance.shareType,
+                    resourceId:instance.resourceId
+                }
+
+            if (instance.type == 'directory')
             {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key
-                });
+                newNode.isFolder = true;
+            }
+
+            if(node.data.key != newNode.key)
+            {
+                node.addChild(newNode);
             }
             else
             {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key,
-                    isFolder:true
-                });
+                node.data.title = newNode.title;
+                node.data.shareType = newNode.shareType;
+                node.render();
             }
+
             $('#cfp_dialog').empty();
         }
         else
@@ -457,18 +466,22 @@
             $('#cfp_dialog').append(xhr.responseText);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
-                sendForm(route, routeParameters, document.getElementById("generic_form"));
+                sendForm(route, routeParameters, document.getElementById("generic_form"), node);
                 });
+            $("#resource_options_form").submit(function(e){
+                e.preventDefault();
+                sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
+            });
         }
     }
 
-    function sendForm(route, routeParameters, form)
+    function sendForm(route, routeParameters, form, node)
     {
         var formData = new FormData(form);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', Routing.generate(route, routeParameters), true);
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-        xhr.onload = function(e){submissionHandler(xhr, route, routeParameters)};
+        xhr.onload = function(e){submissionHandler(xhr, route, routeParameters, node)};
         xhr.send(formData);
     }
 

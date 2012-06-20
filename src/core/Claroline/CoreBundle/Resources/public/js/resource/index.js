@@ -173,26 +173,37 @@ $(function(){
 
     function submissionHandler(xhr, route, routeParameters, node)
     {
+        console.debug(node);
         if(xhr.getResponseHeader('Content-Type') == 'application/json')
         {
             var JSONObject = JSON.parse(xhr.responseText);
-            $('#ct_tree').show();
+            var instance = JSONObject[0];
+            var newNode = {
+                    title:instance.title,
+                    key:instance.key,
+                    copy:instance.copy,
+                    instanceCount:instance.instanceCount,
+                    shareType:instance.shareType,
+                    resourceId:instance.resourceId,
+                }
 
-            if(JSONObject.type != 'directory') {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key
-                });
+            if (instance.type == 'directory')
+            {
+                newNode.isFolder = true;
+            }
+
+            if(node.data.key != newNode.key)
+            {
+                node.addChild(newNode);
             }
             else
             {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key,
-                    isFolder:true
-                });
+                node.data.title = newNode.title;
+                node.data.shareType = newNode.shareType;
+                node.render();
             }
 
+            $('#ct_tree').show();
             $('#ct_form').empty();
         }
         else
@@ -202,6 +213,10 @@ $(function(){
             $("#generic_form").submit(function(e){
                 e.preventDefault();
                 sendForm(route, routeParameters, document.getElementById("generic_form"), node);
+            });
+            $("#resource_options_form").submit(function(e){
+                e.preventDefault();
+                sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
             });
         }
     }
@@ -283,7 +298,7 @@ $(function(){
                 $('#ct_form').append(data);
                 $("#resource_options_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_edit_options",  {'resourceId': node.data.resourceId}, document.getElementById("resource_options_form"));
+                    sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
                 });
             }
         });

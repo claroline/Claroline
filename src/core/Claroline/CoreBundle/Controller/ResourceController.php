@@ -24,13 +24,14 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  * It can add/remove a resource to a workspace.
  *
  * TODO:
+ * fix when a resource is added with js, if it's added in a lazy node, lazy load will be disabled right after.
+ * when the server is slow, many ajax request can be sent... and everything get messy.
  * what about the rights in general ?
+ * instance suppression: do we supress the original aswell ? can the creator remove every instance ?
  * Redirections
- * Form validation: if it's wrong, display it again with errors
  * keep the context in workspaces
  * multiple d&d for resource index.js (1st one works then it crashed)
  * improved tests for move/add to workspace
- * when a resource is added, the json response should have more data (instanceCount & shareType)
  * text diff
  * linker
  * edit by copy
@@ -55,7 +56,7 @@ class ResourceController extends Controller
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourceInstances, 'parentId' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
+                        'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourceInstances, 'parentId' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
         );
     }
 
@@ -100,10 +101,10 @@ class ResourceController extends Controller
         $request = $this->get('request');
 
         if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('resourceId' => $res->getId(), 'form' => $form->createView()));
+            return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
         }
 
-        return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('resourceId' => $res->getId(), 'form' => $form->createView()));
+        return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
     }
 
     /**
@@ -111,13 +112,12 @@ class ResourceController extends Controller
      *
      * @param integer $resourceId
      */
-    public function editOptionsAction($resourceId)
+    public function editOptionsAction($instanceId)
     {
         $request = $this->get('request');
         $em = $this->getDoctrine()->getEntityManager();
-        $res = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+        $res = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId)->getResource();
         $form = $this->createForm(new ResourceOptionsType(), $res);
-
         $form->bindRequest($request);
 
         if ($form->isValid()) {
@@ -126,13 +126,23 @@ class ResourceController extends Controller
             $em->flush();
 
             if ($request->isXmlHttpRequest()) {
-                return new Response("xmlhttp");
+                $ri = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId);
+                $ri->setResource($res);
+                $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
+                $response = new Response($content);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+
             } else {
                 return new Response('success');
             }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
+            } else {
+                return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
+            }
         }
-
-        return new Response("invalid form");
     }
 
     /**
@@ -218,7 +228,7 @@ class ResourceController extends Controller
                 $rightManager->addRight($ri, $user, MaskBuilder::MASK_OWNER);
 
                 if ($request->isXmlHttpRequest()) {
-                    $content = '{"key":' . $ri->getId() . ', "name":"' . $ri->getResource()->getName() . '", "type":"' . $ri->getResourceType()->getType() . '"}';
+                    $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
                     $response = new Response($content);
                     $response->headers->set('Content-Type', 'application/json');
 
@@ -232,16 +242,15 @@ class ResourceController extends Controller
         } else {
             if ($request->isXmlHttpRequest()) {
                 $content = $this->renderView(
-                    'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
+                        'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
                 );
                 $response = new Response($content);
                 $response->headers->set('Content-Type', 'text/html');
 
                 return $response;
-                
             } else {
                 return $this->render(
-                    'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'type' => $type, 'parentId' => $instanceParentId)
+                                'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'type' => $type, 'parentId' => $instanceParentId)
                 );
             }
         }
@@ -261,7 +270,7 @@ class ResourceController extends Controller
     public function defaultClickAction($instanceId)
     {
         $resourceInstance = $this->getDoctrine()->getEntityManager()->getRepository(
-            'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+                        'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
 
         $securityContext = $this->get('security.context');
 
@@ -269,7 +278,7 @@ class ResourceController extends Controller
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         } else {
             $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResourceType();
+                            'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResourceType();
             $name = $this->findResService($resourceType);
             $type = $resourceType->getType();
 
