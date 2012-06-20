@@ -307,7 +307,6 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $em = $this->getDoctrine()->getEntityManager();
             $em->persist($group);
             $em->flush();
 
