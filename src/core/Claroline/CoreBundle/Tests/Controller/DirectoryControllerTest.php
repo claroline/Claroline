@@ -132,7 +132,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('directory_form[name]' => $name));
-        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
+        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
 
         return $id;
      }

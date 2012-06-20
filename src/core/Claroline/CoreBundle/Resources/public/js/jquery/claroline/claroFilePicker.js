@@ -254,6 +254,9 @@
                     case "edit":
                         editNode(node, key);
                         break;
+                    case "options":
+                        optionsNode(node);
+                        break;
                     default:
                         node = $.ui.dynatree.getNode(this);
                         createFormDialog(key, node.data.key);
@@ -304,7 +307,8 @@
                             return true;
                         }
                     }
-            }
+            },
+         "options": {name: "options", accesskey:'p'}
         }
     }
         $.contextMenu(menuDefaultOptions);
@@ -384,8 +388,28 @@
         window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
     }
 
+    function optionsNode(node){
+        var route = Routing.generate('claro_resource_options_form', {
+            instanceId: node.data.key
+        });
+        $.ajax({
+            type: 'POST',
+            url: route,
+            cache: false,
+            success: function(data){
+                $('#cfp_dialog').empty();
+                $('#cfp_dialog').append(data);
+                $('#cfp_dialog').show();
+                $("#resource_options_form").submit(function(e){
+                    e.preventDefault();
+                    sendForm("claro_resource_edit_options",  {'resourceId': node.data.resourceId}, document.getElementById("resource_options_form"));
+                    });
+                }
+            });
+    }
+
     function createFormDialog(type, id){
-        route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
+        var route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
         $.ajax({
             type: 'POST',
             url: route,
