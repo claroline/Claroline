@@ -6,6 +6,18 @@ claro_resource_show_creation_form:
     pattern: /form/show/{instanceParentId}
     defaults: { _controller: ClarolineCoreBundle:Resource:creationResourceForm, instanceParentId:null }
 
+claro_resource_options_form:
+    pattern: /form/options/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:creationOptionsForm }
+    options:
+      expose: true
+
+claro_resource_edit_options:
+    pattern: /edit/options/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:editOptions }
+    options:
+      expose: true
+
 claro_resource_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
@@ -61,7 +73,6 @@ claro_resource_default_click:
    defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
    options:
        expose: true
-
 
 claro_resource_form:
    pattern: /form/{instanceParentId}/{type}

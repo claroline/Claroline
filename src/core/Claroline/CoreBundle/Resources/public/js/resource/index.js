@@ -78,7 +78,7 @@ $(function(){
                 node.activate();
             },
             onCustomRender: function(node){
-                var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" </a>";
+                var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
                 html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                 return html;
             },
@@ -112,6 +112,11 @@ $(function(){
                     }
                     else
                     {
+                        if(sourceNode.data.shareType == 0)
+                        {
+                            alert("you can't share this resource");
+                            return false;
+                        }
                         var copynode;
 
                         if(sourceNode){
@@ -263,6 +268,26 @@ $(function(){
         });
     }
 
+    function optionsNode(node)
+    {
+        var route = Routing.generate('claro_resource_options_form', {
+            instanceId: node.data.key
+        });
+        $.ajax({
+            type: 'POST',
+            url: route,
+            cache: false,
+            success: function(data){
+                $('#ct_tree').hide();
+                $('#ct_form').append(data);
+                $("#resource_options_form").submit(function(e){
+                    e.preventDefault();
+                    sendForm("claro_resource_edit_options",  {'resourceId': node.data.resourceId}, document.getElementById("resource_options_form"));
+                });
+            }
+        });
+    }
+
     function bindContextMenu(node, repositoryId){
         var menuDefaultOptions = {
             selector: 'a.dynatree-title',
@@ -275,13 +300,16 @@ $(function(){
                     case "delete":
                         deleteNode(node);
                         break;
-
                     case "view":
                         viewNode(node, key);
+                        break;
+                    case "options":
+                        optionsNode(node);
                         break;
                     default:
                         node = $.ui.dynatree.getNode(this);
                         createFormDialog(key, node.data.key, node);
+                        break;
                 }
             },
             items: {
@@ -320,8 +348,8 @@ $(function(){
                     accesskey:"v"
                 },
                 "delete": {
-                    name: "delete",
-                    accesskey:"d",
+                    name: 'delete',
+                    accesskey:'d',
                     disabled: function(){
                         node = $.ui.dynatree.getNode(this);
                         if(node.data.key != 0)
@@ -333,6 +361,10 @@ $(function(){
                             return true;
                         }
                     }
+                },
+                "options":{
+                    name: "options",
+                    accesskey:'p'
                 }
             }
         }

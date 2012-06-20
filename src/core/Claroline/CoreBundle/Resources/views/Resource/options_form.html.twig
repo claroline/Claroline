@@ -1,0 +1,5 @@
+<form action="{{path('claro_resource_edit_options', {'resourceId':resourceId})}}" method="post" {{ form_enctype(form) }} id="resource_options_form">
+   {{ form_errors(form) }}
+   {{ form_widget(form) }}
+        <input type="submit"/>
+</form>

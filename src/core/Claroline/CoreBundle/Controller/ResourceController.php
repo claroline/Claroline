@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
+use Claroline\CoreBundle\Form\ResourceOptionsType;
 
 /**
  * This controller will manage resources.
@@ -23,16 +24,17 @@ use Claroline\CoreBundle\Form\SelectResourceType;
  * It can add/remove a resource to a workspace.
  *
  * TODO:
- * adding a resource with the js index in a workspace wich isn't a personnalWorkspace
- * check if a resource is sharable for the js index
- * edition for sharable (could be set to sharable)
+ * what about the rights in general ?
+ * Redirections
+ * Form validation: if it's wrong, display it again with errors
+ * keep the context in workspaces
+ * multiple d&d for resource index.js (1st one works then it crashed)
  * improved tests for move/add to workspace
  * when a resource is added, the json response should have more data (instanceCount & shareType)
  * text diff
  * linker
  * edit by copy
- * not using jquery from twitter bootstrap ? currently there is not enough room for 2 data trees
- * in the js index and it should be fixed
+ * not using jquery from twitter bootstrap ? currently there is not enough room for 2 data trees in the js index and it should be fixed
  */
 class ResourceController extends Controller
 {
@@ -80,6 +82,60 @@ class ResourceController extends Controller
     }
 
     /**
+     * Returns the resource options form.
+     * name & share_type can be edited for every resource as long the user has the rights to do
+     *
+     * @param integer $instanceId
+     */
+    public function creationOptionsFormAction($instanceId)
+    {
+        $res = $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+                ->find($instanceId)
+                ->getResource();
+
+        $form = $this->get('form.factory')->create(new ResourceOptionsType(), $res);
+
+        $request = $this->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('resourceId' => $res->getId(), 'form' => $form->createView()));
+        }
+
+        return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('resourceId' => $res->getId(), 'form' => $form->createView()));
+    }
+
+    /**
+     * Edits the resource options
+     *
+     * @param integer $resourceId
+     */
+    public function editOptionsAction($resourceId)
+    {
+        $request = $this->get('request');
+        $em = $this->getDoctrine()->getEntityManager();
+        $res = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+        $form = $this->createForm(new ResourceOptionsType(), $res);
+
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $res = $form->getData();
+            $em->persist($res);
+            $em->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                return new Response("xmlhttp");
+            } else {
+                return new Response('success');
+            }
+        }
+
+        return new Response("invalid form");
+    }
+
+    /**
      * Renders the specific resource form with it's claroline layout
      *
      * @param integer $instanceParentId
@@ -98,7 +154,6 @@ class ResourceController extends Controller
         return new Response($content);
     }
 
-    //TODO: check return type; js must know if some json is returned
     /**
      * Adds a resource. This method will delegate the resource creation to
      * the correct ResourceType service.
@@ -319,6 +374,7 @@ class ResourceController extends Controller
             $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($workspace);
             $root = new ResourceInstance();
             $rootDir = new Directory();
+            $rootDir->setId(0);
             $rootDir->setName('root');
             $rootDir->setShareType(0);
             $root->setResource($rootDir);

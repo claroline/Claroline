@@ -179,6 +179,25 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testResourceOptionsCanBeEdited()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $rootId = $this->addRootDirectory('root_dir');
+        $this->em->flush();
+        $crawler = $this->client->request('GET', "/resource/form/options/{$rootId}");
+        $form = $crawler->filter('input[type=submit]')->form();
+        $form['resource_options_form[name]'] = "EDITED";
+        $form['resource_options_form[shareType]'] = 1;
+        $crawler = $this->client->submit($form);
+        $crawler = $this->client->request('GET', '/resource/directory/null');
+        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $res = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($rootId)->getResource();
+        $this->assertEquals($this->getFixtureReference('user/user')->getId(), $res->getCreator()->getId());
+        $this->assertEquals("EDITED", $res->getName());
+        $this->assertEquals(1, $res->getShareType());
+        $this->assertNotEquals($res->getCreationDate(), $res->getModificationDate());
+    }
+
     private function initWorkspacesTestsByRef()
     {
         $rootId = $this->createResourcesTree();
@@ -215,7 +234,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
-        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
+        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
 
         return $id;
     }
@@ -228,9 +247,9 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
         $form['directory_form[name]'] = $name;
-        $form['directory_form[shareType][1]']->tick();
+        $form['directory_form[shareType]'] = 1;
         $crawler = $this->client->submit($form);
-        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
+        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
 
         return $id;
     }
@@ -244,11 +263,13 @@ class ResourceControllerTest extends FunctionalTestCase
         $form['file_form[name]'] = $filePath;
 
         if ($isSharable) {
-            $form['file_form[shareType][1]']->tick();
+            $form['file_form[shareType]'] = 1;
+        } else {
+            $form['file_form[shareType]'] = 0;
         }
 
         $crawler = $this->client->submit($form);
-        $crawler->filter(".row_resource")->last()->attr('data-resource_id');
+        $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
     }
 
     private function createResourcesTree()
