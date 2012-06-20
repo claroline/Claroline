@@ -426,10 +426,12 @@
             });
     }
 
-    function submissionHandler(data, route, routeParameters)
+    function submissionHandler(xhr, route, routeParameters)
     {
-        try{
-            var JSONObject = JSON.parse(data);
+
+        if(xhr.getResponseHeader('Content-Type') == 'application/json')
+        {
+            var JSONObject = JSON.parse(xhr.responseText);
             var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.instanceParentId);
 
             if(JSONObject.type != 'directory')
@@ -449,10 +451,10 @@
             }
             $('#cfp_dialog').empty();
         }
-        catch(err)
+        else
         {
             $('#cfp_dialog').empty();
-            $('#cfp_dialog').append(data);
+            $('#cfp_dialog').append(xhr.responseText);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
                 sendForm(route, routeParameters, document.getElementById("generic_form"));
@@ -466,7 +468,7 @@
         var xhr = new XMLHttpRequest();
         xhr.open('POST', Routing.generate(route, routeParameters), true);
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-        xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters)};
+        xhr.onload = function(e){submissionHandler(xhr, route, routeParameters)};
         xhr.send(formData);
     }
 
