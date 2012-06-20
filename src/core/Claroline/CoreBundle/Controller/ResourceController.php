@@ -231,9 +231,14 @@ class ResourceController extends Controller
             return new RedirectResponse($route);
         } else {
             if ($request->isXmlHttpRequest()) {
-                return $this->render(
+                $content = $this->renderView(
                     'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
                 );
+                $response = new Response($content);
+                $response->headers->set('Content-Type', 'text/html');
+
+                return $response;
+                
             } else {
                 return $this->render(
                     'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'type' => $type, 'parentId' => $instanceParentId)

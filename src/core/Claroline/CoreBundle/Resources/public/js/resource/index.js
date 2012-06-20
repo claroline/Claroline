@@ -171,12 +171,13 @@ $(function(){
         });
     }
 
-    function submissionHandler(data, route, routeParameters, node)
+    function submissionHandler(xhr, route, routeParameters, node)
     {
-        var JSONObject = JSON.parse(data);
-        console.debug(node);
-        $('#ct_tree').show();
-        try{
+        if(xhr.getResponseHeader('Content-Type') == 'application/json')
+        {
+            var JSONObject = JSON.parse(xhr.responseText);
+            $('#ct_tree').show();
+
             if(JSONObject.type != 'directory') {
                 var childNode = node.addChild({
                     title:JSONObject.name,
@@ -194,13 +195,13 @@ $(function(){
 
             $('#ct_form').empty();
         }
-        catch(err)
+        else
         {
             $('#ct_form').empty();
-            $('#ct_form').append(data);
+            $('#ct_form').append(xhr.responseText);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
-                sendForm(route, routeParameters, document.getElementById("generic_form"));
+                sendForm(route, routeParameters, document.getElementById("generic_form"), node);
             });
         }
     }
@@ -387,7 +388,7 @@ $(function(){
         xhr.open('POST', Routing.generate(route, routeParameters), true);
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
         xhr.onload = function(e){
-            submissionHandler(xhr.responseText, route, routeParameters, node)
+            submissionHandler(xhr, route, routeParameters, node)
             };
         xhr.send(formData);
     }
