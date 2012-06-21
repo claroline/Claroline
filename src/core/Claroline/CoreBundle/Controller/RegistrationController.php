@@ -8,8 +8,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -58,7 +59,7 @@ class RegistrationController extends Controller
             $config->setWorkspaceName('my workspace');
             $wsCreator = $this->get('claroline.workspace.creator');
             $workspace = $wsCreator->createWorkspace($config, $user);
-            $workspace->setType("user_repository");
+            $workspace->setType(AbstractWorkspace::STANDARD);
             $user->addRole($workspace->getManagerRole());
             $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);

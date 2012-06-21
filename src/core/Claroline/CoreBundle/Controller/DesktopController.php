@@ -16,6 +16,9 @@ class DesktopController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('ClarolineCoreBundle:Desktop:index.html.twig');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $workspace = $user->getPersonnalWorkspace();
+
+        return $this->render('ClarolineCoreBundle:Desktop:index.html.twig', array('workspaceContextId' => $workspace->getId()));
     }
 }

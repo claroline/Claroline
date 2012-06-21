@@ -9,8 +9,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -100,7 +101,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $config->setWorkspaceName('my workspace');
         $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
         $workspace = $wsCreator->createWorkspace($config, $user);
-        $workspace->setType('user_repository');
+        $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
         $user->addRole($workspace->getManagerRole());
         $user->setPersonnalWorkspace($workspace);
         $em->persist($workspace);
