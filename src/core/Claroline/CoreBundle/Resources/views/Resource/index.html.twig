@@ -49,7 +49,7 @@
     {% for resourceInstance in resourceInstances %}
         {% if resourceInstance.getResourceType.getNavigable() == true %}
             <div class="row_resource" data-resource_instance_id={{resourceInstance.getId() }}>
-                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId()}) }}"
+                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId(), 'wsContextId':workspace.getId()}) }}"
                    id="link_resource_{{ resourceInstance.getId() }}"
                    class="link_resource_view">{{ resourceInstance.getResource().getName() }}
                 </a> |
@@ -89,7 +89,7 @@
     {% for resourceInstance in resourceInstances %}
         {% if resourceInstance.getResourceType.getNavigable() == false %}
             <div class="row_resource" data-resource_instance_id={{ resourceInstance.getId() }}>
-                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId()}) }}"
+                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId(), 'wsContextId':workspace.getId()}) }}"
                    id="link_resource_view_{{resourceInstance.getId()}}"
                    class="link_resource_view">
                     {{ resourceInstance.getResource().getName() }}

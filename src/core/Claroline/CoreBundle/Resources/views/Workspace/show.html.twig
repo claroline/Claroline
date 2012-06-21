@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% extends 'ClarolineCoreBundle:Administration:index.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -32,7 +32,7 @@
             {% for resourceInstance in resources %}
                 <div id="resource_row">
                     <div class="row_resource">
-                        <a href="{{ path('claro_resource_default_click',{'instanceId':resourceInstance.getId()}) }}"
+                        <a href="{{ path('claro_resource_default_click',{'instanceId':resourceInstance.getId(), 'wsContextId':workspace.getId()}) }}"
                            id="link_resource_{{ resourceInstance.getId() }}"
                            class="link_resource_view">
                            {{ resourceInstance.getResource().getName() }}

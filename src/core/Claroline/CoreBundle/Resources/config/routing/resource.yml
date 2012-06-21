@@ -69,7 +69,7 @@ claro_resource_create:
       expose: true
 
 claro_resource_default_click:
-   pattern: /click/{instanceId}
+   pattern: /click/{instanceId}/{wsContextId}
    defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
    options:
        expose: true

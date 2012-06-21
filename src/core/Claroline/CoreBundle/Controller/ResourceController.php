@@ -56,7 +56,7 @@ class ResourceController extends Controller
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
-                        'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourceInstances, 'parentId' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
+            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourceInstances, 'parentId' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
         );
     }
 
@@ -262,30 +262,30 @@ class ResourceController extends Controller
      * /!\ 'directory' type service works with resource instances instead of resources
      *
      * @param integer $instanceId
+     * @param integer $wsContextId
      *
      * @return Response
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function defaultClickAction($instanceId)
+    public function defaultClickAction($instanceId, $wsContextId)
     {
-        $resourceInstance = $this->getDoctrine()->getEntityManager()->getRepository(
-                        'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $securityContext = $this->get('security.context');
+        $wsContext = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($wsContextId);
 
         if (false == $securityContext->isGranted('VIEW', $resourceInstance)) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         } else {
-            $resourceType = $this->getDoctrine()->getEntityManager()->getRepository(
-                            'Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResourceType();
+            $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResourceType();
             $name = $this->findResService($resourceType);
             $type = $resourceType->getType();
 
             if ($type != 'directory') {
                 $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
             } else {
-                $response = $this->get($name)->getDefaultAction($instanceId);
+                $response = $this->get($name)->getDefaultAction($instanceId, $wsContext);
             }
         }
 
