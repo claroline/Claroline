@@ -29,7 +29,6 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  * instance suppression: do we supress the original aswell ? can the creator remove every instance ?
  * Redirections
  * improved context. Currently only done for defaultAction & openAction. openAction should be refactored aswell
- * multiple d&d for resource index.js (1st one works then it crashed)
  * improved tests for move/add to workspace
  * text diff
  * linker
