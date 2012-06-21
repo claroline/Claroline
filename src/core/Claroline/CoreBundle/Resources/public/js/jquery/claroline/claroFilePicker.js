@@ -449,7 +449,8 @@
 
             if(node.data.key != newNode.key)
             {
-                node.addChild(newNode);
+                node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'format': 'json'})});
+                node.expand();
             }
             else
             {

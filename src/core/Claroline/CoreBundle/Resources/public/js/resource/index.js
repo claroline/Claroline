@@ -173,7 +173,6 @@ $(function(){
 
     function submissionHandler(xhr, route, routeParameters, node)
     {
-        console.debug(node);
         if(xhr.getResponseHeader('Content-Type') == 'application/json')
         {
             var JSONObject = JSON.parse(xhr.responseText);
@@ -184,7 +183,7 @@ $(function(){
                     copy:instance.copy,
                     instanceCount:instance.instanceCount,
                     shareType:instance.shareType,
-                    resourceId:instance.resourceId,
+                    resourceId:instance.resourceId
                 }
 
             if (instance.type == 'directory')
@@ -194,7 +193,13 @@ $(function(){
 
             if(node.data.key != newNode.key)
             {
-                node.addChild(newNode);
+                console.debug(node);
+                node.appendAjax({url:Routing.generate('claro_resource_node', {
+                        'instanceId':node.data.key,
+                        'workspaceId': document.getElementById(node.tree.divTree.attributes[0].value).getAttribute('data-workspaceId'),
+                        'format': 'json'})
+                });
+                node.expand();
             }
             else
             {

@@ -24,12 +24,11 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  * It can add/remove a resource to a workspace.
  *
  * TODO:
- * fix when a resource is added with js, if it's added in a lazy node, lazy load will be disabled right after.
  * when the server is slow, many ajax request can be sent... and everything get messy.
  * what about the rights in general ?
  * instance suppression: do we supress the original aswell ? can the creator remove every instance ?
  * Redirections
- * keep the context in workspaces
+ * improved context. Currently only done for defaultAction & openAction. openAction should be refactored aswell
  * multiple d&d for resource index.js (1st one works then it crashed)
  * improved tests for move/add to workspace
  * text diff
@@ -196,7 +195,7 @@ class ResourceController extends Controller
 
         if ($form->isValid()) {
             $resource = $this->get($name)->add($form, $instanceParentId, $user);
-            
+
             if (null !== $resource) {
                 if ($form->offsetExists('shareType')) {
                     $sharable = $form['shareType']->getData();
