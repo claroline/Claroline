@@ -191,7 +191,12 @@ class WorkspaceController extends Controller
 
         $resourcesInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getWSListableRootResource($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array('workspace' => $workspace, 'resourcesType' => $resourcesType, 'resources' => $resourcesInstance));
+        return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array(
+            'workspace' => $workspace,
+            'resourcesType' => $resourcesType,
+            'resources' => $resourcesInstance,
+            'wsContextId' => $workspace->getId())
+        );
     }
 
     /**
@@ -439,7 +444,7 @@ class WorkspaceController extends Controller
 
     /**
      * Returns the id of the current user workspace.
-     * 
+     *
      * @return Response
      */
     public function userWorkspaceIdAction()

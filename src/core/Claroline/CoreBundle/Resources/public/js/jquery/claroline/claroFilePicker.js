@@ -385,7 +385,7 @@
 
     function viewNode(node)
     {
-        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
+        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key, 'wsContextId':workspaceClickedId});
     }
 
     function optionsNode(node){

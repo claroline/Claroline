@@ -33,17 +33,22 @@ class ResourceControllerTest extends FunctionalTestCase
     public function testResourceDefaultActionIsProtected()
     {
         $this->logUser($this->getFixtureReference('user/user'));
+        $personnalWsUserId = $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId();
         $id = $this->addRootFile($this->filePath);
         $this->logUser($this->getFixtureReference('user/user_2'));
-        $this->client->request('GET', "/resource/click/{$id}");
+        $personnalWsUserProtectedId = $this->getFixtureReference('user/user_2')->getPersonnalWorkspace()->getId();
+        $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserProtectedId}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testCreatorCanAccessResourceDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/user'));
+        $personnalWsUserId = $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId();
         $id = $this->addRootFile($this->filePath);
-        $this->client->request('GET', "/resource/click/{$id}");
+        $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -112,11 +117,15 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
+        $personnalWsUserProtectedId = $this->getFixtureReference('user/user_2')->getPersonnalWorkspace()->getId();
+        $personnalWsUserId = $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId();
         $rootId = $this->initWorkspacesTestsByRef();
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->registerToWorkspaceA();
         $this->unregisterFromWorkspaceA();
-        $this->client->request('GET', "/resource/click/{$rootId}");
+        $this->client->request('GET', "/resource/click/{$rootId}/{$personnalWsUserId}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->client->request('GET', "/resource/click/{$rootId}/{$personnalWsUserProtectedId}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

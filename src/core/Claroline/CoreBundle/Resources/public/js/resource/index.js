@@ -279,8 +279,10 @@ $(function(){
 
     function viewNode(node)
     {
+        var repoId = document.getElementById('data-claroline').getAttribute('data-workspace_id');
         window.location = Routing.generate('claro_resource_default_click',{
-            'instanceId':node.data.key
+            'instanceId':node.data.key,
+            'wsContextId':repoId
         });
     }
 
