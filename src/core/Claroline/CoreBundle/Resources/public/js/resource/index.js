@@ -128,6 +128,7 @@ $(function(){
                         var html = getMoveFormHtml();
                         $('#ct_tree').hide();
                         $('#ct_form').append(html);
+                        $('#ct_form').show();
                         $('#ct_move_form_submit').click(function(event)
                         {
                             var destinationTreeId = node.tree.divTree.attributes[0].value;
