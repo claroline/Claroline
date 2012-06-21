@@ -178,14 +178,11 @@ class DirectoryController extends Controller
                 break;
 
             case (AbstractWorkspace::STANDARD):
-                $content = $this->render(
-                    'ClarolineCoreBundle:Resource:index.html.twig', array(
-                    'form_resource' => $formResource->createView(),
-                    'resourceInstances' => $resourcesInstance,
-                    'parentId' => $id,
-                    'resourcesType' => $resourcesType,
-                    'directory' => $resourceInstance,
-                    'workspace' => $workspace)
+                return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array(
+                        'workspace' => $workspace,
+                        'resourcesType' => $resourcesType,
+                        'resources' => $resourcesInstance,
+                        'wsContextId' => $workspace->getId())
                 );
                 break;
         }
