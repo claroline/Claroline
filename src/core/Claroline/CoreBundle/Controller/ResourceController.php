@@ -36,6 +36,7 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  * linker
  * edit by copy
  * not using jquery from twitter bootstrap ? currently there is not enough room for 2 data trees in the js index and it should be fixed
+ * create a resource manager in ordrer to remove some logic from the ResourceController.
  */
 class ResourceController extends Controller
 {
@@ -195,19 +196,13 @@ class ResourceController extends Controller
 
         if ($form->isValid()) {
             $resource = $this->get($name)->add($form, $instanceParentId, $user);
-
+            
             if (null !== $resource) {
-
                 if ($form->offsetExists('shareType')) {
                     $sharable = $form['shareType']->getData();
-
-                    if (count($sharable) == 1) {
-                        $resource->setShareType(true);
-                    } else {
-                        $resource->setShareType(false);
-                    }
+                    $resource->setShareType($sharable);
                 } else {
-                    $resource->setShareType(false);
+                    $resource->setShareType(0);
                 }
 
                 $ri = new ResourceInstance();
@@ -242,7 +237,7 @@ class ResourceController extends Controller
         } else {
             if ($request->isXmlHttpRequest()) {
                 $content = $this->renderView(
-                        'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
+                    'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
                 );
                 $response = new Response($content);
                 $response->headers->set('Content-Type', 'text/html');
@@ -250,7 +245,7 @@ class ResourceController extends Controller
                 return $response;
             } else {
                 return $this->render(
-                                'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'type' => $type, 'parentId' => $instanceParentId)
+                    'ClarolineCoreBundle:Resource:form_page.html.twig', array('form' => $form->createView(), 'type' => $type, 'parentId' => $instanceParentId)
                 );
             }
         }
