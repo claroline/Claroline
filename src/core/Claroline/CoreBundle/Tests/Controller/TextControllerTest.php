@@ -31,8 +31,7 @@ class TextManagerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $id = $this->addText('Hello world');
-        $personnalWsUserId = $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId();
-        $crawler = $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
+        $crawler = $this->client->request('GET', "/resource/click/{$id}");
         $node = $crawler->filter('#content');
 
         $this->assertTrue(strpos($node->text(), 'Hello world') !== false);
@@ -41,12 +40,11 @@ class TextManagerTest extends FunctionalTestCase
     public function testEditByRefAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $personnalWsUserId = $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId();
         $id = $this->addText('Hello world');
         $crawler = $this->client->request('GET', "/resource/edit/{$id}/{$this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId()}/ref");
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
-        $crawler = $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
+        $crawler = $this->client->request('GET', "/resource/click/{$id}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id)->getResource();

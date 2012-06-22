@@ -156,7 +156,7 @@ class DirectoryController extends Controller
      *
      * @return Response
      */
-    public function getDefaultAction($id, $wsContext)
+    public function getDefaultAction($id)
     {
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
         $em = $this->getDoctrine()->getEntityManager();
@@ -165,7 +165,7 @@ class DirectoryController extends Controller
         $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
         $resourcesType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
-        switch ($wsContext->getType()) {
+        switch ($resourceInstance->getWorkspace()->getType()) {
             case (AbstractWorkspace::USER_REPOSITORY):
                 $content = $this->render(
                     'ClarolineCoreBundle:Resource:index.html.twig', array(
@@ -200,7 +200,7 @@ class DirectoryController extends Controller
      *
      * @return Response
      */
-    public function indexAction($workspaceId, $resourceId)
+    public function indexAction($resourceId)
     {
 
         $content = $this->render(
