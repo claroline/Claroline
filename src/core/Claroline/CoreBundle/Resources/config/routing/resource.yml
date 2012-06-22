@@ -25,7 +25,7 @@ claro_resource_delete:
       expose: true
 
 claro_resource_open:
-   pattern: /open/{workspaceId}/{instanceId}
+   pattern: /open/{instanceId}
    defaults: { _controller: ClarolineCoreBundle:Resource:open }
    options:
       expose: true
@@ -69,7 +69,7 @@ claro_resource_create:
       expose: true
 
 claro_resource_default_click:
-   pattern: /click/{instanceId}/{wsContextId}
+   pattern: /click/{instanceId}
    defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
    options:
        expose: true

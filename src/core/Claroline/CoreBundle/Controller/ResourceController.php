@@ -27,7 +27,7 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  * when the server is slow, many ajax request can be sent... and everything get messy.
  * what about the rights in general ?
  * instance suppression: do we supress the original aswell ? can the creator remove every instance ?
- * Redirections
+ * Redirections & Responses
  * improved context. Currently only done for defaultAction & openAction. openAction should be refactored aswell
  * improved tests for move/add to workspace
  * text diff
@@ -130,17 +130,24 @@ class ResourceController extends Controller
                 $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
                 $response = new Response($content);
                 $response->headers->set('Content-Type', 'application/json');
-                return $response;
 
-            } else {
-                return new Response('success');
+                return $response;
             }
+
+            /*
+            $instanceParent = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
+                ->find($instanceId)
+                ->getParent();
+            $response = $this->get('claroline.directory.manager')->getDefaultAction($instanceParent->getId());
+
+            return $response;*/
+            return "edited";
+
         } else {
             if ($request->isXmlHttpRequest()) {
                 return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
-            } else {
-                return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
             }
+            return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
         }
     }
 
@@ -255,18 +262,16 @@ class ResourceController extends Controller
      * /!\ 'directory' type service works with resource instances instead of resources
      *
      * @param integer $instanceId
-     * @param integer $wsContextId
      *
      * @return Response
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function defaultClickAction($instanceId, $wsContextId)
+    public function defaultClickAction($instanceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $securityContext = $this->get('security.context');
-        $wsContext = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($wsContextId);
 
         if (false == $securityContext->isGranted('VIEW', $resourceInstance)) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
@@ -278,7 +283,7 @@ class ResourceController extends Controller
             if ($type != 'directory') {
                 $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
             } else {
-                $response = $this->get($name)->getDefaultAction($instanceId, $wsContext);
+                $response = $this->get($name)->getDefaultAction($instanceId);
             }
         }
 
@@ -296,7 +301,7 @@ class ResourceController extends Controller
      *
      * @throws AccessDeniedException
      */
-    public function openAction($instanceId, $workspaceId)
+    public function openAction($instanceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId);
@@ -307,7 +312,7 @@ class ResourceController extends Controller
         } else {
             $resourceType = $resourceInstance->getResourceType();
             $name = $this->findResService($resourceType);
-            $response = $this->get($name)->indexAction($workspaceId, $resourceInstance->getResource()->getId());
+            $response = $this->get($name)->indexAction($resourceInstance->getResource()->getId());
 
             return new Response($response);
         }
@@ -440,7 +445,12 @@ class ResourceController extends Controller
 
         $this->getDoctrine()->getEntityManager()->flush();
 
-        return new Response('success');
+        if($this->get('request')->isXmlHttpRequest())
+        {
+            return new Response('success');
+        }
+
+        return new Response('resource moved');
     }
 
     /**

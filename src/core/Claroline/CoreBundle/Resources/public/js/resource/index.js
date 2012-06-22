@@ -278,7 +278,6 @@ $(function(){
     function openNode(node, repositoryId)
     {
         window.location = Routing.generate('claro_resource_open',{
-            'workspaceId': repositoryId,
             'instanceId':node.data.key
         });
     }
@@ -287,8 +286,7 @@ $(function(){
     {
         var repoId = document.getElementById('data-claroline').getAttribute('data-workspace_id');
         window.location = Routing.generate('claro_resource_default_click',{
-            'instanceId':node.data.key,
-            'wsContextId':repoId
+            'instanceId':node.data.key
         });
     }
 
