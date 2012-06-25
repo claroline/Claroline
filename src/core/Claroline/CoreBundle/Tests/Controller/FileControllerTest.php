@@ -1,9 +1,11 @@
 <?php
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile as SfFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
+use Claroline\CoreBundle\Entity\Resource\File;
 
 class FileControllerTest extends FunctionalTestCase
 {
@@ -34,47 +36,74 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testUpload()
     {
-         $this->logUser($this->getFixtureReference('user/admin'));
+         $this->logUser($this->getFixtureReference('user/user'));
          $originalPath = $this->stubDir.'originalFile.txt';
-         $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/directory');
-         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-         $this->assertEquals(1, count($this->getUploadedFiles()));
+         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+         $this->client->request(
+            'POST',
+            "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
+        );
+        $file = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($file));
+        $this->assertEquals(1, count($this->getUploadedFiles()));
     }
 
     public function testDownload()
     {
-         $this->logUser($this->getFixtureReference('user/admin'));
+         $this->logUser($this->getFixtureReference('user/user'));
          $originalPath = $this->stubDir.'originalFile.txt';
-         $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/directory');
-         $link = $crawler->filter('.link_resource_view')->eq(0)->link();
-         $this->client->click($link);
+         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+         $this->client->request(
+            'GET',
+            "/resource/click/{$ri->getId()}"
+        );
          $headers = $this->client->getResponse()->headers;
-         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=originalFile.txt'));
+         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=copy.txt'));
     }
 
     public function testDelete()
     {
-         $this->logUser($this->getFixtureReference('user/admin'));
+         $this->logUser($this->getFixtureReference('user/user'));
          $originalPath = $this->stubDir.'originalFile.txt';
-         $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/directory');
-         $link = $crawler->filter('.link_delete_resource')->eq(0)->link();
-         $crawler = $this->client->click($link);
-         $this->assertEquals(0, $crawler->filter('.row_resource')->count());
-         $this->assertEquals(0, count($this->getUploadedFiles()));
+         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+         $this->client->request(
+            'GET',
+            "/resource/workspace/remove/{$ri->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
+         );
+        $this->client->request(
+            'POST',
+            "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
+        );
+        $file = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($file));
+        $this->assertEquals(0, count($this->getUploadedFiles()));
     }
 
-    private function uploadFile($filePath)
+    private function uploadFile($filePath, $workspaceId, $parentId = null)
     {
-        $crawler = $this->client->request('GET', '/resource/directory');
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+        $copyPath = $this->stubDir."copy".$extension;
+        copy($filePath, $copyPath);
+        $file = new SfFile($copyPath, "copy.$extension", null, null, null, true);
+        $object = new File();
+        $object->setName($file);
+        $object->setShareType(1);
 
-        $form = $crawler->filter('input[type=submit]')->form();
-        $form['select_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
-        $crawler = $this->client->submit($form);
-        $form = $crawler->filter('input[type=submit]')->form();
-        return $this->client->submit($form, array('file_form[name]' => $filePath));
+        return $this->addResource($object, $workspaceId);
+    }
+
+    private function addResource($object, $workspaceId, $parentId = null)
+    {
+        return $ri = $this
+            ->client
+            ->getContainer()
+            ->get('claroline.resource.creator')
+            ->createResource(
+                $parentId,
+                $workspaceId,
+                $object,
+                true
+                );
     }
 
      private function getUploadedFiles()

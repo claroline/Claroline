@@ -82,7 +82,7 @@ class File extends AbstractResource
     {
         return $this->hashName;
     }
-    
+
     /**
      * Sets the name of the physical file that will be stored in the file directory.
      * To prevent file name issues (e.g. with special characters), the original
