@@ -31,7 +31,8 @@ class TextManagerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $id = $this->addText('Hello world');
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
+        $personnalWsUserId = $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId();
+        $crawler = $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
         $node = $crawler->filter('#content');
 
         $this->assertTrue(strpos($node->text(), 'Hello world') !== false);
@@ -40,11 +41,12 @@ class TextManagerTest extends FunctionalTestCase
     public function testEditByRefAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
+        $personnalWsUserId = $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId();
         $id = $this->addText('Hello world');
         $crawler = $this->client->request('GET', "/resource/edit/{$id}/{$this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId()}/ref");
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
+        $crawler = $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id)->getResource();
@@ -60,7 +62,7 @@ class TextManagerTest extends FunctionalTestCase
         $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('text_form[text]' => $txt));
-        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_id');
+        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
 
         return $id;
     }

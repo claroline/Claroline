@@ -106,6 +106,17 @@ abstract class AbstractResource
     }
 
     /**
+     * Sets the resource id.
+     * Required by the ResourceController when it creates a fictionnal root
+     *
+     * @param integer $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Sets the resource name.
      *
      * @param string $name

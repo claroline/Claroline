@@ -48,8 +48,8 @@
     NAVIGABLE
     {% for resourceInstance in resourceInstances %}
         {% if resourceInstance.getResourceType.getNavigable() == true %}
-            <div class="row_resource" data-resource_id={{resourceInstance.getId() }}>
-                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId()}) }}"
+            <div class="row_resource" data-resource_instance_id={{resourceInstance.getId() }}>
+                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId(), 'wsContextId':workspace.getId()}) }}"
                    id="link_resource_{{ resourceInstance.getId() }}"
                    class="link_resource_view">{{ resourceInstance.getResource().getName() }}
                 </a> |
@@ -69,6 +69,12 @@
                     {{ 'open'|trans({}, 'platformTranslation') }}
                 </a>
                 |
+                <a id="link_resource_options_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_options_form', {'instanceId':resourceInstance.getId()}) }}"
+                   class="link_open_resource">
+                    {{ 'options'|trans({}, 'platformTranslation') }}
+                </a>
+                |
                 {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resourceInstance.getCreator().getUsername() }}
                 |
                 {% if resourceInstance.getCopy() == true %}
@@ -82,8 +88,8 @@
     NOT NAVIGABLE
     {% for resourceInstance in resourceInstances %}
         {% if resourceInstance.getResourceType.getNavigable() == false %}
-            <div class="row_resource" data-resource_id={{ resourceInstance.getId() }}>
-                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId()}) }}"
+            <div class="row_resource" data-resource_instance_id={{ resourceInstance.getId() }}>
+                <a href="{{ path('claro_resource_default_click', {'instanceId':resourceInstance.getId(), 'wsContextId':workspace.getId()}) }}"
                    id="link_resource_view_{{resourceInstance.getId()}}"
                    class="link_resource_view">
                     {{ resourceInstance.getResource().getName() }}
@@ -108,6 +114,12 @@
                    href="{{ path('claro_resource_edit', {'workspaceId':workspace.getId(), 'instanceId':resourceInstance.getId(), 'options':'ref'}) }}"
                    class="link_edit_resource">
                    edit
+                </a>
+                |
+                <a id="link_resource_options_{{ resourceInstance.getId() }}"
+                   href="{{ path('claro_resource_options_form', {'instanceId':resourceInstance.getId()}) }}"
+                   class="link_open_resource">
+                    {{ 'options'|trans({}, 'platformTranslation') }}
                 </a>
                 |
                 {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resourceInstance.getCreator().getUsername( )}}

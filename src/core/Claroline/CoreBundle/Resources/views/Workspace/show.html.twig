@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% extends 'ClarolineCoreBundle:Administration:index.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -29,20 +29,28 @@
     | <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
 {% endif %}
         <div id='div_resource'>
-            {% for resource in resources %}
+            {% for resourceInstance in resources %}
                 <div id="resource_row">
                     <div class="row_resource">
-                        <a href="{{ path('claro_resource_default_click',{'instanceId':resource.getId()}) }}"
-                           id="link_resource_{{ resource.getId() }}"
+                        <a href="{{ path('claro_resource_default_click',{'instanceId':resourceInstance.getId(), 'wsContextId':workspace.getId()}) }}"
+                           id="link_resource_{{ resourceInstance.getId() }}"
                            class="link_resource_view">
-                           {{ resource.getResource().getName() }}
+                           {{ resourceInstance.getResource().getName() }}
                         </a>
-                        <a href="{{ path('claro_resource_remove_workspace', {'resourceId':resource.getId(), 'workspaceId':workspace.getId()}) }}">
+                       |
+                        <a href="{{ path('claro_resource_remove_workspace', {'resourceId':resourceInstance.getId(), 'workspaceId':workspace.getId()}) }}">
                             delete from workspace
                         </a>
-                        {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resource.getCreator().getUsername() }}
                         |
-                        {% if resource.getCopy() == true %}
+                        <a id="link_resource_options_{{ resourceInstance.getId() }}"
+                           href="{{ path('claro_resource_options_form', {'instanceId':resourceInstance.getId()}) }}"
+                           class="link_open_resource">
+                           {{ 'options'|trans({}, 'platformTranslation') }}
+                         </a>
+                        |
+                        {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resourceInstance.getCreator().getUsername() }}
+                        |
+                        {% if resourceInstance.getCopy() == true %}
                         COPY
                         {% else %}
                         ORIGNAL

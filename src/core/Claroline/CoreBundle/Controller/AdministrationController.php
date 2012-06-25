@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
@@ -66,7 +67,7 @@ class AdministrationController extends Controller
             $config->setWorkspaceName('my workspace');
             $wsCreator = $this->get('claroline.workspace.creator');
             $workspace = $wsCreator->createWorkspace($config, $user);
-            $workspace->setType('user_repository');
+            $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
             $user->addRole($workspace->getManagerRole());
             $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);
@@ -307,7 +308,6 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $em = $this->getDoctrine()->getEntityManager();
             $em->persist($group);
             $em->flush();
 

@@ -1,4 +1,3 @@
-//todo: l'event close de la boite de dialogue
 $(function(){
     resourceTypeArray = new Array();
     subItems = {};
@@ -14,10 +13,9 @@ $(function(){
     $.ajax({
         type: 'POST',
         url: Routing.generate('claro_resource_type_resource', {
-            'format':'json'
+            'format':'json', 'listable':'true'
         }),
         success: function(data){
-            //JSON.parse doesn't work: why ?
             var JSONObject = eval(data);
             var cpt = 0;
 
@@ -46,10 +44,10 @@ $(function(){
         $('#'+divId).empty();
         var repositoryId = event.target.attributes[0].value;
         $('#'+divId).dynatree("destroy");
+        document.getElementById(divId).setAttribute('data-workspaceId', repositoryId);
         createTree('#'+divId, repositoryId);
     });
 
-    //créé après la récupération de resourceType~ à changer
     function createTree(treeId, repositoryId)
     {
         $(treeId).dynatree({
@@ -80,7 +78,7 @@ $(function(){
                 node.activate();
             },
             onCustomRender: function(node){
-                var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" </a>";
+                var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
                 html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                 return html;
             },
@@ -102,32 +100,57 @@ $(function(){
                     }
                 },
                 onDrop: function(node, sourceNode, hitMode, ui, draggable){
-                    /**This function MUST be defined to enable dropping of items on the tree.
-                     * sourceNode may be null, if it is a non-Dynatree droppable.
-                     */
-                    logMsg("tree.onDrop(%o, %o)", node, sourceNode);
-                    var copynode;
-                    if(sourceNode) {
-                        copynode = sourceNode.toDict(true, function(dict){
-                            dict.title = "Copy of " + dict.title;
-                            delete dict.key; // Remove key, so a new one will be created
-                        });
-                    }else{
-                        copynode = {
-                            title: "This node was dropped here (" + ui.helper + ")."
-                        };
+                    if(node.tree == sourceNode.tree)
+                    {
+                        if (node.isDescendantOf(sourceNode)){
+                            return false;
+                        }
+                        else {
+                            sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
+                            sourceNode.move(node, hitMode);
+                        }
                     }
-                    if(hitMode == "over"){
-                        // Append as child node
-                        node.addChild(copynode);
-                        // expand the drop target
-                        node.expand(true);
-                    }else if(hitMode == "before"){
-                        // Add before this, i.e. as child of current parent
-                        node.parent.addChild(copynode, node);
-                    }else if(hitMode == "after"){
-                        // Add after this, i.e. as child of current parent
-                        node.parent.addChild(copynode, node.getNextSibling());
+                    else
+                    {
+                        if(sourceNode.data.shareType == 0)
+                        {
+                            alert("you can't share this resource");
+                            return false;
+                        }
+                        var copynode;
+
+                        if(sourceNode){
+                            copynode = sourceNode.toDict(true, function(dict){
+                               delete dict.key;
+                            });
+                        }
+
+                        var html = getMoveFormHtml();
+                        $('#ct_tree').hide();
+                        $('#ct_form').append(html);
+                        $('#ct_move_form_submit').click(function(event)
+                        {
+                            var destinationTreeId = node.tree.divTree.attributes[0].value;
+                            var workspaceDestinationId = document.getElementById(destinationTreeId).getAttribute('data-workspaceId');
+
+                            var option =  getCheckedValue(document.forms['ct_move_form']['options']);
+                            if (option == 'move')
+                            {
+                                /* moving a node from a tree to another isn't implemented yet for dynatree,
+                                 * so the node is copied then removed' */
+                                sendRequest('claro_resource_move', {'idChild':sourceNode.data.key, 'idParent':node.data.key, 'workspaceDestinationId':workspaceDestinationId});
+                                node.addChild(copynode);
+                                sourceNode.remove();
+                            }
+                            else
+                            {
+                                sendRequest('claro_resource_add_workspace', {'instanceId':sourceNode.data.key, 'instanceDestinationId':node.data.key, 'options':option, 'workspaceId':workspaceDestinationId});
+                                node.addChild(copynode);
+                            }
+                            $('#ct_form').empty();
+                            $('#ct_form').hide();
+                            $('#ct_tree').show();
+                        });
                     }
                 },
                 onDragLeave: function(node, sourceNode){
@@ -148,36 +171,52 @@ $(function(){
         });
     }
 
-    function submissionHandler(data, route, routeParameters)
+    function submissionHandler(xhr, route, routeParameters, node)
     {
-        console.debug(data);
-        try{
-            var JSONObject = JSON.parse(data);
-            var node = $("#ct_tree").dynatree("getTree").selectKey(routeParameters.id);
-            if(JSONObject.type != 'directory') {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key
-                });
+        console.debug(node);
+        if(xhr.getResponseHeader('Content-Type') == 'application/json')
+        {
+            var JSONObject = JSON.parse(xhr.responseText);
+            var instance = JSONObject[0];
+            var newNode = {
+                    title:instance.title,
+                    key:instance.key,
+                    copy:instance.copy,
+                    instanceCount:instance.instanceCount,
+                    shareType:instance.shareType,
+                    resourceId:instance.resourceId,
+                }
+
+            if (instance.type == 'directory')
+            {
+                newNode.isFolder = true;
+            }
+
+            if(node.data.key != newNode.key)
+            {
+                node.addChild(newNode);
             }
             else
             {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key,
-                    isFolder:true
-                });
+                node.data.title = newNode.title;
+                node.data.shareType = newNode.shareType;
+                node.render();
             }
 
+            $('#ct_tree').show();
             $('#ct_form').empty();
         }
-        catch(err)
+        else
         {
             $('#ct_form').empty();
-            $('#ct_form').append(data);
+            $('#ct_form').append(xhr.responseText);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
-                sendForm(route, routeParameters, document.getElementById("generic_form"));
+                sendForm(route, routeParameters, document.getElementById("generic_form"), node);
+            });
+            $("#resource_options_form").submit(function(e){
+                e.preventDefault();
+                sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
             });
         }
     }
@@ -187,9 +226,8 @@ $(function(){
         alert("success");
     }
 
-    function createFormDialog(type, id)
+    function createFormDialog(type, id, node)
     {
-        console.debug(type);
         var route = Routing.generate('claro_resource_form', {
             'type':type,
             'instanceParentId':id
@@ -199,15 +237,14 @@ $(function(){
             url: route,
             cache: false,
             success: function(data){
-                $('#ct_form').empty();
+                $('#ct_tree').hide();
                 $('#ct_form').append(data);
-                //ici je change l'event du submit
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
                     sendForm("claro_resource_create",  {
                         'type':type,
-                        'id':id
-                    }, document.getElementById("generic_form"));
+                        'instanceParentId':id
+                    }, document.getElementById("generic_form"), node);
                 });
             }
         });
@@ -224,7 +261,7 @@ $(function(){
             }),
 
             success: function(data){
-                if(data=="success")
+                if(data == "success")
                 {
                     node.remove();
                 }
@@ -242,13 +279,34 @@ $(function(){
 
     function viewNode(node)
     {
+        var repoId = document.getElementById('data-claroline').getAttribute('data-workspace_id');
         window.location = Routing.generate('claro_resource_default_click',{
-            'instanceId':node.data.key
+            'instanceId':node.data.key,
+            'wsContextId':repoId
+        });
+    }
+
+    function optionsNode(node)
+    {
+        var route = Routing.generate('claro_resource_options_form', {
+            instanceId: node.data.key
+        });
+        $.ajax({
+            type: 'POST',
+            url: route,
+            cache: false,
+            success: function(data){
+                $('#ct_tree').hide();
+                $('#ct_form').append(data);
+                $("#resource_options_form").submit(function(e){
+                    e.preventDefault();
+                    sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
+                });
+            }
         });
     }
 
     function bindContextMenu(node, repositoryId){
-
         var menuDefaultOptions = {
             selector: 'a.dynatree-title',
             callback: function(key, options) {
@@ -260,13 +318,16 @@ $(function(){
                     case "delete":
                         deleteNode(node);
                         break;
-
                     case "view":
                         viewNode(node, key);
                         break;
+                    case "options":
+                        optionsNode(node);
+                        break;
                     default:
                         node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key);
+                        createFormDialog(key, node.data.key, node);
+                        break;
                 }
             },
             items: {
@@ -305,8 +366,8 @@ $(function(){
                     accesskey:"v"
                 },
                 "delete": {
-                    name: "delete",
-                    accesskey:"d",
+                    name: 'delete',
+                    accesskey:'d',
                     disabled: function(){
                         node = $.ui.dynatree.getNode(this);
                         if(node.data.key != 0)
@@ -318,6 +379,10 @@ $(function(){
                             return true;
                         }
                     }
+                },
+                "options":{
+                    name: "options",
+                    accesskey:'p'
                 }
             }
         }
@@ -333,19 +398,18 @@ $(function(){
         $.contextMenu(additionalMenuOptions);
     }
 
-    function sendForm(route, routeParameters, form)
+    function sendForm(route, routeParameters, form, node)
     {
         var formData = new FormData(form);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', Routing.generate(route, routeParameters), true);
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
         xhr.onload = function(e){
-            submissionHandler(xhr.responseText, route, routeParameters)
+            submissionHandler(xhr, route, routeParameters, node);
         };
         xhr.send(formData);
     }
 
-    //pas terrible la création... une manière plus propre de le faire en js ?
     function generateSubItems()
     {
         var cpt = 0;
@@ -362,15 +426,13 @@ $(function(){
             }
         }
         subItems+='}'
-        console.debug(subItems);
         object = JSON.parse(subItems);
-        console.debug(object);
+
         return object;
     }
 
     function createTreeDialog()
     {
-        console.debug("MOI PASSER");
         document.getElementById('ct_dialog').setAttribute("class", 'modal fade');
         var modalContent = ""
         +'<div class="modal-header">'
@@ -378,7 +440,7 @@ $(function(){
         +'<h3> header</h3>'
         +'</div>'
         +'<div class="modal-body">'
-        +"<div id='ct_form'><table id='ct_tree'><thead><tr><th><button id='workspace_source_list_button'>workspace source list</button></th>"
+        +"<div id='ct_form'></div></div><table id='ct_tree'><thead><tr><th><button id='workspace_source_list_button'>workspace source list</button></th>"
         +"<th><button id='workspace_destination_list_button'>workspace destination list</button></th></th></thead><tbody><tr valign='top'>"
         +"<td><div id='source_tree'></div></td><td><div id='destination_tree'></div></td></tr></tbody></table>"
         +'</div>'
@@ -403,7 +465,6 @@ $(function(){
         while(cpt < resourceTypeArray.length) {
             name = resourceTypeArray[cpt].type;
             var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
-            console.debug(translation);
             resourceTypeArray[cpt].type=translation;
             cpt++;
         }
@@ -459,4 +520,35 @@ $(function(){
             }
         });
     }
+
+    function getMoveFormHtml()
+    {
+        var html = "";
+        html+="<form id='ct_move_form'>"
+        html+="<input type='radio' name='options' value='copy'>copy<br>"
+        html+="<input type='radio' name='options' value='ref' checked>ref<br>"
+        html+="<input type='radio' name='options' value='move'>move<br>"
+        html+="<input type='submit' id='ct_move_form_submit'>"
+        html+="</form>";
+
+        return html;
+    }
+
+    function getCheckedValue(radioObj) {
+        if(!radioObj)
+            return "";
+        var radioLength = radioObj.length;
+        if(radioLength == undefined)
+            if(radioObj.checked)
+                return radioObj.value;
+            else
+                return "";
+        for(var i = 0; i < radioLength; i++) {
+            if(radioObj[i].checked) {
+                return radioObj[i].value;
+            }
+        }
+        return "";
+    }
+
 });

@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 /**
  * Development command deleting the content of the "files", "test/files" and

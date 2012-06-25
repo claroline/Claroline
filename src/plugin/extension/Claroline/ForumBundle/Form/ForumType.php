@@ -11,8 +11,8 @@ class ForumType extends AbstractType
     {
         $builder->add('name');
         $builder->add('shareType', 'choice', array(
-            'choices' => array(true => ' '),
-            'multiple' => true,
+            'choices' => array(true => 'public', false => 'private'),
+            'multiple' => false,
             'expanded' => true,
             'label' => 'sharable'
         ));

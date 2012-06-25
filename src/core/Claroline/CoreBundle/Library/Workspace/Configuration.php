@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Claroline\CoreBundle\Exception\ClarolineException;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class Configuration
 {
@@ -24,7 +25,7 @@ class Configuration
         $this->visitorTranslationKey = 'Visitor';
         $this->collaboratorTranslationKey = 'Collaborator';
         $this->managerTranslationKey = 'Manager';
-        $this->type = 'standard';
+        $this->type = AbstractWorkspace::STANDARD;
     }
 
     public static function fromTemplate($templateFile)

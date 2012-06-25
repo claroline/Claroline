@@ -6,6 +6,18 @@ claro_resource_show_creation_form:
     pattern: /form/show/{instanceParentId}
     defaults: { _controller: ClarolineCoreBundle:Resource:creationResourceForm, instanceParentId:null }
 
+claro_resource_options_form:
+    pattern: /form/options/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:creationOptionsForm }
+    options:
+      expose: true
+
+claro_resource_edit_options:
+    pattern: /edit/options/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:editOptions }
+    options:
+      expose: true
+
 claro_resource_delete:
     pattern: /delete/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
@@ -31,14 +43,14 @@ claro_resource_node:
       expose: true
 
 claro_resource_move:
-   pattern: move/{idChild}/{idParent}
-   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource }
+   pattern: move/{idChild}/{idParent}/{workspaceDestinationId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource, workspaceDestinationId:null }
    options:
       expose: true
 
 claro_resource_add_workspace:
-   pattern: workspace/add/{instanceId}/{workspaceId}/{options}
-   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
+   pattern: workspace/add/{instanceId}/{workspaceId}/{options}/{instanceDestinationId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace, instanceDestinationId:null }
    options:
       expose: true
    requirements:
@@ -57,11 +69,10 @@ claro_resource_create:
       expose: true
 
 claro_resource_default_click:
-   pattern: /click/{instanceId}
+   pattern: /click/{instanceId}/{wsContextId}
    defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
    options:
        expose: true
-
 
 claro_resource_form:
    pattern: /form/{instanceParentId}/{type}
@@ -70,7 +81,7 @@ claro_resource_form:
       expose: true
 
 claro_resource_type_resource:
-   pattern: /type/list.{format}
+   pattern: /type/{listable}/list.{format}
    defaults: { _controller: ClarolineCoreBundle:Resource:getResourceTypes }
    options:
       expose: true
