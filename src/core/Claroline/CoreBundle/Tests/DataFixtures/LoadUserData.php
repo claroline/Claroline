@@ -15,15 +15,15 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
 {
     /** @var ContainerInterface $container */
     private $container;
-    
+
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
-    
+
     /**
      * Loads five users with the following roles :
-     * 
+     *
      * Jane Doe  : ROLE_USER
      * Bob Doe   : ROLE_USER
      * Bill Doe  : ROLE_USER
@@ -35,13 +35,13 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $userRole = $this->getReference('role/user');
         $wsCreatorRole = $this->getReference('role/ws_creator');
         $adminRole = $this->getReference('role/admin');
-        
+
         $wsCreatorService = $this->container->get('claroline.workspace.creator');
         $type = Configuration::TYPE_SIMPLE;
         $config = new Configuration();
         $config->setWorkspaceType($type);
         $config->setWorkspaceName("my workspace");
-        
+
         $user = new User();
         $user->setFirstName('Jane');
         $user->setLastName('Doe');
@@ -53,7 +53,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryOne->setType('user_repository');
         $user->addRole($repositoryOne->getManagerRole());
         $user->setPersonnalWorkspace($repositoryOne);
-        
+
         $secondUser = new User();
         $secondUser->setFirstName('Bob');
         $secondUser->setLastName('Doe');
@@ -77,7 +77,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryThree->setType('user_repository');
         $thirdUser->addRole($repositoryThree->getManagerRole());
         $thirdUser->setPersonnalWorkspace($repositoryThree);
-        
+
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
         $wsCreator->setLastName('Doe');
@@ -89,7 +89,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryFour->setType('user_repository');
         $wsCreator->addRole($repositoryFour->getManagerRole());
         $wsCreator->setPersonnalWorkspace($repositoryFour);
-        
+
         $admin = new User();
         $admin->setFirstName('John');
         $admin->setLastName('Doe');
@@ -101,7 +101,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryFive->setType('user_repository');
         $admin->addRole($repositoryFive->getManagerRole());
         $admin->setPersonnalWorkspace($repositoryFive);
-        
+
         $manager->persist($user);
         $manager->persist($secondUser);
         $manager->persist($thirdUser);
@@ -112,7 +112,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $manager->persist($repositoryThree);
         $manager->persist($repositoryFour);
         $manager->persist($repositoryFive);
-       
+
         $manager->flush();
 
         $this->addReference('user/user', $user);
@@ -121,7 +121,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $this->addReference('user/ws_creator', $wsCreator);
         $this->addReference('user/admin', $admin);
     }
-        
+
     public function getOrder()
     {
         return 2;

@@ -9,13 +9,13 @@ class DatabaseWriterTest extends TransactionalTestCase
 {
     /** @var DatabaseWriter */
     private $dbWriter;
-    
+
     /** @var Loader */
     private $loader;
-    
+
     /** @var Doctrine\ORM\EntityManager */
     private $em;
-    
+
     protected function setUp()
     {
         parent::setUp();
@@ -26,78 +26,78 @@ class DatabaseWriterTest extends TransactionalTestCase
         $stubDir = $container->getParameter('claroline.stub_plugin_directory');
         $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
     }
-    
+
     /**
      * @dataProvider pluginPropertiesProvider
-     */  
+     */
     public function testWriterMakesInsertsCommonPropertiesForEachTypeOfPlugin($fqcn, $entityType, $pluginType)
     {
         $plugin = $this->loader->load($fqcn);
         $this->dbWriter->insert($plugin);
-        
+
         $pluginEntity = $this->em
             ->getRepository($entityType)
             ->findOneByBundleFQCN($fqcn);
-        
+
         $this->assertEquals($pluginType, $pluginEntity->getType());
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
         $this->assertEquals($plugin->getNameTranslationKey(), $pluginEntity->getNameTranslationKey());
         $this->assertEquals($plugin->getDescriptionTranslationKey(), $pluginEntity->getDescriptionTranslationKey());
     }
-    
+
     public function testInsertThenDeleteAPluginLeavesDatabaseUnchanged()
     {
         $plugin = $this->loader->load('Valid\Simple\ValidSimple');
         $this->dbWriter->insert($plugin);
         $this->dbWriter->delete('Valid\Simple\ValidSimple');
-        
+
         $extensions = $this->em
             ->getRepository('Claroline\CoreBundle\Entity\Extension')
             ->findOneByBundleFQCN('Valid\Simple\ValidSimple');
-        
+
         $this->assertEquals(0, count($extensions));
     }
-    
+
     public function testInsertThrowsAnExceptionIfPluginEntityIsNotValid()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
-        
+
         $plugin = $this->loader->load('Valid\Simple\ValidSimple');
         $this->dbWriter->insert($plugin);
         $this->dbWriter->insert($plugin); // violates unique name constraint
     }
-    
+
     public function testIsSavedReturnsExpectedValue()
     {
         $pluginFQCN = 'Valid\Simple\ValidSimple';
         $plugin = $this->loader->load($pluginFQCN);
-        
+
         $this->assertFalse($this->dbWriter->isSaved($pluginFQCN));
-        
+
         $this->dbWriter->insert($plugin);
-        
+
         $this->assertTrue($this->dbWriter->isSaved($pluginFQCN));
     }
-    
+
     public function testCustomResourceTypesArePersisted()
     {
         $pluginFQCN = 'Valid\WithCustomResources\ValidWithCustomResources';
         $plugin = $this->loader->load($pluginFQCN);
         $this->dbWriter->insert($plugin);
-        
+
         $dql = "
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
             JOIN rt.plugin p
             WHERE p.bundleName = 'WithCustomResources'
         ";
         $pluginResourceTypes = $this->em->createQuery($dql)->getResult();
-        
+
         $this->assertEquals(2, count($pluginResourceTypes));
         $this->assertEquals('ResourceA', $pluginResourceTypes[0]->getType());
         $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getType());
     }
-    
+
     public function pluginPropertiesProvider()
     {
         return array(
@@ -113,7 +113,7 @@ class DatabaseWriterTest extends TransactionalTestCase
             )
         );
     }
-    
+
     private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
     {
         $ds = DIRECTORY_SEPARATOR;

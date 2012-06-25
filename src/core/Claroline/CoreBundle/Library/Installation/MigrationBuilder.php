@@ -14,11 +14,11 @@ class MigrationBuilder
     private $prodMigrationsRelativePath;
     private $testMigrationsRelativePath;
     private $includeTestMigrations;
-    
+
     public function __construct(
         Connection $connection,
         MigrationHelper $helper,
-        $prodMigrationsRelativePath, 
+        $prodMigrationsRelativePath,
         $testMigrationsRelativePath,
         $includeTestMigrations = false
     )
@@ -29,30 +29,27 @@ class MigrationBuilder
         $this->testMigrationsRelativePath = $testMigrationsRelativePath;
         $this->includeTestMigrations = (bool) $includeTestMigrations;
     }
-    
+
     public function buildMigrationsForBundle(Bundle $bundle)
     {
         $migrations = array();
         $prodMigration = $this->buildMigration($bundle, $this->prodMigrationsRelativePath, 'prod');
-        
-        if (false !== $prodMigration)
-        {
+
+        if (false !== $prodMigration) {
             $migrations[] = $prodMigration;
         }
-        
-        if (true === $this->includeTestMigrations)
-        {
+
+        if (true === $this->includeTestMigrations) {
             $testMigration = $this->buildMigration($bundle, $this->testMigrationsRelativePath, 'test');
-            
-            if (false !== $testMigration)
-            {
+
+            if (false !== $testMigration) {
                 $migrations[] = $testMigration;
             }
         }
-        
+
         return $migrations;
     }
-    
+
     private function buildMigration(Bundle $bundle, $migrationsRelativePath, $environment)
     {
         $bundlePrefix = $this->migrationHelper->getTablePrefixForBundle($bundle);
@@ -62,19 +59,18 @@ class MigrationBuilder
         $migrationsNamespace = "{$bundle->getNamespace()}\\"
             . str_replace('/', '\\', $migrationsRelativePath);
         $migrationsTableName = "{$bundlePrefix}{$tableDiscr}_doctrine_migration_versions";
-        
+
         $config = new Configuration($this->connection);
         $config->setName($migrationsName);
-        $config->setMigrationsDirectory($migrationsPath);        
+        $config->setMigrationsDirectory($migrationsPath);
         $config->setMigrationsNamespace($migrationsNamespace);
         $config->setMigrationsTableName($migrationsTableName);
         $config->registerMigrationsFromDirectory($migrationsPath);
-        
-        if (count($config->getMigrations()) == 0)
-        {
+
+        if (count($config->getMigrations()) == 0) {
             return false;
         }
-        
+
         return new Migration($config);
     }
 }

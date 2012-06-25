@@ -13,18 +13,18 @@ class WorkspaceRoleTest extends FixtureTestCase
         $this->loadUserFixture();
         $this->loadWorkspaceFixture();
     }
-    
+
     public function testAWorkspaceRoleCannotBeReallocatedToAnotherWorkspace()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
-        
+
         $wsA = $this->getFixtureReference('workspace/ws_a');
         $wsB = $this->getFixtureReference('workspace/ws_a');
-        
+
         $wsRole = new WorkspaceRole();
         $wsRole->setName('ROLE_FOO');
         $wsRole->setWorkspace($wsA);
-        
+
         $wsRole->setWorkspace($wsB);
     }
 }

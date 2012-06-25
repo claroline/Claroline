@@ -11,7 +11,7 @@ class RecorderTest extends WebTestCase
     private $mockedPlugin;
     private $mockedDbWriter;
     private $mockedConfigWriter;
-    
+
     protected function setUp()
     {
         $this->recorder = self::createClient()->getContainer()->get('claroline.plugin.recorder');
@@ -19,7 +19,7 @@ class RecorderTest extends WebTestCase
         $this->recorder->setConfigurationFileWriter($this->mockedConfigWriter);
         $this->recorder->setDatabaseWriter($this->mockedDbWriter);
     }
-    
+
     public function testRecorderProperlyDelegatesToWritersOnRegister()
     {
         $this->mockedDbWriter->expects($this->once())
@@ -34,19 +34,17 @@ class RecorderTest extends WebTestCase
         $this->mockedConfigWriter->expects($this->once())
             ->method('importRoutingResources')
             ->with(
-                get_class($this->mockedPlugin), 
-                $this->mockedPlugin->getRoutingResourcesPaths(),
-                $this->mockedPlugin->getRoutingPrefix()
-            );
-        
+                get_class($this->mockedPlugin), $this->mockedPlugin->getRoutingResourcesPaths(), $this->mockedPlugin->getRoutingPrefix()
+        );
+
         $this->recorder->register($this->mockedPlugin);
     }
-    
+
     public function testRecorderProperlyDelegatesToWritersOnUnregister()
     {
         $this->mockedDbWriter->expects($this->once())
             ->method('delete')
-            ->with(get_class($this->mockedPlugin));  
+            ->with(get_class($this->mockedPlugin));
         $this->mockedConfigWriter->expects($this->once())
             ->method('removeNamespace')
             ->with($this->mockedPlugin->getVendorName());
@@ -56,16 +54,16 @@ class RecorderTest extends WebTestCase
         $this->mockedConfigWriter->expects($this->once())
             ->method('removeRoutingResources')
             ->with(get_class($this->mockedPlugin));
-        
+
         $this->recorder->unregister($this->mockedPlugin);
     }
-    
+
     public function testIsRecordedReturnsExpectedValues()
     {
         $pluginFQCN = get_class($this->mockedPlugin);
-        
+
         $this->assertFalse($this->recorder->isRegistered($pluginFQCN));
-        
+
         $this->mockedConfigWriter->expects($this->any())
             ->method('isRecorded')
             ->with($pluginFQCN)
@@ -73,11 +71,11 @@ class RecorderTest extends WebTestCase
         $this->mockedDbWriter->expects($this->any())
             ->method('isSaved')
             ->with($pluginFQCN)
-            ->will($this->returnValue(true));    
-        
+            ->will($this->returnValue(true));
+
         $this->assertTrue($this->recorder->isRegistered($pluginFQCN));
     }
-    
+
     private function initMockObjects()
     {
         $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\Plugin\ClarolineExtension');

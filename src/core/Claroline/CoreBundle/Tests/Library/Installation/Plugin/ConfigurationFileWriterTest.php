@@ -10,68 +10,67 @@ class ConfigurationFileWriterTest extends WebTestCase
 {
     /** @var ConfigurationFileWriter */
     private $configWriter;
-    
+
     /** @var string */
     private $namespacesFile;
-    
+
     /** @var string */
     private $bundlesFile;
-    
+
     /** @var string */
     private $routingFile;
-    
+
     protected function setUp()
     {
         $container = self::createClient()->getContainer();
         $this->configWriter = $container->get('claroline.plugin.recorder_configuration_file_writer');
-        
+
         $structure = array('namespaces' => '', 'bundles' => '', 'routing.yml' => '');
         vfsStream::setup('virtual', null, $structure);
-        
+
         $this->namespacesFile = vfsStream::url('virtual/namespaces');
         $this->bundlesFile = vfsStream::url('virtual/bundles');
         $this->routingFile = vfsStream::url('virtual/routing.yml');
-        
+
         $this->configWriter->setPluginNamespacesFile($this->namespacesFile);
         $this->configWriter->setPluginBundlesFile($this->bundlesFile);
         $this->configWriter->setPluginRoutingFile($this->routingFile);
     }
-    
+
     public function testRegisterNamespaceThrowsExceptionOnEmptyNamespaceArgument()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
-        
+
         $this->configWriter->registerNamespace('');
     }
-    
+
     public function testRegisterNamespaceWritesNewEntryInNamespacesFile()
     {
-        $this->configWriter->registerNamespace('Foo');       
-        
+        $this->configWriter->registerNamespace('Foo');
+
         $this->assertTrue(in_array('Foo', $this->getRegisteredNamespaces()));
     }
-    
+
     public function testRegisterNamespacePreservesOtherEntries()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        
+
         $this->configWriter->registerNamespace('Foo');
-        
+
         $this->assertEquals(
-            array("VendorX", "VendorY", "VendorZ", 'Foo'),
-            $this->getRegisteredNamespaces()
+            array("VendorX", "VendorY", "VendorZ", 'Foo'), $this->getRegisteredNamespaces()
         );
     }
-    
+
     public function testRegisterNamespaceDoesntDuplicateNamespace()
     {
         file_put_contents($this->namespacesFile, 'Bar');
-        
+
         $this->configWriter->registerNamespace('Bar');
-        
+
         $this->assertEquals(1, count($this->getRegisteredNamespaces()));
     }
-    
+
     public function testRegisterNamespaceCalledSeveralTimes()
     {
         $this->configWriter->registerNamespace('ABC');
@@ -84,18 +83,18 @@ class ConfigurationFileWriterTest extends WebTestCase
     public function testRemoveNamespaceDeletesEntry()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY\nVendorZ");
-        
+
         $this->configWriter->removeNamespace("VendorZ");
-        
+
         $this->assertEquals(array('VendorX', 'VendorY'), $this->getRegisteredNamespaces());
     }
 
     public function testRemoveUnregisteredNamespaceDoesntProduceError()
     {
         file_put_contents($this->namespacesFile, "VendorX\nVendorY");
-        
+
         $this->configWriter->removeNamespace("UnregisteredVendor");
-        
+
         $this->assertEquals(array('VendorX', 'VendorY'), $this->getRegisteredNamespaces());
     }
 
@@ -118,7 +117,7 @@ class ConfigurationFileWriterTest extends WebTestCase
 
         $this->assertEquals(array('VendorX'), $this->getRegisteredNamespaces());
     }
-    
+
     public function testAddInstantiableBundleThrowsExceptionOnEmptyBundleFQCN()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
@@ -128,28 +127,27 @@ class ConfigurationFileWriterTest extends WebTestCase
     public function testAddInstantiableBundleWritesNewEntryInBundlesFile()
     {
         $this->configWriter->addInstantiableBundle('Foo\\Bar');
-        
+
         $this->assertTrue(in_array('Foo\\Bar', $this->getRegisteredBundles()));
     }
 
     public function testAddInstantiableBundlePreservesOtherEntries()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        
+
         $this->configWriter->addInstantiableBundle('VendorZ\\Test');
-        
+
         $this->assertEquals(
-            array('VendorX\\Foo', 'VendorY\\Bar', 'VendorZ\\Test'),
-            $this->getRegisteredBundles()
+            array('VendorX\\Foo', 'VendorY\\Bar', 'VendorZ\\Test'), $this->getRegisteredBundles()
         );
     }
-    
+
     public function testAddInstantiableBundleDoesntDuplicateBundle()
     {
         file_put_contents($this->bundlesFile, 'Foo\\Bar');
-        
+
         $this->configWriter->addInstantiableBundle('Foo\\Bar');
-        
+
         $this->assertEquals(1, count($this->getRegisteredBundles()));
     }
 
@@ -161,29 +159,28 @@ class ConfigurationFileWriterTest extends WebTestCase
         $this->configWriter->addInstantiableBundle('VendorY\\Foo');
 
         $this->assertEquals(
-            array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'),
-            $this->getRegisteredBundles()
+            array('VendorX\\Foo', 'VendorX\\Bar', 'VendorY\\Foo'), $this->getRegisteredBundles()
         );
     }
 
     public function testRemoveInstantiableBundleDeletesEntry()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        
+
         $this->configWriter->removeInstantiableBundle('VendorY\\Bar');
-        
+
         $this->assertEquals(array('VendorX\\Foo'), $this->getRegisteredBundles());
     }
 
     public function testRemoveUnregisteredBundleDoesntProduceError()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar");
-        
+
         $this->configWriter->removeInstantiableBundle('UnregisteredVendor');
-        
+
         $this->assertEquals(array('VendorX\\Foo', 'VendorY\\Bar'), $this->getRegisteredBundles());
     }
-    
+
     public function testRemoveBundleCalledSeveralTimes()
     {
         file_put_contents($this->bundlesFile, "VendorX\\Foo\nVendorY\\Bar\nVendorZ\\Test");
@@ -203,7 +200,7 @@ class ConfigurationFileWriterTest extends WebTestCase
 
         $this->assertEquals(array('VendorX\\Foo'), $this->getRegisteredBundles());
     }
-    
+
     public function testImportRoutingResourcesAddsEntriesInRoutingFile()
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -214,9 +211,7 @@ class ConfigurationFileWriterTest extends WebTestCase
         );
 
         $this->configWriter->importRoutingResources(
-            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle', 
-            $paths,
-            'dummy_prefix'
+            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths, 'dummy_prefix'
         );
 
         $expectedResources = array(
@@ -233,7 +228,7 @@ class ConfigurationFileWriterTest extends WebTestCase
                 'prefix' => 'dummy_prefix'
             )
         );
-        
+
         $this->assertEquals($expectedResources, $this->getRoutingResources());
     }
 
@@ -247,9 +242,7 @@ class ConfigurationFileWriterTest extends WebTestCase
         $ds = DIRECTORY_SEPARATOR;
         $newPath = "plugin{$ds}VendorY{$ds}DummyPluginBundle{$ds}Resources{$ds}routing.yml";
         $this->configWriter->importRoutingResources(
-            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
-            array($newPath),
-            'dummy_prefix'
+            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($newPath), 'dummy_prefix'
         );
 
         $expectedResources = array(
@@ -262,32 +255,28 @@ class ConfigurationFileWriterTest extends WebTestCase
                 'prefix' => 'dummy_prefix'
             )
         );
-        
+
         $this->assertEquals($expectedResources, $this->getRoutingResources());
-    }  
-    
+    }
+
     public function testImportRoutingResourcesDoesntDuplicateEntry()
     {
         $ds = DIRECTORY_SEPARATOR;
         $path = "plugin{$ds}VendorY{$ds}DummyPluginBundle{$ds}Resources{$ds}routing.yml";
         $this->configWriter->importRoutingResources(
-            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
-            array($path),
-            'dummy_prefix'
+            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path), 'dummy_prefix'
         );
         $this->configWriter->importRoutingResources(
-            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', 
-            array($path),
-            'dummy_prefix'
+            'VendorY\DummyPluginBundle\VendorYDummyPluginBundle', array($path), 'dummy_prefix'
         );
 
         $expectedResources = array(
             'VendorYDummyPluginBundle_0' => array(
                 'resource' => '@VendorYDummyPluginBundle/Resources/routing.yml',
                 'prefix' => 'dummy_prefix'
-                )
-            );
-        
+            )
+        );
+
         $this->assertEquals($expectedResources, $this->getRoutingResources());
     }
 
@@ -312,7 +301,7 @@ class ConfigurationFileWriterTest extends WebTestCase
                 'prefix' => 'y_dummy_prefix'
             )
         );
-        
+
         $this->assertEquals($expectedResources, $this->getRoutingResources());
     }
 
@@ -325,9 +314,7 @@ class ConfigurationFileWriterTest extends WebTestCase
         );
 
         $this->configWriter->importRoutingResources(
-            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle', 
-            $paths,
-            'dummy_prefix'
+            'VendorX\DummyPluginBundle\VendorXDummyPluginBundle', $paths, 'dummy_prefix'
         );
         $this->configWriter->removeRoutingResources(
             'VendorX\DummyPluginBundle\VendorXDummyPluginBundle'
@@ -335,17 +322,17 @@ class ConfigurationFileWriterTest extends WebTestCase
 
         $this->assertEquals(array(), $this->getRoutingResources());
     }
-    
+
     public function testIsRecordedReturnsExpectedValues()
     {
         $this->assertFalse($this->configWriter->isRecorded('VendorX\Foo'));
-        
+
         file_put_contents($this->namespacesFile, 'VendorX');
         file_put_contents($this->bundlesFile, 'VendorX\\Foo');
-        
+
         $this->assertTrue($this->configWriter->isRecorded('VendorX\Foo'));
     }
-    
+
     private function getRegisteredNamespaces()
     {
         return file($this->namespacesFile, FILE_IGNORE_NEW_LINES);
@@ -355,7 +342,7 @@ class ConfigurationFileWriterTest extends WebTestCase
     {
         return file($this->bundlesFile, FILE_IGNORE_NEW_LINES);
     }
-    
+
     private function getRoutingResources()
     {
         $resources = Yaml::parse($this->routingFile);

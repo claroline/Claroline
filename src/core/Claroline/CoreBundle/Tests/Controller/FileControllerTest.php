@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
@@ -21,7 +22,7 @@ class FileControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}";
-        $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
+        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);
     }
 
@@ -34,36 +35,36 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testUpload()
     {
-         $this->logUser($this->getFixtureReference('user/admin'));
-         $originalPath = $this->stubDir.'originalFile.txt';
-         $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/directory');
-         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-         $this->assertEquals(1, count($this->getUploadedFiles()));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $originalPath = $this->stubDir . 'originalFile.txt';
+        $crawler = $this->uploadFile($originalPath);
+        $crawler = $this->client->request('GET', '/resource/directory');
+        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $this->assertEquals(1, count($this->getUploadedFiles()));
     }
 
     public function testDownload()
     {
-         $this->logUser($this->getFixtureReference('user/admin'));
-         $originalPath = $this->stubDir.'originalFile.txt';
-         $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/directory');
-         $link = $crawler->filter('.link_resource_view')->eq(0)->link();
-         $this->client->click($link);
-         $headers = $this->client->getResponse()->headers;
-         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=originalFile.txt'));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $originalPath = $this->stubDir . 'originalFile.txt';
+        $crawler = $this->uploadFile($originalPath);
+        $crawler = $this->client->request('GET', '/resource/directory');
+        $link = $crawler->filter('.link_resource_view')->eq(0)->link();
+        $this->client->click($link);
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=originalFile.txt'));
     }
 
     public function testDelete()
     {
-         $this->logUser($this->getFixtureReference('user/admin'));
-         $originalPath = $this->stubDir.'originalFile.txt';
-         $crawler = $this->uploadFile($originalPath);
-         $crawler = $this->client->request('GET', '/resource/directory');
-         $link = $crawler->filter('.link_delete_resource')->eq(0)->link();
-         $crawler = $this->client->click($link);
-         $this->assertEquals(0, $crawler->filter('.row_resource')->count());
-         $this->assertEquals(0, count($this->getUploadedFiles()));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $originalPath = $this->stubDir . 'originalFile.txt';
+        $crawler = $this->uploadFile($originalPath);
+        $crawler = $this->client->request('GET', '/resource/directory');
+        $link = $crawler->filter('.link_delete_resource')->eq(0)->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(0, $crawler->filter('.row_resource')->count());
+        $this->assertEquals(0, count($this->getUploadedFiles()));
     }
 
     private function uploadFile($filePath)
@@ -77,33 +78,29 @@ class FileControllerTest extends FunctionalTestCase
         return $this->client->submit($form, array('file_form[name]' => $filePath));
     }
 
-     private function getUploadedFiles()
-     {
+    private function getUploadedFiles()
+    {
         $iterator = new \DirectoryIterator($this->upDir);
         $uploadedFiles = array();
 
-        foreach($iterator as $file)
-        {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder')
-            {
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getFilename() !== 'placeholder') {
                 $uploadedFiles[] = $file->getFilename();
             }
         }
 
         return $uploadedFiles;
-     }
+    }
 
     private function cleanDirectory($dir)
     {
         $iterator = new \DirectoryIterator($dir);
 
-        foreach ($iterator as $file)
-        {
+        foreach ($iterator as $file) {
             if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                    && $file->getFilename() !== 'originalFile.txt'
-                    && $file->getFilename() !== 'originalZip.zip'
-               )
-            {
+                && $file->getFilename() !== 'originalFile.txt'
+                && $file->getFilename() !== 'originalZip.zip'
+            ) {
                 chmod($file->getPathname(), 0777);
                 unlink($file->getPathname());
             }

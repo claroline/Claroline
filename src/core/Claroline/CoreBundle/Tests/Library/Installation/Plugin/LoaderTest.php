@@ -9,10 +9,10 @@ class LoaderTest extends WebTestCase
 {
     /** @var Loader */
     private $loader;
-    
+
     /** @var string */
     private $extensionPath;
-    
+
     protected function setUp()
     {
         $container = self::createClient()->getContainer();
@@ -20,72 +20,60 @@ class LoaderTest extends WebTestCase
         $stubDir = $container->getParameter('claroline.stub_plugin_directory');
         $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
     }
-    
+
     public function testLoaderCanReturnAnInstanceOfALoadablePluginBundleClass()
     {
         $plugin = $this->loader->load('Valid\Basic\ValidBasic');
-        
+
         $this->assertInstanceOf('Valid\Basic\ValidBasic', $plugin);
     }
-    
+
     public function testLoaderThrowsAnExceptionIfExpectedBundleClassFileDoesntExist()
     {
-        try
-        {
+        try {
             $this->loader->load('Invalid\NoBundleClassFile\InvalidNoBundleClassFile');
             $this->fail('No exception thrown');
-        }
-        catch (InstallationException $ex)
-        {
+        } catch (InstallationException $ex) {
             $this->assertEquals(InstallationException::NO_PLUGIN_FOUND, $ex->getCode());
         }
     }
-    
+
     public function testLoaderThrowsAnExceptionIfMoreThanOneBundleClassFileIsFound()
     {
-        try
-        {
+        try {
             $this->loader->load('Incompatible\SameFQCNThanAnotherPlugin\IncompatibleSameFQCNThanAnotherPlugin');
             $this->fail('No exception thrown');
-        }
-        catch (InstallationException $ex)
-        {
+        } catch (InstallationException $ex) {
             $this->assertEquals(InstallationException::MULTIPLE_PLUGINS_FOUND, $ex->getCode());
         }
     }
-    
+
     /**
      * @dataProvider nonExistentBundleClassProvider
      */
     public function testLoaderThrowsAnExceptionIfExpectedBundleClassDoesntExist($fqcn)
     {
-        try
-        {
+        try {
             $this->loader->load($fqcn);
             $this->fail('No exception thrown');
-        }
-        catch (InstallationException $ex)
-        {
+        } catch (InstallationException $ex) {
             $this->assertEquals(InstallationException::NON_EXISTENT_BUNDLE_CLASS, $ex->getCode());
         }
     }
-    
+
     /**
      * @dataProvider nonInstantiableBundleClassProvider
      */
     public function testLoaderThrowsAnExceptionIfBundleClassIsNotInstantiable($fqcn)
     {
-        try
-        {
+        try {
             $this->loader->load($fqcn);
             $this->fail('No exception thrown');
-        }
-        catch (InstallationException $ex)
-        {
+        } catch (InstallationException $ex) {
             $this->assertEquals(InstallationException::NON_INSTANTIABLE_BUNDLE_CLASS, $ex->getCode());
         }
     }
-    
+
     public function nonExistentBundleClassProvider()
     {
         return array(
@@ -95,7 +83,7 @@ class LoaderTest extends WebTestCase
             array('Invalid\UnloadableBundleClass4\InvalidUnloadableBundleClass4')
         );
     }
-    
+
     public function nonInstantiableBundleClassProvider()
     {
         return array(
@@ -103,7 +91,7 @@ class LoaderTest extends WebTestCase
             array('Invalid\UnloadableBundleClass6\InvalidUnloadableBundleClass6')
         );
     }
-    
+
     private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -111,7 +99,7 @@ class LoaderTest extends WebTestCase
         $loader->setPluginDirectories(
             array(
                 'extension' => $this->extensionPath,
-                'tool' =>"{$stubDir}{$ds}tool"
+                'tool' => "{$stubDir}{$ds}tool"
             )
         );
     }

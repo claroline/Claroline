@@ -67,8 +67,7 @@ class CommonChecker
     {
         $nameParts = explode('\\', $this->pluginFQCN);
 
-        if (count($nameParts) !== 3 || $nameParts[2] !== $nameParts[0] . $nameParts[1])
-        {
+        if (count($nameParts) !== 3 || $nameParts[2] !== $nameParts[0] . $nameParts[1]) {
             throw new InstallationException(
                 "Plugin FQCN '{$this->pluginFQCN}' doesn't follow the "
                 . "'Vendor\BundleName\VendorBundleName' convention.",
@@ -79,9 +78,8 @@ class CommonChecker
 
     private function checkPluginExtendsClarolinePluginSubType()
     {
-        if (! $this->plugin instanceof ClarolineExtension
-            && ! $this->plugin instanceof ClarolineTool)
-        {
+        if (!$this->plugin instanceof ClarolineExtension
+            && !$this->plugin instanceof ClarolineTool) {
             throw new InstallationException(
                 "Class '{$this->pluginFQCN}' must inherit one of the ClarolinePlugin "
                 . "sub-types (ClarolineExtension, ClarolineApplication or ClarolineTool).",
@@ -92,12 +90,9 @@ class CommonChecker
 
     private function checkPluginIsInTheRightSubDirectory()
     {
-        if ($this->plugin instanceof ClarolineExtension)
-        {
+        if ($this->plugin instanceof ClarolineExtension) {
             $expectedDirectory = $this->pluginDirectories['extension'];
-        }
-        elseif ($this->plugin instanceof ClarolineTool)
-        {
+        } elseif ($this->plugin instanceof ClarolineTool) {
             $expectedDirectory = $this->pluginDirectories['tool'];
         }
 
@@ -105,8 +100,7 @@ class CommonChecker
         $expectedDirectoryEscaped = preg_quote($expectedDirectory, '/');
         $pluginPath = realpath($this->plugin->getPath());
 
-        if (preg_match("/^{$expectedDirectoryEscaped}/", $pluginPath) === 0)
-        {
+        if (preg_match("/^{$expectedDirectoryEscaped}/", $pluginPath) === 0) {
             throw new InstallationException(
                 "Plugin '{$this->pluginFQCN}' location doesn't match its "
                 . "type (expected location was {$expectedDirectory}).",
@@ -119,24 +113,21 @@ class CommonChecker
     {
         $prefix = $this->plugin->getRoutingPrefix();
 
-        if (! is_string($prefix))
-        {
+        if (!is_string($prefix)) {
             throw new InstallationException(
                 "{$this->pluginFQCN} : routing prefix must be a string.",
                 InstallationException::INVALID_ROUTING_PREFIX
             );
         }
 
-        if (empty($prefix))
-        {
+        if (empty($prefix)) {
             throw new InstallationException(
                 "{$this->pluginFQCN} : routing prefix cannot be empty.",
                 InstallationException::INVALID_ROUTING_PREFIX
             );
         }
 
-        if (preg_match('#\s#', $prefix))
-        {
+        if (preg_match('#\s#', $prefix)) {
             throw new InstallationException(
                 "{$this->pluginFQCN} : routing prefix cannot contain white spaces.",
                 InstallationException::INVALID_ROUTING_PREFIX
@@ -150,12 +141,10 @@ class CommonChecker
         $routingPaths = $this->plugin->getRoutingResourcesPaths();
         $routingResources = (array) $this->yamlParser->parse($this->routingFilePath);
 
-        foreach ($routingResources as $resource)
-        {
-            $isConflicting = ! $this->isOneOfTheFiles($resource['resource'], $routingPaths);
+        foreach ($routingResources as $resource) {
+            $isConflicting = !$this->isOneOfTheFiles($resource['resource'], $routingPaths);
 
-            if ($resource['prefix'] === $prefix &&  $isConflicting)
-            {
+            if ($resource['prefix'] === $prefix && $isConflicting) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : routing prefix '{$prefix}' is already registered in another plugin.",
                     InstallationException::INVALID_ALREADY_REGISTERED_PREFIX
@@ -166,20 +155,17 @@ class CommonChecker
 
     private function isOneOfTheFiles($resource, $paths)
     {
-        if (! is_array($paths))
-        {
+        if (!is_array($paths)) {
             $paths = array($paths);
         }
 
         $realpath = $this->fileLocator->locate($resource);
         $realpath = str_replace('\\', '/', $realpath);
 
-        foreach ($paths as $path)
-        {
+        foreach ($paths as $path) {
             $path = str_replace('\\', '/', $path);
 
-            if ($path == $realpath)
-            {
+            if ($path == $realpath) {
                 return true;
             }
         }
@@ -191,17 +177,14 @@ class CommonChecker
     {
         $paths = $this->plugin->getRoutingResourcesPaths();
 
-        if ($paths === null)
-        {
+        if ($paths === null) {
             return;
         }
 
-        foreach ((array) $paths as $path)
-        {
+        foreach ((array) $paths as $path) {
             $path = realpath($path);
 
-            if (! file_exists($path))
-            {
+            if (!file_exists($path)) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : Cannot find routing file '{$path}'.",
                     InstallationException::INVALID_ROUTING_PATH
@@ -210,8 +193,7 @@ class CommonChecker
 
             $bundlePath = preg_quote(realpath($this->plugin->getPath()), '/');
 
-            if (preg_match("/^{$bundlePath}/", $path) === 0)
-            {
+            if (preg_match("/^{$bundlePath}/", $path) === 0) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : Invalid routing file '{$path}' "
                     . "(must be located within the bundle).",
@@ -219,8 +201,7 @@ class CommonChecker
                 );
             }
 
-            if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION))
-            {
+            if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION)) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : Unsupported '{$ext}' extension for "
                     . "routing file '{$path}'(use .yml).",
@@ -228,13 +209,10 @@ class CommonChecker
                 );
             }
 
-            try
-            {
+            try {
                 $yamlString = file_get_contents($path);
                 $this->yamlParser->parse($yamlString);
-            }
-            catch (ParseException $ex)
-            {
+            } catch (ParseException $ex) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : Unloadable YAML routing file "
                     . "(parse exception message : '{$ex->getMessage()}')",
@@ -250,18 +228,15 @@ class CommonChecker
         $keys['name'] = $this->plugin->getNameTranslationKey();
         $keys['description'] = $this->plugin->getDescriptionTranslationKey();
 
-        foreach ($keys as $type => $key)
-        {
-            if (! is_string($key))
-            {
+        foreach ($keys as $type => $key) {
+            if (!is_string($key)) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : {$type} translation key must be a string.",
                     InstallationException::INVALID_TRANSLATION_KEY
                 );
             }
 
-            if (empty($key))
-            {
+            if (empty($key)) {
                 throw new InstallationException(
                     "{$this->pluginFQCN} : {$type} translation key cannot be empty.",
                     InstallationException::INVALID_TRANSLATION_KEY
@@ -274,8 +249,7 @@ class CommonChecker
     {
         $resourceFile = $this->plugin->getCustomResourcesFile();
 
-        if (is_string($resourceFile) && file_exists($resourceFile))
-        {
+        if (is_string($resourceFile) && file_exists($resourceFile)) {
             $resources = (array) $this->yamlParser->parse($resourceFile);
             $expectedKeys = array(
                 'name' => 'string',
@@ -283,20 +257,16 @@ class CommonChecker
                 'navigable' => 'boolean'
             );
 
-            foreach ($resources as $resource)
-            {
-                foreach ($expectedKeys as $expectedKey => $expectedType)
-                {
-                    if (! isset($resource[$expectedKey]))
-                    {
+            foreach ($resources as $resource) {
+                foreach ($expectedKeys as $expectedKey => $expectedType) {
+                    if (!isset($resource[$expectedKey])) {
                         throw new InstallationException(
                             "{$this->pluginFQCN} : {$expectedKey} is required in '{$resourceFile}'.",
                             InstallationException::INVALID_RESOURCE_KEY
                         );
                     }
 
-                    if (gettype($resource[$expectedKey]) !== $expectedType)
-                    {
+                    if (gettype($resource[$expectedKey]) !== $expectedType) {
                         throw new InstallationException(
                             "{$this->pluginFQCN} : {$expectedKey} must be a {$expectedType} in '{$resourceFile}'.",
                             InstallationException::INVALID_RESOURCE_VALUE
@@ -304,20 +274,17 @@ class CommonChecker
                     }
                 }
 
-                if(false==isset($resource['class']) && false==isset($resource['extends']))
-                {
+                if (false == isset($resource['class']) && false == isset($resource['extends'])) {
                     throw new InstallationException(
-                            "{$this->pluginFQCN} : requires a field 'class' or a field 'extends'"
-                            );
+                        "{$this->pluginFQCN} : requires a field 'class' or a field 'extends'"
+                    );
                 }
 
-                if(isset($resource['class']))
-                {
+                if (isset($resource['class'])) {
                     $expectedClassLocation = $this->plugin->getPath() . '/../../'
-                    . str_replace('\\', '/', $resource['class']) . '.php';
+                        . str_replace('\\', '/', $resource['class']) . '.php';
 
-                    if (! file_exists($expectedClassLocation))
-                    {
+                    if (!file_exists($expectedClassLocation)) {
 
                         throw new InstallationException(
                             "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) "
@@ -330,8 +297,7 @@ class CommonChecker
 
                     $classInstance = new $resource['class'];
 
-                    if (! $classInstance instanceof AbstractResource)
-                    {
+                    if (!$classInstance instanceof AbstractResource) {
                         throw new InstallationException(
                             "{$this->pluginFQCN} : {$resource['class']} (declared in {$resourceFile}) "
                             . "must extend Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource.",
@@ -341,18 +307,16 @@ class CommonChecker
                 }
 
                 //todo check resource extends
-                if(isset($resource['extends']))
-                {
-                    $expectedClassLocation = __DIR__.'/../../../Entity/Resource/'
-                    .str_replace('\\', '/', $resource['extends']).'.php';
+                if (isset($resource['extends'])) {
+                    $expectedClassLocation = __DIR__ . '/../../../Entity/Resource/'
+                        . str_replace('\\', '/', $resource['extends']) . '.php';
 
-                    if (! file_exists($expectedClassLocation))
-                    {
+                    if (!file_exists($expectedClassLocation)) {
                         throw new InstallationException(
                             "{$this->pluginFQCN} : {$resource['extends']} (declared in {$resourceFile}) "
                             . "cannot be found (looked for {$expectedClassLocation}).",
                             InstallationException::INVALID_RESOURCE_LOCATION
-                                );
+                        );
                     }
                 }
             }

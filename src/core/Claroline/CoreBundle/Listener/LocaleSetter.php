@@ -9,15 +9,15 @@ class LocaleSetter
 {
     protected $session;
     protected $configHandler;
-    
+
     public function __construct($session, $configHandler)
     {
         $this->session = $session;
         $this->configHandler = $configHandler;
     }
-    
+
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $this->session->setLocale($this->configHandler->getParameter('locale_language'));      
+        $this->session->setLocale($this->configHandler->getParameter('locale_language'));
     }
 }

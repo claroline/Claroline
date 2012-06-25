@@ -28,10 +28,10 @@ class Group extends AbstractRoleSubject
      * @Assert\NotBlank()
      */
     protected $name;
-    
+
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\User", 
+     *      targetEntity="Claroline\CoreBundle\Entity\User",
      *      cascade={"persist"}
      * )
      * @ORM\JoinTable(name="claro_user_group",
@@ -40,10 +40,10 @@ class Group extends AbstractRoleSubject
      * )
      */
     protected $users;
-    
+
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Role",
      *      cascade={"persist"}
      * )
      * @ORM\JoinTable(name="claro_group_role",
@@ -52,10 +52,10 @@ class Group extends AbstractRoleSubject
      * )
      */
     protected $roles;
-    
+
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole", 
+     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
      *      inversedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_group_role",
@@ -64,49 +64,49 @@ class Group extends AbstractRoleSubject
      * )
      */
     protected $workspaceRoles;
-    
+
     public function __construct()
     {
         parent::__construct();
         $this->workspaceRoles = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
-    
+
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function setName($name)
     {
         $this->name = $name;
     }
-       
+
     public function getName()
     {
         return $this->name;
     }
-    
+
     public function addUser(User $user)
     {
         $this->users->add($user);
         $user->getGroups()->add($this);
     }
-    
+
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
         $user->getGroups()->removeElement($this);
     }
-    
+
     public function getUsers()
     {
-        return $this->users;      
+        return $this->users;
     }
 
     /**
      * Returns the group's workspace roles as an ArrayCollection of WorkspaceRole objects.
-     * 
+     *
      * @return ArrayCollection[WorkspaceRole]
      */
     public function getWorkspaceRoleCollection()

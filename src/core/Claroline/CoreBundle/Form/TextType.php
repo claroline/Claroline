@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilder;
 
 class TextType extends AbstractType
 {
-
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'text');
@@ -24,5 +23,4 @@ class TextType extends AbstractType
     {
         return 'text_form';
     }
-
 }

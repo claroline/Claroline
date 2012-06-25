@@ -19,9 +19,9 @@ class DatabaseWriter
     private $validator;
     private $em;
     private $yamlParser;
-    
+
     public function __construct(
-        SymfonyValidator $validator, 
+        SymfonyValidator $validator,
         EntityManager $em,
         Yaml $yamlParser
     )
@@ -33,30 +33,26 @@ class DatabaseWriter
 
     public function insert(ClarolinePlugin $plugin)
     {
-        if ($plugin instanceof ClarolineTool)
-        {
+        if ($plugin instanceof ClarolineTool) {
             $pluginEntity = $this->prepareToolEntity($plugin);
-        }
-        elseif ($plugin instanceof ClarolineExtension)
-        {
+        } elseif ($plugin instanceof ClarolineExtension) {
             $pluginEntity = $this->prepareExtensionEntity($plugin);
         }
-        
+
         $pluginEntity->setBundleFQCN(get_class($plugin));
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
         $pluginEntity->setType($plugin->getType());
         $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
-        
+
         $errors = $this->validator->validate($pluginEntity);
 
-        if (count($errors) > 0) 
-        {
+        if (count($errors) > 0) {
             $pluginFQCN = get_class($plugin);
-            
+
             throw new InstallationException(
-                "The plugin entity for '{$pluginFQCN}' cannot be validated. " 
+                "The plugin entity for '{$pluginFQCN}' cannot be validated. "
                 . "Validation errors : {$errors->__toString()}.",
                 InstallationException::ENTIY_VALIDATION_ERROR
             );
@@ -70,22 +66,21 @@ class DatabaseWriter
     public function delete($pluginFQCN)
     {
         $plugin = $this->getPluginEntity($pluginFQCN);
-        // Complete deletion of all plugin db dependencies 
+        // Complete deletion of all plugin db dependencies
         // is made via cascade mechanism
         $this->em->remove($plugin);
         $this->em->flush();
     }
-    
+
     public function isSaved($pluginFQCN)
-    {        
-        if ($this->getPluginEntity($pluginFQCN) !== null)
-        {
+    {
+        if ($this->getPluginEntity($pluginFQCN) !== null) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     private function prepareToolEntity(ClarolineTool $tool)
     {
         return new Tool();
@@ -95,42 +90,38 @@ class DatabaseWriter
     {
         return new Extension();
     }
-    
+
     private function getPluginEntity($pluginFQCN)
     {
         return $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
-            ->findOneByBundleFQCN($pluginFQCN);
+                ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+                ->findOneByBundleFQCN($pluginFQCN);
     }
-    
+
     private function persistCustomResourceTypes(ClarolinePlugin $plugin, Plugin $pluginEntity)
     {
         $resourceFile = $plugin->getCustomResourcesFile();
-        
-        if (is_string($resourceFile) && file_exists($resourceFile))
-        {
+
+        if (is_string($resourceFile) && file_exists($resourceFile)) {
             $resources = (array) $this->yamlParser->parse($resourceFile);
 
-            foreach ($resources as $resource)
-            {              
+            foreach ($resources as $resource) {
                 $resourceType = new ResourceType();
-                
-                if(isset($resource['class']))
-                {
+
+                if (isset($resource['class'])) {
                     $resourceType->setClass($resource['class']);
                 }
-                if(isset($resource['extends']))
-                {
+                if (isset($resource['extends'])) {
                     //resource Type ex
                     $resourceExtended = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $resource['extends']));
                     $resourceType->setParent($resourceExtended);
                 }
-                
+
                 $resourceType->setType($resource['name']);
                 $resourceType->setListable($resource['listable']);
                 $resourceType->setNavigable($resource['navigable']);
                 $resourceType->setPlugin($pluginEntity);
-                         
+
                 $this->em->persist($resourceType);
             }
         }

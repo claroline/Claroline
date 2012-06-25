@@ -4,9 +4,9 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Plugin;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
+use Claroline\CoreBundle\Entity\Plugin;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceTypeRepository")
@@ -28,14 +28,17 @@ class ResourceType
     private $type;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="resourceType", cascade={"persist"})
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *      mappedBy="resourceType",
+     *      cascade={"persist"}
+     * )
      */
     private $abstractResources;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-
     private $class;
 
     /**
@@ -67,17 +70,26 @@ class ResourceType
     protected $metaTypes;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="children")
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *      inversedBy="children"
+     * )
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", mappedBy="parent")
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *      mappedBy="parent"
+     * )
      * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $children;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->abstractResources = new ArrayCollection();
@@ -85,37 +97,49 @@ class ResourceType
         $this->metaTypes = new ArrayCollection();
     }
 
+    /**
+     * Returns the resource type id.
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Returns the resource type name.
+     *
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * Sets the resource type name.
+     *
+     * @param string $type
+     */
     public function setType($type)
     {
-        $this->type=$type;
+        $this->type = $type;
     }
 
+    /**
+     * Returns the resource instances having the resource type.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getResourceInstances()
     {
         return $this->resourceInstances;
     }
 
-    // TRASH
-    public function addResourceInstance(ResourceInstance $resourceInstance)
-    {
-        $this->resourceInstances[] = $resourceInstance;
-        $resourceInstance->setUser($this);
-    }
-
-
     public function setNavigable($isNavigable)
     {
-        $this->isNavigable=$isNavigable;
+        $this->isNavigable = $isNavigable;
     }
 
     public function getNavigable()
@@ -125,7 +149,7 @@ class ResourceType
 
     public function setListable($isListable)
     {
-        $this->isListable=$isListable;
+        $this->isListable = $isListable;
     }
 
     public function getListable()
@@ -150,7 +174,7 @@ class ResourceType
 
     public function setClass($class)
     {
-        $this->class=$class;
+        $this->class = $class;
     }
 
     public function addMetaType($metaType)

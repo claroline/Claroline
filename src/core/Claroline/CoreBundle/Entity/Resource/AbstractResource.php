@@ -93,7 +93,6 @@ abstract class AbstractResource
     public function __construct()
     {
         $this->resourceInstances = new ArrayCollection();
-        $this->instanceCount = 0;
     }
 
     /**
@@ -127,25 +126,23 @@ abstract class AbstractResource
     }
 
     /**
-     * Adds a resource instance and increments the instances count.
+     * Adds a resource instance to the instance collection.
      *
      * @param ResourceInstance $resourceInstance
      */
     public function addResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourceInstances->add($resourceInstance);
-        $this->instanceCount++;
     }
 
     /**
-     * Removes a resource instance and decrements the instances count.
+     * Removes a resource instance from the instance collection.
      *
      * @param ResourceInstance $resourceInstance
      */
     public function removeResourceInstance(ResourceInstance $resourceInstance)
     {
         $this->resourceInstances->removeElement($resourceInstance);
-        $this->instanceCount--;
     }
 
     /**
