@@ -19,12 +19,12 @@ class FirstEntity
      * @ORM\generatedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $firstEntityField;
-    
+
     public function getId()
     {
         return $this->id;

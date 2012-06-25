@@ -8,17 +8,17 @@ abstract class TransactionalTestCase extends WebTestCase
 {
     /** @var Claroline\CoreBundle\Testing\TransactionalTestClient */
     protected $client;
-      
+
     protected function setUp()
-    {        
-        parent::setUp();        
-        $this->client = self::createClient();        
+    {
+        parent::setUp();
+        $this->client = self::createClient();
         $this->client->beginTransaction();
     }
-  
+
     protected function tearDown()
     {
         $this->client->shutdown();
-        parent::tearDown();        
+        parent::tearDown();
     }
 }

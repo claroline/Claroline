@@ -16,12 +16,12 @@ class SecondEntity
      * @ORM\generatedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $secondEntityField;
-    
+
     public function getId()
     {
         return $this->id;

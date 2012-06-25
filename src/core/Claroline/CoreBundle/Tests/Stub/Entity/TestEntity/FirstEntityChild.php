@@ -16,12 +16,12 @@ class FirstEntityChild extends FirstEntity
      * @ORM\generatedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $firstEntityChildField;
-    
+
     public function getId()
     {
         return $this->id;

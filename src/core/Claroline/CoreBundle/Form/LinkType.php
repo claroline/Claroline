@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilder;
 
 class LinkType extends AbstractType
 {
-
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('url', 'text');
@@ -25,5 +24,4 @@ class LinkType extends AbstractType
     {
         return 'link_form';
     }
-
 }

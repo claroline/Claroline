@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilder;
 
 class FileType extends AbstractType
 {
-
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'file');
@@ -24,5 +23,4 @@ class FileType extends AbstractType
     {
         return 'file_form';
     }
-
 }

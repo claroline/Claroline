@@ -16,25 +16,19 @@ class ThumbnailGenerator
     const WIDTH = 50;
     const HEIGHT = 50;
 
-    public function __construct ($dir)
+    public function __construct($dir)
     {
         $this->dir = $dir;
 
-        if (!extension_loaded('gd'))
-        {
+        if (!extension_loaded('gd')) {
             $this->hasGdExtension = false;
-        }
-        else
-        {
+        } else {
             $this->hasGdExtension = true;
         }
 
-        if (!extension_loaded('ffmpeg'))
-        {
+        if (!extension_loaded('ffmpeg')) {
             $this->hasFfmpegExtension = false;
-        }
-        else
-        {
+        } else {
             $this->hasFfmpegExtension = true;
         }
     }
@@ -44,41 +38,34 @@ class ThumbnailGenerator
     {
         $extension = pathinfo($name, PATHINFO_EXTENSION);
 
-        if($this->hasGdExtension)
-        {
-            switch($extension)
-            {
+        if ($this->hasGdExtension) {
+            switch ($extension) {
                 case "jpeg":
                     $srcImg = imagecreatefromjpeg($name);
-                    $filename = preg_replace('"\.jpeg$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
+                    $filename = preg_replace('"\.jpeg$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
                     break;
                 case "jpg":
                     $srcImg = imagecreatefromjpeg($name);
-                    $filename = preg_replace('"\.jpg$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
+                    $filename = preg_replace('"\.jpg$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
                     break;
                 case "png":
                     $srcImg = imagecreatefrompng($name);
-                    $filename = preg_replace('"\.png$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
+                    $filename = preg_replace('"\.png$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
                     break;
                 case "mov":
                     $srcImg = $this->createMpegGDI($name);
-                    $filename = preg_replace('"\.mov$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
+                    $filename = preg_replace('"\.mov$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
                     break;
                 case "mp4":
                     $srcImg = $this->createMpegGDI($name);
-                    $filename = preg_replace('"\.mp4$"', '@'.self::WIDTH.'x'.self::HEIGHT.'.png', $filename);
+                    $filename = preg_replace('"\.mp4$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
                     break;
                 default:
                     return null;
             }
 
             return $this->getFormatedImg($newWidth, $newHeight, $srcImg, $filename);
-
-            //imagedestroy($dstImg);
-            //imagedestroy($srcImg);
-        }
-        else
-        {
+        } else {
             //something went wrong.
             return 1;
         }
@@ -89,16 +76,12 @@ class ThumbnailGenerator
         $oldX = imagesx($srcImg);
         $oldY = imagesy($srcImg);
 
-        if ($oldX > $oldY)
-        {
+        if ($oldX > $oldY) {
             $thumbWidth = $newWidth;
-            $thumbHeight = $oldY*($newHeight/$oldX);
-        }
-        else
-        {
-            if ($oldX < $oldY)
-            {
-                $thumbWidth = $oldX*($newWidth/$oldY);
+            $thumbHeight = $oldY * ($newHeight / $oldX);
+        } else {
+            if ($oldX < $oldY) {
+                $thumbWidth = $oldX * ($newWidth / $oldY);
                 $thumbHeight = $newHeight;
             }
         }
@@ -113,10 +96,8 @@ class ThumbnailGenerator
     {
         $iterator = new \DirectoryIterator($this->dir);
 
-        foreach($iterator as $fileInfo)
-        {
-            if($fileInfo->isFile())
-            {
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isFile()) {
                 $pathName = $fileInfo->getPathname();
                 $path = $fileInfo->getPath();
                 $fileName = $fileInfo->getFileName();
@@ -127,20 +108,16 @@ class ThumbnailGenerator
 
     private function createMpegGDI($name)
     {
-        if($this->hasFfmpegExtension)
-        {
+        if ($this->hasFfmpegExtension) {
             $media = new \ffmpeg_movie($name);
             $frameCount = $media->getFrameCount();
             $frame = $media->getFrame(round($frameCount / 2));
             $gdImage = $frame->toGDImage();
 
             return $gdImage;
-        }
-        else
-        {
+        } else {
             //something went wrong
             return "1";
         }
     }
-
 }

@@ -19,9 +19,9 @@ class MetaType
     private $id;
 
     /**
-     * @ORM\Column(name="meta_type", type="string", length=50)
+     * @ORM\Column(name="name", type="string", length=50)
      */
-    protected $metaType;
+    protected $name;
 
     /*
      * @ORM\ManyToMany(
@@ -35,18 +35,33 @@ class MetaType
      */
     protected $resourceTypes;
 
+    /**
+     * Returns the meta type id.
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function setMetaType($metaType)
+    /**
+     * Sets the meta type name.
+     *
+     * @param string $name
+     */
+    public function setName($name)
     {
-        $this->metaType = $metaType;
+        $this->name = $name;
     }
 
-    public function getMetaType()
+    /**
+     * Returns the meta type name.
+     *
+     * @return string
+     */
+    public function getName()
     {
-        return $this->metaType;
+        return $this->name;
     }
 }

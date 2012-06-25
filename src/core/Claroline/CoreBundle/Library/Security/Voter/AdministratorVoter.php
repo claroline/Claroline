@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 /**
- * This voter grants access to admin users, whenever the attribute or the 
+ * This voter grants access to admin users, whenever the attribute or the
  * class is. This means that administrators are seen by the AccessDecisionManager
  * as if they have all the possible roles and permissions on every object or class.
  */
@@ -20,10 +20,8 @@ class AdministratorVoter implements VoterInterface
 
     protected function isAdmin(TokenInterface $token)
     {
-        foreach ($token->getRoles() as $role)
-        {
-            if (PlatformRoles::ADMIN === $role->getRole()) 
-            {
+        foreach ($token->getRoles() as $role) {
+            if (PlatformRoles::ADMIN === $role->getRole()) {
                 return true;
             }
         }

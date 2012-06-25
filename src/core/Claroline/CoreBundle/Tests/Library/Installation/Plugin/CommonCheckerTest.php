@@ -67,13 +67,13 @@ class CommonCheckerTest extends WebTestCase
         $this->checker->setPluginRoutingFilePath(vfsStream::url('virtual/routing.yml'));
 
         $locator = $this->getMockBuilder('\Symfony\Component\HttpKernel\Config\FileLocator')
-                ->disableOriginalConstructor()
-                ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $locator->expects($this->once())
-                ->method('locate')
-                ->with($this->equalTo("@FakePluginBundle/Resources/config/routing.yml"))
-                ->will($this->returnValue("Fake/PluginBundle/Resources/Resources/config/routing.yml"));
+            ->method('locate')
+            ->with($this->equalTo("@FakePluginBundle/Resources/config/routing.yml"))
+            ->will($this->returnValue("Fake/PluginBundle/Resources/Resources/config/routing.yml"));
         $this->checker->setFileLocator($locator);
 
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_ALREADY_REGISTERED_PREFIX);
@@ -155,13 +155,10 @@ class CommonCheckerTest extends WebTestCase
     {
         $plugin = $this->loader->load($pluginFQCN);
 
-        try
-        {
+        try {
             $this->checker->check($plugin);
             $this->assertTrue(true);
-        }
-        catch (InstallationException $ex)
-        {
+        } catch (InstallationException $ex) {
             $this->fail("A validation exception was thrown with code {$ex->getCode()}.");
         }
     }
@@ -269,13 +266,10 @@ class CommonCheckerTest extends WebTestCase
     {
         $plugin = $this->loader->load($pluginFQCN);
 
-        try
-        {
+        try {
             $this->checker->check($plugin);
             $this->fail("No exception thrown.");
-        }
-        catch (InstallationException $ex)
-        {
+        } catch (InstallationException $ex) {
             $this->assertEquals($exceptionCode, $ex->getCode());
         }
     }

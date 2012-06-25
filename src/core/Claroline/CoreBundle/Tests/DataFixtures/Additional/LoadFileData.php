@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Tests\DataFixtures\Additional;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -31,15 +32,15 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
 
     public function load(ObjectManager $manager)
     {
-       $this->setLoader();
-       $this->addFiles($this->getReference("user/user"), $manager);
+        $this->setLoader();
+        $this->addFiles($this->getReference("user/user"), $manager);
     }
 
     protected function setLoader()
     {
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}";
-        $this->upDir  = $this->getContainer()->getParameter('claroline.files.directory');
+        $this->upDir = $this->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);
     }
 
@@ -51,20 +52,20 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
 
     protected function createFile($user, $dir, $manager)
     {
-         $filePath = $this->stubDir."file.txt";
-         $size = 1000;
-         $hashName = $this->GUID();
+        $filePath = $this->stubDir . "file.txt";
+        $size = 1000;
+        $hashName = $this->GUID();
 
-         $file = new File();
-         $file->setSize($size);
-         $file->setName("test.txt");
-         $file->setHashName($hashName);
-         $file->setCreator($user);
-         $file->setParent($dir);
-         $file->setResourceType($this->getReference('resource_type/file'));
-         $manager->persist($file);
-         $manager->flush();
-         copy($filePath, $this->upDir.DIRECTORY_SEPARATOR.$hashName);
+        $file = new File();
+        $file->setSize($size);
+        $file->setName("test.txt");
+        $file->setHashName($hashName);
+        $file->setCreator($user);
+        $file->setParent($dir);
+        $file->setResourceType($this->getReference('resource_type/file'));
+        $manager->persist($file);
+        $manager->flush();
+        copy($filePath, $this->upDir . DIRECTORY_SEPARATOR . $hashName);
     }
 
     protected function cleanDirectory($dir)
@@ -72,13 +73,11 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
 
         $iterator = new \DirectoryIterator($dir);
 
-        foreach ($iterator as $file)
-        {
+        foreach ($iterator as $file) {
             if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                    && $file->getFilename() !== 'originalFile.txt'
-                    && $file->getFilename() !== 'originalZip.zip'
-               )
-            {
+                && $file->getFilename() !== 'originalFile.txt'
+                && $file->getFilename() !== 'originalZip.zip'
+            ) {
                 chmod($file->getPathname(), 0777);
                 unlink($file->getPathname());
             }
@@ -87,14 +86,11 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface, O
 
     private function GUID()
     {
-        if (function_exists('com_create_guid') === true)
-        {
+        if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');
         }
 
-        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535),
-            mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535),
-            mt_rand(0, 65535), mt_rand(0, 65535)
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)
         );
     }
 

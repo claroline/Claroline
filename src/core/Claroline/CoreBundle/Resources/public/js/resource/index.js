@@ -60,7 +60,7 @@ $(function(){
                     'workspaceId': repositoryId,
                     'format':'json'
                 })
-                },
+            },
             clickFolderMode: 1,
             onLazyRead: function(node){
                 node.appendAjax({
@@ -341,7 +341,7 @@ $(function(){
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
         xhr.onload = function(e){
             submissionHandler(xhr.responseText, route, routeParameters)
-            };
+        };
         xhr.send(formData);
     }
 

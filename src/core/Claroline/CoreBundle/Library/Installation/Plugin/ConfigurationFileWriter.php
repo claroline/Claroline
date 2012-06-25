@@ -51,8 +51,7 @@ class ConfigurationFileWriter
 
     public function removeNamespace($namespace)
     {
-        if (! in_array($namespace, $this->getSharedVendorNamespaces()))
-        {
+        if (!in_array($namespace, $this->getSharedVendorNamespaces())) {
             $this->doRemoveItem($this->pluginNamespacesFile, $namespace);
         }
     }
@@ -66,7 +65,7 @@ class ConfigurationFileWriter
     {
         $this->doRemoveItem($this->pluginBundlesFile, $pluginFQCN);
     }
-    
+
     public function importRoutingResources($pluginFQCN, $paths, $prefix)
     {
         $nameParts = explode('\\', $pluginFQCN);
@@ -75,13 +74,12 @@ class ConfigurationFileWriter
         $bundleClassName = $nameParts[2];
         $resources = array();
 
-        foreach ((array) $paths as $pathKey => $path)
-        {
+        foreach ((array) $paths as $pathKey => $path) {
             // extract resource path relatively to the plugin's bundle
             $ds = preg_quote(DIRECTORY_SEPARATOR);
             $pattern = "#^(.+){$ds}{$vendor}{$ds}{$bundleName}{$ds}(.+)$#";
             preg_match($pattern, $path, $matches);
-            $relativePath = $matches[2];          
+            $relativePath = $matches[2];
             // replace os-dependant directory separator by forward slash (symfony convention)
             $normalizedPath = str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
             // build a key for the resource ('$pathKey' index allowing several resources per bundle)
@@ -89,7 +87,7 @@ class ConfigurationFileWriter
             // express the path in the symfony way
             $value = "@{$bundleClassName}/{$normalizedPath}";
             // build the entry to be dumped in the yaml routing file
-            $resources[$key] = array (
+            $resources[$key] = array(
                 'resource' => $value,
                 'prefix' => $prefix
             );
@@ -107,10 +105,8 @@ class ConfigurationFileWriter
         $className = $nameParts[2];
         $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
 
-        foreach (array_keys((array) $resources) as $key)
-        {
-            if (substr($key, 0, strlen($className)) == $className)
-            {
+        foreach (array_keys((array) $resources) as $key) {
+            if (substr($key, 0, strlen($className)) == $className) {
                 unset($resources[$key]);
             }
         }
@@ -123,36 +119,30 @@ class ConfigurationFileWriter
     {
         $namespaceParts = explode('\\', $pluginFQCN);
         $vendorNamespace = array_shift($namespaceParts);
-        
+
         $isNamespaceRegistered = in_array(
-            $vendorNamespace, 
-            $this->getRegisteredNamespaces()
+            $vendorNamespace, $this->getRegisteredNamespaces()
         );
         $isBundleRegistered = in_array(
-            $pluginFQCN, 
-            $this->getRegisteredBundles()
+            $pluginFQCN, $this->getRegisteredBundles()
         );
-        
-        if ($isNamespaceRegistered && $isBundleRegistered)
-        {
+
+        if ($isNamespaceRegistered && $isBundleRegistered) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     private function assertFileIsWriteable($file)
     {
-        if (! file_exists($file))
-        {
-            if (! touch($file))
-            {
+        if (!file_exists($file)) {
+            if (!touch($file)) {
                 throw new ClarolineException("File '{$file}' not found.");
             }
         }
 
-        if (! is_writable($file))
-        {
+        if (!is_writable($file)) {
             throw new ClarolineException("File '{$file}' is not writable.");
         }
     }
@@ -161,18 +151,17 @@ class ConfigurationFileWriter
     {
         return file($this->pluginBundlesFile, FILE_IGNORE_NEW_LINES);
     }
-    
+
     private function getRegisteredNamespaces()
     {
         return file($this->pluginNamespacesFile, FILE_IGNORE_NEW_LINES);
     }
-    
+
     private function getSharedVendorNamespaces()
     {
         $vendors = array();
 
-        foreach ($this->getRegisteredBundles() as $bundleName)
-        {
+        foreach ($this->getRegisteredBundles() as $bundleName) {
             $nameParts = explode('\\', $bundleName);
             $vendors[] = $nameParts[0];
         }
@@ -180,17 +169,13 @@ class ConfigurationFileWriter
         $uniqueVendors = array_unique($vendors);
         $sharedVendors = array();
 
-        foreach ($uniqueVendors as $uniqueVendor)
-        {
+        foreach ($uniqueVendors as $uniqueVendor) {
             $vendorCount = 0;
 
-            foreach ($vendors as $vendor)
-            {
-                if ($vendor == $uniqueVendor)
-                {
+            foreach ($vendors as $vendor) {
+                if ($vendor == $uniqueVendor) {
                     $vendorCount++;
-                    if ($vendorCount > 1)
-                    {
+                    if ($vendorCount > 1) {
                         $sharedVendors[] = $vendor;
                     }
                 }
@@ -199,18 +184,17 @@ class ConfigurationFileWriter
 
         return $sharedVendors;
     }
-    
+
     private function getRoutingResources()
     {
         $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
 
         return (array) $resources;
     }
-    
+
     private function doAddItem($file, $item, $itemType)
     {
-        if (empty($item))
-        {
+        if (empty($item)) {
             throw new InstallationException(
                 "{$itemType} argument cannot be empty.",
                 InstallationException::EMPTY_FILE_ITEM
@@ -219,8 +203,7 @@ class ConfigurationFileWriter
 
         $items = file($file, FILE_IGNORE_NEW_LINES);
 
-        if (! in_array($item, $items))
-        {
+        if (!in_array($item, $items)) {
             $items[] = $item;
             file_put_contents($file, implode("\n", $items));
         }
@@ -230,10 +213,8 @@ class ConfigurationFileWriter
     {
         $items = file($file, FILE_IGNORE_NEW_LINES);
 
-        foreach ($items as $key => $value)
-        {
-            if ($value === $item)
-            {
+        foreach ($items as $key => $value) {
+            if ($value === $item) {
                 unset($items[$key]);
             }
         }

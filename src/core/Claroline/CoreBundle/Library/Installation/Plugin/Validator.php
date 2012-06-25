@@ -11,7 +11,7 @@ class Validator
     private $commonChecker;
     private $extensionChecker;
     private $toolChecker;
-    
+
     public function __construct(
         CommonChecker $commonChecker,
         ToolChecker $toolChecker,
@@ -22,7 +22,7 @@ class Validator
         $this->toolChecker = $toolChecker;
         $this->extensionChecker = $extensionChecker;
     }
-    
+
     public function setCommonChecker(CommonChecker $checker)
     {
         $this->commonChecker = $checker;
@@ -32,22 +32,19 @@ class Validator
     {
         $this->toolChecker = $checker;
     }
-    
+
     public function setExtensionChecker(ExtensionChecker $checker)
     {
         $this->extensionChecker = $checker;
     }
-    
+
     public function validate(ClarolinePlugin $plugin)
     {
         $this->commonChecker->check($plugin);
-        
-        if ($plugin instanceof ClarolineTool)
-        {
+
+        if ($plugin instanceof ClarolineTool) {
             $this->toolChecker->check($plugin);
-        }
-        elseif ($plugin instanceof ClarolineExtension)
-        {
+        } elseif ($plugin instanceof ClarolineExtension) {
             $this->extensionChecker->check($plugin);
         }
     }

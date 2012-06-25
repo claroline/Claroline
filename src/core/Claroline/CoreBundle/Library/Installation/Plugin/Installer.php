@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 
 class Installer
 {
-    private $loader; 
+    private $loader;
     private $validator;
     private $recorder;
     private $migrator;
@@ -26,11 +26,11 @@ class Installer
         $this->loader = $loader;
         $this->validator = $validator;
         $this->migrator = $migrator;
-        $this->recorder = $recorder;  
+        $this->recorder = $recorder;
         $this->kernel = $kernel;
         $this->em = $em;
     }
-    
+
     public function setLoader(Loader $loader)
     {
         $this->loader = $loader;
@@ -50,11 +50,11 @@ class Installer
     {
         $this->migrator = $migrator;
     }
-    
+
     public function install($pluginFQCN)
     {
         $this->checkRegistrationStatus($pluginFQCN, false);
-        $plugin = $this->loader->load($pluginFQCN);        
+        $plugin = $this->loader->load($pluginFQCN);
         $this->validator->validate($plugin);
         $this->migrator->install($plugin);
         $this->recorder->register($plugin);
@@ -72,41 +72,37 @@ class Installer
         $this->kernel->shutdown();
         $this->kernel->boot();
     }
-    
+
     public function isInstalled($pluginFQCN)
     {
         return $this->recorder->isRegistered($pluginFQCN);
     }
-    
+
     private function checkRegistrationStatus($pluginFQCN, $expectedStatus)
     {
-        if ($this->isInstalled($pluginFQCN) !== $expectedStatus)
-        {
+        if ($this->isInstalled($pluginFQCN) !== $expectedStatus) {
             $expectedStatus === true ? $stateDiscr = 'not' : $stateDiscr = 'already';
-            
+
             throw new InstallationException(
                 "Plugin '{$pluginFQCN}' is {$stateDiscr} registered.",
                 InstallationException::UNEXPECTED_REGISTRATION_STATUS
             );
         }
     }
-    
-        
+
     private function updateOnRemove($pluginFQCN)
-    {   
+    {
         $plugin = $this->em->getRepository('Claroline\CoreBundle\Entity\Plugin')->findOneBy(array('bundleFQCN' => $pluginFQCN));
         $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('plugin' => $plugin->getGeneratedId()));
         $parentType = $resourceType->getParent();
         $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findBy(array('resourceType' => $resourceType->getId()));
-        
-        if(null != $resources)
-        {
-            foreach ($resources as $resource)
-            {
+
+        if (null != $resources) {
+            foreach ($resources as $resource) {
                 $resource->setResourceType($parentType);
             }
         }
-        
+
         $this->em->flush();
     }
 }

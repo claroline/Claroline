@@ -13,10 +13,10 @@ abstract class FunctionalTestCase extends FixtureTestCase
         $form = $crawler->filter('#login_form input[type=submit]')->form();
         $form['_username'] = $user->getUsername();
         $form['_password'] = $user->getPlainPassword();
-        
+
         return $this->client->submit($form);
     }
-    
+
     /** @return Symfony\Component\Security\Core\SecurityContextInterface */
     protected function getSecurityContext()
     {
