@@ -2,11 +2,14 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile as SfFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadDirectoryData;
 use Claroline\CoreBundle\Tests\DataFixtures\Additional\LoadFileData;
 use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\File;
 
 class DirectoryControllerTest extends FunctionalTestCase
 {
@@ -31,64 +34,95 @@ class DirectoryControllerTest extends FunctionalTestCase
 
     public function testUserCanCreateRootDirectory()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/resource/directory');
-        $form = $crawler->filter('input[type=submit]')->form();
-        $form['select_resource_form[type]'] = $this->getFixtureReference('resource_type/directory')->getId();
-        $crawler = $this->client->submit($form);
-        $form = $crawler->filter('input[type=submit]')->form();
-        $this->client->submit($form, array('directory_form[name]' => 'abc'));
-        $crawler = $this->client->request('GET', '/resource/directory');
-        $this->assertEquals(1, count($crawler->filter(".row_resource")));
+        $this->logUser($this->getFixtureReference('user/user'));
+        $rootDir = new Directory;
+        $rootDir->setName('root_dir');
+        $this->addResource($rootDir, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        $this->client->request(
+            'POST',
+            "resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($dir));
     }
 
     public function testUserCanCreateSubDirectory()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $id = $this->createRootDirectory('DIR_ROOT_user');
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
-        $form = $crawler->filter('input[type=submit]')->form();
-        $dirTypeId = $this->getFixtureReference('resource_type/directory')->getId();
-        $crawler = $this->client->submit($form, array('select_resource_form[type]' => $dirTypeId));
-        $form = $crawler->filter('input[type=submit]')->form();
-        $this->client->submit($form, array('directory_form[name]' => 'abc'));
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
-        $this->assertEquals(1, count($crawler->filter(".row_resource")));
+        $rootDir = new Directory;
+        $rootDir->setName('root_dir');
+        $dirRi = $this->addResource($rootDir, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        $subDir = new Directory;
+        $subDir->setName('subDir');
+        $this->addResource($subDir, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId(), $dirRi->getId());
+        $this->client->request(
+            'POST',
+            "resource/node/{$dirRi->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($dir));
     }
 
     public function testUserCanCreateSubResource()
     {
         $ds = DIRECTORY_SEPARATOR;
+
         $filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
+        $copyPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}copy.txt";
+
         $this->logUser($this->getFixtureReference('user/user'));
-        $id = $this->createRootDirectory('DIR_ROOT_user');
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
-        $form = $crawler->filter('input[type=submit]')->form();
-        $form['select_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
-        $crawler = $this->client->submit($form);
-        $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
-        $this->assertEquals(1, count($crawler->filter(".row_resource")));
+        $rootDir = new Directory;
+        $rootDir->setName('root_dir');
+        $dirRi = $this->addResource($rootDir, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        copy($filePath, $copyPath);
+        $file = new SfFile($copyPath, 'copy.txt', null, null, null, true);
+        $object = new File();
+        $object->setName($file);
+        $object->setShareType(1);
+        $ri = $this->addResource($object, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId(), $dirRi->getId());
+        $this->client->request(
+            'POST',
+            "resource/node/{$dirRi->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($dir));
     }
 
     public function testUserCanRemoveDirectoryAndItsContent()
     {
-        $ds = DIRECTORY_SEPARATOR;
+       $ds = DIRECTORY_SEPARATOR;
+
         $filePath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
+        $copyPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}copy.txt";
+
         $this->logUser($this->getFixtureReference('user/user'));
-        $id = $this->createRootDirectory('DIR_ROOT_user');
-        $crawler = $this->client->request('GET', "/resource/click/{$id}");
-        $form = $crawler->filter('input[type=submit]')->form();
-        $form['select_resource_form[type]'] = $this->getFixtureReference('resource_type/file')->getId();
-        $crawler = $this->client->submit($form);
-        $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('file_form[name]' => $filePath));
-        $link = $crawler->filter("#link_resource_delete_{$id}")->link();
-        $this->client->click($link);
-        $crawler = $this->client->request('GET', '/resource/directory');
+        $rootDir = new Directory;
+        $rootDir->setName('root_dir');
+        $dirRi = $this->addResource($rootDir, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        copy($filePath, $copyPath);
+        $file = new SfFile($copyPath, 'copy.txt', null, null, null, true);
+        $object = new File();
+        $object->setName($file);
+        $object->setShareType(1);
+        $ri = $this->addResource($object, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId(), $dirRi->getId());
+
+        $this->client->request(
+            'POST',
+            "resource/workspace/remove/{$dirRi->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
+        );
+
         $this->assertEquals(0, count($this->getUploadedFiles($this->upDir)));
-        $this->assertEquals(0, count($crawler->filter(".row_resource")));
     }
 
     private function cleanDirectory($dir)
@@ -124,16 +158,17 @@ class DirectoryControllerTest extends FunctionalTestCase
         return $uploadedFiles;
      }
 
-     private function createRootDirectory($name)
-     {
-        $crawler = $this->client->request('GET', '/resource/directory/null');
-        $form = $crawler->filter('input[type=submit]')->form();
-        $fileTypeId = $this->getFixtureReference('resource_type/directory')->getId();
-        $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
-        $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('directory_form[name]' => $name));
-        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
-
-        return $id;
-     }
+    private function addResource($object, $workspaceId, $parentId = null)
+    {
+        return $ri = $this
+            ->client
+            ->getContainer()
+            ->get('claroline.resource.creator')
+            ->createResource(
+                $parentId,
+                $workspaceId,
+                $object,
+                true
+                );
+    }
 }

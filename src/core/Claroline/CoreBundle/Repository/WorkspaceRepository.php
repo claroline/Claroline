@@ -31,4 +31,16 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function getAllWsOfUser(User $user)
+    {
+        $dql = "
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles wr JOIN wr.users u WHERE u.id = '{$user->getId()}'
+            ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

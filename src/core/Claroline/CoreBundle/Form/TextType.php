@@ -25,4 +25,11 @@ class TextType extends AbstractType
         return 'text_form';
     }
 
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'data_class' => 'Claroline\CoreBundle\Entity\Resource\Text',
+        );
+    }
+
 }
