@@ -5,15 +5,17 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
     /** @var ContainerInterface $container */
     private $container;
+
     private $config;
 
     public function __construct()
@@ -61,7 +63,7 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
         $manager->persist($user);
         $wsCreatorService = $this->container->get('claroline.workspace.creator');
         $ws = $wsCreatorService->createWorkspace($this->config, $user);
-        $ws->setType('user_repository');
+        $ws->setType(AbstractWorkspace::USER_REPOSITORY);
         $user->addRole($ws->getManagerRole());
         $user->setPersonnalWorkspace($ws);
         $manager->persist($ws);

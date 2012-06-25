@@ -36,7 +36,7 @@ abstract class AbstractWorkspace
     private $name;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="integer", length="255")
      */
     private $type;
 
@@ -66,10 +66,14 @@ abstract class AbstractWorkspace
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="workspace")
      */
     private $resourcesInstance;
+
     private static $visitorPrefix = 'ROLE_WS_VISITOR';
     private static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
     private static $managerPrefix = 'ROLE_WS_MANAGER';
     private static $customPrefix = 'ROLE_WS_CUSTOM';
+
+    const USER_REPOSITORY = 0;
+    const STANDARD = 1;
 
     public function __construct()
     {

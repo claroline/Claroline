@@ -2,18 +2,18 @@
  * dependencies: dynatree & rod-contextMenu + jquery
  */
 (function($){
-    var idUserRepository = "";
     var resourceTypeArray = new Array();
     subItems = {};
     getResourceTypeJSON();
     getUserRepositoryId();
-    var idClickedWorkspace = "";
+    var workspaceClickedId = "";
 
     $.fn.extend({
         claroFilePicker:function(options){
         var params = $.extend({
             autoOpen: false,
             backdrop: false,
+            currentWorspaceId: null,
            // leftClickMenu: true,
             getForm: function(){
                 var formHTML =
@@ -67,29 +67,37 @@
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idUserRepository, 'format': 'json'})},
+                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format': 'json'})},
                 clickFolderMode: 1,
                 onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'format': 'json'})});
+                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'format': 'json'})});
                 },
                 onCreate: function(node, span){
                     bindContextMenu(node);
                 },
                 onDblClick: function(node){
                     $('#cfp_dialog').hide();
-                    if(node.data.shareType == 1)
+                    if(workspaceClickedId == params.currentWorkspaceId)
                     {
-                        params.dblClickItem(node);
+                        alert("you can't a resource this workspace in the current workspace");
                     }
                     else
                     {
-                        alert("you can't share this resource");
+                        if(node.data.shareType == 1)
+                        {
+                            params.dblClickItem(node);
+                        }
+                        else
+                        {
+                            alert("you can't share this resource");
+                        }
                     }
+
                 },
                 onCustomRender: function(node){
                     var copy = node.data.copy;
                     var html ='';
-                    console.debug(node);
+
                     if(copy == 1)
                     {
                         html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceCount+" share "+node.data.shareType+" </a>";
@@ -136,13 +144,11 @@
             $('#local_tree_button').live("click", function(event){
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
-                //this is weird but I have to do that, idk where the bug come form
-                idClickedRepository = idUserRepository;
-                idClickedWorkspace = null;
+                workspaceClickedId = document.getElementById("local_tree_button").getAttribute("data-userRepositoryId");
                 var customWorkspaceDynatree =
                    $.extend(defaultsDynatree,
                        {
-                           initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idUserRepository, 'format':'json'})},
+                           initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format':'json'})},
                            onCreate: function(node, span){
                                bindContextMenu(node);
                            }
@@ -166,8 +172,7 @@
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
-                console.debug(event);
-                idClickedWorkspace = idRepository;
+                workspaceClickedId = idRepository;
                 var customWorkspaceDynatree =
                     $.extend(defaultsDynatree,
                         {
@@ -183,14 +188,12 @@
                 $('#cfp_tree').show();
             });
 
-            $('#close_dialog_button').click(function(){
-                alert("close");
-            });
-
+            $('#close_dialog_button').click(function(){});
             $(this).modal({
                 show:params.autoOpen,
                 backdrop:params.backdrop
             });
+
             return (this);
 
         });}
@@ -203,7 +206,7 @@
             url: Routing.generate("claro_ws_user_workspace_id"),
             cache: false,
             success: function(data){
-                idUserRepository = data;
+                document.getElementById('local_tree_button').setAttribute('data-userRepositoryId', data);
             },
             error: function(xhr){
                 alert(xhr.status);
@@ -251,9 +254,12 @@
                     case "edit":
                         editNode(node, key);
                         break;
+                    case "options":
+                        optionsNode(node);
+                        break;
                     default:
                         node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key);
+                        createFormDialog(key, node.data.key, node);
                 }
             },
         items: {
@@ -288,7 +294,6 @@
         },
         "view": {name: "view", accesskey:"v"},
         "edit": {name: "edit", accesskey:"e"},
-        "remove": {name: "remove", accesskey:"r"},
         "delete": {
             name: "delete",
             accesskey:"d",
@@ -302,7 +307,8 @@
                             return true;
                         }
                     }
-            }
+            },
+         "options": {name: "options", accesskey:'p'}
         }
     }
         $.contextMenu(menuDefaultOptions);
@@ -321,7 +327,7 @@
     {
         $.ajax({
             type: 'POST',
-            url: Routing.generate('claro_resource_type_resource', {'format':'json'}),
+            url: Routing.generate('claro_resource_type_resource', {'format':'json', 'listable':'true'}),
             success: function(data){
                     //JSON.parse doesn't work: why ?
                     var JSONObject = eval(data);
@@ -345,9 +351,9 @@
     {
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':idClickedWorkspace}),
+        url: Routing.generate('claro_resource_remove_workspace',{'resourceId':node.data.key, 'workspaceId':workspaceClickedId}),
         success: function(data){
-            if(data=="delete")
+            if(data == "success")
             {
                 node.remove();
             }
@@ -357,13 +363,12 @@
 
     function editNode(node)
     {
-        //copy
         alert("this will create a copy")
-        alert('clickedWorkspace = '+idClickedWorkspace);
+        alert('clickedWorkspace = '+workspaceClickedId);
 
         $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_edit',{'instanceId':node.data.key, 'workspaceId': idClickedWorkspace, 'options':'copy'}),
+        url: Routing.generate('claro_resource_edit',{'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'options':'copy'}),
         success: function(data){
             if(data=="edit")
             {
@@ -375,17 +380,36 @@
 
     function openNode(node)
     {
-        console.debug(node);
-        window.location = Routing.generate('claro_resource_open',{'workspaceId': idClickedWorkspace, 'id':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'workspaceId': workspaceClickedId, 'id':node.data.key});
     }
 
     function viewNode(node)
     {
-        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
+        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key, 'wsContextId':workspaceClickedId});
     }
 
-    function createFormDialog(type, id){
-        route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
+    function optionsNode(node){
+        var route = Routing.generate('claro_resource_options_form', {
+            instanceId: node.data.key
+        });
+        $.ajax({
+            type: 'POST',
+            url: route,
+            cache: false,
+            success: function(data){
+                $('#cfp_dialog').empty();
+                $('#cfp_dialog').append(data);
+                $('#cfp_dialog').show();
+                $("#resource_options_form").submit(function(e){
+                    e.preventDefault();
+                    sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
+                    });
+                }
+            });
+    }
+
+    function createFormDialog(type, id, node){
+        var route = Routing.generate('claro_resource_form', {'type':type, 'instanceParentId':id});
         $.ajax({
             type: 'POST',
             url: route,
@@ -396,55 +420,68 @@
                 $('#cfp_dialog').show();
                 $("#generic_form").submit(function(e){
                     e.preventDefault();
-                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':idClickedWorkspace}, document.getElementById("generic_form"));
+                    sendForm("claro_resource_create",  {'type':type, 'instanceParentId':id, 'workspaceId':workspaceClickedId}, document.getElementById("generic_form"), node);
                     });
                 }
             });
     }
 
-    function submissionHandler(data, route, routeParameters)
+    function submissionHandler(xhr, route, routeParameters, node)
     {
-        console.debug(data);
-        try{
-            alert("TRY");
-            var JSONObject = JSON.parse(data);
-            var node = $("#cfp_tree").dynatree("getTree").selectKey(routeParameters.id);
-            if(JSONObject.type != 'directory')
+        if(xhr.getResponseHeader('Content-Type') == 'application/json')
+        {
+            var JSONObject = JSON.parse(xhr.responseText);
+            var instance = JSONObject[0];
+
+            var newNode = {
+                    title:instance.title,
+                    key:instance.key,
+                    copy:instance.copy,
+                    instanceCount:instance.instanceCount,
+                    shareType:instance.shareType,
+                    resourceId:instance.resourceId
+                }
+
+            if (instance.type == 'directory')
             {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key
-                });
+                newNode.isFolder = true;
+            }
+
+            if(node.data.key != newNode.key)
+            {
+                node.addChild(newNode);
             }
             else
             {
-                var childNode = node.addChild({
-                    title:JSONObject.name,
-                    key:JSONObject.key,
-                    isFolder:true
-                });
+                node.data.title = newNode.title;
+                node.data.shareType = newNode.shareType;
+                node.render();
             }
+
             $('#cfp_dialog').empty();
         }
-        catch(err)
+        else
         {
-            alert("error");
             $('#cfp_dialog').empty();
-            $('#cfp_dialog').append(data);
+            $('#cfp_dialog').append(xhr.responseText);
             $("#generic_form").submit(function(e){
                 e.preventDefault();
-                sendForm(route, routeParameters, document.getElementById("generic_form"));
+                sendForm(route, routeParameters, document.getElementById("generic_form"), node);
                 });
+            $("#resource_options_form").submit(function(e){
+                e.preventDefault();
+                sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
+            });
         }
     }
 
-    function sendForm(route, routeParameters, form)
+    function sendForm(route, routeParameters, form, node)
     {
         var formData = new FormData(form);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', Routing.generate(route, routeParameters), true);
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-        xhr.onload = function(e){submissionHandler(xhr.responseText, route, routeParameters)};
+        xhr.onload = function(e){submissionHandler(xhr, route, routeParameters, node)};
         xhr.send(formData);
     }
 

@@ -5,7 +5,8 @@ $(function(){
         submitHandler: function(oForm, id){
                 var option =  getCheckedValue(oForm["options"]);
                 addResource(id, twigWorkspaceId, option);
-            }
+            },
+            currentWorkspaceId: twigWorkspaceId
         };
 
     picker = $('#filepicker').claroFilePicker(params);

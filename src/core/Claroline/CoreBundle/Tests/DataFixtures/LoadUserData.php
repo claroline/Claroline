@@ -9,6 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
@@ -50,7 +51,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $user->addRole($userRole);
         $manager->persist($user);
         $repositoryOne = $wsCreatorService->createWorkspace($config, $user);
-        $repositoryOne->setType('user_repository');
+        $repositoryOne->setType(AbstractWorkspace::USER_REPOSITORY);
         $user->addRole($repositoryOne->getManagerRole());
         $user->setPersonnalWorkspace($repositoryOne);
 
@@ -62,7 +63,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $secondUser->addRole($userRole);
         $manager->persist($secondUser);
         $repositoryTwo = $wsCreatorService->createWorkspace($config, $secondUser);
-        $repositoryTwo->setType('user_repository');
+        $repositoryTwo->setType(AbstractWorkspace::USER_REPOSITORY);
         $secondUser->addRole($repositoryTwo->getManagerRole());
         $secondUser->setPersonnalWorkspace($repositoryTwo);
 
@@ -74,7 +75,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $thirdUser->addRole($userRole);
         $manager->persist($thirdUser);
         $repositoryThree = $wsCreatorService->createWorkspace($config, $thirdUser);
-        $repositoryThree->setType('user_repository');
+        $repositoryThree->setType(AbstractWorkspace::USER_REPOSITORY);
         $thirdUser->addRole($repositoryThree->getManagerRole());
         $thirdUser->setPersonnalWorkspace($repositoryThree);
 
@@ -86,7 +87,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $wsCreator->addRole($wsCreatorRole);
         $manager->persist($wsCreator);
         $repositoryFour = $wsCreatorService->createWorkspace($config, $wsCreator);
-        $repositoryFour->setType('user_repository');
+        $repositoryFour->setType(AbstractWorkspace::USER_REPOSITORY);
         $wsCreator->addRole($repositoryFour->getManagerRole());
         $wsCreator->setPersonnalWorkspace($repositoryFour);
 
@@ -98,7 +99,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $admin->addRole($adminRole);
         $manager->persist($admin);
         $repositoryFive = $wsCreatorService->createWorkspace($config, $wsCreator);
-        $repositoryFive->setType('user_repository');
+        $repositoryFive->setType(AbstractWorkspace::USER_REPOSITORY);
         $admin->addRole($repositoryFive->getManagerRole());
         $admin->setPersonnalWorkspace($repositoryFive);
 

@@ -5,11 +5,12 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
 
@@ -150,11 +151,12 @@ class DirectoryController extends Controller
      * Default action for a directory. It's what happens when you left click on it. This one is a particular because
      * it uses the resource:index.html.twig file with the current directory as a root.
      *
-     * @param integer $id
+     * @param integer           $id
+     * @param AbstractWorkspace $wsContext
      *
      * @return Response
      */
-    public function getDefaultAction($id)
+    public function getDefaultAction($id, $wsContext)
     {
         $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
         $em = $this->getDoctrine()->getEntityManager();
@@ -162,8 +164,28 @@ class DirectoryController extends Controller
         $workspace = $resourceInstance->getWorkspace();
         $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
         $resourcesType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-        $content = $this->render(
-            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourcesInstance, 'parentId' => $id, 'resourcesType' => $resourcesType, 'directory' => $resourceInstance, 'workspace' => $workspace));
+
+        switch ($wsContext->getType()) {
+            case (AbstractWorkspace::USER_REPOSITORY):
+                $content = $this->render(
+                    'ClarolineCoreBundle:Resource:index.html.twig', array(
+                    'form_resource' => $formResource->createView(),
+                    'resourceInstances' => $resourcesInstance,
+                    'parentId' => $id,
+                    'resourcesType' => $resourcesType,
+                    'directory' => $resourceInstance,
+                    'workspace' => $workspace));
+                break;
+
+            case (AbstractWorkspace::STANDARD):
+                return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array(
+                        'workspace' => $workspace,
+                        'resourcesType' => $resourcesType,
+                        'resources' => $resourcesInstance,
+                        'wsContextId' => $workspace->getId())
+                );
+                break;
+        }
         $response = new Response($content);
 
         return $response;

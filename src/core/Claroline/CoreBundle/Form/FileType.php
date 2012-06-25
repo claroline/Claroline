@@ -12,8 +12,8 @@ class FileType extends AbstractType
         $builder->add('name', 'file');
         $builder->add('license', 'entity', array('class' => 'ClarolineCoreBundle:License', 'property' => 'name'));
         $builder->add('shareType', 'choice', array(
-            'choices' => array(true => ' '),
-            'multiple' => true,
+            'choices' => array(true => 'public', false => 'private'),
+            'multiple' => false,
             'expanded' => true,
             'label' => 'sharable'
         ));
