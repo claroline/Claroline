@@ -37,11 +37,8 @@ class ForumController extends Controller
         );
     }
 
-    public function add($form, $id, User $user)
+    public function add(Forum $forum, $id, User $user)
     {
-        $name = $form['name']->getData();
-        $forum = new Forum();
-        $forum->setName($name);
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($forum);
         $em->flush();

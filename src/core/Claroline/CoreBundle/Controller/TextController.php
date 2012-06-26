@@ -64,17 +64,15 @@ class TextController extends Controller
      *
      * @return Text
      */
-    public function add($form, $id, User $user)
+    public function add(Text $text, $id, User $user)
     {
-        $name = $form['name']->getData();
-        $data = $form['text']->getData();
+        $data = $text->getText();
         $revision = new Revision();
         $revision->setContent($data);
         $revision->setUser($user);
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($revision);
         $text = new Text();
-        $text->setName($name);
         $text->setLastRevision($revision);
         $em->persist($text);
         $revision->setText($text);

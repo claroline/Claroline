@@ -208,7 +208,7 @@ class ResourceController extends Controller
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $ri = $this->get('claroline.resource.creator')->createResource($instanceParentId, $workspaceId, $data, true);
+            $ri = $this->get('claroline.resource.creator')->createResource($data, $workspaceId, $instanceParentId, $data, true);
 
             if (null !== $ri) {
                 $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
