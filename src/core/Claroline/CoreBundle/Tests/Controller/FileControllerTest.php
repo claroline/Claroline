@@ -99,9 +99,9 @@ class FileControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.resource.creator')
             ->createResource(
-                $parentId,
-                $workspaceId,
                 $object,
+                $workspaceId,
+                $parentId,
                 true
                 );
     }

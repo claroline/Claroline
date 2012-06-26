@@ -69,15 +69,14 @@ class FileController extends Controller
      *
      * @return File
      */
-    public function add($form, $id, User $user)
+    public function add(File $file, $id, User $user)
     {
-        $tmpFile = $form['name']->getData();
+        $tmpFile = $file->getName();
         $fileName = $tmpFile->getClientOriginalName();
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $size = filesize($tmpFile);
         $hashName = $this->generateGuid() . "." . $extension;
         $tmpFile->move($this->container->getParameter('claroline.files.directory'), $hashName);
-        $file = new File();
         $file->setSize($size);
         $file->setName($fileName);
         $file->setHashName($hashName);

@@ -254,9 +254,9 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.resource.creator')
             ->createResource(
-                $parentId,
-                $workspaceId,
                 $object,
+                $workspaceId,
+                $parentId,
                 true
                 );
     }
@@ -297,7 +297,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $rootDir = new Directory();
         $rootDir->setName($name);
         $rootDir->setShareType(1);
- 
+
         return $this->addResource($rootDir, $wsId);;
     }
 

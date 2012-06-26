@@ -46,24 +46,17 @@ class Manager
      *
      * @throws \Exception
      */
-    public function createResource($instanceParentId, $workspaceId, AbstractResource $object, $resourceInstance = false)
+    public function createResource(AbstractResource $object, $workspaceId, $instanceParentId = null,  $returnInstance = false)
     {
         $class = get_class($object);
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('class' => $class));
         $user = $this->container->get('security.context')->getToken()->getUser();
         $name = $this->findResService($resourceType);
         $resServ = $this->container->get($name);
-        $form = $resServ->getForm();
-        $form->setData($object);
-        $resource = $resServ->add($form, $instanceParentId, $user);
+        $resource = $resServ->add($object, $instanceParentId, $user);
 
         if (null !== $resource) {
-            if ($form->offsetExists('shareType')) {
-                $sharable = $form['shareType']->getData();
-                $resource->setShareType($sharable);
-            } else {
-                $resource->setShareType(0);
-            }
+
             $ri = new ResourceInstance();
             $ri->setCreator($user);
             $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceParentId);
@@ -79,7 +72,7 @@ class Manager
             $this->em->flush();
             $this->container->get('claroline.security.right_manager')->addRight($ri, $user, MaskBuilder::MASK_OWNER);
 
-            return $resourceInstance ? $ri : $resource;
+            return $returnInstance ? $ri : $resource;
         }
 
         throw \Exception("failed to create resource");

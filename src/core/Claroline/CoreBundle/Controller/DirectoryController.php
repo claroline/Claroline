@@ -59,11 +59,8 @@ class DirectoryController extends Controller
      *
      * @return Directory
      */
-    public function add($form, $id, User $user)
+    public function add(Directory $directory, $id, User $user)
     {
-        $directory = new Directory();
-        $name = $form['name']->getData();
-        $directory->setName($name);
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($directory);
         $em->flush();
