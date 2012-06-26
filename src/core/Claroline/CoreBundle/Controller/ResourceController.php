@@ -208,7 +208,7 @@ class ResourceController extends Controller
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $ri = $this->get('claroline.resource.creator')->createResource($data, $workspaceId, $instanceParentId, $data, true);
+            $ri = $this->get('claroline.resource.creator')->create($data, $workspaceId, $instanceParentId, $data, true);
 
             if (null !== $ri) {
                 $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
@@ -428,26 +428,12 @@ class ResourceController extends Controller
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idParent);
         $child = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idChild);
 
-        //when it's moved to the root with javascript, the workspaceId isn't know so it must be passed as a parameter
-        if ($workspaceDestinationId != null) {
-            $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceDestinationId);
-            $child->setWorkspace($workspace);
-        }
 
-        $child->setParent($parent);
+        $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceDestinationId);
 
-        //otherwise child and parent workspace are equals
-        if ($parent != null && $workspaceDestinationId != null) {
-            $child->setWorkspace($parent->getWorkspace());
-        }
+        $this->get('claroline.resource.creator')->move($child, $workspace, $parent);
 
-        $this->getDoctrine()->getEntityManager()->flush();
-
-        if ($this->get('request')->isXmlHttpRequest()) {
-            return new Response('success');
-        }
-
-        return new Response('resource moved');
+        return new Response('success');
     }
 
     /**
