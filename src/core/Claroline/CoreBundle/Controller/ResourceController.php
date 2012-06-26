@@ -387,7 +387,7 @@ class ResourceController extends Controller
         }
 
         $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getAllWsOfUser($user);
-        $cpt = 0;
+        $roots = array();
 
         foreach ($workspaces as $workspace) {
             $root = new ResourceInstance();
@@ -401,8 +401,7 @@ class ResourceController extends Controller
             $root->setWorkspace($workspace);
             $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
             $root->setResourceType($directoryType[0]);
-            $roots[$cpt] = $root;
-            $cpt++;
+            $roots[] = $root;
         }
 
         $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.{$format}.twig", array('resources' => $roots));

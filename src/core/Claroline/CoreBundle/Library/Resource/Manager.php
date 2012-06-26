@@ -39,14 +39,14 @@ class Manager
      *
      * @param integer          $instanceParentId
      * @param integer          $workspaceId
-     * @param                  $object
+     * @param AbstractResource $object
      * @param boolean          $instance the return type
      *
      * @return ResourceInstance | Resource
      *
      * @throws \Exception
      */
-    public function createResource($instanceParentId, $workspaceId, $object, $resourceInstance = false)
+    public function createResource($instanceParentId, $workspaceId, AbstractResource $object, $resourceInstance = false)
     {
         $class = get_class($object);
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('class' => $class));
