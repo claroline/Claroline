@@ -153,7 +153,7 @@ class FileController extends Controller
      *
      * @return Response
      */
-    public function indexAction($workspaceId,  $resourceId)
+    public function indexAction($resourceId)
     {
         $resource = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($resourceId);
         $mime = $resource->getMimeType();
@@ -163,7 +163,7 @@ class FileController extends Controller
             $name = $this->findPlayerService($mime);
             if(null != $name)
             {
-                return $this->get($name)->indexAction($workspaceId, $resourceId);
+                return $this->get($name)->indexAction($resourceId);
             }
 
         }

@@ -380,12 +380,12 @@
 
     function openNode(node)
     {
-        window.location = Routing.generate('claro_resource_open',{'workspaceId': workspaceClickedId, 'id':node.data.key});
+        window.location = Routing.generate('claro_resource_open',{'instanceId':node.data.key});
     }
 
     function viewNode(node)
     {
-        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key, 'wsContextId':workspaceClickedId});
+        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key });
     }
 
     function optionsNode(node){
@@ -449,7 +449,8 @@
 
             if(node.data.key != newNode.key)
             {
-                node.addChild(newNode);
+                node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'format': 'json'})});
+                node.expand();
             }
             else
             {

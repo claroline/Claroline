@@ -29,12 +29,12 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
         $documentMetatype->setName('document');
         $manager->persist($documentMetatype);
 
-        // resource type attributes : name, listable, navigable
+        // resource type attributes : name, listable, navigable, class
         $resourceTypes = array(
-            array('file', true, false),
-            array('directory', true, true),
-            array('link', true, false),
-            array('text', true, false)
+            array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File'),
+            array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory'),
+            array('link', true, false, 'Claroline\CoreBundle\Entity\Resource\Link'),
+            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text')
         );
 
         foreach ($resourceTypes as $attributes) {
@@ -42,6 +42,7 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
             $type->setType($attributes[0]);
             $type->setListable($attributes[1]);
             $type->setNavigable($attributes[2]);
+            $type->setClass($attributes[3]);
             $type->addMetaType($documentMetatype);
             $manager->persist($type);
             $this->addReference("resource_type/{$attributes[0]}", $type);
