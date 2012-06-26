@@ -65,7 +65,7 @@ class TextManagerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('claroline.resource.creator')
-            ->createResource(
+            ->create(
                 $object,
                 $workspaceId,
                 $parentId,

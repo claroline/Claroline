@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class Manager
 {
@@ -46,7 +47,7 @@ class Manager
      *
      * @throws \Exception
      */
-    public function createResource(AbstractResource $object, $workspaceId, $instanceParentId = null,  $returnInstance = false)
+    public function create(AbstractResource $object, $workspaceId, $instanceParentId = null,  $returnInstance = false)
     {
         $class = get_class($object);
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('class' => $class));
@@ -56,7 +57,6 @@ class Manager
         $resource = $resServ->add($object, $instanceParentId, $user);
 
         if (null !== $resource) {
-
             $ri = new ResourceInstance();
             $ri->setCreator($user);
             $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceParentId);
@@ -66,9 +66,8 @@ class Manager
             $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
             $ri->setWorkspace($workspace);
             $ri->setResource($resource);
-            $resource->addResourceInstance($ri);
-            $resource->setCreator($user);
             $this->em->persist($ri);
+            $resource->setCreator($user);
             $this->em->flush();
             $this->container->get('claroline.security.right_manager')->addRight($ri, $user, MaskBuilder::MASK_OWNER);
 
@@ -76,6 +75,22 @@ class Manager
         }
 
         throw \Exception("failed to create resource");
+    }
+
+    /**
+     * Moves a resource instance
+     *
+     * @param ResourceInstance  $child
+     * @param AbstractWorkspace $workspace
+     * @param ResourceInstance  $parent
+     */
+    public function move(ResourceInstance $child, AbstractWorkspace $workspace, ResourceInstance $parent = null)
+    {
+        $child->setWorkspace($workspace);
+        $child->setParent($parent);
+        $this->em->flush();
+
+        return 0;
     }
 
     /**
