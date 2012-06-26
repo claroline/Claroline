@@ -116,10 +116,8 @@ abstract class AbstractWorkspace
     {
         $this->checkIdCondition();
 
-        foreach ($this->roles as $storedRole)
-        {
-            if (self::isBaseRole($storedRole->getName()))
-            {
+        foreach ($this->roles as $storedRole) {
+            if (self::isBaseRole($storedRole->getName())) {
                 throw new ClarolineException('Base workspace roles are already set.');
             }
         }
@@ -156,10 +154,8 @@ abstract class AbstractWorkspace
     {
         $customRoles = new ArrayCollection();
 
-        foreach ($this->roles as $role)
-        {
-            if (self::isCustomRole($role->getName()))
-            {
+        foreach ($this->roles as $role) {
+            if (self::isCustomRole($role->getName())) {
                 $customRoles[] = $role;
             }
         }
@@ -179,21 +175,16 @@ abstract class AbstractWorkspace
     {
         $this->checkIdCondition();
 
-        if ($this->roles->contains($role))
-        {
+        if ($this->roles->contains($role)) {
             return;
         }
 
         $workspace = $role->getWorkspace();
 
-        if (! $workspace instanceof AbstractWorkspace)
-        {
+        if (!$workspace instanceof AbstractWorkspace) {
             $role->setWorkspace($this);
-        }
-        else
-        {
-            if ($workspace !== $this)
-            {
+        } else {
+            if ($workspace !== $this) {
                 throw new ClarolineException(
                     'Workspace roles are bound to only one workspace and cannot '
                     . 'be associated with another workspace.'
@@ -203,8 +194,7 @@ abstract class AbstractWorkspace
 
         $roleName = $role->getName();
 
-        if (! is_string($roleName) || 0 == strlen($roleName))
-        {
+        if (!is_string($roleName) || 0 == strlen($roleName)) {
             throw new ClarolineException('Workspace role must have a valid name.');
         }
 
@@ -215,8 +205,7 @@ abstract class AbstractWorkspace
 
     public function removeCustomRole(WorkspaceRole $role)
     {
-        if (0 === strpos($role->getName(), self::$customPrefix . "_{$this->getId()}_"))
-        {
+        if (0 === strpos($role->getName(), self::$customPrefix . "_{$this->getId()}_")) {
             $this->roles->removeElement($role);
         }
     }
@@ -225,8 +214,7 @@ abstract class AbstractWorkspace
     {
         if (0 === strpos($roleName, self::$visitorPrefix)
             || 0 === strpos($roleName, self::$collaboratorPrefix)
-            || 0 === strpos($roleName, self::$managerPrefix))
-        {
+            || 0 === strpos($roleName, self::$managerPrefix)) {
             return true;
         }
 
@@ -235,8 +223,7 @@ abstract class AbstractWorkspace
 
     public static function isCustomRole($roleName)
     {
-        if (0 === strpos($roleName, self::$customPrefix))
-        {
+        if (0 === strpos($roleName, self::$customPrefix)) {
             return true;
         }
 
@@ -260,8 +247,7 @@ abstract class AbstractWorkspace
 
     private function checkIdCondition()
     {
-        if (null === $this->id)
-        {
+        if (null === $this->id) {
             throw new ClarolineException(
                 'Workspace must be flushed and have a valid id '
                 . 'before associating roles to it.'
@@ -279,10 +265,8 @@ abstract class AbstractWorkspace
 
     private function doGetBaseRole($prefix)
     {
-        foreach ($this->roles as $role)
-        {
-            if (0 === strpos($role->getName(), $prefix))
-            {
+        foreach ($this->roles as $role) {
+            if (0 === strpos($role->getName(), $prefix)) {
                 return $role;
             }
         }

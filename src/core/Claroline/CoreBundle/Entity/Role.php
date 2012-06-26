@@ -42,12 +42,12 @@ class Role implements RoleInterface
      * @ORM\Column(name="translation_key", type="string", length="255")
      */
     private $translationKey;
-    
+
     /**
      * @ORM\Column(name="is_read_only", type="boolean")
      */
     private $isReadOnly = false;
-    
+
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
@@ -75,7 +75,7 @@ class Role implements RoleInterface
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Role",
      *      inversedBy="children"
      * )
      * @ORM\JoinColumn(
@@ -88,13 +88,13 @@ class Role implements RoleInterface
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Role",
      *      mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
-    
+
     public function getId()
     {
         return $this->id;
@@ -104,50 +104,46 @@ class Role implements RoleInterface
      * Sets the role name. The name must be prefixed by 'ROLE_'. Note that
      * platform-wide roles (as listed in Claroline/CoreBundle/Security/PlatformRoles)
      * cannot be modified by this setter.
-     * 
-     * @param string $name 
+     *
+     * @param string $name
      * @throw ClarolineException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
      */
     public function setName($name)
     {
-        if (0 !== strpos($name, 'ROLE_'))
-        {
+        if (0 !== strpos($name, 'ROLE_')) {
             throw new ClarolineException('Role names must start with "ROLE_"');
         }
-        
-        if (PlatformRoles::contains($this->name))
-        {
+
+        if (PlatformRoles::contains($this->name)) {
             throw new ClarolineException('Platform roles cannot be modified');
         }
-        
-        if (PlatformRoles::contains($name))
-        {
+
+        if (PlatformRoles::contains($name)) {
             $this->isReadOnly = true;
         }
-        
+
         $this->name = $name;
     }
-        
+
     public function getName()
     {
         return $this->name;
     }
-    
+
     public function setTranslationKey($key)
     {
         $this->translationKey = $key;
     }
-    
+
     public function getTranslationKey()
     {
-        if (null === $this->translationKey)
-        {
+        if (null === $this->translationKey) {
             return $this->getName();
         }
-        
+
         return $this->translationKey;
     }
-    
+
     public function isReadOnly()
     {
         return $this->isReadOnly;
@@ -155,35 +151,34 @@ class Role implements RoleInterface
 
     /**
      * Alias of getName().
-     * 
+     *
      * @return string The role name.
      */
     public function getRole()
     {
         return $this->getName();
     }
-    
+
     public function setParent(Role $role = null)
     {
-        $this->parent = $role;    
+        $this->parent = $role;
     }
 
     public function getParent()
     {
-        return $this->parent;   
+        return $this->parent;
     }
-    
-    /** 
-     * @ORM\PreRemove 
+
+    /**
+     * @ORM\PreRemove
      */
     public function preRemove()
     {
-        if (PlatformRoles::contains($this->name))
-        {
+        if (PlatformRoles::contains($this->name)) {
             throw new ClarolineException('Platform roles cannot be deleted');
         }
     }
-    
+
     protected function setReadOnly($value)
     {
         $this->isReadOnly = $value;

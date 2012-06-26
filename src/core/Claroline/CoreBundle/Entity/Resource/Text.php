@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,20 +11,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Text extends AbstractResource
 {
-
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $version;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Revision", mappedBy="text", cascade={"persist"})
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
+     *      mappedBy="text",
+     *      cascade={"persist"}
+     * )
      * @ORM\OrderBy({"version" = "DESC"})
      */
     protected $revisions;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Revision", cascade={"persist"})
+     * @ORM\OneToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
+     *      cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="current_text_id", referencedColumnName="id")
      */
     protected $lastRevision;

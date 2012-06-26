@@ -3,18 +3,16 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
- * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceInstanceRepository")
  * @ORM\Table(name="claro_resource_instance")
+ * @Gedmo\Tree(type="nested")
  */
-
 class ResourceInstance
 {
     /**
@@ -22,11 +20,11 @@ class ResourceInstance
      * @ORM\Column(type="integer")
      * @ORM\generatedValue(strategy="AUTO")
      */
-     protected $id;
+    protected $id;
 
     /**
-     * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
      */
     protected $created;
 
@@ -37,50 +35,62 @@ class ResourceInstance
     protected $updated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="resourcesInstance")
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\User",
+     *      inversedBy="resourceInstances"
+     * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="resourceInstances")
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *      inversedBy="resourceInstances"
+     * )
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */
     protected $abstractResource;
 
     /**
-     * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
+     * @Gedmo\TreeLeft
      */
     protected $lft;
 
     /**
-     * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
+     * @Gedmo\TreeLevel
      */
     protected $lvl;
 
     /**
-     * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
+     * @Gedmo\TreeRight
      */
     protected $rgt;
 
     /**
-     * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
+     * @Gedmo\TreeRoot
      */
     protected $root;
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", inversedBy="children")
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
+     *      inversedBy="children"
+     * )
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="parent")
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
+     *      mappedBy="parent"
+     * )
      * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $children;
@@ -91,109 +101,196 @@ class ResourceInstance
     protected $copy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="resourcesInstance")
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *      inversedBy="resourcesInstance"
+     * )
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
 
+    /**
+     * Returns the resource instance id.
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Sets the resource instance id.
+     *
+     * @param type $id
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    public function getCreationDate()
-    {
-        return $this->created;
-    }
-
-    public function getModificationDate()
-    {
-        return $this->updated;
-    }
-
-
-    public function getCreator()
-    {
-        return $this->user;
-    }
-
-    public function setCreator(User $user)
-    {
-       $this->user=$user;
-    }
-
-    public function setParent(ResourceInstance $parent = null)
-    {
-        $this->parent = $parent;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    public function addChildren(ResourceInstance $resource)
-    {
-        $this->children[] = $resource;
-    }
-
-    public function setCopy($copy)
-    {
-        $this->copy = $copy;
-    }
-
-    public function getCopy()
-    {
-        return $this->copy;
-    }
-
-    public function getRepositories()
-    {
-        return $this->repositories;
-    }
-
-    public function setWorkspace(AbstractWorkspace $workspace)
-    {
-        $this->workspace = $workspace;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-    public function setResource(AbstractResource $abstractResource)
-    {
-        $this->abstractResource = $abstractResource;
-    }
-
-    public function getResource()
-    {
-        return $this->abstractResource;
-    }
-
+    /**
+     * Returns the name of the resource the instance is referring to (shortcut).
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->abstractResource->getName();
     }
 
-    public function setResourceType($resourceType)
+    /**
+     * Returns the resource instance creation date.
+     *
+     * @return \DateTime
+     */
+    public function getCreationDate()
     {
-        $this->abstractResource->setResourceType($resourceType);
+        return $this->created;
     }
 
+    /**
+     * Returns the resource instance modification date.
+     *
+     * @return \DateTime
+     */
+    public function getModificationDate()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Returns the resource instance creator.
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getCreator()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Sets the resource instance creator.
+     *
+     * @param \Claroline\CoreBundle\Entity\User
+     */
+    public function setCreator(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Sets the parent resource instance.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceInstance $parent
+     */
+    public function setParent(ResourceInstance $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Returns the parent resource instance.
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceInstance
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Returns the children resource instances.
+     *
+     * @return \Doctrine\Common\ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Adds a child resource instance.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceInstance $resource
+     */
+    public function addChild(ResourceInstance $resource)
+    {
+        $this->children[] = $resource;
+    }
+
+    /**
+     * Sets the workspace containing the resource instance.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    /**
+     * Returns the workspace containing the resource instance.
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     */
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    /**
+     * Sets the resource the instance is referring to.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $abstractResource
+     */
+    public function setResource(AbstractResource $abstractResource)
+    {
+        $this->abstractResource = $abstractResource;
+    }
+
+    /**
+     * Returns the resource the instance is referring to.
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     */
+    public function getResource()
+    {
+        return $this->abstractResource;
+    }
+
+    /**
+     * Returns the instance resource type (shortcut to the original resource type).
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
+     */
     public function getResourceType()
     {
         return $this->abstractResource->getResourceType();
+    }
+
+    /**
+     * TO BE REMOVED
+     *
+     * Convenience method marking the instance as a copy of another instance.
+     *
+     * @param boolean $copy
+     */
+    public function setCopy($copy)
+    {
+        $this->copy = $copy;
+    }
+
+    /**
+     * TO BE REMOVED
+     *
+     * Convenience method returning true if the instance is a copy of another
+     * instance, false otherwise.
+     *
+     * @return boolean $copy
+     */
+    public function getCopy()
+    {
+        return $this->copy;
     }
 }

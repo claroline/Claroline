@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile as SfFile;
@@ -23,7 +24,7 @@ class FileControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}";
-        $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
+        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);
     }
 
@@ -36,12 +37,11 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testUpload()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $originalPath = $this->stubDir.'originalFile.txt';
-         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
-         $this->client->request(
-            'POST',
-            "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
+        $this->logUser($this->getFixtureReference('user/user'));
+        $originalPath = $this->stubDir . 'originalFile.txt';
+        $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        $this->client->request(
+            'POST', "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
         );
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($file));
@@ -50,29 +50,26 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testDownload()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $originalPath = $this->stubDir.'originalFile.txt';
-         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
-         $this->client->request(
-            'GET',
-            "/resource/click/{$ri->getId()}"
+        $this->logUser($this->getFixtureReference('user/user'));
+        $originalPath = $this->stubDir . 'originalFile.txt';
+        $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        $this->client->request(
+            'GET', "/resource/click/{$ri->getId()}"
         );
-         $headers = $this->client->getResponse()->headers;
-         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=copy.txt'));
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=copy.txt'));
     }
 
     public function testDelete()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $originalPath = $this->stubDir.'originalFile.txt';
-         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
-         $this->client->request(
-            'GET',
-            "/resource/workspace/remove/{$ri->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
-         );
+        $this->logUser($this->getFixtureReference('user/user'));
+        $originalPath = $this->stubDir . 'originalFile.txt';
+        $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
         $this->client->request(
-            'POST',
-            "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
+            'GET', "/resource/workspace/remove/{$ri->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
+        );
+        $this->client->request(
+            'POST', "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
         );
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($file));
@@ -82,7 +79,7 @@ class FileControllerTest extends FunctionalTestCase
     private function uploadFile($filePath, $workspaceId, $parentId = null)
     {
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-        $copyPath = $this->stubDir."copy".$extension;
+        $copyPath = $this->stubDir . "copy" . $extension;
         copy($filePath, $copyPath);
         $file = new SfFile($copyPath, "copy.$extension", null, null, null, true);
         $object = new File();
@@ -98,41 +95,32 @@ class FileControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('claroline.resource.creator')
-            ->create(
-                $object,
-                $workspaceId,
-                $parentId,
-                true
-                );
+            ->create($object, $workspaceId, $parentId, true);
     }
 
-     private function getUploadedFiles()
-     {
+    private function getUploadedFiles()
+    {
         $iterator = new \DirectoryIterator($this->upDir);
         $uploadedFiles = array();
 
-        foreach($iterator as $file)
-        {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder')
-            {
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getFilename() !== 'placeholder') {
                 $uploadedFiles[] = $file->getFilename();
             }
         }
 
         return $uploadedFiles;
-     }
+    }
 
     private function cleanDirectory($dir)
     {
         $iterator = new \DirectoryIterator($dir);
 
-        foreach ($iterator as $file)
-        {
+        foreach ($iterator as $file) {
             if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                    && $file->getFilename() !== 'originalFile.txt'
-                    && $file->getFilename() !== 'originalZip.zip'
-               )
-            {
+                && $file->getFilename() !== 'originalFile.txt'
+                && $file->getFilename() !== 'originalZip.zip'
+            ) {
                 chmod($file->getPathname(), 0777);
                 unlink($file->getPathname());
             }

@@ -27,11 +27,10 @@ class ProfileControllerTest extends FunctionalTestCase
 
         // change credentials
         $crawler = $this->client->submit(
-            $crawler->filter('input[type=submit]')->form(),
-            array(
-                'profile_form[username]' => 'new_username',
-                'profile_form[plainPassword][first]' => 'new_password',
-                'profile_form[plainPassword][second]' => 'new_password'
+            $crawler->filter('input[type=submit]')->form(), array(
+            'profile_form[username]' => 'new_username',
+            'profile_form[plainPassword][first]' => 'new_password',
+            'profile_form[plainPassword][second]' => 'new_password'
             )
         );
 
@@ -49,8 +48,7 @@ class ProfileControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/profile/view/{$adminId}");
         $this->assertRegExp(
-            '/John.+Doe.+admin/s',
-            $this->client->getResponse()->getContent()
+            '/John.+Doe.+admin/s', $this->client->getResponse()->getContent()
         );
     }
 }

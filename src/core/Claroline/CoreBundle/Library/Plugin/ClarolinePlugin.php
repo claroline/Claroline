@@ -28,13 +28,12 @@ abstract class ClarolinePlugin extends Bundle
     public function getRoutingResourcesPaths()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $path = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'routing.yml';
+        $path = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'routing.yml';
 
-        if (file_exists($path))
-        {
+        if (file_exists($path)) {
             return array($path);
         }
-        
+
         return array();
     }
 
@@ -43,17 +42,16 @@ abstract class ClarolinePlugin extends Bundle
         $vendor = $this->getVendorName();
         $prefix = $this->getBundleName();
         $pattern = '#^(.+)Bundle$#';
-        
-        if (preg_match($pattern, $prefix, $matches))
-        {
+
+        if (preg_match($pattern, $prefix, $matches)) {
             $prefix = $matches[1];
         }
-        
+
         $prefix = strtolower("{$vendor}_{$prefix}");
-        
+
         return $prefix;
     }
-    
+
     public function getNameTranslationKey()
     {
         return 'No available translated name';
@@ -63,17 +61,16 @@ abstract class ClarolinePlugin extends Bundle
     {
         return 'No available description';
     }
-    
+
     public function getCustomResourcesFile()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $defaultFilePath = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'resources.yml';
+        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'resources.yml';
 
-        if (file_exists($defaultFilePath))
-        {
+        if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
         }
-        
+
         return null;
     }
 }

@@ -13,23 +13,23 @@ class AclPersister extends ContainerAware implements EventSubscriber
 {
     public function getSubscribedEvents()
     {
-        return array(Events::postPersist, Events::preRemove); 
+        return array(Events::postPersist, Events::preRemove);
     }
-    
+
     public function postPersist(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
         $oid = ObjectIdentity::fromDomainObject($entity);
         $this->getAclProvider()->createAcl($oid);
     }
-    
+
     public function preRemove(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
         $oid = ObjectIdentity::fromDomainObject($entity);
         $this->getAclProvider()->deleteAcl($oid);
     }
- 
+
     /** @return AclProvider */
     private function getAclProvider()
     {

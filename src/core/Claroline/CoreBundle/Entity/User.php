@@ -116,12 +116,18 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     protected $workspaceRoles;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="user")
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
+     *      mappedBy="user"
+     * )
      */
-    private $resourcesInstance;
+    private $resourceInstances;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="user")
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *      mappedBy="user"
+     * )
      */
     private $abstractResources;
 
@@ -137,7 +143,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
-        $this->resourcesInstance = new ArrayCollection();
+        $this->resourceInstances = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
@@ -224,15 +230,12 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     {
         $roleNames = array();
 
-        foreach ($this->getOwnedRoles(true) as $role)
-        {
+        foreach ($this->getOwnedRoles(true) as $role) {
             $roleNames[] = $role->getName();
         }
 
-        foreach ($this->getGroups() as $group)
-        {
-            foreach ($group->getOwnedRoles(true) as $role)
-            {
+        foreach ($this->getGroups() as $group) {
+            foreach ($group->getOwnedRoles(true) as $role) {
                 $roleNames[] = $role->getName();
             }
         }
@@ -250,8 +253,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
      */
     public function hasRole($roleName)
     {
-        if (in_array($roleName, $this->getRoles()))
-        {
+        if (in_array($roleName, $this->getRoles())) {
             return true;
         }
 
@@ -270,33 +272,27 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
 
     public function equals(UserInterface $user)
     {
-        if (!$user instanceof User)
-        {
+        if (!$user instanceof User) {
             return false;
         }
 
-        if ($this->firstName !== $user->getFirstName())
-        {
+        if ($this->firstName !== $user->getFirstName()) {
             return false;
         }
 
-        if ($this->lastName !== $user->getLastName())
-        {
+        if ($this->lastName !== $user->getLastName()) {
             return false;
         }
 
-        if ($this->username !== $user->getUsername())
-        {
+        if ($this->username !== $user->getUsername()) {
             return false;
         }
 
-        if ($this->password !== $user->getPassword())
-        {
+        if ($this->password !== $user->getPassword()) {
             return false;
         }
 
-        if ($this->getSalt() !== $user->getSalt())
-        {
+        if ($this->getSalt() !== $user->getSalt()) {
             return false;
         }
     }
@@ -344,17 +340,17 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     public function serialize()
     {
         return serialize(array(
-            $this->id,
-            $this->firstName,
-            $this->lastName,
-            $this->username,
-            $this->password,
-            $this->salt,
-            $this->phone,
-            $this->note,
-            $this->mail,
-            $this->administrativeCode
-        ));
+                $this->id,
+                $this->firstName,
+                $this->lastName,
+                $this->username,
+                $this->password,
+                $this->salt,
+                $this->phone,
+                $this->note,
+                $this->mail,
+                $this->administrativeCode
+            ));
     }
 
     public function unserialize($serialized)
@@ -369,12 +365,12 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
             $this->note,
             $this->mail,
             $this->administrativeCode
-        ) = unserialize($serialized);
+            ) = unserialize($serialized);
     }
 
-    public function getResourcesInstance()
+    public function getResourceInstances()
     {
-        return $this->resourcesInstance;
+        return $this->resourceInstances;
     }
 
     public function addResourceInstance(ResourceInstance $resourcesInstance)

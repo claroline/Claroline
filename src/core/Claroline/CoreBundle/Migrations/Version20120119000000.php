@@ -233,7 +233,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'SET NULL')
         );
         $table->addForeignKeyConstraint(
-           $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
+            $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
 
         $this->storeTable($table);
@@ -346,7 +346,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('rgt', 'integer', array('notnull' => true));
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
-        $table->addColumn('copy', 'boolean', array('not_null' => false));
+        $table->addColumn('copy', 'boolean', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -374,7 +374,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_meta_type');
         $this->addId($table);
-        $table->addColumn('meta_type', 'string', array('notnull' => true));
+        $table->addColumn('name', 'string', array('notnull' => true));
 
         $this->storeTable($table);
     }

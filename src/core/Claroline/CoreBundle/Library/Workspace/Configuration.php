@@ -105,13 +105,11 @@ class Configuration
 
     public function check()
     {
-        if ($this->workspaceType != self::TYPE_SIMPLE && $this->workspaceType != self::TYPE_AGGREGATOR)
-        {
+        if ($this->workspaceType != self::TYPE_SIMPLE && $this->workspaceType != self::TYPE_AGGREGATOR) {
             throw new ClarolineException("Unknown workspace type '{$this->workspaceType}'");
         }
 
-        if (! is_string($this->workspaceName) || 0 === strlen($this->workspaceName))
-        {
+        if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new ClarolineException('Workspace name must be a non empty string');
         }
     }

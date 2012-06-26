@@ -14,7 +14,6 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
     /*
      * Create a directory tree for 5 users, 5 ws_creators and 5 admins
      */
-
     /** @var ContainerInterface $container */
     protected $container;
 
@@ -41,8 +40,6 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
 
         return $directory;
     }
-
-
     /* The tree is created this way:
      *
      * amount = 3
@@ -81,20 +78,18 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
     protected function createTree($user, $amount, ObjectManager $manager)
     {
         $name = "DIR_ROOT_{$user->getUsername()}";
-        $root = $this->createDirectory(null, $name, $user, $manager);;
+        $root = $this->createDirectory(null, $name, $user, $manager);
+        ;
         $lastref = $root;
 
-        for ($i=1; $i<($amount); $i++)
-        {
+        for ($i = 1; $i < ($amount); $i++) {
             $name = "DIR_{$i}_{$user->getUsername()}";
             $directory = $this->createDirectory($lastref, $name, $user, $manager);
-            if ($i%2 == 0)
-            {
-                $lastref=$directory;
+            if ($i % 2 == 0) {
+                $lastref = $directory;
             }
         }
     }
-
 
     public function getOrder()
     {

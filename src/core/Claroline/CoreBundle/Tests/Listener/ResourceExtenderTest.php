@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2;
 
 class ResourceExtenderTest extends FunctionalTestCase
 {
+
     protected function setUp()
     {
         parent::setUp();
@@ -20,10 +21,8 @@ class ResourceExtenderTest extends FunctionalTestCase
 
         $listeners = $this->em->getEventManager()->getListeners(Events::loadClassMetadata);
 
-        foreach ($listeners as $listener)
-        {
-            if ($listener instanceof ResourceExtender)
-            {
+        foreach ($listeners as $listener) {
+            if ($listener instanceof ResourceExtender) {
                 return;
             }
         }

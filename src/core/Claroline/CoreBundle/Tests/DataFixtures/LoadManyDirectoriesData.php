@@ -13,22 +13,20 @@ class LoadManyDirectoriesData extends LoadDirectoryData implements ContainerAwar
 {
     public function load(ObjectManager $manager)
     {
-        for ($i=0; $i<5; $i++)
-        {
+        for ($i = 0; $i < 5; $i++) {
             //for normal users
-            $this->createTree($this->getReference("user/manyUser{$i}"), $i+1, $manager);
+            $this->createTree($this->getReference("user/manyUser{$i}"), $i + 1, $manager);
             //for ws_creator
-            $idWSCreator = $i+100;
-            $this->createTree($this->getReference("user/manyUser{$idWSCreator}"), $i+1, $manager);
+            $idWSCreator = $i + 100;
+            $this->createTree($this->getReference("user/manyUser{$idWSCreator}"), $i + 1, $manager);
             //for admins
-            $idAdmin = $i+120;
-            $this->createTree($this->getReference("user/manyUser{$idAdmin}"), $i+1, $manager);
+            $idAdmin = $i + 120;
+            $this->createTree($this->getReference("user/manyUser{$idAdmin}"), $i + 1, $manager);
         }
-        
+
         $manager->flush();
     }
-   
-    
+
     public function getOrder()
     {
         return 104;
