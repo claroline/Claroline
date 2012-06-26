@@ -2,7 +2,8 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class ResourceInstanceRepository extends NestedTreeRepository
