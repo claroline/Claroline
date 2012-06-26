@@ -13,14 +13,14 @@ class AdministratorVoterTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
     }
-    
+
     public function testAdministrorIsAlwaysGranted()
     {
         $admin = $this->getFixtureReference('user/admin');
-        
+
         $this->logUser($admin);
         $security = $this->getSecurityContext();
-        
+
         $this->assertTrue($security->isGranted(PlatformRoles::ADMIN));
         $this->assertTrue($security->isGranted(array('ROLE_FOO', 'ROLE_BAR')));
         $this->assertTrue($security->isGranted('VIEW', new \stdClass()));

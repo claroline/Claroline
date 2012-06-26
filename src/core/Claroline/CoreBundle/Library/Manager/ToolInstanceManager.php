@@ -15,9 +15,9 @@ class ToolInstanceManager
      * @var EntityManager
      */
     protected $em;
-    
-    /** 
-    * @var RightManager
+
+    /**
+     * @var RightManager
      */
     protected $rightManager;
 
@@ -44,7 +44,6 @@ class ToolInstanceManager
         $this->repository = $em->getRepository($class);
         $this->rightManager = $rm;
         $this->class = $em->getClassMetadata($class)->name;
-
     }
 
     public function create(Tool $tool, AbstractWorkspace $workspace)
@@ -53,21 +52,21 @@ class ToolInstanceManager
         $toolInstance->setToolType($tool);
         $toolInstance->setHostWorkspace($workspace);
         $this->em->persist($toolInstance);
-        
+
         $workspace->addToolInstance($toolInstance);
         $this->em->persist($workspace);
         $this->em->flush();
-        
+
         return $toolInstance;
     }
 
     public function delete(ToolInstance $toolInstance, AbstractWorkspace $workspace)
-    {       
+    {
         $workspace->removeToolInstance($toolInstance);
         $this->em->remove($toolInstance);
         $this->em->flush();
     }
-    
+
     public function setPermission($toolInstance, $user, $mask)
     {
         $this->rightManager->addRight($toolInstance, $user, $mask);

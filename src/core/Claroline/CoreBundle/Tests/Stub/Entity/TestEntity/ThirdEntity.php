@@ -16,12 +16,12 @@ class ThirdEntity
      * @ORM\generatedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $thirdEntityField;
-    
+
     public function getId()
     {
         return $this->id;

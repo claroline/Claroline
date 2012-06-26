@@ -8,8 +8,8 @@ use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 interface TargetDelegateInterface
 {
     function getAces(Acl $acl);
-    function insertAce(Acl $acl,SecurityIdentityInterface $sid, $mask);
+    function insertAce(Acl $acl, SecurityIdentityInterface $sid, $mask);
     function deleteAce(Acl $acl, $aceIndex);
-    function updateAce(Acl $acl, $aceIndex, $mask);    
+    function updateAce(Acl $acl, $aceIndex, $mask);
     function buildObjectIdentity($target);
 }

@@ -12,22 +12,22 @@ class ClassDelegate implements TargetDelegateInterface
     {
         return $acl->getClassAces();
     }
-    
+
     public function insertAce(Acl $acl, SecurityIdentityInterface $sid, $mask)
     {
         $acl->insertClassAce($sid, $mask);
     }
-    
+
     public function deleteAce(Acl $acl, $aceIndex)
     {
         $acl->deleteClassAce($aceIndex);
     }
-      
+
     public function buildObjectIdentity($target)
     {
         return ClassIdentity::fromDomainClass($target);
     }
-      
+
     public function updateAce(Acl $acl, $aceIndex, $mask)
     {
         $acl->updateClassAce($aceIndex, $mask);

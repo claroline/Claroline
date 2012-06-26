@@ -19,23 +19,24 @@ class ToolInstance
      * @ORM\generatedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Tool")
      * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
      */
     protected $toolType;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $hostWorkspace;
-    
+
     public function getId()
     {
         return $this->id;
     }
+
     public function getToolType()
     {
         return $this->toolType;

@@ -35,7 +35,7 @@ $(function(){
                 url:Routing.generate('claro_resource_root_nodes',{
                     'format':'json'
                 })
-                },
+            },
             clickFolderMode: 1,
             onLazyRead: function(node){
                 node.appendAjax({
@@ -404,8 +404,8 @@ $(function(){
         xhr.open('POST', Routing.generate(route, routeParameters), true);
         xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
         xhr.onload = function(e){
-            submissionHandler(xhr, route, routeParameters, node)
-            };
+            submissionHandler(xhr, route, routeParameters, node);
+        };
         xhr.send(formData);
     }
 

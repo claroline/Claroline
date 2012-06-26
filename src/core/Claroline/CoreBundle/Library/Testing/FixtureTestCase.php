@@ -21,24 +21,24 @@ abstract class FixtureTestCase extends TransactionalTestCase
 
     /** @var ReferenceRepository */
     private $referenceRepo;
-    
+
     protected function setUp()
     {
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->referenceRepo = new ReferenceRepository($this->em);
     }
-    
+
     protected function loadPlatformRolesFixture()
     {
         $this->loadFixture(new LoadPlatformRolesData());
     }
-    
+
     protected function loadWorkspaceFixture()
     {
         $this->loadFixture(new LoadWorkspaceData());
     }
-    
+
     protected function loadUserFixture()
     {
         $this->loadFixture(new LoadPlatformRolesData());
@@ -50,32 +50,30 @@ abstract class FixtureTestCase extends TransactionalTestCase
         $this->loadFixture(new LoadRoleData());
         $this->loadFixture(new LoadGroupData());
     }
-    
+
     protected function loadRoleFixture()
     {
         $this->loadFixture(new LoadRoleData());
     }
-    
+
     protected function loadFixture(FixtureInterface $fixture)
     {
-        if ($fixture instanceof AbstractFixture)
-        {
+        if ($fixture instanceof AbstractFixture) {
             $fixture->setReferenceRepository($this->referenceRepo);
         }
-        
-        if ($fixture instanceof ContainerAwareInterface)
-        {
+
+        if ($fixture instanceof ContainerAwareInterface) {
             $fixture->setContainer($this->client->getContainer());
         }
-        
+
         $fixture->load($this->em);
     }
-    
+
     protected function getFixtureReference($name)
     {
         return $this->referenceRepo->getReference($name);
     }
-    
+
     /** @return Doctrine\ORM\EntityManager */
     protected function getEntityManager()
     {

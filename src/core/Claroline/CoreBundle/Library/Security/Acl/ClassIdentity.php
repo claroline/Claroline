@@ -10,13 +10,11 @@ final class ClassIdentity implements ObjectIdentityInterface
 
     public function __construct($classFQCN)
     {
-        if (empty($classFQCN)) 
-        {
+        if (empty($classFQCN)) {
             throw new \InvalidArgumentException('$classFQCN cannot be empty.');
         }
-        
-        if (! class_exists($classFQCN))
-        {
+
+        if (!class_exists($classFQCN)) {
             throw new \InvalidArgumentException(
                 "Class {$classFQCN} doesn't exist or couldn't be loaded ."
             );

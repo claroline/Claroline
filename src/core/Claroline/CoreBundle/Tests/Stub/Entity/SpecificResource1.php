@@ -15,7 +15,7 @@ class SpecificResource1 extends AbstractResource
      * @ORM\Column(type="string", name="some_field", length=255)
      */
     private $someField;
-    
+
     public function getSomeField()
     {
         return $this->someField;

@@ -11,9 +11,10 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles wr JOIN wr.users u WHERE u.id = '{$user->getId()}' AND
-            w.type != 0
-
+            JOIN w.roles wr
+            JOIN wr.users u
+            WHERE u.id = '{$user->getId()}'
+            AND w.type != 0
         ";
         $query = $this->_em->createQuery($dql);
 

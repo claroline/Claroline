@@ -18,10 +18,10 @@ class WorkspaceRole extends Role
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     private $workspace;
-    
+
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\User", 
+     *  targetEntity="Claroline\CoreBundle\Entity\User",
      *  inversedBy="workspaceRoles"
      * )
      * @ORM\JoinTable(name="claro_user_role",
@@ -30,10 +30,10 @@ class WorkspaceRole extends Role
      * )
      */
     private $users;
-    
+
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\Group", 
+     *  targetEntity="Claroline\CoreBundle\Entity\Group",
      *  inversedBy="workspaceRoles"
      * )
      * @ORM\JoinTable(name="claro_group_role",
@@ -42,34 +42,32 @@ class WorkspaceRole extends Role
      * )
      */
     private $groups;
-    
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
     }
-    
+
     /**
      * Sets the role's name. This operation is only needed for workspace custom roles.
      * Note that in this case, the 'ROLE_' convention isn't mandatory.
-     * 
-     * @param string $name 
+     *
+     * @param string $name
      */
     public function setName($name)
     {
-        if (AbstractWorkspace::isBaseRole($this->getName()))
-        {
+        if (AbstractWorkspace::isBaseRole($this->getName())) {
             throw new ClarolineException('Workspace base roles cannot be modified');
         }
-        
-        if (AbstractWorkspace::isBaseRole($name))
-        {
+
+        if (AbstractWorkspace::isBaseRole($name)) {
             $this->setReadOnly(true);
         }
-        
+
         $this->name = $name;
     }
-    
+
     public function getWorkspace()
     {
         return $this->workspace;
@@ -78,20 +76,19 @@ class WorkspaceRole extends Role
     /**
      * Binds the role to a workspace instance. This method is aimed to be used
      * by the AbstractWorkspace role setters.
-     * 
-     * @param AbstractWorkspace $workspace 
+     *
+     * @param AbstractWorkspace $workspace
      */
     public function setWorkspace(AbstractWorkspace $workspace)
     {
         $ws = $this->getWorkspace();
-        
-        if (null !== $ws)
-        {
+
+        if (null !== $ws) {
             throw new ClarolineException(
                 "This role is already bound to workspace '{$ws->getName()}'"
             );
         }
-        
+
         $this->workspace = $workspace;
     }
 

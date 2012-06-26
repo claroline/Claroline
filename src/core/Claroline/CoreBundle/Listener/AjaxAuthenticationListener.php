@@ -9,9 +9,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 class AjaxAuthenticationListener
 {
-/**
- * @param GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
- */
+    /**
+     * @param GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
+     */
     public function onCoreException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
@@ -24,5 +24,4 @@ class AjaxAuthenticationListener
         }
     }
 }
-
 

@@ -8,12 +8,12 @@ class InstallerTest extends WebTestCase
 {
     /** @var Installer */
     private $installer;
-    private $mockedPlugin;    
+    private $mockedPlugin;
     private $mockedLoader;
     private $mockedValidator;
     private $mockedMigrator;
     private $mockedRecorder;
-    
+
     protected function setUp()
     {
         $this->markTestSkipped("don't understand");
@@ -23,9 +23,9 @@ class InstallerTest extends WebTestCase
         $this->installer->setLoader($this->mockedLoader);
         $this->installer->setValidator($this->mockedValidator);
         $this->installer->setMigrator($this->mockedMigrator);
-        $this->installer->setRecorder($this->mockedRecorder);     
+        $this->installer->setRecorder($this->mockedRecorder);
     }
-    
+
     public function testInstallProperlyDelegatesToHelpers()
     {
         $this->mockedRecorder->expects($this->once())
@@ -45,24 +45,24 @@ class InstallerTest extends WebTestCase
         $this->mockedRecorder->expects($this->once())
             ->method('register')
             ->with($this->mockedPlugin);
-        
+
         $this->installer->install(get_class($this->mockedPlugin));
     }
-    
+
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
-      
+
         $pluginFQCN = 'Imaginary\Fake\Plugin';
-        
+
         $this->mockedRecorder->expects($this->once())
             ->method('isRegistered')
             ->with($pluginFQCN)
             ->will($this->returnValue(true));
-        
+
         $this->installer->install($pluginFQCN);
     }
-    
+
     public function testUninstallProperlyDelegatesToHelpers()
     {
         $this->mockedRecorder->expects($this->once())
@@ -79,24 +79,24 @@ class InstallerTest extends WebTestCase
         $this->mockedMigrator->expects($this->once())
             ->method('remove')
             ->with($this->mockedPlugin);
-        
+
         $this->installer->uninstall(get_class($this->mockedPlugin));
     }
-    
+
     public function testUninstallThrowsAnExceptionIfPluginIsNotRegistered()
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
-      
+
         $pluginFQCN = 'Imaginary\Fake\Plugin';
-        
+
         $this->mockedRecorder->expects($this->once())
             ->method('isRegistered')
             ->with($pluginFQCN)
             ->will($this->returnValue(false));
-        
+
         $this->installer->uninstall($pluginFQCN);
     }
-    
+
     private function initMockedHelpers()
     {
         $this->mockedLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Loader')

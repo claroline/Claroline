@@ -8,25 +8,22 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 class ResourceExtender implements EventSubscriber
 {
-    public function getSubscribedEvents() 
+    public function getSubscribedEvents()
     {
-        return array(Events::loadClassMetadata);  
+        return array(Events::loadClassMetadata);
     }
-  
+
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
-    {       
+    {
         $classMetadata = $event->getClassMetadata();
-      
-        if ($classMetadata->getName() == 'Claroline\CoreBundle\Entity\Resource\AbstractResource')
-        {
+
+        if ($classMetadata->getName() == 'Claroline\CoreBundle\Entity\Resource\AbstractResource') {
             $pluginTypes = $event->getEntityManager()
                 ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
                 ->findPluginResourceNameFqcns();
-            
-            foreach ($pluginTypes as $pluginType)
-            {
-                if($pluginType['class']!='')
-                {
+
+            foreach ($pluginTypes as $pluginType) {
+                if ($pluginType['class'] != '') {
                     $classMetadata->discriminatorMap[$pluginType['class']] = $pluginType['class'];
                     $classMetadata->subClasses[] = $pluginType['class'];
                 }

@@ -14,7 +14,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             SELECT re FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance re
             WHERE re.lvl = 0
             AND re.workspace = {$ws->getId()}
-            ";
+        ";
 
         $query = $this->_em->createQuery($dql);
 
@@ -23,7 +23,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getDirectoryDirectChildren($ri)
     {
-       $dql = "
+        $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
             JOIN ri.resourceType rt
             WHERE rt.type = 'directory'
@@ -37,7 +37,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getNotDirectoryDirectChildren($ri)
     {
-       $dql = "
+        $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
             JOIN ri.resourceType rt
             WHERE rt.type != 'directory'
@@ -56,14 +56,15 @@ class ResourceInstanceRepository extends NestedTreeRepository
             JOIN ri.parent par
             JOIN ri.abstractResource res
             WHERE par.id = {$resourceInstance->getId()}
-            AND res.resourceType
-            IN (SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-                WHERE rt.isListable = 1)
-            ";
+            AND res.resourceType IN
+            (
+                SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+                WHERE rt.isListable = 1
+            )
+        ";
 
-            $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-            return $query->getResult();
+        return $query->getResult();
     }
-
 }

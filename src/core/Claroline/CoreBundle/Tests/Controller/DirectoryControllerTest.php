@@ -13,7 +13,7 @@ use Claroline\CoreBundle\Entity\Resource\File;
 
 class DirectoryControllerTest extends FunctionalTestCase
 {
-   /** @var string */
+    /** @var string */
     private $upDir;
 
     public function setUp()
@@ -22,14 +22,14 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->loadUserFixture();
         $this->loadFixture(new LoadResourceTypeData());
         $this->client->followRedirects();
-        $this->upDir  = $this->client->getContainer()->getParameter('claroline.files.directory');
+        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);
     }
 
     public function tearDown()
     {
-       parent::tearDown();
-       $this->cleanDirectory($this->upDir);
+        parent::tearDown();
+        $this->cleanDirectory($this->upDir);
     }
 
     public function testUserCanCreateRootDirectory()
@@ -129,34 +129,30 @@ class DirectoryControllerTest extends FunctionalTestCase
     {
         $iterator = new \DirectoryIterator($dir);
 
-        foreach ($iterator as $file)
-        {
+        foreach ($iterator as $file) {
             if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                    && $file->getFilename() !== 'originalFile.txt'
-                    && $file->getFilename() !== 'originalZip.zip'
-               )
-            {
+                && $file->getFilename() !== 'originalFile.txt'
+                && $file->getFilename() !== 'originalZip.zip'
+            ) {
                 chmod($file->getPathname(), 0777);
                 unlink($file->getPathname());
             }
         }
     }
 
-     private function getUploadedFiles()
-     {
+    private function getUploadedFiles()
+    {
         $iterator = new \DirectoryIterator($this->upDir);
         $uploadedFiles = array();
 
-        foreach($iterator as $file)
-        {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder')
-            {
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getFilename() !== 'placeholder') {
                 $uploadedFiles[] = $file->getFilename();
             }
         }
 
         return $uploadedFiles;
-     }
+    }
 
     private function addResource($object, $workspaceId, $parentId = null)
     {
@@ -164,11 +160,6 @@ class DirectoryControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('claroline.resource.creator')
-            ->create(
-                $object,
-                $workspaceId,
-                $parentId,
-                true
-                );
+            ->create($object, $workspaceId, $parentId, true);
     }
 }

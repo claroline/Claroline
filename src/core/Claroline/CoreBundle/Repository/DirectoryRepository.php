@@ -14,12 +14,12 @@ class DirectoryRepository extends EntityRepository
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\Directory r
             WHERE r.parent = '{$directory->getId()}'
         ";
-            
+
         $query = $this->_em->createQuery($dql);
-            
-        return $query->getResult();       
+
+        return $query->getResult();
     }
-    
+
     public function getNotDirectoryDirectChildren(Directory $directory)
     {
         $dql = "
@@ -27,10 +27,10 @@ class DirectoryRepository extends EntityRepository
             JOIN r.resourceType rt
             WHERE r.parent = '{$directory->getId()}'
             AND rt.type != 'directory'
-        ";        
-        
+        ";
+
         $query = $this->_em->createQuery($dql);
-            
-        return $query->getResult();          
+
+        return $query->getResult();
     }
 }

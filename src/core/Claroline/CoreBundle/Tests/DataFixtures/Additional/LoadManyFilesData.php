@@ -14,19 +14,18 @@ class LoadManyFilesData extends LoadFileData implements ContainerAwareInterface,
     public function load(ObjectManager $manager)
     {
         parent::setLoader();
-        for ($i=0; $i<5; $i++)
-        { 
+        for ($i = 0; $i < 5; $i++) {
             //for normal users
             $this->addFiles($this->getReference("user/manyUser{$i}"), $manager);
             //for ws_creator
-            $idWSCreator = $i+100;
+            $idWSCreator = $i + 100;
             $this->addFiles($this->getReference("user/manyUser{$idWSCreator}"), $manager);
             //for admins
-            $idAdmin = $i+120;
+            $idAdmin = $i + 120;
             $this->addFiles($this->getReference("user/manyUser{$idAdmin}"), $manager);
-        }         
+        }
     }
-     
+
     public function getOrder()
     {
         return 104;

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -47,7 +48,6 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  */
 class ResourceController extends Controller
 {
-
     /**
      * Renders the root resources for the personnal workspace of the current
      * logged user.
@@ -243,16 +243,14 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $securityContext = $this->get('security.context');
 
-        if (false == $securityContext->isGranted('VIEW', $resourceInstance)) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        if (!$this->get('security.context')->isGranted('VIEW', $resourceInstance)) {
+            throw new AccessDeniedException();
         } else {
-            $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResourceType();
+            $resourceType = $resourceInstance->getResource()->getResourceType();
             $name = $this->findResService($resourceType);
-            $type = $resourceType->getType();
 
-            if ($type != 'directory') {
+            if ('directory' !== $resourceType->getType()) {
                 $response = $this->get($name)->getDefaultAction($resourceInstance->getResource()->getId());
             } else {
                 $response = $this->get($name)->getDefaultAction($instanceId);
@@ -275,12 +273,13 @@ class ResourceController extends Controller
      */
     public function openAction($instanceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId);
-        $securityContext = $this->get('security.context');
+        $resourceInstance = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
+            ->find($instanceId);
 
-        if (false === $securityContext->isGranted('VIEW', $resourceInstance)) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        if (!$this->get('security.context')->isGranted('VIEW', $resourceInstance)) {
+            throw new AccessDeniedException();
         } else {
             $resourceType = $resourceInstance->getResourceType();
             $name = $this->findResService($resourceType);
@@ -352,7 +351,6 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-        $response = new Response();
 
         if ($instanceId == 0) {
             $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($workspace);
@@ -643,7 +641,6 @@ class ResourceController extends Controller
         $ric->setCopy(true);
         $ric->setWorkspace($resourceInstance->getWorkspace());
         $ric->setResource($resourceInstance->getResource());
-        $ric->setResourceType($resourceInstance->getResourceType());
         $resourceInstance->getResource()->addResourceInstance($ric);
 
         return $ric;
@@ -660,14 +657,14 @@ class ResourceController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
-        $ric->setCreator($this->get('security.context')->getToken()->getUser());
+        $ric->setCreator($user);
         $ric->setCopy(false);
         $ric->setWorkspace($resourceInstance->getWorkspace());
         $name = $this->findResService($resourceInstance->getResourceType());
         $resourceCopy = $this->get($name)->copy($resourceInstance->getResource(), $user);
+        $resourceCopy->setResourceType($resourceInstance->getResourceType());
         $resourceCopy->addResourceInstance($ric);
         $ric->setResource($resourceCopy);
-        $ric->setResourceType($resourceInstance->getResourceType());
 
         return $ric;
     }

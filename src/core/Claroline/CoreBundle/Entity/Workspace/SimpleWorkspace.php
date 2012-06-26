@@ -42,7 +42,7 @@ class SimpleWorkspace extends AbstractWorkspace
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
      *      inversedBy="children"
      * )
      * @ORM\JoinColumn(
@@ -55,50 +55,47 @@ class SimpleWorkspace extends AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace", 
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
      *      mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
-    
+
     public function __construct()
     {
         parent::__construct();
         $this->children = new ArrayCollection();
     }
-    
+
     public function setPublic($isPublic)
     {
         $parentWorkspace = $this->getParent();
-        
-        if (null !== $parentWorkspace)
-        {
-            if (true === $isPublic && ! $parentWorkspace->isPublic())
-            {
+
+        if (null !== $parentWorkspace) {
+            if (true === $isPublic && !$parentWorkspace->isPublic()) {
                 throw new ClarolineException(
                     'A sub-workspace of a private workspace cannot be made public'
                 );
             }
         }
-        
+
         $this->isPublic = $isPublic;
     }
-    
+
     public function getParent()
     {
         return $this->parent;
     }
-    
+
     public function setParent(SimpleWorkspace $workspace = null)
     {
-        if ($this->isPublic() && ! $workspace->isPublic())
-        {
+        if ($this->isPublic() && !$workspace->isPublic()) {
             throw new ClarolineException(
                 'A public workspace cannot be a sub-workspace of a private one'
             );
         }
-        
+
         $this->parent = $workspace;
     }
 }

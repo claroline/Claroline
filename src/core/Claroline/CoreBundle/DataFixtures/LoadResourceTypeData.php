@@ -26,7 +26,7 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
     public function load (ObjectManager $manager)
     {
         $documentMetatype = new MetaType();
-        $documentMetatype->setMetaType('document');
+        $documentMetatype->setName('document');
         $manager->persist($documentMetatype);
 
         // resource type attributes : name, listable, navigable, class
