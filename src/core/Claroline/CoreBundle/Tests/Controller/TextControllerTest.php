@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
+use Claroline\CoreBundle\Entity\Resource\Text;
 
 class TextManagerTest extends FunctionalTestCase
 {
@@ -18,10 +19,8 @@ class TextManagerTest extends FunctionalTestCase
     public function testAdd()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $id = $this->addText('Hello world');
-        $crawler = $this->client->request('GET', '/resource/directory');
-        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
-        $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id)->getResource();
+        $ri = $this->addText('Hello world', $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId());
+        $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($ri->getId())->getResource();
         $this->assertEquals('Hello world', $text->getLastRevision()->getContent());
         $this->assertEquals(1, count($text->getRevisions()));
         $this->assertEquals(1, count($text->getLastRevision()));
@@ -30,9 +29,8 @@ class TextManagerTest extends FunctionalTestCase
     public function testDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $id = $this->addText('Hello world');
-        $personnalWsUserId = $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId();
-        $crawler = $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
+        $ri = $this->addText('Hello world', $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId());
+        $crawler = $this->client->request('GET', "/resource/click/{$ri->getId()}");
         $node = $crawler->filter('#content');
 
         $this->assertTrue(strpos($node->text(), 'Hello world') !== false);
@@ -41,29 +39,37 @@ class TextManagerTest extends FunctionalTestCase
     public function testEditByRefAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $personnalWsUserId = $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId();
-        $id = $this->addText('Hello world');
-        $crawler = $this->client->request('GET', "/resource/edit/{$id}/{$this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId()}/ref");
+        $ri = $this->addText('Hello world', $this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId());
+        $crawler = $this->client->request('GET', "/resource/edit/{$ri->getId()}/{$this->getFixtureReference('user/admin')->getPersonnalWorkspace()->getId()}/ref");
         $form = $crawler->filter('input[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
-        $crawler = $this->client->request('GET', "/resource/click/{$id}/{$personnalWsUserId}");
+        $crawler = $this->client->request('GET', "/resource/click/{$ri->getId()}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
-        $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($id)->getResource();
+        $text = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($ri->getId())->getResource();
         $revisions = $text->getRevisions();
         $this->assertEquals(2, count($revisions));
     }
 
-    private function addText($txt)
+    private function addText($txt, $workspaceId, $parentId = null)
     {
-        $crawler = $this->client->request('GET', '/resource/directory/null');
-        $form = $crawler->filter('input[type=submit]')->form();
-        $fileTypeId = $this->getFixtureReference('resource_type/text')->getId();
-        $crawler = $this->client->submit($form, array('select_resource_form[type]' => $fileTypeId));
-        $form = $crawler->filter('input[type=submit]')->form();
-        $crawler = $this->client->submit($form, array('text_form[text]' => $txt));
-        $id = $crawler->filter(".row_resource")->last()->attr('data-resource_instance_id');
+        $text = new Text();
+        $text->setText($txt);
 
-        return $id;
+        return $this->addResource($text, $workspaceId);
+    }
+
+    private function addResource($object, $workspaceId, $parentId = null)
+    {
+        return $ri = $this
+            ->client
+            ->getContainer()
+            ->get('claroline.resource.creator')
+            ->createResource(
+                $parentId,
+                $workspaceId,
+                $object,
+                true
+                );
     }
 }

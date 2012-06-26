@@ -92,6 +92,7 @@ abstract class AbstractResource
      */
     public function __construct()
     {
+        $this->setShareType(self::PRIVATE_RESOURCE);
         $this->resourceInstances = new ArrayCollection();
     }
 

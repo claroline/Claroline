@@ -48,7 +48,7 @@ class TextController extends Controller
      */
     public function getFormPage($twigTemp, $id, $type)
     {
-        $form = $this->get('form.factory')->create(new TextType);
+        $form = $this->get('form.factory')->create(new TextType());
         $content = $this->render('ClarolineCoreBundle:Text:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $type));
 
         return $content;
