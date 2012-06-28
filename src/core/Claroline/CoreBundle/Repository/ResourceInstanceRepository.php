@@ -8,7 +8,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class ResourceInstanceRepository extends NestedTreeRepository
 {
-    public function getWSListableRootResource($ws)
+    public function getWSListableRootResource(AbstractWorkspace $ws)
     {
         $dql = "
             SELECT re FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance re
@@ -21,7 +21,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getDirectoryDirectChildren($ri)
+    public function getDirectoryDirectChildren(ResourceInstance $ri)
     {
         $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
@@ -35,7 +35,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getNotDirectoryDirectChildren($ri)
+    public function getNotDirectoryDirectChildren(ResourceInstance $ri)
     {
         $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
@@ -49,7 +49,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getListableChildren($resourceInstance)
+    public function getListableChildren(ResourceInstance $resourceInstance)
     {
         $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri

@@ -102,7 +102,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspacesTestsByRef($this->getFixtureReference('user/user'));
+        $this->initWorkspaceATestsByRef($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
     }
@@ -111,7 +111,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspacesTestsByRef($this->getFixtureReference('user/user'));
+        $this->initWorkspaceATestsByRef($this->getFixtureReference('user/user'));
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->registerToWorkspaceA();
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
@@ -127,7 +127,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $rootRi = $this->initWorkspacesTestsByRef($this->getFixtureReference('user/user'));
+        $rootRi = $this->initWorkspaceATestsByRef($this->getFixtureReference('user/user'));
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->registerToWorkspaceA();
         $this->unregisterFromWorkspaceA();
@@ -141,7 +141,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspacesTestsByCopy($this->getFixtureReference('user/user'));
+        $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
     }
@@ -150,7 +150,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspacesTestsByCopy($this->getFixtureReference('user/user'));
+        $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->registerToWorkspaceA();
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
@@ -166,7 +166,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspacesTestsByCopy($this->getFixtureReference('user/user'));
+        $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->registerToWorkspaceA();
         $this->unregisterFromWorkspaceA();
@@ -182,7 +182,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->registerToWorkspaceA();
         $this->logUser($this->getFixtureReference('user/user_2'));
-        $this->initWorkspacesTestsByCopy($this->getFixtureReference('user/user'));
+        $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $link = $crawler->filter('.link_resource_view')->first()->link();
@@ -212,7 +212,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertNotEquals($res->getCreationDate(), $res->getModificationDate());
     }
 
-    private function initWorkspacesTestsByRef($user)
+    private function initWorkspaceATestsByRef($user)
     {
         $rootRi = $this->createTree($user->getPersonnalWorkspace()->getId());
         $this->registerToWorkspaceA();
@@ -225,7 +225,7 @@ class ResourceControllerTest extends FunctionalTestCase
         return $rootRi;
     }
 
-    private function initWorkspacesTestsByCopy($user)
+    private function initWorkspaceATestsByCopy($user)
     {
         $rootRi = $this->createTree($user->getPersonnalWorkspace()->getId());
         $this->registerToWorkspaceA();

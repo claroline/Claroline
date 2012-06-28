@@ -70,6 +70,13 @@ class Manager
             $resource->setCreator($user);
             $this->em->flush();
             $this->container->get('claroline.security.right_manager')->addRight($ri, $user, MaskBuilder::MASK_OWNER);
+            $roles = $workspace->getWorkspaceRoles();
+
+            //default rights: will be changed.
+            foreach ($roles as $role)
+            {
+                $this->container->get('claroline.security.right_manager')->addRight($ri, $role, MaskBuilder::MASK_VIEW);
+            }
 
             return $returnInstance ? $ri : $resource;
         }

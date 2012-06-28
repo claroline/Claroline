@@ -4,9 +4,7 @@ $(function(){
     copiedNode = null;
     $.ajax({
         type: 'POST',
-        url: Routing.generate('claro_resource_type_resource', {
-            'format':'json', 'listable':'true'
-        }),
+        url: Routing.generate('claro_resource_type_resource', {'format':'json', 'listable':'true'}),
         success: function(data){
             var JSONObject = eval(data);
             var cpt = 0;
@@ -47,7 +45,7 @@ $(function(){
                 });
             },
             onCreate: function(node, span){
-                bindContextMenu(node);
+                bindContextMenuTree(node);
             },
             onDblClick: function(node)
             {
@@ -164,10 +162,7 @@ $(function(){
 
     function createFormDialog(type, id, node)
     {
-        var route = Routing.generate('claro_resource_form', {
-            'type':type,
-            'instanceParentId':id
-        });
+        var route = Routing.generate('claro_resource_form', {'type':type,'instanceParentId':id});
         $.ajax({
             type: 'POST',
             url: route,
@@ -176,11 +171,10 @@ $(function(){
                 $('#ct_form').append(data);
                 $('#generic_form').submit(function(e){
                     e.preventDefault();
-                    sendForm('claro_resource_create',  {
-                        'type':type,
-                        'instanceParentId':id,
-                        'workspaceId': node.data.workspaceId
-                    }, document.getElementById('generic_form'), node);
+                    sendForm('claro_resource_create',
+                        {'type':type,'instanceParentId':id, 'workspaceId': node.data.workspaceId},
+                        document.getElementById('generic_form'), node
+                    );
                 });
             }
         });
@@ -197,8 +191,7 @@ $(function(){
             }),
 
             success: function(data){
-                if(data == 'success')
-                {
+                if(data == 'success'){
                     node.remove();
                 }
             }
@@ -221,12 +214,9 @@ $(function(){
         $('#ct_move_form_submit').click(function(e) {
             e.preventDefault();
             var option = getCheckedValue(document.forms['ct_move_form']['options']);
-            sendRequest('claro_resource_add_workspace', {
-                'instanceId':copiedNode.data.key,
-                'instanceDestinationId':node.data.key,
-                'options':option,
-                'workspaceId':node.data.workspaceId
-            });
+            sendRequest('claro_resource_add_workspace',
+                        {'instanceId':copiedNode.data.key,'instanceDestinationId':node.data.key,'options':option,'workspaceId':node.data.workspaceId}
+            );
 
             var newNode = {
                     title:copiedNode.data.title,
@@ -246,16 +236,12 @@ $(function(){
 
     function openNode(node)
     {
-        window.location = Routing.generate('claro_resource_open',{
-            'instanceId':node.data.key
-        });
+        window.location = Routing.generate('claro_resource_open',{'instanceId':node.data.key});
     }
 
     function viewNode(node)
     {
-        window.location = Routing.generate('claro_resource_default_click',{
-            'instanceId':node.data.key
-        });
+        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
     }
 
     function optionsNode(node)
@@ -278,37 +264,33 @@ $(function(){
         });
     }
 
-    function bindContextMenu(node){
+    function workspaceRightNode(node)
+    {
+        window.location = Routing.generate('claro_ws_properties',{'workspaceId':node.data.workspaceId});
+    }
+
+    function createWorkspaceSettingsPopup()
+    {
+
+    }
+
+    function bindContextMenuTree(node){
+        isWorkspace='';
+        (node.data.key == 0) ? isWorkspace = true : isWorkspace = false;
         var menuDefaultOptions = {
             selector: 'a.dynatree-title',
             callback: function(key, options) {
                 switch(key)
                 {
-                    case 'open':
-                        openNode(node);
-                        break;
-                    case 'delete':
-                        deleteNode(node);
-                        break;
-                    case 'view':
-                        viewNode(node, key);
-                        break;
-                    case 'options':
-                        optionsNode(node);
-                        break;
-                    case 'copy':
-                        copyNode(node);
-                        break;
-                    case 'paste':
-                        pasteNode(node);
-                        break;
-                    case 'cut':
-                        cutNode(node);
-                        break;
-                    default:
-                        node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key, node);
-                        break;
+                    case 'open': openNode(node); break;
+                    case 'delete':deleteNode(node); break;
+                    case 'options': optionsNode(node); break;
+                    case 'workspace_properties': workspaceRightNode(node); break;
+                    case 'copy': copyNode(node); break;
+                    case 'paste': pasteNode(node); break;
+                    case 'cut': cutNode(node); break;
+                    default:node = $.ui.dynatree.getNode(this);
+                        createFormDialog(key, node.data.key, node);break;
                 }
             },
             items: {
@@ -316,83 +298,48 @@ $(function(){
                     name: 'new',
                     disabled: function(){
                         node = $.ui.dynatree.getNode(this);
-                        if(node.data.isFolder == true)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        return (node.data.isFolder) ? false : true;
                     },
                     items:subItems
                 },
                 'open': {
-                    name: 'open',
-                    accesskey:"o",
+                    name: 'open', accesskey:"o",
                     disabled: function(){
                         node = $.ui.dynatree.getNode(this);
-                        if(node.data.isFolder != true)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        return (node.data.isFolder)? false : true;
                     }
                 },
-                'view': {
-                    name: 'view',
-                    accesskey:'v'
-                },
+                'view': {name: 'view', accesskey:'v'},
                 'delete': {
-                    name: 'delete',
-                    accesskey:'d',
+                    name: 'delete', accesskey:'d',
                     disabled: function(){
                         node = $.ui.dynatree.getNode(this);
-                        if(node.data.key != 0)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        return (node.data.key != 0)? false: true;
                     }
                 },
-                'options': {
-                    name: 'options',
-                    accesskey:'p'
+                'resource_properties': {
+                    name: 'properties',
+                    items: {
+                        'options' : {name: 'options'},
+                        'rights' : { name :'rights'}
+                    }
                 },
-                'copy': {
-                    name: "copy"
-                },
-                'paste': {
+                'workspace_properties':{name: 'workspace properties'},
+                'copy': {name: "copy"},
+                'paste': { name: 'paste',
                     disabled: function(){
                         node = $.ui.dynatree.getNode(this);
-                        if(node.data.isFolder == true)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    },
-                    name: 'paste'
+                        return (node.data.isFolder)? false : true;
+                    }
                 }
-
             }
         }
 
         $.contextMenu(menuDefaultOptions);
-
-        var additionalMenuOptions = $.extend(menuDefaultOptions,
-        {
-            selector: 'span.dynatree-custom-claro-menu',
-            trigger: 'left'
-        });
+        var additionalMenuOptions = $.extend(
+            menuDefaultOptions,
+            {selector: 'span.dynatree-custom-claro-menu', trigger: 'left'}
+        );
 
         $.contextMenu(additionalMenuOptions);
     }
@@ -425,7 +372,7 @@ $(function(){
             }
         }
         subItems+='}'
-        object = JSON.parse(subItems);
+        var object = JSON.parse(subItems);
 
         return object;
     }
@@ -433,8 +380,24 @@ $(function(){
     function createDivTree()
     {
         var content = ""
-        +"<div id='ct_form'></div>"
+        +"<div id='workspace_settings></div>"
+        +"<div id='ct_form'></div><br>"
         +"<div id='source_tree'></div>"
+
+       var modalContent = ""
+            +'<div class="modal-header">'
+                +'<button id="close_dialog_button" class="close" data-dismiss="modal">×</button>'
+                +'<h3>Modal header</h3>'
+           +'</div>'
+           +'<div class="modal-body">'
+               +'HELLO WORLD'
+            +'</div>'
+           +'<div class="modal-footer">'
+               +'FOOTER'
+            +'</div>'
+            +'</div>';
+            $('#workspace_settings').append(modalContent);
+        $('#workspace_settings').modal({keyboard: true, show:false});
         $('#ct_dialog').append(content);
     }
 
