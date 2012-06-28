@@ -31,6 +31,8 @@ $coreNamespaces = array(
     'Stof'             => __DIR__.'/../vendor/bundles',
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
     'org\\bovigo\\vfs' => __DIR__.'/../vendor/vfsstream/src/main/php',
+    'JMS'              => __DIR__.'/../vendor/bundles',
+    'TwigJs'           => __DIR__.'/../vendor/twig.js/src',
     'Claroline'        => array(
         __DIR__.'/../src/core',
         __DIR__.'/../src/plugin/extension',

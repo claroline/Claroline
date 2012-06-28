@@ -103,3 +103,10 @@
 [vfsStream]
     git=http://github.com/mikey179/vfsStream.git
     target=/vfsstream
+
+[JMSTwigJsBundle]
+    git=https://github.com/schmittjoh/JMSTwigJsBundle.git
+    target=/bundles/JMS/TwigJsBundle
+
+[twig.js]
+    git=https://github.com/schmittjoh/twig.js.git
