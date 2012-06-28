@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 
 /**
  * This controller is able to:
@@ -452,5 +453,47 @@ class WorkspaceController extends Controller
         $id = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();
 
         return new Response($id);
+    }
+
+    /**
+     *
+     * @param type $workspaceId
+     * @param type $format
+     */
+    public function rolesAction($workspaceId, $format)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $wsRoles = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId)->getWorkspaceRoles();
+
+        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
+    }
+
+    /**
+     * Adds a permission to a workspace role
+     *
+     * @param integer $roleId
+     * @param integer $maskId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function addPermissionRoleAction($roleId, $maskId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $role = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId);
+        $role->addResourcePermission($maskId);
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    /**
+     * Renders the workspace properties page
+     */
+    public function propertiesAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles_properties.html.twig", array('workspace' => $workspace, 'masks' => SymfonySecurity::getResourcesMasks()));
     }
 }

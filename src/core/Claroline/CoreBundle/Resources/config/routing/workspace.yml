@@ -2,6 +2,12 @@ claro_ws_show_creation_form:
     pattern: /new/form
     defaults: { _controller: ClarolineCoreBundle:Workspace:creationForm }
 
+claro_ws_roles_list:
+    pattern: /{workspaceId}/roles.{format}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:roles }
+    options:
+      expose: true
+
 claro_ws_create:
     pattern: /new/create
     defaults: { _controller: ClarolineCoreBundle:Workspace:create }
@@ -83,3 +89,15 @@ claro_ws_user_workspace_id:
    defaults: { _controller: ClarolineCoreBundle:Workspace:userWorkspaceId }
    options:
        expose: true
+
+claro_ws_add_role_permission:
+   pattern: /add/role/permission/{roleId}/{maskId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:addPermissionRole }
+   options:
+       expose: true
+
+claro_ws_properties:
+   pattern: /properties/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:properties }
+   options:
+      expose: true

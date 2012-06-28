@@ -41,7 +41,7 @@ claro_resource_root_nodes:
     defaults: { _controller: ClarolineCoreBundle:Resource:getRootNodes, userId:null }
     options:
       expose: true
-      
+
 claro_resource_node:
     pattern: node/{instanceId}/{workspaceId}/node.{format}
     defaults: { _controller: ClarolineCoreBundle:Resource:getNode }
@@ -95,6 +95,12 @@ claro_resource_type_resource:
 claro_resource_get_instances:
    pattern: /get/copy/{instanceId}
    defaults: { _controller: ClarolineCoreBundle:Resource:getResourcesReference }
+   options:
+     expose: true
+
+claro_resource_masks:
+   pattern: /{type}/masks.{format}
+   defaults: { _controller: ClarolineCoreBundle:Resource:getMasks, type:'all' }
    options:
      expose: true
 

@@ -13,10 +13,12 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\MimeType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Form\ResourceOptionsType;
+use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 
 /**
  * This controller will manage resources.
@@ -48,6 +50,7 @@ use Claroline\CoreBundle\Form\ResourceOptionsType;
  */
 class ResourceController extends Controller
 {
+
     /**
      * Renders the root resources for the personnal workspace of the current
      * logged user.
@@ -64,7 +67,7 @@ class ResourceController extends Controller
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourceInstances, 'parentId' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
+                'ClarolineCoreBundle:Resource:index.html.twig', array('form_resource' => $formResource->createView(), 'resourceInstances' => $resourceInstances, 'parentId' => null, 'resourcesType' => $resourcesType, 'workspace' => $personnalWs)
         );
     }
 
@@ -77,17 +80,23 @@ class ResourceController extends Controller
      */
     public function creationResourceFormAction($instanceParentId)
     {
-        $request = $this->get('request');
-        $form = $request->request->get('select_resource_form');
-        $idType = $form['type'];
         $em = $this->getDoctrine()->getEntityManager();
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($idType);
-        $rsrcServName = $this->findResService($resourceType);
-        $rsrcServ = $this->get($rsrcServName);
-        $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig';
-        $content = $rsrcServ->getFormPage($twigFile, $instanceParentId, $resourceType->getType());
+        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceParentId);
 
-        return new Response($content);
+        if ($this->get('security.context')->isGranted('EDIT', $parent) || $parent === null) {
+            $request = $this->get('request');
+            $form = $request->request->get('select_resource_form');
+            $idType = $form['type'];
+            $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($idType);
+            $rsrcServName = $this->findResService($resourceType);
+            $rsrcServ = $this->get($rsrcServName);
+            $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig';
+            $content = $rsrcServ->getFormPage($twigFile, $instanceParentId, $resourceType->getType());
+
+            return new Response($content);
+        }
+
+        throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
     }
 
     /**
@@ -143,13 +152,6 @@ class ResourceController extends Controller
                 return $response;
             }
 
-            /*
-              $instanceParent = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
-              ->find($instanceId)
-              ->getParent();
-              $response = $this->get('claroline.directory.manager')->getDefaultAction($instanceParent->getId());
-
-              return $response; */
             return "edited";
         } else {
             if ($request->isXmlHttpRequest()) {
@@ -397,8 +399,8 @@ class ResourceController extends Controller
             $root->setId(0);
             $root->setCopy(0);
             $root->setWorkspace($workspace);
-            $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('type' => 'directory'));
-            $root->setResourceType($directoryType[0]);
+            $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
+            $rootDir->setResourceType($directoryType);
             $roots[] = $root;
         }
 
@@ -625,6 +627,25 @@ class ResourceController extends Controller
         }
 
         return new Response(var_dump($arrayPlayer));
+    }
+
+    /**
+     * Renders the sf2 masks lists
+     *
+     * @param string $format
+     * @param string $type   the type of list (all | res)
+     *
+     * @return Response
+     */
+    public function getMasksAction($type, $format)
+    {
+        switch ($type) {
+            case $res: $masks = SymfonySecurity::getResourcesMasks();
+                break;
+            default: $masks = SymfonySecurity::getSfMasks();
+                break;
+        }
+        return $this->render("ClarolineCoreBundle:Resource:masks_list.{$format}.twig", array('masks' => $masks));
     }
 
     /**

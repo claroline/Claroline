@@ -1,0 +1,23 @@
+[
+    {% set cpt = 0 %}
+    {% for role in roles %}
+    {
+        "id": "{{role.getId()}}",
+        "name": "{{role.getName()}}",
+        "translation_key": "{{role.getTranslationKey()}}",
+        "permissions": [
+            {% set cptPerm = 0 %}
+            {% for key, permission in role.getPermissions() %}
+            {
+                "mask":"{{key}}",
+                "name":"{{permission}}"
+            }
+            {% set cptPerm = cptPerm+1 %}
+            {% if cptPerm < role.getPermissions()|length %},{% endif %}
+            {% endfor %}
+        ]
+    }
+    {% set cpt = cpt+1 %}
+    {% if cpt< roles|length %},{% endif %}
+    {% endfor %}
+]
