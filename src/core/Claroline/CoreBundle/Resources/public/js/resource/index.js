@@ -142,8 +142,7 @@ $(function(){
         }
         else
         {
-            $('#ct_form').empty();
-            $('#ct_form').append(xhr.responseText);
+            $('#ct_form').append(xhr.responseText).empty();
             $('#generic_form').submit(function(e){
                 e.preventDefault();
                 sendForm(route, routeParameters, document.getElementById('generic_form'), node);
@@ -211,9 +210,9 @@ $(function(){
 
         var html = getMoveFormHtml();
         $('#ct_form').append(html);
-        $('#ct_move_form_submit').click(function(e) {
+        $('#move_resource_form_submit').click(function(e) {
             e.preventDefault();
-            var option = getCheckedValue(document.forms['ct_move_form']['options']);
+            var option = getCheckedValue(document.forms['move_resource_form']['options']);
             sendRequest('claro_resource_add_workspace',
                         {'instanceId':copiedNode.data.key,'instanceDestinationId':node.data.key,'options':option,'workspaceId':node.data.workspaceId}
             );
@@ -266,7 +265,10 @@ $(function(){
 
     function workspaceRightNode(node)
     {
-        window.location = Routing.generate('claro_ws_properties',{'workspaceId':node.data.workspaceId});
+        //window.location = Routing.generate('claro_ws_properties',{'workspaceId':node.data.workspaceId});
+        alert("clock");
+        $('#workspace_settings').modal('show');
+        alert('clack');
     }
 
     function createWorkspaceSettingsPopup()
@@ -380,25 +382,12 @@ $(function(){
     function createDivTree()
     {
         var content = ""
-        +"<div id='workspace_settings></div>"
+        +"<div id='workspace_settings' class='modal fade'></div>"
         +"<div id='ct_form'></div><br>"
         +"<div id='source_tree'></div>"
-
-       var modalContent = ""
-            +'<div class="modal-header">'
-                +'<button id="close_dialog_button" class="close" data-dismiss="modal">×</button>'
-                +'<h3>Modal header</h3>'
-           +'</div>'
-           +'<div class="modal-body">'
-               +'HELLO WORLD'
-            +'</div>'
-           +'<div class="modal-footer">'
-               +'FOOTER'
-            +'</div>'
-            +'</div>';
-            $('#workspace_settings').append(modalContent);
-        $('#workspace_settings').modal({keyboard: true, show:false});
-        $('#ct_dialog').append(content);
+        $('#ct_dialog').append(content)
+        var modalContent = Twig.render(bootstrap_modal);
+        $('#workspace_settings').append(modalContent).modal({show:true,backdrop:true});
     }
 
     function setSubItemsTranslations()
@@ -415,13 +404,7 @@ $(function(){
 
     function getMoveFormHtml()
     {
-        var html = "";
-        html+="<form id='ct_move_form'>"
-        html+="<input type='radio' name='options' value='copy'>copy<br>"
-        html+="<input type='radio' name='options' value='ref' checked>ref<br>"
-        html+="<input type='submit' id='ct_move_form_submit'>"
-        html+="</form>";
-
+        var html = twig.Render(move_resource_form);
         return html;
     }
 

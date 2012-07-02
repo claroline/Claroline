@@ -55,7 +55,7 @@ class WorkspaceRole extends Role
     {
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->res_mask = 0;
+        $this->resMask = 0;
     }
 
     /**
@@ -136,12 +136,12 @@ class WorkspaceRole extends Role
      *
      * @param integer $mask
      */
-    public function addResourcePermission($mask)
+    public function addResourceMask($mask)
     {
         $builder = new MaskBuilder($this->getResMask());
         $builder->add($mask);
         $resMask = $builder->get();
-        $this->setResMask($resMask);
+        $this->resMask = $resMask;
     }
 
     /**
@@ -149,12 +149,12 @@ class WorkspaceRole extends Role
      *
      * @param integer $mask
      */
-    public function removeResourcePermission($mask)
+    public function removeResourceMask($mask)
     {
         $builder = new MaskBuilder($this->getResMask());
         $builder->remove($mask);
         $resMask = $builder->get();
-        $this->setResMask($resMask);
+        $this->resMask = $resMask;
     }
 
     /**

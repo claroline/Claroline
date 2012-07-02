@@ -469,22 +469,48 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Adds a permission to a workspace role
+     * Adds a permission to a workspace role. This method will adds the current mask in the database
+     * and edit the concerned resource acls. Only managers can edit permissions.
      *
      * @param integer $roleId
      * @param integer $maskId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response | AccessDeniedHttpException
      */
-    public function addPermissionRoleAction($roleId, $maskId)
+    public function addResourceRolePermissionAction($roleId, $maskId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $role = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId);
-        $role->addResourcePermission($maskId);
-        $em->flush();
+        $workspace = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getWorkspace();
+
+        if ($this->get('security.context')->isGranted($workspace->getManagerRole()->getName(), $workspace)) {
+           $this->container->get('claroline.resource.creator')->addResourceRolePermission($roleId, $maskId);
+        } else {
+            throw new AccessDeniedHttpException();
+        }
 
         return new Response('success');
     }
+
+    /**
+     * Removes a permission from a workspace role. See above.
+     *
+     * @param integer $roleId
+     * @param integer $maskId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response | AccessDeniedHttpException
+     */
+    public function removeResourceRolePermissionAction($roleId, $maskId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getWorkspace();
+
+        if ($this->get('security.context')->isGranted($workspace->getManagerRole()->getName(), $workspace)) {
+            $this->container->get('claroline.resource.creator')->removeResourceRolePermission($roleId, $maskId);
+        } else {
+            throw new AccessDeniedHttpException();
+        }
+    }
+
 
     /**
      * Renders the workspace properties page

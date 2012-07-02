@@ -47,16 +47,74 @@ class ResourceControllerTest extends FunctionalTestCase
         );
     }
 
-    public function testResourceDefaultActionIsProtected()
+    public function testOwnerCanAddRemoveResourcePermission()
     {
+        $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $ri = $this->addRootFile($this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
-        $this->logUser($this->getFixtureReference('user/user_2'));
-        $this->client->request('GET', "/resource/click/{$ri->getId()}");
+        $this->registerToWorkspaceA();
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $this->client->request('GET',"/resource/permission/add/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertTrue($this->client->getContainer()->get('security.context')->isGranted(('OWNER'), $root));
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->client->request('GET',"/resource/permission/remove/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted(('OWNER'), $root));
+    }
+
+    public function testManagerCanAddDefaultResourcePermissionsForWorkspace()
+    {
+        $this->loadFixture(new LoadWorkspaceData());
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
+        $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
+        $newMask = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getResMask();
+        $this->assertEquals($newMask, 129);
+    }
+
+    public function testManagerCanRemoveDefaultResourcePermissionsForWorkspace()
+    {
+        $this->loadFixture(new LoadWorkspaceData());
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
+        $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
+        $newMask = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getResMask();
+        $this->assertEquals($newMask, 129);
+        $this->client->request('GET',"/workspace/remove/role/permission/{$roleId}/128");
+        $newMask = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getResMask();
+        $this->assertEquals($newMask, 1);
+    }
+
+    public function testAddRemoveResourcePermissionIsProtected()
+    {
+        $this->loadFixture(new LoadWorkspaceData());
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->registerToWorkspaceA();
+        $this->client->request('GET',"/resource/permission/add/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->client->request('GET',"/resource/permission/remove/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testCreatorCanAccessResourceDefaultAction()
+    public function testNormalWorkspaceDefaultActionProtection()
+    {
+        $this->loadFixture(new LoadWorkspaceData());
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/resource/click/{$root->getId()}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->registerToWorkspaceA();
+        $this->client->request('GET', "/resource/click/{$root->getId()}");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testCreatorCanAccessPersonnalWorkspaceResourceDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $ri = $this->addRootFile($this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
@@ -81,13 +139,69 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testResourceDeleteActionIsProtected()
+    public function testPersonnalWorkspaceResourceDeleteActionIsProtected()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $ri = $this->addRootFile($this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->client->request('GET', "/resource/workspace/remove/{$ri->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * CASE    user permissions    role permissions
+     * ============ unregistered ====================
+     * unregistered: no right.
+     * ============= registered =====================
+     * CASE 1:    user: NONE    => collaborator: VIEW  => VIEW :: default registration
+     * CASE 2:    user: OWNER   => collaborator: VIEW  => from VIEW to OWNER
+     * CASE 3:    user: NONE    => collaborator: from VIEW to OWNER and from OWNER to VIEW
+     */
+
+    public function testIsGrantedInstanceReturnsTheCorrectValueWhenUpdated()
+    {
+        $this->loadFixture(new LoadWorkspaceData());
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        // unregistered
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('VIEW', $root));
+        //registration
+        $this->registerToWorkspaceA();
+        // |1| user: none & collaborator: VIEW => VIEW
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertTrue($this->client->getContainer()->get('security.context')->isGranted('VIEW', $root));
+        $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
+        // |2| user: owner & collaborator: VIEW => OWNER
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->client->request('GET',"/resource/permission/add/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertTrue($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
+        // |3| user: none & collaborator: OWNER. Resource added before change
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
+        $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertTrue($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->client->request('GET',"/workspace/remove/role/permission/{$roleId}/128");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
+        //user: none & collaborator: OWNER. Resource added after change
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
+        $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertTrue($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
+        $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
+        $this->client->request('GET',"/workspace/remove/role/permission/{$roleId}/128");
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
     }
 
     public function testCreatorCanAccessDeleteAction()

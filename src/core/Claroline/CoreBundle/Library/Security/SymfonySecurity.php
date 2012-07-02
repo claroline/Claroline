@@ -64,8 +64,7 @@ class SymfonySecurity
                 $permissions[$mask] = $masks[$mask];
             }
         }
-        
+
         return $permissions;
     }
-
 }

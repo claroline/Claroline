@@ -104,6 +104,18 @@ claro_resource_masks:
    options:
      expose: true
 
+claro_resource_add_permission:
+   pattern: /permission/add/{instanceId}/{userId}/{maskId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:addInstanceUserPermission }
+   options:
+       expose: true
+
+claro_resource_remove_permission:
+   pattern: /permission/remove/{instanceId}/{userId}/{maskId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:removeInstanceUserPermission }
+   options:
+       expose: true
+
 claro_license_list:
    pattern: /license/list.{format}
    defaults: { _controller: ClarolineCoreBundle:Resource:getJsonLicensesList }

@@ -1,5 +1,4 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block section_content %}
+{% twig_js name="workspace_roles_settings" %}
 {{workspace.getName()}}:
 PROPERTIES
 <form>
@@ -31,4 +30,3 @@ PROPERTIES
     </table>
     <input type='submit'>
 </form>
-{% endblock %}

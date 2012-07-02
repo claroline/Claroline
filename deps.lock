@@ -5,14 +5,12 @@ doctrine-common 2.1.4
 doctrine-dbal 2.1.7
 doctrine 2.1.7
 swiftmailer v4.1.7
-assetic v1.0.3
 twig-extensions feb6d3f10c411e2631997c0a905aa581c80305c1
 metadata 1.0.0
 SensioFrameworkExtraBundle 1eda94d838aa885e154f92f426df35f2252cdb92
 JMSSecurityExtraBundle e752f888c51425f71382c056961f10f2be642102
 SensioDistributionBundle 41a6c5caed65f02bb09c95a90579f047616471fd
 SensioGeneratorBundle 83b768a487a6878f2bc2ad6859bd61a3651a7885
-AsseticBundle v1.0.1
 
 
 DoctrineBundle f100a7727b89ab5519ed68a72d29e75eb2c85d8b
