@@ -357,9 +357,18 @@ class ResourceController extends Controller
 
         if ($instanceId == 0) {
             $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getWSListableRootResource($workspace);
+
         } else {
             $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
             $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getListableChildren($parent);
+        }
+
+        $i = 0;
+        foreach ($resourcesInstance as $resourceInstance) {
+            if (!$this->get('security.context')->isGranted('VIEW', $resourceInstance)) {
+                unset($resourcesInstance[$i]);
+            }
+            $i++;
         }
 
         $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.{$format}.twig", array('resources' => $resourcesInstance));
