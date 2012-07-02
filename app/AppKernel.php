@@ -25,6 +25,8 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
+          //  new JMS\SerializerBundle\JMSSerializerBundle($this),
+//            new Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle()
         );
 

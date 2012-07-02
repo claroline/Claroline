@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\ToolInstance;
 use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use JMS\SerializerBundle\Annotation\Type;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")

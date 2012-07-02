@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -509,13 +510,12 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-        $managerRole = $workspace->getManagerRole();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
 
-        if (false === $this->get('security.context')->isGranted($managerRole->getName())) {
+        if (false === $this->get('security.context')->isGranted('DELETE', $resourceInstance)) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
 
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceId);
         $resourceType = $resourceInstance->getResourceType();
         $name = $this->findResService($resourceType);
 
@@ -813,6 +813,58 @@ class ResourceController extends Controller
                 return $name;
             }
         }
+    }
+
+    /**
+     * Adds a permission to a resource instance
+     *
+     * @param integer $instanceId
+     * @param integer $userId
+     * @param integer $maskId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws AccessDeniedHttpException
+     */
+    public function addInstanceUserPermissionAction($instanceId, $userId, $maskId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+
+        if($this->get('security.context')->isGranted(('OWNER'), $resourceInstance))
+        {
+            $this->container->get('claroline.resource.creator')->addInstanceRight($instanceId, $userId, intval($maskId));
+        } else {
+            throw new AccessDeniedHttpException();
+        }
+
+        return new Response('success');
+    }
+
+    /**
+     * Removes a permission to a resource instance
+     *
+     * @param integer $instanceId
+     * @param integer $userId
+     * @param integer $maskId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws AccessDeniedHttpException
+     */
+    public function removeInstanceUserPermissionAction($instanceId, $userId, $maskId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+
+        if($this->get('security.context')->isGranted(('OWNER'), $resourceInstance))
+        {
+            $this->container->get('claroline.resource.creator')->removeInstanceRight($instanceId, $userId, intval($maskId));
+        } else {
+            throw new AccessDeniedHttpException();
+        }
+
+        return new Response('success');
     }
 
 }

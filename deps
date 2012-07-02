@@ -28,7 +28,6 @@
 
 [assetic]
     git=http://github.com/kriswallsmith/assetic.git
-    version=v1.0.3
 
 [twig-extensions]
     git=http://github.com/fabpot/Twig-extensions.git
@@ -60,11 +59,6 @@
 [AsseticBundle]
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
-    version=v1.0.1
-
-
-
-
 
 [DoctrineBundle]
     git=http://github.com/doctrine/DoctrineBundle.git
@@ -109,4 +103,4 @@
     target=/bundles/JMS/TwigJsBundle
 
 [twig.js]
-    git=https://github.com/schmittjoh/twig.js.git
+    git=https://github.com/schmittjoh/twig.js.gitgit c

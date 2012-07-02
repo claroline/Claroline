@@ -1,6 +1,4 @@
-$(function()
-{
-
+$(function(){
     var twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId');
     var twigDeleteTranslation = document.getElementById('twig_attributes').getAttribute('data-translation.delete');
 
