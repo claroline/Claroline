@@ -38,13 +38,17 @@ class DirectoryControllerTest extends FunctionalTestCase
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
         $this->addResource($rootDir, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        $rootWsId = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->findOneBy(array('parent' => null, 'workspace' => $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()))->getId();
         $this->client->request(
             'POST',
-            "resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json",
+            "resource/node/{$rootWsId}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
+
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($dir));
     }

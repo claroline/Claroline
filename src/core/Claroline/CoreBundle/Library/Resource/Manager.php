@@ -36,7 +36,7 @@ class Manager
     }
 
     /**
-     * Creates a resource
+     * Creates a resource. If instanceParentId is null, added to the root.
      *
      * @param integer          $instanceParentId
      * @param integer          $workspaceId
@@ -59,7 +59,12 @@ class Manager
         if (null !== $resource) {
             $ri = new ResourceInstance();
             $ri->setCreator($user);
+            if ($instanceParentId != null) {
             $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceParentId);
+            } else {
+                $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspaceId));
+            }
+            
             $ri->setParent($dir);
             $resource->setResourceType($resourceType);
             $ri->setCopy(0);

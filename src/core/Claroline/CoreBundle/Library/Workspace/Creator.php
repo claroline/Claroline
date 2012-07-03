@@ -21,7 +21,7 @@ class Creator
         $this->rightManager = $rm;
     }
 
-    public function createWorkspace(Configuration $config, User $manager = null)
+    public function createWorkspace(Configuration $config, User $manager)
     {
         $config->check();
 
@@ -50,6 +50,7 @@ class Creator
         $root->setCreator($manager);
         $directoryType = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
         $rootDir->setResourceType($directoryType);
+
         $this->entityManager->persist($rootDir);
         $this->entityManager->persist($root);
         $this->entityManager->flush();
@@ -60,6 +61,19 @@ class Creator
         }
 
         $this->entityManager->flush();
+
+        $roles = $workspace->getWorkspaceRoles();
+        $masks = \Claroline\CoreBundle\Library\Security\SymfonySecurity::getSfMasks();
+        $keys = array_keys($masks);
+
+        foreach ($roles as $role) {
+            $mask = $role->getResMask();
+            foreach ($keys as $key) {
+                if ($mask & $key) {
+                    $this->rightManager->addRight($root, $role, $key);
+                }
+            }
+        }
 
         return $workspace;
     }

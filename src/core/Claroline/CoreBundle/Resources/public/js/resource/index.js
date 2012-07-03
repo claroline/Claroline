@@ -284,6 +284,7 @@ $(function(){
             callback: function(key, options) {
                 switch(key)
                 {
+                    case 'view': viewNode(node); break;
                     case 'open': openNode(node); break;
                     case 'delete':deleteNode(node); break;
                     case 'options': optionsNode(node); break;
