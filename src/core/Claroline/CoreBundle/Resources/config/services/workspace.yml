@@ -8,7 +8,7 @@ services:
 
     claroline.workspace.toolinstance_manager:
         class: Claroline\CoreBundle\Library\Manager\ToolInstanceManager
-        arguments:    
+        arguments:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"
             - Claroline\CoreBundle\Entity\ToolInstance

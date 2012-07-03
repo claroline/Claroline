@@ -386,7 +386,7 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function getRootNodesAction($userId, $format)
+    public function getRootNodeAction($userId, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -400,17 +400,7 @@ class ResourceController extends Controller
         $roots = array();
 
         foreach ($workspaces as $workspace) {
-            $root = new ResourceInstance();
-            $rootDir = new Directory();
-            $rootDir->setId(0);
-            $rootDir->setName($workspace->getName());
-            $rootDir->setShareType(0);
-            $root->setResource($rootDir);
-            $root->setId(0);
-            $root->setCopy(0);
-            $root->setWorkspace($workspace);
-            $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
-            $rootDir->setResourceType($directoryType);
+            $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
             $roots[] = $root;
         }
 

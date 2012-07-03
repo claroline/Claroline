@@ -30,7 +30,7 @@ $(function(){
         $(treeId).dynatree({
             title: 'myTree',
             initAjax:{
-                url:Routing.generate('claro_resource_root_nodes',{
+                url:Routing.generate('claro_resource_root_node',{
                     'format':'json'
                 })
             },

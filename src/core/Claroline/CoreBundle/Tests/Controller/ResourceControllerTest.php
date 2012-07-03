@@ -204,6 +204,25 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('OWNER', $root));
     }
 
+    public function testRemoveUserRight()
+    {
+//      $this->markTestSkipped('will be implemented later, the user role should be replaced');
+        $this->loadFixture(new LoadWorkspaceData());
+        $this->logUser($this->getFixtureReference('user/user'));
+        //$this->registerToWorkspaceA();
+        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $root = $this->addRootFile($this->getFixtureReference('workspace/ws_a')->getId());
+        $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
+        $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
+        $this->client->request('GET',"/resource/permission/add/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
+        var_dump($this->client->getResponse()->getContent());
+        $this->client->request('GET',"/resource/permission/remove/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/1");
+        var_dump($this->client->getResponse()->getContent());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('VIEW', $root));
+    }
+
+
     public function testCreatorCanAccessDeleteAction()
     {
         $this->logUser($this->getFixtureReference('user/user'));
