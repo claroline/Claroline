@@ -29,7 +29,8 @@ use Claroline\CoreBundle\Library\Security\SymfonySecurity;
  *
  * TODO:
  * javascript, add by copy => the response should be the new resource id
- * remove php navigation and replace it by javascript
+ * remove php navigation and replace it by javascript ~ almost done
+ * the root can't be removed
  * REFACTOR RESOURCE MANANGER
  * - copy/paste
  * - sharable stuff
@@ -454,7 +455,11 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResource();
-        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        if (null != $instanceDestinationId) {
+            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        } else {
+            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, "workspace" => $workspaceId));
+        }
 
         if ($options == 'ref') {
             if ($instanceId == 0) {

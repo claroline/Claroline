@@ -10,11 +10,9 @@ use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 
-
 class ResourceControllerTest extends FunctionalTestCase
 {
-    /** @var string */
-    private $filePath;
+    private $upDir;
 
     public function setUp()
     {
@@ -25,6 +23,14 @@ class ResourceControllerTest extends FunctionalTestCase
         $ds = DIRECTORY_SEPARATOR;
         $this->originalPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
         $this->copyPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}copy.txt";
+        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->cleanDirectory($this->upDir);
     }
 
     public function testUserCanCreateFileResource()
@@ -206,7 +212,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testRemoveUserRight()
     {
-//      $this->markTestSkipped('will be implemented later, the user role should be replaced');
+        $this->markTestSkipped('will be implemented later, the user role should be replaced');
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
         //$this->registerToWorkspaceA();
@@ -215,9 +221,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $roleId = $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId();
         $this->client->request('GET',"/workspace/add/role/permission/{$roleId}/128");
         $this->client->request('GET',"/resource/permission/add/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
-        var_dump($this->client->getResponse()->getContent());
         $this->client->request('GET',"/resource/permission/remove/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/1");
-        var_dump($this->client->getResponse()->getContent());
         $this->logUser($this->getFixtureReference('user/user'));
         $this->assertFalse($this->client->getContainer()->get('security.context')->isGranted('VIEW', $root));
     }
@@ -238,6 +242,10 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->initWorkspaceATestsByRef($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $link = $crawler->filter('.link_resource_view')->first()->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $this->assertEquals(count($this->getUploadedFiles()),3);
     }
 
     public function testRegisterUserHasAccessToWorkspaceResourcesByRef()
@@ -249,10 +257,10 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->registerToWorkspaceA();
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $link = $crawler->filter('.link_resource_view')->first()->link();
-        $this->client->click($link);
+        $crawler = $this->client->click($link);
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
         $link = $crawler->filter('.link_resource_view')->first()->link();
-        $this->client->click($link);
+        $crawler = $this->client->click($link);
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
     }
 
@@ -266,8 +274,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->unregisterFromWorkspaceA();
         $this->client->request('GET', "/resource/click/{$rootRi->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-        $this->client->request('GET', "/resource/click/{$rootRi->getId()}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testResourceCanBeAddedToWorkspaceByCopy()
@@ -277,6 +283,10 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $link = $crawler->filter('.link_resource_view')->first()->link();
+        $crawler = $this->client->click($link);
+        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $this->assertEquals(count($this->getUploadedFiles()), 4);
     }
 
     public function testRegisterUserHasAccessToWorkspaceResourcesByCopy()
@@ -293,19 +303,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $link = $crawler->filter('.link_resource_view')->first()->link();
         $this->client->click($link);
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
+        $link = $crawler->filter('.link_resource_view')->first()->link();
+        $this->client->click($link);
+        $this->assertEquals(1, $crawler->filter('.row_resource')->count());
     }
 
     public function testUnregisteredUserLostAccessToWorkspaceResourcesByCopy()
     {
         $this->loadFixture(new LoadWorkspaceData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
+        $rootRi = $this->initWorkspaceATestsByCopy($this->getFixtureReference('user/user'));
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->registerToWorkspaceA();
         $this->unregisterFromWorkspaceA();
-        $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-        $link = $crawler->filter('.link_resource_view')->first()->link();
-        $this->client->click($link);
+        $this->client->request('GET', "/resource/click/{$rootRi->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -319,14 +330,13 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspace/show/{$this->getFixtureReference('workspace/ws_a')->getId()}");
         $link = $crawler->filter('.link_resource_view')->first()->link();
-        $this->client->click($link);
+        $crawler = $this->client->click($link);
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
         $link = $crawler->filter('.link_resource_view')->first()->link();
-        $this->client->click($link);
+        $crawler = $this->client->click($link);
         $this->assertEquals(1, $crawler->filter('.row_resource')->count());
         $link = $crawler->filter('.link_resource_view')->first()->link();
-        $this->client->click($link);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $crawler = $this->client->click($link);
     }
 
     public function testResourceOptionsCanBeEdited()
@@ -447,4 +457,34 @@ class ResourceControllerTest extends FunctionalTestCase
         $link = $crawler->filter("#link_unregistration_{$this->getFixtureReference('workspace/ws_a')->getId()}")->link();
         $this->client->click($link);
     }
+
+    private function getUploadedFiles()
+    {
+        $iterator = new \DirectoryIterator($this->upDir);
+        $uploadedFiles = array();
+
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getFilename() !== 'placeholder') {
+                $uploadedFiles[] = $file->getFilename();
+            }
+        }
+
+        return $uploadedFiles;
+    }
+
+    private function cleanDirectory($dir)
+    {
+        $iterator = new \DirectoryIterator($dir);
+
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getFilename() !== 'placeholder'
+                && $file->getFilename() !== 'originalFile.txt'
+                && $file->getFilename() !== 'originalZip.zip'
+            ) {
+                chmod($file->getPathname(), 0777);
+                unlink($file->getPathname());
+            }
+        }
+    }
+
 }
