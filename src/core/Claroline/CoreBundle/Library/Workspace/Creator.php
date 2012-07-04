@@ -7,7 +7,8 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Resource\Repository;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 class Creator
 {
@@ -20,7 +21,7 @@ class Creator
         $this->rightManager = $rm;
     }
 
-    public function createWorkspace(Configuration $config, User $manager = null)
+    public function createWorkspace(Configuration $config, User $manager)
     {
         $config->check();
 
@@ -38,6 +39,20 @@ class Creator
         $workspace->getCollaboratorRole()->setResMask(MaskBuilder::MASK_VIEW);
         $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
         $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
+        $root = new ResourceInstance();
+        $rootDir = new Directory();
+        $rootDir->setName($workspace->getName());
+        $rootDir->setShareType(0);
+        $rootDir->setCreator($manager);
+        $root->setResource($rootDir);
+        $root->setCopy(0);
+        $root->setWorkspace($workspace);
+        $root->setCreator($manager);
+        $directoryType = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
+        $rootDir->setResourceType($directoryType);
+
+        $this->entityManager->persist($rootDir);
+        $this->entityManager->persist($root);
         $this->entityManager->flush();
 
         if (null !== $manager) {
@@ -46,6 +61,19 @@ class Creator
         }
 
         $this->entityManager->flush();
+
+        $roles = $workspace->getWorkspaceRoles();
+        $masks = \Claroline\CoreBundle\Library\Security\SymfonySecurity::getSfMasks();
+        $keys = array_keys($masks);
+
+        foreach ($roles as $role) {
+            $mask = $role->getResMask();
+            foreach ($keys as $key) {
+                if ($mask & $key) {
+                    $this->rightManager->addRight($root, $role, $key);
+                }
+            }
+        }
 
         return $workspace;
     }

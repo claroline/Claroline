@@ -41,7 +41,7 @@ class FileControllerTest extends FunctionalTestCase
         $originalPath = $this->stubDir . 'originalFile.txt';
         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
         $this->client->request(
-            'POST', "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
+            'POST', "/resource/node/{$ri->getParent()->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
         );
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($file));
@@ -65,11 +65,12 @@ class FileControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $originalPath = $this->stubDir . 'originalFile.txt';
         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
+        $parentId = $ri->getParent()->getId();
         $this->client->request(
             'GET', "/resource/workspace/remove/{$ri->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
         );
         $this->client->request(
-            'POST', "/resource/node/0/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
+            'POST', "/resource/node/{$parentId}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"
         );
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($file));

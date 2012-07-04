@@ -48,10 +48,11 @@ class ResourceExtenderTest extends FunctionalTestCase
             ->getRepository('Claroline\CoreBundle\Entity\Resource\Directory')
             ->findAll();
 
-        $this->assertEquals(4, count($allRes));
+        //there is also 1 directory for each workspace, wich mean 5 directories are added with fixtures
+        $this->assertEquals(9, count($allRes));
         $this->assertEquals(1, count($firstSpecRes));
         $this->assertEquals(2, count($secondSpecRes));
-        $this->assertEquals(1, count($dirRes));
+        $this->assertEquals(6, count($dirRes));
     }
 
     /**

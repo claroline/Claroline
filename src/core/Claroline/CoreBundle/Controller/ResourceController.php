@@ -29,7 +29,8 @@ use Claroline\CoreBundle\Library\Security\SymfonySecurity;
  *
  * TODO:
  * javascript, add by copy => the response should be the new resource id
- * remove php navigation and replace it by javascript
+ * remove php navigation and replace it by javascript ~ almost done
+ * the root can't be removed
  * REFACTOR RESOURCE MANANGER
  * - copy/paste
  * - sharable stuff
@@ -386,7 +387,7 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function getRootNodesAction($userId, $format)
+    public function getRootNodeAction($userId, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -400,17 +401,7 @@ class ResourceController extends Controller
         $roots = array();
 
         foreach ($workspaces as $workspace) {
-            $root = new ResourceInstance();
-            $rootDir = new Directory();
-            $rootDir->setId(0);
-            $rootDir->setName($workspace->getName());
-            $rootDir->setShareType(0);
-            $root->setResource($rootDir);
-            $root->setId(0);
-            $root->setCopy(0);
-            $root->setWorkspace($workspace);
-            $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
-            $rootDir->setResourceType($directoryType);
+            $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
             $roots[] = $root;
         }
 
@@ -464,7 +455,11 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResource();
-        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        if (null != $instanceDestinationId) {
+            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        } else {
+            $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, "workspace" => $workspaceId));
+        }
 
         if ($options == 'ref') {
             if ($instanceId == 0) {

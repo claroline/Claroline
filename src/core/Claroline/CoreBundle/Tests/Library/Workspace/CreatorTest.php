@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 
 class CreatorTest extends FunctionalTestCase
 {
@@ -23,16 +24,18 @@ class CreatorTest extends FunctionalTestCase
     public function testWorkspaceConfigurationIsCheckedBeforeCreation($invalidConfig)
     {
         $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $user = $this->getFixtureReference('user/user');
 
-        $this->creator->createWorkspace($invalidConfig);
+        $this->creator->createWorkspace($invalidConfig, $user);
     }
 
     public function testWorkspaceCreatedWithMinimalConfigurationHasDefaultParameters()
     {
         $config = new Configuration();
         $config->setWorkspaceName('Workspace Foo');
+        $user = $this->getFixtureReference('user/user');
 
-        $workspace = $this->creator->createWorkspace($config);
+        $workspace = $this->creator->createWorkspace($config, $user);
 
         $this->assertEquals(Configuration::TYPE_SIMPLE, get_class($workspace));
         $this->assertEquals('Workspace Foo', $workspace->getName());
@@ -44,6 +47,7 @@ class CreatorTest extends FunctionalTestCase
 
     public function testWorkspaceCanBeCreatedWithCustomParameters()
     {
+        $user = $this->getFixtureReference('user/user');
         $config = new Configuration();
         $config->setWorkspaceType(Configuration::TYPE_AGGREGATOR);
         $config->setWorkspaceName('Workspace Bar');
@@ -52,7 +56,7 @@ class CreatorTest extends FunctionalTestCase
         $config->setCollaboratorTranslationKey('Student');
         $config->setManagerTranslationKey('Professor');
 
-        $workspace = $this->creator->createWorkspace($config);
+        $workspace = $this->creator->createWorkspace($config, $user);
 
         $this->assertEquals(Configuration::TYPE_AGGREGATOR, get_class($workspace));
         $this->assertEquals('Workspace Bar', $workspace->getName());
