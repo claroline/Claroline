@@ -36,9 +36,9 @@ claro_resource_edit:
    options:
       expose: true
 
-claro_resource_root_nodes:
+claro_resource_root_node:
     pattern: /nodes/{userId}/roots.{format}
-    defaults: { _controller: ClarolineCoreBundle:Resource:getRootNodes, userId:null }
+    defaults: { _controller: ClarolineCoreBundle:Resource:getRootNode, userId:null }
     options:
       expose: true
 
