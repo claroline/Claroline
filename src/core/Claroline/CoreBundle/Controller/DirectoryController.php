@@ -39,14 +39,19 @@ class DirectoryController extends Controller
      *
      * @return string
      */
-    public function getFormPage($twigFile, $id, $type)
+    public function getFormPage($renderType, $instanceParentId, $type)
     {
-        $form = $this->get('form.factory')->create(new DirectoryType(), new Directory());
-        $content = $this->render(
-            $twigFile, array('form' => $form->createView(), 'parentId' => $id, 'type' => $type)
-        );
+        $form = $this->get('form.factory')->create(new DirectoryType, new Directory());
 
-        return $content;
+        switch($renderType)
+        {
+            case 'widget': $twigFile = 'ClarolineCoreBundle:Resource:generic_form.html.twig'; break;
+            case 'fullpage' : $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig'; break;
+        }
+
+        return $this->render(
+            $twigFile, array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
+        );
     }
 
     /**
@@ -189,22 +194,27 @@ class DirectoryController extends Controller
     }
 
     /**
-     * Fired when OpenAction is fired for a directory in the resource controller.
-     * It's sent with the workspaceId to keep the context.
+     * {@inheritdoc}
      *
-     * @param integer $workspaceId
-     * @param integer $resourceInstance
-     *
-     * @return Response
+     * @return array
      */
-    public function indexAction($resourceId)
+    public function getRoutedActions()
     {
+        $repo = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $resourceTypes = $repo->findBy(array('isListable' => '1'));
+        $news = array();
 
-        $content = $this->render(
-            'ClarolineCoreBundle:Directory:index.html.twig');
-        $response = new Response($content);
+        foreach ($resourceTypes as $resourceType) {
+            $url = $this->get('router')->generate('claro_resource_form', array('renderType' => 'widget', 'type' => $resourceType->getType(), 'instanceParentId' => '%%instanceId%%'));
+            $news[$resourceType->getType()] = array('widget', $url);
+        }
 
-        return $response;
+        $array = array(
+            'new' => array('menu', $news),
+        );
+
+
+        return $array;
     }
 
     /**

@@ -1,0 +1,5 @@
+claro_file_download:
+    pattern: /download/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:File:download }
+    options:
+      expose: true
