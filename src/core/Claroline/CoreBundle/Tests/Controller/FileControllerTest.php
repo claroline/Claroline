@@ -54,7 +54,7 @@ class FileControllerTest extends FunctionalTestCase
         $originalPath = $this->stubDir . 'originalFile.txt';
         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
         $this->client->request(
-            'GET', "/resource/click/{$ri->getId()}"
+            'GET', "/file/download/{$ri->getId()}"
         );
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=copy.txt'));
@@ -67,7 +67,7 @@ class FileControllerTest extends FunctionalTestCase
         $ri = $this->uploadFile($originalPath, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId());
         $parentId = $ri->getParent()->getId();
         $this->client->request(
-            'GET', "/resource/workspace/remove/{$ri->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
+            'GET', "/resource/workspace/remove/{$ri->getId()}"
         );
         $this->client->request(
             'POST', "/resource/node/{$parentId}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}/node.json"

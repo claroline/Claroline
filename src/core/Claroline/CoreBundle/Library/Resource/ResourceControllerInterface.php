@@ -42,8 +42,8 @@ interface ResourceControllerInterface
     public function add($form, $id, User $user);
 
     /**
-     * remove a resource.
-     * doesn't return anything
+     * Removes a resource.
+     * Doesn't return anything
      *
      * @param AbstractResource $res
      */
@@ -66,7 +66,7 @@ interface ResourceControllerInterface
     public function indexAction($workspaceId, $resourceId);
 
     /**
-     * copy a resource. $resource should have AbstractResource sub type.
+     * Copy a resource. $resource should have AbstractResource sub type.
      *
      * @param AbstractResource $resource the resource copied
      * @param User $user the user copying
@@ -74,9 +74,16 @@ interface ResourceControllerInterface
     public function copy($resource, User $user);
 
     /**
-     * renders the edit form
+     * Renders the edit form.
      *
      * @param integer $resourceId
      */
     public function editFormPageAction($resourceId);
+
+    /**
+     * Returns an action array in order to create menu items.
+     * Here is an array exemple.
+     * array(
+     */
+    public function getActionsArray();
 }

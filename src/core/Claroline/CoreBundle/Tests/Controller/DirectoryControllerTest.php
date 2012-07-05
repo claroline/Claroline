@@ -119,11 +119,11 @@ class DirectoryControllerTest extends FunctionalTestCase
         $object = new File();
         $object->setName($file);
         $object->setShareType(1);
-        $ri = $this->addResource($object, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId(), $dirRi->getId());
+        $this->addResource($object, $this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId(), $dirRi->getId());
 
         $this->client->request(
             'POST',
-            "resource/workspace/remove/{$dirRi->getId()}/{$this->getFixtureReference('user/user')->getPersonnalWorkspace()->getId()}"
+            "resource/workspace/remove/{$dirRi->getId()}"
         );
 
         $this->assertEquals(0, count($this->getUploadedFiles($this->upDir)));
