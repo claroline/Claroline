@@ -47,7 +47,7 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $object, $workspaceId, $instanceParentId = null, $returnInstance = false)
+    public function create(AbstractResource $object, $instanceParentId, $returnInstance = false)
     {
         $class = get_class($object);
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('class' => $class));
@@ -59,23 +59,17 @@ class Manager
         if (null !== $resource) {
             $ri = new ResourceInstance();
             $ri->setCreator($user);
-            if ($instanceParentId != null) {
             $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceParentId);
-            } else {
-                $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspaceId));
-            }
-            
             $ri->setParent($dir);
             $resource->setResourceType($resourceType);
             $ri->setCopy(0);
-            $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-            $ri->setWorkspace($workspace);
+            $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->flush();
             $this->container->get('claroline.security.right_manager')->addRight($ri, $user, MaskBuilder::MASK_OWNER);
-            $roles = $workspace->getWorkspaceRoles();
+            $roles = $dir->getWorkspace()->getWorkspaceRoles();
             $masks = \Claroline\CoreBundle\Library\Security\SymfonySecurity::getSfMasks();
             $keys = array_keys($masks);
 
@@ -98,16 +92,13 @@ class Manager
      * Moves a resource instance
      *
      * @param ResourceInstance  $child
-     * @param AbstractWorkspace $workspace
      * @param ResourceInstance  $parent
      */
-    public function move(ResourceInstance $child, AbstractWorkspace $workspace, ResourceInstance $parent = null)
+    public function move(ResourceInstance $child, ResourceInstance $parent)
     {
-        $child->setWorkspace($workspace);
+        $child->setWorkspace($parent->getWorkspace());
         $child->setParent($parent);
         $this->em->flush();
-
-        return 0;
     }
 
     /**

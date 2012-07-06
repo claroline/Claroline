@@ -1,30 +1,40 @@
 $(function(){
-    resourceTypeArray = new Array();
-    subItems = {};
-    copiedNode = null;
+    jsonmenu = {};
+
+    //Gets the menu lists.
     $.ajax({
-        type: 'POST',
-        url: Routing.generate('claro_resource_type_resource', {'format':'json', 'listable':'true'}),
+        type: 'GET',
+        url: Routing.generate('claro_json_menu', {'type': 'all'}),
+        cache: false,
         success: function(data){
-            var JSONObject = eval(data);
-            var cpt = 0;
-            while (cpt<JSONObject.length) {
-                resourceTypeArray[cpt]=JSONObject[cpt];
-                cpt++;
-            }
+            jsonmenu = JSON.parse(data);
         },
-        error: function(data){
-            alert("resource type loading failed");
-        },
-        complete: function(jqXHR, textStatus)
-        {
-            //setSubItemsTranslations();
-            subItems = generateSubItems();
+        complete: function(){
             createDivTree();
             createTree('#source_tree');
         }
     });
 
+    /**
+     * Creates the divisions needed for the file manager.
+     * source_tree => workspaces and their content.
+     * ct_form => the file manager widget
+     * ct_dialog is the div containing the file manager
+     * workspace_settins is a test
+     */
+    function createDivTree()
+    {
+        var content = ""
+        +"<div id='ct_form'></div><br>"
+        +"<div id='source_tree'></div>"
+        $('#ct_dialog').append(content)
+    }
+
+    /**
+     * Creates the resource tree
+     *
+     * @param {string} treeId the div id
+     */
     function createTree(treeId)
     {
         $(treeId).dynatree({
@@ -45,7 +55,9 @@ $(function(){
                 });
             },
             onCreate: function(node, span){
-                bindContextMenuTree(node);
+                if(node.data.hasOwnProperty('type')){
+                    bindContextMenuTree(node);
+                }
             },
             onDblClick: function(node)
             {
@@ -53,7 +65,7 @@ $(function(){
                 node.activate();
             },
             onCustomRender: function(node){
-                var html = "<a class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
+                var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
                 html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                 return html;
             },
@@ -79,8 +91,9 @@ $(function(){
                         return false;
                     }
                     else {
-                        sendRequest('claro_resource_move', {'idChild': sourceNode.data.key, 'idParent': node.data.key, 'workspaceDestinationId':node.data.workspaceId});
-                        sourceNode.move(node, hitMode);
+                        dropNode(node, sourceNode, hitMode);
+                        //sendRequest('claro_resource_move', {'idChild': sourceNode.data.key, 'idParent': node.data.key, 'workspaceDestinationId':node.data.workspaceId});
+                        //sourceNode.move(node, hitMode);
                     }
                 },
                 onDragLeave: function(node, sourceNode){
@@ -89,7 +102,48 @@ $(function(){
         });
     }
 
-    function sendRequest(route, routeParams, successHandler){
+    function dropNode(node, sourceNode, hitMode)
+    {
+        var html = Twig.render(move_resource_form);
+        $('#ct_form').empty();
+        $('#ct_form').append(html);
+        $('#move_resource_form_submit').click(function(e) {
+            e.preventDefault();
+            var option = getCheckedValue(document.forms['move_resource_form']['options']);
+            if('move' == option){
+                sendRequest('claro_resource_move', {'idChild': sourceNode.data.key, 'idParent': node.data.key, 'workspaceDestinationId':node.data.workspaceId});
+                sourceNode.move(node, hitMode);
+                $('#ct_form').empty();
+            } else
+            {
+                sendRequest('claro_resource_add_workspace',
+                            {'instanceId':sourceNode.data.key,'instanceDestinationId':node.data.key,'options':option}
+                );
+
+                var newNode = {
+                        title:sourceNode.data.title,
+                        key:sourceNode.data.key,
+                        copy:sourceNode.data.copy,
+                        instanceCount:sourceNode.data.instanceCount,
+                        shareType:sourceNode.data.shareType,
+                        resourceId:sourceNode.data.resourceId
+                    }
+
+                node.addChild(newNode);
+                $('#ct_form').empty();
+            }
+        });
+    }
+
+    /**
+     * Sends a standard ajaxRequest.
+     *
+     * @param {string}   route
+     * @param {Object}   routeParams
+     * @param {function} successHandler
+     */
+    function sendRequest(route, routeParams, successHandler)
+    {
         $.ajax({
             type: 'POST',
             url: Routing.generate(route, routeParams),
@@ -101,7 +155,29 @@ $(function(){
         });
     }
 
-    function submissionHandler(xhr, route, routeParameters, node)
+    /**
+     * Sends a form to the backend for a certain node.
+     * See SumbmissionHandler.
+     */
+    function sendForm(url, form, node)
+    {
+        var formData = new FormData(form);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
+        xhr.onload = function(e){
+            submissionHandler(xhr, node);
+        };
+        xhr.send(formData);
+    }
+
+    /**
+     * The widget form submission handler.
+     *
+     * @param {Object} xhr
+     * @param {Object} node
+     */
+    function submissionHandler(xhr, node)
     {
         if(xhr.getResponseHeader('Content-Type') == 'application/json')
         {
@@ -142,202 +218,98 @@ $(function(){
         }
         else
         {
-            $('#ct_form').append(xhr.responseText).empty();
-            $('#generic_form').submit(function(e){
-                e.preventDefault();
-                sendForm(route, routeParameters, document.getElementById('generic_form'), node);
-            });
-            $('#resource_options_form').submit(function(e){
-                e.preventDefault();
-                sendForm('claro_resource_edit_options',  {'instanceId': node.data.key}, document.getElementById('resource_options_form'), node);
-            });
-        }
-    }
-
-    function successHandler()
-    {
-        alert('success');
-    }
-
-    function createFormDialog(type, id, node)
-    {
-        var route = Routing.generate('claro_resource_form', {'type':type,'instanceParentId':id});
-        $.ajax({
-            type: 'POST',
-            url: route,
-            cache: false,
-            success: function(data){
-                $('#ct_form').append(data);
-                $('#generic_form').submit(function(e){
-                    e.preventDefault();
-                    sendForm('claro_resource_create',
-                        {'type':type,'instanceParentId':id, 'workspaceId': node.data.workspaceId},
-                        document.getElementById('generic_form'), node
-                    );
-                });
-            }
-        });
-    }
-
-    function deleteNode(node)
-    {
-        var repoId = document.getElementById('data-claroline').getAttribute('data-workspace_id');
-        $.ajax({
-            type: 'POST',
-            url: Routing.generate('claro_resource_remove_workspace',{
-                'resourceId':node.data.key,
-                'workspaceId':repoId
-            }),
-
-            success: function(data){
-                if(data == 'success'){
-                    node.remove();
-                }
-            }
-        });
-    }
-
-    function copyNode(node)
-    {
-        copiedNode = node;
-    }
-
-    function pasteNode(node)
-    {
-        if(null == copiedNode){
-            alert("can't paste the void");
-        }
-
-        var html = getMoveFormHtml();
-        $('#ct_form').append(html);
-        $('#move_resource_form_submit').click(function(e) {
-            e.preventDefault();
-            var option = getCheckedValue(document.forms['move_resource_form']['options']);
-            sendRequest('claro_resource_add_workspace',
-                        {'instanceId':copiedNode.data.key,'instanceDestinationId':node.data.key,'options':option,'workspaceId':node.data.workspaceId}
-            );
-
-            var newNode = {
-                    title:copiedNode.data.title,
-                    key:copiedNode.data.key,
-                    copy:copiedNode.data.copy,
-                    instanceCount:copiedNode.data.instanceCount,
-                    shareType:copiedNode.data.shareType,
-                    resourceId:copiedNode.data.resourceId
-                }
-
-            node.addChild(newNode);
             $('#ct_form').empty();
-            copiedNode = null;
-        });
-
+            $('#ct_form').append(xhr.responseText);
+            $('#ct_form').find('form').submit(function(e){
+                e.preventDefault();
+                var action = $('#ct_form').find('form').attr('action');
+                var id = $('#ct_form').find('form').attr('id');
+                sendForm(action, document.getElementById(id), node);
+            })
+        }
     }
 
-    function openNode(node)
+    /**
+     * Executes the desired action for a menu item.
+     *
+     * @param {Object} obj
+     * @param {Object} node
+     */
+    function executeMenuActions(obj, node)
     {
-        window.location = Routing.generate('claro_resource_open',{'instanceId':node.data.key});
-    }
+        var route = obj.route;
+        var compiledRoute = route.replace('%25%25instanceId%25%25', node.data.key);
+        compiledRoute = compiledRoute.replace('%25%25resourceId%25%25', node.data.resourceId);
 
-    function viewNode(node)
-    {
-        window.location = Routing.generate('claro_resource_default_click',{'instanceId':node.data.key});
-    }
-
-    function optionsNode(node)
-    {
-        var route = Routing.generate('claro_resource_options_form', {
-            instanceId: node.data.key
-        });
-        $.ajax({
-            type: 'POST',
-            url: route,
-            cache: false,
-            success: function(data){
-                $('#ct_tree').hide();
-                $('#ct_form').append(data);
-                $("#resource_options_form").submit(function(e){
-                    e.preventDefault();
-                    sendForm('claro_resource_edit_options',  {'instanceId': node.data.key}, document.getElementById('resource_options_form'), node);
+        switch(obj.return_type)
+        {
+            case 'widget':
+                $.ajax({
+                    type: 'POST',
+                    url: compiledRoute,
+                    cache: false,
+                    success: function(data){
+                        $('#ct_tree').hide();
+                        $('#ct_form').append(data);
+                        $('#ct_form').find('form').submit(function(e){
+                            e.preventDefault();
+                            var action = $('#ct_form').find('form').attr('action');
+                            var id = $('#ct_form').find('form').attr('id');
+                            sendForm(action, document.getElementById(id), node);
+                        })
+                    }
                 });
-            }
-        });
+                break;
+            case 'fullpage': window.location = compiledRoute; break
+            case 'delete':
+                $.ajax({
+                type: 'POST',
+                url: compiledRoute,
+                success: function(data){
+                    if(data == 'success'){
+                    node.remove();
+                        }
+                    }
+                });
+        }
     }
 
-    function workspaceRightNode(node)
+    /**
+     * Finds wich menu object was clicked on in the menu description.
+     *
+     * @param {Object} items the menu description.
+     * @param {Object} node the target node.
+     * @param {string} menuItem the menuItem name.
+     */
+    function findMenuObject(items, node, menuItem)
     {
-        //window.location = Routing.generate('claro_ws_properties',{'workspaceId':node.data.workspaceId});
-        alert("clock");
-        $('#workspace_settings').modal('show');
-        alert('clack');
-    }
-
-    function createWorkspaceSettingsPopup()
-    {
-
-    }
-
-    function bindContextMenuTree(node){
-        isWorkspace='';
-        (node.data.key == 0) ? isWorkspace = true : isWorkspace = false;
-        var menuDefaultOptions = {
-            selector: 'a.dynatree-title',
-            callback: function(key, options) {
-                switch(key)
-                {
-                    case 'view': viewNode(node); break;
-                    case 'open': openNode(node); break;
-                    case 'delete':deleteNode(node); break;
-                    case 'options': optionsNode(node); break;
-                    case 'workspace_properties': workspaceRightNode(node); break;
-                    case 'copy': copyNode(node); break;
-                    case 'paste': pasteNode(node); break;
-                    case 'cut': cutNode(node); break;
-                    default:node = $.ui.dynatree.getNode(this);
-                        createFormDialog(key, node.data.key, node);break;
-                }
-            },
-            items: {
-                'new': {
-                    name: 'new',
-                    disabled: function(){
-                        node = $.ui.dynatree.getNode(this);
-                        return (node.data.isFolder) ? false : true;
-                    },
-                    items:subItems
-                },
-                'open': {
-                    name: 'open', accesskey:"o",
-                    disabled: function(){
-                        node = $.ui.dynatree.getNode(this);
-                        return (node.data.isFolder)? false : true;
-                    }
-                },
-                'view': {name: 'view', accesskey:'v'},
-                'delete': {
-                    name: 'delete', accesskey:'d',
-                    disabled: function(){
-                        node = $.ui.dynatree.getNode(this);
-                        return (node.data.key != 0)? false: true;
-                    }
-                },
-                'resource_properties': {
-                    name: 'properties',
-                    items: {
-                        'options' : {name: 'options'},
-                        'rights' : { name :'rights'}
-                    }
-                },
-                'workspace_properties':{name: 'workspace properties'},
-                'copy': {name: "copy"},
-                'paste': { name: 'paste',
-                    disabled: function(){
-                        node = $.ui.dynatree.getNode(this);
-                        return (node.data.isFolder)? false : true;
-                    }
+        for (var property in items.items){
+            if(property == menuItem){
+                executeMenuActions(items.items[property], node);
+            } else {
+                if (items.items[property].hasOwnProperty('items')){
+                    findMenuObject(items.items[property], node, menuItem);
                 }
             }
         }
+    }
 
+    /**
+     * Creates the context menu for a specific node
+     */
+    function bindContextMenuTree(node)
+    {
+        var type = node.data.type;
+
+        var menuDefaultOptions =
+            {
+                selector: '#node_'+node.data.key,
+                callback: function(key, options){
+                    findMenuObject(jsonmenu[type], node, key);
+                }
+            }
+
+        menuDefaultOptions.items = jsonmenu[type].items;
         $.contextMenu(menuDefaultOptions);
         var additionalMenuOptions = $.extend(
             menuDefaultOptions,
@@ -347,68 +319,9 @@ $(function(){
         $.contextMenu(additionalMenuOptions);
     }
 
-    function sendForm(route, routeParameters, form, node)
-    {
-        var formData = new FormData(form);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', Routing.generate(route, routeParameters), true);
-        xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-        xhr.onload = function(e){
-            submissionHandler(xhr, route, routeParameters, node);
-        };
-        xhr.send(formData);
-    }
-
-    function generateSubItems()
-    {
-        var cpt = 0;
-        var subItems='';
-        subItems+='{'
-        while (cpt<resourceTypeArray.length)
-        {
-            var name = resourceTypeArray[cpt].type;
-            var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
-            subItems+= '"'+resourceTypeArray[cpt].type+'": {"name":"'+translation+'"}';
-            cpt++;
-            if (cpt<resourceTypeArray.length) {
-                subItems+=",";
-            }
-        }
-        subItems+='}'
-        var object = JSON.parse(subItems);
-
-        return object;
-    }
-
-    function createDivTree()
-    {
-        var content = ""
-        +"<div id='workspace_settings' class='modal fade'></div>"
-        +"<div id='ct_form'></div><br>"
-        +"<div id='source_tree'></div>"
-        $('#ct_dialog').append(content)
-        var modalContent = Twig.render(bootstrap_modal);
-        $('#workspace_settings').append(modalContent).modal({show:true,backdrop:true});
-    }
-
-    function setSubItemsTranslations()
-    {
-        var cpt = 0;
-        var name = "";
-        while(cpt < resourceTypeArray.length) {
-            name = resourceTypeArray[cpt].type;
-            var translation = document.getElementById('translation-claroline').getAttribute('data-'+name);
-            resourceTypeArray[cpt].type=translation;
-            cpt++;
-        }
-    }
-
-    function getMoveFormHtml()
-    {
-        var html = twig.Render(move_resource_form);
-        return html;
-    }
-
+    /**
+     * Return the check value of a combobox form.
+     */
     function getCheckedValue(radioObj) {
         if(!radioObj)
             return "";
@@ -425,5 +338,4 @@ $(function(){
         }
         return "";
     }
-
 });

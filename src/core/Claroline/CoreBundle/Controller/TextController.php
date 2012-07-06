@@ -46,12 +46,19 @@ class TextController extends Controller
      *
      * @return string
      */
-    public function getFormPage($twigTemp, $id, $type)
+    public function getFormPage($renderType, $instanceParentId, $type)
     {
-        $form = $this->get('form.factory')->create(new TextType());
-        $content = $this->render('ClarolineCoreBundle:Text:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $type));
+        $form = $this->get('form.factory')->create(new TextType, new Text());
 
-        return $content;
+        switch($renderType)
+        {
+            case 'widget': $twigFile = 'ClarolineCoreBundle:Resource:generic_form.html.twig'; break;
+            case 'fullpage' : $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig'; break;
+        }
+
+        return $this->render(
+            $twigFile, array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
+        );
     }
 
     /**

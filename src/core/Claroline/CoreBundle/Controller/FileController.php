@@ -50,13 +50,26 @@ class FileController extends Controller
      *
      * @return string
      */
-    public function getFormPage($twigFile, $id, $type)
+    public function getFormPage($renderType, $instanceParentId, $type)
     {
         $form = $this->get('form.factory')->create(new FileType, new File());
 
+        switch($renderType)
+        {
+            case 'widget': $twigFile = 'ClarolineCoreBundle:Resource:generic_form.html.twig'; break;
+            case 'fullpage' : $twigFile = 'ClarolineCoreBundle:Resource:form_page.html.twig'; break;
+        }
         return $this->render(
-            $twigFile, array('form' => $form->createView(), 'parentId' => $id, 'type' => $type)
+            $twigFile, array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
         );
+    }
+
+    /**
+     * Returns the creation form route
+     */
+    public function getFormRoute()
+    {
+        return 'claro_file_show_creation_form';
     }
 
     /**
@@ -127,13 +140,28 @@ class FileController extends Controller
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
+    public function getRoutedActions()
+    {
+        $router = $this->get('router');
+        $array = array(
+            'download' => array('fullpage', $router->generate('claro_file_download', array('resourceId' => '%%resourceId%%')))
+        );
+
+        return $array;
+    }
+
+    /**
      * Default action for a file: downloading the file.
      *
      * @param integer $resourceId
      *
      * @return Response
      */
-    public function getDefaultAction($resourceId)
+    public function downloadAction($resourceId)
     {
         $response = new Response();
         $file = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($resourceId);

@@ -33,6 +33,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->cleanDirectory($this->upDir);
     }
 
+    /*
     public function testUserCanCreateFileResource()
     {
         $this->markTestSkipped('crsf token error');
@@ -105,7 +106,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         $this->client->request('GET',"/resource/permission/remove/{$root->getId()}/{$this->getFixtureReference('user/user')->getId()}/128");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
+    }*/
 
     public function testNormalWorkspaceDefaultActionProtection()
     {
@@ -118,7 +119,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->registerToWorkspaceA();
         $this->client->request('GET', "/resource/click/{$root->getId()}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
+    }/*
 
     public function testCreatorCanAccessPersonnalWorkspaceResourceDefaultAction()
     {
@@ -163,7 +164,7 @@ class ResourceControllerTest extends FunctionalTestCase
      * CASE 2:    user: OWNER   => collaborator: VIEW  => from VIEW to OWNER
      * CASE 3:    user: NONE    => collaborator: from VIEW to OWNER and from OWNER to VIEW
      */
-
+/*
     public function testIsGrantedInstanceReturnsTheCorrectValueWhenUpdated()
     {
         $this->loadFixture(new LoadWorkspaceData());
@@ -319,7 +320,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/click/{$rootRi->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
-
+*/
     public function testRegisteredUserHasAccesToWorkspaceResourcesByCopy()
     {
         $this->loadFixture(new LoadWorkspaceData());
