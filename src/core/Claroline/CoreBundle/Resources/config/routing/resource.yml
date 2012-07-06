@@ -2,10 +2,6 @@ claro_resource_index:
     pattern: /directory/{id}
     defaults: { _controller: ClarolineCoreBundle:Resource:index, id:null}
 
-claro_resource_show_creation_form:
-    pattern: /form/show/{instanceParentId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:creationResourceForm, instanceParentId:null }
-
 claro_resource_options_form:
     pattern: /form/options/{instanceId}
     defaults: { _controller: ClarolineCoreBundle:Resource:creationOptionsForm }
@@ -24,12 +20,6 @@ claro_resource_delete:
     options:
       expose: true
 
-claro_resource_open:
-   pattern: /open/{instanceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:open }
-   options:
-      expose: true
-
 claro_resource_edit:
    pattern: /edit/{instanceId}/{workspaceId}/{options}
    defaults: { _controller: ClarolineCoreBundle:Resource:edit}
@@ -43,45 +33,39 @@ claro_resource_root_node:
       expose: true
 
 claro_resource_node:
-    pattern: node/{instanceId}/{workspaceId}/node.{format}
+    pattern: node/{instanceId}/node.{format}
     defaults: { _controller: ClarolineCoreBundle:Resource:getNode }
     options:
       expose: true
 
 claro_resource_move:
-   pattern: move/{idChild}/{idParent}/{workspaceDestinationId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource, workspaceDestinationId:null }
+   pattern: move/{idChild}/{idParent}
+   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource }
    options:
       expose: true
 
 claro_resource_add_workspace:
-   pattern: workspace/add/{instanceId}/{workspaceId}/{options}/{instanceDestinationId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace, instanceDestinationId:null }
+   pattern: workspace/add/{instanceId}/{options}/{instanceDestinationId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
    options:
       expose: true
    requirements:
       options: ref|copy
 
 claro_resource_remove_workspace:
-   pattern: workspace/remove/{resourceId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:removeFromWorkspace, workspaceId:null }
+   pattern: workspace/remove/{instanceId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:deleteInstance}
    options:
       expose: true
 
 claro_resource_create:
-   pattern: /add/{type}/{instanceParentId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:create, instanceParentId:null, workspaceId:null }
+   pattern: /add/{type}/{instanceParentId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:create }
    options:
       expose: true
 
-claro_resource_default_click:
-   pattern: /click/{instanceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
-   options:
-       expose: true
-
 claro_resource_form:
-   pattern: /form/{instanceParentId}/{type}
+   pattern: /form/{instanceParentId}/{type}/{renderType}
    defaults: { _controller: ClarolineCoreBundle:Resource:getForm }
    options:
       expose: true
@@ -126,4 +110,10 @@ claro_player_list:
    pattern: /player/list/{id}
    defaults: { _controller: ClarolineCoreBundle:Resource:getJsonPlayerList }
    options:
+      expose: true
+
+claro_json_menu:
+  pattern: /action/array/{type}
+  defaults: { _controller: ClarolineCoreBundle:Resource:getJsonMenu, type:'all' }
+  options:
       expose: true
