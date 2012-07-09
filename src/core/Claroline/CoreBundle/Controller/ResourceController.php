@@ -20,36 +20,16 @@ use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Form\ResourceOptionsType;
 use Claroline\CoreBundle\Library\Security\SymfonySecurity;
+use Claroline\CoreBundle\Library\Resource\ResourceEvent;
 
-/**
- * This controller will manage resources.
- * It'll delegate create/update/delete/click actions for the different resource types
- * to the specified resource "manager" service.
- * It can add/remove a resource to a workspace.
- *
- * TODO:
- * javascript, add by copy => the response should be the new resource id
- * remove php navigation and replace it by javascript ~ almost done
- * REFACTOR RESOURCE MANANGER
- * - copy/paste
- * - sharable stuff
- * - popups instead of the stuff above
- * - tinyMCE for text
- * REFACTOR RESOURCE PICKER
- * when the server is slow, many ajax request can be sent... and everything get messy.
- * what about the rights in general ?
- * instance suppression: do we supress the original aswell ? can the creator remove every instance ?
- * Redirections & Responses
- * improved tests for move/add to workspace
- * text diff
- * linker
- * edit by copy
- * not using jquery from twitter bootstrap ? currently there is not enough room for 2 data trees in the js index and it should be fixed
- * create a resource manager in ordrer to remove some logic from the ResourceController.
- */
+use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
+
 class ResourceController extends Controller
 {
-
     /**
      * Renders the root resources for the personnal workspace of the current
      * logged user.
@@ -60,136 +40,192 @@ class ResourceController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getEntityManager();
-        $personnalWs = $user->getPersonnalWorkspace();
         //required for translations
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:index.html.twig', array('resourcesType' => $resourcesType, 'workspace' => $personnalWs)
+                'ClarolineCoreBundle:Resource:index.html.twig', array('resourcesType' => $resourcesType)
         );
     }
 
     /**
-     * Returns the resource options form.
-     * name & share_type can be edited for every resource as long the user has the rights to do
+     * Renders the creation form for a given resource type.
      *
-     * @param integer $instanceId
-     */
-    public function creationOptionsFormAction($instanceId)
-    {
-        $res = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->find($instanceId)
-            ->getResource();
-
-        $form = $this->get('form.factory')->create(new ResourceOptionsType(), $res);
-
-        $request = $this->get('request');
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
-        }
-
-        return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
-    }
-
-    /**
-     * Edits the resource options
-     *
-     * @param integer $resourceId
-     */
-    public function editOptionsAction($instanceId)
-    {
-        $request = $this->get('request');
-        $em = $this->getDoctrine()->getEntityManager();
-        $res = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId)->getResource();
-        $form = $this->createForm(new ResourceOptionsType(), $res);
-        $form->bindRequest($request);
-
-        if ($form->isValid()) {
-            $res = $form->getData();
-            $em->persist($res);
-            $em->flush();
-
-            if ($request->isXmlHttpRequest()) {
-                $ri = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId);
-                $ri->setResource($res);
-                $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
-                $response = new Response($content);
-                $response->headers->set('Content-Type', 'application/json');
-
-                return $response;
-            }
-
-            return "edited";
-        } else {
-            if ($request->isXmlHttpRequest()) {
-                return $this->render('ClarolineCoreBundle:Resource:options_form.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
-            }
-            return $this->render('ClarolineCoreBundle:Resource:options_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
-        }
-    }
-
-    /**
-     * Renders the specific resource form with it's claroline layout
-     *
-     * @param integer $instanceParentId
-     * @param string  $type
+     * @param string  $resourceType
+     * @throws Exception if no listener has filled the creation event with a response object
      *
      * @return Response
      */
-    public function getFormAction($renderType, $instanceParentId, $type)
+    public function creationFormAction($resourceType)
     {
-        $resourceType = $this->getDoctrine()->getEntityManager()->getRepository("Claroline\CoreBundle\Entity\Resource\ResourceType")->findOneBy(array('type' => $type));
-        $name = $this->findResService($resourceType);
-        $rsrcServ = $this->get($name);
-        $content = $rsrcServ->getFormPage($renderType, $instanceParentId, $type);
+        // dispatch a create_form_[resource_type_name] event;
+        // if the event is filled with a response, send it,
+        // otherwise, throw an exception
+        // note : the parent instance id will be added to the form action on client side
+        // note : on client side, we must know if the response is to be displayed as a part of
+        // the current interface or as a new page (detect the <html> element ?)
+        $resourceType = strtolower(str_replace(' ', '_', $resourceType));
+        $event = new CreateFormResourceEvent();
+        $this->get('event_dispatcher')->dispatch("create_form_{$resourceType}", $event);
 
-        return new Response($content);
+        return new Response($event->getResponseContent());
     }
 
     /**
-     * Adds a resource. This method will delegate the resource creation to
-     * the correct ResourceType service.
-     *
-     * if the workspaceId is 'null', the workspace will be the current user personnal Ws.
-     * if it was requested through ajax, it'll respond with a json object containing the created resource datas
-     * otherwise it'll redirect to the resource index.
+     * Creates a resource.
      *
      * @param string  $type
      * @param integer $instanceParentId
      *
-     * @return Response|RedirectResponse
+     * @return Response
      */
-    public function createAction($type, $instanceParentId)
+    public function createAction($resourceType, $parentInstanceId)
     {
-        $request = $this->get('request');
-        $resourceType = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $type));
-        $name = $this->findResService($resourceType);
-        $form = $this->get($name)->getForm();
-        $form->bindRequest($request);
+        // dispatch a create_[resource_type_name] event, containing the request object;
+        // if the event is filled with an entity, create an instance, put rights on it, and send success response,
+        // otherwise send form with validation errors
+        // note : it's up to the plugin resource listener to validate the data and depending
+        // on the result, to fill the event wit'renderType' => 'widget'h a success response or with the initial form
+        // with validation errors.
+        $resourceType = strtolower(str_replace(' ', '_', $resourceType));
+        $event = new CreateResourceEvent();
+        $this->get('event_dispatcher')->dispatch("create_{$resourceType}", $event);
+        $response = new Response();
 
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $ri = $this->get('claroline.resource.creator')->create($data, $instanceParentId, $data, true);
+        if (($resource = $event->getResource()) instanceof AbstractResource) {
+            $manager = $this->get('claroline.resource.manager');
+            $instance = $manager->create($resource, $parentInstanceId);
+            $content = $this->renderView(
+                'ClarolineCoreBundle:Resource:resources.json.twig',
+                array('resources' => array($instance))
+            );
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($content);
+        } else {
+            $response->setContent($event->getErrorFormContent());
+        }
 
-            if (null !== $ri) {
-                $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.json.twig", array('resources' => array($ri)));
-                $response = new Response($content);
-                $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
-                return $response;
+
+    /**
+     * Removes a resource instance from a workspace
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
+    public function deleteAction($instanceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+
+        if (1 === $resourceInstance->getResource()->getInstanceCount()) {
+            if ($resourceInstance->getResourceType()->getType() !== 'directory') {
+                $event = new DeleteResourceEvent(array($resourceInstance->getResource()));
+                $this->get('event_dispatcher')->dispatch("delete_{$resourceInstance->getResourceType()->getType()}", $event);
+            } else {
+                $this->deleteDirectory($resourceInstance);
             }
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:generic_form.html.twig', array('form' => $form->createView(), 'parentId' => $instanceParentId, 'type' => $type)
-        );
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'text/html');
+        $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
+        $em->remove($resourceInstance);
+        $em->flush();
 
-        return $response;
+        return new Response('success');
+    }
+
+    private function deleteDirectory($resourceInstance)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
+
+        foreach ($children as $child) {
+            $rsrc = $child->getResource();
+
+            if ($rsrc->getInstanceCount() === 1) {
+                $type = $child->getResourceType();
+
+                if ($child->getResourceType()->getType() === 'directory') {
+                    $em->remove($rsrc);
+                } else {
+                    $event = new DeleteResourceEvent(array($child->getResource()));
+                    $this->get('event_dispatcher')->dispatch("delete_{$child->getResourceType()->getType()}", $event);
+                }
+            }
+
+            $rsrc->removeResourceInstance($child);
+            $em->remove($child);
+        }
+
+        if ($rsrc->getInstanceCount() === 1) {
+            $em->remove($rsrc);
+        }
+
+        $rsrc = $resourceInstance->getResource();
+        $rsrc->removeResourceInstance($resourceInstance);
+        $em->remove($resourceInstance);
+        $em->remove($rsrc);
+        $em->flush();
+    }
+
+    public function customAction($resourceType, $action, $instanceId)
+    {
+        $instance = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->find($instanceId);
+        $event = new CustomActionResourceEvent($instance->getResource()->getId());
+        $this->get('event_dispatcher')->dispatch("{$action}_{$resourceType}", $event);
+
+        // TODO : if $event->getResponse() === null -> exception
+
+        return $event->getResponse();
+    }
+
+    /**
+     * Renders the form allowing to edit the base properties (currently only the name and the
+     * sharable/public/private attribute) of a given resource.
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
+    public function basePropertiesFormAction($resourceId)
+    {
+        // render the form, passing the resource id
+    }
+
+    /**
+     * Updates the base properties of a given resource.
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
+    public function updateBasePropertiesAction($resourceId)
+    {
+        // update properties if form is valid, and send success message
+        // otherwise render the form with validation errors
+    }
+
+    /**
+     * Moves an resource instance (changes his parent)
+     *
+     * @param integer $idChild
+     * @param integer $idParent
+     *
+     * @return Response
+     */
+    public function moveResourceAction($idChild, $idParent)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idParent);
+        $child = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idChild);
+        $this->get('claroline.resource.manager')->move($child, $parent);
+
+        return new Response('success');
     }
 
     /**
@@ -254,16 +290,16 @@ class ResourceController extends Controller
 
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getListableChildren($parent);
-        $i = 0;
+        /*$i = 0;
 
         foreach ($resourcesInstance as $resourceInstance) {
             if (!$this->get('security.context')->isGranted('VIEW', $resourceInstance)) {
                 unset($resourcesInstance[$i]);
             }
             $i++;
-        }
+        }*/
 
-        $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.{$format}.twig", array('resources' => $resourcesInstance));
+        $content = $this->renderView("ClarolineCoreBundle:Resource:resources.{$format}.twig", array('resources' => $resourcesInstance));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -296,32 +332,11 @@ class ResourceController extends Controller
             $roots[] = $root;
         }
 
-        $content = $this->renderView("ClarolineCoreBundle:Resource:dynatree_resource.{$format}.twig", array('resources' => $roots));
+        $content = $this->renderView("ClarolineCoreBundle:Resource:resources.{$format}.twig", array('resources' => $roots));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
-    }
-
-    /**
-     * Moves an resource instance (changes his parent)
-     * When it's moved to the root with javascript, the workspaceId isn't know so it must be passed as a parameter
-     * otherwise child and parent workspace are equals.
-     *
-     * @param integer $idChild
-     * @param integer $idParent
-     * @param integer $workspaceDestinationId
-     *
-     * @return Response
-     */
-    public function moveResourceAction($idChild, $idParent)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idParent);
-        $child = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($idChild);
-        $this->get('claroline.resource.creator')->move($child, $parent);
-
-        return new Response('success');
     }
 
     /**
@@ -332,49 +347,17 @@ class ResourceController extends Controller
      */
     public function getJsonMenuAction($type)
     {
-        if('all' != $type)
-        {
-            $resourceType = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findOneBy(array('type' => $type));
+        $resourceTypes = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findAll();
 
-            $name = $this->findResService($resourceType);
-            $actions = $this->get($name)->getRoutedActions();
-            $actions = $this->addMandatoryActionsToMenu($actions);
-            $json = $this->convertArrayToJsonMenu($actions);
-
-            return new Response("{{$json}}");
-        }
-
-        $resourceTypes = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-        $response = "{";
-
-        foreach($resourceTypes as $resourceType){
-            $name = $this->findResService($resourceType);
-            if($this->has($name)){
-                $service = $this->get($name);
-                if(method_exists($service, 'getRoutedActions')){
-                    $actions = $service->getRoutedActions();
-                    $actions = $this->addMandatoryActionsToMenu($actions);
-                    $json = $this->convertArrayToJsonMenu($actions);
-                    if('{'!= $response){
-                        $response.= ",";
-                    }
-                    $response.= '"'.$service->getResourceType().'":'."{{$json}}";
-                }
-            }
-        }
-
-        $response .= "}";
-        return new Response ($response);
+        return $this->render('ClarolineCoreBundle:Resource:resource_menu.json.twig', array('resourceTypes' => $resourceTypes));
     }
 
     /**
      * Adds a resource instance to a workspace.
      * Options must be must be 'ref' or 'copy'.
-     * If $instanceId = 0, every resource is added
-     * If $instanceDestinationId = 0, everything is added to the root
      *
      * @param integer $resourceId
      * @param string  $options
@@ -402,49 +385,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Removes a resource instance from a workspace
-     *
-     * @param integer $resourceId
-     *
-     * @return Response
-     *
-     * @throws AccessDeniedException
-     */
-
-    public function deleteInstanceAction($instanceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-
-        if (false === $this->get('security.context')->isGranted('DELETE', $resourceInstance)) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
-        }
-
-        if (null == $resourceInstance->getParent()){
-            throw new \Exception("the workspace root can't be removed");
-        }
-
-        $resourceType = $resourceInstance->getResourceType();
-        $name = $this->findResService($resourceType);
-
-        if ($resourceInstance->getResourceType()->getType() === 'directory') {
-            $this->get($name)->delete($resourceInstance);
-        } else {
-            $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
-            $em->remove($resourceInstance);
-
-            if (0 === $resourceInstance->getResource()->getInstanceCount()) {
-                $this->get($name)->delete($resourceInstance->getResource());
-            }
-        }
-
-        $em->flush();
-
-        return new Response('success');
-    }
-
-    /**
-     * Returns the resource types defined in the platform (currently only json)
+     * Returns the resource types defined in the platform (currently only in json format)
      *
      * $listable can be "all", "false" and "true"
      *
@@ -468,74 +409,6 @@ class ResourceController extends Controller
         $response = new Response($content);
 
         return $response;
-    }
-
-    /**
-     * Currently not in use.
-     * Get the list of instance for an instance.
-     *
-     * @param integer $instanceId
-     *
-     * @return Response
-     */
-    public function getResourcesReferenceAction($instanceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('abstractResource' => $resourceInstance->getId()));
-        $content = $this->renderView('ClarolineCoreBundle:Resource:resource_instance.json.twig', array('resourcesInstance' => $resourcesInstance));
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * Returns the license list
-     * Currently not in use
-     *
-     * @param string $format
-     *
-     * @return Response
-     */
-    public function getJsonLicensesListAction($format)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $licenses = $em->getRepository('Claroline\CoreBundle\Entity\License')->findAll();
-
-        return $this->render("ClarolineCoreBundle:Resource:license_list.{$format}.twig", array('licenses' => $licenses));
-    }
-
-    /**
-     * Returns the player list as an array.
-     * Test function
-     *
-     * @param integer $id
-     *
-     * @return Response
-     */
-    public function getJsonPlayerListAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
-        $mime = $resourceInstance->getResource()->getMimeType();
-        $services = $this->container->getParameter('claroline.resource_players');
-        $names = array_keys($services);
-        $i = 1;
-        $arrayPlayer[0][0] = 'claroline.file.manager';
-        $arrayPlayer[0][1] = $this->get('claroline.file.manager')->getPlayerName();
-
-        foreach ($names as $name) {
-            $srvMime = $this->get($name)->getMimeType();
-
-            if ($mime->getName() == $srvMime || $mime->getType() == $srvMime) {
-                $arrayPlayer[$i][0] = $name;
-                $arrayPlayer[$i][1] = $this->get($name)->getPlayerName();
-                $i++;
-            }
-        }
-
-        return new Response(var_dump($arrayPlayer));
     }
 
     /**
@@ -590,11 +463,34 @@ class ResourceController extends Controller
         $ric->setCreator($user);
         $ric->setCopy(false);
         $ric->setWorkspace($resourceInstance->getWorkspace());
-        $name = $this->findResService($resourceInstance->getResourceType());
-        $resourceCopy = $this->get($name)->copy($resourceInstance->getResource(), $user);
-        $resourceCopy->setResourceType($resourceInstance->getResourceType());
-        $resourceCopy->addResourceInstance($ric);
+
+        // dispatch a copy_[resource_type_name] event,
+        // ensure the event is filled with an abstract resource instance
+
+
+        //$name = $this->findResService($resourceInstance->getResourceType());
+
+        $this->get('doctrine.orm.entity_manager')->flush();
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        if($resourceInstance->getResourceType()->getType()=='directory') {
+            $resourceCopy = new Directory();
+            $resourceCopy->setName($resourceInstance->getResource()->getName());
+            $resourceCopy->setCreator($user);
+            $resourceCopy->setResourceType($em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
+            $em->persist($resourceCopy);
+        }
+        else {
+            $event = new CopyResourceEvent($resourceInstance->getResource());
+            $resourceType = strtolower(str_replace(' ', '_', $resourceInstance->getResourceType()->getType()));
+            $this->get('event_dispatcher')->dispatch("copy_{$resourceType}", $event);
+            $resourceCopy = $event->getCopy();
+            $resourceCopy->setResourceType($resourceInstance->getResourceType());
+            $resourceCopy->addResourceInstance($ric);
+        }
+
         $ric->setResource($resourceCopy);
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         return $ric;
     }
@@ -607,7 +503,7 @@ class ResourceController extends Controller
      */
     private function setChildrenByReferenceCopy(ResourceInstance $parentInstance, ResourceInstance $parentCopy)
     {
-        $workspace = $parentInstance->getWorkspace();
+        $workspace = $parentCopy->getWorkspace();
         $em = $this->getDoctrine()->getEntityManager();
         $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
         $rightManager = $this->get('claroline.security.right_manager');
@@ -635,7 +531,8 @@ class ResourceController extends Controller
      */
     private function setChildrenByCopyCopy(ResourceInstance $parentInstance, ResourceInstance $parentCopy)
     {
-        $workspace = $parentInstance->getWorkspace();
+        $workspace = $parentCopy->getWorkspace();
+        var_dump($workspace->getId());
         $em = $this->getDoctrine()->getEntityManager();
         $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
         $rightManager = $this->get('claroline.security.right_manager');
@@ -727,7 +624,7 @@ class ResourceController extends Controller
     /**
      * Adds a permission to a resource instance
      *
-     * @param integer $instanceId
+     * @param integer                alert('move !');$instanceId
      * @param integer $userId
      * @param integer $maskId
      *
@@ -740,9 +637,8 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
 
-        if($this->get('security.context')->isGranted(('OWNER'), $resourceInstance))
-        {
-            $this->container->get('claroline.resource.creator')->addInstanceRight($instanceId, $userId, intval($maskId));
+        if ($this->get('security.context')->isGranted(('OWNER'), $resourceInstance)) {
+            $this->container->get('claroline.resource.manager')->addInstanceRight($instanceId, $userId, intval($maskId));
         } else {
             throw new AccessDeniedHttpException();
         }
@@ -766,9 +662,8 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
 
-        if($this->get('security.context')->isGranted(('OWNER'), $resourceInstance))
-        {
-            $this->container->get('claroline.resource.creator')->removeInstanceRight($instanceId, $userId, intval($maskId));
+        if ($this->get('security.context')->isGranted(('OWNER'), $resourceInstance)) {
+            $this->container->get('claroline.resource.manager')->removeInstanceRight($instanceId, $userId, intval($maskId));
         } else {
             throw new AccessDeniedHttpException();
         }
@@ -780,21 +675,22 @@ class ResourceController extends Controller
     {
         $json = '"items": {';
         $i = 0;
-        foreach($array as $key => $item)
-        {
-            if ($item[0]!='menu'){
-                $json.='"'.$key.'" : {"name": "'.$key.'", "return_type":"'.$item[0].'", "route":"'.$item[1].'"}';
+        foreach ($array as $key => $item) {
+            if ($item[0] != 'menu') {
+                $json.='"' . $key . '" : {"name": "' . $key . '", "return_type":"' . $item[0] . '", "route":"' . $item[1] . '"}';
             } else {
-                $json .= '"'.$key.'" :{"name": "'.$key.'", ';
+                $json .= '"' . $key . '" :{"name": "' . $key . '", ';
                 $json .= $this->convertArrayToJsonMenu($item[1]);
                 $json .= '}';
             }
             $i++;
-            if($i < count($array)){$json.=',';}
+            if ($i < count($array)) {
+                $json.=',';
+            }
         }
         $json.= "}";
 
-         return $json;
+        return $json;
     }
 
     public function addMandatoryActionsToMenu($array)

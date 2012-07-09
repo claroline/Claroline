@@ -1,0 +1,3 @@
+claro_dashboard_index:
+    pattern: /
+    defaults: { _controller: ClarolineCoreBundle:Dashboard:index }

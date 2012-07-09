@@ -167,7 +167,6 @@ class FileController extends Controller
         $file = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\File')->find($resourceId);
 
         return $this->setDownloadHeaders($file, $response);
-        ;
     }
 
     /**

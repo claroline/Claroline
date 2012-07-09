@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Claroline\CoreBundle\Entity\Plugin;
 
 /**
@@ -22,7 +21,6 @@ class ResourceType
     private $id;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $type;
@@ -35,6 +33,15 @@ class ResourceType
      * )
      */
     private $abstractResources;
+
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction",
+     *      mappedBy="resourceType",
+     *      cascade={"persist"}
+     * )
+     */
+    private $customActions;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -95,6 +102,7 @@ class ResourceType
         $this->abstractResources = new ArrayCollection();
         $this->resourceInstances = new ArrayCollection();
         $this->metaTypes = new ArrayCollection();
+        $this->customActions = new ArrayCollection();
     }
 
     /**
@@ -195,6 +203,16 @@ class ResourceType
     public function setParent(ResourceType $parent = null)
     {
         $this->parent = $parent;
+    }
+
+    public function getCustomActions()
+    {
+        return $this->customActions;
+    }
+
+    public function addCustomAction(ResourceTypeCustomAction $action)
+    {
+        $this->customActions->add($action);
     }
 
     public function getParent()

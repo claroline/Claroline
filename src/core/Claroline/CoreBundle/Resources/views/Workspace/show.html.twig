@@ -28,37 +28,6 @@
 {% if is_granted(workspace.getManagerRole().getName()) %}
     | <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
 {% endif %}
-        <div id='div_resource'>
-            {% for resourceInstance in resources %}
-                <div id="resource_row">
-                    <div class="row_resource">
-                        <a href="{{ path('claro_resource_default_click',{'instanceId':resourceInstance.getId()}) }}"
-                           id="link_resource_{{ resourceInstance.getId() }}"
-                           class="link_resource_view">
-                           {{ resourceInstance.getResource().getName() }}
-                        </a>
-                       |
-                        <a href="{{ path('claro_resource_remove_workspace', {'resourceId':resourceInstance.getId(), 'workspaceId':workspace.getId()}) }}">
-                            delete from workspace
-                        </a>
-                        |
-                        <a id="link_resource_options_{{ resourceInstance.getId() }}"
-                           href="{{ path('claro_resource_options_form', {'instanceId':resourceInstance.getId()}) }}"
-                           class="link_open_resource">
-                           {{ 'options'|trans({}, 'platformTranslation') }}
-                         </a>
-                        |
-                        {{ 'owner'|trans({}, 'platformTranslation') }}: {{ resourceInstance.getCreator().getUsername() }}
-                        |
-                        {% if resourceInstance.getCopy() == true %}
-                        COPY
-                        {% else %}
-                        ORIGNAL
-                        {% endif %}
-                   </div>
-                </div>
-            {% endfor %}
-        </div>
     <button id="show_filepicker_button">filePicker</button>
     <div id="filepicker"></div>
 </div>

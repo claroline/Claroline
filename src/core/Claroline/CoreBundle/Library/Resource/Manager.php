@@ -38,7 +38,7 @@ class Manager
     /**
      * Creates a resource. If instanceParentId is null, added to the root.
      *
-     * @param integer          $instanceParentId
+     * @param integer          $parentInstanceId
      * @param integer          $workspaceId
      * @param AbstractResource $object
      * @param boolean          $instance the return type
@@ -47,19 +47,16 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $object, $instanceParentId, $returnInstance = false)
+    public function create(AbstractResource $resource, $parentInstanceId, $returnInstance = true)
     {
-        $class = get_class($object);
+        $class = get_class($resource);
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('class' => $class));
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $name = $this->findResService($resourceType);
-        $resServ = $this->container->get($name);
-        $resource = $resServ->add($object, $instanceParentId, $user);
 
         if (null !== $resource) {
             $ri = new ResourceInstance();
             $ri->setCreator($user);
-            $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceParentId);
+            $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($parentInstanceId);
             $ri->setParent($dir);
             $resource->setResourceType($resourceType);
             $ri->setCopy(0);
@@ -67,6 +64,7 @@ class Manager
             $ri->setResource($resource);
             $this->em->persist($ri);
             $resource->setCreator($user);
+            $this->em->persist($resource);
             $this->em->flush();
             $this->container->get('claroline.security.right_manager')->addRight($ri, $user, MaskBuilder::MASK_OWNER);
             $roles = $dir->getWorkspace()->getWorkspaceRoles();

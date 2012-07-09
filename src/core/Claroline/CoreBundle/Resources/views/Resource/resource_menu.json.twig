@@ -1,0 +1,50 @@
+{
+    "directory": {
+        "items": {
+            "new": {
+                "name": "new",
+                "items": {
+                    {% set cpt = 1 %}
+                    {% for resourceType in resourceTypes %}
+                    "{{ resourceType.getType() }}": {
+                        "name": "{{ resourceType.getType() }}",
+                        "route": "{{ path('claro_resource_creation_form', {'resourceType':resourceType.getType()}) }}",
+                        "async": true
+                    }
+                    {% set cpt = cpt+1 %}
+                    {% if cpt <= resourceTypes|length %} , {% endif %}
+                    {% endfor %}
+                }
+            },
+            "delete": {
+                "name": "delete",
+                "route": "{{ path('claro_resource_delete', {'instanceId': '_instanceId'}) }}",
+                "async": true
+            },
+            "properties": {
+                "name": "properties",
+                "route": "todo",
+                "async": true
+            }
+        }
+    },
+    "file": {
+        "items": {
+            "download": {
+                "name": "download",
+                "route": "{{ path('claro_resource_custom', {'resourceType': 'file', 'action': 'download', 'instanceId': '_instanceId'}) }}",
+                "async": false
+            },
+            "delete": {
+                "name": "delete",
+                "route": "{{ path('claro_resource_delete', {'instanceId': '_instanceId'}) }}",
+                "async": true
+            },
+            "properties": {
+                "name": "properties",
+                "route": "todo",
+                "async": true
+            }
+       }
+     }
+}

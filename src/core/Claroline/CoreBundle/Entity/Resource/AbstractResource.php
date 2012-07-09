@@ -286,4 +286,9 @@ abstract class AbstractResource
     {
         return $this->mimeType;
     }
+
+    public function getResourceInstances()
+    {
+        return $this->resourceInstances;
+    }
 }
