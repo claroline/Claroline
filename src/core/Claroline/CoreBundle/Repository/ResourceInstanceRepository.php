@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
@@ -43,7 +44,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             WHERE rt.type != 'directory'
             AND ri.parent = {$ri->getId()}
         ";
-
+                $em->flush();
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();

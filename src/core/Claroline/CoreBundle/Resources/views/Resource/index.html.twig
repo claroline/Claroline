@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Administration:index.html.twig" %}
+{% extends "ClarolineCoreBundle:Dashboard:index.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -24,10 +24,6 @@
         {% for resourceType in resourcesType %}
         data-{{ resourceType.getType() }}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
         {% endfor %}
-></div>
-
-<div id="data-claroline"
-     data-workspace_id = "{{app.user.getPersonnalWorkspace().getId()}}"
 ></div>
 
 <div id="ct_dialog"></div>

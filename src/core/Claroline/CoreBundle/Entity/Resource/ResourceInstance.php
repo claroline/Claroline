@@ -293,4 +293,14 @@ class ResourceInstance
     {
         return $this->copy;
     }
+
+    public function getLeft()
+    {
+        return $this->left;
+    }
+
+    public function getRight()
+    {
+        return $this->right;
+    }
 }

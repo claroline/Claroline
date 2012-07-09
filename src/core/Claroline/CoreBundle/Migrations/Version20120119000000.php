@@ -212,6 +212,19 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
+    public function createResourceTypeCustomActionsTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_type_custom_action');
+
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('notnull' => false));
+        $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'SET NULL')
+        );
+    }
+
     private function createResourceTable(Schema $schema)
     {
         $table = $schema->createTable('claro_resource');

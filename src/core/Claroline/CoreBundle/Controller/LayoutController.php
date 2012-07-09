@@ -57,7 +57,7 @@ class LayoutController extends Controller
             }
 
             // TODO : use a platform option to make this target configurable
-            $loginTarget = 'claro_desktop_index';
+            $loginTarget = 'claro_dashboard_index';
         }
 
         return $this->render(

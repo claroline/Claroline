@@ -150,50 +150,6 @@ class DirectoryController extends Controller
     }
 
     /**
-     * Default action for a directory. It's what happens when you left click on it. This one is a particular because
-     * it uses the resource:index.html.twig file with the current directory as a root.
-     *
-     * @param integer           $id
-     * @param AbstractWorkspace $wsContext
-     *
-     * @return Response
-     */
-    public function getDefaultAction($id)
-    {
-        $formResource = $this->get('form.factory')->create(new SelectResourceType(), new ResourceType());
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
-        $workspace = $resourceInstance->getWorkspace();
-        $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, true);
-        $resourcesType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-
-        switch ($resourceInstance->getWorkspace()->getType()) {
-            case (AbstractWorkspace::USER_REPOSITORY):
-                $content = $this->render(
-                    'ClarolineCoreBundle:Resource:index.html.twig', array(
-                    'form_resource' => $formResource->createView(),
-                    'resourceInstances' => $resourcesInstance,
-                    'parentId' => $id,
-                    'resourcesType' => $resourcesType,
-                    'directory' => $resourceInstance,
-                    'workspace' => $workspace));
-                break;
-
-            case (AbstractWorkspace::STANDARD):
-                return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array(
-                        'workspace' => $workspace,
-                        'resourcesType' => $resourcesType,
-                        'resources' => $resourcesInstance,
-                        'wsContextId' => $workspace->getId())
-                );
-                break;
-        }
-        $response = new Response($content);
-
-        return $response;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @return array
@@ -205,7 +161,7 @@ class DirectoryController extends Controller
         $news = array();
 
         foreach ($resourceTypes as $resourceType) {
-            $url = $this->get('router')->generate('claro_resource_form', array('renderType' => 'widget', 'type' => $resourceType->getType(), 'instanceParentId' => '%%instanceId%%'));
+            $url = $this->get('router')->generate('claro_resource_creation_form', array('resourceType' => $resourceType->getType()));
             $news[$resourceType->getType()] = array('widget', $url);
         }
 

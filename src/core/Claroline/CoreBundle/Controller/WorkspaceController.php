@@ -126,7 +126,7 @@ class WorkspaceController extends Controller
             $wsCreator = $this->get('claroline.workspace.creator');
             $wsCreator->createWorkspace($config, $user);
             $this->get('session')->setFlash('notice', 'Workspace created');
-            $route = $this->get('router')->generate('claro_desktop_index');
+            $route = $this->get('router')->generate('claro_ws_list');
 
             return new RedirectResponse($route);
         }
@@ -158,7 +158,7 @@ class WorkspaceController extends Controller
         $em->flush();
 
         $this->get('session')->setFlash('notice', 'Workspace deleted');
-        $route = $this->get('router')->generate('claro_desktop_index');
+        $route = $this->get('router')->generate('claro_ws_list');
 
         return new RedirectResponse($route);
     }
@@ -483,7 +483,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getWorkspace();
 
         if ($this->get('security.context')->isGranted($workspace->getManagerRole()->getName(), $workspace)) {
-           $this->container->get('claroline.resource.creator')->addResourceRolePermission($roleId, $maskId);
+           $this->container->get('claroline.resource.manager')->addResourceRolePermission($roleId, $maskId);
         } else {
             throw new AccessDeniedHttpException();
         }
@@ -505,7 +505,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getWorkspace();
 
         if ($this->get('security.context')->isGranted($workspace->getManagerRole()->getName(), $workspace)) {
-            $this->container->get('claroline.resource.creator')->removeResourceRolePermission($roleId, $maskId);
+            $this->container->get('claroline.resource.manager')->removeResourceRolePermission($roleId, $maskId);
         } else {
             throw new AccessDeniedHttpException();
         }
