@@ -1,0 +1,11 @@
+services:
+    claroline.listener.html_element_listener:
+        class: Claroline\HTMLPageBundle\Listener\HTMLPageListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: open_htmlelement, method: onOpen }
+            - { name: kernel.event_listener, event: create_form_htmlelement, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_htmlelement, method: onCreate }
+            - { name: kernel.event_listener, event: delete_htmlelement, method: onDelete }
+            - { name: kernel.event_listener, event: copy_htmlelement, method: onCopy }

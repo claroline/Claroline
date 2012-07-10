@@ -61,4 +61,27 @@
             }
         }
     }
+    {% for pluginResourceType in pluginResourceTypes %}
+    ,"{{ pluginResourceType.getType() }}" : {
+        "items": {
+            "delete": {
+                "name": "delete",
+                "route": "{{ path('claro_resource_delete', {'instanceId': '_instanceId'}) }}",
+                "async": true
+            },
+            "properties": {
+                "name": "properties",
+                "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'}) }}",
+                "async": true
+            }
+            {% for customAction in pluginResourceType.getCustomActions() %}
+            , "{{customAction.getAction()}}": {
+                "name": "{{customAction.getAction()}}",
+                "route": "{{ path('claro_resource_custom', {'resourceType': pluginResourceType.getType(), 'action': customAction.getAction(), 'instanceId': '_instanceId'}) }}",
+                "async": {{ customAction.isAsync() }}
+            }
+            {% endfor %}
+         }
+     }
+    {% endfor %}
 }
