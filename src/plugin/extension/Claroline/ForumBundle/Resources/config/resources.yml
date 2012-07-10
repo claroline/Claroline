@@ -6,6 +6,8 @@ forum:
   listable: true
   navigable: false
   vendor: Claroline
+  actions:
+    open: false
 
 subject:
   class: Claroline\ForumBundle\Entity\Subject

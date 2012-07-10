@@ -92,7 +92,7 @@ class ResourceController extends Controller
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-            $instance = $manager->create($resource, $parentInstanceId);
+            $instance = $manager->create($resource, $parentInstanceId, $resourceType);
             $content = $this->renderView(
                 'ClarolineCoreBundle:Resource:resources.json.twig',
                 array('resources' => array($instance))
@@ -166,7 +166,9 @@ class ResourceController extends Controller
         $instance = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->find($instanceId);
+        $resourceType = strtolower(str_replace(' ', '_', $resourceType));
         $event = new CustomActionResourceEvent($instance->getResource()->getId());
+        echo "{$action}_{$resourceType}";
         $this->get('event_dispatcher')->dispatch("{$action}_{$resourceType}", $event);
 
         // TODO : if $event->getResponse() === null -> exception
@@ -362,10 +364,12 @@ class ResourceController extends Controller
     {
         $resourceTypes = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findAll();
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
+        $pluginResourceTypes = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findPluginResourceTypes();
 
-        return $this->render('ClarolineCoreBundle:Resource:resource_menu.json.twig', array('resourceTypes' => $resourceTypes));
+        return $this->render('ClarolineCoreBundle:Resource:resource_menu.json.twig', array('resourceTypes' => $resourceTypes, 'pluginResourceTypes' => $pluginResourceTypes));
     }
 
     /**

@@ -3,24 +3,20 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-
 use Symfony\Component\HttpFoundation\Response;
-
 use Claroline\CoreBundle\Library\Resource\ResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Resource\MimeTypes;
-
 use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
 
-
 class FileListener extends ContainerAware
 {
-    public function onCreateForm(CreateFormResourceEvent $event)
+    public function onForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
         $content = $this->container->get('templating')->render(

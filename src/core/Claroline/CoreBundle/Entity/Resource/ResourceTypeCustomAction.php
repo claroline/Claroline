@@ -50,7 +50,7 @@ class ResourceTypeCustomAction
 
     public function isAsync()
     {
-        return $this->async;
+        return $this->isAsync;
     }
 
     public function setAsync($async)
