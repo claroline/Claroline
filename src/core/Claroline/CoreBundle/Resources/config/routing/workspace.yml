@@ -90,18 +90,6 @@ claro_ws_user_workspace_id:
    options:
        expose: true
 
-claro_ws_add_workspace_resource_role_permission:
-   pattern: /add/role/permission/{roleId}/{maskId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:addResourceRolePermission }
-   options:
-       expose: true
-
-claro_ws_remove_workspace_resource_role_permission:
-   pattern: /remove/role/permission/{roleId}/{maskId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:removeResourceRolePermission }
-   options:
-       expose: true
-
 claro_ws_properties:
    pattern: /properties/{workspaceId}
    defaults: { _controller: ClarolineCoreBundle:Workspace:properties }
