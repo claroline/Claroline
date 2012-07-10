@@ -1,0 +1,9 @@
+services:
+    claroline.listener.forum_listener:
+        class: Claroline\ForumBundle\Listener\ForumListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_forum, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_forum, method: onCreate }
+            - { name: kernel.event_listener, event: open_forum, method: onOpen }

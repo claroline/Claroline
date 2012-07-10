@@ -63,6 +63,7 @@ class ResourceController extends Controller
         // note : on client side, we must know if the response is to be displayed as a part of
         // the current interface or as a new page (detect the <html> element ?)
         $resourceType = strtolower(str_replace(' ', '_', $resourceType));
+        echo "create_form_{$resourceType}";
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch("create_form_{$resourceType}", $event);
 
