@@ -20,7 +20,12 @@ class ResourceTypeCustomAction
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $action;
+
+    /**
+     * @ORM\Column(type="string", length=255, name="async")
+     */
+    private $isAsync;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="customActions", cascade={"persist"})
@@ -33,13 +38,33 @@ class ResourceTypeCustomAction
         return $this->id;
     }
 
-    public function getName()
+    public function getAction()
     {
-        return $this->name;
+        return $this->action;
     }
 
-    public function setName($name)
+    public function setAction($action)
     {
-        $this->name = $name;
+        $this->action = $action;
+    }
+
+    public function isAsync()
+    {
+        return $this->isAsync;
+    }
+
+    public function setAsync($async)
+    {
+        $this->isAsync = $async;
+    }
+
+    public function getResourceType()
+    {
+        return $this->resourceType;
+    }
+
+    public function setResourceType($resourceType)
+    {
+        $this->resourceType = $resourceType;
     }
 }

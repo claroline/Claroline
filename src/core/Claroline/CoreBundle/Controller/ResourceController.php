@@ -63,7 +63,7 @@ class ResourceController extends Controller
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-            $instance = $manager->create($resource, $parentInstanceId);
+            $instance = $manager->create($resource, $parentInstanceId, $resourceType);
             $content = $this->renderView(
                 'ClarolineCoreBundle:Resource:resources.json.twig',
                 array('resources' => array($instance))
@@ -289,10 +289,12 @@ class ResourceController extends Controller
     {
         $resourceTypes = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findAll();
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
+        $pluginResourceTypes = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findPluginResourceTypes();
 
-        return $this->render('ClarolineCoreBundle:Resource:resource_menu.json.twig', array('resourceTypes' => $resourceTypes));
+        return $this->render('ClarolineCoreBundle:Resource:resource_menu.json.twig', array('resourceTypes' => $resourceTypes, 'pluginResourceTypes' => $pluginResourceTypes));
     }
 
     /**

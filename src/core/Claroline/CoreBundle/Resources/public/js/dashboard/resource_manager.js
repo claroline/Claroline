@@ -247,11 +247,11 @@ $(function(){
         var executeAsync = function (obj, node, route) {
             var removeNode = function (node, route) {
                 $.ajax({
-                type: 'POST',
-                url: route,
-                success: function(data){
-                    if(data == 'success'){
-                    node.remove();
+                    type: 'POST',
+                    url: route,
+                    statusCode: {
+                        204: function() {
+                            node.remove();
                         }
                     }
                 });
@@ -262,10 +262,10 @@ $(function(){
                     type: 'POST',
                     url: route,
                     cache: false,
-                    success: function(data){
+                    success: function (data) {
                         $('#ct_tree').hide();
                         $('#ct_form').append(data);
-                        $('#ct_form').find('form').submit(function(e){
+                        $('#ct_form').find('form').submit(function (e) {
                             e.preventDefault();
                             var action = $('#ct_form').find('form').attr('action');
                             action = action.replace('_instanceId', node.data.key);

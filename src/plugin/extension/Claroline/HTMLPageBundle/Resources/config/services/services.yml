@@ -1,11 +1,3 @@
 parameters:
 
    claroline.html_page.directory: "%kernel.root_dir%/../web/HTMLPage"
-
-services:
-  claroline.html_element.manager:
-        class: Claroline\HTMLPageBundle\Controller\HTMLPageController
-        calls:
-          - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.controller }

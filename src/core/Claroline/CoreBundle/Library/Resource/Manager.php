@@ -47,10 +47,10 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentInstanceId, $returnInstance = true)
+    public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true)
     {
-        $class = get_class($resource);
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('class' => $class));
+
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if (null !== $resource) {
