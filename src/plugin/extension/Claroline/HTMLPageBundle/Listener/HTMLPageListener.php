@@ -2,7 +2,6 @@
 
 namespace Claroline\HTMLPageBundle\Listener;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;

@@ -45,7 +45,7 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         tags:
-            - { name: kernel.event_listener, event: create_form_file, method: onForm }
+            - { name: kernel.event_listener, event: create_form_file, method: onCreateForm }
             - { name: kernel.event_listener, event: create_file, method: onCreate }
             - { name: kernel.event_listener, event: delete_file, method: onDelete }
             - { name: kernel.event_listener, event: copy_file, method: onCopy }

@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
 
 class FileListener extends ContainerAware
 {
-    public function onForm(CreateFormResourceEvent $event)
+    public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
         $content = $this->container->get('templating')->render(

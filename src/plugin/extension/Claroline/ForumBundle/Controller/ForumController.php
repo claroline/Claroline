@@ -6,49 +6,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\MessageType;
+use Claroline\ForumBundle\Form\ForumType;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\ForumBundle\Form\ForumType;
-
 
 /**
  * ForumController
  */
 class ForumController extends Controller
 {
-    public function getResourceType()
+    public function OpenAction($forumId)
     {
-        return 'Forum';
-    }
-
-    public function getForm()
-    {
-        return $this->get('form.factory')->create(new ForumType, new Forum());
-    }
-
-    public function getFormPage($twigFile, $id, $type)
-    {
-        $form = $this->get('form.factory')->create(new ForumType, new Forum());
-
-        return $this->render(
-            $twigFile, array('form' => $form->createView(), 'parentId' => $id, 'type' => $type)
-        );
-    }
-
-    public function add(Forum $forum, $id, User $user)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($forum);
-        $em->flush();
-
-        return $forum;
-    }
-
-    public function getDefaultAction($resourceId)
-    {
-        $forum = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->find($resourceId);
+        $forum = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->find($forumId);
         $content = $this->render(
             'ClarolineForumBundle::index.html.twig', array('forum' => $forum)
         );
