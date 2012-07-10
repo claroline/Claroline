@@ -18,10 +18,9 @@ use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
-use Claroline\CoreBundle\Form\ResourceOptionsType;
+use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 use Claroline\CoreBundle\Library\Resource\ResourceEvent;
-
 use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
@@ -38,7 +37,6 @@ class ResourceController extends Controller
      */
     public function indexAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getEntityManager();
         //required for translations
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
@@ -146,7 +144,6 @@ class ResourceController extends Controller
             $rsrc = $child->getResource();
 
             if ($rsrc->getInstanceCount() === 1) {
-                $type = $child->getResourceType();
 
                 if ($child->getResourceType()->getType() === 'directory') {
                     $em->remove($rsrc);
@@ -160,14 +157,7 @@ class ResourceController extends Controller
             $em->remove($child);
         }
 
-        if ($rsrc->getInstanceCount() === 1) {
-            $em->remove($rsrc);
-        }
-
-        $rsrc = $resourceInstance->getResource();
-        $rsrc->removeResourceInstance($resourceInstance);
-        $em->remove($resourceInstance);
-        $em->remove($rsrc);
+        $em->remove($resourceInstance->getResource());
         $em->flush();
     }
 
@@ -194,7 +184,15 @@ class ResourceController extends Controller
      */
     public function basePropertiesFormAction($resourceId)
     {
-        // render the form, passing the resource id
+        $request = $this->get('request');
+        $res = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+        $form = $this->createForm(new ResourcePropertiesType(), $res);
+
+        if($request->isXmlHttpRequest()){
+            return $this->render('ClarolineCoreBundle:Resource:properties_form.html.twig', array('resourceId' => $resourceId, 'form' => $form->createView()));
+        }
+
+        return $this->render('ClarolineCoreBundle:Resource:properties_form_page.html.twig', array('resourceId' => $resourceId, 'form' => $form->createView()));
     }
 
     /**
@@ -204,10 +202,34 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function updateBasePropertiesAction($resourceId)
+    public function updateBasePropertiesAction($instanceId)
     {
-        // update properties if form is valid, and send success message
-        // otherwise render the form with validation errors
+        $request = $this->get('request');
+        $em = $this->getDoctrine()->getEntityManager();
+        $res = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId)->getResource();
+        $form = $this->createForm(new ResourcePropertiesType(), $res);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $res = $form->getData();
+            $em->persist($res);
+            $em->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                $ri = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($instanceId);
+                $ri->setResource($res);
+                $content = $this->renderView("ClarolineCoreBundle:Resource:resources.json.twig", array('resources' => array($ri)));
+                $response = new Response($content);
+                $response->headers->set('Content-Type', 'application/json');
+
+                return $response;
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                return $this->render('ClarolineCoreBundle:Resource:properties_form.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
+            }
+            return $this->render('ClarolineCoreBundle:Resource:properties_form_page.html.twig', array('instanceId' => $instanceId, 'form' => $form->createView()));
+        }
     }
 
     /**
@@ -598,27 +620,6 @@ class ResourceController extends Controller
         $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
         $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
         $this->setChildrenByCopyCopy($resourceInstance, $resourceInstanceCopy);
-    }
-
-    /**
-     * Returns the service's name for the ResourceType $resourceType
-     *
-     * @param ResourceType $resourceType
-     *
-     * @return string
-     */
-    private function findResService(ResourceType $resourceType)
-    {
-        $services = $this->container->getParameter('claroline.resource_controllers');
-        $names = array_keys($services);
-
-        foreach ($names as $name) {
-            $type = $this->get($name)->getResourceType();
-
-            if ($type == $resourceType->getType()) {
-                return $name;
-            }
-        }
     }
 
     /**

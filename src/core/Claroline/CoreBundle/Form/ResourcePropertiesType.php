@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class ResourceOptionsType extends AbstractType
+class ResourcePropertiesType extends AbstractType
 {
 
     public function buildForm(FormBuilder $builder, array $options)

@@ -23,7 +23,7 @@
             },
             "properties": {
                 "name": "properties",
-                "route": "todo",
+                "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
                 "async": true
             }
         }
@@ -42,9 +42,23 @@
             },
             "properties": {
                 "name": "properties",
-                "route": "todo",
+                "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
                 "async": true
             }
        }
-     }
+     },
+     "text": {
+        "items": {
+            "properties": {
+                "name": "properties",
+                "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
+                "async": true
+            },
+            "edit" : {
+                "name": "edit",
+                "route": " {{path('claro_resource_custom', {'resourceType': 'text', 'action': 'update', 'instanceId': '_instanceId'}) }}",
+                "async": false
+            }
+        }
+    }
 }

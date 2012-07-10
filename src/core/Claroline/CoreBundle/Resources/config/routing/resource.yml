@@ -20,9 +20,15 @@ claro_resource_custom:
     options:
         expose: true
 
-claro_resource_options_form:
-    pattern: /form/options/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:creationOptionsForm }
+claro_resource_properties_form:
+    pattern: /form/properties/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:basePropertiesForm }
+    options:
+        expose: true
+
+claro_resource_properties_update:
+    pattern: /update/properties/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:updateBaseProperties }
     options:
         expose: true
 
