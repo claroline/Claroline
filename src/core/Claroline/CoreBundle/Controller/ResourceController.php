@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Security\SymfonySecurity;
-use Claroline\CoreBundle\Library\Resource\ResourceEvent;
+
 use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
@@ -50,18 +50,11 @@ class ResourceController extends Controller
      * Renders the creation form for a given resource type.
      *
      * @param string  $resourceType
-     * @throws Exception if no listener has filled the creation event with a response object
      *
      * @return Response
      */
     public function creationFormAction($resourceType)
     {
-        // dispatch a create_form_[resource_type_name] event;
-        // if the event is filled with a response, send it,
-        // otherwise, throw an exception
-        // note : the parent instance id will be added to the form action on client side
-        // note : on client side, we must know if the response is to be displayed as a part of
-        // the current interface or as a new page (detect the <html> element ?)
         $resourceType = strtolower(str_replace(' ', '_', $resourceType));
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch("create_form_{$resourceType}", $event);
@@ -72,8 +65,8 @@ class ResourceController extends Controller
     /**
      * Creates a resource.
      *
-     * @param string  $type
-     * @param integer $instanceParentId
+     * @param string  $resourceType
+     * @param integer $parentInstanceId
      *
      * @return Response
      */
@@ -670,36 +663,5 @@ class ResourceController extends Controller
         }
 
         return new Response('success');
-    }
-
-    private function convertArrayToJsonMenu($array)
-    {
-        $json = '"items": {';
-        $i = 0;
-        foreach ($array as $key => $item) {
-            if ($item[0] != 'menu') {
-                $json.='"' . $key . '" : {"name": "' . $key . '", "return_type":"' . $item[0] . '", "route":"' . $item[1] . '"}';
-            } else {
-                $json .= '"' . $key . '" :{"name": "' . $key . '", ';
-                $json .= $this->convertArrayToJsonMenu($item[1]);
-                $json .= '}';
-            }
-            $i++;
-            if ($i < count($array)) {
-                $json.=',';
-            }
-        }
-        $json.= "}";
-
-        return $json;
-    }
-
-    public function addMandatoryActionsToMenu($array)
-    {
-        $router = $this->get('router');
-        $array["delete"] = array("delete", $router->generate('claro_resource_remove_workspace', array('instanceId' => '%%instanceId%%')));
-        $array["properties"] = array("widget", $router->generate('claro_resource_options_form', array('instanceId' => '%%instanceId%%')));
-
-        return $array;
     }
 }

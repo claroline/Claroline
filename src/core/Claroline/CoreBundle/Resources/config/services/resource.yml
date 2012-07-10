@@ -4,20 +4,6 @@ parameters:
 
 services:
 
-    claroline.file.manager:
-        class: Claroline\CoreBundle\Controller\FileController
-        calls:
-           - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.controller }
-
-    claroline.directory.manager:
-        class: Claroline\CoreBundle\Controller\DirectoryController
-        calls:
-          - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.controller }
-
     claroline.text.manager:
         class: Claroline\CoreBundle\Controller\TextController
         calls:
