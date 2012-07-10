@@ -50,3 +50,12 @@ services:
             - { name: kernel.event_listener, event: delete_file, method: onDelete }
             - { name: kernel.event_listener, event: copy_file, method: onCopy }
             - { name: kernel.event_listener, event: download_file, method: onDownload }
+
+    claroline.listener.text_listener:
+        class: Claroline\CoreBundle\Listener\TextListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_text, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_text, method: onCreate }
+            - { name: kernel.event_listener, event: update_text, method: onUpdate }
