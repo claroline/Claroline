@@ -33,6 +33,7 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceInstanceTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
+        $this->createResourceTypeCustomActionsTable($schema);
     }
 
     public function down(Schema $schema)
@@ -60,6 +61,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_license');
         $schema->dropTable('claro_meta_type');
         $schema->dropTable('claro_meta_type_resource_type');
+        $schema->dropTable('claro_resource_type_custom_action');
     }
 
     private function createUserTable(Schema $schema)
@@ -217,7 +219,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_type_custom_action');
 
         $this->addId($table);
-        $table->addColumn('name', 'string', array('notnull' => false));
+        $table->addColumn('action', 'string', array('notnull' => false));
+        $table->addColumn('async', 'boolean', array('notnull' => false));
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -416,7 +419,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('url', 'string');
     }
 
-    //ADD FOREIGN KEY
     private function createTextTable(Schema $schema)
     {
         $table = $schema->createTable("claro_text");
@@ -427,7 +429,6 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    //ADD FOREIGN KEY
     private function createTextContentTable(Schema $schema)
     {
         $table = $schema->createTable("claro_text_revision");

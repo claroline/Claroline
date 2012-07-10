@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Tool;
 use Claroline\CoreBundle\Entity\Extension;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 use Claroline\CoreBundle\Exception\InstallationException;
 
 class DatabaseWriter
@@ -121,8 +122,21 @@ class DatabaseWriter
                 $resourceType->setListable($resource['listable']);
                 $resourceType->setNavigable($resource['navigable']);
                 $resourceType->setPlugin($pluginEntity);
-
                 $this->em->persist($resourceType);
+
+                if (isset($resource['actions']))
+                {
+                    $actions = $resource['actions'];
+                    foreach($actions as $key => $action)
+                    {
+                        $rtca = new ResourceTypeCustomAction();
+                        $rtca->setAsync($action);
+                        $rtca->setAction($key);
+                        $rtca->setResourceType($resourceType);
+                        $this->em->persist($rtca);
+                    }
+                }
+
             }
         }
     }
