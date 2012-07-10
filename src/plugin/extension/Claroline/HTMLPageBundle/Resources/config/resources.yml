@@ -6,3 +6,6 @@ html_element:
     listable: true
     navigable: false
     vendor: Claroline
+    actions:
+      open: true
+      download: false
