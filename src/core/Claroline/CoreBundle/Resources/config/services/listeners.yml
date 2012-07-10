@@ -58,4 +58,4 @@ services:
         tags:
             - { name: kernel.event_listener, event: create_form_text, method: onCreateForm }
             - { name: kernel.event_listener, event: create_text, method: onCreate }
-            - { name: kernel.event_listener, event: update_text, method: onUpdate }
+            - { name: kernel.event_listener, event: open_text, method: onOpen }
