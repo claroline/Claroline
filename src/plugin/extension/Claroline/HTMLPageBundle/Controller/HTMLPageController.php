@@ -5,10 +5,9 @@ namespace Claroline\HTMLPageBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Controller\FileController;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
-class HTMLPageController extends FileController
+class HTMLPageController
 {
 
     /**
