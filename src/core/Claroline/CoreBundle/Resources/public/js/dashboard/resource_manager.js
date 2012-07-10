@@ -107,18 +107,23 @@ $(function(){
         var html = Twig.render(move_resource_form);
         $('#ct_form').empty();
         $('#ct_form').append(html);
-        $('#move_resource_form_submit').click(function(e) {
+        $('#move_resource_form_submit').click(function (e) {
             e.preventDefault();
             var option = getCheckedValue(document.forms['move_resource_form']['options']);
-            if('move' == option){
-                sendRequest('claro_resource_move', {'idChild': sourceNode.data.key, 'idParent': node.data.key, 'workspaceDestinationId':node.data.workspaceId});
+            if ('move' == option) {
+                sendRequest('claro_resource_move', {
+                    'instanceId': sourceNode.data.key,
+                    'newParentId': node.data.key,
+                    'workspaceDestinationId': node.data.workspaceId
+                });
                 sourceNode.move(node, hitMode);
                 $('#ct_form').empty();
-            } else
-            {
-                sendRequest('claro_resource_add_workspace',
-                            {'instanceId':sourceNode.data.key,'instanceDestinationId':node.data.key,'options':option}
-                );
+            } else {
+                sendRequest('claro_resource_add_workspace', {
+                    'instanceId': sourceNode.data.key,
+                    'instanceDestinationId': node.data.key,
+                    'options': option
+                });
 
                 var newNode = {
                         title:sourceNode.data.title,

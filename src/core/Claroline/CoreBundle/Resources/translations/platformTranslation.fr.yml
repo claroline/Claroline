@@ -4,7 +4,7 @@
 
 # top bar links
 administration: Administration
-desktop: Bureau
+dashboard: Tableau de bord
 home: Accueil
 my_account: Mon compte
 
@@ -16,9 +16,9 @@ list_groups: Lister les groupes
 claro_settings: Paramètres de la plateforme
 
 # workspace links
-create_workspace: Ajouter un espace d'activité
+create_workspace: Ajouter un espace d'activités
 my_workspaces: Mes espaces d'activités
-list_workspaces: Lister les espaces d'activités
+list_workspaces: Tous les espaces d'activités
 
 # registration
 login: Connexion
@@ -59,14 +59,14 @@ claro_settings_form_localLanguage: Langue
 
 # group form field labels
 group_form_name: Nom
-group_form_ownedRoles: Roles
+group_form_ownedRoles: Rôles
 
 # workspace form field labels
-workspace_form_name: Name
+workspace_form_name: Nom
 workspace_form_type: Type
 
 # file manager form field labels
-choose_resource_form_type: "Type de ressource:"
+choose_resource_form_type: "Type de ressource :"
 
 ############
 # MESSAGES #
@@ -106,8 +106,8 @@ owner: Propriétaire
 open: Ouvrir
 
 # workspace
-workspace: Espace d'activité
-workspaces: Espace d'activités
+workspace: Espace d'activités
+workspaces: Espaces d'activités
 workspace.create: Créer un nouvel espace d'activités
 registered_users: Utilisateurs enregistrés
 registered_groups: Groupes enregistrés
