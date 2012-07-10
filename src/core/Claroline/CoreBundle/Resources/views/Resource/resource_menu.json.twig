@@ -49,15 +49,15 @@
      },
      "text": {
         "items": {
+            "open" : {
+                "name": "open",
+                "route": "{{ path('claro_resource_custom', {'resourceType': 'text', 'action': 'open', 'instanceId': '_instanceId'}) }}",
+                "async": false
+            },
             "properties": {
                 "name": "properties",
                 "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
                 "async": true
-            },
-            "edit" : {
-                "name": "edit",
-                "route": " {{path('claro_resource_custom', {'resourceType': 'text', 'action': 'update', 'instanceId': '_instanceId'}) }}",
-                "async": false
             }
         }
     }

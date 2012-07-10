@@ -81,8 +81,6 @@ claro_resource_remove_workspace:
     options:
         expose: true
 
-
-
 claro_resource_form:
     pattern: /form/{instanceParentId}/{type}/{renderType}
     defaults: { _controller: ClarolineCoreBundle:Resource:getForm }
@@ -104,18 +102,6 @@ claro_resource_get_instances:
 claro_resource_masks:
     pattern: /{type}/masks.{format}
     defaults: { _controller: ClarolineCoreBundle:Resource:getMasks, type:'all' }
-    options:
-        expose: true
-
-claro_resource_add_permission:
-    pattern: /permission/add/{instanceId}/{userId}/{maskId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:addInstanceUserPermission }
-    options:
-        expose: true
-
-claro_resource_remove_permission:
-    pattern: /permission/remove/{instanceId}/{userId}/{maskId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:removeInstanceUserPermission }
     options:
         expose: true
 
