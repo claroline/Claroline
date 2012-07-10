@@ -7,5 +7,5 @@ html_element:
     navigable: false
     vendor: Claroline
     actions:
-      open: true
+      open: false
       download: false
