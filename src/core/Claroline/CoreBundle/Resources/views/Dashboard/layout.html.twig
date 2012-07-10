@@ -2,11 +2,20 @@
 
 {% block content %}
 
-<div class="section" id="dashboard">
-    <h4>{{ 'desktop'|trans({}, 'platformTranslation') }}</h4>
-    <a href="{{ path('claro_dashboard_resources') }}" id="resource_manager_link">{{ 'resource_manager'|trans({}, 'platformTranslation') }}</a>
-<div>
-
-    {% block section_content %}{% endblock %}
+<div class="row-fluid dashboard">
+    <div class="span2">
+        <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">{{ 'dashboard'|trans({}, 'platformTranslation') }}</li>
+            <li><a href="{{ path('claro_dashboard_index') }}" id="resource_manager_link">{{ 'home'|trans({}, 'platformTranslation') }}</a></li>
+            <li><a href="{{ path('claro_dashboard_resources') }}" id="resource_manager_link">{{ 'resource_manager'|trans({}, 'platformTranslation') }}</a></li>
+        </ul>
+        </div><!--/.well -->
+    </div>
+    <div class="span10">
+        <!--Body content-->
+        {% block section_content %}{% endblock %}
+    </div>
+</div>
 
 {% endblock %}

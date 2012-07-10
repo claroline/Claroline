@@ -1,7 +1,3 @@
-claro_resource_index:
-    pattern: /
-    defaults: { _controller: ClarolineCoreBundle:Resource:index}
-
 claro_resource_creation_form:
     pattern: /form/{resourceType}
     defaults: { _controller: ClarolineCoreBundle:Resource:creationForm }
@@ -44,12 +40,6 @@ claro_resource_delete:
     options:
         expose: true
 
-claro_resource_edit:
-   pattern: /edit/{instanceId}/{workspaceId}/{options}
-   defaults: { _controller: ClarolineCoreBundle:Resource:edit}
-   options:
-        expose: true
-
 claro_resource_root_node:
     pattern: /nodes/{userId}/roots.{format}
     defaults: { _controller: ClarolineCoreBundle:Resource:getRootNode, userId:null }
@@ -63,7 +53,7 @@ claro_resource_node:
         expose: true
 
 claro_resource_move:
-   pattern: move/{idChild}/{idParent}
+   pattern: move/{instanceId}/{newParentId}
    defaults: { _controller: ClarolineCoreBundle:Resource:moveResource }
    options:
         expose: true
@@ -108,12 +98,6 @@ claro_resource_masks:
 claro_license_list:
     pattern: /license/list.{format}
     defaults: { _controller: ClarolineCoreBundle:Resource:getJsonLicensesList }
-    options:
-        expose: true
-
-claro_player_list:
-    pattern: /player/list/{id}
-    defaults: { _controller: ClarolineCoreBundle:Resource:getJsonPlayerList }
     options:
         expose: true
 
