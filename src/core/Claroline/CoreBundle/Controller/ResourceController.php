@@ -339,35 +339,38 @@ class ResourceController extends Controller
         $em->flush();
     }
 
-    private function addToDirectoryByReference($instance, $parent)
+    private function addToDirectoryByReference(ResourceInstance $instance, ResourceInstance $parent)
     {
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
             $instanceCopy = $this->createReference($instance);
             $instanceCopy->setParent($parent);
             $children = $instance->getChildren();
+
             foreach ($children as $child) {
                 $this->addToDirectoryByReference($child, $instanceCopy);
             }
+
             $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
         }
     }
 
-    private function addToDirectoryByCopy($instance, $parent)
+    private function addToDirectoryByCopy(ResourceInstance $instance, ResourceInstance $parent)
     {
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
             $instanceCopy = $this->createCopy($instance);
             $instanceCopy->setParent($parent);
             $children = $instance->getChildren();
+
             foreach ($children as $child) {
                 $this->addToDirectoryByCopy($child, $instanceCopy);
             }
+
             $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
         }
     }
 
     private function createCopy(ResourceInstance $resourceInstance)
     {
-        var_dump('copy');
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
         $ric->setCreator($user);
@@ -385,8 +388,8 @@ class ResourceController extends Controller
         }
         else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
-            $resourceType = strtolower(str_replace(' ', '_', $resourceInstance->getResourceType()->getType()));
-            $this->get('event_dispatcher')->dispatch("copy_{$resourceType}", $event);
+            $eventName = $this->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
+            $this->get('event_dispatcher')->dispatch($eventName, $event);
             $resourceCopy = $event->getCopy();
             $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($resourceInstance->getResourceType());
@@ -394,7 +397,7 @@ class ResourceController extends Controller
         }
         $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $em->flush();
 
         return $ric;
     }
