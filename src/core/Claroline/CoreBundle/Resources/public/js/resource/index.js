@@ -4,7 +4,9 @@ $(function(){
     //Gets the menu lists.
     $.ajax({
         type: 'GET',
-        url: Routing.generate('claro_json_menu', {'type': 'all'}),
+        url: Routing.generate('claro_json_menu', {
+            'type': 'all'
+        }),
         cache: false,
         success: function(data){
             jsonmenu = JSON.parse(data);
@@ -45,13 +47,22 @@ $(function(){
                 })
             },
             clickFolderMode: 1,
-            onLazyRead: function(node){
+            onLazyRead: function (node){
                 node.appendAjax({
                     url:Routing.generate('claro_resource_node', {
                         'instanceId':node.data.key,
                         'workspaceId':node.data.workspaceId,
                         'format': 'json'
-                    })
+                    }),
+                    error: function (node, XMLHttpRequest, textStatus, errorThrown){
+                        if(XMLHttpRequest.status == 403){
+                            ClaroUtils.ajaxAuthenticationErrorHandler(function(){
+                                window.location.reload();
+                            });
+                        } else {
+                            alert("this node could not be loaded");
+                        }
+                    }
                 });
             },
             onCreate: function(node, span){
@@ -92,11 +103,7 @@ $(function(){
                     }
                     else {
                         dropNode(node, sourceNode, hitMode);
-                        //sendRequest('claro_resource_move', {'idChild': sourceNode.data.key, 'idParent': node.data.key, 'workspaceDestinationId':node.data.workspaceId});
-                        //sourceNode.move(node, hitMode);
                     }
-                },
-                onDragLeave: function(node, sourceNode){
                 }
             }
         });
@@ -111,103 +118,80 @@ $(function(){
             e.preventDefault();
             var option = getCheckedValue(document.forms['move_resource_form']['options']);
             if('move' == option){
-                sendRequest('claro_resource_move', {'idChild': sourceNode.data.key, 'idParent': node.data.key, 'workspaceDestinationId':node.data.workspaceId});
-                sourceNode.move(node, hitMode);
-                $('#ct_form').empty();
-            } else
-            {
-                sendRequest('claro_resource_add_workspace',
-                            {'instanceId':sourceNode.data.key,'instanceDestinationId':node.data.key,'options':option}
-                );
-
-                var newNode = {
-                        title:sourceNode.data.title,
-                        key:sourceNode.data.key,
-                        copy:sourceNode.data.copy,
-                        instanceCount:sourceNode.data.instanceCount,
-                        shareType:sourceNode.data.shareType,
-                        resourceId:sourceNode.data.resourceId
-                    }
-
-                node.addChild(newNode);
-                $('#ct_form').empty();
+                var route = {
+                    'name': 'claro_resource_move',
+                    'parameters':{
+                        'idChild': sourceNode.data.key,
+                        'idParent': node.data.key,
+                        'workspaceDestinationId':node.data.workspaceId
+                        }
+                    };
+            ClaroUtils.sendRequest(route);
+            sourceNode.move(node, hitMode);
+            $('#ct_form').empty();
+        } else
+{
+            var route = {
+                'name': 'claro_resource_add_workspace',
+                'parameters':{
+                    'instanceId': sourceNode.data.key,
+                    'instanceDestinationId': node.data.key,
+                    'options': option
+                }
             }
-        });
-    }
+        ClaroUtils.sendRequest(route);
 
-    /**
-     * Sends a standard ajaxRequest.
-     *
-     * @param {string}   route
-     * @param {Object}   routeParams
-     * @param {function} successHandler
-     */
-    function sendRequest(route, routeParams, successHandler)
-    {
-        $.ajax({
-            type: 'POST',
-            url: Routing.generate(route, routeParams),
-            cache: false,
-            success: successHandler,
-            error: function(xhr){
-                alert(xhr.status);
+            var newNode = {
+                title: sourceNode.data.title,
+                key: sourceNode.data.key,
+                copy: sourceNode.data.copy,
+                instanceCount: sourceNode.data.instanceCount,
+                shareType: sourceNode.data.shareType,
+                resourceId: sourceNode.data.resourceId
             }
-        });
-    }
 
-    /**
-     * Sends a form to the backend for a certain node.
-     * See SumbmissionHandler.
-     */
-    function sendForm(url, form, node)
-    {
-        var formData = new FormData(form);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('X_Requested_With', 'XMLHttpRequest');
-        xhr.onload = function(e){
-            submissionHandler(xhr, node);
-        };
-        xhr.send(formData);
-    }
+            node.addChild(newNode);
+            $('#ct_form').empty();
+        }
+    });
+}
 
-    /**
-     * The widget form submission handler.
+/**
+     * Executes the desired action for a menu item.
      *
-     * @param {Object} xhr
+     * @param {Object} obj
      * @param {Object} node
      */
-    function submissionHandler(xhr, node)
-    {
-        if(xhr.getResponseHeader('Content-Type') == 'application/json')
-        {
+function executeMenuActions(obj, node)
+{
+    var submissionHandler = function(xhr){
+        if(xhr.getResponseHeader('Content-Type') == 'application/json'){
             var JSONObject = JSON.parse(xhr.responseText);
             var instance = JSONObject[0];
             var newNode = {
-                    title:instance.title,
-                    key:instance.key,
-                    copy:instance.copy,
-                    instanceCount:instance.instanceCount,
-                    shareType:instance.shareType,
-                    resourceId:instance.resourceId
-                }
+                title:instance.title,
+                key:instance.key,
+                copy:instance.copy,
+                instanceCount:instance.instanceCount,
+                shareType:instance.shareType,
+                resourceId:instance.resourceId
+            }
 
-            if (instance.type == 'directory')
-            {
+            if (instance.type == 'directory'){
                 newNode.isFolder = true;
             }
 
-            if(node.data.key != newNode.key)
-            {
-                node.appendAjax({url:Routing.generate('claro_resource_node', {
-                    'instanceId':node.data.key,
-                    'workspaceId': document.getElementById(node.tree.divTree.attributes[0].value).getAttribute('data-workspaceId'),
-                    'format': 'json'})
+            if(node.data.key != newNode.key){
+                node.appendAjax({
+                    url:Routing.generate('claro_resource_node', {
+                        'instanceId':node.data.key,
+                        'workspaceId': document.getElementById(node.tree.divTree.attributes[0].value).getAttribute('data-workspaceId'),
+                        'format': 'json'
+                    })
                 });
                 node.expand();
             }
-            else
-            {
+            else{
                 node.data.title = newNode.title;
                 node.data.shareType = newNode.shareType;
                 node.render();
@@ -215,9 +199,7 @@ $(function(){
 
             $('#ct_tree').show();
             $('#ct_form').empty();
-        }
-        else
-        {
+        } else {
             $('#ct_form').empty();
             $('#ct_form').append(xhr.responseText);
             $('#ct_form').find('form').submit(function(e){
@@ -226,128 +208,120 @@ $(function(){
                 action = action.replace('_instanceId', node.data.key);
                 action = action.replace('_resourceId', node.data.resourceId);
                 var id = $('#ct_form').find('form').attr('id');
-                sendForm(action, document.getElementById(id), node);
+                ClaroUtils.sendForm(action, document.getElementById(id), submissionHandler);
             })
         }
     }
 
-    /**
-     * Executes the desired action for a menu item.
-     *
-     * @param {Object} obj
-     * @param {Object} node
-     */
-    function executeMenuActions(obj, node)
-    {
-        var executeAsync = function (obj, node, route) {
-            var removeNode = function (node, route) {
-                $.ajax({
-                type: 'POST',
-                url: route,
-                success: function(data){
-                    if(data == 'success'){
+    var executeAsync = function (obj, node, route) {
+
+        var removeNode = function(){
+            ClaroUtils.sendRequest(route, function(data){
+                if(data == 'success'){
                     node.remove();
-                        }
-                    }
-                });
-            }
-
-            var executeRequest = function (node, route) {
-               $.ajax({
-                    type: 'POST',
-                    url: route,
-                    cache: false,
-                    success: function(data){
-                        $('#ct_tree').hide();
-                        $('#ct_form').append(data);
-                        $('#ct_form').find('form').submit(function(e){
-                            e.preventDefault();
-                            var action = $('#ct_form').find('form').attr('action');
-                            action = action.replace('_instanceId', node.data.key);
-                            var id = $('#ct_form').find('form').attr('id');
-                            sendForm(action, document.getElementById(id), node);
-                        })
-                    }
-                });
-            }
-
-            switch(obj.name)
-            {
-                case "delete": removeNode(node, route); break;
-                default: executeRequest (node, route); break;
-            }
-
+                }
+            })
         }
 
-        var route = obj.route;
-        var compiledRoute = route.replace('_instanceId', node.data.key);
-        compiledRoute = compiledRoute.replace('_resourceId', node.data.resourceId);
+        var executeRequest = function(){
+            ClaroUtils.sendRequest(route, function(data){
+                $('#ct_tree').hide();
+                $('#ct_form').append(data);
+                $('#ct_form').find('form').submit(function(e){
+                    e.preventDefault();
+                    var action = $('#ct_form').find('form').attr('action');
+                    action = action.replace('_instanceId', node.data.key);
+                    var id = $('#ct_form').find('form').attr('id');
+                    ClaroUtils.sendForm(action, document.getElementById(id), submissionHandler);
+                })
+            })
+        }
 
-        (obj.async) ? executeAsync(obj, node, compiledRoute): window.location = compiledRoute;
+        switch(obj.name) {
+            case "delete":
+                removeNode(node, route);
+                break;
+            default:
+                executeRequest (node, route);
+                break;
+        }
+
     }
 
-    /**
+    var route = obj.route;
+    var compiledRoute = route.replace('_instanceId', node.data.key);
+    compiledRoute = compiledRoute.replace('_resourceId', node.data.resourceId);
+
+    (obj.async) ? executeAsync(obj, node, compiledRoute): window.location = compiledRoute;
+}
+
+/**
      * Finds wich menu object was clicked on in the menu description.
      *
      * @param {Object} items the menu description.
      * @param {Object} node the target node.
      * @param {string} menuItem the menuItem name.
      */
-    function findMenuObject(items, node, menuItem)
-    {
-        for (var property in items.items){
-            if(property == menuItem){
-                executeMenuActions(items.items[property], node);
-            } else {
-                if (items.items[property].hasOwnProperty('items')){
-                    findMenuObject(items.items[property], node, menuItem);
-                }
+function findMenuObject(items, node, menuItem)
+{
+    for (var property in items.items){
+        if(property == menuItem){
+            executeMenuActions(items.items[property], node);
+        } else {
+            if (items.items[property].hasOwnProperty('items')){
+                findMenuObject(items.items[property], node, menuItem);
             }
         }
     }
+}
 
-    /**
+/**
      * Creates the context menu for a specific node
      */
-    function bindContextMenuTree(node)
+function bindContextMenuTree(node)
+{
+    var type = node.data.type;
+
+    var menuDefaultOptions =
     {
-        var type = node.data.type;
+        selector: '#node_'+node.data.key,
+        callback: function(key, options){
+            findMenuObject(jsonmenu[type], node, key);
+        }
+    }
 
-        var menuDefaultOptions =
-            {
-                selector: '#node_'+node.data.key,
-                callback: function(key, options){
-                    findMenuObject(jsonmenu[type], node, key);
-                }
-            }
-
-        menuDefaultOptions.items = jsonmenu[type].items;
-        $.contextMenu(menuDefaultOptions);
-        var additionalMenuOptions = $.extend(
-            menuDefaultOptions,
-            {selector: '#dynatree-custom-claro-menu-'+node.data.key, trigger: 'left'}
+    menuDefaultOptions.items = jsonmenu[type].items;
+    console.debug(typeof $.contextMenu);
+    console.debug($.contextMenu);
+    $.contextMenu(menuDefaultOptions);
+    var additionalMenuOptions = $.extend(
+        menuDefaultOptions,
+        {
+            selector: '#dynatree-custom-claro-menu-'+node.data.key,
+            trigger: 'left'
+        }
         );
 
-        $.contextMenu(additionalMenuOptions);
-    }
+    $.contextMenu(additionalMenuOptions);
+}
 
-    /**
+/**
      * Return the check value of a combobox form.
      */
-    function getCheckedValue(radioObj) {
-        if(!radioObj)
-            return "";
-        var radioLength = radioObj.length;
-        if(radioLength == undefined)
-            if(radioObj.checked)
-                return radioObj.value;
-            else
-                return "";
-        for(var i = 0; i < radioLength; i++) {
-            if(radioObj[i].checked) {
-                return radioObj[i].value;
-            }
-        }
+function getCheckedValue(radioObj) {
+    if(!radioObj)
         return "";
+    var radioLength = radioObj.length;
+    if(radioLength == undefined)
+        if(radioObj.checked)
+            return radioObj.value;
+        else
+            return "";
+    for(var i = 0; i < radioLength; i++) {
+        if(radioObj[i].checked) {
+            return radioObj[i].value;
+        }
     }
+    return "";
+}
 });
