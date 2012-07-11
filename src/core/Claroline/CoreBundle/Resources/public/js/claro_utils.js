@@ -65,3 +65,25 @@ utils.sendForm = function(route, form, successHandler){
     }
     xhr.send(formData);
 }
+
+
+/**
+* Return the check value of a combobox form.
+*/
+utils.getCheckedValue = function(radioObj) {
+    if(!radioObj){return "";}
+    var radioLength = radioObj.length;
+    if(radioLength == undefined){
+        if(radioObj.checked){
+            return radioObj.value;
+        } else {
+            return "";
+        }
+    }
+    for(var i = 0; i < radioLength; i++) {
+        if(radioObj[i].checked) {
+            return radioObj[i].value;
+        }
+    }
+    return "";
+}
