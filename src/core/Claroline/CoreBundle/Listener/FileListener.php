@@ -117,7 +117,7 @@ class FileListener extends ContainerAware
     }
 
     /**
-     * Generated an unique identifier.
+     * Generates a globally unique identifier.
      *
      * @see http://php.net/manual/fr/function.com-create-guid.php
      *

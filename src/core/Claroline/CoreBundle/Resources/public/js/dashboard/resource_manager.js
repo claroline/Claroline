@@ -4,7 +4,7 @@ $(function(){
     //Gets the menu lists.
     $.ajax({
         type: 'GET',
-        url: Routing.generate('claro_json_menu', {'type': 'all'}),
+        url: Routing.generate('claro_resource_menus'),
         cache: false,
         success: function(data){
             jsonmenu = JSON.parse(data);
@@ -40,54 +40,49 @@ $(function(){
         $(treeId).dynatree({
             title: 'myTree',
             initAjax:{
-                url:Routing.generate('claro_resource_root_node',{
-                    'format':'json'
-                })
+                url: Routing.generate('claro_resource_roots')
             },
             clickFolderMode: 1,
-            onLazyRead: function(node){
+            onLazyRead: function (node) {
                 node.appendAjax({
-                    url:Routing.generate('claro_resource_node', {
-                        'instanceId':node.data.key,
-                        'workspaceId':node.data.workspaceId,
-                        'format': 'json'
+                    url:Routing.generate('claro_resource_children', {
+                        'instanceId': node.data.key
                     })
                 });
             },
-            onCreate: function(node, span){
-                if(node.data.hasOwnProperty('type')){
+            onCreate: function (node, span) {
+                if (node.data.hasOwnProperty('type')) {
                     bindContextMenuTree(node);
                 }
             },
-            onDblClick: function(node)
-            {
+            onDblClick: function (node) {
                 node.expand();
                 node.activate();
             },
-            onCustomRender: function(node){
+            onCustomRender: function (node) {
                 var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
                 html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                 return html;
             },
             dnd: {
-                onDragStart: function(node){
+                onDragStart: function (node) {
                     return true;
                 },
-                onDragStop: function(node){
+                onDragStop: function (node) {
                 },
                 autoExpandMS: 1000,
                 preventVoidMoves: true,
 
-                onDragEnter: function(node, sourceNode){
+                onDragEnter: function (node, sourceNode) {
                     return true;
                 },
-                onDragOver: function(node, sourceNode, hitMode){
-                    if(node.isDescendantOf(sourceNode)){
+                onDragOver: function (node, sourceNode, hitMode) {
+                    if (node.isDescendantOf(sourceNode)) {
                         return false;
                     }
                 },
-                onDrop: function(node, sourceNode, hitMode, ui, draggable){
-                    if (node.isDescendantOf(sourceNode)){
+                onDrop: function (node, sourceNode, hitMode, ui, draggable) {
+                    if (node.isDescendantOf(sourceNode)) {
                         return false;
                     }
                     else {
@@ -96,7 +91,7 @@ $(function(){
                         //sourceNode.move(node, hitMode);
                     }
                 },
-                onDragLeave: function(node, sourceNode){
+                onDragLeave: function (node, sourceNode) {
                 }
             }
         });
@@ -184,35 +179,31 @@ $(function(){
      */
     function submissionHandler(xhr, node)
     {
-        if(xhr.getResponseHeader('Content-Type') == 'application/json')
-        {
+        if (xhr.getResponseHeader('Content-Type') == 'application/json') {
             var JSONObject = JSON.parse(xhr.responseText);
             var instance = JSONObject[0];
             var newNode = {
-                    title:instance.title,
-                    key:instance.key,
-                    copy:instance.copy,
-                    instanceCount:instance.instanceCount,
-                    shareType:instance.shareType,
-                    resourceId:instance.resourceId
-                }
+                title: instance.title,
+                key: instance.key,
+                copy: instance.copy,
+                instanceCount: instance.instanceCount,
+                shareType: instance.shareType,
+                resourceId: instance.resourceId
+            }
 
-            if (instance.type == 'directory')
-            {
+            if (instance.type == 'directory') {
                 newNode.isFolder = true;
             }
 
-            if(node.data.key != newNode.key)
-            {
-                node.appendAjax({url:Routing.generate('claro_resource_node', {
-                    'instanceId':node.data.key,
-                    'workspaceId': document.getElementById(node.tree.divTree.attributes[0].value).getAttribute('data-workspaceId'),
-                    'format': 'json'})
+            if (node.data.key != newNode.key) {
+                node.appendAjax({
+                    url: Routing.generate('claro_resource_children', {
+                        'instanceId':node.data.key
+                    })
                 });
                 node.expand();
             }
-            else
-            {
+            else {
                 node.data.title = newNode.title;
                 node.data.shareType = newNode.shareType;
                 node.render();
@@ -221,11 +212,10 @@ $(function(){
             $('#ct_tree').show();
             $('#ct_form').empty();
         }
-        else
-        {
+        else {
             $('#ct_form').empty();
             $('#ct_form').append(xhr.responseText);
-            $('#ct_form').find('form').submit(function(e){
+            $('#ct_form').find('form').submit(function (e) {
                 e.preventDefault();
                 var action = $('#ct_form').find('form').attr('action');
                 action = action.replace('_instanceId', node.data.key);

@@ -1,22 +1,19 @@
 [
-{% set cptroot = 0 %}
-{% for root in resources %}
-{% set cptchild = 0 %}
-{
-    "title": "{{ root.getResource().getName() }}",
-    "key": {{ root.getId() }},
-    "copy": "{{ root.getCopy() }}",
-    "instanceCount": {{ root.getResource().getInstanceCount() }},
-    "shareType": "{{root.getResource().getShareType()}}",
-    "resourceId": "{{root.getResource().getId()}}",
-    "type": "{{root.getResource().getResourceType().getType()}}",
-    "workspaceId": "{{root.getWorkspace().getId()}}"
-    {% if root.getResourceType.getNavigable() == 1 %}
-        ,"isFolder": true
-        ,"isLazy": true
-    {% endif %}
-}
-{% set cptroot = cptroot + 1 %}
-{% if cptroot < resources|length %},{% endif %}
-{% endfor %}
+    {% for resource in resources %}
+    {
+        "title": "{{ resource.getResource().getName() }}",
+        "key": {{ resource.getId() }},
+        "copy": "{{ resource.getCopy() }}",
+        "instanceCount": {{ resource.getResource().getInstanceCount() }},
+        "shareType": "{{ resource.getResource().getShareType() }}",
+        "resourceId": "{{resource.getResource().getId() }}",
+        "type": "{{ resource.getResource().getResourceType().getType() }}",
+        "workspaceId": "{{ resource.getWorkspace().getId() }}"
+        {% if resource.getResourceType.getNavigable() == 1 %}
+            ,"isFolder": true
+            ,"isLazy": true
+        {% endif %}
+    }
+    {% if not loop.last %},{% endif %}
+    {% endfor %}
 ]

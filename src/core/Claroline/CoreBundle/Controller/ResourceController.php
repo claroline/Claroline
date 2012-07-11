@@ -2,25 +2,13 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\MimeType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\DirectoryType;
-use Claroline\CoreBundle\Form\SelectResourceType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
-use Claroline\CoreBundle\Library\Security\SymfonySecurity;
-
 use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
@@ -128,12 +116,9 @@ class ResourceController extends Controller
             ->find($resourceId);
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
-        $template = $request->isXmlHttpRequest() ?
-            'ClarolineCoreBundle:Resource:properties_form.html.twig':
-            'ClarolineCoreBundle:Resource:properties_form_page.html.twig';
-
         return $this->render(
-            $template, array('resourceId' => $resourceId, 'form' => $form->createView())
+            'ClarolineCoreBundle:Resource:properties_form.html.twig',
+            array('resourceId' => $resourceId, 'form' => $form->createView())
         );
     }
 
@@ -168,12 +153,9 @@ class ResourceController extends Controller
             return $response;
         }
 
-        $template = $request->isXmlHttpRequest() ?
-            'ClarolineCoreBundle:Resource:properties_form.html.twig':
-            'ClarolineCoreBundle:Resource:properties_form_page.html.twig';
-
         return $this->render(
-            $template, array('instanceId' => $instanceId, 'form' => $form->createView())
+            'ClarolineCoreBundle:Resource:properties_form.html.twig',
+            array('instanceId' => $instanceId, 'form' => $form->createView())
         );
     }
 
@@ -185,7 +167,7 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function moveResourceAction($instanceId, $newParentId)
+    public function moveAction($instanceId, $newParentId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
@@ -194,7 +176,7 @@ class ResourceController extends Controller
             ->find($newParentId);
         $this->get('claroline.resource.manager')->move($instance, $newParent);
 
-        return new Response('Resource moved');
+        return new Response('Resource moved', 204);
     }
 
     /**
@@ -226,53 +208,30 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a representation of a resource instance.
-     *
-     * @param integer $instanceId
-     * @param string  $format
+     * Returns a json representation of the root resources of every workspace whom
+     * the current user is a member.
      *
      * @return Response
      */
-    public function getNodeAction($instanceId, $format)
+    public function rootsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $resourcesInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getListableChildren($parent);
-        $content = $this->renderView("ClarolineCoreBundle:Resource:resources.{$format}.twig", array('resources' => $resourcesInstance));
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * Gets every workspace root nodes for a user
-     *
-     * @param integer $userId
-     * @param string  $format
-     *
-     * @return Response
-     */
-    public function getRootNodeAction($userId, $format)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        if ('null' != $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-        } else {
-            $user = $this->get('security.context')->getToken()->getUser();
-        }
-
-        $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getAllWsOfUser($user);
+        $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+            ->getAllWsOfUser($user);
         $roots = array();
 
+        // TODO : use a one-to-one relationship between workspace and root directory
         foreach ($workspaces as $workspace) {
             $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
             $roots[] = $root;
         }
 
-        $content = $this->renderView("ClarolineCoreBundle:Resource:resources.{$format}.twig", array('resources' => $roots));
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:resources.json.twig',
+            array('resources' => $roots)
+        );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -280,26 +239,53 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns an action array as key(action name) => value(route) for
-     * a resource type
+     * Returns a json representation of the children of a resource instance.
      *
-     * @param string $type
+     * @param integer $instanceId
+     *
+     * @return Response
      */
-    public function getJsonMenuAction($type)
+    public function childrenAction($instanceId)
     {
-        $resourceTypes = $this->getDoctrine()
+        $repo = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
-        $pluginResourceTypes = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findPluginResourceTypes();
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $parent = $repo->find($instanceId);
+        $resourceInstances = $repo->getListableChildren($parent);
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:resources.json.twig',
+            array('resources' => $resourceInstances)
+        );
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render('ClarolineCoreBundle:Resource:resource_menu.json.twig', array('resourceTypes' => $resourceTypes, 'pluginResourceTypes' => $pluginResourceTypes));
+        return $response;
     }
 
     /**
-     * Adds a resource instance to a workspace.
-     * Options must be must be 'ref' or 'copy'.
+     * Returns a json representation of the menus of actions available for each resource type.
+     *
+     * @return Response
+     */
+    public function menusAction()
+    {
+        $repo = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceTypes = $repo->findAll();
+        $pluginResourceTypes = $repo->findPluginResourceTypes();
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:resource_menus.json.twig',
+            array(
+                'resourceTypes' => $resourceTypes,
+                'pluginResourceTypes' => $pluginResourceTypes
+            )
+        );
+    }
+
+    /**
+     * Adds a resource instance to a workspace. Options must be must be 'ref' or 'copy'.
      *
      * @param integer $resourceId
      * @param string  $options
@@ -324,52 +310,6 @@ class ResourceController extends Controller
         }
 
         return new Response('success');
-    }
-
-    /**
-     * Returns the resource types defined in the platform (currently only in json format)
-     *
-     * $listable can be "all", "false" and "true"
-     *
-     * @param string $format
-     * @param string $listable
-     *
-     * @return Response
-     */
-    public function getResourceTypesAction($format, $listable)
-    {
-        $repo = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        if ($listable == 'all') {
-            $resourceTypes = $repo->findAll();
-        } else if ($listable == 'true') {
-            $resourceTypes = $repo->findBy(array('isListable' => '1'));
-        } else if ($listable == 'false') {
-            $resourceTypes = $repo->findBy(array('isListable' => '0'));
-        }
-
-        $content = $this->renderView("ClarolineCoreBundle:Resource:resource_type.{$format}.twig", array('resourceTypes' => $resourceTypes));
-        $response = new Response($content);
-
-        return $response;
-    }
-
-    /**
-     * Renders the sf2 masks lists
-     *
-     * @param string $format
-     * @param string $type   the type of list (all | res)
-     *
-     * @return Response
-     */
-    public function getMasksAction($type, $format)
-    {
-        switch ($type) {
-            case 'res': $masks = SymfonySecurity::getResourcesMasks();
-                break;
-            default: $masks = SymfonySecurity::getSfMasks();
-                break;
-        }
-        return $this->render("ClarolineCoreBundle:Resource:masks_list.{$format}.twig", array('masks' => $masks));
     }
 
     private function normalizeEventName($prefix, $resourceType)
@@ -436,17 +376,10 @@ class ResourceController extends Controller
         $ric->setCreator($user);
         $ric->setCopy(false);
         $ric->setWorkspace($resourceInstance->getWorkspace());
-
-        // dispatch a copy_[resource_type_name] event,
-        // ensure the event is filled with an abstract resource instance
-
-
-        //$name = $this->findResService($resourceInstance->getResourceType());
-
         $this->get('doctrine.orm.entity_manager')->flush();
         $em = $this->get('doctrine.orm.entity_manager');
 
-        if($resourceInstance->getResourceType()->getType()=='directory') {
+        if ($resourceInstance->getResourceType()->getType()=='directory') {
             $resourceCopy = new Directory();
             $resourceCopy->setName($resourceInstance->getResource()->getName());
             $resourceCopy->setCreator($user);
@@ -505,7 +438,6 @@ class ResourceController extends Controller
     private function setChildrenByCopyCopy(ResourceInstance $parentInstance, ResourceInstance $parentCopy)
     {
         $workspace = $parentCopy->getWorkspace();
-        var_dump($workspace->getId());
         $em = $this->getDoctrine()->getEntityManager();
         $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
         $rightManager = $this->get('claroline.security.right_manager');
