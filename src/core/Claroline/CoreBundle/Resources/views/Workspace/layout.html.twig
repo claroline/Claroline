@@ -1,4 +1,5 @@
 {% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
+
 {% block content %}
 <div class="row-fluid">
     <div class="span2">
@@ -7,16 +8,13 @@
         <li><a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platformTranslation') }} </a></li>
         <li><a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platformTranslation') }}</a></li>
         {% if is_granted('ROLE_WS_CREATOR') %}
-
         <li><a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platformTranslation') }}</a>
         {% endif %}
-    <!--    <li><a href="todo" id="link_WS_chat">chatbox</a></li>-->
         </ul>
         </div><!--/.well -->
     </div>
     <div class="span10">
         <!--Body content-->
-        TITLE: (workspace.layout.html.twig) WORKSPACE
         {% block section_content %}
         {% endblock %}
     </div>

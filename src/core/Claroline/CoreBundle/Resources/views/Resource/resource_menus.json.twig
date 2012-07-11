@@ -4,15 +4,13 @@
             "new": {
                 "name": "new",
                 "items": {
-                    {% set cpt = 1 %}
                     {% for resourceType in resourceTypes %}
                     "{{ resourceType.getType() }}": {
                         "name": "{{ resourceType.getType() }}",
                         "route": "{{ path('claro_resource_creation_form', {'resourceType':resourceType.getType()}) }}",
                         "async": true
                     }
-                    {% set cpt = cpt+1 %}
-                    {% if cpt <= resourceTypes|length %} , {% endif %}
+                    {% if not loop.last %},{% endif %}
                     {% endfor %}
                 }
             },
@@ -62,7 +60,7 @@
         }
     }
     {% for pluginResourceType in pluginResourceTypes %}
-    ,"{{pluginResourceType.getType()}}" : {
+    ,"{{ pluginResourceType.getType() }}" : {
         "items": {
             "delete": {
                 "name": "delete",
@@ -71,18 +69,17 @@
             },
             "properties": {
                 "name": "properties",
-                "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
+                "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'}) }}",
                 "async": true
             }
-         {% for customAction in pluginResourceType.getCustomActions() %}
-            , "{{customAction.getAction()}}": {
-                "name": "{{customAction.getAction()}}",
-                "route": "{{ path('claro_resource_custom', {'resourceType': pluginResourceType.getType(), 'action': customAction.getAction(), 'instanceId': '_instanceId'})}}",
-                "async": {{customAction.isAsync()}}
+            {% for customAction in pluginResourceType.getCustomActions() %}
+            , "{{ customAction.getAction() }}": {
+                "name": "{{ customAction.getAction() }}",
+                "route": "{{ path('claro_resource_custom', {'resourceType': pluginResourceType.getType(), 'action': customAction.getAction(), 'instanceId': '_instanceId'}) }}",
+                "async": {{ customAction.isAsync() }}
             }
-         {% endfor %}
+            {% endfor %}
          }
      }
     {% endfor %}
-
 }
