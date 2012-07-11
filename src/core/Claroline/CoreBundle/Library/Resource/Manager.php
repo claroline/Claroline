@@ -49,7 +49,6 @@ class Manager
      */
     public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true)
     {
-
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
         $user = $this->container->get('security.context')->getToken()->getUser();
 
@@ -66,20 +65,7 @@ class Manager
             $resource->setCreator($user);
             $this->em->persist($resource);
             $this->em->flush();
-            $this->container->get('claroline.security.right_manager')->addRight($ri, $user, MaskBuilder::MASK_OWNER);
-            $roles = $dir->getWorkspace()->getWorkspaceRoles();
-            $masks = \Claroline\CoreBundle\Library\Security\SymfonySecurity::getSfMasks();
-            $keys = array_keys($masks);
-
-            foreach ($roles as $role) {
-                $mask = $role->getResMask();
-                foreach ($keys as $key) {
-                    if ($mask & $key) {
-                        $this->container->get('claroline.security.right_manager')->addRight($ri, $role, $key);
-                    }
-                }
-            }
-
+            
             return $returnInstance ? $ri : $resource;
         }
 

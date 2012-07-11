@@ -339,7 +339,7 @@ class ResourceController extends Controller
         $em->flush();
     }
 
-    private function addToDirectoryByReference($instance, $parent)
+    private function addToDirectoryByReference(ResourceInstance $instance, ResourceInstance $parent)
     {
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
             $instanceCopy = $this->createReference($instance);
@@ -352,7 +352,7 @@ class ResourceController extends Controller
         }
     }
 
-    private function addToDirectoryByCopy($instance, $parent)
+    private function addToDirectoryByCopy(ResourceInstance $instance, ResourceInstance $parent)
     {
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
             $instanceCopy = $this->createCopy($instance);
@@ -367,7 +367,6 @@ class ResourceController extends Controller
 
     private function createCopy(ResourceInstance $resourceInstance)
     {
-        var_dump('copy');
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
         $ric->setCreator($user);
