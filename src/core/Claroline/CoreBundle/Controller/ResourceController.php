@@ -295,19 +295,16 @@ class ResourceController extends Controller
     public function addToWorkspaceAction($instanceId, $options, $instanceDestinationId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId)->getResource();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
 
-        if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-            if ($options == 'ref') {
-                $this->copyFirstReferenceInstance($instanceId, $parent);
-            } else {
-                $this->copyFirstCopyInstance($instanceId, $parent);
-            }
-
-            return new Response('copied');
+        if ($options == 'ref') {
+            $this->addToDirectoryByReference($instance, $parent);
+        } else {
+            $this->addToDirectoryByCopy($instance, $parent);
         }
 
+        $em->flush();
         return new Response('success');
     }
 
@@ -342,34 +339,35 @@ class ResourceController extends Controller
         $em->flush();
     }
 
-    /**
-     * Returns a copied resource instance. The resource itself is not copied.
-     *
-     * @param ResourceInstance $resourceInstance
-     *
-     * @return ResourceInstance
-     */
-    private function copyByReferenceResourceInstance(ResourceInstance $resourceInstance)
+    private function addToDirectoryByReference($instance, $parent)
     {
-        $ric = new ResourceInstance();
-        $ric->setCreator($this->get('security.context')->getToken()->getUser());
-        $ric->setCopy(true);
-        $ric->setWorkspace($resourceInstance->getWorkspace());
-        $ric->setResource($resourceInstance->getResource());
-        $resourceInstance->getResource()->addResourceInstance($ric);
-
-        return $ric;
+        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+            $instanceCopy = $this->createReference($instance);
+            $instanceCopy->setParent($parent);
+            $children = $instance->getChildren();
+            foreach ($children as $child) {
+                $this->addToDirectoryByReference($child, $instanceCopy);
+            }
+            $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
+        }
     }
 
-    /**
-     * Returns a copied resource instance. The resource itself is also copied
-     *
-     * @param ResourceInstance $resourceInstance
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceInstance
-     */
-    private function copyByCopyResourceInstance(ResourceInstance $resourceInstance)
+    private function addToDirectoryByCopy($instance, $parent)
     {
+        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+            $instanceCopy = $this->createCopy($instance);
+            $instanceCopy->setParent($parent);
+            $children = $instance->getChildren();
+            foreach ($children as $child) {
+                $this->addToDirectoryByCopy($child, $instanceCopy);
+            }
+            $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
+        }
+    }
+
+    private function createCopy(ResourceInstance $resourceInstance)
+    {
+        var_dump('copy');
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
         $ric->setCreator($user);
@@ -383,124 +381,33 @@ class ResourceController extends Controller
             $resourceCopy->setName($resourceInstance->getResource()->getName());
             $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
-            $em->persist($resourceCopy);
+            $resourceCopy->addResourceInstance($ric);
         }
         else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
             $resourceType = strtolower(str_replace(' ', '_', $resourceInstance->getResourceType()->getType()));
             $this->get('event_dispatcher')->dispatch("copy_{$resourceType}", $event);
             $resourceCopy = $event->getCopy();
+            $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($resourceInstance->getResourceType());
             $resourceCopy->addResourceInstance($ric);
         }
-
+        $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
         $this->get('doctrine.orm.entity_manager')->flush();
 
         return $ric;
     }
 
-    /**
-     * Set the children of a copied by reference resource instance.
-     *
-     * @param ResourceInstance $parentInstance
-     * @param ResourceInstance $parentCopy
-     */
-    private function setChildrenByReferenceCopy(ResourceInstance $parentInstance, ResourceInstance $parentCopy)
+    private function createReference(ResourceInstance $resourceInstance)
     {
-        $workspace = $parentCopy->getWorkspace();
-        $em = $this->getDoctrine()->getEntityManager();
-        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
-        $rightManager = $this->get('claroline.security.right_manager');
-        $roleCollaborator = $workspace->getCollaboratorRole();
+        $ric = new ResourceInstance();
+        $ric->setCreator($this->get('security.context')->getToken()->getUser());
+        $ric->setCopy(true);
+        $ric->setWorkspace($resourceInstance->getWorkspace());
+        $ric->setResource($resourceInstance->getResource());
+        $resourceInstance->getResource()->addResourceInstance($ric);
 
-        foreach ($children as $child) {
-            if ($child->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-                $copy = $this->copyByReferenceResourceInstance($child);
-                $copy->setParent($parentCopy);
-                $copy->setWorkspace($workspace);
-                $em->persist($copy);
-                $this->setChildrenByReferenceCopy($child, $copy);
-                $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
-            }
-        }
-
-        $em->flush();
-    }
-
-    /**
-     * Set the children of a copied by copy resource instance
-     *
-     * @param ResourceInstance $parentInstance
-     * @param ResourceInstance $parentCopy
-     */
-    private function setChildrenByCopyCopy(ResourceInstance $parentInstance, ResourceInstance $parentCopy)
-    {
-        $workspace = $parentCopy->getWorkspace();
-        $em = $this->getDoctrine()->getEntityManager();
-        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($parentInstance, true);
-        $rightManager = $this->get('claroline.security.right_manager');
-        $roleCollaborator = $workspace->getCollaboratorRole();
-
-        foreach ($children as $child) {
-            if ($child->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-                $copy = $this->copyByCopyResourceInstance($child);
-                $copy->setParent($parentCopy);
-                $copy->setWorkspace($workspace);
-                $em->persist($copy);
-                $em->flush();
-                $this->setChildrenByReferenceCopy($child, $copy);
-                $rightManager->addRight($copy, $roleCollaborator, MaskBuilder::MASK_VIEW);
-            }
-        }
-    }
-
-    /**
-     * Copy a resource instance by reference and put it in a workspace.
-     *
-     * @param integer           $instanceId
-     * @param ResourceInstance  $parent
-     */
-    private function copyFirstReferenceInstance($instanceId, $parent)
-    {
-        $workspace = $parent->getWorkspace();
-        $em = $this->getDoctrine()->getEntityManager();
-        $roleCollaborator = $workspace->getCollaboratorRole();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $resourceInstanceCopy = $this->copyByReferenceResourceInstance($resourceInstance);
-        $resourceInstanceCopy->setWorkspace($workspace);
-        $resourceInstanceCopy->setParent($parent);
-        $em->persist($resourceInstanceCopy);
-        $resourceInstance->getResource()->addResourceInstance($resourceInstance);
-        $em->flush();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $rightManager = $this->get('claroline.security.right_manager');
-        $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
-        $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
-        $this->setChildrenByReferenceCopy($resourceInstance, $resourceInstanceCopy);
-    }
-
-    /**
-     * Copy a resource instance by copy and put it in a workspace.
-     *
-     * @param integer           $instanceId
-     * @param ResourceInstance  $parent
-     */
-    private function copyFirstCopyInstance($instanceId, $parent)
-    {
-        $workspace = $parent->getWorkspace();
-        $em = $this->getDoctrine()->getEntityManager();
-        $roleCollaborator = $workspace->getCollaboratorRole();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $resourceInstanceCopy = $this->copyByCopyResourceInstance($resourceInstance);
-        $resourceInstanceCopy->setWorkspace($workspace);
-        $resourceInstanceCopy->setParent($parent);
-        $em->persist($resourceInstanceCopy);
-        $em->flush();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $rightManager = $this->get('claroline.security.right_manager');
-        $rightManager->addRight($resourceInstanceCopy, $roleCollaborator, MaskBuilder::MASK_VIEW);
-        $rightManager->addRight($resourceInstanceCopy, $user, MaskBuilder::MASK_OWNER);
-        $this->setChildrenByCopyCopy($resourceInstance, $resourceInstanceCopy);
+        return $ric;
     }
 }
