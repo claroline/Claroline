@@ -1,5 +1,8 @@
-<form novalidate="validate" action="{{path('claro_resource_properties_update', {'instanceId': '_instanceId'})}}" method="post" {{ form_enctype(form) }} id="resource_properties_form">
+<form novalidate="validate"
+      action="{{ path('claro_resource_properties_update', {'instanceId': '_instanceId'}) }}"
+      method="post" {{ form_enctype(form) }}
+      id="resource_properties_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
-        <input type="submit" formnovalidate="formnovalidate"/>
+   <input type="submit" formnovalidate="formnovalidate"/>
 </form>

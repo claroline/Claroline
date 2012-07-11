@@ -4,9 +4,7 @@ $(function(){
     //Gets the menu lists.
     $.ajax({
         type: 'GET',
-        url: Routing.generate('claro_json_menu', {
-            'type': 'all'
-        }),
+        url: Routing.generate('claro_resource_menus'),
         cache: false,
         success: function(data){
             jsonmenu = JSON.parse(data);
@@ -42,17 +40,13 @@ $(function(){
         $(treeId).dynatree({
             title: 'myTree',
             initAjax:{
-                url:Routing.generate('claro_resource_root_node',{
-                    'format':'json'
-                })
+                url: Routing.generate('claro_resource_roots')
             },
             clickFolderMode: 1,
             onLazyRead: function (node){
                 node.appendAjax({
-                    url:Routing.generate('claro_resource_node', {
-                        'instanceId':node.data.key,
-                        'workspaceId':node.data.workspaceId,
-                        'format': 'json'
+                    url:Routing.generate('claro_resource_children', {
+                        'instanceId':node.data.key
                     }),
                     error: function (node, XMLHttpRequest, textStatus, errorThrown){
                         if(XMLHttpRequest.status == 403){
@@ -65,40 +59,39 @@ $(function(){
                     }
                 });
             },
-            onCreate: function(node, span){
-                if(node.data.hasOwnProperty('type')){
+            onCreate: function (node, span) {
+                if (node.data.hasOwnProperty('type')) {
                     bindContextMenuTree(node);
                 }
             },
-            onDblClick: function(node)
-            {
+            onDblClick: function (node) {
                 node.expand();
                 node.activate();
             },
-            onCustomRender: function(node){
+            onCustomRender: function (node) {
                 var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
                 html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                 return html;
             },
             dnd: {
-                onDragStart: function(node){
+                onDragStart: function (node) {
                     return true;
                 },
-                onDragStop: function(node){
+                onDragStop: function (node) {
                 },
                 autoExpandMS: 1000,
                 preventVoidMoves: true,
 
-                onDragEnter: function(node, sourceNode){
+                onDragEnter: function (node, sourceNode) {
                     return true;
                 },
-                onDragOver: function(node, sourceNode, hitMode){
-                    if(node.isDescendantOf(sourceNode)){
+                onDragOver: function (node, sourceNode, hitMode) {
+                    if (node.isDescendantOf(sourceNode)) {
                         return false;
                     }
                 },
-                onDrop: function(node, sourceNode, hitMode, ui, draggable){
-                    if (node.isDescendantOf(sourceNode)){
+                onDrop: function (node, sourceNode, hitMode, ui, draggable) {
+                    if (node.isDescendantOf(sourceNode)) {
                         return false;
                     }
                     else {
@@ -114,11 +107,12 @@ $(function(){
         var html = Twig.render(move_resource_form);
         $('#ct_form').empty();
         $('#ct_form').append(html);
-        $('#move_resource_form_submit').click(function(e) {
+        $('#move_resource_form_submit').click(function (e) {
             e.preventDefault();
             var option = getCheckedValue(document.forms['move_resource_form']['options']);
+            var route = {}
             if('move' == option){
-                var route = {
+                route = {
                     'name': 'claro_resource_move',
                     'parameters':{
                         'idChild': sourceNode.data.key,
@@ -129,15 +123,15 @@ $(function(){
             ClaroUtils.sendRequest(route);
             sourceNode.move(node, hitMode);
             $('#ct_form').empty();
-        } else
-{
-            var route = {
+        } else {
+            route = {
                 'name': 'claro_resource_add_workspace',
                 'parameters':{
                     'instanceId': sourceNode.data.key,
                     'instanceDestinationId': node.data.key,
                     'options': option
                 }
+
             }
         ClaroUtils.sendRequest(route);
 
@@ -183,10 +177,8 @@ function executeMenuActions(obj, node)
 
             if(node.data.key != newNode.key){
                 node.appendAjax({
-                    url:Routing.generate('claro_resource_node', {
+                    url:Routing.generate('claro_resource_children', {
                         'instanceId':node.data.key,
-                        'workspaceId': document.getElementById(node.tree.divTree.attributes[0].value).getAttribute('data-workspaceId'),
-                        'format': 'json'
                     })
                 });
                 node.expand();
@@ -202,7 +194,7 @@ function executeMenuActions(obj, node)
         } else {
             $('#ct_form').empty();
             $('#ct_form').append(xhr.responseText);
-            $('#ct_form').find('form').submit(function(e){
+            $('#ct_form').find('form').submit(function (e) {
                 e.preventDefault();
                 var action = $('#ct_form').find('form').attr('action');
                 action = action.replace('_instanceId', node.data.key);

@@ -48,7 +48,7 @@ class LayoutController extends Controller
 
         if ($user instanceof User) {
             $connected = true;
-            $username = $user->getUsername();
+            $username = $user->getFirstName() . ' ' . $user->getLastName();
         } else {
             $configHandler = $this->get('claroline.config.platform_config_handler');
 
