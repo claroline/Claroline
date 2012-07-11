@@ -1,7 +1,6 @@
 $(function(){
-    jsonmenu = {};
+    var jsonmenu = {};
 
-    //Gets the menu lists.
     $.ajax({
         type: 'GET',
         url: Routing.generate('claro_resource_menus'),
@@ -109,15 +108,14 @@ $(function(){
         $('#ct_form').append(html);
         $('#move_resource_form_submit').click(function (e) {
             e.preventDefault();
-            var option = getCheckedValue(document.forms['move_resource_form']['options']);
+            var option = ClaroUtils.getCheckedValue(document.forms['move_resource_form']['options']);
             var route = {}
             if('move' == option){
                 route = {
                     'name': 'claro_resource_move',
                     'parameters':{
-                        'idChild': sourceNode.data.key,
-                        'idParent': node.data.key,
-                        'workspaceDestinationId':node.data.workspaceId
+                        'instanceId': sourceNode.data.key,
+                        'newParentId': node.data.key
                         }
                     };
             ClaroUtils.sendRequest(route);
@@ -151,11 +149,11 @@ $(function(){
 }
 
 /**
-     * Executes the desired action for a menu item.
-     *
-     * @param {Object} obj
-     * @param {Object} node
-     */
+* Executes the desired action for a menu item.
+*
+* @param {Object} obj
+* @param {Object} node
+*/
 function executeMenuActions(obj, node)
 {
     var submissionHandler = function(xhr){
@@ -248,12 +246,12 @@ function executeMenuActions(obj, node)
 }
 
 /**
-     * Finds wich menu object was clicked on in the menu description.
-     *
-     * @param {Object} items the menu description.
-     * @param {Object} node the target node.
-     * @param {string} menuItem the menuItem name.
-     */
+* Finds wich menu object was clicked on in the menu description.
+*
+* @param {Object} items the menu description.
+* @param {Object} node the target node.
+* @param {string} menuItem the menuItem name.
+*/
 function findMenuObject(items, node, menuItem)
 {
     for (var property in items.items){
@@ -268,8 +266,8 @@ function findMenuObject(items, node, menuItem)
 }
 
 /**
-     * Creates the context menu for a specific node
-     */
+* Creates the context menu for a specific node
+*/
 function bindContextMenuTree(node)
 {
     var type = node.data.type;
@@ -295,25 +293,5 @@ function bindContextMenuTree(node)
         );
 
     $.contextMenu(additionalMenuOptions);
-}
-
-/**
-     * Return the check value of a combobox form.
-     */
-function getCheckedValue(radioObj) {
-    if(!radioObj)
-        return "";
-    var radioLength = radioObj.length;
-    if(radioLength == undefined)
-        if(radioObj.checked)
-            return radioObj.value;
-        else
-            return "";
-    for(var i = 0; i < radioLength; i++) {
-        if(radioObj[i].checked) {
-            return radioObj[i].value;
-        }
-    }
-    return "";
 }
 });
