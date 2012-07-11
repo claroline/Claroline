@@ -128,7 +128,6 @@ class CommonCheckerTest extends WebTestCase
 
     public function testCheckThrowsAnExceptionOnInvalidResourceValue()
     {
-        $this->markTestSkipped("CommonChecker changed; it doesn't require a service and a controller anymore");
         $pluginFQCN = 'Invalid\UnexpectedResourceValue\InvalidUnexpectedResourceValue';
         $this->loader->load($pluginFQCN);
         $this->assertInstallationExceptionIsThrown($pluginFQCN, InstallationException::INVALID_RESOURCE_VALUE);

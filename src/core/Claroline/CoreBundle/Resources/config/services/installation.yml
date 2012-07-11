@@ -1,5 +1,5 @@
 parameters:
-  
+
     claroline.install.prod_migrations_directory: Migrations
     claroline.install.test_migrations_directory: Tests/Stub/Migrations
     claroline.install.include_test_migrations: false # see config_test.yml
@@ -17,13 +17,13 @@ services:
         arguments:
             - "@kernel"
             - "@claroline.install.bundle_migrator"
-    
+
     claroline.install.bundle_migrator:
         public: false
         class: Claroline\CoreBundle\Library\Installation\BundleMigrator
         arguments:
             - "@claroline.install.migration_builder"
-            
+
     claroline.install.migration_builder:
         class: Claroline\CoreBundle\Library\Installation\MigrationBuilder
         arguments:
@@ -32,7 +32,7 @@ services:
             - %claroline.install.prod_migrations_directory%
             - %claroline.install.test_migrations_directory%
             - %claroline.install.include_test_migrations%
-            
+
     claroline.install.migration_helper:
         public: false
         class: Claroline\CoreBundle\Library\Installation\MigrationHelper
@@ -45,21 +45,21 @@ services:
             - "@claroline.plugin.migrator"
             - "@claroline.plugin.recorder"
             - "@kernel"
-            - "@doctrine.orm.entity_manager"
-    
+#            - "@doctrine.orm.entity_manager"
+
     claroline.plugin.loader:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Loader
         arguments:
             - tool: %claroline.plugin.tool_directory%
               extension: %claroline.plugin.extension_directory%
-              
+
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
         arguments:
             - "@claroline.plugin.common_checker"
             - "@claroline.plugin.tool_checker"
             - "@claroline.plugin.extension_checker"
-    
+
     claroline.plugin.common_checker:
         class: Claroline\CoreBundle\Library\Installation\Plugin\CommonChecker
         arguments:
@@ -68,10 +68,10 @@ services:
               extension: %claroline.plugin.extension_directory%
             - "@symfony.yaml"
             - "@file_locator"
-    
+
     claroline.plugin.extension_checker:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ExtensionChecker
-  
+
     claroline.plugin.tool_checker:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ToolChecker
 
@@ -79,13 +79,13 @@ services:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Migrator
         arguments:
             - "@claroline.install.bundle_migrator"
-          
+
     claroline.plugin.recorder:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Recorder
         arguments:
             - "@claroline.plugin.recorder_configuration_file_writer"
             - "@claroline.plugin.recorder_database_writer"
-            
+
     claroline.plugin.recorder_configuration_file_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationFileWriter
         arguments:
@@ -93,7 +93,7 @@ services:
             - %claroline.plugin.bundles_config_file%
             - %claroline.plugin.routing_config_file%
             - "@symfony.yaml"
-    
+
     claroline.plugin.recorder_database_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter
         arguments:
