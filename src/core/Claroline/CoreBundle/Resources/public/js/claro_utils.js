@@ -66,7 +66,6 @@ utils.sendForm = function(route, form, successHandler){
     xhr.send(formData);
 }
 
-
 /**
 * Return the check value of a combobox form.
 */

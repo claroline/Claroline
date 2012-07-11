@@ -44,7 +44,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             WHERE rt.type != 'directory'
             AND ri.parent = {$ri->getId()}
         ";
-                $em->flush();
+            
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
