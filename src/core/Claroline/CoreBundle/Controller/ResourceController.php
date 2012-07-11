@@ -109,7 +109,6 @@ class ResourceController extends Controller
      */
     public function basePropertiesFormAction($resourceId)
     {
-        $request = $this->get('request');
         $resource = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
