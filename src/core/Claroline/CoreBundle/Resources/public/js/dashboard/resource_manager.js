@@ -176,7 +176,7 @@ function executeMenuActions(obj, node)
             if(node.data.key != newNode.key){
                 node.appendAjax({
                     url:Routing.generate('claro_resource_children', {
-                        'instanceId':node.data.key,
+                        'instanceId':node.data.key
                     })
                 });
                 node.expand();
@@ -206,8 +206,8 @@ function executeMenuActions(obj, node)
     var executeAsync = function (obj, node, route) {
 
         var removeNode = function(){
-            ClaroUtils.sendRequest(route, function(data){
-                if(data == 'success'){
+            ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR){
+                if(204 == jqXHR.status){
                     node.remove();
                 }
             })
@@ -235,13 +235,11 @@ function executeMenuActions(obj, node)
                 executeRequest (node, route);
                 break;
         }
-
     }
 
     var route = obj.route;
     var compiledRoute = route.replace('_instanceId', node.data.key);
     compiledRoute = compiledRoute.replace('_resourceId', node.data.resourceId);
-
     (obj.async) ? executeAsync(obj, node, compiledRoute): window.location = compiledRoute;
 }
 
@@ -281,8 +279,6 @@ function bindContextMenuTree(node)
     }
 
     menuDefaultOptions.items = jsonmenu[type].items;
-    console.debug(typeof $.contextMenu);
-    console.debug($.contextMenu);
     $.contextMenu(menuDefaultOptions);
     var additionalMenuOptions = $.extend(
         menuDefaultOptions,
