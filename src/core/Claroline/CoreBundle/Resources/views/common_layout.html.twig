@@ -21,6 +21,17 @@
 {% endblock %}
 
 {% block body %}
+    <div id='bootstrap-modal' class='modal fade'>
+           <div class="modal-header">
+               <button id="close_dialog_button" class="close" data-dismiss="modal">×</button>
+               <h3>Modal header</h3>
+           </div>
+           <div class="modal-body" id="modal-body">
+           </div>
+           <div class="modal-footer">
+               FOOTER
+            </div>
+    </div>
 
     {% block global_content %}{% endblock %}
 
@@ -39,4 +50,5 @@
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/twitter-bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png')}}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/twitter-bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png')}}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/twitter-bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png')}}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/claro_utils.js') }}" /></script>
 {% endblock %}
