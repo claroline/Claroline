@@ -9,13 +9,13 @@
     var workspaceClickedId = "";
 
     $.fn.extend({
-        claroFilePicker:function(options){
+        claroFilePicker:function (options) {
         var params = $.extend({
             autoOpen: false,
             backdrop: false,
             currentWorspaceId: null,
            // leftClickMenu: true,
-            getForm: function(){
+            getForm: function () {
                 var formHTML =
                     "<form id='cfp_form'><input id='resource_name_value' type='text' placeholder='"+"name"+"'/><br>"
                     formHTML += "<input type='radio' name='options' value='copy'>copy<br>"
@@ -23,12 +23,12 @@
                     formHTML +="<input type='submit' id='cfp_form_submit'></form>";
                 return formHTML;
             },
-            onSubmit: function(form){
+            onSubmit: function (form) {
                 $('#cfp_form').hide();
                 $('#cfp_tree').show();
                 this.submitHandler(form, document.getElementById('resource_name_value').getAttribute('data-instanceId'));
             },
-            dblClickItem: function(node){
+            dblClickItem: function (node) {
                 $('#cfp_tree').hide();
                 $('#cfp_form').show();
                 document.getElementById('resource_name_value').value=node.data.title;
@@ -39,7 +39,7 @@
                 alert("DEFAULT SUBMIT HANDLER! IT MUST BE CHANGED");
             }
         }, options);
-        return this.each(function(){
+        return this.each(function () {
             //must be changed with sthg like $(this).setAttribute.doSthg
             document.getElementById('filepicker').setAttribute("class", 'modal fade');
             var modalContent = ""
@@ -60,99 +60,98 @@
 
             $('#cfp_form').append(params.getForm());
             $('#cfp_form').hide();
-            $('#cfp_form').submit(function(e){
+            $('#cfp_form').submit(function (e) {
                 e.preventDefault();
                 params.onSubmit(document.forms['cfp_form']);
             });
             //create a new file tree
             var defaultsDynatree = {
                 title: "myTree",
-                initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format': 'json'})},
-                clickFolderMode: 1,
-                onLazyRead: function(node){
-                    node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'format': 'json'})});
+                initAjax: {
+                    url: Routing.generate('claro_resource_children', {'instanceId': 0})
                 },
-                onCreate: function(node, span){
+                clickFolderMode: 1,
+                onLazyRead: function (node) {
+                    node.appendAjax({
+                        url: Routing.generate('claro_resource_children', {'instanceId': node.data.key})
+                    });
+                },
+                onCreate: function (node, span) {
                     bindContextMenu(node);
                 },
-                onDblClick: function(node){
+                onDblClick: function (node) {
                     $('#cfp_dialog').hide();
-                    if(workspaceClickedId == params.currentWorkspaceId)
-                    {
+                    if(workspaceClickedId == params.currentWorkspaceId) {
                         alert("you can't a resource this workspace in the current workspace");
                     }
-                    else
-                    {
-                        if(node.data.shareType == 1)
-                        {
+                    else {
+                        if (node.data.shareType == 1) {
                             params.dblClickItem(node);
                         }
-                        else
-                        {
+                        else {
                             alert("you can't share this resource");
                         }
                     }
 
                 },
-                onCustomRender: function(node){
+                onCustomRender: function (node) {
                     var copy = node.data.copy;
                     var html ='';
 
-                    if(copy == 1)
-                    {
+                    if (copy == 1) {
                         html += "<a class='dynatree-title' style='cursor:pointer; color:red' href='#'> "+node.data.title+" instance amount "+node.data.instanceCount+" share "+node.data.shareType+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
-                    else
-                    {
+                    else {
                         html += "<a class='dynatree-title' style='cursor:pointer; color:green' href='#'> "+node.data.title+" instance amount "+node.data.instanceCount+" share "+node.data.shareType+" </a>";
                         html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                     }
+
                     return html;
                 },
                 dnd: {
-                    onDragStart: function(node){
+                    onDragStart: function (node) {
                         return true;
                     },
-                    onDragStop: function(node, sourceNode){
+                    onDragStop: function (node, sourceNode) {
                     },
                     autoExpandMS: 1000,
                     preventVoidMoves: true,
 
-                    onDragEnter: function(node, sourceNode){
+                    onDragEnter: function (node, sourceNode) {
                         return true;
                     },
-                    onDragOver: function(node, sourceNode, hitMode){
-                        if(node.isDescendantOf(sourceNode)){
+                    onDragOver: function (node, sourceNode, hitMode) {
+                        if (node.isDescendantOf(sourceNode)) {
                             return false;
                         }
                     },
-                    onDrop: function(node, sourceNode, hitMode, ui, draggable){
-                        if(node.isDescendantOf(sourceNode)){
+                    onDrop: function (node, sourceNode, hitMode, ui, draggable) {
+                        if (node.isDescendantOf(sourceNode)) {
                             return false;
                         }
-                        else{
-                        sendRequest("claro_resource_move", {"idChild": sourceNode.data.key, "idParent": node.data.key});
-                        sourceNode.move(node, hitMode);
+                        else {
+                            sendRequest("claro_resource_move", {"instanceId": sourceNode.data.key, "newParentId": node.data.key});
+                            sourceNode.move(node, hitMode);
                         }
                     },
-                    onDragLeave: function(node, sourceNode){
+                    onDragLeave: function (node, sourceNode) {
                     }
                 }
             }
 
-            $('#local_tree_button').live("click", function(event){
+            $('#local_tree_button').live("click", function (event) {
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 workspaceClickedId = document.getElementById("local_tree_button").getAttribute("data-userRepositoryId");
-                var customWorkspaceDynatree =
-                   $.extend(defaultsDynatree,
-                       {
-                           initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': document.getElementById("local_tree_button").getAttribute("data-userRepositoryId"), 'format':'json'})},
-                           onCreate: function(node, span){
-                               bindContextMenu(node);
-                           }
-                       });
+                var customWorkspaceDynatree = $.extend(defaultsDynatree, {
+                    initAjax: {
+                        url: Routing.generate('claro_resource_children', {'instanceId': 0})
+                    },
+                    onCreate: function (node, span) {
+                        bindContextMenu(node);
+                    }
+                });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
                 $('#cfp_dialog').hide();
@@ -160,7 +159,7 @@
                 $('#cfp_tree').show();
             });
 
-            $('#workspace_tree_button').click(function(){
+            $('#workspace_tree_button').click(function () {
                 appendRegisteredWorkspacesList();
                 $('#cfp_form').hide();
                 $('#cfp_tree').hide();
@@ -168,19 +167,19 @@
                 $('#cfp_data').show();
             });
 
-            $('.cfp_workspace_show_tree').live("click", function (event){
+            $('.cfp_workspace_show_tree').live("click", function (event) {
                 $('#cfp_tree').dynatree("destroy");
                 $('#cfp_tree').empty();
                 var idRepository = event.target.attributes[0].value;
                 workspaceClickedId = idRepository;
-                var customWorkspaceDynatree =
-                    $.extend(defaultsDynatree,
-                        {
-                            initAjax:{url:Routing.generate('claro_resource_node',{'instanceId':0, 'workspaceId': idRepository, 'format': 'json'})},
-                            onCreate: function(node, span){
-                               bindContextMenu(node);
-                            }
-                        });
+                var customWorkspaceDynatree = $.extend(defaultsDynatree, {
+                    initAjax: {
+                        url: Routing.generate('claro_resource_children', {'instanceId': 0})
+                    },
+                    onCreate: function (node, span) {
+                        bindContextMenu(node);
+                    }
+                });
                 $('#cfp_tree').dynatree(customWorkspaceDynatree);
                 $('#cfp_form').hide();
                 $('#cfp_data').hide();
@@ -188,14 +187,13 @@
                 $('#cfp_tree').show();
             });
 
-            $('#close_dialog_button').click(function(){});
+            $('#close_dialog_button').click(function () {});
             $(this).modal({
                 show:params.autoOpen,
                 backdrop:params.backdrop
             });
 
             return (this);
-
         });}
     });
 
@@ -428,32 +426,30 @@
 
     function submissionHandler(xhr, route, routeParameters, node)
     {
-        if(xhr.getResponseHeader('Content-Type') == 'application/json')
-        {
+        if (xhr.getResponseHeader('Content-Type') == 'application/json') {
             var JSONObject = JSON.parse(xhr.responseText);
             var instance = JSONObject[0];
 
             var newNode = {
-                    title:instance.title,
-                    key:instance.key,
-                    copy:instance.copy,
-                    instanceCount:instance.instanceCount,
-                    shareType:instance.shareType,
-                    resourceId:instance.resourceId
-                }
+                title: instance.title,
+                key: instance.key,
+                copy: instance.copy,
+                instanceCount: instance.instanceCount,
+                shareType: instance.shareType,
+                resourceId: instance.resourceId
+            }
 
-            if (instance.type == 'directory')
-            {
+            if (instance.type == 'directory') {
                 newNode.isFolder = true;
             }
 
-            if(node.data.key != newNode.key)
-            {
-                node.appendAjax({url:Routing.generate('claro_resource_node', {'instanceId':node.data.key, 'workspaceId': workspaceClickedId, 'format': 'json'})});
+            if (node.data.key != newNode.key) {
+                node.appendAjax({
+                    url: Routing.generate('claro_resource_children', {'instanceId': node.data.key})
+                });
                 node.expand();
             }
-            else
-            {
+            else {
                 node.data.title = newNode.title;
                 node.data.shareType = newNode.shareType;
                 node.render();
@@ -461,15 +457,14 @@
 
             $('#cfp_dialog').empty();
         }
-        else
-        {
+        else {
             $('#cfp_dialog').empty();
             $('#cfp_dialog').append(xhr.responseText);
-            $("#generic_form").submit(function(e){
+            $("#generic_form").submit(function (e) {
                 e.preventDefault();
                 sendForm(route, routeParameters, document.getElementById("generic_form"), node);
-                });
-            $("#resource_options_form").submit(function(e){
+            });
+            $("#resource_options_form").submit(function (e) {
                 e.preventDefault();
                 sendForm("claro_resource_edit_options",  {'instanceId': node.data.key}, document.getElementById("resource_options_form"), node);
             });
