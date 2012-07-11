@@ -252,7 +252,6 @@ class CommonChecker
         if (is_string($resourceFile) && file_exists($resourceFile)) {
             $resources = (array) $this->yamlParser->parse($resourceFile);
             $expectedKeys = array(
-                'name' => 'string',
                 'listable' => 'boolean',
                 'navigable' => 'boolean'
             );
