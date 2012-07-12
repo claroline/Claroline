@@ -35,7 +35,7 @@ claro_resource_move:
         expose: true
 
 claro_resource_custom:
-    pattern: /custom/{resourceType}/{action}/{instanceId}
+    pattern: /custom/{resourceType}/{action}/{resourceId}
     defaults: { _controller: ClarolineCoreBundle:Resource:custom }
     options:
         expose: true

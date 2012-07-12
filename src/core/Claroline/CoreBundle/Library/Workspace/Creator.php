@@ -44,13 +44,13 @@ class Creator
         $rootDir->setName($workspace->getName());
         $rootDir->setShareType(0);
         $rootDir->setCreator($manager);
+        $directoryType = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
+        $rootDir->setResourceType($directoryType);
         $root->setResource($rootDir);
         $root->setCopy(0);
         $root->setWorkspace($workspace);
         $root->setCreator($manager);
-        $directoryType = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
-        $rootDir->setResourceType($directoryType);
-
+        
         $this->entityManager->persist($rootDir);
         $this->entityManager->persist($root);
         $this->entityManager->flush();

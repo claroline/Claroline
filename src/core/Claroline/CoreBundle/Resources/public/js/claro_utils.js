@@ -36,7 +36,7 @@ utils.sendRequest = function (route, successHandler){
     var url = '';
     ('string' == typeof route)? url = route : url = Routing.generate(route.name, route.parameters);
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: url,
         cache: false,
         success: function(data, textStatus, jqXHR){successHandler(data, textStatus, jqXHR)},

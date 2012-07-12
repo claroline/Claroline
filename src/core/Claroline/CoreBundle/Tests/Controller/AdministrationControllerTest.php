@@ -61,7 +61,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['profile_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
         $crawler = $this->client->submit($form);
         $user = $this->getUser('tototata');
-        $repositoryWs = $user->getPersonnalWorkspace();
+        $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
         $this->assertEquals(6, $crawler->filter('.row_user')->count());
     }
