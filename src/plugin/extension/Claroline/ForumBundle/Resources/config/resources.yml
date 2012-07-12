@@ -1,24 +1,16 @@
-forum:
+Forum:
   class: Claroline\ForumBundle\Entity\Forum
-  name: Forum
-  manager_service_id: claroline.forum.manager
-  controller: Forum
   listable: true
   navigable: false
-  vendor: Claroline
   actions:
     open: false
 
-subject:
+Subject:
   class: Claroline\ForumBundle\Entity\Subject
-  name : Subject
   listable: false
   navigable: false
-  vendor: Claroline
 
-message:
+Message:
   class: Claroline\ForumBundle\Entity\Message
-  name: Message
   listable: false
   navigable: false
-  vendor: Claroline

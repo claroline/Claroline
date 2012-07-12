@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
-class DesktopSecurityTest extends FunctionalTestCase
+class DashboardSecurityTest extends FunctionalTestCase
 {
     protected function setUp()
     {
@@ -13,16 +13,16 @@ class DesktopSecurityTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    public function testDesktopSectionRequiresAuthenticatedUser()
+    public function testDashboardSectionRequiresAuthenticatedUser()
     {
-        $crawler = $this->client->request('GET', '/desktop');
+        $crawler = $this->client->request('GET', '/dashboard');
         $this->assertTrue($crawler->filter('#login_form')->count() > 0);
     }
 
-    public function testAccessToDesktopSectionIsAllowedToSimpleUsers()
+    public function testAccessToDashboardSectionIsAllowedToSimpleUsers()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', '/desktop');
-        $this->assertTrue($crawler->filter('#desktop.section')->count() > 0);
+        $crawler = $this->client->request('GET', '/dashboard');
+        $this->assertTrue($crawler->filter('#dashboard')->count() > 0);
     }
 }

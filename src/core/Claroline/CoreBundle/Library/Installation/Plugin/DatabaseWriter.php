@@ -67,8 +67,29 @@ class DatabaseWriter
     public function delete($pluginFQCN)
     {
         $plugin = $this->getPluginEntity($pluginFQCN);
-        // Complete deletion of all plugin db dependencies
-        // is made via cascade mechanism
+
+        // code below is for "re-parenting" the resources which depend on one
+        // of the resource types the plugin might have declared
+        // TODO : this should be covered by a test
+        $resourceTypes = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findByPlugin($plugin->getGeneratedId());
+
+        foreach ($resourceTypes as $resourceType) {
+            if (null !== $resourceType) {
+                if (null !== $parentType = $resourceType->getParent()) {
+                    $resources = $this->em
+                        ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                        ->findByResourceType($resourceType->getId());
+
+                    foreach ($resources as $resource) {
+                        $resource->setResourceType($parentType);
+                    }
+                }
+            }
+        }
+
+        // deletion of other plugin db dependencies is made via a cascade mechanism
         $this->em->remove($plugin);
         $this->em->flush();
     }
@@ -95,8 +116,8 @@ class DatabaseWriter
     private function getPluginEntity($pluginFQCN)
     {
         return $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Plugin')
-                ->findOneByBundleFQCN($pluginFQCN);
+            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+            ->findOneByBundleFQCN($pluginFQCN);
     }
 
     private function persistCustomResourceTypes(ClarolinePlugin $plugin, Plugin $pluginEntity)
@@ -106,29 +127,29 @@ class DatabaseWriter
         if (is_string($resourceFile) && file_exists($resourceFile)) {
             $resources = (array) $this->yamlParser->parse($resourceFile);
 
-            foreach ($resources as $resource) {
+            foreach ($resources as $name => $properties) {
                 $resourceType = new ResourceType();
 
-                if (isset($resource['class'])) {
-                    $resourceType->setClass($resource['class']);
+                if (isset($properties['class'])) {
+                    $resourceType->setClass($properties['class']);
                 }
-                if (isset($resource['extends'])) {
-                    //resource Type ex
-                    $resourceExtended = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $resource['extends']));
+                if (isset($properties['extends'])) {
+                    $resourceExtended = $this->em
+                        ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                        ->findOneBy(array('type' => $properties['extends']));
                     $resourceType->setParent($resourceExtended);
                 }
 
-                $resourceType->setType($resource['name']);
-                $resourceType->setListable($resource['listable']);
-                $resourceType->setNavigable($resource['navigable']);
+                $resourceType->setType($name);
+                $resourceType->setListable($properties['listable']);
+                $resourceType->setNavigable($properties['navigable']);
                 $resourceType->setPlugin($pluginEntity);
                 $this->em->persist($resourceType);
 
-                if (isset($resource['actions']))
-                {
-                    $actions = $resource['actions'];
-                    foreach($actions as $key => $action)
-                    {
+                if (isset($properties['actions'])) {
+                    $actions = $properties['actions'];
+
+                    foreach ($actions as $key => $action) {
                         $rtca = new ResourceTypeCustomAction();
                         $rtca->setAsync($action);
                         $rtca->setAction($key);

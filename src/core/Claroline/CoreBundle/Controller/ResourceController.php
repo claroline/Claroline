@@ -342,9 +342,11 @@ class ResourceController extends Controller
             $instanceCopy = $this->createReference($instance);
             $instanceCopy->setParent($parent);
             $children = $instance->getChildren();
+
             foreach ($children as $child) {
                 $this->addToDirectoryByReference($child, $instanceCopy);
             }
+
             $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
         }
     }
@@ -355,9 +357,11 @@ class ResourceController extends Controller
             $instanceCopy = $this->createCopy($instance);
             $instanceCopy->setParent($parent);
             $children = $instance->getChildren();
+
             foreach ($children as $child) {
                 $this->addToDirectoryByCopy($child, $instanceCopy);
             }
+
             $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
         }
     }
@@ -381,8 +385,8 @@ class ResourceController extends Controller
         }
         else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
-            $resourceType = strtolower(str_replace(' ', '_', $resourceInstance->getResourceType()->getType()));
-            $this->get('event_dispatcher')->dispatch("copy_{$resourceType}", $event);
+            $eventName = $this->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
+            $this->get('event_dispatcher')->dispatch($eventName, $event);
             $resourceCopy = $event->getCopy();
             $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($resourceInstance->getResourceType());
@@ -390,7 +394,7 @@ class ResourceController extends Controller
         }
         $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $em->flush();
 
         return $ric;
     }

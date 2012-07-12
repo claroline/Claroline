@@ -19,8 +19,7 @@ class Installer
         Validator $validator,
         Migrator $migrator,
         Recorder $recorder,
-        KernelInterface $kernel,
-        EntityManager $em
+        KernelInterface $kernel
     )
     {
         $this->loader = $loader;
@@ -28,7 +27,6 @@ class Installer
         $this->migrator = $migrator;
         $this->recorder = $recorder;
         $this->kernel = $kernel;
-        $this->em = $em;
     }
 
     public function setLoader(Loader $loader)
@@ -64,7 +62,6 @@ class Installer
 
     public function uninstall($pluginFQCN)
     {
-        $this->updateOnRemove($pluginFQCN);
         $this->checkRegistrationStatus($pluginFQCN, true);
         $plugin = $this->loader->load($pluginFQCN);
         $this->recorder->unregister($plugin);
@@ -88,21 +85,5 @@ class Installer
                 InstallationException::UNEXPECTED_REGISTRATION_STATUS
             );
         }
-    }
-
-    private function updateOnRemove($pluginFQCN)
-    {
-        $plugin = $this->em->getRepository('Claroline\CoreBundle\Entity\Plugin')->findOneBy(array('bundleFQCN' => $pluginFQCN));
-        $resourceType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('plugin' => $plugin->getGeneratedId()));
-        $parentType = $resourceType->getParent();
-        $resources = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findBy(array('resourceType' => $resourceType->getId()));
-
-        if (null != $resources) {
-            foreach ($resources as $resource) {
-                $resource->setResourceType($parentType);
-            }
-        }
-
-        $this->em->flush();
     }
 }
