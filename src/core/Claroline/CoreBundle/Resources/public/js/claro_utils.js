@@ -48,7 +48,7 @@
                 xhr.status == 403 ?
                     utils.ajaxAuthenticationErrorHandler(function () {
                         'function' == typeof successHandler ?
-                            sendRequest(route, successHandler) :
+                            utils.sendRequest(route, successHandler) :
                             window.location.reload();
                     }) :
                     alert('error');
