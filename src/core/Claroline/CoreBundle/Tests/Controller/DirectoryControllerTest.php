@@ -16,7 +16,7 @@ class DirectoryControllerTest extends FunctionalTestCase
     /** @var string */
     private $upDir;
 
-    /** @var integer */
+    /** @var $ResourceInstance */
     private $pwr;
 
     public function setUp()
@@ -32,7 +32,7 @@ class DirectoryControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getWSListableRootResource($this->getFixtureReference('user/user')->getPersonnalWorkspace());
+            ->getWSListableRootResource($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function tearDown()
@@ -69,7 +69,6 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($dir));
     }
 
-
     public function testUserCanRemoveDirectoryAndItsContent()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -98,20 +97,6 @@ class DirectoryControllerTest extends FunctionalTestCase
                 unlink($file->getPathname());
             }
         }
-    }
-
-    private function getUploadedFiles()
-    {
-        $iterator = new \DirectoryIterator($this->upDir);
-        $uploadedFiles = array();
-
-        foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder') {
-                $uploadedFiles[] = $file->getFilename();
-            }
-        }
-
-        return $uploadedFiles;
     }
 
     private function addResource($object, $parentId, $resourceType)

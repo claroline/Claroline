@@ -30,7 +30,7 @@
         "items": {
             "download": {
                 "name": "download",
-                "route": "{{ path('claro_resource_custom', {'resourceType': 'file', 'action': 'download', 'instanceId': '_instanceId'}) }}",
+                "route": "{{ path('claro_resource_custom', {'resourceType': 'file', 'action': 'download', 'resourceId': '_resourceId'}) }}",
                 "async": false
             },
             "delete": {
@@ -49,7 +49,7 @@
         "items": {
             "open" : {
                 "name": "open",
-                "route": "{{ path('claro_resource_custom', {'resourceType': 'text', 'action': 'open', 'instanceId': '_instanceId'}) }}",
+                "route": "{{ path('claro_resource_custom', {'resourceType': 'text', 'action': 'open', 'resourceId': '_resourceId'}) }}",
                 "async": false
             },
             "properties": {
@@ -75,7 +75,7 @@
             {% for customAction in pluginResourceType.getCustomActions() %}
             , "{{ customAction.getAction() }}": {
                 "name": "{{ customAction.getAction() }}",
-                "route": "{{ path('claro_resource_custom', {'resourceType': pluginResourceType.getType(), 'action': customAction.getAction(), 'instanceId': '_instanceId'}) }}",
+                "route": "{{ path('claro_resource_custom', {'resourceType': pluginResourceType.getType(), 'action': customAction.getAction(), 'resourceId': '_resourceId'}) }}",
                 "async": {{ customAction.isAsync() }}
             }
             {% endfor %}

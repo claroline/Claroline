@@ -450,7 +450,7 @@ class WorkspaceController extends Controller
      */
     public function userWorkspaceIdAction()
     {
-        $id = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();
+        $id = $this->get('security.context')->getToken()->getUser()->getPersonalWorkspace()->getId();
 
         return new Response($id);
     }

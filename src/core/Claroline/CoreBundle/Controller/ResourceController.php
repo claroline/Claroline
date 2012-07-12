@@ -188,13 +188,10 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function customAction($resourceType, $action, $instanceId)
+    public function customAction($resourceType, $action, $resourceId)
     {
-        $instance = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->find($instanceId);
         $eventName = $this->normalizeEventName($action, $resourceType);
-        $event = new CustomActionResourceEvent($instance->getResource()->getId());
+        $event = new CustomActionResourceEvent($resourceId);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {

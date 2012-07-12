@@ -61,7 +61,7 @@ class RegistrationControllerTest extends FunctionalTestCase
         $this->configHandler->setParameter('allow_self_registration', true);
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $user = $this->getUser('bdoe');
-        $repositoryWs = $user->getPersonnalWorkspace();
+        $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
     }
 

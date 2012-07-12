@@ -55,7 +55,7 @@ class TextListener extends ContainerAware
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:text:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:resource_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -64,7 +64,7 @@ class TextListener extends ContainerAware
         $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
-    
+
     public function onOpen(CustomActionResourceEvent $event)
     {
         $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($event->getResourceId());
