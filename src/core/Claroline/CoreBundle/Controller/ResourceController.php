@@ -283,8 +283,8 @@ class ResourceController extends Controller
         $repo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findAll();
-        $pluginResourceTypes = $repo->findPluginResourceTypes();
+        $resourceTypes = $repo->findBy(array('isListable' => 1));
+        $pluginResourceTypes = $repo->findListablePluginResourceTypes();
 
         return $this->render(
             'ClarolineCoreBundle:Resource:resource_menus.json.twig',
