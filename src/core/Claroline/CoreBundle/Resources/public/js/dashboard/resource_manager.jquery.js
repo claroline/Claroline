@@ -120,6 +120,7 @@ $(function(){
 
                     function dropNode(node, sourceNode, hitMode)
                     {
+                        console.debug(node);
                         $('#ct_form').empty();
                         $('#ct_form').append(moveForm);
                         $('#move_resource_form_submit').click(function (e) {
@@ -153,7 +154,9 @@ $(function(){
                                     copy: sourceNode.data.copy,
                                     instanceCount: sourceNode.data.instanceCount,
                                     shareType: sourceNode.data.shareType,
-                                    resourceId: sourceNode.data.resourceId
+                                    resourceId: sourceNode.data.resourceId,
+                                    isFolder: sourceNode.data.isFolder,
+                                    isLazy: true
                                 }
                                 node.addChild(newNode);
                                 $('#ct_form').empty();
