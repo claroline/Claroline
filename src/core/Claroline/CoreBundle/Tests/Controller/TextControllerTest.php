@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\Entity\Resource\Text;
 
-class TextManagerTest extends FunctionalTestCase
+class TextControllerTest extends FunctionalTestCase
 {
     protected function setUp()
     {
