@@ -4,15 +4,14 @@ $(function(){
     var sourceId = 0;
     var params = {
         mode: 'picker',
-        resourcePickedHandler: function(oForm, id){
-            var option =  ClaroUtils.getCheckedValue(oForm["options"]);
+        resourcePickedHandler: function(id){
             $('#bootstrap-modal').modal("hide");
             var route = {
                 'name': 'claro_resource_add_workspace',
                 'parameters': {
                     'instanceId': id,
                     'instanceDestinationId': sourceId,
-                    'options': option
+                    'options': 'ref'
                 }
             }
             ClaroUtils.sendRequest(route, function(data){
@@ -85,7 +84,9 @@ $(function(){
             },
             onCreate: function (node, span) {
                 if (node.data.hasOwnProperty('type')) {
-                    bindContextMenuTree(node);
+                    if(undefined != jsonmenu[node.data.type]){
+                        bindContextMenuTree(node);
+                    }
                 }
             },
             onDblClick: function (node) {

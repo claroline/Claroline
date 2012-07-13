@@ -7,21 +7,29 @@ $(function(){
         claroResourceManager: function(options){
             var params = $.extend({
                 mode: 'manager',
-                resourcePickedHandler: function (form, instanceId){
+                resourcePickedHandler: function (instanceId){
                     alert("DEFAULT SUBMIT HANDLER MUST BE CHANGED")
                 }
             }, options);
             return this.each(function(){
-
                 createDivTree($(this));
                 var moveForm = Twig.render(move_resource_form);
-
                 $.ajax({
                     type: 'GET',
                     url: Routing.generate('claro_resource_menus'),
                     cache: false,
                     success: function (data) {
                         jsonmenu = JSON.parse(data);
+                        if('picker' == params.mode){
+//                            console.debug(jsonmenu);
+                            for (var menu in jsonmenu) {
+                                delete jsonmenu[menu].items['delete'];
+                                delete jsonmenu[menu].items['properties'];
+                            }
+                            delete jsonmenu['directory'];
+
+                        }
+                        console.debug(jsonmenu);
                     },
                     complete: function () {
                       createTree('#source_tree');
@@ -61,21 +69,14 @@ $(function(){
                         },
                         onCreate: function (node, span) {
                             if (node.data.hasOwnProperty('type')) {
-                                bindContextMenuTree(node);
+                                if(undefined != jsonmenu[node.data.type]){
+                                    bindContextMenuTree(node);
+                                }
                             }
                         },
                         onDblClick: function (node) {
                             if (params.mode == 'picker'){
-                                $('#ct_form').empty();
-                                $('#ct_form').append(moveForm);
-                                document.getElementById('resource_name_value').value=node.data.title;
-                                document.getElementById('resource_name_value').setAttribute('data-instanceId', node.data.key);
-                                document.getElementById('resource_name_value').setAttribute('readonly', 'readonly');
-                                $('#move_resource_form').submit(function (e) {
-                                    e.preventDefault();
-                                    params.resourcePickedHandler(document.forms['move_resource_form'], document.getElementById('resource_name_value').getAttribute('data-instanceId'));
-                                    $('#ct_form').empty();
-                                });
+                                params.resourcePickedHandler(node.data.key);
                             } else {
                                 node.expand();
                                 node.activate();
@@ -211,7 +212,6 @@ $(function(){
                                         node.data.shareType = newNode.shareType;
                                         node.render();
                                     }
-
                                     $('#ct_tree').show();
                                     $('#ct_form').empty();
                                 } else {
@@ -281,7 +281,6 @@ $(function(){
                         }
                     }
                 }
-
                 return(this);
             })
         }
