@@ -224,10 +224,25 @@ class ResourceController extends Controller
             $roots[] = $root;
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resources.json.twig',
-            array('resources' => $roots)
-        );
+        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig',array('resources' => $roots));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns a json representation of the root resource of a workspace
+     *
+     * @param integer $workspaceId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function rootAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
+        $roots = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('parent' => null, 'workspace' => $workspace->getId()));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => $roots));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 

@@ -177,7 +177,6 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $authorization = false;
-        $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         foreach ($workspace->getWorkspaceRoles() as $role) {
             $this->get('security.context')->isGranted($role->getName());
@@ -190,13 +189,9 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $resourcesInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getWSListableRootResource($workspace);
-
         return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array(
             'workspace' => $workspace,
-            'resourcesType' => $resourcesType,
-            'resources' => $resourcesInstance,
-            'wsContextId' => $workspace->getId())
+            )
         );
     }
 
@@ -467,7 +462,7 @@ class WorkspaceController extends Controller
 
         return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
     }
-    
+
     /**
      * Renders the workspace properties page
      */
