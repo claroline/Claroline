@@ -52,8 +52,8 @@ class PlatformConfigurationHandler
     public function getPlatformConfig()
     {
         $platformConfig = new PlatformConfiguration(
-                $this->getParameter('allow_self_registration'),
-                $this->getParameter('locale_language')
+            $this->getParameter('allow_self_registration'),
+            $this->getParameter('locale_language')
         );
 
         return $platformConfig;

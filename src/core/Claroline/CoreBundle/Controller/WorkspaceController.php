@@ -40,7 +40,8 @@ class WorkspaceController extends Controller
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
 
         return $this->render(
-                'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
+            'ClarolineCoreBundle:Workspace:list.html.twig',
+            array('workspaces' => $workspaces)
         );
     }
 
@@ -74,11 +75,15 @@ class WorkspaceController extends Controller
 
         if ('page' == $format) {
             return $this->render(
-                    'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
+                'ClarolineCoreBundle:Workspace:list.html.twig',
+                array('workspaces' => $workspaces)
             );
         }
 
-        return $this->render("ClarolineCoreBundle:Workspace:list.{$format}.twig", array('workspaces' => $workspaces));
+        return $this->render(
+            "ClarolineCoreBundle:Workspace:list.{$format}.twig",
+            array('workspaces' => $workspaces)
+        );
     }
 
     /**
@@ -95,7 +100,8 @@ class WorkspaceController extends Controller
         $form = $this->get('form.factory')->create(new WorkspaceType());
 
         return $this->render(
-                'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Workspace:form.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -132,7 +138,8 @@ class WorkspaceController extends Controller
         }
 
         return $this->render(
-                'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Workspace:form.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -467,7 +474,7 @@ class WorkspaceController extends Controller
 
         return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
     }
-    
+
     /**
      * Renders the workspace properties page
      */
