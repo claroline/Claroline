@@ -2,6 +2,10 @@
 $(function(){
     var wsjsonmenu = {};
     var sourceId = 0;
+    var displayMode = 'classic';
+    var rootws = {};
+    var rootTypes = [];
+    var children = {};
     var params = {
         mode: 'picker',
         resourcePickedHandler: function(id){
@@ -35,102 +39,82 @@ $(function(){
         }
     };
 
-    picker = $('#modal-body').claroResourceManager(params)
+    $('#modal-body').claroResourceManager(params)
     createDivTree($('#currentWorkspaceTree'));
-
-    $.ajax({
-        type: 'GET',
-        url: Routing.generate('claro_resource_menus'),
-        cache: false,
-        success: function (data) {
-            wsjsonmenu = JSON.parse(data);
-            wsjsonmenu.directory.items.add = {'name': 'add'};
-        },
-        complete: function () {
-            createTree('#ws_tree');
-        }
-    });
 
     function createDivTree(div) {
         var content = ""
         +"<div id='ws_form'></div><br>"
-        +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
-        +"<div id='ws_tree'>CONTINENT</div>";
+        +"<div id='ws_mode'><button id='ws_switch_mode'>switch mode</button></div><br>"
+        +"<div id='ws_tree'></div>";
         div.append(content);
+        $('#ws_switch_mode').click(function(){
+            if (displayMode == 'classic'){
+               displayMode = 'linker';
+               children = rootTypes;
+            } else {
+               displayMode = 'classic';
+               children = rootws;
+            }
+            $('#ws_tree').dynatree('destroy').empty();
+            createTree(children)
+        });
     }
 
-    function createTree(treeId)
-    {
-        $(treeId).dynatree({
-            title: 'myTree',
-            initAjax:{
-                url: Routing.generate('claro_resource_root', {'workspaceId': document.getElementById('jsdata').getAttribute('data-ws-id')})
-            },
-            clickFolderMode: 1,
-            onLazyRead: function (node) {
-                node.appendAjax({
-                    url: Routing.generate('claro_resource_children', {
-                        'instanceId': node.data.key
-                    }),
-                    error: function (node, XMLHttpRequest, textStatus, errorThrown) {
-                        if (XMLHttpRequest.status == 403) {
-                            ClaroUtils.ajaxAuthenticationErrorHandler(function () {
-                                window.location.reload();
-                            });
-                        } else {
-                            alert('this node could not be loaded');
-                        }
-                    }
-                });
-            },
-            onCreate: function (node, span) {
-                if (node.data.hasOwnProperty('type')) {
-                    if(undefined != wsjsonmenu[node.data.type]){
-                        bindContextMenuTree(node);
-                    }
-                }
-            },
-            onDblClick: function (node) {
-                    node.expand();
-                    node.activate();
-            },
-            onCustomRender: function (node) {
-                var html = "<a id='ws_node_"+node.data.key+"' class='ws_dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
-                html += "<span class='ws_dynatree-custom-claro-menu' id='ws_dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
-                return html;
-            },
-            dnd: {
-                onDragStart: function (node) {
-                    return true;
-                },
-                onDragStop: function (node) {
-                },
-                autoExpandMS: 1000,
-                preventVoidMoves: true,
-                onDragEnter: function (node, sourceNode) {
-                    return true;
-                },
-                onDragOver: function (node, sourceNode, hitMode) {
-                    if (node.isDescendantOf(sourceNode)) {
-                        return false;
-                    }
-                },
-                onDrop: function (node, sourceNode, hitMode, ui, draggable) {
-                    if (node.isDescendantOf(sourceNode)) {
-                        return false;
-                    }
-                    else {
-                        dropNode(node, sourceNode, hitMode);
-                    }
-                }
-            }
-        });
-
-        function dropNode(node, sourceNode, hitMode)
-        {
-            sourceNode.move(node, hitMode);
+    ClaroUtils.sendRequest(
+        Routing.generate('claro_resource_menus'),
+        function(data){
+            wsjsonmenu = JSON.parse(data);
+            wsjsonmenu.directory.items.add = {
+                'name': 'add'
+            };
+        },
+        function(){
+            ClaroUtils.sendRequest(Routing.generate('claro_resource_root', {
+                'workspaceId': document.getElementById('jsdata').getAttribute('data-ws-id')
+                }),
+            function(data){
+                rootws = eval(data);
+                children = rootws;
+                initLinker();
+                createTree(children)
+                })
         }
+        )
 
+    var onLazyReadUrl = function(displayMode, node){
+        var url = '';
+        (displayMode == 'classic') ? url = Routing.generate('claro_resource_children', {
+            'instanceId': node.data.key
+            })
+        : url = Routing.generate('claro_resources_list', {
+            'resourceTypeId':node.data.id,
+            'rootId': rootws[0].key
+            } );
+        return url;
+    }
+
+    var initLinker = function(){
+        ClaroUtils.sendRequest(Routing.generate('claro_resource_types'), function(data){
+            //JSON.parse not working: why ?
+            var resourceTypes = eval(data);
+            for(var i in resourceTypes){
+                var node = {
+                    "id": resourceTypes[i].id,
+                    "key": resourceTypes[i].type,
+                    "title": resourceTypes[i].type,
+                    "shareType": 1,
+                    "type": "resourceType",
+                    "isFolder": true,
+                    "isLazy": true
+                }
+                rootTypes.push(node);
+            }
+        })
+    };
+
+    function createTree(initChildren)
+    {
         var bindContextMenuTree = function(node)
         {
             var type = node.data.type;
@@ -161,7 +145,6 @@ $(function(){
 
             function executeMenuActions(obj, node)
             {
-                console.debug(obj);
                 var submissionHandler = function(xhr){
                     if (xhr.getResponseHeader('Content-Type') == 'application/json') {
                         var JSONObject = JSON.parse(xhr.responseText);
@@ -255,6 +238,72 @@ $(function(){
                     }
                 }
             }
+        }
+
+        $('#ws_tree').dynatree({
+            title: 'myTree',
+            children: initChildren,
+            clickFolderMode: 1,
+            onLazyRead: function (node) {
+                node.appendAjax({
+                    url: onLazyReadUrl(displayMode, node),
+                    error: function (node, XMLHttpRequest, textStatus, errorThrown) {
+                        if (XMLHttpRequest.status == 403) {
+                            ClaroUtils.ajaxAuthenticationErrorHandler(function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            alert('this node could not be loaded');
+                        }
+                    }
+                });
+            },
+            onCreate: function (node, span) {
+                if (node.data.hasOwnProperty('type')) {
+                    if(undefined != wsjsonmenu[node.data.type]){
+                        bindContextMenuTree(node);
+                    }
+                }
+            },
+            onDblClick: function (node) {
+                    node.expand();
+                    node.activate();
+            },
+            onCustomRender: function (node) {
+                var html = "<a id='ws_node_"+node.data.key+"' class='ws_dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
+                html += "<span class='ws_dynatree-custom-claro-menu' id='ws_dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
+                return html;
+            },
+            dnd: {
+                onDragStart: function (node) {
+                    return true;
+                },
+                onDragStop: function (node) {
+                },
+                autoExpandMS: 1000,
+                preventVoidMoves: true,
+                onDragEnter: function (node, sourceNode) {
+                    return true;
+                },
+                onDragOver: function (node, sourceNode, hitMode) {
+                    if (node.isDescendantOf(sourceNode)) {
+                        return false;
+                    }
+                },
+                onDrop: function (node, sourceNode, hitMode, ui, draggable) {
+                    if (node.isDescendantOf(sourceNode)) {
+                        return false;
+                    }
+                    else {
+                        dropNode(node, sourceNode, hitMode);
+                    }
+                }
+            }
+        });
+
+        function dropNode(node, sourceNode, hitMode)
+        {
+            sourceNode.move(node, hitMode);
         }
     }
 });
