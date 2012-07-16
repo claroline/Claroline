@@ -9,11 +9,11 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
-use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 
 class ResourceController extends Controller
 {

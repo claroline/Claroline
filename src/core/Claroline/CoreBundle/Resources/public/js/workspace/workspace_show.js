@@ -84,7 +84,7 @@ $(function(){
             },
             onCreate: function (node, span) {
                 if (node.data.hasOwnProperty('type')) {
-                    if(undefined != jsonmenu[node.data.type]){
+                    if(undefined != wsjsonmenu[node.data.type]){
                         bindContextMenuTree(node);
                     }
                 }

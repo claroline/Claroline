@@ -5,11 +5,11 @@ namespace Claroline\ForumBundle\Listener;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Library\Resource\ResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\ResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumType;
 
