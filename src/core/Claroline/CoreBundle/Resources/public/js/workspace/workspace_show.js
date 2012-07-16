@@ -18,6 +18,7 @@ $(function(){
                     'options': 'ref'
                 }
             }
+
             ClaroUtils.sendRequest(route, function(data){
                 var node = $('#ws_tree').dynatree('getTree').selectKey(sourceId);
                 node.appendAjax({
@@ -200,7 +201,7 @@ $(function(){
 
                     var executeRequest = function () {
                         ClaroUtils.sendRequest(route, function (data) {
-                            $('#ws_form').append(data).find('form').submit(function (e) {
+                            $('#ws_form').empty().append(data).find('form').submit(function (e) {
                                 e.preventDefault();
                                 var action = $('#ws_form').find('form').attr('action');
                                 action = action.replace('_instanceId', node.data.key);
@@ -276,7 +277,9 @@ $(function(){
             },
             dnd: {
                 onDragStart: function (node) {
-                    return true;
+                    var bool = true;
+                    (displayMode == 'classic') ? bool = true: bool = false;
+                    return bool;
                 },
                 onDragStop: function (node) {
                 },

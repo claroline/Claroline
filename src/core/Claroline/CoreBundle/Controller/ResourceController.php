@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -114,6 +115,11 @@ class ResourceController extends Controller
             ->getEntityManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        if($user != $resource->getCreator()){
+            throw new AccessDeniedHttpException('access denied');
+        }
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
@@ -135,6 +141,10 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
             ->find($instanceId);
+        $user = $this->get('security.context')->getToken()->getUser();
+        if($user != $resourceInstance->getResource()->getCreator()){
+            throw new AccessDeniedHttpException('access denied');
+        }
         $form = $this->createForm(new ResourcePropertiesType(), $resourceInstance->getResource());
         $form->bindRequest($request);
 
@@ -285,7 +295,7 @@ class ResourceController extends Controller
     public function resourceTypesAction()
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findAll();
+        $resourceTypes = $repo->findResourceTypeWithoutDirectory();
 
        $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
@@ -364,6 +374,7 @@ class ResourceController extends Controller
         }
 
         $em->flush();
+        var_dump('hey');
         return new Response('success');
     }
 

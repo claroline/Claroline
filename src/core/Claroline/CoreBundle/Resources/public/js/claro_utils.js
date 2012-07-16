@@ -5,6 +5,13 @@
         backdrop: false
     });
 
+    $('#bootstrap-modal').on('hidden', function(){
+        /*$('#modal-login').empty();
+        $('#modal-body').show();*/
+        //the page must be reloaded or it'll break dynatree
+        window.location.reload();
+    })
+
     var utils = this.ClaroUtils = {};
 
     utils.ajaxAuthenticationErrorHandler = function (callBack) {
@@ -13,7 +20,8 @@
             url: Routing.generate('claro_security_login'),
             cache: false,
             success: function (data) {
-                $('#modal-body').append(data);
+                $('#modal-body').hide();
+                $('#modal-login').append(data);
                 $('#bootstrap-modal').modal('show');
                 $('#login_form').submit(function (e) {
                     e.preventDefault();
