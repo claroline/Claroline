@@ -3,7 +3,7 @@
  */
 $(function(){
     var jsonmenu = {};
-    var roots = {}
+    var roots = {};
     $.fn.extend({
         claroResourceManager: function(options){
             var params = $.extend({
@@ -36,12 +36,11 @@ $(function(){
                         )
                     }
                 )
-
                 function createDivTree(div) {
                     var content = ""
                     +"<div id='ct_form'></div><br>"
                     +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
-                    +"<div id='source_tree'>CONTINENT</div>";
+                    +"<div id='source_tree'></div>";
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
@@ -51,8 +50,7 @@ $(function(){
                 }
 
                 function createTree(treeId)
-{
-
+                {
                     var initChildren = function (displayMode){
                         var children = {};
                         (displayMode == 'classic') ? children = roots : children = [];
@@ -61,7 +59,6 @@ $(function(){
 
                     var onLazyReadUrl = function(displayMode, node){
                         var url = '';
-                        console.debug(node);
                         (displayMode == 'classic') ? url = Routing.generate('claro_resource_children', {'instanceId': node.data.key})
                         : url = Routing.generate('claro_resources_list', {'resourceTypeId':node.parent.data.id, 'rootId':node.data.key} );
                         return url;
@@ -137,7 +134,6 @@ $(function(){
                         var menuDefaultOptions = {
                             selector: '#node_'+ node.data.key,
                             callback: function (key, options) {
-                                console.debug("jquerybind");
                                 findMenuObject(jsonmenu[type], node, key);
                             }
                         }
