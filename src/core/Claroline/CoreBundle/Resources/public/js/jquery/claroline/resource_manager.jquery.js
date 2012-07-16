@@ -44,7 +44,8 @@ $(function(){
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
-                        $('#source_tree').dynatree('destroy').empty();
+                        $('#source_tree').dynatree('destroy');
+                        $('#source_tree').empty();
                         createTree('#source_tree');
                     });
                 }
@@ -204,7 +205,7 @@ $(function(){
                                 var executeRequest = function () {
                                     ClaroUtils.sendRequest(route, function (data) {
                                         $('#ct_tree').hide();
-                                        $('#ct_form').append(data).find('form').submit(function (e) {
+                                        $('#ct_form').empty().append(data).find('form').submit(function (e) {
                                             e.preventDefault();
                                             var action = $('#ct_form').find('form').attr('action');
                                             action = action.replace('_instanceId', node.data.key);
@@ -277,8 +278,8 @@ $(function(){
                             }
                         },
                         onDblClick: function (node) {
-                            if (params.mode == 'picker'){
-                                params.resourcePickedHandler(node.data.key);
+                            if (params.mode == 'picker' && node.data.type != 'resourceType'){
+                                (node.shareType == 0) ? alert("you can't share this resource"): params.resourcePickedHandler(node.data.key);
                             } else {
                                 node.expand();
                                 node.activate();
@@ -293,8 +294,6 @@ $(function(){
                             onDragStart: function (node) {
                                 if(params.mode == 'picker' || params.displayMode == 'linker'){
                                     return false;
-                                } else {
-                                    return true;
                                 }
                             },
                             onDragStop: function (node) {
@@ -314,6 +313,11 @@ $(function(){
                                     return false;
                                 }
                                 else {
+                                    if(node.data.shareType == 0){
+                                        alert('this resource is private');
+                                        return false;
+                                    }
+
                                     dropNode(node, sourceNode, hitMode);
                                 }
                             }
