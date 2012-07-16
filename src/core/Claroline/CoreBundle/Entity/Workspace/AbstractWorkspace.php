@@ -88,6 +88,11 @@ abstract class AbstractWorkspace
         return $this->id;
     }
 
+    public function setId($id)
+    {
+        $this->id = 0;
+    }
+
     public function getName()
     {
         return $this->name;

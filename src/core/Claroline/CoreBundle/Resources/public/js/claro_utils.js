@@ -33,7 +33,7 @@
     }
 
 
-    utils.sendRequest = function (route, successHandler) {
+    utils.sendRequest = function (route, successHandler, completeHandler) {
         var url = '';
         'string' == typeof route ? url = route : url = Routing.generate(route.name, route.parameters);
         $.ajax({
@@ -45,6 +45,7 @@
                     successHandler(data, textStatus, jqXHR);
                 }
             },
+            complete: completeHandler,
             error: function(xhr){
                 xhr.status == 403 ?
                     utils.ajaxAuthenticationErrorHandler(function () {

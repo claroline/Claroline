@@ -8,6 +8,7 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
@@ -258,6 +259,9 @@ class ResourceController extends Controller
      */
     public function childrenAction($instanceId)
     {
+        if (0 == $instanceId){
+            return new Response('[]');
+        }
         $repo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
@@ -266,6 +270,49 @@ class ResourceController extends Controller
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resources.json.twig',
             array('resources' => $resourceInstances)
+        );
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns a json representation of the resource types
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resourceTypesAction()
+    {
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceTypes = $repo->findAll();
+
+       $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:resource_types.json.twig',
+            array('resourceTypes' => $resourceTypes)
+        );
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns a json representation of the resources of a defined type in a defined directory
+     *
+     * @param type $resourceTypeId
+     * @param type $rootId
+     */
+    public function resourceListAction($resourceTypeId, $rootId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
+        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
+        $instances = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
+
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:resources.json.twig',
+            array('resources' => $instances)
         );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
