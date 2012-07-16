@@ -45,8 +45,7 @@ $(function(){
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
-                        $('#source_tree').dynatree('destroy');
-                        $('#source_tree').empty();
+                        $('#source_tree').dynatree('destroy').empty();
                         createTree('#source_tree');
                     });
                 }
@@ -91,8 +90,7 @@ $(function(){
 
                     function dropNode(node, sourceNode, hitMode)
                     {
-                        $('#ct_form').empty();
-                        $('#ct_form').append(moveForm);
+                        $('#ct_form').empty().append(moveForm);
                         $('#move_resource_form_submit').click(function (e) {
                             e.preventDefault();
                             var option = ClaroUtils.getCheckedValue(document.forms['move_resource_form']['options']);
@@ -187,9 +185,7 @@ $(function(){
                                     $('#ct_tree').show();
                                     $('#ct_form').empty();
                                 } else {
-                                    $('#ct_form').empty();
-                                    $('#ct_form').append(xhr.responseText);
-                                    $('#ct_form').find('form').submit(function (e) {
+                                    $('#ct_form').empty().append(xhr.responseText).find('form').submit(function (e) {
                                         e.preventDefault();
                                         var action = $('#ct_form').find('form').attr('action');
                                         action = action.replace('_instanceId', node.data.key);
@@ -212,8 +208,7 @@ $(function(){
                                 var executeRequest = function () {
                                     ClaroUtils.sendRequest(route, function (data) {
                                         $('#ct_tree').hide();
-                                        $('#ct_form').append(data);
-                                        $('#ct_form').find('form').submit(function (e) {
+                                        $('#ct_form').append(data).find('form').submit(function (e) {
                                             e.preventDefault();
                                             var action = $('#ct_form').find('form').attr('action');
                                             action = action.replace('_instanceId', node.data.key);
@@ -300,7 +295,7 @@ $(function(){
                         },
                         dnd: {
                             onDragStart: function (node) {
-                                if(params.mode == 'picker'){
+                                if(params.mode == 'picker' || params.displayMode == 'linker'){
                                     return false;
                                 } else {
                                     return true;

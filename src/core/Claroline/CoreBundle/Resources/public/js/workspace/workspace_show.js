@@ -54,6 +54,7 @@ $(function(){
     function createDivTree(div) {
         var content = ""
         +"<div id='ws_form'></div><br>"
+        +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
         +"<div id='ws_tree'>CONTINENT</div>";
         div.append(content);
     }
@@ -194,9 +195,7 @@ $(function(){
                         $('#ws_tree').show();
                         $('#ws_form').empty();
                     } else {
-                        $('#ws_form').empty();
-                        $('#ws_form').append(xhr.responseText);
-                        $('#ws_form').find('form').submit(function (e) {
+                        $('#ws_form').empty().append(xhr.responseText).find('form').submit(function (e) {
                             e.preventDefault();
                             var action = $('#ws_form').find('form').attr('action');
                             action = action.replace('_instanceId', node.data.key);
@@ -218,8 +217,7 @@ $(function(){
 
                     var executeRequest = function () {
                         ClaroUtils.sendRequest(route, function (data) {
-                            $('#ws_form').append(data);
-                            $('#ws_form').find('form').submit(function (e) {
+                            $('#ws_form').append(data).find('form').submit(function (e) {
                                 e.preventDefault();
                                 var action = $('#ws_form').find('form').attr('action');
                                 action = action.replace('_instanceId', node.data.key);
