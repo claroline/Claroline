@@ -117,9 +117,11 @@ class ResourceController extends Controller
             ->find($resourceId);
 
         $user = $this->get('security.context')->getToken()->getUser();
-        if($user != $resource->getCreator()){
+
+        if ($user != $resource->getCreator()) {
             throw new AccessDeniedHttpException('access denied');
         }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
@@ -142,9 +144,11 @@ class ResourceController extends Controller
         $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
             ->find($instanceId);
         $user = $this->get('security.context')->getToken()->getUser();
-        if($user != $resourceInstance->getResource()->getCreator()){
+
+        if ($user != $resourceInstance->getResource()->getCreator()) {
             throw new AccessDeniedHttpException('access denied');
         }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resourceInstance->getResource());
         $form->bindRequest($request);
 
@@ -235,7 +239,10 @@ class ResourceController extends Controller
             $roots[] = $root;
         }
 
-        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig',array('resources' => $roots));
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:resources.json.twig',
+            array('resources' => $roots)
+        );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -272,6 +279,7 @@ class ResourceController extends Controller
         if (0 == $instanceId){
             return new Response('[]');
         }
+
         $repo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
@@ -288,7 +296,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resource types
+     * Returns a json representation of the resource types.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -297,7 +305,7 @@ class ResourceController extends Controller
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceTypes = $repo->findResourceTypeWithoutDirectory();
 
-       $content = $this->renderView(
+        $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
             array('resourceTypes' => $resourceTypes)
         );
@@ -308,17 +316,19 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resources of a defined type in a defined directory
+     * Returns a json representation of the resources of a defined type in a defined directory.
      *
-     * @param type $resourceTypeId
-     * @param type $rootId
+     * @param integer $resourceTypeId
+     * @param integer $rootId
      */
     public function resourceListAction($resourceTypeId, $rootId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
-        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
-        $instances = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
+        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->find($resourceTypeId);
+        $instanceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $root = $instanceRepo->find($rootId);
+        $instances = $instanceRepo->getChildrenInstanceList($root, $resourceType);
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resources.json.twig',
@@ -374,7 +384,7 @@ class ResourceController extends Controller
         }
 
         $em->flush();
-        var_dump('hey');
+
         return new Response('success');
     }
 
@@ -455,8 +465,7 @@ class ResourceController extends Controller
             $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
             $resourceCopy->addResourceInstance($ric);
-        }
-        else {
+        } else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
             $eventName = $this->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
             $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -465,6 +474,7 @@ class ResourceController extends Controller
             $resourceCopy->setResourceType($resourceInstance->getResourceType());
             $resourceCopy->addResourceInstance($ric);
         }
+        
         $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
         $em->flush();
