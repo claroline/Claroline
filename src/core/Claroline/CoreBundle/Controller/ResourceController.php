@@ -379,13 +379,7 @@ class ResourceController extends Controller
 
         $em->flush();
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => (array)$copy)
-        );
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new Response('success');
     }
 
     private function normalizeEventName($prefix, $resourceType)
@@ -479,7 +473,6 @@ class ResourceController extends Controller
         }
         $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
-        $em->flush();
 
         return $ric;
     }

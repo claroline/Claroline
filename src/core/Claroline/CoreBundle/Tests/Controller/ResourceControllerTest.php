@@ -55,7 +55,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(count($rootDir), 1);
         $this->client->request('GET', "/resource/children/{$rootDir[0]->{'key'}}");
         $file = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(count($file), 1);
+        $this->assertEquals(count($file), 2);
         $this->assertEquals(count($this->getUploadedFiles()), 2);
     }
 
@@ -116,6 +116,9 @@ class ResourceControllerTest extends FunctionalTestCase
         return $obj[0];
     }
 
+    //DIR
+        //private child
+        //public child
     private function createTree($parentId)
     {
         $rootDir = $this->createDirectory($parentId, 'rootDir');
