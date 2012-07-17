@@ -188,12 +188,27 @@ abstract class AbstractResource
     }
 
     /**
-     * Gets the share type
+     * Returns the resource share type. If the first parameter is set to true,
+     * the type will be returned as a string, otherwise it will be returned
+     * as an integer.
      *
-     * @return integer
+     * @param boolean $asString
+     *
+     * @return integer|string
      */
-    public function getShareType()
+    public function getShareType($asString = false)
     {
+        if (true === $asString) {
+            switch ($this->shareType) {
+                case self::PRIVATE_RESOURCE:
+                    return 'private';
+                    break;
+                case self::PUBLIC_RESOURCE:
+                    return 'public';
+                    break;
+            }
+        }
+
         return $this->shareType;
     }
 
@@ -204,7 +219,7 @@ abstract class AbstractResource
      */
     public function setShareType($shareType)
     {
-        $this->shareType=$shareType;
+        $this->shareType = $shareType;
     }
 
     /**
@@ -287,16 +302,13 @@ abstract class AbstractResource
         return $this->mimeType;
     }
 
+    /**
+     * Returns the instances of the resource.
+     *
+     * @return ArrayCollection[ResourceInstance]
+     */
     public function getResourceInstances()
     {
         return $this->resourceInstances;
-    }
-
-    public function getStringShareType()
-    {
-        switch($this->shareType){
-            case self::PRIVATE_RESOURCE: return "private"; break;
-            case self::PUBLIC_RESOURCE: return "public"; break;
-        }
     }
 }
