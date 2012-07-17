@@ -31,11 +31,11 @@ $(function(){
                                 window.location.reload();
                             });
                         } else {
+                            console.debug(XMLHttpRequest);
                             alert('this node could not be loaded');
                         }
                     }
                 });
-                alert(data);
             });
         }
     };

@@ -9,7 +9,9 @@
         /*$('#modal-login').empty();
         $('#modal-body').show();*/
         //the page must be reloaded or it'll break dynatree
-        window.location.reload();
+        if ($('#modal-login').find('form').attr('id') == 'login_form'){
+            window.location.reload();
+        }
     })
 
     var utils = this.ClaroUtils = {};
@@ -53,7 +55,10 @@
                     successHandler(data, textStatus, jqXHR);
                 }
             },
-            complete: completeHandler,
+            complete: function(data){
+                if ('function' == typeof completeHandler){
+                    completeHandler(data)}
+            },
             error: function(xhr){
                 xhr.status == 403 ?
                     utils.ajaxAuthenticationErrorHandler(function () {
