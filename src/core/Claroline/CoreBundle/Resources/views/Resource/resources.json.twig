@@ -10,7 +10,7 @@
         "type": "{{ resource.getResource().getResourceType().getType() }}",
         "workspaceId": "{{ resource.getWorkspace().getId() }}",
         "tooltip":
-            "added by {{resource.getCreator().getUsername()}}\ncreated by {{resource.getResource().getCreator().getUsername()}}\nthis resource is {{resource.getResource().getStringShareType()}}"
+            "added by {{ resource.getCreator().getUsername() }}\ncreated by {{ resource.getResource().getCreator().getUsername() }}\nthis resource is {{ resource.getResource().getShareType(true) }}"
         {% if resource.getResourceType.getNavigable() == 1 %}
             ,"isFolder": true
             ,"isLazy": true
