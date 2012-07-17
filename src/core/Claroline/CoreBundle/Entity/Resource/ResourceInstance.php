@@ -294,13 +294,13 @@ class ResourceInstance
         return $this->copy;
     }
 
-    public function getLeft()
+    public function getLft()
     {
-        return $this->left;
+        return $this->lft;
     }
 
-    public function getRight()
+    public function getRgt()
     {
-        return $this->right;
+        return $this->rgt;
     }
 }
