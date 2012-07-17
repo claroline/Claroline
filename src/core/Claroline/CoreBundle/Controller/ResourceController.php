@@ -464,7 +464,6 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
         $ric->setCreator($user);
-        $ric->setCopy(false);
         $this->get('doctrine.orm.entity_manager')->flush();
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -483,7 +482,7 @@ class ResourceController extends Controller
             $resourceCopy->setResourceType($resourceInstance->getResourceType());
             $resourceCopy->addResourceInstance($ric);
         }
-        
+
         $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
 
@@ -494,7 +493,6 @@ class ResourceController extends Controller
     {
         $ric = new ResourceInstance();
         $ric->setCreator($this->get('security.context')->getToken()->getUser());
-        $ric->setCopy(true);
         $ric->setResource($resourceInstance->getResource());
         $resourceInstance->getResource()->addResourceInstance($ric);
 
