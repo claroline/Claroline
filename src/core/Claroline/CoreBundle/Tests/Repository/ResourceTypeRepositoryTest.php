@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Entity\Extension;
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class ResourceTypeRepositoryTest extends TransactionalTestCase
@@ -56,10 +56,9 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
 
     private function createResourceTypes()
     {
-        $plugin = new Extension();
+        $plugin = new Plugin();
         $plugin->setVendorName('Test');
         $plugin->setBundleName('Test');
-        $plugin->setType('test');
         $plugin->setBundleFQCN('Test\Test');
         $plugin->setNameTranslationKey('test');
         $plugin->setDescriptionTranslationKey('test');

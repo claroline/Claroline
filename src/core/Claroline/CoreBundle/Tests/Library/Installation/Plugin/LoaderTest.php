@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use \RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\CoreBundle\Exception\InstallationException;
 
@@ -10,22 +11,19 @@ class LoaderTest extends WebTestCase
     /** @var Loader */
     private $loader;
 
-    /** @var string */
-    private $extensionPath;
-
     protected function setUp()
     {
-        $container = self::createClient()->getContainer();
-        $this->loader = $container->get('claroline.plugin.loader');
-        $stubDir = $container->getParameter('claroline.stub_plugin_directory');
-        $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
+        $pluginDirectory = static::createClient()
+            ->getContainer()
+            ->getParameter('claroline.stub_plugin_directory');
+        $this->loader = new Loader($pluginDirectory);
     }
 
     public function testLoaderCanReturnAnInstanceOfALoadablePluginBundleClass()
     {
-        $plugin = $this->loader->load('Valid\Basic\ValidBasic');
+        $plugin = $this->loader->load('Valid\Simple\ValidSimple');
 
-        $this->assertInstanceOf('Valid\Basic\ValidBasic', $plugin);
+        $this->assertInstanceOf('Valid\Simple\ValidSimple', $plugin);
     }
 
     public function testLoaderThrowsAnExceptionIfExpectedBundleClassFileDoesntExist()
@@ -33,18 +31,8 @@ class LoaderTest extends WebTestCase
         try {
             $this->loader->load('Invalid\NoBundleClassFile\InvalidNoBundleClassFile');
             $this->fail('No exception thrown');
-        } catch (InstallationException $ex) {
-            $this->assertEquals(InstallationException::NO_PLUGIN_FOUND, $ex->getCode());
-        }
-    }
-
-    public function testLoaderThrowsAnExceptionIfMoreThanOneBundleClassFileIsFound()
-    {
-        try {
-            $this->loader->load('Incompatible\SameFQCNThanAnotherPlugin\IncompatibleSameFQCNThanAnotherPlugin');
-            $this->fail('No exception thrown');
-        } catch (InstallationException $ex) {
-            $this->assertEquals(InstallationException::MULTIPLE_PLUGINS_FOUND, $ex->getCode());
+        } catch (RuntimeException $ex) {
+            $this->assertEquals(Loader::NO_PLUGIN_FOUND, $ex->getCode());
         }
     }
 
@@ -56,8 +44,8 @@ class LoaderTest extends WebTestCase
         try {
             $this->loader->load($fqcn);
             $this->fail('No exception thrown');
-        } catch (InstallationException $ex) {
-            $this->assertEquals(InstallationException::NON_EXISTENT_BUNDLE_CLASS, $ex->getCode());
+        } catch (RuntimeException $ex) {
+            $this->assertEquals(Loader::NON_EXISTENT_BUNDLE_CLASS, $ex->getCode());
         }
     }
 
@@ -69,8 +57,21 @@ class LoaderTest extends WebTestCase
         try {
             $this->loader->load($fqcn);
             $this->fail('No exception thrown');
-        } catch (InstallationException $ex) {
-            $this->assertEquals(InstallationException::NON_INSTANTIABLE_BUNDLE_CLASS, $ex->getCode());
+        } catch (RuntimeException $ex) {
+            $this->assertEquals(Loader::NON_INSTANTIABLE_BUNDLE_CLASS, $ex->getCode());
+        }
+    }
+
+    /**
+     * @dataProvider unexpectedBundleTypeProvider
+     */
+    public function testLoaderThrowsAnExceptionIfBundleClassDoesntExtendPluginBundle($fqcn)
+    {
+        try {
+            $this->loader->load($fqcn);
+            $this->fail('No exception thrown');
+        } catch (RuntimeException $ex) {
+            $this->assertEquals(Loader::UNEXPECTED_BUNDLE_TYPE, $ex->getCode());
         }
     }
 
@@ -92,15 +93,10 @@ class LoaderTest extends WebTestCase
         );
     }
 
-    private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
+    public function unexpectedBundleTypeProvider()
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $this->extensionPath = "{$stubDir}{$ds}extension";
-        $loader->setPluginDirectories(
-            array(
-                'extension' => $this->extensionPath,
-                'tool' => "{$stubDir}{$ds}tool"
-            )
+        return array(
+            array('Invalid\UnexpectedBundleType\InvalidUnexpectedBundleType')
         );
     }
 }

@@ -56,14 +56,6 @@ abstract class AbstractWorkspace
     private $roles;
 
     /**
-     * @ORM\OneToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\ToolInstance",
-     *  mappedBy="hostWorkspace"
-     * )
-     */
-    private $tools;
-
-    /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="workspace")
      */
     private $resourcesInstance;
@@ -234,21 +226,6 @@ abstract class AbstractWorkspace
         }
 
         return false;
-    }
-
-    public function addToolInstance(ToolInstance $toolInstance)
-    {
-        $this->tools->add($toolInstance);
-    }
-
-    public function removeToolInstance(ToolInstance $toolInstance)
-    {
-        $this->tools->removeElement($toolInstance);
-    }
-
-    public function getTools()
-    {
-        return $this->tools;
     }
 
     private function checkIdCondition()

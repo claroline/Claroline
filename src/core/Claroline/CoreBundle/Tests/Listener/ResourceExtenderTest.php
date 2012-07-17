@@ -10,15 +10,8 @@ use Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2;
 
 class ResourceExtenderTest extends FunctionalTestCase
 {
-
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testResourceExtenderIsSubscribed()
     {
-
         $listeners = $this->em->getEventManager()->getListeners(Events::loadClassMetadata);
 
         foreach ($listeners as $listener) {
@@ -68,12 +61,10 @@ class ResourceExtenderTest extends FunctionalTestCase
         $conn = $this->em->getConnection();
 
         // Insert a fake extension plugin
-        $sql = "INSERT INTO claro_plugin (type, bundle_fqcn, vendor_name, short_name, name_translation_key, description, discr)"
-            . " VALUES ('plugin x', 'TestTest', '', 'Test', 'test', 'test', 'extension')";
+        $sql = "INSERT INTO claro_plugin (bundle_fqcn, vendor_name, short_name, name_translation_key, description)"
+            . " VALUES ('TestTest', '', 'Test', 'test', 'test')";
         $conn->exec($sql);
         $pluginId = $conn->lastInsertId();
-        $sql = "INSERT INTO claro_extension (id) VALUES ({$pluginId})";
-        $conn->exec($sql);
 
         // Insert two specific resource types (see test/Stub/Entity)
         $sql = "INSERT INTO claro_resource_type (plugin_id, class, type, is_listable, is_navigable)"

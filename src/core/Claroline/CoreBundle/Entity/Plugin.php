@@ -9,15 +9,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_plugin")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({
- *      "extension" = "Extension",
- *      "tool" = "Tool"
- * })
  * @UniqueEntity("bundleFQCN")
  */
-abstract class Plugin
+class Plugin
 {
     /**
      * @ORM\Id
@@ -25,13 +19,6 @@ abstract class Plugin
      * @ORM\generatedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(name="type", type="string", length="255")
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(255)
-     */
-    protected $type;
 
     /**
      * @ORM\Column(name="bundle_fqcn", type="string", length="255")
@@ -72,20 +59,10 @@ abstract class Plugin
     {
         return $this->bundleFQCN;
     }
-    
+
     public function getGeneratedId()
     {
         return $this->id;
-    }
-     
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     public function getBundleFQCN()
