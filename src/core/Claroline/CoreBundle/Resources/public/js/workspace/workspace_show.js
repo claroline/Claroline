@@ -31,11 +31,11 @@ $(function(){
                                 window.location.reload();
                             });
                         } else {
+                            console.debug(XMLHttpRequest);
                             alert('this node could not be loaded');
                         }
                     }
                 });
-                alert(data);
             });
         }
     };
@@ -104,6 +104,7 @@ $(function(){
                     "id": resourceTypes[i].id,
                     "key": resourceTypes[i].type,
                     "title": resourceTypes[i].type,
+                    "tooltip":  resourceTypes[i].type,
                     "shareType": 1,
                     "type": "resourceType",
                     "isFolder": true,
@@ -205,7 +206,7 @@ $(function(){
                                 e.preventDefault();
                                 var action = $('#ws_form').find('form').attr('action');
                                 action = action.replace('_instanceId', node.data.key);
-                                var id = $('ws_form').find('form').attr('id');
+                                var id = $('#ws_form').find('form').attr('id');
                                 ClaroUtils.sendForm(action, document.getElementById(id), submissionHandler);
                             });
                         })
@@ -271,7 +272,7 @@ $(function(){
                     node.activate();
             },
             onCustomRender: function (node) {
-                var html = "<a id='ws_node_"+node.data.key+"' class='ws_dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
+                var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' title='"+node.data.tooltip+"'href='#'> "+node.data.title+"</a>";
                 html += "<span class='ws_dynatree-custom-claro-menu' id='ws_dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                 return html;
             },

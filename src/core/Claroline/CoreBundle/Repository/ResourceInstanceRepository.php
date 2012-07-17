@@ -50,6 +50,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             WHERE rt.type = '{$resourceType->getType()}'
             AND ri.lft > {$resourceInstance->getLft()}
             AND ri.rgt < {$resourceInstance->getRgt()}
+            AND ri.root = {$resourceInstance->getId()}
         ";
 
         $query = $this->_em->createQuery($dql);
