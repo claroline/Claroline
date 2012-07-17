@@ -50,7 +50,7 @@ class InstallerTest extends WebTestCase
 
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('LogicException');
 
         $pluginFQCN = 'Imaginary\Fake\Plugin';
 
@@ -84,7 +84,7 @@ class InstallerTest extends WebTestCase
 
     public function testUninstallThrowsAnExceptionIfPluginIsNotRegistered()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('LogicException');
 
         $pluginFQCN = 'Imaginary\Fake\Plugin';
 

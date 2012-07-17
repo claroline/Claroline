@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use \RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\CoreBundle\Exception\InstallationException;
 
 class LoaderTest extends WebTestCase
 {
@@ -22,7 +21,6 @@ class LoaderTest extends WebTestCase
     public function testLoaderCanReturnAnInstanceOfALoadablePluginBundleClass()
     {
         $plugin = $this->loader->load('Valid\Simple\ValidSimple');
-
         $this->assertInstanceOf('Valid\Simple\ValidSimple', $plugin);
     }
 
