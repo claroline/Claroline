@@ -1,7 +1,0 @@
-services:
-  claroline.video_player:
-        class: Claroline\VideoPlayerBundle\Controller\VideoController
-        calls:
-           - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.player}
