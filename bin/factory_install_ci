@@ -2,13 +2,23 @@
 
 /*
  * This script can be used as a part of a CIS job.
- * 
+ *
  * It will initialize a test environment
  *
  * Requirement : a valid 'app/config/local/parameters.yml' file.
  */
 
 $rootDirectory = realpath(__DIR__ . "/..");
+
+function deleteIfExists($file) {
+    if (file_exists($file)) {
+        unlink($file);
+    }
+}
+
+deleteIfExists("{$rootDirectory}/app/config/plugin/bundles");
+deleteIfExists("{$rootDirectory}/app/config/plugin/namespaces");
+deleteIfExists("{$rootDirectory}/app/config/plugin/routing.yml");
 
 system("php {$rootDirectory}/bin/vendors install");
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
