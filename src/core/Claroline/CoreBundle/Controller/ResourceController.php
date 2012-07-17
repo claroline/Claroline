@@ -374,7 +374,7 @@ class ResourceController extends Controller
         }
 
         $em->flush();
-        var_dump('hey');
+
         return new Response('success');
     }
 
@@ -414,6 +414,7 @@ class ResourceController extends Controller
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
             $instanceCopy = $this->createReference($instance);
             $instanceCopy->setParent($parent);
+            $instanceCopy->setWorkspace($parent->getWorkspace());
             $children = $instance->getChildren();
 
             foreach ($children as $child) {
@@ -429,6 +430,7 @@ class ResourceController extends Controller
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
             $instanceCopy = $this->createCopy($instance);
             $instanceCopy->setParent($parent);
+            $instanceCopy->setWorkspace($parent->getWorkspace());
             $children = $instance->getChildren();
 
             foreach ($children as $child) {
@@ -445,7 +447,6 @@ class ResourceController extends Controller
         $ric = new ResourceInstance();
         $ric->setCreator($user);
         $ric->setCopy(false);
-        $ric->setWorkspace($resourceInstance->getWorkspace());
         $this->get('doctrine.orm.entity_manager')->flush();
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -477,7 +478,6 @@ class ResourceController extends Controller
         $ric = new ResourceInstance();
         $ric->setCreator($this->get('security.context')->getToken()->getUser());
         $ric->setCopy(true);
-        $ric->setWorkspace($resourceInstance->getWorkspace());
         $ric->setResource($resourceInstance->getResource());
         $resourceInstance->getResource()->addResourceInstance($ric);
 
