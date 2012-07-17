@@ -291,4 +291,12 @@ abstract class AbstractResource
     {
         return $this->resourceInstances;
     }
+
+    public function getStringShareType()
+    {
+        switch($this->shareType){
+            case self::PRIVATE_RESOURCE: return "private"; break;
+            case self::PUBLIC_RESOURCE: return "public"; break;
+        }
+    }
 }

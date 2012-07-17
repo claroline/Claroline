@@ -75,6 +75,7 @@ $(function(){
                                     "id": resourceTypes[i].id,
                                     "key": resourceTypes[i].type,
                                     "title": resourceTypes[i].type,
+                                    "tooltip":  resourceTypes[i].type,
                                     "shareType": 1,
                                     "type": "resourceType",
                                     "isFolder": true,
@@ -286,7 +287,7 @@ $(function(){
                             }
                         },
                         onCustomRender: function (node) {
-                            var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' href='#'> "+node.data.title+" share "+node.data.shareType+" </a>";
+                            var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' title='"+node.data.tooltip+"'href='#'> "+node.data.title+"</a>";
                             html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                             return html;
                         },
