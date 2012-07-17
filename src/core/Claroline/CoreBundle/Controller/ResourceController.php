@@ -182,11 +182,15 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->find($instanceId);
-        $newParent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->find($newParentId);
-        $this->get('claroline.resource.manager')->move($instance, $newParent);
+        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE
+            || $instance->getResource()->getCreator() == $this->get('security.context')->getToken()->getUser()) {
 
-        return new Response('Resource moved', 204);
+            $newParent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($newParentId);
+            $this->get('claroline.resource.manager')->move($instance, $newParent);
+
+            return new Response('Resource moved', 204);
+        }
+        throw new AccessDeniedHttpException();
     }
 
     /**
@@ -368,14 +372,20 @@ class ResourceController extends Controller
         $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
 
         if ($options == 'ref') {
-            $this->addToDirectoryByReference($instance, $parent);
+            $copy = $this->addToDirectoryByReference($instance, $parent);
         } else {
-            $this->addToDirectoryByCopy($instance, $parent);
+            $copy = $this->addToDirectoryByCopy($instance, $parent);
         }
 
         $em->flush();
 
-        return new Response('success');
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => (array)$copy)
+        );
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     private function normalizeEventName($prefix, $resourceType)
@@ -391,7 +401,7 @@ class ResourceController extends Controller
         foreach ($children as $child) {
             $rsrc = $child->getResource();
 
-            if ($rsrc->getInstanceCount() === 1) {
+            if ($rsrc->getInstanceCount() === 1 || $rsrc->getCreator() == $this->get('security.context')->getToken()->getUser()) {
 
                 if ($child->getResourceType()->getType() === 'directory') {
                     $em->remove($rsrc);
@@ -411,7 +421,8 @@ class ResourceController extends Controller
 
     private function addToDirectoryByReference(ResourceInstance $instance, ResourceInstance $parent)
     {
-        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
+        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE
+            || $instance->getResource()->getCreator() == $this->get('security.context')->getToken()->getUser()) {
             $instanceCopy = $this->createReference($instance);
             $instanceCopy->setParent($parent);
             $instanceCopy->setWorkspace($parent->getWorkspace());
