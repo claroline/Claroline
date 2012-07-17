@@ -82,6 +82,7 @@ class ResourceController extends Controller
             ->find($instanceId);
 
         if (1 === $resourceInstance->getResource()->getInstanceCount()) {
+
             if ($resourceInstance->getResourceType()->getType() !== 'directory') {
                 $eventName = $this->normalizeEventName(
                     'delete',
@@ -117,9 +118,11 @@ class ResourceController extends Controller
             ->find($resourceId);
 
         $user = $this->get('security.context')->getToken()->getUser();
-        if($user != $resource->getCreator()){
+
+        if ($user != $resource->getCreator()) {
             throw new AccessDeniedHttpException('access denied');
         }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
@@ -142,9 +145,11 @@ class ResourceController extends Controller
         $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
             ->find($instanceId);
         $user = $this->get('security.context')->getToken()->getUser();
-        if($user != $resourceInstance->getResource()->getCreator()){
+
+        if ($user != $resourceInstance->getResource()->getCreator()) {
             throw new AccessDeniedHttpException('access denied');
         }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resourceInstance->getResource());
         $form->bindRequest($request);
 
@@ -182,6 +187,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->find($instanceId);
+
         if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE
             || $instance->getResource()->getCreator() == $this->get('security.context')->getToken()->getUser()) {
 
@@ -190,6 +196,7 @@ class ResourceController extends Controller
 
             return new Response('Resource moved', 204);
         }
+
         throw new AccessDeniedHttpException();
     }
 
@@ -247,7 +254,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the root resource of a workspace
+     * Returns a json representation of the root resource of a workspace.
      *
      * @param integer $workspaceId
      * @return \Symfony\Component\HttpFoundation\Response
@@ -273,7 +280,7 @@ class ResourceController extends Controller
      */
     public function childrenAction($instanceId)
     {
-        if (0 == $instanceId){
+        if (0 == $instanceId) {
             return new Response('[]');
         }
         $repo = $this->getDoctrine()
@@ -292,7 +299,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resource types
+     * Returns a json representation of the resource types.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -312,10 +319,10 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resources of a defined type in a defined directory
+     * Returns a json representation of the resources of a defined type in a defined directory.
      *
-     * @param type $resourceTypeId
-     * @param type $rootId
+     * @param integer $resourceTypeId
+     * @param integer $rootId
      */
     public function resourceListAction($resourceTypeId, $rootId)
     {
