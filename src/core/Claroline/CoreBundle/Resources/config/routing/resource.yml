@@ -46,9 +46,27 @@ claro_resource_roots:
     options:
         expose: true
 
+claro_resource_root:
+    pattern: /root/{workspaceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:root }
+    options:
+        expose: true
+
 claro_resource_children:
     pattern: children/{instanceId}
     defaults: { _controller: ClarolineCoreBundle:Resource:children }
+    options:
+        expose: true
+
+claro_resource_types:
+    pattern: types
+    defaults: { _controller: ClarolineCoreBundle:Resource:resourceTypes }
+    options:
+        expose: true
+
+claro_resources_list:
+    pattern: list/{resourceTypeId}/{rootId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
     options:
         expose: true
 

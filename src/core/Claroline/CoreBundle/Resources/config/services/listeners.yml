@@ -33,7 +33,7 @@ services:
             - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default}
 
     claroline.listener.directory_listener:
-        class: Claroline\CoreBundle\Listener\DirectoryListener
+        class: Claroline\CoreBundle\Listener\Resource\DirectoryListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -41,7 +41,7 @@ services:
             - { name: kernel.event_listener, event: create_directory, method: onCreate }
 
     claroline.listener.file_listener:
-        class: Claroline\CoreBundle\Listener\FileListener
+        class: Claroline\CoreBundle\Listener\Resource\FileListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -52,7 +52,7 @@ services:
             - { name: kernel.event_listener, event: download_file, method: onDownload }
 
     claroline.listener.text_listener:
-        class: Claroline\CoreBundle\Listener\TextListener
+        class: Claroline\CoreBundle\Listener\Resource\TextListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:

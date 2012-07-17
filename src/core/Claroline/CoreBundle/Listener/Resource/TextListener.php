@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Listener;
+namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -8,10 +8,10 @@ use Claroline\CoreBundle\Library\Resource\ResourceEvent;
 use Claroline\CoreBundle\Form\TextType;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
-use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 
 class TextListener extends ContainerAware
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Listener;
+namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,11 +8,11 @@ use Claroline\CoreBundle\Library\Resource\ResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Resource\MimeTypes;
-use Claroline\CoreBundle\Library\Resource\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Resource\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 
 class FileListener extends ContainerAware
 {
