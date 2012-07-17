@@ -14,7 +14,7 @@
 $rootDirectory = realpath(__DIR__ . "/..");
 
 function deleteIfExists($file) {
-    if(file_exists($file)) {
+    if (file_exists($file)) {
         unlink($file);
     }
 }
