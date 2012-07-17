@@ -2,50 +2,53 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
-use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
-use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
+use \InvalidArgumentException;
+use Claroline\CoreBundle\Library\PluginBundle;
 
+/**
+ * This class is used to perform various validation checks upon a plugin,
+ * calling dedicated checkers. If the validation succeed, the plugin could
+ * be considered as safe to install by the plugin installer.
+ */
 class Validator
 {
-    private $commonChecker;
-    private $extensionChecker;
-    private $toolChecker;
+    private $checkers;
 
-    public function __construct(
-        CommonChecker $commonChecker,
-        ToolChecker $toolChecker,
-        ExtensionChecker $extensionChecker
-    )
+    /**
+     * Constructor.
+     *
+     * @param array $checkers[CheckerInterface]
+     */
+    public function __construct(array $checkers)
     {
-        $this->commonChecker = $commonChecker;
-        $this->toolChecker = $toolChecker;
-        $this->extensionChecker = $extensionChecker;
-    }
-
-    public function setCommonChecker(CommonChecker $checker)
-    {
-        $this->commonChecker = $checker;
-    }
-
-    public function setToolChecker(ToolChecker $checker)
-    {
-        $this->toolChecker = $checker;
-    }
-
-    public function setExtensionChecker(ExtensionChecker $checker)
-    {
-        $this->extensionChecker = $checker;
-    }
-
-    public function validate(ClarolinePlugin $plugin)
-    {
-        $this->commonChecker->check($plugin);
-
-        if ($plugin instanceof ClarolineTool) {
-            $this->toolChecker->check($plugin);
-        } elseif ($plugin instanceof ClarolineExtension) {
-            $this->extensionChecker->check($plugin);
+        foreach ($checkers as $checker) {
+            if (!$checker instanceof CheckerInterface) {
+                throw new InvalidArgumentException(
+                    'Instances of CheckerInterface expected'
+                );
+            }
         }
+
+        $this->checkers = $checkers;
+    }
+
+    /**
+     * Validates a plugin.
+     *
+     * @param PluginBundle $plugin
+     *
+     * @return array[ValidationError]
+     */
+    public function validate(PluginBundle $plugin)
+    {
+        $validationErrors = array();
+
+        foreach ($this->checkers as $checker) {
+            if (null !== $errors = $checker->check($plugin)) {
+                $validationErrors = array_merge($validationErrors, $errors);
+            }
+        }
+
+        return $validationErrors;
     }
 }
