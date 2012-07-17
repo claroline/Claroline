@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use \InvalidArgumentException;
+use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Exception\ClarolineException;
-use Claroline\CoreBundle\Exception\InstallationException;
 
 /**
  * This class is used to (un-)register the namespace, the bundle name and the
@@ -205,12 +205,12 @@ class ConfigurationFileWriter
     {
         if (!file_exists($file)) {
             if (!touch($file)) {
-                throw new ClarolineException("File '{$file}' not found.");
+                throw new RuntimeException("File '{$file}' not found.");
             }
         }
 
         if (!is_writable($file)) {
-            throw new ClarolineException("File '{$file}' is not writable.");
+            throw new RuntimeException("File '{$file}' is not writable.");
         }
     }
 
@@ -262,9 +262,8 @@ class ConfigurationFileWriter
     private function doAddItem($file, $item, $itemType)
     {
         if (empty($item)) {
-            throw new InstallationException(
-                "{$itemType} argument cannot be empty.",
-                InstallationException::EMPTY_FILE_ITEM
+            throw new InvalidArgumentException(
+                "{$itemType} argument cannot be empty."
             );
         }
 
