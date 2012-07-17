@@ -79,9 +79,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/update/properties/{$this->pwr[0]->getId()}",
-            array('resource_options_form' =>
-                array('name' => "EDITED", 'shareType' => 1))
-            );
+            array('resource_options_form' => array('name' => "EDITED", 'shareType' => 1))
+        );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals("EDITED", $jsonResponse[0]->{'title'});
@@ -108,9 +107,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/create/directory/{$parentId}",
-            array('directory_form' =>
-                array('name' => $name, 'shareType' => $shareType))
-            );
+            array('directory_form' => array('name' => $name, 'shareType' => $shareType))
+        );
         $obj = json_decode($this->client->getResponse()->getContent());
 
         return $obj[0];

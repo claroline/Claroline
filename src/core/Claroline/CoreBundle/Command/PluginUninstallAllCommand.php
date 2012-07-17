@@ -22,7 +22,7 @@ class PluginUninstallAllCommand extends AbstractPluginCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->walkPluginDirectories('uninstallPlugin', $output)) {
+        if ($this->walkPluginDirectory('uninstallPlugin', $output)) {
             $this->resetCache($output);
         }
 

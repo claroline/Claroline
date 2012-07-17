@@ -1,0 +1,5 @@
+resource_x:
+    # this class doesnt exist
+    class: Invalid\UnloadableResourceClass1\Entity\ResourceX
+    listable: true
+    navigable: true

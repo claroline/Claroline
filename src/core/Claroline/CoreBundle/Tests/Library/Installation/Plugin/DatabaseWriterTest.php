@@ -22,24 +22,23 @@ class DatabaseWriterTest extends TransactionalTestCase
         $container = $this->client->getContainer();
         $this->dbWriter = $container->get('claroline.plugin.recorder_database_writer');
         $this->loader = $container->get('claroline.plugin.loader');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $this->loader = new Loader($pluginDirectory);
         $this->em = $container->get('doctrine.orm.entity_manager');
-        $stubDir = $container->getParameter('claroline.stub_plugin_directory');
-        $this->overrideDefaultPluginDirectories($this->loader, $stubDir);
     }
 
     /**
-     * @dataProvider pluginPropertiesProvider
+     * @dataProvider pluginProvider
      */
-    public function testWriterMakesInsertsCommonPropertiesForEachTypeOfPlugin($fqcn, $entityType, $pluginType)
+    public function testWriterCorrectlyPersistsPluginProperties($fqcn)
     {
         $plugin = $this->loader->load($fqcn);
         $this->dbWriter->insert($plugin);
 
         $pluginEntity = $this->em
-            ->getRepository($entityType)
+            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
             ->findOneByBundleFQCN($fqcn);
 
-        $this->assertEquals($pluginType, $pluginEntity->getType());
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
         $this->assertEquals($plugin->getNameTranslationKey(), $pluginEntity->getNameTranslationKey());
@@ -52,11 +51,11 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->dbWriter->insert($plugin);
         $this->dbWriter->delete('Valid\Simple\ValidSimple');
 
-        $extensions = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Extension')
+        $plugins = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
             ->findOneByBundleFQCN('Valid\Simple\ValidSimple');
 
-        $this->assertEquals(0, count($extensions));
+        $this->assertEquals(0, count($plugins));
     }
 
     public function testInsertThrowsAnExceptionIfPluginEntityIsNotValid()
@@ -70,20 +69,20 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testIsSavedReturnsExpectedValue()
     {
-        $pluginFQCN = 'Valid\Simple\ValidSimple';
-        $plugin = $this->loader->load($pluginFQCN);
+        $pluginFqcn = 'Valid\Simple\ValidSimple';
+        $plugin = $this->loader->load($pluginFqcn);
 
-        $this->assertFalse($this->dbWriter->isSaved($pluginFQCN));
+        $this->assertFalse($this->dbWriter->isSaved($pluginFqcn));
 
         $this->dbWriter->insert($plugin);
 
-        $this->assertTrue($this->dbWriter->isSaved($pluginFQCN));
+        $this->assertTrue($this->dbWriter->isSaved($pluginFqcn));
     }
 
     public function testCustomResourceTypesArePersisted()
     {
-        $pluginFQCN = 'Valid\WithCustomResources\ValidWithCustomResources';
-        $plugin = $this->loader->load($pluginFQCN);
+        $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
+        $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
 
         $dql = "
@@ -98,30 +97,11 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getType());
     }
 
-    public function pluginPropertiesProvider()
+    public function pluginProvider()
     {
         return array(
-            array(
-                'Valid\Simple\ValidSimple',
-                'Claroline\CoreBundle\Entity\Extension',
-                'Claroline\CoreBundle\Library\Plugin\ClarolineExtension'
-            ),
-            array(
-                'Valid\Basic\ValidBasic',
-                'Claroline\CoreBundle\Entity\Tool',
-                'Claroline\CoreBundle\Library\Plugin\ClarolineTool'
-            )
-        );
-    }
-
-    private function overrideDefaultPluginDirectories(Loader $loader, $stubDir)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $loader->setPluginDirectories(
-            array(
-                'extension' => "{$stubDir}{$ds}extension",
-                'tool' => "{$stubDir}{$ds}tool"
-            )
+            array('Valid\Simple\ValidSimple'),
+            array('Valid\Custom\ValidCustom')
         );
     }
 }

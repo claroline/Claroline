@@ -63,7 +63,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     }
 
     /**
-     * Helper method parsing the plugin directories and applying the "installPlugin"
+     * Helper method parsing the plugin directory and applying the "installPlugin"
      * or "uninstallPlugin" methods of this class on each plugin found.
      *
      * @param string $methodName "installPlugin" or "uninstallPlugin"
@@ -71,7 +71,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      *
      * @return boolean True if the callback method has succeeded at least once, false otherwise
      */
-    protected function walkPluginDirectories($methodName, OutputInterface $output)
+    protected function walkPluginDirectory($methodName, OutputInterface $output)
     {
         if ($methodName != 'installPlugin' && $methodName != 'uninstallPlugin') {
             throw new ClarolineException(
@@ -80,22 +80,14 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             );
         }
 
-        $pluginDirs = array(
-            $this->getContainer()->getParameter('claroline.plugin.extension_directory'),
-            $this->getContainer()->getParameter('claroline.plugin.tool_directory')
-        );
-
+        $pluginDirectory = $this->getContainer()->getParameter('claroline.plugin.directory');
         $hasEffect = false;
+        $output->writeln("Scanning plugin directory ('{$pluginDirectory}')...");
+        $pluginFQCNs = $this->getAvailablePluginFQCNs($pluginDirectory);
 
-        foreach ($pluginDirs as $pluginDir) {
-            $output->writeln("Scanning plugin directory ('{$pluginDir}')...");
-
-            $pluginFQCNs = $this->getAvailablePluginFQCNs($pluginDir);
-
-            foreach ($pluginFQCNs as $pluginFQCN) {
-                if ($this->{$methodName}($pluginFQCN, $output)) {
-                    $hasEffect = true;
-                }
+        foreach ($pluginFQCNs as $pluginFQCN) {
+            if ($this->{$methodName}($pluginFQCN, $output)) {
+                $hasEffect = true;
             }
         }
 

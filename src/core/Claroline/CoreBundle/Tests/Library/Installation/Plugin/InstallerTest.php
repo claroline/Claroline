@@ -17,7 +17,7 @@ class InstallerTest extends WebTestCase
     protected function setUp()
     {
         $this->installer = self::createClient()->getContainer()->get('claroline.plugin.installer');
-        $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\Plugin\ClarolinePlugin');
+        $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
         $this->initMockedHelpers();
         $this->installer->setLoader($this->mockedLoader);
         $this->installer->setValidator($this->mockedValidator);
