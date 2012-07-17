@@ -19,9 +19,9 @@ function deleteIfExists($file) {
     }
 }
 
-deleteIfExists("{$rootDirectory}/app/config/plugin/bundles");
-deleteIfExists("{$rootDirectory}/app/config/plugin/namespaces");
-deleteIfExists("{$rootDirectory}/app/config/plugin/routing.yml");
+deleteIfExists("{$rootDirectory}/app/config/local/plugin/bundles");
+deleteIfExists("{$rootDirectory}/app/config/local/plugin/namespaces");
+deleteIfExists("{$rootDirectory}/app/config/local/plugin/routing.yml");
 
 system("php {$rootDirectory}/bin/vendors install");
 
