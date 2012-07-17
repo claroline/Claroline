@@ -1,0 +1,4 @@
+ResourceX:
+    # resource definition requires either a 'class' or an 'extends' attribute
+    listable: true
+    navigable: true

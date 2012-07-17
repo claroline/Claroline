@@ -2,55 +2,93 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
+use Claroline\CoreBundle\Library\PluginBundle;
 
+/**
+ * This recorder is used to register a plugin both in database and in the
+ * application configuration files. It uses dedicated components to perform
+ * this task.
+ */
 class Recorder
 {
     private $configWriter;
     private $dbWriter;
 
+    /**
+     * Constructor.
+     *
+     * @param ConfigurationFileWriter   $configWriter
+     * @param DatabaseWriter            $dbWriter
+     */
     public function __construct(ConfigurationFileWriter $configWriter, DatabaseWriter $dbWriter)
     {
         $this->configWriter = $configWriter;
         $this->dbWriter = $dbWriter;
     }
 
+    /**
+     * Sets the configuration file writer.
+     *
+     * @param ConfigurationFileWriter $writer
+     */
     public function setConfigurationFileWriter(ConfigurationFileWriter $writer)
     {
         $this->configWriter = $writer;
     }
 
+    /**
+     * Sets the database writer.
+     *
+     * @param DatabaseWriter $writer
+     */
     public function setDatabaseWriter(DatabaseWriter $writer)
     {
         $this->dbWriter = $writer;
     }
 
-    public function register(ClarolinePlugin $plugin)
+    /**
+     * Registers a plugin.
+     *
+     * @param PluginBundle $plugin
+     */
+    public function register(PluginBundle $plugin)
     {
-        $pluginFQCN = get_class($plugin);
+        $pluginFqcn = get_class($plugin);
 
         $this->dbWriter->insert($plugin);
         $this->configWriter->registerNamespace($plugin->getVendorName());
-        $this->configWriter->addInstantiableBundle($pluginFQCN);
+        $this->configWriter->addInstantiableBundle($pluginFqcn);
         $this->configWriter->importRoutingResources(
-            $pluginFQCN, $plugin->getRoutingResourcesPaths(), $plugin->getRoutingPrefix()
+            $pluginFqcn, $plugin->getRoutingResourcesPaths(), $plugin->getRoutingPrefix()
         );
     }
 
-    public function unregister(ClarolinePlugin $plugin)
+    /**
+     * Unregisters a plugin.
+     *
+     * @param PluginBundle $plugin
+     */
+    public function unregister(PluginBundle $plugin)
     {
-        $pluginFQCN = get_class($plugin);
+        $pluginFqcn = get_class($plugin);
 
-        $this->dbWriter->delete($pluginFQCN);
+        $this->dbWriter->delete($pluginFqcn);
         $this->configWriter->removeNamespace($plugin->getVendorName());
-        $this->configWriter->removeInstantiableBundle($pluginFQCN);
-        $this->configWriter->removeRoutingResources($pluginFQCN);
+        $this->configWriter->removeInstantiableBundle($pluginFqcn);
+        $this->configWriter->removeRoutingResources($pluginFqcn);
     }
 
-    public function isRegistered($pluginFQCN)
+    /**
+     * Checks if a plugin is registered.
+     *
+     * @param string $pluginFqcn
+     *
+     * @return boolean
+     */
+    public function isRegistered($pluginFqcn)
     {
-        $isSavedInDb = $this->dbWriter->isSaved($pluginFQCN);
-        $isSavedInConfig = $this->configWriter->isRecorded($pluginFQCN);
+        $isSavedInDb = $this->dbWriter->isSaved($pluginFqcn);
+        $isSavedInConfig = $this->configWriter->isRecorded($pluginFqcn);
 
         if ($isSavedInDb && $isSavedInConfig) {
             return true;

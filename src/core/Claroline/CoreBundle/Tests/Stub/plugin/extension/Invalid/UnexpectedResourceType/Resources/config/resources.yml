@@ -1,7 +1,0 @@
-resource_x:
-    class: Invalid\UnexpectedResourceType\Entity\ResourceX
-    manager_service_id: resource_x.manager
-    controller: ResourceX
-    listable: true
-    navigable: true
-    name: ResourceX
