@@ -49,7 +49,7 @@ services:
             - { name: kernel.event_listener, event: create_file, method: onCreate }
             - { name: kernel.event_listener, event: delete_file, method: onDelete }
             - { name: kernel.event_listener, event: copy_file, method: onCopy }
-            - { name: kernel.event_listener, event: download_file, method: onDownload }
+            - { name: kernel.event_listener, event: export_file, method: onExport }
 
     claroline.listener.text_listener:
         class: Claroline\CoreBundle\Listener\Resource\TextListener

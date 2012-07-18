@@ -2,6 +2,7 @@ Forum:
   class: Claroline\ForumBundle\Entity\Forum
   listable: true
   navigable: false
+  downloadable: true
   actions:
     open: false
 
@@ -9,8 +10,10 @@ Subject:
   class: Claroline\ForumBundle\Entity\Subject
   listable: false
   navigable: false
+  downloadable: false
 
 Message:
   class: Claroline\ForumBundle\Entity\Message
   listable: false
   navigable: false
+  downloadable: false

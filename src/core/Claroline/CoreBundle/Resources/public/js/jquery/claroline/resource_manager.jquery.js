@@ -9,6 +9,7 @@ $(function(){
             var params = $.extend({
                 mode: 'manager',
                 displayMode: 'classic',
+                checkbox: true,
                 resourcePickedHandler: function (instanceId){
                     alert("DEFAULT SUBMIT HANDLER MUST BE CHANGED")
                 }
@@ -41,6 +42,9 @@ $(function(){
                     +"<div id='ct_form'></div><br>"
                     +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
                     +"<div id='source_tree'></div>";
+                    if (true == params.checkbox) {
+                        content+="<br><button id='ct_download'>download</button>";
+                    }
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
@@ -249,6 +253,7 @@ $(function(){
                     var children = initChildren(params.displayMode);
 
                     $(treeId).dynatree({
+                        checkbox: true,
                         title: 'myTree',
                         children: children,
                         onPostInit: function(isReloading, isError){

@@ -112,7 +112,8 @@ class ResourceChecker implements CheckerInterface
         $resources = (array) $this->yamlParser->parse($resourceFile);
         $expectedKeys = array(
             'listable' => 'boolean',
-            'navigable' => 'boolean'
+            'navigable' => 'boolean',
+            'downloadable' => 'boolean'
         );
 
         foreach ($resources as $resource) {
