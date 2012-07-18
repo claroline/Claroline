@@ -318,7 +318,7 @@ class ResourceController extends Controller
             $roots[] = $root;
         }
 
-        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig',array('resources' => $roots));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => $roots));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -380,7 +380,7 @@ class ResourceController extends Controller
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceTypes = $repo->findResourceTypeWithoutDirectory();
 
-       $content = $this->renderView(
+        $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
             array('resourceTypes' => $resourceTypes)
         );
@@ -569,12 +569,11 @@ class ResourceController extends Controller
 
     private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path)
     {
-        var_dump('hi');
         if ($root != $resourceInstance->getParent()) {
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
             $path = $this->getRelativePath($root, $resourceInstance->getParent(), $path);
         }
-        var_dump($path);
+        
         return $path;
     }
 }

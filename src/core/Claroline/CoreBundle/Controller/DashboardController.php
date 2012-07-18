@@ -16,8 +16,6 @@ class DashboardController extends Controller
      */
     public function indexAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-
         return $this->render('ClarolineCoreBundle:Dashboard:index.html.twig');
     }
 
