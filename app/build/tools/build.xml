@@ -111,7 +111,7 @@
             <arg value="--ignore" />
             <arg path="Tests/*,Resources/*,Migrations/*" />
             <arg value="--directory" />
-            <arg path="${srcdir}core/Claroline,${srcdir}/plugin/Claroline" />
+            <arg path="${srcdir}/core/Claroline,${srcdir}/plugin/Claroline" />
             <arg value="--target" />
             <arg path="${buildir}/api" />
         </exec>
