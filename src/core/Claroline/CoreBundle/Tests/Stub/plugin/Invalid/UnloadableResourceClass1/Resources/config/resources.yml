@@ -3,3 +3,4 @@ resource_x:
     class: Invalid\UnloadableResourceClass1\Entity\ResourceX
     listable: true
     navigable: true
+    downloadable: true

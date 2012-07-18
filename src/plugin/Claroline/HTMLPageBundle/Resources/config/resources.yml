@@ -4,4 +4,4 @@ HTMLElement:
     navigable: false
     actions:
       open: false
-      download: false
+    downloadable: true

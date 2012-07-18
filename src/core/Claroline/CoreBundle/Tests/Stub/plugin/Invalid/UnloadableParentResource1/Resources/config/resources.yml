@@ -3,3 +3,4 @@ resource_x:
     extends: Foo\Bar\Entity\ResourceX
     listable: true
     navigable: true
+    downloadable: true
