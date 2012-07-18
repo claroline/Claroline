@@ -22,7 +22,7 @@
     <testsuites>
         <testsuite name="Claronext test suite">
             <directory>../src/core/*/*Bundle/Tests</directory>
-            <directory>../src/plugin/*/*/*Bundle/Tests</directory>
+            <directory>../src/plugin/*/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
 
@@ -31,10 +31,10 @@
             <directory>../src/core</directory>
             <directory>../src/plugin/*/Claroline</directory>
             <exclude>
-                <directory>../src/core/*/*Bundle/Command</directory>
-                <directory>../src/core/*/*Bundle/Resources</directory>
-                <directory>../src/core/*/*Bundle/Tests</directory>
-                <directory>../src/core/*/*Bundle/Migrations</directory>
+                <directory>../src/core/Claroline/*Bundle/Command</directory>
+                <directory>../src/core/Claroline/*Bundle/Resources</directory>
+                <directory>../src/core/Claroline/*Bundle/Tests</directory>
+                <directory>../src/core/Claroline/*Bundle/Migrations</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Tests</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Resources</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Command</directory>

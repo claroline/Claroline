@@ -15,13 +15,11 @@
             description="Clean up and create artifact directories">
         <delete dir="${buildir}/api"/>
         <delete dir="${buildir}/code-browser"/>
-        <delete dir="${buildir}/coverage"/>
         <delete dir="${buildir}/logs"/>
         <delete dir="${buildir}/pdepend"/>
 
         <mkdir dir="${buildir}/api"/>
         <mkdir dir="${buildir}/code-browser"/>
-        <mkdir dir="${buildir}/coverage"/>
         <mkdir dir="${buildir}/logs"/>
         <mkdir dir="${buildir}/pdepend"/>
     </target>
