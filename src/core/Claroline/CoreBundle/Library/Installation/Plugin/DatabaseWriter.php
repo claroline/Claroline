@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use \RuntimeException;
 use Symfony\Component\Validator\Validator as SymfonyValidator;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
@@ -9,7 +10,6 @@ use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
-use Claroline\CoreBundle\Exception\InstallationException;
 
 /**
  * This class is used to save/delete a plugin an its possible dependencies (like
@@ -58,10 +58,9 @@ class DatabaseWriter
         if (count($errors) > 0) {
             $pluginFqcn = get_class($plugin);
 
-            throw new InstallationException(
+            throw new RuntimeException(
                 "The plugin entity for '{$pluginFqcn}' cannot be validated. "
-                . "Validation errors : {$errors->__toString()}.",
-                InstallationException::ENTIY_VALIDATION_ERROR
+                . "Validation errors : {$errors->__toString()}."
             );
         }
 

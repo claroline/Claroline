@@ -47,10 +47,9 @@ class Creator
         $directoryType = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => 'directory'));
         $rootDir->setResourceType($directoryType);
         $root->setResource($rootDir);
-        $root->setCopy(0);
         $root->setWorkspace($workspace);
         $root->setCreator($manager);
-        
+
         $this->entityManager->persist($rootDir);
         $this->entityManager->persist($root);
         $this->entityManager->flush();
@@ -61,19 +60,6 @@ class Creator
         }
 
         $this->entityManager->flush();
-
-        $roles = $workspace->getWorkspaceRoles();
-        $masks = \Claroline\CoreBundle\Library\Security\SymfonySecurity::getSfMasks();
-        $keys = array_keys($masks);
-
-        foreach ($roles as $role) {
-            $mask = $role->getResMask();
-            foreach ($keys as $key) {
-                if ($mask & $key) {
-                    $this->rightManager->addRight($root, $role, $key);
-                }
-            }
-        }
 
         return $workspace;
     }

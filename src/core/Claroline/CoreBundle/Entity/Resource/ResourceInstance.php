@@ -96,11 +96,6 @@ class ResourceInstance
     protected $children;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    protected $copy;
-
-    /**
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *      inversedBy="resourcesInstance"
@@ -270,35 +265,20 @@ class ResourceInstance
     }
 
     /**
-     * TO BE REMOVED
+     * Returns the left value of the instance in the nested tree.
      *
-     * Convenience method marking the instance as a copy of another instance.
-     *
-     * @param boolean $copy
+     * @return integer
      */
-    public function setCopy($copy)
-    {
-        $this->copy = $copy;
-    }
-
-    /**
-     * TO BE REMOVED
-     *
-     * Convenience method returning true if the instance is a copy of another
-     * instance, false otherwise.
-     *
-     * @return boolean $copy
-     */
-    public function getCopy()
-    {
-        return $this->copy;
-    }
-
     public function getLft()
     {
         return $this->lft;
     }
 
+    /**
+     * Returns the right value of the instance in the nested tree.
+     *
+     * @return integer
+     */
     public function getRgt()
     {
         return $this->rgt;

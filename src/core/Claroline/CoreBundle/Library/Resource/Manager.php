@@ -58,14 +58,13 @@ class Manager
             $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($parentInstanceId);
             $ri->setParent($dir);
             $resource->setResourceType($resourceType);
-            $ri->setCopy(0);
             $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
             $this->em->flush();
-            
+
             return $returnInstance ? $ri : $resource;
         }
 
