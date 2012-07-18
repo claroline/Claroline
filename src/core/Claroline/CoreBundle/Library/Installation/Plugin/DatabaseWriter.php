@@ -150,6 +150,7 @@ class DatabaseWriter
                 $resourceType->setType($name);
                 $resourceType->setListable($properties['listable']);
                 $resourceType->setNavigable($properties['navigable']);
+                $resourceType->setDownloadable($properties['downloadable']);
                 $resourceType->setPlugin($pluginEntity);
                 $this->em->persist($resourceType);
 

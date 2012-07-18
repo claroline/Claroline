@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 
 class ResourceController extends Controller
 {
@@ -226,6 +227,77 @@ class ResourceController extends Controller
     }
 
     /**
+     * Download a resource. If it's a directory, its content will be downloaded in an archive.
+     * If their are many directories, their id will be sent as as post request. It'll fire an export event.
+     *
+     * @param integer $instanceId
+     *
+     * @return Response
+     */
+    public function exportAction($instanceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $request = $this->get('request');
+        //will unlink the downloaded item
+        $unlink = false;
+
+        if ('GET' == $request->getMethod()) {
+            $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+
+            if ('directory' != $resourceInstance->getResource()->getResourceType()->getType()) {
+                $eventName = $this->normalizeEventName('export', $resourceInstance->getResource()->getResourceType()->getType());
+                $event = new ExportResourceEvent($resourceInstance->getResource()->getId());
+                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $item = $event->getItem();
+                $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName()));
+            } else {
+
+                $archive = new \ZipArchive();
+                $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid().'.zip';
+                $archive->open($item, \ZipArchive::CREATE);
+                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
+                foreach ($children as $child) {
+                    if ($child->getResource()->getResourceType()->getType() != 'directory') {
+
+                        $eventName = $this->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
+                        $event = new ExportResourceEvent($child->getResource()->getId());
+                        $this->get('event_dispatcher')->dispatch($eventName, $event);
+                        $obj = $event->getItem();
+
+                        if ($obj != null) {
+                            $path = $this->getRelativePath($resourceInstance, $child, '');
+                            $archive->addFile($obj, $path.$child->getResource()->getName());
+                        }
+                    }
+                }
+
+                $archive->close();
+                $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName().'.zip'));
+                $unlink = true;
+            }
+        } else {
+
+
+        }
+
+        $file = file_get_contents($item);
+        $response = new Response();
+        $response->setContent($file);
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $nameDownload);
+        $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
+        $response->headers->set('Connection', 'close');
+
+        if (true == $unlink) {
+            chmod($item, 0777);
+            unlink($item);
+        }
+
+        return $response;
+    }
+
+    /**
      * Returns a json representation of the root resources of every workspace whom
      * the current user is a member.
      *
@@ -246,10 +318,7 @@ class ResourceController extends Controller
             $roots[] = $root;
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resources.json.twig',
-            array('resources' => $roots)
-        );
+        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => $roots));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -497,5 +566,15 @@ class ResourceController extends Controller
         $resourceInstance->getResource()->addResourceInstance($ric);
 
         return $ric;
+    }
+
+    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path)
+    {
+        if ($root != $resourceInstance->getParent()) {
+            $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
+            $path = $this->getRelativePath($root, $resourceInstance->getParent(), $path);
+        }
+
+        return $path;
     }
 }

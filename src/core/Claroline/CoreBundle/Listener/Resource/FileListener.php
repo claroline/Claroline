@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 
 class FileListener extends ContainerAware
 {
@@ -99,20 +100,13 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onDownload(CustomActionResourceEvent $event)
+    public function onExport(ExportResourceEvent $event)
     {
-        $response = new Response();
         $file = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\File')
             ->find($event->getResourceId());
-        $response->setContent(file_get_contents($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName()));
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $file->getName());
-        $response->headers->set('Content-Length', $file->getSize());
-        $response->headers->set('Content-Type', 'application/' . pathinfo($file->getName(), PATHINFO_EXTENSION));
-        $response->headers->set('Connection', 'close');
-        $event->setResponse($response);
+        $hash = $file->getHashName();
+        $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
         $event->stopPropagation();
     }
 
@@ -123,7 +117,7 @@ class FileListener extends ContainerAware
      *
      * @return string
      */
-    private function generateGuid()
+    public function generateGuid()
     {
         if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');

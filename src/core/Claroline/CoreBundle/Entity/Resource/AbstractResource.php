@@ -192,6 +192,7 @@ abstract class AbstractResource
      * the type will be returned as a string, otherwise it will be returned
      * as an integer.
      *
+
      * @param boolean $asString
      *
      * @return integer|string

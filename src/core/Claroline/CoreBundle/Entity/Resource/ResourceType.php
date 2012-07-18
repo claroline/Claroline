@@ -59,6 +59,11 @@ class ResourceType
     private $isListable;
 
     /**
+     * @ORM\Column(type="boolean", name="is_downloadable")
+     */
+    private $isDownloadable;
+
+    /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
      */
@@ -233,5 +238,15 @@ class ResourceType
     public function addAbstractResource($abstractResource)
     {
         $this->abstractResource->add($abstractResource);
+    }
+
+    public function setDownloadable($downloadable)
+    {
+        $this->isDownloadable = $downloadable;
+    }
+
+    public function isDownloadable()
+    {
+        return $this->isDownloadable;
     }
 }
