@@ -42,12 +42,26 @@ $(function(){
                     +"<div id='ct_form'></div><br>"
                     +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
                     +"<div id='source_tree'></div>";
+
                     if (true == params.checkbox) {
                         content+="<br><button id='ct_download'>download</button>";
+                        $('#ct_download').live('click', function(){
+                            var children = $('#source_tree').dynatree('getTree').getSelectedNodes(true);
+                            var parameters = {};
+
+                            for (var i in children) {
+                                parameters[i] = children[i].data.key;
+                                console.debug(children);
+                            }
+
+                            window.location = Routing.generate('claro_multi_export', parameters);
+                        })
                     }
+
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
+                        (params.displayMode == 'classic') ? params.checkbox = false: params.checkbox = true;
                         $('#source_tree').dynatree('destroy');
                         $('#source_tree').empty();
                         createTree('#source_tree');
@@ -98,6 +112,7 @@ $(function(){
                             e.preventDefault();
                             var option = ClaroUtils.getCheckedValue(document.forms['move_resource_form']['options']);
                             var route = {}
+
                             if ('move' == option) {
                                 route = {
                                     'name': 'claro_resource_move',
@@ -262,9 +277,19 @@ $(function(){
                             }
                         },
                         clickFolderMode: 1,
+                        selectMode: 3,
                         onLazyRead: function (node) {
                             node.appendAjax({
                                 url: onLazyReadUrl(params.displayMode, node),
+                                success: function (node) {
+                                    var children = node.getChildren();
+
+                                    if (node.isSelected()){
+                                        for (var i in children) {
+                                            children[i].select();
+                                        }
+                                    }
+                                },
                                 error: function (node, XMLHttpRequest, textStatus, errorThrown) {
                                     if (XMLHttpRequest.status == 403) {
                                         ClaroUtils.ajaxAuthenticationErrorHandler(function () {

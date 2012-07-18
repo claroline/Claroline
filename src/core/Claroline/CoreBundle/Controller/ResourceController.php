@@ -237,47 +237,24 @@ class ResourceController extends Controller
     public function exportAction($instanceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $request = $this->get('request');
         //will unlink the downloaded item
         $unlink = false;
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
 
-        if ('GET' == $request->getMethod()) {
-            $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-
-            if ('directory' != $resourceInstance->getResource()->getResourceType()->getType()) {
-                $eventName = $this->normalizeEventName('export', $resourceInstance->getResource()->getResourceType()->getType());
-                $event = new ExportResourceEvent($resourceInstance->getResource()->getId());
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $item = $event->getItem();
-                $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName()));
-            } else {
-
-                $archive = new \ZipArchive();
-                $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid().'.zip';
-                $archive->open($item, \ZipArchive::CREATE);
-                $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
-                foreach ($children as $child) {
-                    if ($child->getResource()->getResourceType()->getType() != 'directory') {
-
-                        $eventName = $this->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
-                        $event = new ExportResourceEvent($child->getResource()->getId());
-                        $this->get('event_dispatcher')->dispatch($eventName, $event);
-                        $obj = $event->getItem();
-
-                        if ($obj != null) {
-                            $path = $this->getRelativePath($resourceInstance, $child, '');
-                            $archive->addFile($obj, $path.$child->getResource()->getName());
-                        }
-                    }
-                }
-
-                $archive->close();
-                $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName().'.zip'));
-                $unlink = true;
-            }
+        if ('directory' != $resourceInstance->getResource()->getResourceType()->getType()) {
+            $eventName = $this->normalizeEventName('export', $resourceInstance->getResource()->getResourceType()->getType());
+            $event = new ExportResourceEvent($resourceInstance->getResource()->getId());
+            $this->get('event_dispatcher')->dispatch($eventName, $event);
+            $item = $event->getItem();
+            $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName()));
         } else {
-
-
+            $archive = new \ZipArchive();
+            $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid() . '.zip';
+            $archive->open($item, \ZipArchive::CREATE);
+            $this->addDirectoryToArchive($resourceInstance, $archive);
+            $archive->close();
+            $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName() . '.zip'));
+            $unlink = true;
         }
 
         $file = file_get_contents($item);
@@ -293,6 +270,49 @@ class ResourceController extends Controller
             chmod($item, 0777);
             unlink($item);
         }
+
+        return $response;
+    }
+
+    /**
+     * This function takes an array of parameters. Theses parameters are the ids of the instances which are going to be downloaded.
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function multiExportAction()
+    {
+        $archive = new \ZipArchive();
+        $pathArch = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid() . '.zip';
+        $archive->open($pathArch, \ZipArchive::CREATE);
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $request = $this->get('request');
+        $instanceIds = $request->query->all();
+
+        foreach ($instanceIds as $instanceId) {
+            $instance = $repo->find($instanceId);
+            if($instance->getResource()->getResourceType()->getType() == 'directory') {
+                $this->addDirectoryToArchive($instance, $archive);
+            } else {
+                $eventName = $this->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
+                $event = new ExportResourceEvent($instance->getResource()->getId());
+                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $item = $event->getItem();
+                $name = strtolower(str_replace(' ', '_', $instance->getResource()->getName()));
+                $archive->addFile($item, $name);
+            }
+        }
+
+        $archive->close();
+        $file = file_get_contents($pathArch);
+        $response = new Response();
+        $response->setContent($file);
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=archive');
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Connection', 'close');
+        chmod($pathArch, 0777);
+        unlink($pathArch);
 
         return $response;
     }
@@ -577,4 +597,24 @@ class ResourceController extends Controller
 
         return $path;
     }
+
+    private function addDirectoryToArchive($resourceInstance, $archive)
+    {
+        $children = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
+        foreach ($children as $child) {
+            if ($child->getResource()->getResourceType()->getType() != 'directory') {
+
+                $eventName = $this->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
+                $event = new ExportResourceEvent($child->getResource()->getId());
+                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $obj = $event->getItem();
+
+                if ($obj != null) {
+                    $path = $this->getRelativePath($resourceInstance, $child, '');
+                    $archive->addFile($obj, $resourceInstance->getResource()->getName().DIRECTORY_SEPARATOR.$path . $child->getResource()->getName());
+                }
+            }
+        }
+    }
+
 }
