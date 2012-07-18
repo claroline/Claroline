@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use \RuntimeException;
+use \LogicException;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Claroline\CoreBundle\Exception\InstallationException;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -145,9 +145,8 @@ class Installer
         if ($this->isInstalled($pluginFqcn) !== $expectedStatus) {
             $expectedStatus === true ? $stateDiscr = 'not' : $stateDiscr = 'already';
 
-            throw new InstallationException(
-                "Plugin '{$pluginFqcn}' is {$stateDiscr} registered.",
-                InstallationException::UNEXPECTED_REGISTRATION_STATUS
+            throw new LogicException(
+                "Plugin '{$pluginFqcn}' is {$stateDiscr} registered."
             );
         }
     }

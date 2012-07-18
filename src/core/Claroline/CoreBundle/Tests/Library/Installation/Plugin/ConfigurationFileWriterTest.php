@@ -39,7 +39,7 @@ class ConfigurationFileWriterTest extends WebTestCase
 
     public function testRegisterNamespaceThrowsExceptionOnEmptyNamespaceArgument()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('InvalidArgumentException');
 
         $this->configWriter->registerNamespace('');
     }
@@ -120,7 +120,7 @@ class ConfigurationFileWriterTest extends WebTestCase
 
     public function testAddInstantiableBundleThrowsExceptionOnEmptyBundleFQCN()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('InvalidArgumentException');
         $this->configWriter->addInstantiableBundle('');
     }
 

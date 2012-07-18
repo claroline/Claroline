@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use \RuntimeException;
-use Claroline\CoreBundle\Exception\InstallationException;
 
 /**
  * The plugin loader is used to instantiate a plugin bundle class (in order to
@@ -33,7 +32,7 @@ class Loader
      * Searches a plugin bundle by its FQCN and returns an instance of it.
      *
      * @param string $pluginFqcn
-     * @throws InstallationException if the plugin class cannot be found or instantiated
+     * @throws RuntimeException if the plugin class cannot be found or instantiated
      *
      * @return PluginBundle
      */

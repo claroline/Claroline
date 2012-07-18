@@ -60,7 +60,7 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testInsertThrowsAnExceptionIfPluginEntityIsNotValid()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('RuntimeException');
 
         $plugin = $this->loader->load('Valid\Simple\ValidSimple');
         $this->dbWriter->insert($plugin);

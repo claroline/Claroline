@@ -355,6 +355,7 @@ class ResourceController extends Controller
         if (0 == $instanceId) {
             return new Response('[]');
         }
+
         $repo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
@@ -399,9 +400,11 @@ class ResourceController extends Controller
     public function resourceListAction($resourceTypeId, $rootId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
-        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
-        $instances = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
+        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->find($resourceTypeId);
+        $instanceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $root = $instanceRepo->find($rootId);
+        $instances = $instanceRepo->getChildrenInstanceList($root, $resourceType);
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resources.json.twig',
@@ -530,7 +533,6 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $ric = new ResourceInstance();
         $ric->setCreator($user);
-        $ric->setCopy(false);
         $this->get('doctrine.orm.entity_manager')->flush();
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -540,8 +542,7 @@ class ResourceController extends Controller
             $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
             $resourceCopy->addResourceInstance($ric);
-        }
-        else {
+        } else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
             $eventName = $this->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
             $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -550,6 +551,7 @@ class ResourceController extends Controller
             $resourceCopy->setResourceType($resourceInstance->getResourceType());
             $resourceCopy->addResourceInstance($ric);
         }
+
         $em->persist($resourceCopy);
         $ric->setResource($resourceCopy);
 
@@ -560,7 +562,6 @@ class ResourceController extends Controller
     {
         $ric = new ResourceInstance();
         $ric->setCreator($this->get('security.context')->getToken()->getUser());
-        $ric->setCopy(true);
         $ric->setResource($resourceInstance->getResource());
         $resourceInstance->getResource()->addResourceInstance($ric);
 
@@ -573,7 +574,7 @@ class ResourceController extends Controller
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
             $path = $this->getRelativePath($root, $resourceInstance->getParent(), $path);
         }
-        
+
         return $path;
     }
 }
