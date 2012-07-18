@@ -69,6 +69,7 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $firstType->setListable(true);
         $firstType->setNavigable(false);
         $firstType->setPlugin($plugin);
+        $firstType->setDownloadable(true);
 
         $secondType = new ResourceType();
         $secondType->setType('Type y');
@@ -76,11 +77,13 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $secondType->setListable(true);
         $secondType->setNavigable(false);
         $secondType->setPlugin($plugin);
+        $secondType->setDownloadable(true);
 
         $thirdType = new ResourceType();
         $thirdType->setType('Type z');
         $thirdType->setListable(true);
         $thirdType->setNavigable(false);
+        $thirdType->setDownloadable(true);
 
         $this->em->persist($plugin);
         $this->em->persist($firstType);

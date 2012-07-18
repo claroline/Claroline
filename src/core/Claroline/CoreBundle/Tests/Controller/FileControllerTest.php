@@ -56,7 +56,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $node = $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/custom/file/download/{$node->{'resourceId'}}");
+        $this->client->request('GET', "/resource/export/{$node->{'key'}}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=text.txt'));
     }
