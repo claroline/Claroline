@@ -108,9 +108,10 @@
     <target name="phpdoc"
             description="Generate API documentation using PHPDocumentor">
         <exec executable="phpdoc">
-            <arg value="--quiet" />
+            <arg value="--ignore" />
+            <arg path="Tests/*,Resources/*,Migrations/*" />
             <arg value="--directory" />
-            <arg path="${srcdir}" />
+            <arg path="${srcdir}core/Claroline,${srcdir}/plugin/Claroline" />
             <arg value="--target" />
             <arg path="${buildir}/api" />
         </exec>
