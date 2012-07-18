@@ -283,4 +283,14 @@ class ResourceInstance
     {
         return $this->rgt;
     }
+
+    /**
+     * Returns the root value of the instance in the nested tree.
+     *
+     * @return integer
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
 }
