@@ -101,7 +101,7 @@ class DirectoryControllerTest extends FunctionalTestCase
 
     private function addResource($object, $parentId, $resourceType)
     {
-        return $ri = $this
+        return $this
             ->client
             ->getContainer()
             ->get('claroline.resource.manager')

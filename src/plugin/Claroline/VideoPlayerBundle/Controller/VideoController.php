@@ -9,7 +9,7 @@ class VideoController extends FileController
 {
     public function indexAction($resourceId)
     {
-        return new Response("redéfini openAction pour mp4, l'id de mon workspace est {$workspaceId}");
+        return new Response("redéfini openAction pour mp4, l'id de mon workspace est ...");
     }
 
     public function getMimeType()
