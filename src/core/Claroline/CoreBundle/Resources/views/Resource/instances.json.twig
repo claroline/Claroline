@@ -1,0 +1,20 @@
+[
+    {% for resource in resources %}
+    {
+        "title": "{{ resource.getResource().getName() }}",
+        "key": "{{ resource.getId() }}",
+        "instanceCount": {{ resource.getResource().getInstanceCount() }},
+        "shareType": "{{ resource.getResource().getShareType() }}",
+        "resourceId": "{{resource.getResource().getId() }}",
+        "type": "{{ resource.getResource().getResourceType().getType() }}",
+        "workspaceId": "{{ resource.getWorkspace().getId() }}",
+        "tooltip":
+            "added by {{ resource.getCreator().getUsername() }}\ncreated by {{ resource.getResource().getCreator().getUsername() }}\nthis resource is {{ resource.getResource().getShareType(true) }}"
+        {% if resource.getResourceType.getNavigable() == 1 %}
+            ,"isFolder": true
+            ,"isLazy": true
+        {% endif %}
+    }
+    {% if not loop.last %},{% endif %}
+    {% endfor %}
+]

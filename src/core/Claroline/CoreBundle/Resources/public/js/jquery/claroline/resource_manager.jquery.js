@@ -3,7 +3,6 @@
  */
 $(function(){
     var jsonmenu = {};
-    var roots = {};
     $.fn.extend({
         claroResourceManager: function(options){
             var params = $.extend({
@@ -29,12 +28,6 @@ $(function(){
                             }
                             delete jsonmenu['directory'];
                         }
-                    },
-                    function(){
-                        ClaroUtils.sendRequest(Routing.generate('claro_resource_roots'),
-                            function(data){roots = eval(data)},
-                            function(){createTree('#source_tree')}
-                        )
                     }
                 )
                 function createDivTree(div) {
@@ -61,25 +54,27 @@ $(function(){
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
-                        (params.displayMode == 'classic') ? params.checkbox = false: params.checkbox = true;
+                        (params.displayMode == 'classic') ? params.checkbox = true: params.checkbox = false;
                         $('#source_tree').dynatree('destroy');
                         $('#source_tree').empty();
                         createTree('#source_tree');
                     });
+
+                    createTree('#source_tree');
                 }
 
                 function createTree(treeId)
                 {
-                    var initChildren = function (displayMode){
-                        var children = {};
-                        (displayMode == 'classic') ? children = roots : children = [];
-                        return children;
+                    var initAjaxUrl = function (displayMode){
+                        var url = '';
+                        (displayMode == 'classic') ? url = Routing.generate('claro_resource_roots') : url = Routing.generate('claro_resource_children', {'instanceId':0});
+                        return url;
                     }
 
                     var onLazyReadUrl = function(displayMode, node){
                         var url = '';
                         (displayMode == 'classic') ? url = Routing.generate('claro_resource_children', {'instanceId': node.data.key})
-                        : url = Routing.generate('claro_resources_list', {'resourceTypeId':node.parent.data.id, 'rootId':node.data.key} );
+                        : url = Routing.generate('claro_resources_list', {'resourceTypeId':node.data.id });
                         return url;
                     }
 
@@ -97,10 +92,9 @@ $(function(){
                                     "shareType": 1,
                                     "type": "resourceType",
                                     "isFolder": true,
-                                    "isLazy": false
+                                    "isLazy": true
                                 }
                                 root.addChild(node);
-                                $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).addChild(roots);
                             }
                         })
                     };
@@ -265,12 +259,10 @@ $(function(){
                         }
                     }
 
-                    var children = initChildren(params.displayMode);
-
                     $(treeId).dynatree({
-                        checkbox: true,
+                        checkbox: params.checkbox,
                         title: 'myTree',
-                        children: children,
+                        initAjax: {url : initAjaxUrl(params.displayMode)},
                         onPostInit: function(isReloading, isError){
                             if(params.displayMode == 'linker'){
                                 initLinker(treeId);
