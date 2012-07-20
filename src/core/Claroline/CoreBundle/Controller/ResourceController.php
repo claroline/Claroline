@@ -276,7 +276,7 @@ class ResourceController extends Controller
 
     /**
      * This function takes an array of parameters. Theses parameters are the ids of the instances which are going to be downloaded.
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function multiExportAction()
@@ -338,7 +338,7 @@ class ResourceController extends Controller
             $roots[] = $root;
         }
 
-        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => $roots));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:instances.json.twig', array('resources' => $roots));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -356,7 +356,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $roots = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $content = $this->renderView('ClarolineCoreBundle:Resource:resources.json.twig', array('resources' => $roots));
+        $content = $this->renderView('ClarolineCoreBundle:Resource:instances.json.twig', array('resources' => $roots));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -382,7 +382,7 @@ class ResourceController extends Controller
         $parent = $repo->find($instanceId);
         $resourceInstances = $repo->getListableChildren($parent);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resources.json.twig',
+            'ClarolineCoreBundle:Resource:instances.json.twig',
             array('resources' => $resourceInstances)
         );
         $response = new Response($content);
@@ -417,14 +417,14 @@ class ResourceController extends Controller
      * @param integer $resourceTypeId
      * @param integer $rootId
      */
-    public function resourceListAction($resourceTypeId, $rootId)
+    public function resourceListAction($resourceTypeId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->find($resourceTypeId);
         $instanceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $root = $instanceRepo->find($rootId);
-        $instances = $instanceRepo->getChildrenInstanceList($root, $resourceType);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $instances = $instanceRepo->getResourceList($resourceType, $user);
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resources.json.twig',

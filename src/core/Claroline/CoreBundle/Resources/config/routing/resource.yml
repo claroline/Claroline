@@ -77,7 +77,7 @@ claro_resource_types:
         expose: true
 
 claro_resources_list:
-    pattern: list/{resourceTypeId}/{rootId}
+    pattern: list/{resourceTypeId}
     defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
     options:
         expose: true
