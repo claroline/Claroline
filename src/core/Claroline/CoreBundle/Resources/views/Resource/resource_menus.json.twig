@@ -99,4 +99,18 @@
          }
      }
     {% endfor %}
+    {% for resourceType in resourceTypes %}
+    ,"type_{{resourceType.getType()}}" : {
+        "items": {
+            "new" : {
+                "name": "new",
+                "route": "{{ path('claro_resource_creation_form', {'resourceType':resourceType.getType()}) }}",
+                "async": true
+             }
+        }
+    }
+    {% endfor %}
+
+
+
 }
