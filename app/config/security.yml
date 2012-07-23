@@ -21,7 +21,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/workspace/new, roles: ROLE_WS_CREATOR }
         - { path: ^/workspace, roles: ROLE_USER }
-        - { path: ^/desktop, roles: ROLE_USER }
+        - { path: ^/dashboard, roles: ROLE_USER }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/resource, roles: ROLE_USER }
         - { path: ^/file, roles: ROLE_USER }

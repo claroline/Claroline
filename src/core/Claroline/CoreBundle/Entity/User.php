@@ -384,7 +384,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->personnalWorkspace = $workspace;
     }
 
-    public function getPersonnalWorkspace()
+    public function getPersonalWorkspace()
     {
         return $this->personnalWorkspace;
     }

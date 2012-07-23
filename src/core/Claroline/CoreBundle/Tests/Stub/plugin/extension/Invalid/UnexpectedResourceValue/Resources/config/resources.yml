@@ -1,8 +1,0 @@
-resource_x:
-    class: Invalid\UnexpectedResourceValue\Entity\ResourceX
-    # expected value for this key is a string
-    manager_service_id: false
-    controller: ResourceX
-    listable: true
-    navigable: true
-    name: ResourceX

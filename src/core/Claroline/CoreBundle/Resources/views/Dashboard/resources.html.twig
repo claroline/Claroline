@@ -1,0 +1,32 @@
+{% extends "ClarolineCoreBundle:Dashboard:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+      "@ClarolineCoreBundle/Resources/views/Templates/move_resource_form.twig"
+       filter="twig_js"
+    %}
+       <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
+    <script src='{{ asset('bundles/clarolinecore/js/jquery/claroline/resource_manager.jquery.js')}}'></script>
+    <script src='{{ asset('bundles/clarolinecore/js/dashboard/resource_manager.js') }}' type="text/javascript"></script>
+{% endblock %}
+
+{% block section_content %}
+
+<div id="translation-claroline"
+     {% for resourceType in resourcesType %}
+     data-{{ resourceType.getType() }}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
+     {% endfor %}>
+</div>
+
+<div id="ct_dialog"></div>
+{% endblock %}

@@ -20,7 +20,7 @@
                 {% if connected %}
                 <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i>{{ username }}
+                    <i class="icon-user"></i> {{ username }} 
                     <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
@@ -50,13 +50,13 @@
                     <ul class="nav">
                 {% if connected %}
                     <li>
-                        <a href="{{ path('claro_desktop_index') }}" id="link_desktop">
-                        {{ 'desktop'|trans({}, 'platformTranslation') }}
+                        <a href="{{ path('claro_dashboard_index') }}" id="link_dashboard">
+                        {{ 'dashboard'|trans({}, 'platformTranslation') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('claro_ws_list') }}" id="link_workspace">
-                        {{ 'workspace'|trans({}, 'platformTranslation') }}
+                        {{ 'workspaces'|trans({}, 'platformTranslation') }}
                         </a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}

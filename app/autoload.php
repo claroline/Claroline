@@ -32,26 +32,15 @@ $coreNamespaces = array(
     'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
     'org\\bovigo\\vfs' => __DIR__.'/../vendor/vfsstream/src/main/php',
     'JMS'              => __DIR__.'/../vendor/bundles',
-    'TwigJs'           => __DIR__.'/../vendor/twigjs/src',
-    'Claroline'        => array(
-        __DIR__.'/../src/core',
-        __DIR__.'/../src/plugin/extension',
-        __DIR__.'/../src/plugin/application',
-        __DIR__.'/../src/plugin/tool'
-    ),
+    'TwigJs'           => __DIR__.'/../vendor/twig-js/src',
+    'Claroline'        => array(__DIR__.'/../src/core', __DIR__.'/../src/plugin')
 );
 
 $pluginNamespaces = array();
 
 if (file_exists(__DIR__ . '/config/local/plugin/namespaces')) {
     $namespaceValues = file(__DIR__ . '/config/local/plugin/namespaces', FILE_IGNORE_NEW_LINES);
-    $pluginNamespaces = array_fill_keys(
-        $namespaceValues, array(
-            __DIR__ . '/../src/plugin/extension',
-            __DIR__ . '/../src/plugin/application',
-            __DIR__ . '/../src/plugin/tool'
-        )
-    );
+    $pluginNamespaces = array_fill_keys($namespaceValues, __DIR__ . '/../src/plugin');
 }
 
 $loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));

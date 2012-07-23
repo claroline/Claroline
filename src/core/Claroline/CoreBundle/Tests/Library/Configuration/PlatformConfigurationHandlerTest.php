@@ -19,7 +19,7 @@ class PlatformConfigurationHandlerTest extends WebTestCase
         $this->stubConfigFile = __DIR__ . '/../../Stub/Misc/platform_options.yml';
         $this->initStubConfiguration();
         $this->handler = new PlatformConfigurationHandler(
-                array('prod' => $this->stubConfigFile)
+            array('prod' => $this->stubConfigFile)
         );
     }
 

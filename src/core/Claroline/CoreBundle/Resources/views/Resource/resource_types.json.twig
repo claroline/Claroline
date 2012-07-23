@@ -1,0 +1,9 @@
+[
+    {% for resourceType in resourceTypes %}
+    {
+        "id": "{{ resourceType.getId() }}",
+        "type": "{{ resourceType.getType() }}"
+    }
+    {% if not loop.last %},{% endif %}
+    {% endfor %}
+]

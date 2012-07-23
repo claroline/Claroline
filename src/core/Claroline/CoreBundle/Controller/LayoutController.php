@@ -48,7 +48,7 @@ class LayoutController extends Controller
 
         if ($user instanceof User) {
             $connected = true;
-            $username = $user->getUsername();
+            $username = $user->getFirstName() . ' ' . $user->getLastName();
         } else {
             $configHandler = $this->get('claroline.config.platform_config_handler');
 
@@ -57,7 +57,7 @@ class LayoutController extends Controller
             }
 
             // TODO : use a platform option to make this target configurable
-            $loginTarget = 'claro_desktop_index';
+            $loginTarget = 'claro_dashboard_index';
         }
 
         return $this->render(

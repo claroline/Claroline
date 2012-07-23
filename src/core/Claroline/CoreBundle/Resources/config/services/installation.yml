@@ -1,11 +1,9 @@
 parameters:
-  
+
     claroline.install.prod_migrations_directory: Migrations
     claroline.install.test_migrations_directory: Tests/Stub/Migrations
     claroline.install.include_test_migrations: false # see config_test.yml
     claroline.plugin.directory: "%kernel.root_dir%/../src/plugin"
-    claroline.plugin.tool_directory: "%claroline.plugin.directory%/tool"
-    claroline.plugin.extension_directory: "%claroline.plugin.directory%/extension"
     claroline.plugin.namespaces_config_file: "%kernel.root_dir%/config/local/plugin/namespaces"
     claroline.plugin.bundles_config_file: "%kernel.root_dir%/config/local/plugin/bundles"
     claroline.plugin.routing_config_file: "%kernel.root_dir%/config/local/plugin/routing.yml"
@@ -17,13 +15,13 @@ services:
         arguments:
             - "@kernel"
             - "@claroline.install.bundle_migrator"
-    
+
     claroline.install.bundle_migrator:
         public: false
         class: Claroline\CoreBundle\Library\Installation\BundleMigrator
         arguments:
             - "@claroline.install.migration_builder"
-            
+
     claroline.install.migration_builder:
         class: Claroline\CoreBundle\Library\Installation\MigrationBuilder
         arguments:
@@ -32,7 +30,7 @@ services:
             - %claroline.install.prod_migrations_directory%
             - %claroline.install.test_migrations_directory%
             - %claroline.install.include_test_migrations%
-            
+
     claroline.install.migration_helper:
         public: false
         class: Claroline\CoreBundle\Library\Installation\MigrationHelper
@@ -45,47 +43,45 @@ services:
             - "@claroline.plugin.migrator"
             - "@claroline.plugin.recorder"
             - "@kernel"
-            - "@doctrine.orm.entity_manager"
-    
+
     claroline.plugin.loader:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Loader
         arguments:
-            - tool: %claroline.plugin.tool_directory%
-              extension: %claroline.plugin.extension_directory%
-              
+            - %claroline.plugin.directory%
+
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
         arguments:
-            - "@claroline.plugin.common_checker"
-            - "@claroline.plugin.tool_checker"
-            - "@claroline.plugin.extension_checker"
-    
-    claroline.plugin.common_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\CommonChecker
+            - base: "@claroline.plugin.base_checker"
+              routing: "@claroline.plugin.routing_checker"
+              resource: "@claroline.plugin.resource_checker"
+
+    claroline.plugin.base_checker:
+        class: Claroline\CoreBundle\Library\Installation\Plugin\BaseChecker
+
+    claroline.plugin.routing_checker:
+        class: Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker
         arguments:
-            - %claroline.plugin.routing_config_file%
-            - tool: %claroline.plugin.tool_directory%
-              extension: %claroline.plugin.extension_directory%
+            - "@router"
             - "@symfony.yaml"
-            - "@file_locator"
-    
-    claroline.plugin.extension_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\ExtensionChecker
-  
-    claroline.plugin.tool_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\ToolChecker
+            - "%kernel.root_dir%/config/local/plugin/routing.yml"
+
+    claroline.plugin.resource_checker:
+        class: Claroline\CoreBundle\Library\Installation\Plugin\ResourceChecker
+        arguments:
+            - "@symfony.yaml"
 
     claroline.plugin.migrator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Migrator
         arguments:
             - "@claroline.install.bundle_migrator"
-          
+
     claroline.plugin.recorder:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Recorder
         arguments:
             - "@claroline.plugin.recorder_configuration_file_writer"
             - "@claroline.plugin.recorder_database_writer"
-            
+
     claroline.plugin.recorder_configuration_file_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationFileWriter
         arguments:
@@ -93,7 +89,7 @@ services:
             - %claroline.plugin.bundles_config_file%
             - %claroline.plugin.routing_config_file%
             - "@symfony.yaml"
-    
+
     claroline.plugin.recorder_database_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter
         arguments:

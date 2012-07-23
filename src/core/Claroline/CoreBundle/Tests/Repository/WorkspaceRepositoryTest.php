@@ -24,19 +24,19 @@ class WorkspaceRepositoryTest extends FixtureTestCase
 
         $this->assertEquals(array(), $this->wsRepo->getWorkspacesOfUser($user));
 
-        $this->createWorkspace('Workspace 1');
+        $this->createWorkspace('Workspace 1', $user);
         $this->createWorkspace('Workspace 2', $user);
-        $thirdWs = $this->createWorkspace('Workspace 3');
+        $thirdWs = $this->createWorkspace('Workspace 3', $user);
         $user->addRole($thirdWs->getCollaboratorRole());
         $this->getEntityManager()->flush();
 
         $userWs = $this->wsRepo->getWorkspacesOfUser($user);
-        $this->assertEquals(2, count($userWs));
-        $this->assertEquals('Workspace 2', $userWs[0]->getName());
-        $this->assertEquals('Workspace 3', $userWs[1]->getName());
+        $this->assertEquals(3, count($userWs));
+        $this->assertEquals('Workspace 2', $userWs[1]->getName());
+        $this->assertEquals('Workspace 3', $userWs[2]->getName());
     }
 
-    private function createWorkspace($name, $user = null)
+    private function createWorkspace($name, $user)
     {
         $config = new Configuration();
         $config->setWorkspaceName($name);

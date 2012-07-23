@@ -21,7 +21,7 @@ class PluginInstallAllCommand extends AbstractPluginCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->walkPluginDirectories('installPlugin', $output)) {
+        if ($this->walkPluginDirectory('installPlugin', $output)) {
             $this->resetCache($output);
             $this->installAssets($output);
         }

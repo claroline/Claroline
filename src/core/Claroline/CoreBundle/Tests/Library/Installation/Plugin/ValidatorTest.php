@@ -3,95 +3,76 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
 
 class ValidatorTest extends WebTestCase
 {
-    /** @var Validator */
-    private $validator;
-
-    protected function setUp()
+    public function testValidatorAcceptsOnlyInstancesOfCheckerInterface()
     {
-        $this->validator = self::createClient()->getContainer()->get('claroline.plugin.validator');
-        $checkers = $this->getMockedCheckers();
-        $this->validator->setCommonChecker($checkers['common']);
-        $this->validator->setExtensionChecker($checkers['extension']);
-        $this->validator->setToolChecker($checkers['tool']);
-        $this->markTestSkipped("doesn't work with --process-isolation argument");
+        $this->setExpectedException('InvalidArgumentException');
+        $checkers = array(
+            'regular' => $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface'),
+            'wrong' => new \stdClass()
+        );
+
+        new Validator($checkers);
+    }
+
+    public function testValidatorCollectsValidationErrorsFromCheckers()
+    {
+        $firstChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
+        $secondChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
+        $thirdChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
+        $plugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
+
+        $firstError = new ValidationError('foo');
+        $secondError = new ValidationError('bar');
+        $thirdError = new ValidationError('baz');
+
+        $firstChecker->expects($this->once())
+            ->method('check')
+            ->with($plugin)
+            ->will($this->returnValue(array()));
+        $secondChecker->expects($this->once())
+            ->method('check')
+            ->with($plugin)
+            ->will($this->returnValue(array($firstError)));
+        $thirdChecker->expects($this->once())
+            ->method('check')
+            ->with($plugin)
+            ->will($this->returnValue(array($secondError, $thirdError)));
+
+        $validator = new Validator(array($firstChecker, $secondChecker, $thirdChecker));
+        $errors = $validator->validate($plugin);
+
+        $this->assertEquals(array($firstError, $secondError, $thirdError), $errors);
     }
 
     /**
-     * @dataProvider clarolinePluginProvider
+     * @dataProvider validPluginProvider
      */
-    public function testValidatorCallsCommonCheckerForEveryPluginType(ClarolinePlugin $plugin)
+    public function testValidatorReturnsNoErrorForValidPlugins($pluginFqcn)
     {
-        $checkers = $this->getMockedCheckers();
-        $checkers['common']->expects($this->once())
-            ->method('check')
-            ->with($plugin);
+        $container = static::createClient()->getContainer();
+        $validator = $container->get('claroline.plugin.validator');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new Loader($pluginDirectory);
 
-        $this->validator->setCommonChecker($checkers['common']);
-        $this->validator->validate($plugin);
+        //$pluginFqcn = 'Valid\Basic\ValidBasic';
+
+        $plugin = $loader->load($pluginFqcn);
+        $errors = $validator->validate($plugin);
+
+        $this->assertEquals(0, count($errors));
     }
 
-    /**
-     * @dataProvider clarolinePluginAndTypeProvider
-     */
-    public function testValidatorCallsDedicatedCheckerForSpecificPluginType($type, ClarolinePlugin $plugin)
+    public function validPluginProvider()
     {
-        $checkers = $this->getMockedCheckers();
-        $checker = $checkers[$type];
-        $checker->expects($this->once())
-            ->method('check')
-            ->with($plugin);
-
-        $setMethod = 'set' . ucfirst($type) . 'Checker';
-        $this->validator->{$setMethod}($checker);
-        $this->validator->validate($plugin);
-    }
-
-    public function clarolinePluginProvider()
-    {
-        $plugins = $this->getMockedPlugins();
-
         return array(
-            array($plugins['extension']),
-            array($plugins['tool'])
+            array('Valid\Minimal\ValidMinimal'),
+            array('Valid\Simple\ValidSimple'),
+            array('Valid\Custom\ValidCustom'),
+            array('Valid\WithMigrations\ValidWithMigrations'),
+            array('Valid\WithCustomResources\ValidWithCustomResources')
         );
-    }
-
-    public function clarolinePluginAndTypeProvider()
-    {
-        $plugins = $this->getMockedPlugins();
-
-        return array(
-            array('extension', $plugins['extension']),
-            array('tool', $plugins['tool'])
-        );
-    }
-
-    private function getMockedCheckers()
-    {
-        $checkers = array();
-        $checkers['common'] = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\CommonChecker')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $checkers['extension'] = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\ExtensionChecker')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $checkers['tool'] = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\ToolChecker')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $checkers;
-    }
-
-    private function getMockedPlugins()
-    {
-        $plugins = array();
-        $plugins['extension'] = $this->getMock('Claroline\CoreBundle\Library\Plugin\ClarolineExtension');
-        $plugins['tool'] = $this->getMock('Claroline\CoreBundle\Library\Plugin\ClarolineTool');
-
-        return $plugins;
     }
 }

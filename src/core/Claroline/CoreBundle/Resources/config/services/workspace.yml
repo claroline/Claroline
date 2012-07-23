@@ -5,10 +5,3 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"
-
-    claroline.workspace.toolinstance_manager:
-        class: Claroline\CoreBundle\Library\Manager\ToolInstanceManager
-        arguments:    
-            - "@doctrine.orm.entity_manager"
-            - "@claroline.security.right_manager"
-            - Claroline\CoreBundle\Entity\ToolInstance
