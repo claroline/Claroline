@@ -29,10 +29,12 @@ class DashboardController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findAll();
+        $registeredWorkspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+            ->getWorkspacesOfUser($this->get('security.context')->getToken()->getUser());
 
         return $this->render(
             'ClarolineCoreBundle:Dashboard:resources.html.twig',
-            array('resourcesType' => $resourcesType)
+            array('resourcesType' => $resourcesType, 'workspaces' => $registeredWorkspaces)
         );
     }
 }

@@ -91,7 +91,6 @@
         xhr.send(formData);
     }
 
-
     /**
      * Returns the check value of a combobox form.
      */

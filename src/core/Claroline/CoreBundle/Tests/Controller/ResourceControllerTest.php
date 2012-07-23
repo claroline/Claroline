@@ -49,7 +49,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'key'}}/ref/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/ref/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -61,9 +61,10 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testResourceCanBeAddedToWorkspaceByCopy()
     {
+        $this->markTestSkipped('implementation removed for now');
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'key'}}/copy/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/copy/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -81,7 +82,6 @@ class ResourceControllerTest extends FunctionalTestCase
             "/resource/update/properties/{$this->pwr[0]->getId()}",
             array('resource_options_form' => array('name' => "EDITED", 'shareType' => 1))
         );
-
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals("EDITED", $jsonResponse[0]->{'title'});
         $this->assertEquals(1, $jsonResponse[0]->{'shareType'});
@@ -110,7 +110,6 @@ class ResourceControllerTest extends FunctionalTestCase
             array('directory_form' => array('name' => $name, 'shareType' => $shareType))
         );
         $obj = json_decode($this->client->getResponse()->getContent());
-
         return $obj[0];
     }
 

@@ -3,14 +3,13 @@
  */
 $(function(){
     var jsonmenu = {};
-    var roots = {};
     $.fn.extend({
         claroResourceManager: function(options){
             var params = $.extend({
                 mode: 'manager',
                 displayMode: 'classic',
                 checkbox: true,
-                resourcePickedHandler: function (instanceId){
+                resourcePickedHandler: function (resourceId){
                     alert("DEFAULT SUBMIT HANDLER MUST BE CHANGED")
                 }
             }, options);
@@ -29,12 +28,6 @@ $(function(){
                             }
                             delete jsonmenu['directory'];
                         }
-                    },
-                    function(){
-                        ClaroUtils.sendRequest(Routing.generate('claro_resource_roots'),
-                            function(data){roots = eval(data)},
-                            function(){createTree('#source_tree')}
-                        )
                     }
                 )
                 function createDivTree(div) {
@@ -42,30 +35,45 @@ $(function(){
                     +"<div id='ct_form'></div><br>"
                     +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
                     +"<div id='source_tree'></div>";
+
                     if (true == params.checkbox) {
                         content+="<br><button id='ct_download'>download</button>";
+                        $('#ct_download').live('click', function(){
+                            var children = $('#source_tree').dynatree('getTree').getSelectedNodes(true);
+                            var parameters = {};
+
+                            for (var i in children) {
+                                parameters[i] = children[i].data.key;
+                            }
+
+                            window.location = Routing.generate('claro_multi_export', parameters);
+                        })
                     }
+
                     div.append(content);
                     $('#ct_switch_mode').click(function(){
                         (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
+                        (params.displayMode == 'classic') ? params.checkbox = true: params.checkbox = false;
                         $('#source_tree').dynatree('destroy');
                         $('#source_tree').empty();
                         createTree('#source_tree');
                     });
+
+                    createTree('#source_tree');
                 }
 
                 function createTree(treeId)
                 {
-                    var initChildren = function (displayMode){
-                        var children = {};
-                        (displayMode == 'classic') ? children = roots : children = [];
-                        return children;
+                    var initAjaxUrl = function (displayMode){
+                        var url = '';
+                        (displayMode == 'classic') ? url = Routing.generate('claro_resource_roots') : url = Routing.generate('claro_resource_children', {'instanceId':0});
+                        return url;
                     }
 
                     var onLazyReadUrl = function(displayMode, node){
                         var url = '';
                         (displayMode == 'classic') ? url = Routing.generate('claro_resource_children', {'instanceId': node.data.key})
-                        : url = Routing.generate('claro_resources_list', {'resourceTypeId':node.parent.data.id, 'rootId':node.data.key} );
+                        : url = Routing.generate('claro_resources_list', {'resourceTypeId':node.data.id });
                         return url;
                     }
 
@@ -81,12 +89,12 @@ $(function(){
                                     "title": resourceTypes[i].type,
                                     "tooltip":  resourceTypes[i].type,
                                     "shareType": 1,
-                                    "type": "resourceType",
+                                    "type": "type_"+resourceTypes[i].type,
                                     "isFolder": true,
-                                    "isLazy": false
+                                    "isLazy": true,
+                                    "isTool": true
                                 }
                                 root.addChild(node);
-                                $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).addChild(roots);
                             }
                         })
                     };
@@ -98,6 +106,7 @@ $(function(){
                             e.preventDefault();
                             var option = ClaroUtils.getCheckedValue(document.forms['move_resource_form']['options']);
                             var route = {}
+
                             if ('move' == option) {
                                 route = {
                                     'name': 'claro_resource_move',
@@ -113,7 +122,7 @@ $(function(){
                                 route = {
                                     'name': 'claro_resource_add_workspace',
                                     'parameters': {
-                                        'instanceId': sourceNode.data.key,
+                                        'resourceId': sourceNode.data.resourceId,
                                         'instanceDestinationId': node.data.key,
                                         'options': option
                                     }
@@ -210,6 +219,11 @@ $(function(){
                                 var executeRequest = function () {
                                     ClaroUtils.sendRequest(route, function (data) {
                                         $('#ct_tree').hide();
+                                        if(node.data.isTool == true){
+                                            $('#modal-body').append(Twig.render(select_workspace_form));
+                                            $('#modal-body').append('he');
+                                            $('#bootstrap-modal').modal('show');
+                                        }
                                         $('#ct_form').empty().append(data).find('form').submit(function (e) {
                                             e.preventDefault();
                                             var action = $('#ct_form').find('form').attr('action');
@@ -250,21 +264,29 @@ $(function(){
                         }
                     }
 
-                    var children = initChildren(params.displayMode);
-
                     $(treeId).dynatree({
-                        checkbox: true,
+                        checkbox: params.checkbox,
                         title: 'myTree',
-                        children: children,
+                        initAjax: {url : initAjaxUrl(params.displayMode)},
                         onPostInit: function(isReloading, isError){
                             if(params.displayMode == 'linker'){
                                 initLinker(treeId);
                             }
                         },
                         clickFolderMode: 1,
+                        selectMode: 3,
                         onLazyRead: function (node) {
                             node.appendAjax({
                                 url: onLazyReadUrl(params.displayMode, node),
+                                success: function (node) {
+                                    var children = node.getChildren();
+
+                                    if (node.isSelected()){
+                                        for (var i in children) {
+                                            children[i].select();
+                                        }
+                                    }
+                                },
                                 error: function (node, XMLHttpRequest, textStatus, errorThrown) {
                                     if (XMLHttpRequest.status == 403) {
                                         ClaroUtils.ajaxAuthenticationErrorHandler(function () {
@@ -285,7 +307,7 @@ $(function(){
                         },
                         onDblClick: function (node) {
                             if (params.mode == 'picker' && node.data.type != 'resourceType'){
-                                (node.shareType == 0) ? alert("you can't share this resource"): params.resourcePickedHandler(node.data.key);
+                                (node.shareType == 0) ? alert("you can't share this resource"): params.resourcePickedHandler(node.data.resourceId);
                             } else {
                                 node.expand();
                                 node.activate();

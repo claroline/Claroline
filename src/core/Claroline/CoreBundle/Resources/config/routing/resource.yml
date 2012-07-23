@@ -34,6 +34,12 @@ claro_resource_export:
     options:
         expose: true
 
+claro_multi_export:
+    pattern: /multiexport
+    defaults: { _controller: ClarolineCoreBundle:Resource:multiExport }
+    options:
+        expose: true
+
 claro_resource_move:
    pattern: move/{instanceId}/{newParentId}
    defaults: { _controller: ClarolineCoreBundle:Resource:move }
@@ -71,7 +77,7 @@ claro_resource_types:
         expose: true
 
 claro_resources_list:
-    pattern: list/{resourceTypeId}/{rootId}
+    pattern: list/{resourceTypeId}
     defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
     options:
         expose: true
@@ -83,7 +89,7 @@ claro_resource_menus:
         expose: true
 
 claro_resource_add_workspace:
-    pattern: workspace/add/{instanceId}/{options}/{instanceDestinationId}
+    pattern: workspace/add/{resourceId}/{options}/{instanceDestinationId}
     defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
     options:
         expose: true

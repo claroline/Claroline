@@ -1,15 +1,14 @@
 [
     {% for resource in resources %}
     {
-        "title": "{{ resource.getResource().getName() }}",
+        "title": "{{ resource.getName() }}",
         "key": "{{ resource.getId() }}",
-        "instanceCount": {{ resource.getResource().getInstanceCount() }},
-        "shareType": "{{ resource.getResource().getShareType() }}",
-        "resourceId": "{{resource.getResource().getId() }}",
-        "type": "{{ resource.getResource().getResourceType().getType() }}",
-        "workspaceId": "{{ resource.getWorkspace().getId() }}",
+        "instanceCount": {{ resource.getInstanceCount() }},
+        "shareType": "{{ resource.getShareType() }}",
+        "resourceId": "{{resource.getId() }}",
+        "type": "{{ resource.getResourceType().getType() }}",
         "tooltip":
-            "added by {{ resource.getCreator().getUsername() }}\ncreated by {{ resource.getResource().getCreator().getUsername() }}\nthis resource is {{ resource.getResource().getShareType(true) }}"
+            "added by created by {{ resource.getCreator().getUsername() }}\nthis resource is {{ resource.getShareType(true) }}\nthis resource is placed in\n{% for instance in resource.getResourceInstances %} in the workspace {{instance.getWorkspace().getName()}}\n {% endfor %}"
         {% if resource.getResourceType.getNavigable() == 1 %}
             ,"isFolder": true
             ,"isLazy": true
