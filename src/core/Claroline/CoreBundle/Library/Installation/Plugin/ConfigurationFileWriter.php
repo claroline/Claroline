@@ -2,10 +2,15 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use \InvalidArgumentException;
+use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Exception\ClarolineException;
-use Claroline\CoreBundle\Exception\InstallationException;
 
+/**
+ * This class is used to (un-)register the namespace, the bundle name and the
+ * routing resources of a plugin in the application configuration files,
+ * in order to have it correctly instantiated by the kernel.
+ */
 class ConfigurationFileWriter
 {
     private $pluginNamespacesFile;
@@ -13,6 +18,14 @@ class ConfigurationFileWriter
     private $pluginRoutingFile;
     private $yamlHandler;
 
+    /**
+     * Constructor.
+     *
+     * @param string $pluginNamespacesFile
+     * @param string $pluginBundlesFile
+     * @param string $pluginRoutingFile
+     * @param Yaml   $yamlHandler
+     */
     public function __construct(
         $pluginNamespacesFile,
         $pluginBundlesFile,
@@ -26,29 +39,54 @@ class ConfigurationFileWriter
         $this->yamlHandler = $yamlHandler;
     }
 
+    /**
+     * Sets the plugin namespace file.
+     *
+     * @param string $filePath
+     */
     public function setPluginNamespacesFile($filePath)
     {
         $this->assertFileIsWriteable($filePath);
         $this->pluginNamespacesFile = $filePath;
     }
 
+    /**
+     * Sets the plugin bundle file.
+     *
+     * @param string $filePath
+     */
     public function setPluginBundlesFile($filePath)
     {
         $this->assertFileIsWriteable($filePath);
         $this->pluginBundlesFile = $filePath;
     }
 
+    /**
+     * Sets the plugin routing file.
+     *
+     * @param string $filePath
+     */
     public function setPluginRoutingFile($filePath)
     {
         $this->assertFileIsWriteable($filePath);
         $this->pluginRoutingFile = $filePath;
     }
 
+    /**
+     * Registers a namespace in the plugin namespace file.
+     *
+     * @param string $namespace
+     */
     public function registerNamespace($namespace)
     {
         $this->doAddItem($this->pluginNamespacesFile, $namespace, 'Namespace');
     }
 
+    /**
+     * Removes a namespace from the plugin namespace file.
+     *
+     * @param string $namespace
+     */
     public function removeNamespace($namespace)
     {
         if (!in_array($namespace, $this->getSharedVendorNamespaces())) {
@@ -56,19 +94,36 @@ class ConfigurationFileWriter
         }
     }
 
-    public function addInstantiableBundle($pluginFQCN)
+    /**
+     * Registers a bundle in the plugin bundles file.
+     *
+     * @param string $pluginFqcn
+     */
+    public function addInstantiableBundle($pluginFqcn)
     {
-        $this->doAddItem($this->pluginBundlesFile, $pluginFQCN, 'Plugin FQCN');
+        $this->doAddItem($this->pluginBundlesFile, $pluginFqcn, 'Plugin FQCN');
     }
 
-    public function removeInstantiableBundle($pluginFQCN)
+    /**
+     * Removes a bundle from the plugin bundles file.
+     *
+     * @param string $pluginFqcn
+     */
+    public function removeInstantiableBundle($pluginFqcn)
     {
-        $this->doRemoveItem($this->pluginBundlesFile, $pluginFQCN);
+        $this->doRemoveItem($this->pluginBundlesFile, $pluginFqcn);
     }
 
-    public function importRoutingResources($pluginFQCN, $paths, $prefix)
+    /**
+     * Registers new routing resources in the plugin routing file.
+     *
+     * @param string $pluginFqcn
+     * @param mixed  $paths
+     * @param string $prefix
+     */
+    public function importRoutingResources($pluginFqcn, $paths, $prefix)
     {
-        $nameParts = explode('\\', $pluginFQCN);
+        $nameParts = explode('\\', $pluginFqcn);
         $vendor = $nameParts[0];
         $bundleName = $nameParts[1];
         $bundleClassName = $nameParts[2];
@@ -99,9 +154,14 @@ class ConfigurationFileWriter
         file_put_contents($this->pluginRoutingFile, $yaml);
     }
 
-    public function removeRoutingResources($pluginFQCN)
+    /**
+     * Removes routing resources from the plugin routing file.
+     *
+     * @param string $pluginFqcn
+     */
+    public function removeRoutingResources($pluginFqcn)
     {
-        $nameParts = explode('\\', $pluginFQCN);
+        $nameParts = explode('\\', $pluginFqcn);
         $className = $nameParts[2];
         $resources = $this->yamlHandler->parse($this->pluginRoutingFile);
 
@@ -115,16 +175,23 @@ class ConfigurationFileWriter
         file_put_contents($this->pluginRoutingFile, $yaml);
     }
 
-    public function isRecorded($pluginFQCN)
+    /**
+     * Checks if a plugin is registered in the application configuration files.
+     *
+     * @param string $pluginFqcn
+     *
+     * @return boolean
+     */
+    public function isRecorded($pluginFqcn)
     {
-        $namespaceParts = explode('\\', $pluginFQCN);
+        $namespaceParts = explode('\\', $pluginFqcn);
         $vendorNamespace = array_shift($namespaceParts);
 
         $isNamespaceRegistered = in_array(
             $vendorNamespace, $this->getRegisteredNamespaces()
         );
         $isBundleRegistered = in_array(
-            $pluginFQCN, $this->getRegisteredBundles()
+            $pluginFqcn, $this->getRegisteredBundles()
         );
 
         if ($isNamespaceRegistered && $isBundleRegistered) {
@@ -138,12 +205,12 @@ class ConfigurationFileWriter
     {
         if (!file_exists($file)) {
             if (!touch($file)) {
-                throw new ClarolineException("File '{$file}' not found.");
+                throw new RuntimeException("File '{$file}' not found.");
             }
         }
 
         if (!is_writable($file)) {
-            throw new ClarolineException("File '{$file}' is not writable.");
+            throw new RuntimeException("File '{$file}' is not writable.");
         }
     }
 
@@ -195,9 +262,8 @@ class ConfigurationFileWriter
     private function doAddItem($file, $item, $itemType)
     {
         if (empty($item)) {
-            throw new InstallationException(
-                "{$itemType} argument cannot be empty.",
-                InstallationException::EMPTY_FILE_ITEM
+            throw new InvalidArgumentException(
+                "{$itemType} argument cannot be empty."
             );
         }
 

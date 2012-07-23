@@ -1,0 +1,21 @@
+{% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
+
+{% block content %}
+
+<div id="dashboard" class="row-fluid dashboard">
+    <div class="span2">
+        <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">{{ 'dashboard'|trans({}, 'platformTranslation') }}</li>
+            <li><a href="{{ path('claro_dashboard_index') }}" id="resource_manager_link">{{ 'home'|trans({}, 'platformTranslation') }}</a></li>
+            <li><a href="{{ path('claro_dashboard_resources') }}" id="resource_manager_link">{{ 'resource_manager'|trans({}, 'platformTranslation') }}</a></li>
+        </ul>
+        </div><!--/.well -->
+    </div>
+    <div class="span10">
+        <!--Body content-->
+        {% block section_content %}{% endblock %}
+    </div>
+</div>
+
+{% endblock %}

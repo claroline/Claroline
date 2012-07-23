@@ -40,7 +40,8 @@ class WorkspaceController extends Controller
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
 
         return $this->render(
-                'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
+            'ClarolineCoreBundle:Workspace:list.html.twig',
+            array('workspaces' => $workspaces)
         );
     }
 
@@ -74,11 +75,15 @@ class WorkspaceController extends Controller
 
         if ('page' == $format) {
             return $this->render(
-                    'ClarolineCoreBundle:Workspace:list.html.twig', array('workspaces' => $workspaces)
+                'ClarolineCoreBundle:Workspace:list.html.twig',
+                array('workspaces' => $workspaces)
             );
         }
 
-        return $this->render("ClarolineCoreBundle:Workspace:list.{$format}.twig", array('workspaces' => $workspaces));
+        return $this->render(
+            "ClarolineCoreBundle:Workspace:list.{$format}.twig",
+            array('workspaces' => $workspaces)
+        );
     }
 
     /**
@@ -95,7 +100,8 @@ class WorkspaceController extends Controller
         $form = $this->get('form.factory')->create(new WorkspaceType());
 
         return $this->render(
-                'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Workspace:form.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -126,13 +132,14 @@ class WorkspaceController extends Controller
             $wsCreator = $this->get('claroline.workspace.creator');
             $wsCreator->createWorkspace($config, $user);
             $this->get('session')->setFlash('notice', 'Workspace created');
-            $route = $this->get('router')->generate('claro_desktop_index');
+            $route = $this->get('router')->generate('claro_ws_list');
 
             return new RedirectResponse($route);
         }
 
         return $this->render(
-                'ClarolineCoreBundle:Workspace:form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Workspace:form.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -158,7 +165,7 @@ class WorkspaceController extends Controller
         $em->flush();
 
         $this->get('session')->setFlash('notice', 'Workspace deleted');
-        $route = $this->get('router')->generate('claro_desktop_index');
+        $route = $this->get('router')->generate('claro_ws_list');
 
         return new RedirectResponse($route);
     }
@@ -177,7 +184,6 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $authorization = false;
-        $resourcesType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findAll();
 
         foreach ($workspace->getWorkspaceRoles() as $role) {
             $this->get('security.context')->isGranted($role->getName());
@@ -190,13 +196,9 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $resourcesInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getWSListableRootResource($workspace);
-
         return $this->render('ClarolineCoreBundle:Workspace:show.html.twig', array(
             'workspace' => $workspace,
-            'resourcesType' => $resourcesType,
-            'resources' => $resourcesInstance,
-            'wsContextId' => $workspace->getId())
+            )
         );
     }
 
@@ -450,7 +452,7 @@ class WorkspaceController extends Controller
      */
     public function userWorkspaceIdAction()
     {
-        $id = $this->get('security.context')->getToken()->getUser()->getPersonnalWorkspace()->getId();
+        $id = $this->get('security.context')->getToken()->getUser()->getPersonalWorkspace()->getId();
 
         return new Response($id);
     }
@@ -467,50 +469,6 @@ class WorkspaceController extends Controller
 
         return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
     }
-
-    /**
-     * Adds a permission to a workspace role. This method will adds the current mask in the database
-     * and edit the concerned resource acls. Only managers can edit permissions.
-     *
-     * @param integer $roleId
-     * @param integer $maskId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response | AccessDeniedHttpException
-     */
-    public function addResourceRolePermissionAction($roleId, $maskId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getWorkspace();
-
-        if ($this->get('security.context')->isGranted($workspace->getManagerRole()->getName(), $workspace)) {
-           $this->container->get('claroline.resource.creator')->addResourceRolePermission($roleId, $maskId);
-        } else {
-            throw new AccessDeniedHttpException();
-        }
-
-        return new Response('success');
-    }
-
-    /**
-     * Removes a permission from a workspace role. See above.
-     *
-     * @param integer $roleId
-     * @param integer $maskId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response | AccessDeniedHttpException
-     */
-    public function removeResourceRolePermissionAction($roleId, $maskId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:WorkspaceRole')->find($roleId)->getWorkspace();
-
-        if ($this->get('security.context')->isGranted($workspace->getManagerRole()->getName(), $workspace)) {
-            $this->container->get('claroline.resource.creator')->removeResourceRolePermission($roleId, $maskId);
-        } else {
-            throw new AccessDeniedHttpException();
-        }
-    }
-
 
     /**
      * Renders the workspace properties page

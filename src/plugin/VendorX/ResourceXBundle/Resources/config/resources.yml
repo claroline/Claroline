@@ -1,0 +1,11 @@
+ResourceX:
+    class: VendorX\ResourceXBundle\Entity\ResourceX
+    listable: true
+    navigable: true
+    downloadable: false
+
+ResourceY:
+    class: VendorX\ResourceXBundle\Entity\ResourceY
+    listable: true
+    navigable: false
+    downloadable: false

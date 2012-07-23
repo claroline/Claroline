@@ -17,9 +17,9 @@ claro_home:
     resource: "@ClarolineCoreBundle/Resources/config/routing/home.yml"
     prefix: home
 
-claro_desktop:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
-    prefix: desktop
+claro_dashboard:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/dashboard.yml"
+    prefix: dashboard
 
 claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"

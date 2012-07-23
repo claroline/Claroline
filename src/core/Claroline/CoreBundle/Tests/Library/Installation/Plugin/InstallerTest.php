@@ -16,9 +16,8 @@ class InstallerTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->markTestSkipped("don't understand");
         $this->installer = self::createClient()->getContainer()->get('claroline.plugin.installer');
-        $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\Plugin\ClarolinePlugin');
+        $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
         $this->initMockedHelpers();
         $this->installer->setLoader($this->mockedLoader);
         $this->installer->setValidator($this->mockedValidator);
@@ -51,7 +50,7 @@ class InstallerTest extends WebTestCase
 
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('LogicException');
 
         $pluginFQCN = 'Imaginary\Fake\Plugin';
 
@@ -85,7 +84,7 @@ class InstallerTest extends WebTestCase
 
     public function testUninstallThrowsAnExceptionIfPluginIsNotRegistered()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\InstallationException');
+        $this->setExpectedException('LogicException');
 
         $pluginFQCN = 'Imaginary\Fake\Plugin';
 

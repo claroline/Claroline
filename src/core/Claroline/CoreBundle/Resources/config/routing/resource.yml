@@ -1,129 +1,90 @@
-claro_resource_index:
-    pattern: /directory/{id}
-    defaults: { _controller: ClarolineCoreBundle:Resource:index, id:null}
-
-claro_resource_show_creation_form:
-    pattern: /form/show/{instanceParentId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:creationResourceForm, instanceParentId:null }
-
-claro_resource_options_form:
-    pattern: /form/options/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:creationOptionsForm }
+claro_resource_creation_form:
+    pattern: /form/{resourceType}
+    defaults: { _controller: ClarolineCoreBundle:Resource:creationForm }
     options:
-      expose: true
-
-claro_resource_edit_options:
-    pattern: /edit/options/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:editOptions }
-    options:
-      expose: true
-
-claro_resource_delete:
-    pattern: /delete/{id}
-    defaults: { _controller: ClarolineCoreBundle:Resource:delete }
-    options:
-      expose: true
-
-claro_resource_open:
-   pattern: /open/{instanceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:open }
-   options:
-      expose: true
-
-claro_resource_edit:
-   pattern: /edit/{instanceId}/{workspaceId}/{options}
-   defaults: { _controller: ClarolineCoreBundle:Resource:edit}
-   options:
-      expose: true
-
-claro_resource_root_nodes:
-    pattern: /nodes/{userId}/roots.{format}
-    defaults: { _controller: ClarolineCoreBundle:Resource:getRootNodes, userId:null }
-    options:
-      expose: true
-
-claro_resource_node:
-    pattern: node/{instanceId}/{workspaceId}/node.{format}
-    defaults: { _controller: ClarolineCoreBundle:Resource:getNode }
-    options:
-      expose: true
-
-claro_resource_move:
-   pattern: move/{idChild}/{idParent}/{workspaceDestinationId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:moveResource, workspaceDestinationId:null }
-   options:
-      expose: true
-
-claro_resource_add_workspace:
-   pattern: workspace/add/{instanceId}/{workspaceId}/{options}/{instanceDestinationId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace, instanceDestinationId:null }
-   options:
-      expose: true
-   requirements:
-      options: ref|copy
-
-claro_resource_remove_workspace:
-   pattern: workspace/remove/{resourceId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:removeFromWorkspace, workspaceId:null }
-   options:
-      expose: true
+        expose: true
 
 claro_resource_create:
-   pattern: /add/{type}/{instanceParentId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:create, instanceParentId:null, workspaceId:null }
-   options:
-      expose: true
+    pattern: /create/{resourceType}/{parentInstanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:create }
+    options:
+        expose: true
 
-claro_resource_default_click:
-   pattern: /click/{instanceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:defaultClick }
-   options:
-       expose: true
+claro_resource_properties_form:
+    pattern: /form/properties/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:basePropertiesForm }
+    options:
+        expose: true
 
-claro_resource_form:
-   pattern: /form/{instanceParentId}/{type}
-   defaults: { _controller: ClarolineCoreBundle:Resource:getForm }
-   options:
-      expose: true
+claro_resource_properties_update:
+    pattern: /update/properties/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:updateBaseProperties }
+    options:
+        expose: true
 
-claro_resource_type_resource:
-   pattern: /type/{listable}/list.{format}
-   defaults: { _controller: ClarolineCoreBundle:Resource:getResourceTypes }
-   options:
-      expose: true
+claro_resource_delete:
+    pattern: /delete/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:delete }
+    options:
+        expose: true
 
-claro_resource_get_instances:
-   pattern: /get/copy/{instanceId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:getResourcesReference }
-   options:
-     expose: true
+claro_resource_export:
+    pattern: /export/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:export }
+    options:
+        expose: true
 
-claro_resource_masks:
-   pattern: /{type}/masks.{format}
-   defaults: { _controller: ClarolineCoreBundle:Resource:getMasks, type:'all' }
+claro_resource_move:
+   pattern: move/{instanceId}/{newParentId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:move }
    options:
-     expose: true
+        expose: true
 
-claro_resource_add_permission:
-   pattern: /permission/add/{instanceId}/{userId}/{maskId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:addInstanceUserPermission }
-   options:
-       expose: true
+claro_resource_custom:
+    pattern: /custom/{resourceType}/{action}/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:custom }
+    options:
+        expose: true
 
-claro_resource_remove_permission:
-   pattern: /permission/remove/{instanceId}/{userId}/{maskId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:removeInstanceUserPermission }
-   options:
-       expose: true
+claro_resource_roots:
+    pattern: /roots
+    defaults: { _controller: ClarolineCoreBundle:Resource:roots }
+    options:
+        expose: true
 
-claro_license_list:
-   pattern: /license/list.{format}
-   defaults: { _controller: ClarolineCoreBundle:Resource:getJsonLicensesList }
-   options:
-     expose: true
+claro_resource_root:
+    pattern: /root/{workspaceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:root }
+    options:
+        expose: true
 
-claro_player_list:
-   pattern: /player/list/{id}
-   defaults: { _controller: ClarolineCoreBundle:Resource:getJsonPlayerList }
-   options:
-      expose: true
+claro_resource_children:
+    pattern: children/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:children }
+    options:
+        expose: true
+
+claro_resource_types:
+    pattern: types
+    defaults: { _controller: ClarolineCoreBundle:Resource:resourceTypes }
+    options:
+        expose: true
+
+claro_resources_list:
+    pattern: list/{resourceTypeId}/{rootId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
+    options:
+        expose: true
+
+claro_resource_menus:
+    pattern: /menus
+    defaults: { _controller: ClarolineCoreBundle:Resource:menus }
+    options:
+        expose: true
+
+claro_resource_add_workspace:
+    pattern: workspace/add/{instanceId}/{options}/{instanceDestinationId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
+    options:
+        expose: true
+        options: ref|copy

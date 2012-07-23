@@ -1,0 +1,5 @@
+ResourceX:
+    class: Invalid\UnexpectedResourceValue\Entity\ResourceX
+    # expected type is a boolean
+    listable: 123
+    navigable: true

@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Entity\Extension;
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class ResourceTypeRepositoryTest extends TransactionalTestCase
@@ -56,10 +56,9 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
 
     private function createResourceTypes()
     {
-        $plugin = new Extension();
+        $plugin = new Plugin();
         $plugin->setVendorName('Test');
         $plugin->setBundleName('Test');
-        $plugin->setType('test');
         $plugin->setBundleFQCN('Test\Test');
         $plugin->setNameTranslationKey('test');
         $plugin->setDescriptionTranslationKey('test');
@@ -70,6 +69,7 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $firstType->setListable(true);
         $firstType->setNavigable(false);
         $firstType->setPlugin($plugin);
+        $firstType->setDownloadable(true);
 
         $secondType = new ResourceType();
         $secondType->setType('Type y');
@@ -77,11 +77,13 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $secondType->setListable(true);
         $secondType->setNavigable(false);
         $secondType->setPlugin($plugin);
+        $secondType->setDownloadable(true);
 
         $thirdType = new ResourceType();
         $thirdType->setType('Type z');
         $thirdType->setListable(true);
         $thirdType->setNavigable(false);
+        $thirdType->setDownloadable(true);
 
         $this->em->persist($plugin);
         $this->em->persist($firstType);

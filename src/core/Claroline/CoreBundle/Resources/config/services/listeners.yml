@@ -1,5 +1,5 @@
 services:
-  
+
     claroline.listener.user_password_encoder:
         class: Claroline\CoreBundle\Listener\UserPasswordEncoder
         calls:
@@ -7,7 +7,7 @@ services:
         tags:
             - { name: doctrine.event_subscriber, event: prePersist}
             - { name: doctrine.event_subscriber, event: preUpdate}
-     
+
     claroline.listener.acl_persister:
         class: Claroline\CoreBundle\Listener\AclPersister
         calls:
@@ -15,19 +15,47 @@ services:
         tags:
             - { name: doctrine.event_subscriber, event: preRemove}
             - { name: doctrine.event_subscriber, event: postPersist}
-            
+
     claroline.listener.locale_setter:
         class: Claroline\CoreBundle\Listener\LocaleSetter
         arguments: ["@session", "@claroline.config.platform_config_handler"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-            
+
     claroline.listener.ajax_authentication:
         class: Claroline\CoreBundle\Listener\AjaxAuthenticationListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1 }
-                 
+
     claroline.listener.resource_extender:
         class: Claroline\CoreBundle\Listener\ResourceExtender
         tags:
             - { name: doctrine.event_subscriber, event: loadClassMetadata, connection: default}
+
+    claroline.listener.directory_listener:
+        class: Claroline\CoreBundle\Listener\Resource\DirectoryListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_directory, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_directory, method: onCreate }
+
+    claroline.listener.file_listener:
+        class: Claroline\CoreBundle\Listener\Resource\FileListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_file, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_file, method: onCreate }
+            - { name: kernel.event_listener, event: delete_file, method: onDelete }
+            - { name: kernel.event_listener, event: copy_file, method: onCopy }
+            - { name: kernel.event_listener, event: export_file, method: onExport }
+
+    claroline.listener.text_listener:
+        class: Claroline\CoreBundle\Listener\Resource\TextListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_text, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_text, method: onCreate }
+            - { name: kernel.event_listener, event: open_text, method: onOpen }

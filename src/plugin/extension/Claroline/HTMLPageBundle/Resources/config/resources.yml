@@ -1,8 +1,0 @@
-html_element:
-    extends: File
-    name: HTMLElement
-    manager_service_id: htmlpage.manager
-    controller: HTMLElement
-    listable: true
-    navigable: false
-    vendor: Claroline

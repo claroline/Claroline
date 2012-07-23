@@ -1,0 +1,7 @@
+claro_dashboard_index:
+    pattern: /
+    defaults: { _controller: ClarolineCoreBundle:Dashboard:index }
+
+claro_dashboard_resources:
+    pattern: /resources
+    defaults: { _controller: ClarolineCoreBundle:Dashboard:resourceManager }

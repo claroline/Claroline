@@ -22,7 +22,8 @@ class ProfileController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Profile:profile_form.html.twig',
-            array('profile_form' => $form->createView()));
+            array('profile_form' => $form->createView())
+        );
     }
 
     /**
@@ -49,7 +50,8 @@ class ProfileController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Profile:profile_form.html.twig',
-            array('profile_form' => $form->createView()));
+            array('profile_form' => $form->createView())
+        );
     }
 
     /**

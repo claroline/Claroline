@@ -2,85 +2,85 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Exception\InstallationException;
+use \RuntimeException;
 
+/**
+ * The plugin loader is used to instantiate a plugin bundle class (in order to
+ * perform checks, access some of its methods, etc.) while it is not yet
+ * known by the application kernel.
+ */
 class Loader
 {
-    private $pluginDirectories;
+    const NO_PLUGIN_FOUND = 0;
+    const NON_EXISTENT_BUNDLE_CLASS = 1;
+    const NON_INSTANTIABLE_BUNDLE_CLASS = 2;
+    const UNEXPECTED_BUNDLE_TYPE = 3;
 
-    public function __construct(array $pluginDirectories)
+    private $pluginDirectory;
+
+    /**
+     * Constructor.
+     *
+     * @param string $pluginDirectory
+     */
+    public function __construct($pluginDirectory)
     {
-        $this->setPluginDirectories($pluginDirectories);
+        $this->pluginDirectory = $pluginDirectory;
     }
 
-    public function setPluginDirectories(array $directories)
+    /**
+     * Searches a plugin bundle by its FQCN and returns an instance of it.
+     *
+     * @param string $pluginFqcn
+     * @throws RuntimeException if the plugin class cannot be found or instantiated
+     *
+     * @return PluginBundle
+     */
+    public function load($pluginFqcn)
     {
-        $this->pluginDirectories = $directories;
-    }
+        $pluginPath = $this->pluginDirectory
+            . DIRECTORY_SEPARATOR
+            . str_replace('\\', DIRECTORY_SEPARATOR, $pluginFqcn)
+            . '.php';
 
-    public function load($pluginFQCN)
-    {
-        $pluginPath = $this->locate($pluginFQCN);
-
-        return $this->getPluginInstance($pluginPath, $pluginFQCN);
-    }
-
-    private function locate($pluginFQCN)
-    {
-        $relativePath = str_replace('\\', DIRECTORY_SEPARATOR, $pluginFQCN) . '.php';
-        $possiblePaths = array();
-        $foundPaths = array();
-
-        foreach ($this->pluginDirectories as $directory) {
-            $possiblePath = $directory . DIRECTORY_SEPARATOR . $relativePath;
-            $possiblePaths[] = $possiblePath;
-
-            if (file_exists($possiblePath)) {
-                $foundPaths[] = $possiblePath;
-            }
-        }
-
-        $foundPathCount = count($foundPaths);
-
-        if ($foundPathCount == 0) {
-            throw new InstallationException(
-                "No bundle class file matches the FQCN '{$pluginFQCN}' "
-                . '(possible paths where : ' . implode(', ', $possiblePaths) . ')',
-                InstallationException::NO_PLUGIN_FOUND
+        if (!file_exists($pluginPath)) {
+            throw new RuntimeException(
+                "No bundle class file matches the FQCN '{$pluginFqcn}' "
+                . '(expected path was : ' . $pluginPath . ')',
+                self::NO_PLUGIN_FOUND
             );
         }
 
-        if ($foundPathCount > 1) {
-            throw new InstallationException(
-                "{$foundPathCount} bundle class files matches the FQCN "
-                . "'{$pluginFQCN}' (" . implode(', ', $foundPaths) . ')',
-                InstallationException::MULTIPLE_PLUGINS_FOUND
-            );
-        }
-
-        return $foundPaths[0];
+        return $this->getPluginInstance($pluginPath, $pluginFqcn);
     }
 
-    private function getPluginInstance($pluginPath, $pluginFQCN)
+    private function getPluginInstance($pluginPath, $pluginFqcn)
     {
         require_once $pluginPath;
 
-        if (!class_exists($pluginFQCN)) {
-            throw new InstallationException(
-                "Class '{$pluginFQCN}' not found in '{$pluginPath}'.",
-                InstallationException::NON_EXISTENT_BUNDLE_CLASS
+        if (!class_exists($pluginFqcn)) {
+            throw new RuntimeException(
+                "Class '{$pluginFqcn}' not found in '{$pluginPath}'.",
+                self::NON_EXISTENT_BUNDLE_CLASS
             );
         }
 
-        $reflectionClass = new \ReflectionClass($pluginFQCN);
+        $reflectionClass = new \ReflectionClass($pluginFqcn);
 
         if (!$reflectionClass->IsInstantiable()) {
-            throw new InstallationException(
-                "Class '{$pluginFQCN}' is not instantiable.",
-                InstallationException::NON_INSTANTIABLE_BUNDLE_CLASS
+            throw new RuntimeException(
+                "Class '{$pluginFqcn}' is not instantiable.",
+                self::NON_INSTANTIABLE_BUNDLE_CLASS
             );
         }
 
-        return new $pluginFQCN;
+        if (!$reflectionClass->isSubclassOf('Claroline\CoreBundle\Library\PluginBundle')) {
+            throw new RuntimeException(
+                "Class '{$pluginFqcn}' doesn't extend Claroline 'PluginBundle' class.",
+                self::UNEXPECTED_BUNDLE_TYPE
+            );
+        }
+
+        return new $pluginFqcn;
     }
 }

@@ -1,0 +1,7 @@
+HTMLElement:
+    extends: File
+    listable: true
+    navigable: false
+    actions:
+      open: false
+    downloadable: true

@@ -4,7 +4,7 @@
 
 # top bar links
 administration: Administration
-desktop: Desktop
+dashboard: Dashboard
 home: Home
 my_account: My account
 
@@ -85,32 +85,32 @@ workspace.name_not_blank: The workspace's name is required.
 ########
 
 # user
-first_name: first name
-last_name: lastname
-mail: mail
-phone: phone
-note: note
-username: username
-password: password
-role: role
-user: user
-users: users
-administrative_code: administrative code
+first_name: First name
+last_name: Last name
+mail: Mail
+phone: Phone
+note: Note
+username: Username
+password: Password
+role: Role
+user: User
+users: Users
+administrative_code: Administrative code
 
 # group
-group: group
-groups: groups
-add_group: add group
+group: Group
+groups: Groups
+add_group: Add group
 
 # resource
-resource: resource
-resources: resources
-resource_manager: resource manager
-owner: owner
-open: ouvrir
+resource: Resource
+resources: Resources
+resource_manager: Resource manager
+owner: Owner
+open: Open
 
 # workspace
-workspace: Workspaces
+workspace: Workspace
 workspaces: Workspaces
 workspace.create: Create a new workspace
 registered_users: Registered users

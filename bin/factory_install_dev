@@ -14,14 +14,14 @@
 $rootDirectory = realpath(__DIR__ . "/..");
 
 function deleteIfExists($file) {
-    if(file_exists($file)) {
+    if (file_exists($file)) {
         unlink($file);
     }
 }
 
-deleteIfExists("{$rootDirectory}/app/config/plugin/bundles");
-deleteIfExists("{$rootDirectory}/app/config/plugin/namespaces");
-deleteIfExists("{$rootDirectory}/app/config/plugin/routing.yml");
+deleteIfExists("{$rootDirectory}/app/config/local/plugin/bundles");
+deleteIfExists("{$rootDirectory}/app/config/local/plugin/namespaces");
+deleteIfExists("{$rootDirectory}/app/config/local/plugin/routing.yml");
 
 system("php {$rootDirectory}/bin/vendors install");
 

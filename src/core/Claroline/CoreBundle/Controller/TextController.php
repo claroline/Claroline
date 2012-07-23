@@ -9,109 +9,11 @@ use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Form\TextType;
 use Claroline\CoreBundle\Entity\User;
 
-
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
  */
 class TextController extends Controller
 {
-
-    /**
-     * Returns the resource type as a string, it'll be used by the resource controller to find this service
-     *
-     * @return string
-     */
-    public function getResourceType()
-    {
-        return "text";
-    }
-
-    /**
-     * Returns the resource form.
-     *
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->get('form.factory')->create(new TextType);
-    }
-
-    /**
-     * Returns the form in a template. $twigFile will contain the default template called
-     * but it's not used here.
-     *
-     * @param string  $twigTemp
-     * @param integer $id
-     * @param string  $type
-     *
-     * @return string
-     */
-    public function getFormPage($twigTemp, $id, $type)
-    {
-        $form = $this->get('form.factory')->create(new TextType());
-        $content = $this->render('ClarolineCoreBundle:Text:form_page.html.twig', array('form' => $form->createView(), 'id' => $id, 'type' => $type));
-
-        return $content;
-    }
-
-    /**
-     * Create a text. Right/user/parent are set by the resource controller
-     * but you can use them here aswell.
-     *
-     * @param Form    $form
-     * @param integer $id
-     * @param User    $user
-     *
-     * @return Text
-     */
-    public function add(Text $text, $id, User $user)
-    {
-        $data = $text->getText();
-        $revision = new Revision();
-        $revision->setContent($data);
-        $revision->setUser($user);
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($revision);
-        $text = new Text();
-        $text->setLastRevision($revision);
-        $em->persist($text);
-        $revision->setText($text);
-        $em->flush();
-
-        return $text;
-    }
-
-    /**
-     * Default action for a text. It's what happens when you left click on it.
-     *
-     * @param integer $resourceId
-     *
-     * @return Response
-     */
-    public function getDefaultAction($resourceId)
-    {
-        $text = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\Text')->find($resourceId);
-        $content = $this->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $resourceId));
-
-        return new Response($content);
-    }
-
-    /**
-     * Returns a response (wich contains a form).
-     * Edit action for a text.
-     *
-     * @param integer $resourceId
-     *
-     * @return Response
-     */
-    public function editFormPageAction($resourceId)
-    {
-        $text = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\Text')->find($resourceId);
-        $content = $this->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $resourceId));
-
-        return new Response($content);
-    }
-
     /**
      * found on https://github.com/paulgb/simplediff/blob/5bfe1d2a8f967c7901ace50f04ac2d9308ed3169/simplediff.php
      * Paul's Simple Diff Algorithm v 0.1
@@ -148,13 +50,17 @@ class TextController extends Controller
                 }
             }
         }
+
         if ($maxlen == 0) {
 
             return array(array('d' => $old, 'i' => $new));
         }
 
         return array_merge(
-            $this->diff(array_slice($old, 0, $omax), array_slice($new, 0, $nmax)), array_slice($new, $nmax, $maxlen), $this->diff(array_slice($old, $omax + $maxlen), array_slice($new, $nmax + $maxlen)));
+            $this->diff(array_slice($old, 0, $omax), array_slice($new, 0, $nmax)),
+            array_slice($new, $nmax, $maxlen),
+            $this->diff(array_slice($old, $omax + $maxlen), array_slice($new, $nmax + $maxlen))
+        );
     }
 
     /**
@@ -235,35 +141,6 @@ class TextController extends Controller
     }
 
     /**
-     * Edits a text.
-     *
-     * @param integer $textId
-     *
-     * @return Response
-     */
-    public function editAction($textId)
-    {
-        $request = $this->get('request');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $text = $request->request->get('content');
-        $em = $this->getDoctrine()->getEntityManager();
-        $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
-        $version = $old->getVersion();
-        $revision = new Revision();
-        $revision->setContent($text);
-        $revision->setText($old);
-        $revision->setVersion(++$version);
-        $revision->setUser($user);
-        $em->persist($revision);
-        $old->setVersion($version);
-        $old->setLastRevision($revision);
-
-        $em->flush();
-
-        return new Response('edited');
-    }
-
-    /**
      * Show the diff between every text verion. This function is a test.
      *
      * @param integer $textId
@@ -289,18 +166,53 @@ class TextController extends Controller
             //$normalized = $doc->loadHTML($new);
             //var_dump($doc);
 
-            $old = $this->get('claroline.text.manager')->tokenize($old);
-            $new = $this->get('claroline.text.manager')->tokenize($new);
+            $old = $this->tokenize($old);
+            $new = $this->tokenize($new);
 
-            $diff = $this->get('claroline.text.manager')->htmlDiff($old, $new);
-            $differences[$d] = $this->get('claroline.text.manager')->untokenize($diff);
+            $diff = $this->htmlDiff($old, $new);
+            $differences[$d] = $this->untokenize($diff);
 
             $d++;
         }
 
-        return $this->render('ClarolineCoreBundle:Text:history.html.twig', array('differences' => $differences,
-                    'original' => $revisions[$size]->getContent())
+        return $this->render(
+            'ClarolineCoreBundle:Text:history.html.twig',
+            array(
+                'differences' => $differences,
+                'original' => $revisions[$size]->getContent()
+            )
         );
     }
 
+    public function editFormAction($textId)
+    {
+        $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
+        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $textId));
+        $response = new Response($content);
+
+        return $response;
+    }
+
+    public function editAction($textId)
+    {
+
+        $request = $this->get('request');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $text = $request->request->get('content');
+        $em = $this->getDoctrine()->getEntityManager();
+        $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
+        $version = $old->getVersion();
+        $revision = new Revision();
+        $revision->setContent($text);
+        $revision->setText($old);
+        $revision->setVersion(++$version);
+        $revision->setUser($user);
+        $em->persist($revision);
+        $old->setVersion($version);
+        $old->setLastRevision($revision);
+
+        $em->flush();
+
+        return new Response('edited');
+    }
 }

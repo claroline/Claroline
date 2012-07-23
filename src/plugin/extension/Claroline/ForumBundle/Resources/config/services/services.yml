@@ -1,7 +1,0 @@
-services:
-  claroline.forum.manager:
-        class: Claroline\ForumBundle\Controller\ForumController
-        calls:
-          - [ setContainer, [ "@service_container" ] ]
-        tags:
-           - { name: resource.controller }

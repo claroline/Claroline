@@ -1,0 +1,11 @@
+ResourceA:
+    class: Valid\WithCustomResources\Entity\ResourceA
+    listable: true
+    navigable: true
+    downloadable: true
+
+ResourceB:
+    class: Valid\WithCustomResources\Entity\ResourceB
+    listable: false
+    navigable: false
+    downloadable: true

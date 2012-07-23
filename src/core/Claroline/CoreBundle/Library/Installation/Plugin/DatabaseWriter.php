@@ -2,24 +2,32 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use \RuntimeException;
 use Symfony\Component\Validator\Validator as SymfonyValidator;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Library\Plugin\ClarolinePlugin;
-use Claroline\CoreBundle\Library\Plugin\ClarolineTool;
-use Claroline\CoreBundle\Library\Plugin\ClarolineExtension;
+use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Entity\Tool;
-use Claroline\CoreBundle\Entity\Extension;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Exception\InstallationException;
+use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
+/**
+ * This class is used to save/delete a plugin an its possible dependencies (like
+ * custom resource types) in the database.
+ */
 class DatabaseWriter
 {
     private $validator;
     private $em;
     private $yamlParser;
 
+    /**
+     * Constructor.
+     *
+     * @param SymfonyValidator  $validator
+     * @param EntityManager     $em
+     * @param Yaml              $yamlParser
+     */
     public function __construct(
         SymfonyValidator $validator,
         EntityManager $em,
@@ -31,30 +39,28 @@ class DatabaseWriter
         $this->yamlParser = $yamlParser;
     }
 
-    public function insert(ClarolinePlugin $plugin)
+    /**
+     * Persists a plugin in the database.
+     *
+     * @param PluginBundle $plugin
+     */
+    public function insert(PluginBundle $plugin)
     {
-        if ($plugin instanceof ClarolineTool) {
-            $pluginEntity = $this->prepareToolEntity($plugin);
-        } elseif ($plugin instanceof ClarolineExtension) {
-            $pluginEntity = $this->prepareExtensionEntity($plugin);
-        }
-
+        $pluginEntity = new Plugin();
         $pluginEntity->setBundleFQCN(get_class($plugin));
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
-        $pluginEntity->setType($plugin->getType());
         $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
 
         $errors = $this->validator->validate($pluginEntity);
 
         if (count($errors) > 0) {
-            $pluginFQCN = get_class($plugin);
+            $pluginFqcn = get_class($plugin);
 
-            throw new InstallationException(
-                "The plugin entity for '{$pluginFQCN}' cannot be validated. "
-                . "Validation errors : {$errors->__toString()}.",
-                InstallationException::ENTIY_VALIDATION_ERROR
+            throw new RuntimeException(
+                "The plugin entity for '{$pluginFqcn}' cannot be validated. "
+                . "Validation errors : {$errors->__toString()}."
             );
         }
 
@@ -63,66 +69,103 @@ class DatabaseWriter
         $this->em->flush();
     }
 
-    public function delete($pluginFQCN)
+    /**
+     * Removes a plugin from the database.
+     *
+     * @param string $pluginFqcn
+     */
+    public function delete($pluginFqcn)
     {
-        $plugin = $this->getPluginEntity($pluginFQCN);
-        // Complete deletion of all plugin db dependencies
-        // is made via cascade mechanism
+        $plugin = $this->getPluginEntity($pluginFqcn);
+
+        // code below is for "re-parenting" the resources which depend on one
+        // of the resource types the plugin might have declared
+        // TODO : this should be covered by a test
+        $resourceTypes = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findByPlugin($plugin->getGeneratedId());
+
+        foreach ($resourceTypes as $resourceType) {
+            if (null !== $resourceType) {
+                if (null !== $parentType = $resourceType->getParent()) {
+                    $resources = $this->em
+                        ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                        ->findByResourceType($resourceType->getId());
+
+                    foreach ($resources as $resource) {
+                        $resource->setResourceType($parentType);
+                    }
+                }
+            }
+        }
+
+        // deletion of other plugin db dependencies is made via a cascade mechanism
         $this->em->remove($plugin);
         $this->em->flush();
     }
 
-    public function isSaved($pluginFQCN)
+    /**
+     * Checks if a plugin is persited in the database.
+     *
+     * @param string $pluginFqcn
+     *
+     * @return boolean
+     */
+    public function isSaved($pluginFqcn)
     {
-        if ($this->getPluginEntity($pluginFQCN) !== null) {
+        if ($this->getPluginEntity($pluginFqcn) !== null) {
             return true;
         }
 
         return false;
     }
 
-    private function prepareToolEntity(ClarolineTool $tool)
-    {
-        return new Tool();
-    }
-
-    private function prepareExtensionEntity(ClarolineExtension $extension)
-    {
-        return new Extension();
-    }
-
-    private function getPluginEntity($pluginFQCN)
+    private function getPluginEntity($pluginFqcn)
     {
         return $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Plugin')
-                ->findOneByBundleFQCN($pluginFQCN);
+            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+            ->findOneByBundleFQCN($pluginFqcn);
     }
 
-    private function persistCustomResourceTypes(ClarolinePlugin $plugin, Plugin $pluginEntity)
+    private function persistCustomResourceTypes(PluginBundle $plugin, Plugin $pluginEntity)
     {
         $resourceFile = $plugin->getCustomResourcesFile();
 
         if (is_string($resourceFile) && file_exists($resourceFile)) {
             $resources = (array) $this->yamlParser->parse($resourceFile);
 
-            foreach ($resources as $resource) {
+            foreach ($resources as $name => $properties) {
                 $resourceType = new ResourceType();
 
-                if (isset($resource['class'])) {
-                    $resourceType->setClass($resource['class']);
+                if (isset($properties['class'])) {
+                    $resourceType->setClass($properties['class']);
                 }
-                if (isset($resource['extends'])) {
-                    //resource Type ex
-                    $resourceExtended = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => $resource['extends']));
+                if (isset($properties['extends'])) {
+                    $resourceExtended = $this->em
+                        ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                        ->findOneBy(array('type' => $properties['extends']));
                     $resourceType->setParent($resourceExtended);
                 }
 
-                $resourceType->setType($resource['name']);
-                $resourceType->setListable($resource['listable']);
-                $resourceType->setNavigable($resource['navigable']);
+                $resourceType->setType($name);
+                $resourceType->setListable($properties['listable']);
+                $resourceType->setNavigable($properties['navigable']);
+                $resourceType->setDownloadable($properties['downloadable']);
                 $resourceType->setPlugin($pluginEntity);
-
                 $this->em->persist($resourceType);
+
+                if (isset($properties['actions'])) {
+                    $actions = $properties['actions'];
+
+                    foreach ($actions as $key => $action) {
+                        $rtca = new ResourceTypeCustomAction();
+                        $rtca->setAsync($action);
+                        $rtca->setAction($key);
+                        $rtca->setResourceType($resourceType);
+                        $this->em->persist($rtca);
+                    }
+                }
+
             }
         }
     }
