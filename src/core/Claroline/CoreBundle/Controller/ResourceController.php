@@ -412,10 +412,9 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resources of a defined type in a defined directory.
+     * Returns a json representation of the resources of a defined type for the current user.
      *
      * @param integer $resourceTypeId
-     * @param integer $rootId
      */
     public function resourceListAction($resourceTypeId)
     {

@@ -44,7 +44,6 @@ $(function(){
 
                             for (var i in children) {
                                 parameters[i] = children[i].data.key;
-                                console.debug(children);
                             }
 
                             window.location = Routing.generate('claro_multi_export', parameters);
@@ -90,9 +89,10 @@ $(function(){
                                     "title": resourceTypes[i].type,
                                     "tooltip":  resourceTypes[i].type,
                                     "shareType": 1,
-                                    "type": "resourceType",
+                                    "type": "type_"+resourceTypes[i].type,
                                     "isFolder": true,
-                                    "isLazy": true
+                                    "isLazy": true,
+                                    "isTool": true
                                 }
                                 root.addChild(node);
                             }
@@ -219,6 +219,11 @@ $(function(){
                                 var executeRequest = function () {
                                     ClaroUtils.sendRequest(route, function (data) {
                                         $('#ct_tree').hide();
+                                        if(node.data.isTool == true){
+                                            $('#modal-body').append(Twig.render(select_workspace_form));
+                                            $('#modal-body').append('he');
+                                            $('#bootstrap-modal').modal('show');
+                                        }
                                         $('#ct_form').empty().append(data).find('form').submit(function (e) {
                                             e.preventDefault();
                                             var action = $('#ct_form').find('form').attr('action');
