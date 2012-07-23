@@ -13,7 +13,7 @@ $(function(){
             var route = {
                 'name': 'claro_resource_add_workspace',
                 'parameters': {
-                    'instanceId': id,
+                    'resourceId': id,
                     'instanceDestinationId': sourceId,
                     'options': 'ref'
                 }

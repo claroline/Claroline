@@ -56,7 +56,7 @@ class ResourceController extends Controller
             $manager = $this->get('claroline.resource.manager');
             $instance = $manager->create($resource, $parentInstanceId, $resourceType);
             $content = $this->renderView(
-                'ClarolineCoreBundle:Resource:resources.json.twig',
+                'ClarolineCoreBundle:Resource:instances.json.twig',
                 array('resources' => array($instance))
             );
             $response->headers->set('Content-Type', 'application/json');
@@ -160,7 +160,7 @@ class ResourceController extends Controller
             $em->persist($resource);
             $em->flush();
             $content = $this->renderView(
-                'ClarolineCoreBundle:Resource:resources.json.twig',
+                'ClarolineCoreBundle:Resource:instances.json.twig',
                 array('resources' => array($resourceInstance))
             );
             $response = new Response($content);
@@ -423,11 +423,10 @@ class ResourceController extends Controller
             ->find($resourceTypeId);
         $instanceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $user = $this->get('security.context')->getToken()->getUser();
-        $instances = $instanceRepo->getResourceList($resourceType, $user);
-
+        $resources = $instanceRepo->getResourceList($resourceType, $user);
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resources.json.twig',
-            array('resources' => $instances)
+            array('resources' => $resources)
         );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -460,20 +459,20 @@ class ResourceController extends Controller
     /**
      * Adds a resource instance to a workspace. Options must be must be 'ref' or 'copy'.
      *
-     * @param integer $resourceId
+     * @param integer $instanceId
      * @param string  $options
      * @param integer $instanceDestinationId
      *
      * @return Response
      */
-    public function addToWorkspaceAction($instanceId, $options, $instanceDestinationId)
+    public function addToWorkspaceAction($resourceId, $options, $instanceDestinationId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
-        $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
 
         if ($options == 'ref') {
-            $copy = $this->addToDirectoryByReference($instance, $parent);
+            $copy = $this->addToDirectoryByReference($resource, $parent);
         } else {
             $copy = $this->addToDirectoryByCopy($instance, $parent);
         }
@@ -514,17 +513,26 @@ class ResourceController extends Controller
         $em->flush();
     }
 
-    private function addToDirectoryByReference(ResourceInstance $instance, ResourceInstance $parent)
+    private function addToDirectoryByReference(AbstractResource $resource, ResourceInstance $parent)
     {
-        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE
-            || $instance->getResource()->getCreator() == $this->get('security.context')->getToken()->getUser()) {
-            $instanceCopy = $this->createReference($instance);
-            $instanceCopy->setParent($parent);
-            $instanceCopy->setWorkspace($parent->getWorkspace());
-            $children = $instance->getChildren();
+        if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE
+            || $resource->getCreator() == $this->get('security.context')->getToken()->getUser()) {
 
-            foreach ($children as $child) {
-                $this->addToDirectoryByReference($child, $instanceCopy);
+            if ($resource->getResourceType()->getType() != 'directory') {
+                $instanceCopy = $this->createReference($resource);
+                $instanceCopy->setParent($parent);
+                $instanceCopy->setWorkspace($parent->getWorkspace());
+            } else {
+                $instances = $resource->getResourceInstances();
+                $instanceCopy = $this->createCopy($instances[0]);
+                $instanceCopy->setParent($parent);
+                $instanceCopy->setWorkspace($parent->getWorkspace());
+                var_dump('directory');
+                var_dump(count($instances[0]->getChildren()));
+
+                foreach ($instances[0]->getChildren() as $child) {
+                    $this->addToDirectoryByReference($child->getResource(), $instanceCopy);
+                }
             }
 
             $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
@@ -577,12 +585,12 @@ class ResourceController extends Controller
         return $ric;
     }
 
-    private function createReference(ResourceInstance $resourceInstance)
+    private function createReference(AbstractResource $resource)
     {
         $ric = new ResourceInstance();
         $ric->setCreator($this->get('security.context')->getToken()->getUser());
-        $ric->setResource($resourceInstance->getResource());
-        $resourceInstance->getResource()->addResourceInstance($ric);
+        $ric->setResource($resource);
+        $resource->addResourceInstance($ric);
 
         return $ric;
     }

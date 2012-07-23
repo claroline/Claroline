@@ -89,7 +89,7 @@ claro_resource_menus:
         expose: true
 
 claro_resource_add_workspace:
-    pattern: workspace/add/{instanceId}/{options}/{instanceDestinationId}
+    pattern: workspace/add/{resourceId}/{options}/{instanceDestinationId}
     defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
     options:
         expose: true

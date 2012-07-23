@@ -9,7 +9,7 @@ $(function(){
                 mode: 'manager',
                 displayMode: 'classic',
                 checkbox: true,
-                resourcePickedHandler: function (instanceId){
+                resourcePickedHandler: function (resourceId){
                     alert("DEFAULT SUBMIT HANDLER MUST BE CHANGED")
                 }
             }, options);
@@ -122,7 +122,7 @@ $(function(){
                                 route = {
                                     'name': 'claro_resource_add_workspace',
                                     'parameters': {
-                                        'instanceId': sourceNode.data.key,
+                                        'resourceId': sourceNode.data.resourceId,
                                         'instanceDestinationId': node.data.key,
                                         'options': option
                                     }
@@ -307,7 +307,7 @@ $(function(){
                         },
                         onDblClick: function (node) {
                             if (params.mode == 'picker' && node.data.type != 'resourceType'){
-                                (node.shareType == 0) ? alert("you can't share this resource"): params.resourcePickedHandler(node.data.key);
+                                (node.shareType == 0) ? alert("you can't share this resource"): params.resourcePickedHandler(node.data.resourceId);
                             } else {
                                 node.expand();
                                 node.activate();
