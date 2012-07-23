@@ -290,15 +290,18 @@ class ResourceController extends Controller
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
-            if($instance->getResource()->getResourceType()->getType() == 'directory') {
-                $this->addDirectoryToArchive($instance, $archive);
-            } else {
+
+            if ($instance->getResource()->getResourceType()->getType() != 'directory') {
+
                 $eventName = $this->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
                 $event = new ExportResourceEvent($instance->getResource()->getId());
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $item = $event->getItem();
-                $name = strtolower(str_replace(' ', '_', $instance->getResource()->getName()));
-                $archive->addFile($item, $name);
+                $obj = $event->getItem();
+
+                if ($obj != null) {
+                    $path = $this->getAbsolutePath($instance, '');
+                    $archive->addFile($obj, $path . $instance->getResource()->getName());
+                }
             }
         }
 
@@ -527,8 +530,6 @@ class ResourceController extends Controller
                 $instanceCopy = $this->createCopy($instances[0]);
                 $instanceCopy->setParent($parent);
                 $instanceCopy->setWorkspace($parent->getWorkspace());
-                var_dump('directory');
-                var_dump(count($instances[0]->getChildren()));
 
                 foreach ($instances[0]->getChildren() as $child) {
                     $this->addToDirectoryByReference($child->getResource(), $instanceCopy);
@@ -600,6 +601,16 @@ class ResourceController extends Controller
         if ($root != $resourceInstance->getParent()) {
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
             $path = $this->getRelativePath($root, $resourceInstance->getParent(), $path);
+        }
+
+        return $path;
+    }
+
+    public function getAbsolutePath($resourceInstance, $path)
+    {
+        if (null != $resourceInstance->getParent()) {
+            $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
+            $path = $this->getAbsolutePath($resourceInstance->getParent(), $path);
         }
 
         return $path;
