@@ -39,10 +39,12 @@ $(function(){
                     if (true == params.checkbox) {
                         content+="<br><button id='ct_download'>download</button>";
                         $('#ct_download').live('click', function(){
-                            var children = $('#source_tree').dynatree('getTree').getSelectedNodes(true);
+                            var children = $('#source_tree').dynatree('getTree').getSelectedNodes();
+
                             var parameters = {};
 
                             for (var i in children) {
+                                console.debug(children[i]);
                                 parameters[i] = children[i].data.key;
                             }
 
