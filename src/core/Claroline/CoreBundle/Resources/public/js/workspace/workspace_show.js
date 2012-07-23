@@ -75,13 +75,18 @@ $(function(){
                 'workspaceId': document.getElementById('jsdata').getAttribute('data-ws-id')
                 }),
             function(data){
-                rootws = eval(data);
-                children = rootws;
                 initLinker();
                 createTree(children)
                 })
-        }
-        )
+        })
+
+    var initAjaxUrl = function (displayMode){
+        var url = '';
+        (displayMode == 'classic') ? url = Routing.generate('claro_resource_roots') : url = Routing.generate('claro_resource_children', {
+            'instanceId':0
+        });
+        return url;
+    }
 
     var onLazyReadUrl = function(displayMode, node){
         var url = '';
@@ -89,9 +94,8 @@ $(function(){
             'instanceId': node.data.key
             })
         : url = Routing.generate('claro_resources_list', {
-            'resourceTypeId':node.data.id,
-            'rootId': rootws[0].key
-            } );
+            'resourceTypeId':node.data.id
+        });
         return url;
     }
 
@@ -99,6 +103,7 @@ $(function(){
         ClaroUtils.sendRequest(Routing.generate('claro_resource_types'), function(data){
             //JSON.parse not working: why ?
             var resourceTypes = eval(data);
+            var root = $('#ws_tree').dynatree('getTree').getRoot();
             for(var i in resourceTypes){
                 var node = {
                     "id": resourceTypes[i].id,
@@ -106,11 +111,12 @@ $(function(){
                     "title": resourceTypes[i].type,
                     "tooltip":  resourceTypes[i].type,
                     "shareType": 1,
-                    "type": "resourceType",
+                    "type": "type_"+resourceTypes[i].type,
                     "isFolder": true,
-                    "isLazy": true
+                    "isLazy": true,
+                    "isTool": true
                 }
-                rootTypes.push(node);
+                root.addChild(node);
             }
         })
     };
@@ -244,11 +250,28 @@ $(function(){
 
         $('#ws_tree').dynatree({
             title: 'myTree',
-            children: initChildren,
+            initAjax: {
+                url : initAjaxUrl(displayMode)
+                },
+            onPostInit: function(isReloading, isError){
+                if(displayMode == 'linker'){
+                    initLinker('#ws_tree');
+                }
+            },
             clickFolderMode: 1,
+            selectMode: 3,
             onLazyRead: function (node) {
                 node.appendAjax({
                     url: onLazyReadUrl(displayMode, node),
+                    success: function (node) {
+                        var children = node.getChildren();
+
+                        if (node.isSelected()){
+                            for (var i in children) {
+                                children[i].select();
+                            }
+                        }
+                    },
                     error: function (node, XMLHttpRequest, textStatus, errorThrown) {
                         if (XMLHttpRequest.status == 403) {
                             ClaroUtils.ajaxAuthenticationErrorHandler(function () {
