@@ -276,6 +276,7 @@ class ResourceController extends Controller
 
     /**
      * This function takes an array of parameters. Theses parameters are the ids of the instances which are going to be downloaded.
+     * It also needs the "displayMode".
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -287,6 +288,8 @@ class ResourceController extends Controller
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $request = $this->get('request');
         $instanceIds = $request->query->all();
+
+        $instanceIds = $this->getExportListInstanceIds($instanceIds);
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
@@ -606,7 +609,7 @@ class ResourceController extends Controller
         return $path;
     }
 
-    public function getAbsolutePath($resourceInstance, $path)
+    private function getAbsolutePath($resourceInstance, $path)
     {
         if (null != $resourceInstance->getParent()) {
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
@@ -614,6 +617,45 @@ class ResourceController extends Controller
         }
 
         return $path;
+    }
+
+    private function getExportListInstanceIds($instanceIds) {
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $dirIds = array();
+        $resIds = array();
+
+        foreach ($instanceIds as $instanceId) {
+            $instance = $repo->find($instanceId);
+            ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
+        }
+
+        $toAppend = array();
+
+        foreach ($dirIds as $dirId) {
+            $found = false;
+            foreach ($resIds as $resId) {
+                $res = $repo->find($resId);
+
+                if($res->getRoot() == $dirId) {
+                    $found = true;
+                }
+            }
+
+            //if a directory has no children in the list, the whole directory must be downloaded
+            if (true != $found) {
+                $directoryInstance = $repo->find($dirId);
+                $children = $repo->children($directoryInstance, true);
+                foreach($children as $child) {
+                    if($child->getResource()->getResourceType()->getType() != 'directory') {
+                        $toAppend[] = $child->getId();
+                    }
+                }
+            }
+        }
+
+        $resIds = array_merge($resIds, $toAppend);
+
+        return $resIds;
     }
 
     private function addDirectoryToArchive($resourceInstance, $archive)

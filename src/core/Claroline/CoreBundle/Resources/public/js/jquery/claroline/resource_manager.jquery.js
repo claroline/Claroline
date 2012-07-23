@@ -45,7 +45,9 @@ $(function(){
 
                             for (var i in children) {
                                 console.debug(children[i]);
-                                parameters[i] = children[i].data.key;
+                                if(children[i].isTool != true) {
+                                    parameters[i] = children[i].data.key;
+                                }
                             }
 
                             window.location = Routing.generate('claro_multi_export', parameters);
@@ -267,7 +269,7 @@ $(function(){
                     }
 
                     $(treeId).dynatree({
-                        checkbox: params.checkbox,
+                        checkbox: true,
                         title: 'myTree',
                         initAjax: {url : initAjaxUrl(params.displayMode)},
                         onPostInit: function(isReloading, isError){
