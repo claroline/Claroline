@@ -14,7 +14,7 @@ system("phpmd {$rootDirectory}/src text {$rootDirectory}/app/build/tools/phpmd.x
 echo "\n********************************************************************************";
 echo "\n******************************** Code sniffer **********************************";
 echo "\n********************************************************************************\n\n";
-system("phpcs --standard={$rootDirectory}/app/build/tools/phpcs.xml {$rootDirectory}/src");
+system("phpcs --extensions=php --standard={$rootDirectory}/app/build/tools/phpcs.xml {$rootDirectory}/src");
 echo "\n********************************************************************************";
 echo "\n***************************** Copy/paste detector ******************************";
 echo "\n********************************************************************************\n\n";
