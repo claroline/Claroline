@@ -293,4 +293,18 @@ class ResourceInstance
     {
         return $this->root;
     }
+
+    /**
+     * Returns the virtual pathname.
+     */
+    public function getPath()
+    {
+        $path='';
+
+        if (null != $this->getParent()) {
+            $path = $this->parent->getPath() . DIRECTORY_SEPARATOR . $this->parent->getName() . DIRECTORY_SEPARATOR . $this->getName();
+        }
+
+        return $path;
+    }
 }
