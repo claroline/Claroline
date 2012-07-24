@@ -280,7 +280,7 @@ class ResourceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiExportAction()
+    public function multiExportAction($displayMode)
     {
         $archive = new \ZipArchive();
         $pathArch = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid() . '.zip';
@@ -302,7 +302,11 @@ class ResourceController extends Controller
                 $obj = $event->getItem();
 
                 if ($obj != null) {
-                    $path = $this->getAbsolutePath($instance, '');
+                    switch($displayMode){
+                        case 'classic': $path = $this->getAbsolutePath($instance, ''); break;
+                        case 'linker' : $path = $instance->getResource()->getResourceType()->getType().DIRECTORY_SEPARATOR; break;
+                    }
+
                     $archive->addFile($obj, $path . $instance->getResource()->getName());
                 }
             }
@@ -619,22 +623,38 @@ class ResourceController extends Controller
         return $path;
     }
 
+    /* InstancesIds is an array wich can contain:
+     * directories ids
+     * resourceInstances ids
+     * resourceTypes types
+     * if a directory is on the list and has no child, every resources from that directory will be downloaded
+     * if a directory is on the list and some of his children are on the list, only theses children will be downloaded
+     * otherwise, the resource linked to the instance id will be downloaded
+     * same logic for the types
+     */
+
     private function getExportListInstanceIds($instanceIds) {
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $repoIns = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $dirIds = array();
         $resIds = array();
+        $insIds = array();
+        $resTypes = array();
+        $toAppend = array();
 
+        //split types from instance ids
         foreach ($instanceIds as $instanceId) {
-            $instance = $repo->find($instanceId);
-            ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
+             (true == is_numeric($instanceId) || true == is_int($instanceId)) ? $insIds[] = $instanceId : $resTypes[] = $instanceId;
         }
 
-        $toAppend = array();
+        foreach ($insIds as $instanceId) {
+            $instance = $repoIns->find($instanceId);
+            ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
+        }
 
         foreach ($dirIds as $dirId) {
             $found = false;
             foreach ($resIds as $resId) {
-                $res = $repo->find($resId);
+                $res = $repoIns->find($resId);
 
                 if($res->getRoot() == $dirId) {
                     $found = true;
@@ -643,12 +663,36 @@ class ResourceController extends Controller
 
             //if a directory has no children in the list, the whole directory must be downloaded
             if (true != $found) {
-                $directoryInstance = $repo->find($dirId);
-                $children = $repo->children($directoryInstance, true);
+                $directoryInstance = $repoIns->find($dirId);
+                $children = $repoIns->children($directoryInstance, true);
                 foreach($children as $child) {
                     if($child->getResource()->getResourceType()->getType() != 'directory') {
                         $toAppend[] = $child->getId();
                     }
+                }
+            }
+        }
+
+        $repoType = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+
+        foreach ($resTypes as $resType) {
+            $found = false;
+            foreach ($resIds as $resId) {
+                $res = $repoIns->find($resId);
+
+                if ($res->getResourceType()->getType() == $resType) {
+                    $found = true;
+                }
+            }
+
+            //if a type has no resources, every resources from that type will ne dopwnloaded
+            if (true != $found) {
+                $resourceType = $repoType->findOneBy(array('type' => $resType));
+                $instances = $repoIns->findInstancesFromType($resourceType, $this->get('security.context')->getToken()->getUser());
+
+                //duplicatas should also be removed
+                foreach ($instances as $instance) {
+                        $toAppend[] = $instance->getId();
                 }
             }
         }

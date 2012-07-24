@@ -66,4 +66,23 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         return $query->getResult();
     }
+
+    public function findInstancesFromType(ResourceType $resourceType, User $user)
+    {
+        $dql = "
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
+            JOIN ri.abstractResource ar
+            JOIN ar.resourceType rt
+            WHERE rt.type = '{$resourceType->getType()}'
+            AND ri.workspace IN
+            (
+                SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+                JOIN w.roles wr JOIN wr.users u WHERE u.id = '{$user->getId()}'
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
