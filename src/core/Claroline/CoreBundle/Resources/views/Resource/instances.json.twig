@@ -8,6 +8,7 @@
         "resourceId": "{{resource.getResource().getId() }}",
         "type": "{{ resource.getResource().getResourceType().getType() }}",
         "workspaceId": "{{ resource.getWorkspace().getId() }}",
+        "path" : "{{resource.getPath()}}",
         "tooltip":
             "added by {{ resource.getCreator().getUsername() }}\ncreated by {{ resource.getResource().getCreator().getUsername() }}\nthis resource is {{ resource.getResource().getShareType(true) }}"
         {% if resource.getResourceType.getNavigable() == 1 %}
