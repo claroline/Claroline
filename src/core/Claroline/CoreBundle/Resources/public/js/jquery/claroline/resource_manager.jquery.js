@@ -47,9 +47,12 @@ $(function(){
                                 console.debug(children[i]);
                                 if(children[i].isTool != true) {
                                     parameters[i] = children[i].data.key;
+                                    console.debug(children[i]);
                                 }
                             }
+                            parameters['displayMode'] = params.displayMode;
 
+                            alert(Routing.generate('claro_multi_export',  parameters));
                             window.location = Routing.generate('claro_multi_export', parameters);
                         })
                     }
