@@ -72,8 +72,6 @@ $(function(){
                         $('#source_tree').empty();
                         createTree('#source_tree');
                     });
-
-
                 }
 
                 function destroyMenus() {
@@ -134,8 +132,7 @@ $(function(){
                                     rootChildren[k].data.type = 'type_'+resourceTypes[i].type;
                                     rootChildren[k].data.key = 'type_'+resourceTypes[i].type;
                                     bindContextMenuTree(rootChildren[k]);
-                                }
-
+                               }
                             }
                         })
                     };
@@ -306,6 +303,7 @@ $(function(){
 
                     $(treeId).dynatree({
                         checkbox: true,
+                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js')+'/../../../../images/resources/icon/',
                         title: 'myTree',
                         children: children,
                         onPostInit: function(isReloading, isError){

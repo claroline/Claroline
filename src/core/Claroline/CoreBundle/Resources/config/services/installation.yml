@@ -70,6 +70,7 @@ services:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ResourceChecker
         arguments:
             - "@symfony.yaml"
+            - "%claroline.resource.img%"
 
     claroline.plugin.migrator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Migrator
@@ -96,6 +97,7 @@ services:
             - "@validator"
             - "@doctrine.orm.entity_manager"
             - "@symfony.yaml"
+            - "%claroline.resource.img%"
 
     # symfony class used as service argument
     symfony.yaml:

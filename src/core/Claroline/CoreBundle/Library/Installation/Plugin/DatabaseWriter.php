@@ -20,6 +20,7 @@ class DatabaseWriter
     private $validator;
     private $em;
     private $yamlParser;
+    private $imgPath;
 
     /**
      * Constructor.
@@ -27,16 +28,20 @@ class DatabaseWriter
      * @param SymfonyValidator  $validator
      * @param EntityManager     $em
      * @param Yaml              $yamlParser
+     * @param string            $imgPath
      */
     public function __construct(
         SymfonyValidator $validator,
         EntityManager $em,
-        Yaml $yamlParser
+        Yaml $yamlParser,
+        $imgPath
+
     )
     {
         $this->validator = $validator;
         $this->em = $em;
         $this->yamlParser = $yamlParser;
+        $this->imgPath = $imgPath;
     }
 
     /**
@@ -166,6 +171,14 @@ class DatabaseWriter
                     }
                 }
 
+                if (isset($properties['icon'])) {
+                    $resourceType->setIcon($properties['icon']);
+                    $ds = DIRECTORY_SEPARATOR;
+                    $imgFolder = $plugin->getImgFolder();
+                    $img = $imgFolder.$ds.$properties['icon'];
+                    var_dump($this->imgPath.$ds.$properties['icon']);
+                    copy($img, $this->imgPath.$ds.$properties['icon']);
+                    }
             }
         }
     }
