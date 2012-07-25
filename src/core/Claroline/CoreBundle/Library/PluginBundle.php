@@ -71,4 +71,16 @@ abstract class PluginBundle extends Bundle
 
         return null;
     }
+
+    public function getImgFolder()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $path = $this->getPath() . $ds . 'Resources' . $ds . 'img';
+
+        if (is_dir($path)) {
+            return $path;
+        }
+
+        return null;
+    }
 }

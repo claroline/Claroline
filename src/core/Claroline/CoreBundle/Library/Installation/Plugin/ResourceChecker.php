@@ -22,20 +22,24 @@ class ResourceChecker implements CheckerInterface
     const UNLOADABLE_RESOURCE_CLASS = 'unloadable_resource_class';
     const INVALID_RESOURCE_CLASS = 'invalid_resource_class';
     const UNLOADABLE_PARENT_RESOURCE = 'unloadable_parent_resource';
+    const UNEXPECTED_RESOURCE_ICON = 'unexpected_resource_icon';
 
     private $yamlParser;
     private $plugin;
     private $pluginFqcn;
     private $errors;
+    private $imgFolder;
 
     /**
      * Constructor.
      *
      * @param Yaml $yamlParser
+     * @param string imgFolder
      */
-    public function __construct(Yaml $yamlParser)
+    public function __construct(Yaml $yamlParser, $imgFolder)
     {
         $this->yamlParser = $yamlParser;
+        $this->imgFolder = $imgFolder;
     }
 
     /**
@@ -187,6 +191,20 @@ class ResourceChecker implements CheckerInterface
                         "{$this->pluginFqcn} : {$resource['extends']} (declared in {$resourceFile}) "
                         . "cannot be found (looked for {$expectedClassLocation}).",
                         self::UNLOADABLE_PARENT_RESOURCE
+                    );
+                }
+            }
+
+            if (isset($resource['icon'])) {
+                $ds = DIRECTORY_SEPARATOR;
+                $imgFolder = $this->plugin->getImgFolder();
+                $expectedImgLocation = $imgFolder . $ds . $resource['icon'];
+
+                if (!file_exists($expectedImgLocation)) {
+                    $this->errors[] = new ValidationError(
+                        "{$this->pluginFqcn} : {$resource['icon']} (declared in {$resourceFile}) "
+                        . "cannot be found (looked for {$expectedImgLocation}).",
+                        self::UNEXPECTED_RESOURCE_ICON
                     );
                 }
             }

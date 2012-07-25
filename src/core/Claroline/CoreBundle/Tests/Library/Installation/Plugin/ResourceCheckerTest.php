@@ -89,4 +89,11 @@ class ResourceCheckerTest extends WebTestCase
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
         $this->assertEquals(ResourceChecker::UNLOADABLE_PARENT_RESOURCE, $errors[0]->getCode());
     }
+
+    public function testCheckerReturnsAnErrorOnUnexpectedIcon()
+    {
+        $pluginFqcn = 'Invalid\UnexpectedIcon\InvalidUnexpectedIcon';
+        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_ICON, $errors[0]->getCode());
+    }
 }

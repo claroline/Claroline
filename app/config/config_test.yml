@@ -34,6 +34,7 @@ parameters:
     claroline.stub_plugin_directory: %kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/Stub/plugin
     # next line overrides the parameter defined in core config/services/resource.yml
     claroline.files.directory: "%kernel.root_dir%/../test/files"
+    claroline.resource.img: "%kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/Stub/icon"
     claroline.config.platform_handler_class : Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler
     claroline.config.platform_options_files:
         prod: %kernel.root_dir%/config/local/platform_options.yml

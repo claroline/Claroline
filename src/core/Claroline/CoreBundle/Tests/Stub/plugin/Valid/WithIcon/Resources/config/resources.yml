@@ -1,0 +1,6 @@
+ResourceX:
+  class: Valid\WithIcon\Entity\ResourceX
+  listable: true
+  navigable: false
+  downloadable: true
+  icon: icon.gif

@@ -5,6 +5,7 @@ Forum:
   downloadable: true
   actions:
     open: false
+  icon: folder_docs.gif
 
 Subject:
   class: Claroline\ForumBundle\Entity\Subject

@@ -117,15 +117,8 @@
         return '';
     }
 
-    utils.clone = function (obj) {
-        if(obj instanceof Object) {
-            var copy = {};
-            for (var attr in obj) {
-                if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-            }
-            return copy;
-        }
-
-        alert('obj clone failed');
+    utils.findLoadedJsPath = function (filename) {
+//        alert($('script[src*="'+filename+'"]').attr('src'));
+        return $('script[src*="'+filename+'"]').attr('src');
     }
 })();

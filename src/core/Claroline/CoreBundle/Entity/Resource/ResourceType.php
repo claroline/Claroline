@@ -102,7 +102,7 @@ class ResourceType
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $thumbnail;
+    private $icon;
 
     /**
      * Constructor.
@@ -255,13 +255,13 @@ class ResourceType
         return $this->isDownloadable;
     }
 
-    public function setThumbnail($thumbnail)
+    public function setIcon($icon)
     {
-        $this->thumbnail = $thumbnail;
+        $this->icon = $icon;
     }
 
-    public function getThumbnail()
+    public function getIcon()
     {
-        return $this->thumbnail;
+        return $this->icon;
     }
 }

@@ -669,7 +669,7 @@ class ResourceController extends Controller
                 }
             }
 
-            //if a type has no resources, every resources from that type will ne dopwnloaded
+            //if a type has no resources, every resources from that type will ne downloaded
             if (true != $found) {
                 $resourceType = $repoType->findOneBy(array('type' => $resType));
                 $instances = $repoIns->findInstancesFromType($resourceType, $this->get('security.context')->getToken()->getUser());

@@ -16,6 +16,9 @@
             ,"isFolder": true
             ,"isLazy": true
         {% endif %}
+        {% if resource.getResourceType.getIcon() is not null %}
+            ,"icon" : "{{resource.getResourceType.getIcon()}}"
+        {% endif %}
     }
     {% if not loop.last %},{% endif %}
     {% endfor %}
