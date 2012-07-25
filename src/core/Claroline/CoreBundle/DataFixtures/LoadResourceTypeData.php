@@ -33,7 +33,6 @@ class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInte
         $resourceTypes = array(
             array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File', true),
             array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory', true),
-            array('link', true, false, 'Claroline\CoreBundle\Entity\Resource\Link', false),
             array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true)
         );
 
