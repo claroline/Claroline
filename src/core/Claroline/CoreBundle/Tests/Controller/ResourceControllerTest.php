@@ -45,6 +45,64 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->cleanDirectory($this->upDir);
     }
 
+    public function testDirectoryCreationFormCanBeDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', 'resource/form/directory');
+        $form = $crawler->filter('#directory_form');
+        $this->assertEquals(count($form), 1);
+    }
+
+    public function testDirectoryFormErrorsAreDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request(
+            'POST',
+            "/resource/create/directory/{$this->pwr[0]->getId()}",
+            array('directory_form' => array('name' => null, 'shareType' => 1))
+        );
+
+        $form = $crawler->filter('#directory_form');
+        $this->assertEquals(count($form), 1);
+    }
+
+    public function testPropertiesFormCanBeDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
+        $crawler = $this->client->request('GET', "/resource/form/properties/{$dir->{'instanceId'}}");
+        $form = $crawler->filter('#resource_options_form');
+        $this->assertEquals(count($form), 1);
+    }
+
+    public function testPropertiesFormErrorsAreDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
+        $crawler = $this->client->request(
+            'POST',
+            "/resource/update/properties/{$dir->{'instanceId'}}",
+            array('resource_options_form' => array('name' => "", 'shareType' => 1))
+        );
+
+        $form = $crawler->filter('#resource_options_form');
+        $this->assertEquals(count($form), 1);
+    }
+
+    public function testMoveResource()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
+        $res = $this->createDirectory($dir->{'instanceId'}, 'childDir');
+        $this->client->request(
+            'GET',
+            "/resource/move/{$res->{'instanceId'}}/{$this->pwr[0]->getId()}"
+            );
+        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+    }
+
     public function testResourceCanBeAddedToWorkspaceByRef()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -85,6 +143,54 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals("EDITED", $jsonResponse[0]->{'title'});
         $this->assertEquals(1, $jsonResponse[0]->{'shareType'});
+    }
+
+    public function testDirectoryDownload()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createTree($this->userRoot[0]->getId());
+        $this->client->request('GET', "/resource/export/{$this->pwr[0]->getId()}");
+        $headers = $this->client->getResponse()->headers;
+        $name = strtolower(str_replace(' ', '_', $this->pwr[0]->getResource()->getName() . '.zip'));
+        $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
+
+        //the code below doesn't work yet.
+        //the archive content should be tested
+
+//        $content = $this->client->getResponse()->getContent();
+//        $tmpname = tempnam(sys_get_temp_dir(), 'dlarch');
+//        file_put_contents($tmpname, $content);
+//        $tmparch = new \ZipArchive;
+//        $res = $tmparch->open($tmpname);
+//        var_dump($tmparch->getFromName('my workspace/rootDir/firstFile'));
+
+    }
+
+    public function testRootsAction()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/resource/roots");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($jsonResponse));
+    }
+
+    public function testRootAction()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/resource/root/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($jsonResponse));
+        $this->assertEquals($jsonResponse[0]->{'workspaceId'}, $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
+    }
+
+    public function testMenusAction()
+    {
+        $this->markTestSkipped('it should be tested lated');
+    }
+
+    public function testMultiDownloadAction()
+    {
+        $this->markTestSkipped('not done yet');
     }
 
     private function uploadFile($parentId, $name, $shareType = 1)
