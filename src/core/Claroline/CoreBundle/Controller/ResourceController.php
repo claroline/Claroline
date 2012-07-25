@@ -302,12 +302,7 @@ class ResourceController extends Controller
                 $obj = $event->getItem();
 
                 if ($obj != null) {
-                    switch($displayMode){
-                        case 'classic': $path = $this->getAbsolutePath($instance, ''); break;
-                        case 'linker' : $path = $instance->getResource()->getResourceType()->getType().DIRECTORY_SEPARATOR; break;
-                    }
-
-                    $archive->addFile($obj, $path . $instance->getResource()->getName());
+                    $archive->addFile($obj, $instance->getPath());
                 }
             }
         }
@@ -409,7 +404,7 @@ class ResourceController extends Controller
     public function resourceTypesAction()
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findResourceTypeWithoutDirectory();
+        $resourceTypes = $repo->findNavigableResourceTypeWithoutDirectory();
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
@@ -425,18 +420,16 @@ class ResourceController extends Controller
      * Returns a json representation of the resources of a defined type for the current user.
      *
      * @param integer $resourceTypeId
+     * @param integer $rootId
      */
-    public function resourceListAction($resourceTypeId)
+    public function resourceListAction($resourceTypeId, $rootId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->find($resourceTypeId);
-        $instanceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $instanceRepo->getResourceList($resourceType, $user);
+        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
+        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
+        $instances = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resources.json.twig',
-            array('resources' => $resources)
+            'ClarolineCoreBundle:Resource:instances.json.twig', array('resources' => $instances)
         );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -613,16 +606,6 @@ class ResourceController extends Controller
         return $path;
     }
 
-    private function getAbsolutePath($resourceInstance, $path)
-    {
-        if (null != $resourceInstance->getParent()) {
-            $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
-            $path = $this->getAbsolutePath($resourceInstance->getParent(), $path);
-        }
-
-        return $path;
-    }
-
     /* InstancesIds is an array wich can contain:
      * directories ids
      * resourceInstances ids
@@ -632,7 +615,8 @@ class ResourceController extends Controller
      * otherwise, the resource linked to the instance id will be downloaded
      * same logic for the types
      */
-
+    //TODO split this in 2 fuctions (linker & classic)
+    //take into consideration the directory Id for linker.
     private function getExportListInstanceIds($instanceIds) {
         $repoIns = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $dirIds = array();

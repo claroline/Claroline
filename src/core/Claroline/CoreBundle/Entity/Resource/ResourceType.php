@@ -100,6 +100,11 @@ class ResourceType
     protected $children;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $thumbnail;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -248,5 +253,15 @@ class ResourceType
     public function isDownloadable()
     {
         return $this->isDownloadable;
+    }
+
+    public function setThumbnail($thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 }

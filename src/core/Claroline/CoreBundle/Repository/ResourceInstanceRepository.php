@@ -42,30 +42,29 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getResourceList(ResourceType $resourceType, User $user)
+    public function getInstanceList(ResourceType $resourceType, User $user)
     {
         $dql = "
-            SELECT DISTINCT res FROM Claroline\CoreBundle\Entity\Resource\AbstractResource res
-            WHERE res.id IN
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
+            JOIN ri.abstractResource ar
+            JOIN ar.resourceType rt
+            WHERE rt.type = '{$resourceType->getType()}'
+            AND ri.workspace IN
             (
-                SELECT ri.id FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
-                JOIN ri.abstractResource ar
-                JOIN ar.resourceType rt
-                WHERE rt.type = '{$resourceType->getType()}'
-                AND ri.workspace IN
-                (
-                    SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                    JOIN w.roles wr
-                    JOIN wr.users u
-                    WHERE u.id = '{$user->getId()}'
-                )
+                SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+                JOIN w.roles wr
+                JOIN wr.users u
+                WHERE u.id = '{$user->getId()}'
             )
+            ORDER BY ar.name
         ";
 
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }
+
+
 
     public function findInstancesFromType(ResourceType $resourceType, User $user)
     {
@@ -80,6 +79,23 @@ class ResourceInstanceRepository extends NestedTreeRepository
                 JOIN w.roles wr JOIN wr.users u WHERE u.id = '{$user->getId()}'
             )
         ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+
+    public function getChildrenInstanceList(ResourceInstance $resourceInstance, ResourceType $resourceType)
+    {
+        $dql = "
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
+            JOIN ri.abstractResource res
+            JOIN res.resourceType rt
+            WHERE rt.type = '{$resourceType->getType()}'
+            AND ri.lft > {$resourceInstance->getLft()}
+            AND ri.rgt < {$resourceInstance->getRgt()}
+            ";
 
         $query = $this->_em->createQuery($dql);
 

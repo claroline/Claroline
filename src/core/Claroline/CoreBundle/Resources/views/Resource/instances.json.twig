@@ -3,6 +3,7 @@
     {
         "title": "{{ resource.getResource().getName() }}",
         "key": "{{ resource.getId() }}",
+        "instanceId": "{{ resource.getId() }}",
         "instanceCount": {{ resource.getResource().getInstanceCount() }},
         "shareType": "{{ resource.getResource().getShareType() }}",
         "resourceId": "{{resource.getResource().getId() }}",
@@ -10,7 +11,7 @@
         "workspaceId": "{{ resource.getWorkspace().getId() }}",
         "path" : "{{resource.getPath()}}",
         "tooltip":
-            "added by {{ resource.getCreator().getUsername() }}\ncreated by {{ resource.getResource().getCreator().getUsername() }}\nthis resource is {{ resource.getResource().getShareType(true) }}"
+            "added by {{ resource.getCreator().getUsername() }} the {{ resource.getCreationDate()|date('m/d/Y') }}\ncreated by {{ resource.getResource().getCreator().getUsername() }} the {{ resource.getResource().getCreationDate()|date('m/d/Y') }}\nthis resource is {{ resource.getResource().getShareType(true) }}\npath is {{ resource.getPath() }} "
         {% if resource.getResourceType.getNavigable() == 1 %}
             ,"isFolder": true
             ,"isLazy": true

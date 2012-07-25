@@ -77,10 +77,10 @@ claro_resource_types:
         expose: true
 
 claro_resources_list:
-    pattern: list/{resourceTypeId}
+    pattern: list/{resourceTypeId}/{rootId}
     defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
     options:
-        expose: true
+       expose: true
 
 claro_resource_menus:
     pattern: /menus
