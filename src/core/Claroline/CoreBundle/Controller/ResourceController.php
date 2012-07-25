@@ -703,6 +703,8 @@ class ResourceController extends Controller
                 }
             }
         }
+
+        $archive->addEmptyDir($resourceInstance->getResource()->getName());
     }
 
 }
