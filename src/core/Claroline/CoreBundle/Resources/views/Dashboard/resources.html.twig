@@ -11,6 +11,7 @@
     {% javascripts
       "@ClarolineCoreBundle/Resources/views/Templates/move_resource_form.twig"
       "@ClarolineCoreBundle/Resources/views/Templates/select_workspace_form.twig"
+      "@ClarolineCoreBundle/Resources/views/Templates/resource_filter.twig"
        filter="twig_js"
     %}
        <script language="javascript" src="{{ asset_url }}"></script>
@@ -22,12 +23,5 @@
 {% endblock %}
 
 {% block section_content %}
-
-<div id="translation-claroline"
-     {% for resourceType in resourcesType %}
-     data-{{ resourceType.getType() }}={{ resourceType.getType() |trans({}, 'platformTranslation') }}
-     {% endfor %}>
-</div>
-
 <div id="ct_dialog"></div>
 {% endblock %}
