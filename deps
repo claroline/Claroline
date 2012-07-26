@@ -1,6 +1,6 @@
 [symfony]
     git=http://github.com/symfony/symfony.git
-    version=v2.0.15
+    version=origin/2.0
 
 [twig]
     git=http://github.com/fabpot/Twig.git
@@ -24,7 +24,7 @@
 
 [swiftmailer]
     git=http://github.com/swiftmailer/swiftmailer.git
-    version=v4.1.7
+    version=v4.2.0
 
 [assetic]
     git=http://github.com/kriswallsmith/assetic.git
@@ -59,6 +59,9 @@
 [AsseticBundle]
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
+
+
+
 
 [DoctrineBundle]
     git=http://github.com/doctrine/DoctrineBundle.git
