@@ -398,6 +398,8 @@ class ResourceController extends Controller
 
     /**
      * Returns a json representation of the resource types.
+     * It doesn't include the directory.
+     * Ony listable types are included.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -703,6 +705,8 @@ class ResourceController extends Controller
                 }
             }
         }
+
+        $archive->addEmptyDir($resourceInstance->getResource()->getName());
     }
 
 }
