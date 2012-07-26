@@ -183,9 +183,39 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($jsonResponse[0]->{'workspaceId'}, $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
     }
 
+    public function testResourceTypesAction()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', '/resource/types');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        //resourceX, resourceY, HTMLElement, Forum, file, tex
+        //directory is not included
+        //only listable included
+        $this->assertEquals(6, count($jsonResponse));
+    }
+
+    public function testResourceListAction()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createTree($this->userRoot[0]->getId());
+        $fileId = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findOneBy(array('type' => 'file'))
+            ->getId();
+        $this->client->request('GET', "/resource/list/{$fileId}/{$this->userRoot[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+    }
+
     public function testMenusAction()
     {
-        $this->markTestSkipped('it should be tested lated');
+        $this->markTestSkipped('the response is good but hard to assert');
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', '/resource/menus');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(14, count($jsonResponse));
     }
 
     public function testMultiDownloadAction()
