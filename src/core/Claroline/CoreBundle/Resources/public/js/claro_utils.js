@@ -118,7 +118,6 @@
     }
 
     utils.findLoadedJsPath = function (filename) {
-//        alert($('script[src*="'+filename+'"]').attr('src'));
         return $('script[src*="'+filename+'"]').attr('src');
     }
 })();

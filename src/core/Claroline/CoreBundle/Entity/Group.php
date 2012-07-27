@@ -19,12 +19,12 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length="50")
+     * @ORM\Column(name="name", type="string", length=50)
      * @Assert\NotBlank()
      */
     protected $name;

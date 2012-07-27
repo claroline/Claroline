@@ -49,13 +49,17 @@ class Manager
      */
     public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true)
     {
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
+        $resourceType = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findOneBy(array('type' => $resourceType));
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if (null !== $resource) {
             $ri = new ResourceInstance();
             $ri->setCreator($user);
-            $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($parentInstanceId);
+            $dir = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+                ->find($parentInstanceId);
             $ri->setParent($dir);
             $resource->setResourceType($resourceType);
             $ri->setWorkspace($dir->getWorkspace());

@@ -18,6 +18,6 @@ class LocaleSetter
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $this->session->setLocale($this->configHandler->getParameter('locale_language'));
+        //$this->session->setLocale($this->configHandler->getParameter('locale_language'));
     }
 }

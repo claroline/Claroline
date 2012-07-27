@@ -68,13 +68,13 @@ abstract class AbstractResource
     private $updated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="abstractResource", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     private $resourceType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\user", inversedBy="abstractResource", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $creator;

@@ -1,0 +1,58 @@
+{
+    "name": "claroline/claronext",
+    "description": "Claroline 2.0",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.1.*",
+        "doctrine/orm": "2.2.*",
+        "doctrine/doctrine-bundle": "dev-master",
+        "twig/extensions": "dev-master",
+        "symfony/assetic-bundle": "dev-master",
+        "symfony/swiftmailer-bundle": "dev-master",
+        "symfony/monolog-bundle": "dev-master",
+        "sensio/distribution-bundle": "dev-master",
+        "sensio/framework-extra-bundle": "dev-master",
+        "sensio/generator-bundle": "dev-master",
+        "jms/security-extra-bundle": "1.2.*",
+        "jms/di-extra-bundle": "1.1.*",
+
+        "stof/doctrine-extensions-bundle": "dev-master",
+        "doctrine/doctrine-migrations-bundle": "dev-master",
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "friendsofsymfony/jsrouting-bundle": "dev-master",
+        "jms/twig-js-bundle": "dev-master",
+        "mikey179/vfsStream": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "http://github.com/mikey179/vfsStream"
+        }
+    ],
+    "scripts": {
+        "post-install-cmd": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ],
+        "post-update-cmd": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "symfony-assets-install": "symlink"
+    }
+}

@@ -70,7 +70,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
-        $crawler = $this->client->request('GET', "/resource/form/properties/{$dir->{'instanceId'}}");
+        $crawler = $this->client->request('GET', "/resource/form/properties/{$dir->resourceId}");
         $form = $crawler->filter('#resource_options_form');
         $this->assertEquals(count($form), 1);
     }
@@ -81,8 +81,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
         $crawler = $this->client->request(
             'POST',
-            "/resource/update/properties/{$dir->{'instanceId'}}",
-            array('resource_options_form' => array('name' => "", 'shareType' => 1))
+            "/resource/update/properties/{$dir->instanceId}",
+            array('resource_options_form' => array('name' => '', 'shareType' => 1))
         );
 
         $form = $crawler->filter('#resource_options_form');
@@ -93,10 +93,10 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
-        $res = $this->createDirectory($dir->{'instanceId'}, 'childDir');
+        $res = $this->createDirectory($dir->instanceId, 'childDir');
         $this->client->request(
             'GET',
-            "/resource/move/{$res->{'instanceId'}}/{$this->pwr[0]->getId()}"
+            "/resource/move/{$res->instanceId}/{$this->pwr[0]->getId()}"
             );
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -107,7 +107,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/ref/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi->resourceId}/ref/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -122,7 +122,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->markTestSkipped('implementation removed for now');
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/copy/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi->resourceId}/copy/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -245,7 +245,9 @@ class ResourceControllerTest extends FunctionalTestCase
             "/resource/create/directory/{$parentId}",
             array('directory_form' => array('name' => $name, 'shareType' => $shareType))
         );
+
         $obj = json_decode($this->client->getResponse()->getContent());
+
         return $obj[0];
     }
 
@@ -255,8 +257,8 @@ class ResourceControllerTest extends FunctionalTestCase
     private function createTree($parentId)
     {
         $rootDir = $this->createDirectory($parentId, 'rootDir');
-        $this->uploadFile($rootDir->{'key'}, 'firstfile');
-        $this->uploadFile($rootDir->{'key'}, 'secondfile', 0);
+        $this->uploadFile($rootDir->key, 'firstfile');
+        $this->uploadFile($rootDir->key, 'secondfile', 0);
 
         return $rootDir;
     }
