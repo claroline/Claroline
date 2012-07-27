@@ -639,9 +639,6 @@ class ResourceController extends Controller
             ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
         }
 
-                var_dump($dirIds);
-
-
         switch($exportType){
             case 'linker': $toAppend = $this->getLinkerExportList($resTypes, $resIds, $dirIds); break;
             case 'classic': $toAppend = $this->getClassicExportList($dirIds, $resIds); break;
@@ -681,7 +678,6 @@ class ResourceController extends Controller
             }
         }
 
-//        var_dump($toAppend);
         return $toAppend;
     }
 
