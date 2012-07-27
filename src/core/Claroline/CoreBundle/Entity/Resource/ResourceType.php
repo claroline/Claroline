@@ -132,7 +132,7 @@ class ResourceType
      */
     public function getType()
     {
-        return $this->type;
+        return addslashes($this->type);
     }
 
     /**

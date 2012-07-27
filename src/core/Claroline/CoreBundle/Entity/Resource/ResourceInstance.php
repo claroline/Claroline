@@ -307,6 +307,6 @@ class ResourceInstance
             $path = DIRECTORY_SEPARATOR . $this->getName();
         }
 
-        return $path;
+        return addslashes($path);
     }
 }
