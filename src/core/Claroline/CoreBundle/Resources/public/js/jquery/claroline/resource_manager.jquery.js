@@ -15,9 +15,9 @@ $(function(){
                 }
             }, options);
             return this.each(function(){
-
+                var currentDiv = $(this);
                 var moveForm = Twig.render(move_resource_form);
-                createDivTree($(this));
+
                 ClaroUtils.sendRequest(
                     Routing.generate('claro_resource_menus'),
                     function(data){
@@ -34,56 +34,62 @@ $(function(){
                         ClaroUtils.sendRequest(Routing.generate('claro_resource_roots'),
                             function(data){
                                 jsonroots = data;
-                                createTree('#source_tree');
+                                createDivTree(currentDiv);
                                 }
                             )
                         })
 
-                    function createDivTree(div) {
-                    var content = ""
-                    +"<div id='ct_form'></div><br>"
-                    +"<div id='ct_mode'><button id='ct_switch_mode'>switch mode</button></div><br>"
-                    +"<div id='source_tree'></div>";
+                function createDivTree(div) {
+                    ClaroUtils.sendRequest(Routing.generate('claro_resource_types'),
+                        function(rtdata){
+                            var content = Twig.render(resource_filter, {
+                                resourceTypes: rtdata,
+                                workspaceroots: jsonroots
+                            });
+                            div.append(content);
+                            if (true == params.checkbox) {
+                                $('#ct_download').live('click', function(){
+                                    var children = $('#source_tree').dynatree('getTree').getSelectedNodes();
+                                    var parameters = {};
 
-                    if (true == params.checkbox) {
-                        content+="<br><button id='ct_download'>download</button>";
-                        $('#ct_download').live('click', function(){
-                            var children = $('#source_tree').dynatree('getTree').getSelectedNodes();
-                            var parameters = {};
+                                    for (var i in children) {
+                                        if(children[i].isTool != true) {
+                                            parameters[i] = children[i].data.instanceId;
+                                        }
+                                    }
 
-                            for (var i in children) {
-                                if(children[i].isTool != true) {
-                                    parameters[i] = children[i].data.instanceId;
-                                }
+                                    parameters['displayMode'] = params.displayMode;
+                                    window.location = Routing.generate('claro_multi_export', parameters);
+                                })
                             }
 
-                            parameters['displayMode'] = params.displayMode;
-                            window.location = Routing.generate('claro_multi_export', parameters);
-                        })
-                    }
 
-                    div.append(content);
-                    $('#ct_switch_mode').click(function(){
-                        (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
-                        (params.displayMode == 'classic') ? params.checkbox = true: params.checkbox = false;
-                        destroyMenus();
-                        $('#source_tree').dynatree('destroy');
+                            $('#ct_switch_mode').click(function(){
+                                (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
+                                (params.displayMode == 'classic') ? params.checkbox = true: params.checkbox = false;
+                                $('#source_tree').dynatree('destroy');
+                                $('#source_tree').empty();
+                                createTree('#source_tree');
+                            });
 
-                        $('#source_tree').empty();
-                        createTree('#source_tree');
-                    });
+                            createTree('#source_tree');
+                            setOnChangeFilters();
+                        });
                 }
 
-                function destroyMenus() {
-                      $('.dynatree-title').each(function() {
-                            var selector = '#'+this.id;
-                            $.contextMenu('destroy', selector);
-                      });
+                function setOnChangeFilters()
+                {
+                    $('#select_root').change(function(){
+                        var selectedRoots = $('#select_root').val();
+                        for (var i in selectedRoots) {
+                            console.debug(selectedRoots[i]);
+                        }
+                    })
+                }
 
-                      $('.dynatree-custom-claro-menu').each(function() {
-                            var selector = '#'+this.id;
-                            $.contextMenu('destroy', selector);
-                      });
+                function filterByWorkspace(tabRoots){
+                    var tree = ('#source_tree').dynatree('getTree');
+                    
                 }
 
                 function createTree(treeId)
@@ -221,7 +227,7 @@ $(function(){
                                     }
 
                                     if (node.data.instanceId != newNode.instanceId) {
-                                        node.appendAjax({ url: onLazyReadUrl(node)})
+                                        node.appendAjax({url: onLazyReadUrl(node)})
                                         node.expand();
                                     } else {
                                         node.data.title = newNode.title;
