@@ -10,12 +10,13 @@
         </select><br>
         <select id = 'select_type' style='width:125px' class='rf_input' multiple = 'multiple'>
             {% for resourceType in resourceTypes %}
-                    <option value = {{ resourceType.id }}> {{ resourceType.type }} </option>
+                    <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
             {% endfor %}
         </select><br>
         <input type='text' style='width:120px' class='rf_input' placeholder='text'></input><br>
-période
-        <button id='ct_download'>download</button>
+période<br>
+        <button id='ct_download'>download</button><br>
+        <button id='ct_filter'>filter</button><br>
     </div>
     <div id ='rf_right_div' style='float:left;'>
         <div id='source_tree'></div>
