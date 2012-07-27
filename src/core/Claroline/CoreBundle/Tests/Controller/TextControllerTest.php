@@ -26,14 +26,14 @@ class TextControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
-        $this->assertEquals('This is a text', $text->{'title'});
+        $this->assertEquals('This is a text', $text->title);
     }
 
     public function testDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
-        $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->{'resourceId'}}");
+        $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->resourceId}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'hello world') !== false);
     }
@@ -49,10 +49,29 @@ class TextControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/resource/custom/text/open/{$textId}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
-        $textId = $text->{'resourceId'};
+        $textId = $text->resourceId;
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($textId);
         $revisions = $text->getRevisions();
         $this->assertEquals(2, count($revisions));
+    }
+
+    public function testCreationFormCanBeDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', 'resource/form/text');
+        $form = $crawler->filter('#text_form');
+        $this->assertEquals(count($form), 1);
+    }
+
+    public function testFormErrorsAreDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request(
+            'POST', "/resource/create/text/{$this->pwr[0]->getId()}"
+        );
+
+        $form = $crawler->filter('#text_form');
+        $this->assertEquals(count($form), 1);
     }
 
     private function addText($name, $text, $parentId)

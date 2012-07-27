@@ -1,0 +1,25 @@
+{% twig_js name="resource_filter" %}
+<div id ='ct_content'>
+    <div id='ct_form'></div><br>
+    <button id='ct_switch_mode'>switch mode</button><br>
+    <div id = 'rf_left_div' style='float:left;'>
+        <select id = 'select_root' style='width:125px' class='rf_input' multiple = 'multiple'>
+            {% for workspaceroot in workspaceroots %}
+                <option value = {{ workspaceroot.workspaceId }}> {{ workspaceroot.title }} </option>
+            {% endfor %}
+        </select><br>
+        <select id = 'select_type' style='width:125px' class='rf_input' multiple = 'multiple'>
+            {% for resourceType in resourceTypes %}
+                    <option value = {{ resourceType.id }}> {{ resourceType.type }} </option>
+            {% endfor %}
+        </select><br>
+        <input type='text' style='width:120px' class='rf_input' placeholder='text'></input><br>
+période
+        <button id='ct_download'>download</button>
+    </div>
+    <div id ='rf_right_div' style='float:left;'>
+        <div id='source_tree'></div>
+    </div>
+</div>
+
+
