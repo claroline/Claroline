@@ -134,7 +134,7 @@ abstract class AbstractResource
      */
     public function getName()
     {
-        return addslashes($this->name);
+        return $this->name;
     }
 
     /**

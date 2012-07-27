@@ -302,9 +302,9 @@ class ResourceInstance
         $path='';
 
         if (null != $this->getParent()) {
-            $path = $this->parent->getPath() . DIRECTORY_SEPARATOR . $this->getName();
+            $path = $this->parent->getPath() . '/' . $this->getName();
         } else {
-            $path = DIRECTORY_SEPARATOR . $this->getName();
+            $path = '/' . $this->getName();
         }
 
         return addslashes($path);
