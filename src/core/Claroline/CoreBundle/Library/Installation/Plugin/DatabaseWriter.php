@@ -171,14 +171,14 @@ class DatabaseWriter
                     }
                 }
 
+                // TODO : this should be moved to another part of the installation process
                 if (isset($properties['icon'])) {
                     $resourceType->setIcon($properties['icon']);
                     $ds = DIRECTORY_SEPARATOR;
                     $imgFolder = $plugin->getImgFolder();
                     $img = $imgFolder.$ds.$properties['icon'];
-                    var_dump($this->imgPath.$ds.$properties['icon']);
                     copy($img, $this->imgPath.$ds.$properties['icon']);
-                    }
+                }
             }
         }
     }

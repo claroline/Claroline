@@ -57,7 +57,7 @@ class ResourceController extends Controller
             $instance = $manager->create($resource, $parentInstanceId, $resourceType);
             $content = $this->renderView(
                 'ClarolineCoreBundle:Resource:instances.json.twig',
-                array('resources' => array($instance))
+                array('instances' => array($instance))
             );
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent($content);
@@ -115,7 +115,7 @@ class ResourceController extends Controller
     {
         $resource = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -143,7 +143,7 @@ class ResourceController extends Controller
     {
         $request = $this->get('request');
         $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
+        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->find($instanceId);
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -161,7 +161,7 @@ class ResourceController extends Controller
             $em->flush();
             $content = $this->renderView(
                 'ClarolineCoreBundle:Resource:instances.json.twig',
-                array('resources' => array($resourceInstance))
+                array('instances' => array($resourceInstance))
             );
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
@@ -339,11 +339,15 @@ class ResourceController extends Controller
 
         // TODO : use a one-to-one relationship between workspace and root directory
         foreach ($workspaces as $workspace) {
-            $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
+            $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+                ->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
             $roots[] = $root;
         }
 
-        $content = $this->renderView('ClarolineCoreBundle:Resource:instances.json.twig', array('resources' => $roots));
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:instances.json.twig',
+            array('instances' => $roots)
+        );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -361,7 +365,10 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $roots = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $content = $this->renderView('ClarolineCoreBundle:Resource:instances.json.twig', array('resources' => $roots));
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:instances.json.twig',
+            array('instances' => $roots)
+        );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -388,7 +395,7 @@ class ResourceController extends Controller
         $resourceInstances = $repo->getListableChildren($parent);
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:instances.json.twig',
-            array('resources' => $resourceInstances)
+            array('instances' => $resourceInstances)
         );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -431,7 +438,8 @@ class ResourceController extends Controller
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $instances = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:instances.json.twig', array('resources' => $instances)
+            'ClarolineCoreBundle:Resource:instances.json.twig',
+            array('instances' => $instances)
         );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');

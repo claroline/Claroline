@@ -2,7 +2,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use \Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,40 +20,40 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  * @ORM\Table(name="claro_user")
  * @DoctrineAssert\UniqueEntity("username")
  */
-class User extends AbstractRoleSubject implements UserInterface, \Serializable
+class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ORM\Column(name="first_name", type="string", length="50")
+     * @ORM\Column(name="first_name", type="string", length=50)
      * @Assert\NotBlank()
      */
     protected $firstName;
 
     /**
-     * @ORM\Column(name="last_name", type="string", length="50")
+     * @ORM\Column(name="last_name", type="string", length=50)
      * @Assert\NotBlank()
      */
     protected $lastName;
 
     /**
-     * @ORM\Column(name="username", type="string", length="255", unique="true")
+     * @ORM\Column(name="username", type="string", length=255, unique=true)
      * @Assert\NotBlank()
      */
     protected $username;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      */
     protected $password;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      */
     protected $salt;
 
@@ -66,7 +68,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", length="1000", nullable=true)
+     * @ORM\Column(type="string", length=1000, nullable=true)
      */
     protected $note;
 
@@ -270,7 +272,7 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
         $this->plainPassword = null;
     }
 
-    public function equals(UserInterface $user)
+    public function isEqualTo(UserInterface $user)
     {
         if (!$user instanceof User) {
             return false;

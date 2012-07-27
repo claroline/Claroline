@@ -15,7 +15,7 @@ class WorkspaceSecurityTest extends FunctionalTestCase
 
     public function testWorkspacesSectionRequiresAuthenticatedUser()
     {
-        $crawler = $this->client->request('GET', '/workspaces');
+        $crawler = $this->client->request('GET', '/workspace/list');
         $this->assertTrue($crawler->filter('#login_form')->count() > 0);
     }
 

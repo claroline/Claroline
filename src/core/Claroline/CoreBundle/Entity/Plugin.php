@@ -16,40 +16,40 @@ class Plugin
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ORM\Column(name="bundle_fqcn", type="string", length="255")
+     * @ORM\Column(name="bundle_fqcn", type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\MaxLength(255)
      */
     protected $bundleFQCN;
 
     /**
-     * @ORM\Column(name="vendor_name", type="string", length="50")
+     * @ORM\Column(name="vendor_name", type="string", length=50)
      * @Assert\NotBlank()
      * @Assert\MaxLength(50)
      */
     protected $vendorName;
 
     /**
-     * @ORM\Column(name="short_name", type="string", length="50")
+     * @ORM\Column(name="short_name", type="string", length=50)
      * @Assert\NotBlank()
      * @Assert\MaxLength(50)
      */
     protected $bundleName;
 
     /**
-     * @ORM\Column(name="name_translation_key", type="string", length="255")
+     * @ORM\Column(name="name_translation_key", type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\MaxLength(255)
      */
     protected $nameTranslationKey;
 
     /**
-     * @ORM\Column(name="description", type="string", length="255")
+     * @ORM\Column(name="description", type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\MaxLength(255)
      */

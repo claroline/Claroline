@@ -28,18 +28,15 @@ class ResourceChecker implements CheckerInterface
     private $plugin;
     private $pluginFqcn;
     private $errors;
-    private $imgFolder;
 
     /**
      * Constructor.
      *
      * @param Yaml $yamlParser
-     * @param string imgFolder
      */
-    public function __construct(Yaml $yamlParser, $imgFolder)
+    public function __construct(Yaml $yamlParser)
     {
         $this->yamlParser = $yamlParser;
-        $this->imgFolder = $imgFolder;
     }
 
     /**

@@ -26,18 +26,18 @@ abstract class AbstractWorkspace
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer", length="255")
+     * @ORM\Column(type="integer", length=255)
      */
     private $type;
 

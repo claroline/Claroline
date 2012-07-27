@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * This development script is used to delete the content of the "files", "test/files"
+ * and "web/HTMLPage" directories. It is only called by the automatic re-installation
+ * script (raw_install.php).
+ */
+
+function emptyDir($directory)
+{
+    $iterator = new DirectoryIterator($directory);
+
+    foreach ($iterator as $item) {
+        if ($item->isFile() && $item->getFileName() != 'placeholder' && $item->getFileName() != '.gitempty') {
+            unlink($item->getPathname());
+        }
+        if ($item->isDir() && !$item->isDot() && $item->getFilename() != "tmp" && $item->getFilename() != "thumbs") {
+            $emptyDir($item->getPathname());
+            rmdir($item->getPathname());
+        }
+    }
+}
+
+$directories = array(
+    realpath(__DIR__.'/../../files'),
+    realpath(__DIR__.'/../../test/files'),
+    realpath(__DIR__.'/../../web/HTMLPage')
+);
+
+foreach ($directories as $directory) {
+    echo "cleaning {$directory}\n";
+    emptyDir($directory);
+}

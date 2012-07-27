@@ -9,10 +9,12 @@ After having cloned the project :
 * create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
   (currently only db settings are required)
 
-* use the automatic install script (php must be in $PATH ) : `php bin/factory_install_dev`
+* install a local copy of [composer][composer_website] in the root directory of the project
 
-* make the *app/cache*, *app/logs*, *app/config/local*, *files* and *test* directories 
-  (and their children) writable from the webserver (for further explanation on common 
+* use the automatic install script (php must be in $PATH ) : `php app/dev/raw_install`
+
+* make the *app/cache*, *app/logs*, *app/config/local*, *files* and *test* directories
+  (and their children) writable from the webserver (for further explanation on common
   permissions issues and solutions with Symfony, read [this][symfony_doc_install])
 
 * *For dev* : check that either the SQLite3 or PDO_SQLite extension are enabled in your
@@ -20,14 +22,15 @@ After having cloned the project :
 
 * open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
+[composer_website]: http://getcomposer.org/download/
 [symfony_doc_install]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
-  
+
 ### Quick update
 
-To update your installation to the last development state, you can use the installation script 
-mentioned above :   `php bin/factory_install_dev`
+To update your installation to the last development state, you can use the installation script
+mentioned above :   `php app/dev/raw_install`
 
-***Warning*** : this is a quick dev tool, it will drop existing databases (both prod and test) 
+***Warning*** : this is a quick dev tool, it will drop existing databases (both prod and test)
 and create new ones.
 
 ### Plugin installation
@@ -50,8 +53,7 @@ In order to run the test suite you must have [phpunit][phpunit_website] installe
 ### Build tools
 
 The *app/build/tools* directory gathers configuration files for various php tools (PHPMD,
-PHPCS, PHPUnit with code coverage, etc.). You can install and use them locally (see their 
-respective documentation for usage) or visit our continuous integration server 
-at [http://ci.claroline.net/job/Claronext][ci_website].
+PHPCS, Ant, etc.). You can install and use them locally (see their respective documentation
+for usage) or visit our continuous integration server [here][ci_website].
 
-[ci_website]: http://ci.claroline.net/job/Claronext
+[ci_website]: http://dev.claroline.net:8080/job/Claronext/

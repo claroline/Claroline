@@ -28,18 +28,18 @@ class Role implements RoleInterface
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length="50")
+     * @ORM\Column(name="name", type="string", length=50)
      * @Assert\NotBlank()
      */
     protected $name;
 
     /**
-     * @ORM\Column(name="translation_key", type="string", length="255")
+     * @ORM\Column(name="translation_key", type="string", length=255)
      */
     private $translationKey;
 
