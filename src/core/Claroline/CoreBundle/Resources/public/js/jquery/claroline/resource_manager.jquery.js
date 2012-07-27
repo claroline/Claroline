@@ -72,24 +72,40 @@ $(function(){
                                 createTree('#source_tree');
                             });
 
+                            $('#ct_filter').click(function(){
+                                if (params.displayMode == 'classic') {
+                                    filterNodes('workspaceId', $('#select_root').val());
+                                    filterNodes('type', $('#select_type').val());
+                                }
+
+                                if (params.displayMode == 'linker') {
+                                    filterNodes('type', $('#select_type').val());
+                                    var types = $('#source_tree').dynatree('getRoot').getChildren();
+                                    for (var i in types) {
+                                        filterNodes('workspaceId', $('#select_root').val(), types[i]);
+                                    }
+                                }
+                            });
+
                             createTree('#source_tree');
-                            setOnChangeFilters();
                         });
                 }
 
-                function setOnChangeFilters()
-                {
-                    $('#select_root').change(function(){
-                        var selectedRoots = $('#select_root').val();
-                        for (var i in selectedRoots) {
-                            console.debug(selectedRoots[i]);
+                var filterNodes = function(filter, searchArray, targetNode) {
+                    var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                    startNode.visit(function(node) {
+                        if (node.isVisible() && node.data.title) {
+                            if (node.data[filter].indexOf(searchArray) >= 0) {
+                                node.visitParents(function(node) {
+                                    $(node.li).show();
+                                    return (node.parent != null);
+                                }, true);
+                                return 'skip';
+                            } else {
+                                $(node.li).hide();
+                            }
                         }
-                    })
-                }
-
-                function filterByWorkspace(tabRoots){
-                    var tree = ('#source_tree').dynatree('getTree');
-                    
+                    });
                 }
 
                 function createTree(treeId)
@@ -123,6 +139,7 @@ $(function(){
                                     "key": resourceTypes[i].type,
                                     "title": resourceTypes[i].type,
                                     "tooltip":  resourceTypes[i].type,
+                                    "type": resourceTypes[i].type,
                                     "shareType": 1,
                                     "isFolder": true,
                                     "isLazy": false,
