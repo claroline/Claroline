@@ -59,7 +59,7 @@
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--log-junit" />
-            <arg path="${appdir}/logs/junit.xml" />
+            <arg path="${appdir}/build/logs/junit.xml" />
             <arg value="--verbose" />
         </exec>
     </target>
