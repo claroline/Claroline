@@ -160,17 +160,17 @@ class User extends AbstractRoleSubject implements UserInterface, \Serializable
 
     public function getFirstName()
     {
-        return addslashes($this->firstName);
+        return $this->firstName;
     }
 
     public function getLastName()
     {
-        return addslashes($this->lastName);
+        return $this->lastName;
     }
 
     public function getUsername()
     {
-        return addslashes($this->username);
+        return $this->username;
     }
 
     public function getPassword()
