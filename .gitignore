@@ -1,10 +1,12 @@
 !placeholder
 !.gitempty
 catalog.xml
+composer.phar
 nbproject/*
 app/cache/*
 app/logs/*
 app/bootstrap*
+app/SymfonyRequirements.php
 app/build/api
 app/build/code-browser
 app/build/coverage
@@ -15,11 +17,11 @@ app/config/local/parameters.yml
 app/config/local/plugin/*
 vendor/*
 web/bundles/*
+web/icons/*
 web/HTMLPage/*
 files/*
 files/tmp/*
 test/files/*
+test/icons/*
 test/files/tmp/*
 /src/core/Claroline/CoreBundle/Resources/public/twitter-bootstrap-b261f97/docs/build/node_modules/.bin/
-/src/core/Claroline/CoreBundle/Resources/public/images/resources/icon/*
-/src/core/Claroline/CoreBundle/Tests/Stub/icon/*

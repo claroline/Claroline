@@ -66,7 +66,9 @@ class Manager
         if (null !== $resource) {
             $ri = new ResourceInstance();
             $ri->setCreator($user);
-            $dir = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($parentInstanceId);
+            $dir = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+                ->find($parentInstanceId);
             $ri->setParent($dir);
             $resource->setResourceType($resourceType);
             $ri->setWorkspace($dir->getWorkspace());
@@ -180,6 +182,11 @@ class Manager
         return $prefix . '_' . strtolower(str_replace(' ', '_', $resourceType));
     }
 
+    /**
+     * Returns an archive with the required content.
+     * 
+     * @return file
+     */
     public function multiExportClassic()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');

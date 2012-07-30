@@ -1,17 +1,18 @@
 <?php
 
 /*
- * This script can be used to make a fresh install of Claronext
- * for a developper. It will initialize dev and test environments
+ * This script can be used to make a fresh development installation of the
+ * platform. Dev and test environments will be initialized.
  *
  * Requirements :
  *    - a valid 'app/config/local/parameters.yml' file
  *    - a writable app/config/local directory
  *    - an empty, writable app/cache directory
  *    - an empty, writable app/logs directory
+ *    - a local installation of composer.phar in the root directory of the project
  */
 
-$rootDirectory = realpath(__DIR__ . "/..");
+$rootDirectory = realpath(__DIR__ . "/../..");
 
 function deleteIfExists($file) {
     if (file_exists($file)) {
@@ -22,8 +23,10 @@ function deleteIfExists($file) {
 deleteIfExists("{$rootDirectory}/app/config/local/plugin/bundles");
 deleteIfExists("{$rootDirectory}/app/config/local/plugin/namespaces");
 deleteIfExists("{$rootDirectory}/app/config/local/plugin/routing.yml");
+deleteIfExists("{$rootDirectory}/app/logs/dev.log");
+deleteIfExists("{$rootDirectory}/app/logs/test.log");
 
-system("php {$rootDirectory}/bin/vendors install");
+system("php {$rootDirectory}/composer.phar install");
 
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
 system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
@@ -34,4 +37,5 @@ system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=te
 system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
 system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
 system("php {$rootDirectory}/app/console claroline:install --with-plugins --env=test");
-system("php {$rootDirectory}/app/console claroline:files:clean");
+
+require_once __DIR__.'/delete_files';

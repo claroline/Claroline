@@ -1,24 +1,23 @@
 [
-    {% for resource in resources %}
+    {% for instance in instances %}
     {
-        "title": "{{ resource.getResource().getName() }}",
-        "key": "{{ resource.getId() }}",
-        "instanceId": "{{ resource.getId() }}",
-        "instanceCount": {{ resource.getResource().getInstanceCount() }},
-        "shareType": "{{ resource.getResource().getShareType() }}",
-        "resourceId": "{{resource.getResource().getId() }}",
-        "type": "{{ resource.getResource().getResourceType().getType() }}",
-        "workspaceId": "{{ resource.getWorkspace().getId() }}",
-        "path" : "{{resource.getPath()}}",
-        "dateCreation" : "{{ resource.getCreationDate()|date('m/d/Y') }}",
+        "title": "{{ instance.getResource().getName() }}",
+        "key": "{{ instance.getId() }}",
+        "instanceId": "{{ instance.getId() }}",
+        "instanceCount": {{ instance.getResource().getInstanceCount() }},
+        "shareType": "{{ instance.getResource().getShareType() }}",
+        "resourceId": "{{ instance.getResource().getId() }}",
+        "type": "{{ instance.getResource().getResourceType().getType() }}",
+        "workspaceId": "{{ instance.getWorkspace().getId() }}",
+        "path" : "{{ instance.getPath() }}",
         "tooltip":
-            "added by {{ resource.getCreator().getUsername() }} the {{ resource.getCreationDate()|date('m/d/Y') }}\ncreated by {{ resource.getResource().getCreator().getUsername() }} the {{ resource.getResource().getCreationDate()|date('m/d/Y') }}\nthis resource is {{ resource.getResource().getShareType(true) }}\npath is {{ resource.getPath() }} "
-        {% if resource.getResourceType.getNavigable() == 1 %}
+            "added by {{ instance.getCreator().getUsername() }} the {{ instance.getCreationDate()|date('m/d/Y') }}\ncreated by {{ instance.getResource().getCreator().getUsername() }} the {{ instance.getResource().getCreationDate()|date('m/d/Y') }}\nthis instance is {{ instance.getResource().getShareType(true) }}\npath is {{ instance.getPath() }} "
+        {% if instance.getResourceType.getNavigable() == 1 %}
             ,"isFolder": true
             ,"isLazy": true
         {% endif %}
-        {% if resource.getResourceType.getIcon() is not null %}
-            ,"icon" : "{{resource.getResourceType.getIcon()}}"
+        {% if instance.getResourceType.getIcon() is not null %}
+            ,"icon" : "{{ instance.getResourceType.getIcon() }}"
         {% endif %}
     }
     {% if not loop.last %},{% endif %}

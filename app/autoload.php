@@ -1,70 +1,26 @@
 <?php
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
-use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-if (extension_loaded('apc') && ini_get('apc.enabled') == 1) {
-    require_once __DIR__ . '/../vendor/symfony/src/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
-    $loader = new ApcUniversalClassLoader('claroline.');
-} else {
-    if (!class_exists('Symfony\Component\ClassLoader\UniversalClassLoader')) {
-        require_once __DIR__ . '/../vendor/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-    }
-    $loader = new UniversalClassLoader();
+$loader = require __DIR__.'/../vendor/autoload.php';
+
+// intl
+if (!function_exists('intl_get_error_code')) {
+    require_once __DIR__.'/../vendor/symfony/symfony/src/Symfony/Component/Locale/Resources/stubs/functions.php';
+
+    $loader->add('', __DIR__.'/../vendor/symfony/symfony/src/Symfony/Component/Locale/Resources/stubs');
 }
-
-$coreNamespaces = array(
-    'Symfony'          => array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),
-    'Doctrine'         => __DIR__.'/../vendor/doctrine/lib',
-    'Doctrine\\Bundle' => __DIR__.'/../vendor/bundles',
-    'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',
-    'Doctrine\\DBAL'   => __DIR__.'/../vendor/doctrine-dbal/lib',
-    'Doctrine\\DBAL\\Migrations' => __DIR__.'/../vendor/doctrine-migrations/lib',
-    'Doctrine\\Common\\DataFixtures' => __DIR__.'/../vendor/doctrine-fixtures/lib',
-    'FOS'              =>__DIR__.'/../vendor/bundles',
-    'Sensio'           => __DIR__.'/../vendor/bundles',
-    'JMS'              => __DIR__.'/../vendor/bundles',
-    'Monolog'          => __DIR__.'/../vendor/monolog/src',
-    'Assetic'          => __DIR__.'/../vendor/assetic/src',
-    'Metadata'         => __DIR__.'/../vendor/metadata/src',
-    'Stof'             => __DIR__.'/../vendor/bundles',
-    'Gedmo'            => __DIR__.'/../vendor/gedmo-doctrine-extensions/lib',
-    'org\\bovigo\\vfs' => __DIR__.'/../vendor/vfsstream/src/main/php',
-    'JMS'              => __DIR__.'/../vendor/bundles',
-    'TwigJs'           => __DIR__.'/../vendor/twig-js/src',
-    'Claroline'        => array(__DIR__.'/../src/core', __DIR__.'/../src/plugin')
-);
-
-$pluginNamespaces = array();
 
 if (file_exists(__DIR__ . '/config/local/plugin/namespaces')) {
-    $namespaceValues = file(__DIR__ . '/config/local/plugin/namespaces', FILE_IGNORE_NEW_LINES);
-    $pluginNamespaces = array_fill_keys($namespaceValues, __DIR__ . '/../src/plugin');
+    $namespaces = file(__DIR__ . '/config/local/plugin/namespaces', FILE_IGNORE_NEW_LINES);
+
+    foreach ($namespaces as $namespace) {
+        $loader->add($namespace, __DIR__ . '/../src/plugin');
+    }
 }
 
-$loader->registerNamespaces(array_merge($pluginNamespaces, $coreNamespaces));
+$loader->add('Claroline', array(__DIR__.'/../src/core', __DIR__.'/../src/plugin'));
 
-$loader->registerPrefixes(array(
-    'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
-    'Twig_'            => __DIR__.'/../vendor/twig/lib'
-));
-$loader->registerPrefixFallbacks(array(
-    __DIR__.'/../vendor/symfony/src/Symfony/Component/Locale/Resources/stubs',
-));
-$loader->registerNamespaceFallbacks(array(
-    __DIR__.'/../src',
-));
-$loader->register();
+AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
-// Swiftmailer needs a special autoloader to allow
-// the lazy loading of the init file (which is expensive)
-require_once __DIR__.'/../vendor/swiftmailer/lib/classes/Swift.php';
-Swift::registerAutoload(__DIR__.'/../vendor/swiftmailer/lib/swift_init.php');
-
-AnnotationRegistry::registerLoader(function($class) use ($loader) {
-    $loader->loadClass($class);
-    return class_exists($class, false);
-});
-
-AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
+return $loader;

@@ -14,20 +14,20 @@ class Article // extends AbstractResource
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\generatedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      */
     protected $title;
-    
+
     public function __construct()
     {
         $this->type = 'text/html';
     }
-    
+
     public function getTitle()
     {
         return $this->title;

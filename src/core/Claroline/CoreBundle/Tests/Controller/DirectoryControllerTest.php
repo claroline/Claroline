@@ -83,7 +83,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($dir));
     }
-    
+
     private function cleanDirectory($dir)
     {
         $iterator = new \DirectoryIterator($dir);
