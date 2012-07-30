@@ -2,32 +2,54 @@
 
 <!-- Ant build file used for Claronext's Jenkins job. See http://jenkins-php.org/ -->
 
-<project name="Claronext" default="build" basedir=".">
+<project name="Claronext" default="build" basedir="./../../../">
 
-    <property name="appdir" value="${basedir}/../../"/>
-    <property name="buildir" value="${basedir}/../"/>
-    <property name="bindir" value="${basedir}/../../../bin"/>
-    <property name="srcdir" value="${basedir}/../../../src"/>
+    <property name="appdir" value="${basedir}/app"/>
+    <property name="srcdir" value="${basedir}/src"/>
+    <property name="builddir" value="${appdir}/build"/>
 
     <target name="build" depends="clean,rawInstall,parallelTasks,phpunit,phpcb"/>
 
     <target name="clean"
-            description="Clean up and create artifact directories">
-        <delete dir="${buildir}/api"/>
-        <delete dir="${buildir}/code-browser"/>
-        <delete dir="${buildir}/logs"/>
-        <delete dir="${buildir}/pdepend"/>
+            description="Remove logs and plugin config files, clean up and create artifact directories">
+        <delete file="${appdir}/config/local/plugin/bundles"/>
+        <delete file="${appdir}/config/local/plugin/namespaces"/>
+        <delete file="${appdir}/config/local/plugin/routing.yml"/>
+        <delete file="${appdir}/logs/test.log"/>
 
-        <mkdir dir="${buildir}/api"/>
-        <mkdir dir="${buildir}/code-browser"/>
-        <mkdir dir="${buildir}/logs"/>
-        <mkdir dir="${buildir}/pdepend"/>
+        <delete dir="${builddir}/api"/>
+        <delete dir="${builddir}/code-browser"/>
+        <delete dir="${builddir}/logs"/>
+        <delete dir="${builddir}/pdepend"/>
+
+        <mkdir dir="${builddir}/api"/>
+        <mkdir dir="${builddir}/code-browser"/>
+        <mkdir dir="${builddir}/logs"/>
+        <mkdir dir="${builddir}/pdepend"/>
     </target>
 
     <target name="rawInstall"
             description="Install vendors, create database and tables, install plugins">
         <exec executable="php" failonerror="true">
-            <arg path="${bindir}/factory_install_ci" />
+            <arg path="${basedir}/composer.phar" />
+            <arg value="install" />
+        </exec>
+        <exec executable="php" failonerror="true">
+            <arg path="${appdir}/console" />
+            <arg value="doctrine:database:drop" />
+            <arg value="--force" />
+            <arg value="--env=test" />
+        </exec>
+        <exec executable="php" failonerror="true">
+            <arg path="${appdir}/console" />
+            <arg value="doctrine:database:create" />
+            <arg value="--env=test" />
+        </exec>
+        <exec executable="php" failonerror="true">
+            <arg path="${appdir}/console" />
+            <arg value="claroline:install" />
+            <arg value="--with-plugins" />
+            <arg value="--env=test" />
         </exec>
     </target>
 
@@ -37,7 +59,7 @@
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--log-junit" />
-            <arg path="${basedir}/../logs/junit.xml" />
+            <arg path="${appdir}/build/logs/junit.xml" />
             <arg value="--verbose" />
         </exec>
     </target>
@@ -59,9 +81,9 @@
     <target name="pdepend"
             description="Generate jdepend.xml and software metrics charts using PHP_Depend">
         <exec executable="pdepend">
-            <arg value="--jdepend-xml=${buildir}/logs/jdepend.xml" />
-            <arg value="--jdepend-chart=${buildir}/pdepend/dependencies.svg" />
-            <arg value="--overview-pyramid=${buildir}/pdepend/overview-pyramid.svg" />
+            <arg value="--jdepend-xml=${builddir}/logs/jdepend.xml" />
+            <arg value="--jdepend-chart=${builddir}/pdepend/dependencies.svg" />
+            <arg value="--overview-pyramid=${builddir}/pdepend/overview-pyramid.svg" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -71,9 +93,9 @@
         <exec executable="phpmd">
             <arg path="${srcdir}" />
             <arg value="xml" />
-            <arg value="${basedir}/phpmd.xml" />
+            <arg value="${appdir}/build/tools/phpmd.xml" />
             <arg value="--reportfile" />
-            <arg value="${buildir}/logs/pmd.xml" />
+            <arg value="${builddir}/logs/pmd.xml" />
         </exec>
     </target>
 
@@ -81,7 +103,7 @@
             description="Generate pmd-cpd.xml using PHPCPD">
         <exec executable="phpcpd">
             <arg value="--log-pmd" />
-            <arg value="${buildir}/logs/pmd-cpd.xml" />
+            <arg value="${builddir}/logs/pmd-cpd.xml" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -90,7 +112,7 @@
             description="Generate phploc.csv">
         <exec executable="phploc">
             <arg value="--log-csv" />
-            <arg value="${buildir}/logs/phploc.csv" />
+            <arg value="${builddir}/logs/phploc.csv" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -99,8 +121,8 @@
             description="Generate checkstyle.xml using PHP_CodeSniffer">
         <exec executable="phpcs" output="/dev/null">
             <arg value="--report=checkstyle" />
-            <arg value="--report-file=${buildir}/logs/checkstyle.xml" />
-            <arg value="--standard=${basedir}/phpcs.xml" />
+            <arg value="--report-file=${builddir}/logs/checkstyle.xml" />
+            <arg value="--standard=${appdir}/build/tools/phpcs.xml" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -114,7 +136,7 @@
             <arg value="--directory" />
             <arg path="${srcdir}/core/Claroline,${srcdir}/plugin/Claroline" />
             <arg value="--target" />
-            <arg path="${buildir}/api" />
+            <arg path="${builddir}/api" />
         </exec>
     </target>
 
@@ -122,11 +144,11 @@
          description="Aggregate tool output with PHP_CodeBrowser">
         <exec executable="phpcb">
             <arg value="--log" />
-            <arg path="${buildir}/logs" />
+            <arg path="${builddir}/logs" />
             <arg value="--source" />
             <arg path="${srcdir}" />
             <arg value="--output" />
-            <arg path="${buildir}/code-browser" />
+            <arg path="${builddir}/code-browser" />
         </exec>
     </target>
 

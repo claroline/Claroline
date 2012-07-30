@@ -81,8 +81,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
         $crawler = $this->client->request(
             'POST',
-            "/resource/update/properties/{$dir->{'instanceId'}}",
-            array('resource_options_form' => array('name' => "", 'shareType' => 1))
+            "/resource/update/properties/{$dir->instanceId}",
+            array('resource_options_form' => array('name' => '', 'shareType' => 1))
         );
 
         $form = $crawler->filter('#resource_options_form');
@@ -93,11 +93,11 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr[0]->getId(), 'testDir');
-        $res = $this->createDirectory($dir->{'instanceId'}, 'childDir');
+        $res = $this->createDirectory($dir->instanceId, 'childDir');
         $this->client->request(
             'GET',
-            "/resource/move/{$res->{'instanceId'}}/{$this->pwr[0]->getId()}"
-        );
+            "/resource/move/{$res->instanceId}/{$this->pwr[0]->getId()}"
+            );
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
@@ -107,7 +107,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi[0]->{'resourceId'}}/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi[0]->resourceId}/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -196,11 +196,10 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMenusAction()
     {
-        $this->markTestSkipped('the response is good but hard to assert');
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/menus');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(14, count($jsonResponse));
+        $this->assertEquals(14, count(get_object_vars($jsonResponse)));
     }
 
     public function testCanGetEveryInstancesIdsFromTheClassicMultiExportArray()
@@ -263,7 +262,9 @@ class ResourceControllerTest extends FunctionalTestCase
             "/resource/create/directory/{$parentId}",
             array('directory_form' => array('name' => $name, 'shareType' => $shareType))
         );
+
         $obj = json_decode($this->client->getResponse()->getContent());
+
         return $obj[0];
     }
 

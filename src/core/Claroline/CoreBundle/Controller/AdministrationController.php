@@ -95,7 +95,7 @@ class AdministrationController extends Controller
     {
         if ($userId !== $this->get('security.context')->getToken()->getUser()->getId()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
+            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             $em->remove($user);
             $em->flush();
 
@@ -113,7 +113,7 @@ class AdministrationController extends Controller
     public function userListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findAll();
 
         return $this->render(
             'ClarolineCoreBundle:Administration:user_list.html.twig',
@@ -170,7 +170,7 @@ class AdministrationController extends Controller
     public function groupListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findAll();
 
         return $this->render(
             'ClarolineCoreBundle:Administration:group_list.html.twig',
@@ -188,7 +188,7 @@ class AdministrationController extends Controller
     public function groupUserListAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
         return $this->render(
             'ClarolineCoreBundle:Administration:group_user_list.html.twig',
@@ -206,8 +206,8 @@ class AdministrationController extends Controller
     public function userListAddableToGroupAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findAll();
 
         return $this->render(
             'ClarolineCoreBundle:Administration:user_list_addable_to_group.html.twig',
@@ -226,8 +226,8 @@ class AdministrationController extends Controller
     public function addUserToGroupAction($groupId, $userId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $group->addUser($user);
         $em->persist($group);
         $em->flush();
@@ -246,8 +246,8 @@ class AdministrationController extends Controller
     public function deleteUserFromGroupAction($groupId, $userId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $group->removeUser($user);
         $em->persist($group);
         $em->flush();
@@ -265,7 +265,7 @@ class AdministrationController extends Controller
     public function deleteGroupAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $em->remove($group);
         $em->flush();
 
@@ -282,7 +282,7 @@ class AdministrationController extends Controller
     public function groupSettingsFormAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
 
         return $this->render(
@@ -302,7 +302,7 @@ class AdministrationController extends Controller
     {
         $request = $this->get('request');
         $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
         $form->bindRequest($request);
 
@@ -352,10 +352,8 @@ class AdministrationController extends Controller
         if ($form->isValid()) {
             $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
             $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
-            $this->get('session')->setLocale($form['localLanguage']->getData());
 
             return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
-
         }
 
         return $this->render(

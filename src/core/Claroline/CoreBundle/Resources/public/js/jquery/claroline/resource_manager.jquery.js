@@ -340,7 +340,7 @@ $(function(){
 
                     $(treeId).dynatree({
                         checkbox: true,
-                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js')+'/../../../../images/resources/icon/',
+                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js')+'/../../../../../../icons/',
                         title: 'myTree',
                         children: children,
                         onPostInit: function(isReloading, isError){
