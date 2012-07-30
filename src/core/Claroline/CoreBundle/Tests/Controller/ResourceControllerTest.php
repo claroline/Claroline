@@ -97,7 +97,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request(
             'GET',
             "/resource/move/{$res->instanceId}/{$this->pwr[0]->getId()}"
-            );
+        );
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
@@ -202,7 +202,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(14, count(get_object_vars($jsonResponse)));
     }
 
-    public function testCanGetEveryInstancesIdsFromTheClassicMultiExportArray()
+    public function testGetEveryInstancesIdsFromTheClassicMultiExportArray()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
@@ -230,6 +230,31 @@ class ResourceControllerTest extends FunctionalTestCase
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
         //the archive content should be tested
+    }
+
+    //this test should be improved but there is no other "exportable" resource atm.
+    public function testMultiExportLinker()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->userRoot[0]->getId());
+        $pseudoId = 'file_'.$this->userRoot[0]->getId();
+        $this->client->request(
+            'GET',
+            "/resource/multiexport/linker?0={$pseudoId}"
+        );
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
+        //the archive content should be tested
+    }
+
+    public function testGetEveryInstancesIdsFromTheLinkerMultiExportArray()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $this->createForum($theBigTree[0]->key, 'lonelyForum');
+        $pseudoId = 'file_'.$this->userRoot[0]->getId();
+        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getLinkerExportList((array)$pseudoId);
+        $this->assertEquals(3, count($toExport));
     }
 
     public function testCustomActionThrowExceptionOnUknownAction()
@@ -261,6 +286,19 @@ class ResourceControllerTest extends FunctionalTestCase
             'POST',
             "/resource/create/directory/{$parentId}",
             array('directory_form' => array('name' => $name, 'shareType' => $shareType))
+        );
+
+        $obj = json_decode($this->client->getResponse()->getContent());
+
+        return $obj[0];
+    }
+
+    public function createForum($parentId, $name, $shareType = 1)
+    {
+        $this->client->request(
+            'POST',
+            "/resource/create/forum/{$parentId}",
+            array('forum_form' => array('name' => $name, 'shareType' => $shareType))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());

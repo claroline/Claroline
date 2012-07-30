@@ -51,13 +51,16 @@ $(function(){
                                 $('#ct_download').live('click', function(){
                                     var children = $('#source_tree').dynatree('getTree').getSelectedNodes();
                                     var parameters = {};
-
                                     for (var i in children) {
                                         if(children[i].isTool != true) {
                                             parameters[i] = children[i].data.instanceId;
+                                            if(children[i].getParent().data.isTool == true) {
+                                                parameters[i] = children[i].getParent().data.type+'_'+children[i].data.instanceId;
+                                            }
                                         }
                                     }
-                                    (params.displayMode == 'classic') ? window.location = Routing.generate('claro_multi_export_classic', parameters): alert('not done yet');
+                                    parameters['type'] = params.displayMode;
+                                    window.location = Routing.generate('claro_multi_export', parameters);
                                 })
                             }
 
@@ -167,8 +170,6 @@ $(function(){
                                 $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).addChild(rootChildren);
                                 rootChildren = $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).getChildren();
                                 for (var k in rootChildren) {
-                                    rootChildren[k].data.type = 'type_'+resourceTypes[i].type;
-                                    rootChildren[k].data.key = 'type_'+resourceTypes[i].type;
                                     bindContextMenuTree(rootChildren[k]);
                                }
                             }
@@ -389,7 +390,6 @@ $(function(){
                             }
                         },
                         onCustomRender: function (node) {
-                            var customTitle = '';
                             var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' title='"+node.data.tooltip+"'href='#'> "+node.data.title+"</a>";
                             html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
                             return html;

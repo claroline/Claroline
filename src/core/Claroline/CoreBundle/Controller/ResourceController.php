@@ -244,10 +244,9 @@ class ResourceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiExportClassicAction()
+    public function multiExportAction($type)
     {
-        $file = $this->get('claroline.resource.manager')->multiExportClassic();
-
+        $file = $this->get('claroline.resource.manager')->multiExport($type);
         $response = new Response();
         $response->setContent($file);
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
@@ -255,7 +254,7 @@ class ResourceController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename=archive');
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Connection', 'close');
-        
+
         return $response;
     }
 
