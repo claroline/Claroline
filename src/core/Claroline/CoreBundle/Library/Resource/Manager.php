@@ -19,16 +19,12 @@ class Manager
 
     /** @var EntityManager */
     private $em;
-
     /** @var FormFactory */
     private $formFactory;
-
     /** @var ContainerInterface */
     protected $container;
-
     /** @var EventDispatcher */
     private $ed;
-
     /** @var SecurityContext */
     private $sc;
 
@@ -184,16 +180,21 @@ class Manager
 
     /**
      * Returns an archive with the required content.
-     * 
+     *
      * @return file
      */
-    public function multiExportClassic()
+    public function multiExport($type)
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->container->get('claroline.listener.file_listener')->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $instanceIds = $this->getClassicExportList($this->container->get('request')->query->all());
+        switch ($type) {
+            case 'classic': $instanceIds = $this->getClassicExportList($this->container->get('request')->query->all());
+                break;
+            case 'linker': $instanceIds = $this->getLinkerExportList($this->container->get('request')->query->all());
+                break;
+        }
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
@@ -256,6 +257,30 @@ class Manager
                         $toAppend[] = $child->getId();
                     }
                 }
+            }
+        }
+
+        return array_merge($toAppend, $resIds);
+    }
+
+    public function getLinkerExportList($instanceIds)
+    {
+        $repoIns = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
+        $dirPseudoIds = array();
+        $resIds = array();
+        $toAppend = array();
+
+        foreach ($instanceIds as $instanceId) {
+             (true == is_numeric($instanceId) || true == is_int($instanceId)) ? $resIds[] = $instanceId : $dirPseudoIds[] = $instanceId;
+        }
+
+        foreach($dirPseudoIds as $dirPseudoId) {
+            $split = explode('_', $dirPseudoId);
+            $dir = $repoIns->find($split[1]);
+            $resType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $split[0]));
+            $instances = $repoIns->getChildrenInstanceList($dir, $resType);
+            foreach ($instances as $instance) {
+                $toAppend[] = $instance->getId();
             }
         }
 
