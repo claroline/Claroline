@@ -57,9 +57,7 @@ $(function(){
                                             parameters[i] = children[i].data.instanceId;
                                         }
                                     }
-
-                                    parameters['displayMode'] = params.displayMode;
-                                    window.location = Routing.generate('claro_multi_export', parameters);
+                                    (params.displayMode == 'classic') ? window.location = Routing.generate('claro_multi_export_classic', parameters): alert('not done yet');
                                 })
                             }
 
@@ -201,7 +199,7 @@ $(function(){
                                     'name': 'claro_resource_add_workspace',
                                     'parameters': {
                                         'resourceId': sourceNode.data.resourceId,
-                                        'instanceDestinationId': node.data.instanceId,
+                                        'instanceDestinationId': node.data.instanceId
                                     }
                                 }
                                 ClaroUtils.sendRequest(route);

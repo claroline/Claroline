@@ -180,6 +180,81 @@ class Manager
         return $prefix . '_' . strtolower(str_replace(' ', '_', $resourceType));
     }
 
+    public function multiExportClassic()
+    {
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
+        $archive = new \ZipArchive();
+        $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->container->get('claroline.listener.file_listener')->generateGuid() . '.zip';
+        $archive->open($pathArch, \ZipArchive::CREATE);
+        $instanceIds = $this->getClassicExportList($this->container->get('request')->query->all());
+
+        foreach ($instanceIds as $instanceId) {
+            $instance = $repo->find($instanceId);
+
+            if ($instance->getResource()->getResourceType()->getType() != 'directory') {
+
+                $eventName = $this->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
+                $event = new ExportResourceEvent($instance->getResource()->getId());
+                $this->ed->dispatch($eventName, $event);
+                $obj = $event->getItem();
+
+                if ($obj != null) {
+                    $archive->addFile($obj, $instance->getPath());
+                }
+            }
+        }
+
+        $archive->close();
+
+        return file_get_contents($pathArch);
+    }
+
+    /**
+     * Gets the list of the instances wich will be exported. The instanceIds array is given by the dynatree resource tree and
+     * contains the minimal amount of informations to retrieve every resource needed.
+     *
+     * @param array $instanceIds
+     *
+     * @return array $toAppend
+     */
+    public function getClassicExportList($instanceIds)
+    {
+        $repoIns = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
+        $dirIds = array();
+        $resIds = array();
+
+        foreach ($instanceIds as $instanceId) {
+            $instance = $repoIns->find($instanceId);
+            ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
+        }
+
+        $toAppend = array();
+
+        foreach ($dirIds as $dirId) {
+            $found = false;
+            foreach ($resIds as $resId) {
+                $res = $repoIns->find($resId);
+
+                if ($res->getRoot() == $dirId) {
+                    $found = true;
+                }
+            }
+
+            if (true != $found) {
+                $directoryInstance = $repoIns->find($dirId);
+                $children = $repoIns->children($directoryInstance, false);
+
+                foreach ($children as $child) {
+                    if ($child->getResource()->getResourceType()->getType() != 'directory') {
+                        $toAppend[] = $child->getId();
+                    }
+                }
+            }
+        }
+
+        return array_merge($toAppend, $resIds);
+    }
+
     private function createCopy(ResourceInstance $resourceInstance)
     {
         $user = $this->sc->getToken()->getUser();
