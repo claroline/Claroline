@@ -202,7 +202,6 @@ $(function(){
                                     'parameters': {
                                         'resourceId': sourceNode.data.resourceId,
                                         'instanceDestinationId': node.data.instanceId,
-                                        'options': option
                                     }
                                 }
                                 ClaroUtils.sendRequest(route);

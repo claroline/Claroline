@@ -178,7 +178,7 @@ class DatabaseWriter
                     $img = $imgFolder.$ds.$properties['icon'];
                     var_dump($this->imgPath.$ds.$properties['icon']);
                     copy($img, $this->imgPath.$ds.$properties['icon']);
-                    }
+                }
             }
         }
     }
