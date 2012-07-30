@@ -29,7 +29,7 @@ class ResourceController extends Controller
      */
     public function creationFormAction($resourceType)
     {
-        $eventName = $this->normalizeEventName('create_form', $resourceType);
+        $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create_form', $resourceType);
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
@@ -47,7 +47,7 @@ class ResourceController extends Controller
      */
     public function createAction($resourceType, $parentInstanceId)
     {
-        $eventName = $this->normalizeEventName('create', $resourceType);
+        $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create', $resourceType);
         $event = new CreateResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         $response = new Response();
@@ -81,24 +81,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->find($instanceId);
-
-        if (1 === $resourceInstance->getResource()->getInstanceCount()) {
-
-            if ($resourceInstance->getResourceType()->getType() !== 'directory') {
-                $eventName = $this->normalizeEventName(
-                    'delete',
-                    $resourceInstance->getResourceType()->getType()
-                );
-                $event = new DeleteResourceEvent(array($resourceInstance->getResource()));
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
-            } else {
-                $this->deleteDirectory($resourceInstance);
-            }
-        }
-
-        $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
-        $em->remove($resourceInstance);
-        $em->flush();
+        $this->get('claroline.resource.manager')->delete($resourceInstance);
 
         return new Response('Resource deleted', 204);
     }
@@ -213,7 +196,7 @@ class ResourceController extends Controller
      */
     public function customAction($resourceType, $action, $resourceId)
     {
-        $eventName = $this->normalizeEventName($action, $resourceType);
+        $eventName = $this->get('claroline.resource.manager')->normalizeEventName($action, $resourceType);
         $event = new CustomActionResourceEvent($resourceId);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
@@ -237,26 +220,12 @@ class ResourceController extends Controller
     public function exportAction($instanceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        //will unlink the downloaded item
-        $unlink = false;
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-
-        if ('directory' != $resourceInstance->getResource()->getResourceType()->getType()) {
-            $eventName = $this->normalizeEventName('export', $resourceInstance->getResource()->getResourceType()->getType());
-            $event = new ExportResourceEvent($resourceInstance->getResource()->getId());
-            $this->get('event_dispatcher')->dispatch($eventName, $event);
-            $item = $event->getItem();
-            $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName()));
-        } else {
-            $archive = new \ZipArchive();
-            $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid() . '.zip';
-            $archive->open($item, \ZipArchive::CREATE);
-            $this->addDirectoryToArchive($resourceInstance, $archive);
-            $archive->close();
-            $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName() . '.zip'));
-            $unlink = true;
+        $item = $this->get('claroline.resource.manager')->export($resourceInstance);
+        $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName()));
+        if ($resourceInstance->getResourceType()->getType() == 'directory') {
+            $nameDownload.='.zip';
         }
-
         $file = file_get_contents($item);
         $response = new Response();
         $response->setContent($file);
@@ -265,11 +234,6 @@ class ResourceController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $nameDownload);
         $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
         $response->headers->set('Connection', 'close');
-
-        if (true == $unlink) {
-            chmod($item, 0777);
-            unlink($item);
-        }
 
         return $response;
     }
@@ -296,7 +260,7 @@ class ResourceController extends Controller
 
             if ($instance->getResource()->getResourceType()->getType() != 'directory') {
 
-                $eventName = $this->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
+                $eventName = $this->get('claroline.resource.manager')->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
                 $event = new ExportResourceEvent($instance->getResource()->getId());
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
                 $obj = $event->getItem();
@@ -470,142 +434,15 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function addToWorkspaceAction($resourceId, $options, $instanceDestinationId)
+    public function addToWorkspaceAction($resourceId, $instanceDestinationId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-
-        if ($options == 'ref') {
-            $copy = $this->addToDirectoryByReference($resource, $parent);
-        } else {
-            $copy = $this->addToDirectoryByCopy($instance, $parent);
-        }
-
+        $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
         $em->flush();
 
         return new Response('success');
-    }
-
-    private function normalizeEventName($prefix, $resourceType)
-    {
-        return $prefix . '_' . strtolower(str_replace(' ', '_', $resourceType));
-    }
-
-    private function deleteDirectory($directoryInstance)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $children = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, true);
-
-        foreach ($children as $child) {
-            $rsrc = $child->getResource();
-
-            if ($rsrc->getInstanceCount() === 1 || $rsrc->getCreator() == $this->get('security.context')->getToken()->getUser()) {
-
-                if ($child->getResourceType()->getType() === 'directory') {
-                    $em->remove($rsrc);
-                } else {
-                    $event = new DeleteResourceEvent(array($child->getResource()));
-                    $this->get('event_dispatcher')->dispatch("delete_{$child->getResourceType()->getType()}", $event);
-                }
-            }
-
-            $rsrc->removeResourceInstance($child);
-            $em->remove($child);
-        }
-
-        $em->remove($directoryInstance->getResource());
-        $em->flush();
-    }
-
-    private function addToDirectoryByReference(AbstractResource $resource, ResourceInstance $parent)
-    {
-        if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE
-            || $resource->getCreator() == $this->get('security.context')->getToken()->getUser()) {
-
-            if ($resource->getResourceType()->getType() != 'directory') {
-                $instanceCopy = $this->createReference($resource);
-                $instanceCopy->setParent($parent);
-                $instanceCopy->setWorkspace($parent->getWorkspace());
-            } else {
-                $instances = $resource->getResourceInstances();
-                $instanceCopy = $this->createCopy($instances[0]);
-                $instanceCopy->setParent($parent);
-                $instanceCopy->setWorkspace($parent->getWorkspace());
-
-                foreach ($instances[0]->getChildren() as $child) {
-                    $this->addToDirectoryByReference($child->getResource(), $instanceCopy);
-                }
-            }
-
-            $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
-        }
-    }
-
-    private function addToDirectoryByCopy(ResourceInstance $instance, ResourceInstance $parent)
-    {
-        if ($instance->getResource()->getShareType() == AbstractResource::PUBLIC_RESOURCE) {
-            $instanceCopy = $this->createCopy($instance);
-            $instanceCopy->setParent($parent);
-            $instanceCopy->setWorkspace($parent->getWorkspace());
-            $children = $instance->getChildren();
-
-            foreach ($children as $child) {
-                $this->addToDirectoryByCopy($child, $instanceCopy);
-            }
-
-            $this->getDoctrine()->getEntityManager()->persist($instanceCopy);
-        }
-    }
-
-    private function createCopy(ResourceInstance $resourceInstance)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $ric = new ResourceInstance();
-        $ric->setCreator($user);
-        $this->get('doctrine.orm.entity_manager')->flush();
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        if ($resourceInstance->getResourceType()->getType()=='directory') {
-            $resourceCopy = new Directory();
-            $resourceCopy->setName($resourceInstance->getResource()->getName());
-            $resourceCopy->setCreator($user);
-            $resourceCopy->setResourceType($em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
-            $resourceCopy->addResourceInstance($ric);
-        } else {
-            $event = new CopyResourceEvent($resourceInstance->getResource());
-            $eventName = $this->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
-            $this->get('event_dispatcher')->dispatch($eventName, $event);
-            $resourceCopy = $event->getCopy();
-            $resourceCopy->setCreator($user);
-            $resourceCopy->setResourceType($resourceInstance->getResourceType());
-            $resourceCopy->addResourceInstance($ric);
-        }
-
-        $em->persist($resourceCopy);
-        $ric->setResource($resourceCopy);
-
-        return $ric;
-    }
-
-    private function createReference(AbstractResource $resource)
-    {
-        $ric = new ResourceInstance();
-        $ric->setCreator($this->get('security.context')->getToken()->getUser());
-        $ric->setResource($resource);
-        $resource->addResourceInstance($ric);
-
-        return $ric;
-    }
-
-    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path)
-    {
-        if ($root != $resourceInstance->getParent()) {
-            $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
-            $path = $this->getRelativePath($root, $resourceInstance->getParent(), $path);
-        }
-
-        return $path;
     }
 
     /* InstancesIds is an array wich can contain:
@@ -619,7 +456,8 @@ class ResourceController extends Controller
      */
     //TODO split this in 2 functions (linker & classic)
     //take into consideration the directory Id for linker.
-    private function getExportListInstanceIds($instanceIds, $exportType) {
+    private function getExportListInstanceIds($instanceIds, $exportType)
+    {
 
         $repoIns = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $dirIds = array();
@@ -639,9 +477,11 @@ class ResourceController extends Controller
             ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
         }
 
-        switch($exportType){
-            case 'linker': $toAppend = $this->getLinkerExportList($resTypes, $resIds, $dirIds); break;
-            case 'classic': $toAppend = $this->getClassicExportList($dirIds, $resIds); break;
+        switch($exportType) {
+            case 'linker': $toAppend = $this->getLinkerExportList($resTypes, $resIds, $dirIds);
+                break;
+            case 'classic': $toAppend = $this->getClassicExportList($dirIds, $resIds);
+                break;
         }
 
         $resIds = array_merge($resIds, $toAppend);
@@ -709,26 +549,4 @@ class ResourceController extends Controller
 
         return $toAppend;
     }
-
-    private function addDirectoryToArchive($resourceInstance, $archive)
-    {
-        $children = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
-        foreach ($children as $child) {
-            if ($child->getResource()->getResourceType()->getType() != 'directory') {
-
-                $eventName = $this->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
-                $event = new ExportResourceEvent($child->getResource()->getId());
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $obj = $event->getItem();
-
-                if ($obj != null) {
-                    $path = $this->getRelativePath($resourceInstance, $child, '');
-                    $archive->addFile($obj, $resourceInstance->getResource()->getName().DIRECTORY_SEPARATOR.$path . $child->getResource()->getName());
-                }
-            }
-        }
-
-        $archive->addEmptyDir($resourceInstance->getResource()->getName());
-    }
-
 }

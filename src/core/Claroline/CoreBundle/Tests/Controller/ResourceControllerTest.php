@@ -97,7 +97,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request(
             'GET',
             "/resource/move/{$res->{'instanceId'}}/{$this->pwr[0]->getId()}"
-            );
+        );
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
@@ -107,7 +107,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/ref/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -115,21 +115,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($file), 2);
         $this->assertEquals(count($this->getUploadedFiles()), 2);
-    }
-
-    public function testResourceCanBeAddedToWorkspaceByCopy()
-    {
-        $this->markTestSkipped('implementation removed for now');
-        $this->logUser($this->getFixtureReference('user/user'));
-        $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/copy/{$this->pwr[0]->getId()}");
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
-        $rootDir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(count($rootDir), 1);
-        $this->client->request('GET', "/resource/children/{$rootDir[0]->key}");
-        $file = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(count($file), 1);
-        $this->assertEquals(count($this->getUploadedFiles()), 3);
     }
 
     public function testResourceProportiesCanBeEdited()
