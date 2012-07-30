@@ -5,7 +5,7 @@
  * PHPMD, PHPCS and PHPCPD to be installed and reachable via the command-line.
  */
 
-$rootDirectory = realpath(__DIR__ . "/..");
+$rootDirectory = realpath(__DIR__ . "/../..");
 
 echo "\n********************************************************************************";
 echo "\n******************************** Mess detector *********************************";
