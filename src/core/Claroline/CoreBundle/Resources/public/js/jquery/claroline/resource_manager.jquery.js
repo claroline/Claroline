@@ -74,15 +74,31 @@ $(function(){
 
                             $('#ct_filter').click(function(){
                                 if (params.displayMode == 'classic') {
-                                    filterNodes('workspaceId', $('#select_root').val());
-                                    filterNodes('type', $('#select_type').val());
+                                    if ($('#select_root').val() != null){
+                                        filterNodes('workspaceId', $('#select_root').val());
+                                    }
+                                    if ($('#select_type').val() != null) {
+                                        filterNodes('type', $('#select_type').val());
+                                    }
+                                    //it's obviously just a test and isn't working'
+                                    //how to manage date ?
+                                    if ($('#rf_date_from').val() != null) {
+                                        alert('this is a test and it\'s not working');
+                                        filterNodes('dateCreation', $('#rf_date_from').val());
+
+                                    }
                                 }
 
                                 if (params.displayMode == 'linker') {
-                                    filterNodes('type', $('#select_type').val());
-                                    var types = $('#source_tree').dynatree('getRoot').getChildren();
-                                    for (var i in types) {
-                                        filterNodes('workspaceId', $('#select_root').val(), types[i]);
+                                    if ($('#select_type').val() != null) {
+                                        filterNodes('type', $('#select_type').val());
+                                    }
+
+                                    if ($('#select_root').val()) {
+                                        var types = $('#source_tree').dynatree('getRoot').getChildren();
+                                        for (var i in types) {
+                                            filterNodes('workspaceId', $('#select_root').val(), types[i]);
+                                        }
                                     }
                                 }
                             });
@@ -93,6 +109,7 @@ $(function(){
 
                 var filterNodes = function(filter, searchArray, targetNode) {
                     var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                    alert(filter, searchArray);
                     startNode.visit(function(node) {
                         if (node.isVisible() && node.data.title) {
                             if (node.data[filter].indexOf(searchArray) >= 0) {

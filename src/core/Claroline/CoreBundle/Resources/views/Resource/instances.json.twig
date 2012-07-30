@@ -10,6 +10,7 @@
         "type": "{{ resource.getResource().getResourceType().getType() }}",
         "workspaceId": "{{ resource.getWorkspace().getId() }}",
         "path" : "{{resource.getPath()}}",
+        "dateCreation" : "{{ resource.getCreationDate()|date('m/d/Y') }}",
         "tooltip":
             "added by {{ resource.getCreator().getUsername() }} the {{ resource.getCreationDate()|date('m/d/Y') }}\ncreated by {{ resource.getResource().getCreator().getUsername() }} the {{ resource.getResource().getCreationDate()|date('m/d/Y') }}\nthis resource is {{ resource.getResource().getShareType(true) }}\npath is {{ resource.getPath() }} "
         {% if resource.getResourceType.getNavigable() == 1 %}

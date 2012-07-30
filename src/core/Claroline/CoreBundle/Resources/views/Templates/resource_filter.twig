@@ -14,7 +14,8 @@
             {% endfor %}
         </select><br>
         <input type='text' style='width:120px' class='rf_input' placeholder='text'></input><br>
-période<br>
+        <input id='rf_date_from' type='text' style='width:120px' class='rf_input' placeholder='date début'></input><br>
+        <input id='rf_date_to' type='text' style='width:120px' class='rf_input' placeholder='date fin'></input><br>
         <button id='ct_download'>download</button><br>
         <button id='ct_filter'>filter</button><br>
     </div>
@@ -22,5 +23,9 @@ période<br>
         <div id='source_tree'></div>
     </div>
 </div>
+<script>
+    $( "#rf_date_from" ).datepicker();
+    $( "#rf_date_to" ).datepicker();
+</script>
 
 
