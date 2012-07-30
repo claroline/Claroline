@@ -107,7 +107,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
-        $this->client->request('GET', "/resource/workspace/add/{$rootRi->{'resourceId'}}/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/workspace/add/{$rootRi[0]->{'resourceId'}}/{$this->pwr[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -203,9 +203,34 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(14, count($jsonResponse));
     }
 
-    public function testMultiDownloadAction()
+    public function testCanGetEveryInstancesIdsFromTheClassicMultiExportArray()
     {
-        $this->markTestSkipped('not done yet');
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList((array) $this->userRoot[0]->getId());
+        $this->assertEquals(3, count($toExport));
+        $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
+        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList((array) $theLoneFile->key);
+        $this->assertEquals(1, count($toExport));
+        $complexExportList = array();
+        $complexExportList[] = $theBigTree[0]->key;
+        $complexExportList[] = $theLoneFile->key;
+        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList($complexExportList);
+        $this->assertEquals(4, count($toExport));
+    }
+
+    public function testMultiExportClassic()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
+        $this->client->request(
+            'GET',
+            "/resource/multiexport/classic?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
+        //the archive content should be tested
     }
 
     public function testCustomActionThrowExceptionOnUknownAction()
@@ -247,11 +272,12 @@ class ResourceControllerTest extends FunctionalTestCase
         //public child
     private function createTree($parentId)
     {
-        $rootDir = $this->createDirectory($parentId, 'rootDir');
-        $this->uploadFile($rootDir->key, 'firstfile');
-        $this->uploadFile($rootDir->key, 'secondfile', 0);
+        $arrCreated = array();
+        $arrCreated[] = $rootDir = $this->createDirectory($parentId, 'rootDir');
+        $arrCreated[] = $this->uploadFile($rootDir->key, 'firstfile');
+        $arrCreated[] = $this->uploadFile($rootDir->key, 'secondfile', 0);
 
-        return $rootDir;
+        return $arrCreated;
     }
 
     //DIR
@@ -261,13 +287,14 @@ class ResourceControllerTest extends FunctionalTestCase
             //private child
     private function createBigTree($parentId)
     {
-        $rootDir = $this->createDirectory($parentId, 'rootDir');
-        $this->uploadFile($rootDir->key, 'firstfile');
-        $this->uploadFile($rootDir->key, 'secondfile', 0);
-        $childDir = $this->createDirectory($rootDir->key, 'childDir');
-        $this->uploadFile($childDir->key, 'thirdFile');
+        $arrCreated = array();
+        $arrCreated[] = $rootDir = $this->createDirectory($parentId, 'rootDir');
+        $arrCreated[] = $this->uploadFile($rootDir->key, 'firstfile');
+        $arrCreated[] = $this->uploadFile($rootDir->key, 'secondfile', 0);
+        $arrCreated[] = $childDir = $this->createDirectory($rootDir->key, 'childDir');
+        $arrCreated[] = $this->uploadFile($childDir->key, 'thirdFile');
 
-        return $rootDir;
+        return $arrCreated;
     }
 
     private function getUploadedFiles()

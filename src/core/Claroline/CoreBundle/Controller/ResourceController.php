@@ -244,35 +244,10 @@ class ResourceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiExportAction($displayMode)
+    public function multiExportClassicAction()
     {
-        $archive = new \ZipArchive();
-        $pathArch = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $this->get('claroline.listener.file_listener')->generateGuid() . '.zip';
-        $archive->open($pathArch, \ZipArchive::CREATE);
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $request = $this->get('request');
-        $instanceIds = $request->query->all();
+        $file = $this->get('claroline.resource.manager')->multiExportClassic();
 
-        $instanceIds = $this->getExportListInstanceIds($instanceIds, $displayMode);
-
-        foreach ($instanceIds as $instanceId) {
-            $instance = $repo->find($instanceId);
-
-            if ($instance->getResource()->getResourceType()->getType() != 'directory') {
-
-                $eventName = $this->get('claroline.resource.manager')->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
-                $event = new ExportResourceEvent($instance->getResource()->getId());
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $obj = $event->getItem();
-
-                if ($obj != null) {
-                    $archive->addFile($obj, $instance->getPath());
-                }
-            }
-        }
-
-        $archive->close();
-        $file = file_get_contents($pathArch);
         $response = new Response();
         $response->setContent($file);
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
@@ -280,9 +255,7 @@ class ResourceController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename=archive');
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Connection', 'close');
-        chmod($pathArch, 0777);
-        unlink($pathArch);
-
+        
         return $response;
     }
 
@@ -443,110 +416,5 @@ class ResourceController extends Controller
         $em->flush();
 
         return new Response('success');
-    }
-
-    /* InstancesIds is an array wich can contain:
-     * directories ids
-     * resourceInstances ids
-     * resourceTypes types
-     * if a directory is on the list and has no child, every resources from that directory will be downloaded
-     * if a directory is on the list and some of his children are on the list, only theses children will be downloaded
-     * otherwise, the resource linked to the instance id will be downloaded
-     * same logic for the types
-     */
-    //TODO split this in 2 functions (linker & classic)
-    //take into consideration the directory Id for linker.
-    private function getExportListInstanceIds($instanceIds, $exportType)
-    {
-
-        $repoIns = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $dirIds = array();
-        $resIds = array();
-        $insIds = array();
-        $resTypes = array();
-
-
-        //split types from instance ids
-        foreach ($instanceIds as $instanceId) {
-             (true == is_numeric($instanceId) || true == is_int($instanceId)) ? $insIds[] = $instanceId : $resTypes[] = $instanceId;
-        }
-
-        //split directories from other resources
-        foreach ($insIds as $instanceId) {
-            $instance = $repoIns->find($instanceId);
-            ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
-        }
-
-        switch($exportType) {
-            case 'linker': $toAppend = $this->getLinkerExportList($resTypes, $resIds, $dirIds);
-                break;
-            case 'classic': $toAppend = $this->getClassicExportList($dirIds, $resIds);
-                break;
-        }
-
-        $resIds = array_merge($resIds, $toAppend);
-
-        return $resIds;
-    }
-
-    //something is wront here
-    private function getLinkerExportList($resTypes, $resIds, $dirIds)
-    {
-        $toAppend = array();
-        $repoType = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $repoIns = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-
-        foreach ($resTypes as $resType) {
-            $found = false;
-            foreach ($resIds as $resId) {
-                $res = $repoIns->find($resId);
-
-                if ($res->getResourceType()->getType() == $resType) {
-                    $found = true;
-                }
-            }
-
-            //if a type has no resources, every resources from that type will ne downloaded
-            if (true != $found) {
-                $resourceType = $repoType->findOneBy(array('type' => $resType));
-                $instances = $repoIns->findInstancesFromType($resourceType, $this->get('security.context')->getToken()->getUser());
-
-                //duplicatas should also be removed
-                foreach ($instances as $instance) {
-                        $toAppend[] = $instance->getId();
-                }
-            }
-        }
-
-        return $toAppend;
-    }
-
-    private function getClassicExportList($dirIds, $resIds)
-    {
-        $repoIns = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $toAppend = array();
-        foreach ($dirIds as $dirId) {
-            $found = false;
-            foreach ($resIds as $resId) {
-                $res = $repoIns->find($resId);
-
-                if ($res->getRoot() == $dirId) {
-                    $found = true;
-                }
-            }
-
-            //if a directory has no children in the list, the whole directory must be downloaded
-            if (true != $found) {
-                $directoryInstance = $repoIns->find($dirId);
-                $children = $repoIns->children($directoryInstance, true);
-                foreach ($children as $child) {
-                    if ($child->getResource()->getResourceType()->getType() != 'directory') {
-                        $toAppend[] = $child->getId();
-                    }
-                }
-            }
-        }
-
-        return $toAppend;
     }
 }
