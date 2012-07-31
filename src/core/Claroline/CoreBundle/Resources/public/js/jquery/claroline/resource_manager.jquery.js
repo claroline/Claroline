@@ -72,58 +72,111 @@ $(function() {
                                 createTree('#source_tree');
                             });
 
-                            $('#ct_filter').click(function() {
-                                if (params.displayMode === 'classic') {
-                                    if ($('#select_root').val() !== null) {
-                                        filterNodes('workspaceId', $('#select_root').val());
-                                    }
-                                    if ($('#select_type').val() !== null) {
-                                        filterNodes('type', $('#select_type').val());
-                                    }
-                                    //it's obviously just a test and isn't working'
-                                    //how to manage date ?
-                                    if ($('#rf_date_from').val() !== null) {
-                                        alert('this is a test and it\'s not working');
-                                        filterNodes('dateCreation', $('#rf_date_from').val());
-
-                                    }
-                                }
-
-                                if (params.displayMode === 'linker') {
-                                    if ($('#select_type').val() !== null) {
-                                        filterNodes('type', $('#select_type').val());
-                                    }
-
-                                    if ($('#select_root').val()) {
-                                        var types = $('#source_tree').dynatree('getRoot').getChildren();
-                                        for (var i in types) {
-                                            filterNodes('workspaceId', $('#select_root').val(), types[i]);
-                                        }
-                                    }
-                                }
-                            });
-
+                            setFilters();
                             createTree('#source_tree');
                         });
                 }
 
-                var filterNodes = function(filter, searchArray, targetNode) {
-                    var startNode = targetNode || $('#source_tree').dynatree('getRoot');
-                    alert(filter, searchArray);
-                    startNode.visit(function(node) {
-                        if (node.isVisible() && node.data.title) {
-                            if (node.data[filter].indexOf(searchArray) >= 0) {
-                                node.visitParents(function(node) {
-                                    $(node.li).show();
-                                    return (node.parent !== null);
-                                }, true);
-                                return 'skip';
-                            } else {
-                                $(node.li).hide();
+                function setFilters() {
+                    $('#ct_filter').click(function() {
+                        showNodes();
+                        if (params.displayMode == 'classic') {
+                            if ($('#select_root').val() !== null) {
+                                filterByWorkspace(($('#select_root').val()));
+                            }
+
+                            if ($('#select_type').val() !== null) {
+                                filterByType($('#select_type').val());
+                            }
+
+                            if ($('#rf_date_from').val() !== '') {
+                                filterFromDate($('#rf_date_from').val());
+                            }
+
+                            if ($('#rf_date_to').val() !== '') {
+                                filterToDate($('#rf_date_to').val());
+                            }
+                        } else {
+                            if ($('#select_root').val()) {
+                                var types = $('#source_tree').dynatree('getRoot').getChildren();
+                                for (var i in types) {
+                                    filterByWorkspace($('#select_root').val(), types[i]);
+                                }
+                            }
+
+                            if ($('#select_type').val() !== null) {
+                                filterByType($('#select_type').val());
+                            }
+
+                            if ($('#rf_date_from').val() !== '') {
+                                filterFromDate($('#rf_date_from').val());
+                            }
+
+                            if ($('#rf_date_to').val() !== '') {
+                                filterToDate($('#rf_date_to').val());
                             }
                         }
+
                     });
-                };
+
+                    var filterByType = function(searchArray, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title) {
+                                if (searchArray.indexOf(node.data.type) >= 0 || node.data.type == 'directory') {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    };
+
+                    var filterByWorkspace = function(searchArray, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title) {
+                                if (searchArray.indexOf(node.data.workspaceId) >= 0) {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    }
+
+                    var filterFromDate = function(date, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title && node.data.dateInstanceCreation) {
+                                if (node.data.dateInstanceCreation >= date || node.data.type == 'directory') {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    }
+                    var filterToDate = function(date, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title) {
+                                if (node.data.dateInstanceCreation <= date || node.data.type == 'directory') {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    }
+                    var showNodes = function(targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            $(node.li).show();
+                        });
+                    };
+
+                }
 
                 function createTree(treeId)
                 {
