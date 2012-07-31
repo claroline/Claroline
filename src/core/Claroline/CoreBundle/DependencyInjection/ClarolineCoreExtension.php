@@ -26,10 +26,5 @@ class ClarolineCoreExtension extends Extension
         $loader->load('security.yml');
         $loader->load('workspace.yml');
         $loader->load('resource.yml');
-
-        // TODO : try to use a compiler pass
-        $resourceControllers = $container->findTaggedServiceIds('resource.controller');
-        $container->setParameter('claroline.resource_controllers', $resourceControllers);
-        $container->setParameter('claroline.resource_players', null);
     }
 }
