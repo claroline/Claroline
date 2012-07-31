@@ -1,6 +1,12 @@
 {
-    "hash": "caad8359d33011f3b51ed36593c08d89",
+    "hash": "d58acd6b9acc4dc68c4c1e3b873e8428",
     "packages": [
+        {
+            "package": "claroline/front-end-bundle",
+            "version": "dev-master",
+            "source-reference": "aa648a064c507f9495504de8f30735dba7774bc9",
+            "commit-date": "1343732416"
+        },
         {
             "package": "doctrine/common",
             "version": "2.2.2"
@@ -26,8 +32,8 @@
         {
             "package": "doctrine/doctrine-bundle",
             "version": "dev-master",
-            "source-reference": "62134e6a8dd3f330131ee6a970f0cee1d7760c1d",
-            "commit-date": "1343203511"
+            "source-reference": "ed8d02b491512f947fdb2f8b665dc8fd72b5879c",
+            "commit-date": "1343657020"
         },
         {
             "package": "doctrine/doctrine-fixtures-bundle",
@@ -50,8 +56,8 @@
         {
             "package": "doctrine/orm",
             "version": "2.2.x-dev",
-            "source-reference": "5d2a3bcb3b467f41ee58575764f3ba84937f76e4",
-            "commit-date": "1341676080"
+            "source-reference": "7d343302a8f886be9cfb2a9c8345a95740dcfde9",
+            "commit-date": "1343560954"
         },
         {
             "package": "friendsofsymfony/jsrouting-bundle",
@@ -62,8 +68,8 @@
         {
             "package": "gedmo/doctrine-extensions",
             "version": "dev-master",
-            "source-reference": "9898253452a37733d278af6fc595b059327c4218",
-            "commit-date": "1342872222"
+            "source-reference": "3881e19cc9497efa132a55e44aebbc62405a05b1",
+            "commit-date": "1343672222"
         },
         {
             "package": "jms/aop-bundle",
@@ -82,8 +88,8 @@
         {
             "package": "jms/di-extra-bundle",
             "version": "dev-master",
-            "source-reference": "7458e34930a18879110fae18457df09b83fd60b9",
-            "commit-date": "1343212603"
+            "source-reference": "19c78ddeb222b0e911eb87c9b3c07d5dc0f9f9ea",
+            "commit-date": "1343655179"
         },
         {
             "package": "jms/metadata",
@@ -98,8 +104,8 @@
         {
             "package": "jms/security-extra-bundle",
             "version": "dev-master",
-            "source-reference": "1c2b2bef3505c390208f0411be82cc85cf5899eb",
-            "commit-date": "1343171612"
+            "source-reference": "75b21cce40f7714f462deb4292f093a566958b02",
+            "commit-date": "1343654921"
         },
         {
             "package": "jms/twig-js",
@@ -122,8 +128,8 @@
         {
             "package": "kriswallsmith/assetic",
             "version": "dev-master",
-            "source-reference": "c518a48ddc26af898191410cc35f7f30aaed448e",
-            "commit-date": "1343084248"
+            "source-reference": "11324294acf2dcf6b7f7cb0c4f35fd77e6f01cb7",
+            "commit-date": "1343684910"
         },
         {
             "package": "mikey179/vfsStream",
@@ -144,8 +150,8 @@
         {
             "package": "sensio/framework-extra-bundle",
             "version": "dev-master",
-            "source-reference": "fa991fca34d5474cae37a2d97e3d30058253d35c",
-            "commit-date": "1343372485"
+            "source-reference": "dbe4432742e16ee9ca550a2f953b059f0a80c53d",
+            "commit-date": "1343637454"
         },
         {
             "package": "sensio/generator-bundle",
@@ -174,8 +180,8 @@
         {
             "package": "symfony/assetic-bundle",
             "version": "dev-master",
-            "source-reference": "a5daf7ca4588f88105c808de9a28ba1e66bfa082",
-            "commit-date": "1343161458"
+            "source-reference": "24df9ede95084be882aeb557eaef5b761cfa00e0",
+            "commit-date": "1343684934"
         },
         {
             "package": "symfony/monolog-bundle",
@@ -198,8 +204,8 @@
         {
             "package": "symfony/symfony",
             "version": "dev-master",
-            "source-reference": "b6954e7f0b5adef8aaa79832e0b0c3a8bc1e4d76",
-            "commit-date": "1343380470"
+            "source-reference": "788e5eb730ad1c0436c519cf0b878fc48b854044",
+            "commit-date": "1343723577"
         },
         {
             "package": "twig/extensions",
@@ -216,8 +222,8 @@
         {
             "package": "twig/twig",
             "version": "dev-master",
-            "source-reference": "657de7bdeb680815e0df95f63da9f81e1533d2ea",
-            "commit-date": "1342953178"
+            "source-reference": "51c866f415bbee670cd9ba13591307bce8dabdca",
+            "commit-date": "1343464333"
         }
     ],
     "packages-dev": null,
@@ -239,6 +245,7 @@
         "doctrine/doctrine-fixtures-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 20,
         "jms/twig-js-bundle": 20,
-        "mikey179/vfsstream": 20
+        "mikey179/vfsstream": 20,
+        "claroline/front-end-bundle": 20
     }
 }

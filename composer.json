@@ -23,12 +23,17 @@
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
-        "mikey179/vfsStream": "dev-master"
+        "mikey179/vfsStream": "dev-master",
+        "claroline/front-end-bundle": "dev-master"
     },
     "repositories": [
         {
             "type": "vcs",
             "url": "http://github.com/mikey179/vfsStream"
+        },
+        {
+            "type": "vcs",
+            "url": "http://github.com/claroline/FrontEndBundle"
         }
     ],
     "scripts": {

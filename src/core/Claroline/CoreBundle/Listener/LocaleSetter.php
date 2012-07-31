@@ -2,22 +2,33 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
+/**
+ * Listener setting the platform language according to platform_options.yml.
+ */
 class LocaleSetter
 {
-    protected $session;
     protected $configHandler;
 
-    public function __construct($session, $configHandler)
+    /**
+     * Constructor.
+     *
+     * @param PlatformConfigurationHandler $configHandler
+     */
+    public function __construct(PlatformConfigurationHandler $configHandler)
     {
-        $this->session = $session;
         $this->configHandler = $configHandler;
     }
 
+    /**
+     * Sets the platform language.
+     *
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        //$this->session->setLocale($this->configHandler->getParameter('locale_language'));
+        $event->getRequest()->setLocale($this->configHandler->getParameter('locale_language'));
     }
 }
