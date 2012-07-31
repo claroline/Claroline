@@ -69,6 +69,7 @@ class Manager
             $resource->setResourceType($resourceType);
             $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
+            $ri->setName($resource->getName());
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
@@ -149,8 +150,10 @@ class Manager
      * @param AbstractResource $resource
      * @param ResourceInstance $parent
      */
-    public function addToDirectoryByReference(AbstractResource $resource, ResourceInstance $parent)
+    public function addToDirectoryByReference(ResourceInstance $resourceInstance, ResourceInstance $parent)
     {
+        $resource = $resourceInstance->getResource();
+
         if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE
             || $resource->getCreator() == $this->sc->getToken()->getUser()) {
 
@@ -158,14 +161,15 @@ class Manager
                 $instanceCopy = $this->createReference($resource);
                 $instanceCopy->setParent($parent);
                 $instanceCopy->setWorkspace($parent->getWorkspace());
+                $instanceCopy->setName($resourceInstance->getName());
             } else {
                 $instances = $resource->getResourceInstances();
                 $instanceCopy = $this->createCopy($instances[0]);
                 $instanceCopy->setParent($parent);
                 $instanceCopy->setWorkspace($parent->getWorkspace());
-
+                $instanceCopy->setName($resourceInstance->getName());
                 foreach ($instances[0]->getChildren() as $child) {
-                    $this->addToDirectoryByReference($child->getResource(), $instanceCopy);
+                    $this->addToDirectoryByReference($child, $instanceCopy);
                 }
             }
 
@@ -353,10 +357,11 @@ class Manager
 
     private function addDirectoryToArchive($resourceInstance, $archive)
     {
+
         $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
+        
         foreach ($children as $child) {
             if ($child->getResource()->getResourceType()->getType() != 'directory') {
-
                 $eventName = $this->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
                 $event = new ExportResourceEvent($child->getResource()->getId());
                 $this->ed->dispatch($eventName, $event);
@@ -364,7 +369,7 @@ class Manager
 
                 if ($obj != null) {
                     $path = $this->getRelativePath($resourceInstance, $child, '');
-                    $archive->addFile($obj, $resourceInstance->getResource()->getName().DIRECTORY_SEPARATOR.$path . $child->getResource()->getName());
+                    $archive->addFile($obj, $resourceInstance->getName().DIRECTORY_SEPARATOR.$path . $child->getName());
                 }
             }
         }

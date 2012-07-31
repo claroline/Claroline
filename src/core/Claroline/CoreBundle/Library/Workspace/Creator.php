@@ -41,7 +41,7 @@ class Creator
         $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
         $root = new ResourceInstance();
         $rootDir = new Directory();
-        $rootDir->setName($workspace->getName());
+        $root->setName($workspace->getName());
         $rootDir->setShareType(0);
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager
