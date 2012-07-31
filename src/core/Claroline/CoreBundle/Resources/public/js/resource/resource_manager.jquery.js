@@ -1,168 +1,220 @@
 /*
  * dependencies: dynatree, contextualMenu, jquery, some templates.
  */
-$(function(){
+$(function() {
     var jsonmenu = {};
     var jsonroots = '';
     $.fn.extend({
-        claroResourceManager: function(options){
+        claroResourceManager: function(options) {
             var params = $.extend({
                 mode: 'manager',
                 displayMode: 'classic',
                 checkbox: true,
-                resourcePickedHandler: function (resourceId){
-                    alert("DEFAULT SUBMIT HANDLER MUST BE CHANGED")
+                resourcePickedHandler: function(resourceId) {
+                    alert('DEFAULT SUBMIT HANDLER MUST BE CHANGED');
                 }
             }, options);
-            return this.each(function(){
+            return this.each(function() {
                 var currentDiv = $(this);
                 var moveForm = Twig.render(move_resource_form);
 
                 ClaroUtils.sendRequest(
                     Routing.generate('claro_resource_menus'),
-                    function(data){
+                    function(data) {
                         jsonmenu = JSON.parse(data);
-                        if('picker' == params.mode){
+                        if ('picker' === params.mode) {
                             for (var menu in jsonmenu) {
                                 delete jsonmenu[menu].items['delete'];
-                                delete jsonmenu[menu].items['properties'];
+                                delete jsonmenu[menu].items.properties;
                             }
-                            delete jsonmenu['directory'];
+                            delete jsonmenu.directory;
                         }
                     },
-                    function(){
+                    function() {
                         ClaroUtils.sendRequest(Routing.generate('claro_resource_roots'),
-                            function(data){
+                            function(data) {
                                 jsonroots = data;
                                 createDivTree(currentDiv);
-                                }
-                            )
-                        })
+                            });
+                        });
 
                 function createDivTree(div) {
                     ClaroUtils.sendRequest(Routing.generate('claro_resource_types'),
-                        function(rtdata){
+                        function(rtdata) {
                             var content = Twig.render(resource_filter, {
                                 resourceTypes: rtdata,
                                 workspaceroots: jsonroots
                             });
                             div.append(content);
-                            if (true == params.checkbox) {
-                                $('#ct_download').live('click', function(){
+                            if (true === params.checkbox) {
+                                $('#ct_download').live('click', function() {
                                     var children = $('#source_tree').dynatree('getTree').getSelectedNodes();
                                     var parameters = {};
                                     for (var i in children) {
-                                        if(children[i].isTool != true) {
+                                        if (children[i].isTool !== true) {
                                             parameters[i] = children[i].data.instanceId;
-                                            if(children[i].getParent().data.isTool == true) {
-                                                parameters[i] = children[i].getParent().data.type+'_'+children[i].data.instanceId;
+                                            if (children[i].getParent().data.isTool === true) {
+                                                parameters[i] = children[i].getParent().data.type + '_' + children[i].data.instanceId;
                                             }
                                         }
                                     }
-                                    parameters['type'] = params.displayMode;
+                                    parameters.type = params.displayMode;
                                     window.location = Routing.generate('claro_multi_export', parameters);
-                                })
+                                });
                             }
 
 
-                            $('#ct_switch_mode').click(function(){
-                                (params.displayMode == 'classic') ? params.displayMode = 'linker': params.displayMode = 'classic';
-                                (params.displayMode == 'classic') ? params.checkbox = true: params.checkbox = false;
+                            $('#ct_switch_mode').click(function() {
+                                (params.displayMode === 'classic') ? params.displayMode = 'linker' : params.displayMode = 'classic';
+                                (params.displayMode === 'classic') ? params.checkbox = true : params.checkbox = false;
                                 $('#source_tree').dynatree('destroy');
                                 $('#source_tree').empty();
                                 createTree('#source_tree');
                             });
 
-                            $('#ct_filter').click(function(){
-                                if (params.displayMode == 'classic') {
-                                    if ($('#select_root').val() != null){
-                                        filterNodes('workspaceId', $('#select_root').val());
-                                    }
-                                    if ($('#select_type').val() != null) {
-                                        filterNodes('type', $('#select_type').val());
-                                    }
-                                    //it's obviously just a test and isn't working'
-                                    //how to manage date ?
-                                    if ($('#rf_date_from').val() != null) {
-                                        alert('this is a test and it\'s not working');
-                                        filterNodes('dateCreation', $('#rf_date_from').val());
-
-                                    }
-                                }
-
-                                if (params.displayMode == 'linker') {
-                                    if ($('#select_type').val() != null) {
-                                        filterNodes('type', $('#select_type').val());
-                                    }
-
-                                    if ($('#select_root').val()) {
-                                        var types = $('#source_tree').dynatree('getRoot').getChildren();
-                                        for (var i in types) {
-                                            filterNodes('workspaceId', $('#select_root').val(), types[i]);
-                                        }
-                                    }
-                                }
-                            });
-
+                            setFilters();
                             createTree('#source_tree');
                         });
                 }
 
-                var filterNodes = function(filter, searchArray, targetNode) {
-                    var startNode = targetNode || $('#source_tree').dynatree('getRoot');
-                    alert(filter, searchArray);
-                    startNode.visit(function(node) {
-                        if (node.isVisible() && node.data.title) {
-                            if (node.data[filter].indexOf(searchArray) >= 0) {
-                                node.visitParents(function(node) {
-                                    $(node.li).show();
-                                    return (node.parent != null);
-                                }, true);
-                                return 'skip';
-                            } else {
-                                $(node.li).hide();
+                function setFilters() {
+                    $('#ct_filter').click(function() {
+                        showNodes();
+                        if (params.displayMode == 'classic') {
+                            if ($('#select_root').val() !== null) {
+                                filterByWorkspace(($('#select_root').val()));
+                            }
+
+                            if ($('#select_type').val() !== null) {
+                                filterByType($('#select_type').val());
+                            }
+
+                            if ($('#rf_date_from').val() !== '') {
+                                filterFromDate($('#rf_date_from').val());
+                            }
+
+                            if ($('#rf_date_to').val() !== '') {
+                                filterToDate($('#rf_date_to').val());
+                            }
+                        } else {
+                            if ($('#select_root').val()) {
+                                var types = $('#source_tree').dynatree('getRoot').getChildren();
+                                for (var i in types) {
+                                    filterByWorkspace($('#select_root').val(), types[i]);
+                                }
+                            }
+
+                            if ($('#select_type').val() !== null) {
+                                filterByType($('#select_type').val());
+                            }
+
+                            if ($('#rf_date_from').val() !== '') {
+                                filterFromDate($('#rf_date_from').val());
+                            }
+
+                            if ($('#rf_date_to').val() !== '') {
+                                filterToDate($('#rf_date_to').val());
                             }
                         }
+
                     });
+
+                    var filterByType = function(searchArray, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title) {
+                                if (searchArray.indexOf(node.data.type) >= 0 || node.data.type == 'directory') {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    };
+
+                    var filterByWorkspace = function(searchArray, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title) {
+                                if (searchArray.indexOf(node.data.workspaceId) >= 0) {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    }
+
+                    var filterFromDate = function(date, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title && node.data.dateInstanceCreation) {
+                                if (node.data.dateInstanceCreation >= date || node.data.type == 'directory') {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    }
+                    var filterToDate = function(date, targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            if (node.isVisible() && node.data.title) {
+                                if (node.data.dateInstanceCreation <= date || node.data.type == 'directory') {
+
+                                } else {
+                                    $(node.li).hide();
+                                }
+                            }
+                        });
+                    }
+                    var showNodes = function(targetNode) {
+                        var startNode = targetNode || $('#source_tree').dynatree('getRoot');
+                        startNode.visit(function(node) {
+                            $(node.li).show();
+                        });
+                    };
+
                 }
 
                 function createTree(treeId)
                 {
-                    var initChildren = function (){
+                    var initChildren = function() {
 
                         var children = {};
-                        if (params.displayMode == 'classic') {
+                        if (params.displayMode === 'classic') {
                             children = eval(jsonroots);
                         } else {
                             children = [];
                         }
                         return children;
-                    }
+                    };
 
-                    var onLazyReadUrl = function(node){
+                    var onLazyReadUrl = function(node) {
                         var url = '';
-                        (params.displayMode == 'classic') ? url = Routing.generate('claro_resource_children', {'instanceId': node.data.instanceId})
-                        : url = Routing.generate('claro_resources_list', {'resourceTypeId':node.parent.data.id, 'rootId':node.data.instanceId});
+                        (params.displayMode === 'classic') ? url = Routing.generate('claro_resource_children', {'instanceId': node.data.instanceId}) :
+                            url = Routing.generate('claro_resources_list', {'resourceTypeId': node.parent.data.id, 'rootId': node.data.instanceId});
                         return url;
-                    }
+                    };
 
-                    var initLinker = function(){
-                        ClaroUtils.sendRequest(Routing.generate('claro_resource_types'), function(data){
+                    var initLinker = function() {
+                        ClaroUtils.sendRequest(Routing.generate('claro_resource_types'), function(data) {
                             //JSON.parse not working: why ?
                             var resourceTypes = eval(data);
                             var root = $(treeId).dynatree('getTree').getRoot();
-                            for(var i in resourceTypes){
+                            for (var i in resourceTypes) {
                                 var node = {
-                                    "id": resourceTypes[i].id,
-                                    "key": resourceTypes[i].type,
-                                    "title": resourceTypes[i].type,
-                                    "tooltip":  resourceTypes[i].type,
-                                    "type": resourceTypes[i].type,
-                                    "shareType": 1,
-                                    "isFolder": true,
-                                    "isLazy": false,
-                                    "isTool": true
-                                }
+                                    'id': resourceTypes[i].id,
+                                    'key': resourceTypes[i].type,
+                                    'title': resourceTypes[i].type,
+                                    'tooltip': resourceTypes[i].type,
+                                    'type': resourceTypes[i].type,
+                                    'shareType': 1,
+                                    'isFolder': true,
+                                    'isLazy': false,
+                                    'isTool': true
+                                };
                                 root.addChild(node);
 
                                 var rootChildren = eval(jsonroots);
@@ -173,18 +225,18 @@ $(function(){
                                     bindContextMenuTree(rootChildren[k]);
                                }
                             }
-                        })
+                        });
                     };
 
                     function dropNode(node, sourceNode, hitMode)
                     {
                         $('#ct_form').empty().append(moveForm);
-                        $('#move_resource_form_submit').click(function (e) {
+                        $('#move_resource_form_submit').click(function(e) {
                             e.preventDefault();
-                            var option = ClaroUtils.getCheckedValue(document.forms['move_resource_form']['options']);
-                            var route = {}
+                            var option = ClaroUtils.getCheckedValue(document.forms.move_resource_form.options);
+                            var route = {};
 
-                            if ('move' == option) {
+                            if ('move' === option) {
                                 route = {
                                     'name': 'claro_resource_move',
                                     'parameters': {
@@ -202,7 +254,7 @@ $(function(){
                                         'resourceId': sourceNode.data.resourceId,
                                         'instanceDestinationId': node.data.instanceId
                                     }
-                                }
+                                };
                                 ClaroUtils.sendRequest(route);
                                 var newNode = {
                                     title: sourceNode.data.title,
@@ -214,21 +266,21 @@ $(function(){
                                     isFolder: sourceNode.data.isFolder,
                                     instanceId: sourceNode.data.instanceId,
                                     isLazy: true
-                                }
+                                };
                                 node.addChild(newNode);
                                 $('#ct_form').empty();
                             }
                         });
                     }
 
-                    var bindContextMenuTree = function(node){
+                    var bindContextMenuTree = function(node) {
                         var type = node.data.type;
                         var menuDefaultOptions = {
-                            selector: '#node_'+ node.data.key,
-                            callback: function (key, options) {
+                            selector: '#node_' + node.data.key,
+                            callback: function(key, options) {
                                 findMenuObject(jsonmenu[type], node, key);
                             }
-                        }
+                        };
 
                         menuDefaultOptions.items = jsonmenu[type].items;
                         $.contextMenu(menuDefaultOptions);
@@ -241,8 +293,8 @@ $(function(){
 
                         var executeMenuActions = function(obj, node)
                         {
-                            var submissionHandler = function(xhr){
-                                if (xhr.getResponseHeader('Content-Type') == 'application/json') {
+                            var submissionHandler = function(xhr) {
+                                if (xhr.getResponseHeader('Content-Type') === 'application/json') {
                                     var JSONObject = JSON.parse(xhr.responseText);
                                     var instance = JSONObject[0];
                                     var newNode = {
@@ -252,14 +304,14 @@ $(function(){
                                         instanceCount: instance.instanceCount,
                                         shareType: instance.shareType,
                                         resourceId: instance.resourceId
-                                    }
+                                    };
 
-                                    if (instance.type == 'directory') {
+                                    if (instance.type === 'directory') {
                                         newNode.isFolder = true;
                                     }
 
-                                    if (node.data.instanceId != newNode.instanceId) {
-                                        node.appendAjax({url: onLazyReadUrl(node)})
+                                    if (node.data.instanceId !== newNode.instanceId) {
+                                        node.appendAjax({url: onLazyReadUrl(node)});
                                         node.expand();
                                     } else {
                                         node.data.title = newNode.title;
@@ -269,7 +321,7 @@ $(function(){
                                     $('#ct_tree').show();
                                     $('#ct_form').empty();
                                 } else {
-                                    $('#ct_form').empty().append(xhr.responseText).find('form').submit(function (e) {
+                                    $('#ct_form').empty().append(xhr.responseText).find('form').submit(function(e) {
                                         e.preventDefault();
                                         var action = $('#ct_form').find('form').attr('action');
                                         action = action.replace('_instanceId', node.data.instanceId);
@@ -278,55 +330,48 @@ $(function(){
                                         ClaroUtils.sendForm(action, document.getElementById(id), submissionHandler);
                                     });
                                 }
-                            }
+                            };
 
-                            var executeAsync = function (obj, node, route) {
-                                var removeNode = function () {
-                                    ClaroUtils.sendRequest(route, function (data, textStatus, jqXHR) {
-                                        if (204 == jqXHR.status) {
+                            var executeAsync = function(obj, node, route) {
+                                var removeNode = function() {
+                                    ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
+                                        if (204 === jqXHR.status) {
                                             node.remove();
                                         }
                                     });
-                                }
+                                };
 
-                                var executeRequest = function () {
-                                    ClaroUtils.sendRequest(route, function (data) {
+                                var executeRequest = function() {
+                                    ClaroUtils.sendRequest(route, function(data) {
                                         $('#ct_tree').hide();
-                                        if(node.data.isTool == true){
+                                        if (node.data.isTool === true) {
                                             $('#modal-body').append(Twig.render(select_workspace_form));
                                             $('#modal-body').append('he');
                                             $('#bootstrap-modal').modal('show');
                                         }
-                                        $('#ct_form').empty().append(data).find('form').submit(function (e) {
+                                        $('#ct_form').empty().append(data).find('form').submit(function(e) {
                                             e.preventDefault();
                                             var action = $('#ct_form').find('form').attr('action');
                                             action = action.replace('_instanceId', node.data.instanceId);
                                             var id = $('#ct_form').find('form').attr('id');
                                             ClaroUtils.sendForm(action, document.getElementById(id), submissionHandler);
                                         });
-                                    })
-                                }
+                                    });
+                                };
 
-                                switch (obj.name) {
-                                    case 'delete':
-                                        removeNode(node, route);
-                                        break;
-                                    default:
-                                        executeRequest (node, route);
-                                        break;
-                                }
-                            }
+                                (obj.name === 'delete') ? removeNode(node, route) : executeRequest(node, route);
+                            };
 
                             var route = obj.route;
                             var compiledRoute = route.replace('_instanceId', node.data.instanceId);
                             compiledRoute = compiledRoute.replace('_resourceId', node.data.resourceId);
-                            obj.async ? executeAsync(obj, node, compiledRoute): window.location = compiledRoute;
-                        }
+                            obj.async ? executeAsync(obj, node, compiledRoute) : window.location = compiledRoute;
+                        };
 
                         var findMenuObject = function(items, node, menuItem)
                         {
                             for (var property in items.items) {
-                                if (property == menuItem) {
+                                if (property === menuItem) {
                                     executeMenuActions(items.items[property], node);
                                 } else {
                                     if (items.items[property].hasOwnProperty('items')) {
@@ -334,38 +379,38 @@ $(function(){
                                     }
                                 }
                             }
-                        }
-                    }
+                        };
+                    };
 
                     var children = initChildren();
 
                     $(treeId).dynatree({
                         checkbox: true,
-                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js')+'/../../../../../../icons/',
+                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../../../../icons/',
                         title: 'myTree',
                         children: children,
-                        onPostInit: function(isReloading, isError){
-                            if(params.displayMode == 'linker'){
+                        onPostInit: function(isReloading, isError) {
+                            if (params.displayMode === 'linker') {
                                 initLinker(treeId);
                             }
                         },
                         clickFolderMode: 1,
                         selectMode: 3,
-                        onLazyRead: function (node) {
+                        onLazyRead: function(node) {
                             node.appendAjax({
                                 url: onLazyReadUrl(node),
-                                success: function (node) {
+                                success: function(node) {
                                     var children = node.getChildren();
 
-                                    if (node.isSelected()){
+                                    if (node.isSelected()) {
                                         for (var i in children) {
                                             children[i].select();
                                         }
                                     }
                                 },
-                                error: function (node, XMLHttpRequest, textStatus, errorThrown) {
-                                    if (XMLHttpRequest.status == 403) {
-                                        ClaroUtils.ajaxAuthenticationErrorHandler(function () {
+                                error: function(node, XMLHttpRequest, textStatus, errorThrown) {
+                                    if (XMLHttpRequest.status === 403) {
+                                        ClaroUtils.ajaxAuthenticationErrorHandler(function() {
                                             window.location.reload();
                                         });
                                     } else {
@@ -374,45 +419,45 @@ $(function(){
                                 }
                             });
                         },
-                        onCreate: function (node, span) {
+                        onCreate: function(node, span) {
                             if (node.data.hasOwnProperty('type')) {
-                                if(undefined != jsonmenu[node.data.type]){
+                                if (undefined !== jsonmenu[node.data.type]) {
                                     bindContextMenuTree(node);
                                 }
                             }
                         },
-                        onDblClick: function (node) {
-                            if (params.mode == 'picker' && node.data.type != 'resourceType'){
-                                (node.shareType == 0) ? alert("you can't share this resource"): params.resourcePickedHandler(node.data.resourceId);
+                        onDblClick: function(node) {
+                            if (params.mode === 'picker' && node.data.type !== 'resourceType') {
+                                (node.shareType === 0) ? alert("you can't share this resource") : params.resourcePickedHandler(node.data.resourceId);
                             } else {
                                 node.expand();
                                 node.activate();
                             }
                         },
-                        onCustomRender: function (node) {
-                            var html = "<a id='node_"+node.data.key+"' class='dynatree-title' style='cursor:pointer;' title='"+node.data.tooltip+"'href='#'> "+node.data.title+"</a>";
-                            html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-"+node.data.key+"' style='cursor:pointer; color:blue;'> menu </span>";
+                        onCustomRender: function(node) {
+                            var html = "<a id='node_" + node.data.key + "' class='dynatree-title' style='cursor:pointer;' title='" + node.data.tooltip + "'href='#'> " + node.data.title + '</a>';
+                            html += "<span class='dynatree-custom-claro-menu' id='dynatree-custom-claro-menu-" + node.data.key + "' style='cursor:pointer; color:blue;'> menu </span>";
                             return html;
                         },
                         dnd: {
-                            onDragStart: function (node) {
-                                if(params.mode == 'picker' || params.displayMode == 'linker'){
+                            onDragStart: function(node) {
+                                if (params.mode === 'picker' || params.displayMode === 'linker') {
                                     return false;
                                 }
                             },
-                            onDragStop: function (node) {
+                            onDragStop: function(node) {
                             },
                             autoExpandMS: 1000,
                             preventVoidMoves: true,
-                            onDragEnter: function (node, sourceNode) {
+                            onDragEnter: function(node, sourceNode) {
                                 return true;
                             },
-                            onDragOver: function (node, sourceNode, hitMode) {
+                            onDragOver: function(node, sourceNode, hitMode) {
                                 if (node.isDescendantOf(sourceNode)) {
                                     return false;
                                 }
                             },
-                            onDrop: function (node, sourceNode, hitMode, ui, draggable) {
+                            onDrop: function(node, sourceNode, hitMode, ui, draggable) {
                                 if (node.isDescendantOf(sourceNode)) {
                                     return false;
                                 }
@@ -428,9 +473,9 @@ $(function(){
                         }
                     });
                 }
-                return(this);
-            })
+                return (this);
+            });
         }
 
-    })
+    });
 });
