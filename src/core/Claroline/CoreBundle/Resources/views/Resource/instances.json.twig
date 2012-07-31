@@ -1,7 +1,7 @@
 [
     {% for instance in instances %}
     {
-        "title": "{{ instance.getResource().getName() }}",
+        "title": "{{ instance.getName() }}",
         "key": "{{ instance.getId() }}",
         "instanceId": "{{ instance.getId() }}",
         "instanceCount": {{ instance.getResource().getInstanceCount() }},

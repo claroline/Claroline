@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -21,6 +22,12 @@ class ResourceInstance
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, name="name")
+     * @Assert\NotBlank()
+     */
+    protected $name;
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -122,16 +129,6 @@ class ResourceInstance
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Returns the name of the resource the instance is referring to (shortcut).
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->abstractResource->getName();
     }
 
     /**
@@ -308,5 +305,25 @@ class ResourceInstance
         }
 
         return addslashes($path);
+    }
+
+    /**
+     * Sets the resource name.
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Returns the resource name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }
