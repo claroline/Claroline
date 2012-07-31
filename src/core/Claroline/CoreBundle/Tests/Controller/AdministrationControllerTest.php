@@ -168,8 +168,6 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testEditLanguageParameter()
     {
-        $this->markTestSkipped('Locale must be handled differently in Symfony 2.1');
-
         $this->configHandler->setParameter('locale_language', 'en');
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $this->assertEquals('Logout', trim($crawler->filter("#link_logout")->text()));
