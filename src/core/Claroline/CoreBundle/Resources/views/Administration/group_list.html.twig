@@ -4,13 +4,13 @@
 <table class="claroTable group" width="100%" cellspacing="2" border="0">
     <thead class="headerX" align="center" valign="top">
         <tr>
-            <th id="c0" scope="col">{{ 'groupes'|trans({}, 'platformTranslation') }}</th>
-            <th id="c6" scope="col">{{ 'role'|trans({}, 'platformTranslation') }}</th>
-            <th id="c1" scope="col">{{ 'users'|trans({}, 'platformTranslation') }}</th>
-            <th id="c2" scope="col">{{ 'resources'|trans({}, 'platformTranslation') }}</th>
-            <th id="c3" scope="col">{{ 'settings'|trans({}, 'platformTranslation') }}</th>
-            <th id="c4" scope="col">{{ 'move'|trans({}, 'platformTranslation') }}</th>
-            <th id="c5" scope="col">{{ 'delete'|trans({}, 'platformTranslation') }}</th>
+            <th id="c0" scope="col">{{ 'groupes'|trans({}, 'platform') }}</th>
+            <th id="c6" scope="col">{{ 'role'|trans({}, 'platform') }}</th>
+            <th id="c1" scope="col">{{ 'users'|trans({}, 'platform') }}</th>
+            <th id="c2" scope="col">{{ 'resources'|trans({}, 'platform') }}</th>
+            <th id="c3" scope="col">{{ 'settings'|trans({}, 'platform') }}</th>
+            <th id="c4" scope="col">{{ 'move'|trans({}, 'platform') }}</th>
+            <th id="c5" scope="col">{{ 'delete'|trans({}, 'platform') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -23,11 +23,11 @@
                     {{role.getName}}
                 {% endfor %}
                 </div>
-                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link_show_{{ group.getId() }}">{{ 'show'|trans({}, 'platformTranslation') }}</a></td>
+                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link_show_{{ group.getId() }}">{{ 'show'|trans({}, 'platform') }}</a></td>
                 <td align="center" headers="c2 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c3 L0"><a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link_settings_{{ group.getId() }}">{{ 'settings'|trans({}, 'platformTranslation') }}</a></td>
+                <td align="center" headers="c3 L0"><a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link_settings_{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a></td>
                 <td align="center" headers="c4 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" id="link_delete_{{ group.getId() }}">{{ 'delete'|trans({}, 'platformTranslation') }}</a></td>
+                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" id="link_delete_{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a></td>
             <tr>
         {% endfor %}
     </tbody>

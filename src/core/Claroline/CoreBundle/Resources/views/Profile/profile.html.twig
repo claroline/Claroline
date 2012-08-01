@@ -1,10 +1,10 @@
 {% extends "ClarolineCoreBundle::content_layout.html.twig" %}
 
 {% block content %}
-    {{ 'first_name'|trans({}, 'platformTranslation') }}: {{ user.getFirstName() }}<br/>
-    {{ 'last_name'|trans({}, 'platformTranslation') }}: {{ user.getLastName() }}<br/>
-    {{ 'username'|trans({}, 'platformTranslation') }}: {{ user.getUsername() }}<br/>
-    {{ 'mail'|trans({}, 'platformTranslation') }}: {{ user.getMail() }}<br/>
-    {{ 'phone'|trans({}, 'platformTranslation') }}: {{ user.getPhone() }}<br/>
-    {{ 'note'|trans({}, 'platformTranslation') }}: {{ user.getNote() }}<br/>
+    {{ 'first_name'|trans({}, 'platform') }}: {{ user.getFirstName() }}<br/>
+    {{ 'last_name'|trans({}, 'platform') }}: {{ user.getLastName() }}<br/>
+    {{ 'username'|trans({}, 'platform') }}: {{ user.getUsername() }}<br/>
+    {{ 'mail'|trans({}, 'platform') }}: {{ user.getMail() }}<br/>
+    {{ 'phone'|trans({}, 'platform') }}: {{ user.getPhone() }}<br/>
+    {{ 'note'|trans({}, 'platform') }}: {{ user.getNote() }}<br/>
 {% endblock %}

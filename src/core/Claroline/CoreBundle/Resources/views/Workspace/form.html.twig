@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 {% block section_content %}
 
-<h4>{{ 'workspace.create'|trans({}, 'platformTranslation') }} : </h4>
+<h4>{{ 'workspace.create'|trans({}, 'platform') }} : </h4>
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form id="ws_creation_form" action="{{ path('claro_ws_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_errors(form) }}
