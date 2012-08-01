@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\ToolInstance;
-use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use JMS\SerializerBundle\Annotation\Type;
 
@@ -108,7 +108,7 @@ abstract class AbstractWorkspace
      * require the workspace to have a valid identifier, this method can't be used
      * on a workspace instance that has never been flushed.
      *
-     * @throw ClarolineException if the workspace has no valid id
+     * @throw RuntimeException if the workspace has no valid id
      */
     public function initBaseRoles()
     {
@@ -116,7 +116,7 @@ abstract class AbstractWorkspace
 
         foreach ($this->roles as $storedRole) {
             if (self::isBaseRole($storedRole->getName())) {
-                throw new ClarolineException('Base workspace roles are already set.');
+                throw new RuntimeException('Base workspace roles are already set.');
             }
         }
 
@@ -167,7 +167,7 @@ abstract class AbstractWorkspace
      * flushed yet), an exception will be thrown.
      *
      * @param WorkspaceRole $role
-     * @throw ClarolineException if the workspace has no id or if the role has no name
+     * @throw RuntimeException if the workspace has no id or if the role has no name
      */
     public function addCustomRole(WorkspaceRole $role)
     {
@@ -183,7 +183,7 @@ abstract class AbstractWorkspace
             $role->setWorkspace($this);
         } else {
             if ($workspace !== $this) {
-                throw new ClarolineException(
+                throw new RuntimeException(
                     'Workspace roles are bound to only one workspace and cannot '
                     . 'be associated with another workspace.'
                 );
@@ -193,7 +193,7 @@ abstract class AbstractWorkspace
         $roleName = $role->getName();
 
         if (!is_string($roleName) || 0 == strlen($roleName)) {
-            throw new ClarolineException('Workspace role must have a valid name.');
+            throw new RuntimeException('Workspace role must have a valid name.');
         }
 
         $newRoleName = self::$customPrefix . "_{$this->getId()}_{$roleName}";
@@ -231,7 +231,7 @@ abstract class AbstractWorkspace
     private function checkIdCondition()
     {
         if (null === $this->id) {
-            throw new ClarolineException(
+            throw new RuntimeException(
                 'Workspace must be flushed and have a valid id '
                 . 'before associating roles to it.'
             );

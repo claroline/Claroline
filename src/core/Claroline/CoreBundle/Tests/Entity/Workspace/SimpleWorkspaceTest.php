@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 class SimpleWorkspaceTest extends FixtureTestCase
 {
@@ -16,7 +15,7 @@ class SimpleWorkspaceTest extends FixtureTestCase
 
     public function testPublicWorkspaceCannotBeASubWorkspaceOfAPrivateWorkspace()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $wsD = $this->getFixtureReference('workspace/ws_d');
 
@@ -27,7 +26,7 @@ class SimpleWorkspaceTest extends FixtureTestCase
 
     public function testSubWorkspaceOfAPrivateWorkspaceCannotBeMadePublic()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $wsF = $this->getFixtureReference('workspace/ws_f');
         $wsF->setPublic(true);

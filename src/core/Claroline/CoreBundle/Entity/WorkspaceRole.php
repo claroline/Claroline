@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use \RuntimeException;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Security\SymfonySecurity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 /**
  * @ORM\Entity
@@ -67,7 +67,7 @@ class WorkspaceRole extends Role
     public function setName($name)
     {
         if (AbstractWorkspace::isBaseRole($this->getName())) {
-            throw new ClarolineException('Workspace base roles cannot be modified');
+            throw new RuntimeException('Workspace base roles cannot be modified');
         }
 
         if (AbstractWorkspace::isBaseRole($name)) {
@@ -93,7 +93,7 @@ class WorkspaceRole extends Role
         $ws = $this->getWorkspace();
 
         if (null !== $ws) {
-            throw new ClarolineException(
+            throw new RuntimeException(
                 "This role is already bound to workspace '{$ws->getName()}'"
             );
         }

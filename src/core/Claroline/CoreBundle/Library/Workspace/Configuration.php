@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Workspace;
 
-use Claroline\CoreBundle\Exception\ClarolineException;
+use \RuntimeException;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class Configuration
@@ -106,11 +106,11 @@ class Configuration
     public function check()
     {
         if ($this->workspaceType != self::TYPE_SIMPLE && $this->workspaceType != self::TYPE_AGGREGATOR) {
-            throw new ClarolineException("Unknown workspace type '{$this->workspaceType}'");
+            throw new RuntimeException("Unknown workspace type '{$this->workspaceType}'");
         }
 
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
-            throw new ClarolineException('Workspace name must be a non empty string');
+            throw new RuntimeException('Workspace name must be a non empty string');
         }
     }
 }

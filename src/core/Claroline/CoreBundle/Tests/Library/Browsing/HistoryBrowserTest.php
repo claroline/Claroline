@@ -44,14 +44,14 @@ class HistoryBrowserTest extends WebTestCase
 
     public function testKeepCurrentContextIsOnlyAllowedForGetRequests()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
         $browser = new HistoryBrowser($this->getMockedRequest('POST'), $this->session, $this->configHandler);
         $browser->keepCurrentContext('Some context name');
     }
 
     public function testKeepCurrentContextRequiresAValidContextName()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('InvalidArgumentException');
         $this->browser->keepCurrentContext('');
     }
 

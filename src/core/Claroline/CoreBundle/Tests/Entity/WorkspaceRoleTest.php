@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 class WorkspaceRoleTest extends FixtureTestCase
 {
@@ -16,7 +15,7 @@ class WorkspaceRoleTest extends FixtureTestCase
 
     public function testAWorkspaceRoleCannotBeReallocatedToAnotherWorkspace()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $wsA = $this->getFixtureReference('workspace/ws_a');
         $wsB = $this->getFixtureReference('workspace/ws_a');
