@@ -174,12 +174,12 @@ class Manager
                 foreach ($instances[0]->getChildren() as $child) {
                     $this->addToDirectoryByReference($child, $instanceCopy);
                 }
-            }
+           }
 
-            $this->em->persist($instanceCopy);
-            $rename = $this->getRename($resourceInstance, $parent);
-            $instanceCopy->setName($rename);
-            $this->em->persist($instanceCopy);
+           $this->em->persist($instanceCopy);
+           $rename = $this->getRename($resourceInstance, $parent);
+           $instanceCopy->setName($rename);
+           $this->em->persist($instanceCopy);
         }
     }
 
