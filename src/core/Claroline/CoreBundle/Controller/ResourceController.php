@@ -87,7 +87,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Renders the form allowing to edit the base properties (currently only the name and the
+     * Renders the form allowing to edit the base properties (currently the
      * sharable/public/private attribute) of a given resource.
      *
      * @param integer $resourceId
@@ -222,7 +222,7 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $item = $this->get('claroline.resource.manager')->export($resourceInstance);
-        $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getResource()->getName()));
+        $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getName()));
         if ($resourceInstance->getResourceType()->getType() == 'directory') {
             $nameDownload.='.zip';
         }
@@ -409,16 +409,15 @@ class ResourceController extends Controller
      * Adds a resource instance to a workspace. Options must be must be 'ref' or 'copy'.
      *
      * @param integer $instanceId
-     * @param string  $options
      * @param integer $instanceDestinationId
      *
      * @return Response
      */
-    public function addToWorkspaceAction($resourceId, $instanceDestinationId)
+    public function addToWorkspaceAction($instanceId, $instanceDestinationId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
         $em->flush();
 

@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
@@ -32,12 +32,6 @@ abstract class AbstractResource
      * @ORM\generatedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255, name="name")
-     * @Assert\NotBlank()
-     */
-    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource", cascade={"persist", "remove"})
@@ -84,6 +78,11 @@ abstract class AbstractResource
      */
     private $mimeType;
 
+    /**
+     * @Assert\NotBlank()
+     */
+    private $name;
+
     const PRIVATE_RESOURCE = 0;
     const PUBLIC_RESOURCE = 1;
 
@@ -115,26 +114,6 @@ abstract class AbstractResource
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Sets the resource name.
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Returns the resource name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -311,5 +290,20 @@ abstract class AbstractResource
     public function getResourceInstances()
     {
         return $this->resourceInstances;
+    }
+
+    /**
+     * Returns the resource name. Required for the FormType.
+     *
+     * @param type $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }
