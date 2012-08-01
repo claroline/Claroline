@@ -157,10 +157,10 @@ class AdministrationControllerTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
-        $link = $crawler->filter("#link_claro_settings")->link();
+        $link = $crawler->filter("#link_platform_parameters")->link();
         $crawler = $this->client->click($link);
         $form = $crawler->filter('input[type=submit]')->form();
-        $form['claro_settings_form[selfRegistration]'] = true;
+        $form['platform_parameters_form[selfRegistration]'] = true;
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/logout');
         $this->assertEquals(1, $crawler->filter("#link_registration")->count());
@@ -174,7 +174,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request('GET', '/admin/platform/settings/form');
         $form = $crawler->filter('input[type=submit]')->form();
-        $form['claro_settings_form[localLanguage]'] = 'fr';
+        $form['platform_parameters_form[localLanguage]'] = 'fr';
         $crawler = $this->client->submit($form);
 
         $this->assertEquals('Déconnexion', trim($crawler->filter("#link_logout")->text()));

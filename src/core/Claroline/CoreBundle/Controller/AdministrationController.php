@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
-use Claroline\CoreBundle\Form\ClarolineSettingsType;
+use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 /**
@@ -329,7 +329,7 @@ class AdministrationController extends Controller
     {
         $platformConfig = $this->get('claroline.config.platform_config_handler')
             ->getPlatformConfig();
-        $form = $this->createForm(new ClarolineSettingsType(), $platformConfig);
+        $form = $this->createForm(new PlatformParametersType(), $platformConfig);
 
         return $this->render(
             'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
@@ -346,7 +346,7 @@ class AdministrationController extends Controller
     {
         $request = $this->get('request');
         $configHandler = $this->get('claroline.config.platform_config_handler');
-        $form = $this->get('form.factory')->create(new ClarolineSettingsType());
+        $form = $this->get('form.factory')->create(new PlatformParametersType());
         $form->bindRequest($request);
 
         if ($form->isValid()) {

@@ -13,7 +13,7 @@ add_user: Ajouter un utilisateur
 list_users: Lister les utilisateurs
 create_group: Créer un groupe
 list_groups: Lister les groupes
-claro_settings: Paramètres de la plateforme
+platform_parameters: Paramètres de la plateforme
 
 # workspace links
 create_workspace: Ajouter un espace d'activités
@@ -54,8 +54,8 @@ profile_form_ownedRoles: "Role(s) :"
 profile_form_note: "Note personnelle :"
 
 # platform settings form field labels
-claro_settings_form_selfRegistration: Auto-inscription
-claro_settings_form_localLanguage: Langue
+platform_parameters_form_selfRegistration: Auto-inscription
+platform_parameters_form_localLanguage: Langue
 
 # group form field labels
 group_form_name: Nom
