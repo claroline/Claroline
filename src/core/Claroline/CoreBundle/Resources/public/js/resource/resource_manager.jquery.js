@@ -244,33 +244,32 @@ $(function() {
                                         'newParentId': node.data.instanceId
                                     }
                                 };
-                                ClaroUtils.sendRequest(route);
-                                sourceNode.move(node, hitMode);
+
+                                ClaroUtils.sendRequest(route, function(data){
+                                    node.reloadChildren();
+                                    sourceNode.getParent().reloadChildren();
+                                });
+
                                 $('#ct_form').empty();
                             } else {
                                 route = {
                                     'name': 'claro_resource_add_workspace',
                                     'parameters': {
-                                        'resourceId': sourceNode.data.resourceId,
+                                        'instanceId': sourceNode.data.key,
                                         'instanceDestinationId': node.data.instanceId
                                     }
                                 };
-                                ClaroUtils.sendRequest(route);
-                                var newNode = {
-                                    title: sourceNode.data.title,
-                                    key: sourceNode.data.key,
-                                    copy: sourceNode.data.copy,
-                                    instanceCount: sourceNode.data.instanceCount,
-                                    shareType: sourceNode.data.shareType,
-                                    resourceId: sourceNode.data.resourceId,
-                                    isFolder: sourceNode.data.isFolder,
-                                    instanceId: sourceNode.data.instanceId,
-                                    isLazy: true
-                                };
-                                node.addChild(newNode);
+                                ClaroUtils.sendRequest(route, function(data){
+                                    node.reloadChildren();
+                                });
+
                                 $('#ct_form').empty();
                             }
                         });
+
+                        var reloadNode = function(node) {
+                            node.reloadChildren();
+                        }
                     }
 
                     var bindContextMenuTree = function(node) {
@@ -421,7 +420,7 @@ $(function() {
                         },
                         onCreate: function(node, span) {
                             if (node.data.hasOwnProperty('type')) {
-                                if (undefined !== jsonmenu[node.data.type]) {
+                                if (node.data.isTool !== true) {
                                     bindContextMenuTree(node);
                                 }
                             }
