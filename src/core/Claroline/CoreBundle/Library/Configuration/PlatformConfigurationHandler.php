@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
+use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Exception\ClarolineException;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 
 class PlatformConfigurationHandler
@@ -43,7 +43,7 @@ class PlatformConfigurationHandler
     protected function checkParameter($parameter)
     {
         if (!$this->hasParameter($parameter)) {
-            throw new ClarolineException(
+            throw new RuntimeException(
                 "'{$parameter}' is not a parameter of the current platform configuration."
             );
         }

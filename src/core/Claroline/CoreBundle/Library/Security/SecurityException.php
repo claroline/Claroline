@@ -1,10 +1,10 @@
 <?php
 
-namespace Claroline\CoreBundle\Exception;
+namespace Claroline\CoreBundle\Library\Security;
 
-use Claroline\CoreBundle\Exception\ClarolineException;
+use \Exception;
 
-class SecurityException extends ClarolineException
+class SecurityException extends Exception
 {
     // right manager exceptions
     const INVALID_ENTITY_STATE = 1;
@@ -16,10 +16,10 @@ class SecurityException extends ClarolineException
     const MULTIPLE_OWNERS_ENTITY = 7;
     const MULTIPLE_OWNERS_ATTEMPT = 8;
     const NOT_ALLOWED_OWNER_MASK = 9;
-    
+
     // role exceptions
     const ROLE_EXCEPTION = 10;
-    
+
     public function __construct($message, $code)
     {
         parent::__construct($message, $code);

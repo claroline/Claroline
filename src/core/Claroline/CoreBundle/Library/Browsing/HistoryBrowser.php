@@ -2,10 +2,11 @@
 
 namespace Claroline\CoreBundle\Library\Browsing;
 
+use \RuntimeException;
+use \InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Exception\ClarolineException;
 
 class HistoryBrowser
 {
@@ -31,13 +32,13 @@ class HistoryBrowser
     public function keepCurrentContext($contextName)
     {
         if ('GET' !== $this->request->getMethod()) {
-            throw new ClarolineException(
+            throw new RuntimeException(
                 'The keepCurrentContext() method is only available for GET contexts.'
             );
         }
 
         if (!is_string($contextName) || empty($contextName)) {
-            throw new ClarolineException(
+            throw new InvalidArgumentException(
                 'The keepCurrentContext() $contextName argument must be an non empty string.'
             );
         }

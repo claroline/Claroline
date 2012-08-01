@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use \InvalidArgumentException;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Table;
-use Claroline\CoreBundle\Exception\ClarolineException;
 
 abstract class BundleMigration extends AbstractMigration
 {
@@ -68,7 +68,7 @@ abstract class BundleMigration extends AbstractMigration
     protected function getStoredTable($tableName)
     {
         if (!isset($this->storedTables[$tableName])) {
-            throw new ClarolineException("Unknown table '{$tableName}'.");
+            throw new InvalidArgumentException("Unknown table '{$tableName}'.");
         }
 
         return $this->storedTables[$tableName];

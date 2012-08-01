@@ -26,11 +26,11 @@
                     <ul class="dropdown-menu">
                     <li>
                         <a href="{{ path('claro_profile_form') }}" id="link_account">
-                        {{ 'my_account'|trans({}, 'platformTranslation') }}
+                        {{ 'my_account'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="{{ path('claro_security_logout') }}" id="link_logout">{{ 'logout'|trans({}, 'platformTranslation') }}</a></li>
+                    <li><a href="{{ path('claro_security_logout') }}" id="link_logout">{{ 'logout'|trans({}, 'platform') }}</a></li>
                     </ul>
                  </div>
                     {% else %}
@@ -38,11 +38,11 @@
                         <ul class="nav pull-right">
                     {% if register_target is not null %}
                     <li><a id="link_registration" href="{{ path(register_target) }}">
-                    {{ 'register'|trans({}, 'platformTranslation') }}
+                    {{ 'register'|trans({}, 'platform') }}
                     </a></li>
                     {% endif %}
                         <li><a href="{{ path(login_target) }}" id="link_login">
-                        {{ 'login'|trans({}, 'platformTranslation') }}
+                        {{ 'login'|trans({}, 'platform') }}
                         </a></li>
                         </div>
                     {% endif %}
@@ -51,18 +51,18 @@
                 {% if connected %}
                     <li>
                         <a href="{{ path('claro_dashboard_index') }}" id="link_dashboard">
-                        {{ 'dashboard'|trans({}, 'platformTranslation') }}
+                        {{ 'dashboard'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('claro_ws_list') }}" id="link_workspace">
-                        {{ 'workspaces'|trans({}, 'platformTranslation') }}
+                        {{ 'workspaces'|trans({}, 'platform') }}
                         </a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li>
                             <a href="{{ path('claro_admin_index') }}" id="link_administration">
-                            {{ 'administration'|trans({}, 'platformTranslation') }}
+                            {{ 'administration'|trans({}, 'platform') }}
                             </a>
                         </li>
                     {% endif %}

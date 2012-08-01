@@ -18,7 +18,7 @@
             {% endif %}
             {% if (is_granted(workspace.getManagerRole().getName())) %}|
                 <a href = "{{path('claro_ws_delete', {'workspaceId': workspace.getId()})}}" class="link_delete" id="link_delete_{{workspace.getId}}"</>
-                {{ 'delete'|trans({}, 'platformTranslation') }}</a>
+                {{ 'delete'|trans({}, 'platform') }}</a>
             {% endif %}
             {% set bool = 'false' %}
             {% for role in workspace.getWorkspaceRoles() %}
@@ -27,9 +27,9 @@
                 {% endif %}
             {% endfor %}
             {% if bool == 'true' %}
-                <a href="{{path('claro_ws_remove_user', {'workspaceId': workspace.getId()})}}" class="link_unregistration" id="link_unregistration_{{workspace.getId()}}"> | {{ 'unregister'|trans({}, 'platformTranslation') }} </a>
+                <a href="{{path('claro_ws_remove_user', {'workspaceId': workspace.getId()})}}" class="link_unregistration" id="link_unregistration_{{workspace.getId()}}"> | {{ 'unregister'|trans({}, 'platform') }} </a>
             {% else %}
-                <a href="{{path('claro_ws_add_user', {'workspaceId': workspace.getId()})}}" class="link_registration" id="link_registration_{{workspace.getId()}}"> | {{ 'register'|trans({}, 'platformTranslation') }}</a>
+                <a href="{{path('claro_ws_add_user', {'workspaceId': workspace.getId()})}}" class="link_registration" id="link_registration_{{workspace.getId()}}"> | {{ 'register'|trans({}, 'platform') }}</a>
             {% endif %}
     </li>
     {% endfor %}

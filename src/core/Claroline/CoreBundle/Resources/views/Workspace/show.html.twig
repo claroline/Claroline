@@ -24,9 +24,9 @@
 {% block section_content %}
 <div id='jsdata' data-ws-id='{{workspace.getId()}}'></div>
 <div id="div_WS_show">
-{{ 'workspace'|trans({}, 'platformTranslation') }}: {{workspace.getName()}}
+{{ 'workspace'|trans({}, 'platform') }}: {{workspace.getName()}}
 {% if is_granted(workspace.getManagerRole().getName()) %}
-    | <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platformTranslation') }} </a>|
+    | <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platform') }} </a>|
 {% endif %}
     <div id="filepicker"></div>
     <div id="currentWorkspaceTree"></div>

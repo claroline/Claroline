@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use \InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Claroline\CoreBundle\Exception\ClarolineException;
 
 /**
  * This class contains common methods for the plugin install/uninstall commands.
@@ -74,7 +74,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function walkPluginDirectory($methodName, OutputInterface $output)
     {
         if ($methodName != 'installPlugin' && $methodName != 'uninstallPlugin') {
-            throw new ClarolineException(
+            throw new InvalidArgumentException(
                 "First parameter must be either 'installPlugin' "
                 . " or 'uninstallPlugin', {$methodName} given."
             );

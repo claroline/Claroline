@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ClarolineSettingsType extends AbstractType
+class PlatformParametersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -18,6 +18,6 @@ class ClarolineSettingsType extends AbstractType
 
     public function getName()
     {
-        return 'claro_settings_form';
+        return 'platform_parameters_form';
     }
 }

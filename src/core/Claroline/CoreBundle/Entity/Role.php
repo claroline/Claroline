@@ -2,13 +2,13 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use \RuntimeException;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Exception\ClarolineException;
 
 /**
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
@@ -106,16 +106,16 @@ class Role implements RoleInterface
      * cannot be modified by this setter.
      *
      * @param string $name
-     * @throw ClarolineException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
+     * @throw RuntimeException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
      */
     public function setName($name)
     {
         if (0 !== strpos($name, 'ROLE_')) {
-            throw new ClarolineException('Role names must start with "ROLE_"');
+            throw new RuntimeException('Role names must start with "ROLE_"');
         }
 
         if (PlatformRoles::contains($this->name)) {
-            throw new ClarolineException('Platform roles cannot be modified');
+            throw new RuntimeException('Platform roles cannot be modified');
         }
 
         if (PlatformRoles::contains($name)) {
@@ -175,7 +175,7 @@ class Role implements RoleInterface
     public function preRemove()
     {
         if (PlatformRoles::contains($this->name)) {
-            throw new ClarolineException('Platform roles cannot be deleted');
+            throw new RuntimeException('Platform roles cannot be deleted');
         }
     }
 
