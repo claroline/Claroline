@@ -266,10 +266,6 @@ $(function() {
                                 $('#ct_form').empty();
                             }
                         });
-
-                        var reloadNode = function(node) {
-                            node.reloadChildren();
-                        }
                     }
 
                     var bindContextMenuTree = function(node) {
@@ -382,16 +378,47 @@ $(function() {
                     };
 
                     var children = initChildren();
+                    var array = ClaroUtils.splitCookieValue(document.cookie);
+                    if (array[' dynatree-expand'] !== undefined || array[' dynatree-expand'] !== '') {
+                        var idsArray = array[' dynatree-expand'].split('%2C');
+                    }
+
+                    var initFromCookie = function(i) {
+                        if (idsArray[i] == '') {
+                            i++;
+                        }
+                        var node = $(treeId).dynatree('getTree').getNodeByKey(idsArray[i]);
+                        if (null != node) {
+                            node.appendAjax({
+                                url: onLazyReadUrl(node),
+                                success: function(node) {
+                                    var children = node.getChildren();
+                                    for (var i in children) {
+                                        for (var j in idsArray) {
+                                            if(idsArray[j] == children[i].data.key) {
+                                                initFromCookie(j);
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }
 
                     $(treeId).dynatree({
                         checkbox: true,
+                        persist: true,
                         imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../../../../icons/',
                         title: 'myTree',
                         children: children,
                         onPostInit: function(isReloading, isError) {
                             if (params.displayMode === 'linker') {
                                 initLinker(treeId);
+                            } else {
+                                console.debug(array[' dynatree-expand']);
+                                initFromCookie(0);
                             }
+
                         },
                         clickFolderMode: 1,
                         selectMode: 3,

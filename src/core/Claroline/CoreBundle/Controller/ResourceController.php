@@ -324,14 +324,11 @@ class ResourceController extends Controller
             return new Response('[]');
         }
 
-        $repo = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $parent = $repo->find($instanceId);
         $resourceInstances = $repo->getListableChildren($parent);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:instances.json.twig',
-            array('instances' => $resourceInstances)
+        $content = $this->get('templating')->render(
+            'ClarolineCoreBundle:Resource:instances.json.twig', array('instances' => $resourceInstances)
         );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
