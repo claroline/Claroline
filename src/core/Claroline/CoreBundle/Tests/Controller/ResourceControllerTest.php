@@ -255,7 +255,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
         $this->createForum($theBigTree[0]->key, 'lonelyForum');
         $pseudoId = 'file_'.$this->userRoot[0]->getId();
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getLinkerExportList((array)$pseudoId);
+        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getLinkerExportList((array) $pseudoId);
         $this->assertEquals(3, count($toExport));
     }
 
