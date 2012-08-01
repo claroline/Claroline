@@ -1,3 +1,3 @@
 allow_self_registration: true
 context_history_max_size: 5
-locale_language: fr
+locale_language: en
