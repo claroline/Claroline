@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
-use Claroline\CoreBundle\Exception\SecurityException;
+use Claroline\CoreBundle\Library\Security\SecurityException;
 
 class RoleDelegate implements SubjectDelegateInterface
 {

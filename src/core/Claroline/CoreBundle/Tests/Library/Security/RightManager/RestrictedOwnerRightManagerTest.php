@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Security\RightManager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Claroline\CoreBundle\Exception\SecurityException;
+use Claroline\CoreBundle\Library\Security\SecurityException;
 
 class RestrictedOwnerManagerTest extends FixtureTestCase
 {
