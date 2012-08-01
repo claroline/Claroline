@@ -18,7 +18,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
 
     public function testInitBaseRolesRequireWorkspaceToHaveAnIdentifier()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $ws = new SimpleWorkspace();
         $ws->initBaseRoles();
@@ -26,7 +26,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
 
     public function testAddCustomRoleRequireWorkspaceToHaveAnIdentifier()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $ws = new SimpleWorkspace();
         $ws->addCustomRole(new WorkspaceRole);
@@ -34,7 +34,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
 
     public function testAddCustomRoleDoesntAcceptRolesAlreadyBoundToAnotherWorkspace()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $wsA = $this->getFixtureReference('workspace/ws_a');
         $wsB = $this->getFixtureReference('workspace/ws_b');
@@ -48,7 +48,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
 
     public function testAddCustomRoleRequiresRoleToHaveAName()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
 
         $wsA = $this->getFixtureReference('workspace/ws_a');
 

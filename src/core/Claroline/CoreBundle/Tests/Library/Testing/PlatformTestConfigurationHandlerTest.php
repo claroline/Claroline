@@ -49,7 +49,7 @@ class PlatformTestConfigurationHandlerTest extends WebTestCase
      */
     public function testHandlerThrowsAnExceptionOnNonExistentProdParameterAccessAttempt($accessor)
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
         $this->handler->{$accessor}('non_existent_parameter', 'some_value');
     }
 

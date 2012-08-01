@@ -15,15 +15,14 @@ class RoleTest extends FixtureTestCase
 
     public function testRoleNamesMustFollowTheSymfonyConvention()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
-
+        $this->setExpectedException('RuntimeException');
         $role = new Role();
         $role->setName('WRONG_PREFIX_ROLE');
     }
 
     public function testPlatformRoleCannotBeModified()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
         $this->getFixtureReference('role/admin')->setName('ROLE_FOO');
     }
 
@@ -32,7 +31,7 @@ class RoleTest extends FixtureTestCase
         $roleUser = $this->getFixtureReference('role/user');
         $this->assertTrue($roleUser->isReadOnly());
 
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
         $this->getEntityManager()->remove($roleUser);
     }
 }

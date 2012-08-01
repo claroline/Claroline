@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Exception\ClarolineException;
 
 /**
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
@@ -74,7 +74,7 @@ class SimpleWorkspace extends AbstractWorkspace
 
         if (null !== $parentWorkspace) {
             if (true === $isPublic && !$parentWorkspace->isPublic()) {
-                throw new ClarolineException(
+                throw new RuntimeException(
                     'A sub-workspace of a private workspace cannot be made public'
                 );
             }
@@ -91,7 +91,7 @@ class SimpleWorkspace extends AbstractWorkspace
     public function setParent(SimpleWorkspace $workspace = null)
     {
         if ($this->isPublic() && !$workspace->isPublic()) {
-            throw new ClarolineException(
+            throw new RuntimeException(
                 'A public workspace cannot be a sub-workspace of a private one'
             );
         }
