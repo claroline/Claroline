@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Exception\SecurityException;
+use Claroline\CoreBundle\Library\Security\SecurityException;
 
 class StrategyChooser
 {
