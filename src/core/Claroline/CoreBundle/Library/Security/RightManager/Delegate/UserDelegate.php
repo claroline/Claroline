@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Exception\SecurityException;
+use Claroline\CoreBundle\Library\Security\SecurityException;
 
 class UserDelegate implements SubjectDelegateInterface
 {

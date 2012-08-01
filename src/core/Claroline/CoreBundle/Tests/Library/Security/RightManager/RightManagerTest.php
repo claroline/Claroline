@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Security\RightManager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
-use Claroline\CoreBundle\Exception\SecurityException;
+use Claroline\CoreBundle\Library\Security\SecurityException;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;

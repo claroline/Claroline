@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Claroline\CoreBundle\Exception\SecurityException;
+use Claroline\CoreBundle\Library\Security\SecurityException;
 use Claroline\CoreBundle\Entity\User;
 
 class RestrictedOwnerRightManager implements RightManagerInterface

@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\User;
 
 class CreatorTest extends FunctionalTestCase
 {
@@ -23,7 +21,7 @@ class CreatorTest extends FunctionalTestCase
      */
     public function testWorkspaceConfigurationIsCheckedBeforeCreation($invalidConfig)
     {
-        $this->setExpectedException('Claroline\CoreBundle\Exception\ClarolineException');
+        $this->setExpectedException('RuntimeException');
         $user = $this->getFixtureReference('user/user');
 
         $this->creator->createWorkspace($invalidConfig, $user);

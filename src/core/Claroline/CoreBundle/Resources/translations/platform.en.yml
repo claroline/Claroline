@@ -13,7 +13,7 @@ add_user: Add user
 list_users: List users
 create_group: Create group
 list_groups: List groups
-claro_settings: Claroline settings
+platform_parameters: Platform parameters
 
 # registration
 login: Login
@@ -54,8 +54,8 @@ profile_form_ownedRoles: "Role(s) :"
 profile_form_note: "Personnal note :"
 
 # platform settings form field labels
-claro_settings_form_selfRegistration: Auto-inscription
-claro_settings_form_localLanguage: Langue
+platform_parameters_form_selfRegistration: Auto-inscription
+platform_parameters_form_localLanguage: Langue
 
 # group form field labels
 group_form_name: Name
