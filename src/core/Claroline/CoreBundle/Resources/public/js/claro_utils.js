@@ -122,4 +122,18 @@
     utils.findLoadedJsPath = function (filename) {
         return $('script[src*="'+filename+'"]').attr('src');
     }
+
+    utils.splitCookieValue = function(cookie) {
+        var values = new Object();
+        var cookieArray = cookie.split(';');
+
+        for (var i=0; i<cookieArray.length; i++){
+            var key = cookieArray[i].split('=')[0];
+            var value = cookieArray[i].split('=')[1];
+            value.replace(/^\s*|\s*$/g,'');
+            values[key] = value;
+        }
+
+        return values;
+    }
 })();

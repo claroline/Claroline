@@ -70,7 +70,7 @@ class Manager
             $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
             $ri->setName($resource->getName());
-            $rename = $this->getRename($ri, $dir);
+            $rename = $this->getUniqueName($ri, $dir);
             $ri->setName($rename);
             $this->em->persist($ri);
             $resource->setCreator($user);
@@ -93,7 +93,7 @@ class Manager
     {
         $child->setWorkspace($parent->getWorkspace());
         $child->setParent($parent);
-        $rename = $this->getRename($child, $parent);
+        $rename = $this->getUniqueName($child, $parent);
         $child->setName($rename);
         $this->em->flush();
     }
@@ -177,7 +177,7 @@ class Manager
            }
 
            $this->em->persist($instanceCopy);
-           $rename = $this->getRename($resourceInstance, $parent);
+           $rename = $this->getUniqueName($resourceInstance, $parent);
            $instanceCopy->setName($rename);
            $this->em->persist($instanceCopy);
         }
@@ -393,7 +393,7 @@ class Manager
         return $path;
     }
 
-    private function getRename ($resourceInstance, $parent)
+    private function getUniqueName ($resourceInstance, $parent)
     {
 
         $children = $parent->getChildren();
