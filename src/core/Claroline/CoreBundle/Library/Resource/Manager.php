@@ -70,6 +70,8 @@ class Manager
             $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
             $ri->setName($resource->getName());
+            $rename = $this->getRename($ri, $dir);
+            $ri->setName($rename);
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
@@ -91,6 +93,8 @@ class Manager
     {
         $child->setWorkspace($parent->getWorkspace());
         $child->setParent($parent);
+        $rename = $this->getRename($child, $parent);
+        $child->setName($rename);
         $this->em->flush();
     }
 
@@ -147,7 +151,7 @@ class Manager
     /**
      * Adds a resource to a directory by reference.
      *
-     * @param AbstractResource $resource
+     * @param ResourceInstance $resourceInstance
      * @param ResourceInstance $parent
      */
     public function addToDirectoryByReference(ResourceInstance $resourceInstance, ResourceInstance $parent)
@@ -157,22 +161,24 @@ class Manager
         if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE
             || $resource->getCreator() == $this->sc->getToken()->getUser()) {
 
-            if ($resource->getResourceType()->getType() != 'directory') {
+           if ($resource->getResourceType()->getType() != 'directory') {
                 $instanceCopy = $this->createReference($resource);
                 $instanceCopy->setParent($parent);
                 $instanceCopy->setWorkspace($parent->getWorkspace());
-                $instanceCopy->setName($resourceInstance->getName());
-            } else {
+           } else {
                 $instances = $resource->getResourceInstances();
                 $instanceCopy = $this->createCopy($instances[0]);
                 $instanceCopy->setParent($parent);
                 $instanceCopy->setWorkspace($parent->getWorkspace());
-                $instanceCopy->setName($resourceInstance->getName());
+
                 foreach ($instances[0]->getChildren() as $child) {
                     $this->addToDirectoryByReference($child, $instanceCopy);
                 }
             }
 
+            $this->em->persist($instanceCopy);
+            $rename = $this->getRename($resourceInstance, $parent);
+            $instanceCopy->setName($rename);
             $this->em->persist($instanceCopy);
         }
     }
@@ -359,7 +365,7 @@ class Manager
     {
 
         $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
-        
+
         foreach ($children as $child) {
             if ($child->getResource()->getResourceType()->getType() != 'directory') {
                 $eventName = $this->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
@@ -386,4 +392,41 @@ class Manager
 
         return $path;
     }
+
+    private function getRename ($resourceInstance, $parent)
+    {
+
+        $children = $parent->getChildren();
+        $name = $resourceInstance->getName();
+        $arName = explode('~', pathinfo($name, PATHINFO_FILENAME));
+        $baseName = $arName[0];
+        $nbName = 0;
+
+        if (null != $children) {
+            foreach ($children as $child) {
+                $childArName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
+                $childBaseName = $childArName[0];
+                if($childBaseName == $baseName && pathinfo($child->getName(),
+                    PATHINFO_EXTENSION) == pathinfo($resourceInstance->getName(), PATHINFO_EXTENSION)) {
+                    if(array_key_exists(1, $childArName)) {
+                        $ind = $childArName[1];
+                        if ($ind >= $nbName) {
+                            $nbName = $ind;
+                            $nbName++;
+                        }
+                    } else {
+                        $nbName = 1;
+                    }
+                }
+            }
+        }
+        if (0!= $nbName) {
+            $newName = $baseName.'~'.$nbName.'.'.pathinfo($resourceInstance->getName(), PATHINFO_EXTENSION);
+        } else {
+            $newName = $resourceInstance->getName();
+        }
+
+        return $newName;
+    }
+
 }
