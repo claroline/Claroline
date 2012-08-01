@@ -5,38 +5,38 @@
 {% endblock %}
 {% block section_content %}
  <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" class="link_show" id="link_show_{{workspace.getId}}">{{workspace.getName()}}</a>
-{{ 'registered_users'|trans({}, 'platformTranslation') }}
+{{ 'registered_users'|trans({}, 'platform') }}
 <!-- twig variables are here in order to make javascript happy -->
 <div id="twig_attributes"
      data-workspaceId="{{workspace.getId()}}"
-     data-translation.delete="{{ 'delete'|trans({}, 'platformTranslation') }}"
+     data-translation.delete="{{ 'delete'|trans({}, 'platform') }}"
 />
 
-<button id="show_user_dialog_button">{{ 'add_user'|trans({}, 'platformTranslation') }}</button>
-<button id="show_group_dialog_button">{{ 'add_group'|trans({}, 'platformTranslation') }}</button>
+<button id="show_user_dialog_button">{{ 'add_user'|trans({}, 'platform') }}</button>
+<button id="show_group_dialog_button">{{ 'add_group'|trans({}, 'platform') }}</button>
 
 <ul id="workspace_users">
     {% for user in users %}
         <li class="row_user" id="user_{{user.getId()}}" >
             {{user.getUsername()}}
-            <a href="{{path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_user_{{user.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
+            <a href="{{path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() })}}" id="link_delete_user_{{user.getId()}}">{{ 'delete'|trans({}, 'platform') }}</a>
         </li>
     {% endfor %}
 </ul>
 
-{{'registered_groups'|trans({},'platformTranslation')}}
+{{'registered_groups'|trans({},'platform')}}
 <ul id="workspace_groups">
     {% for group in groups %}
         <li class="row_group" id="group_{{group.getId()}}">
  <!--           <a href="todo">{{group.getName()}}</a> -->
-           |<a href ="{{path('claro_ws_remove_group', {'groupId':group.getId(), 'workspaceId':workspace.getId()})}}" id="link_delete_group_{{group.getId()}}">{{ 'delete'|trans({}, 'platformTranslation') }}</a>
+           |<a href ="{{path('claro_ws_remove_group', {'groupId':group.getId(), 'workspaceId':workspace.getId()})}}" id="link_delete_group_{{group.getId()}}">{{ 'delete'|trans({}, 'platform') }}</a>
         </li>
     {% endfor %}
 </ul>
 
 <!-- dialog boxes ------------------------------------------------------------------->
 
-<div id="user_dialog" title="{{ 'list_users'|trans({}, 'platformTranslation') }}">
+<div id="user_dialog" title="{{ 'list_users'|trans({}, 'platform') }}">
     <div id="user_search_div">
         <input type="text" id="search_user_txt" value="">
         <input type="button" id="search_user_button" value ="search"><br>
@@ -46,9 +46,9 @@
             <table id="user_table_checkboxes">
                 <thead>
                     <th id="c0" scope="col"></th>
-                    <th id="c1" scope="col">{{ 'username'|trans({}, 'platformTranslation') }}</th>
-                    <th id="c2" scope="col">{{ 'last_name'|trans({}, 'platformTranslation') }}</th>
-                    <th id="c3" scope="col">{{ 'first_name'|trans({}, 'platformTranslation') }}</th>
+                    <th id="c1" scope="col">{{ 'username'|trans({}, 'platform') }}</th>
+                    <th id="c2" scope="col">{{ 'last_name'|trans({}, 'platform') }}</th>
+                    <th id="c3" scope="col">{{ 'first_name'|trans({}, 'platform') }}</th>
                 </thead>
                 <tbody id="user_table_checkboxes_body">
                 </tbody>
@@ -59,7 +59,7 @@
     </form>
 </div>
 
-<div id="group_dialog" title="{{ 'list_groups'|trans({}, 'platformTranslation') }}">
+<div id="group_dialog" title="{{ 'list_groups'|trans({}, 'platform') }}">
     <div id="group_search_div">
         <input type="text" id="search_group_txt" value="">
         <input type="button" id="search_group_button" value ="search name"><br>

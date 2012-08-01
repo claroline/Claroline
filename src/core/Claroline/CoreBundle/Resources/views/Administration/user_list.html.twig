@@ -4,14 +4,14 @@
     <table class="claroTable userList" width="100%" cellspacing="2" border="0">
         <thead>
             <tr class="headerX" align="center" valign"=top">
-                <th>{{ 'id'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'username'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'last_name'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'first_name'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'mail'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'role'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'delete'|trans({}, 'platformTranslation') }}</th>
-                <th>{{ 'show'|trans({}, 'platformTranslation') }}</th>
+                <th>{{ 'id'|trans({}, 'platform') }}</th>
+                <th>{{ 'username'|trans({}, 'platform') }}</th>
+                <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                <th>{{ 'mail'|trans({}, 'platform') }}</th>
+                <th>{{ 'role'|trans({}, 'platform') }}</th>
+                <th>{{ 'delete'|trans({}, 'platform') }}</th>
+                <th>{{ 'show'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -36,14 +36,14 @@
                     <td align="center">
                         <a class="link_delete"
                            href="{{ path('claro_admin_delete_user', {'userId': user.getId()}) }}">
-                            {{ 'delete'|trans({}, 'platformTranslation') }}
+                            {{ 'delete'|trans({}, 'platform') }}
                         </a>
                     </td>
                 {% endif %}
             {% endif %}
             <td align="center">
                 <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
-                    {{ 'show'|trans({}, 'platformTranslation') }}
+                    {{ 'show'|trans({}, 'platform') }}
                 </a>
             </td>
         </tr>
