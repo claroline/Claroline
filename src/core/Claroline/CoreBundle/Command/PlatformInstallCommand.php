@@ -66,6 +66,10 @@ class PlatformInstallCommand extends ContainerAwareCommand
         ));
         $assetCommand->run($assetInput, $output);
 
+        $asseticCommand = $this->getApplication()->find('assetic:dump');
+        $asseticInput = new ArrayInput(array('command' => 'assetic:dump'));
+        $asseticCommand->run($asseticInput, $output);
+
         $output->writeln('Done');
     }
 }
