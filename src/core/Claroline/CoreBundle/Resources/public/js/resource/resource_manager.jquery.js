@@ -379,29 +379,34 @@ $(function() {
 
                     var children = initChildren();
                     var array = ClaroUtils.splitCookieValue(document.cookie);
-                    if (array[' dynatree-expand'] !== undefined || array[' dynatree-expand'] !== '') {
+                    if (array[' dynatree-expand'] != undefined && array[' dynatree-expand'] != '') {
+                        console.debug(array[' dynatree-expand']);
                         var idsArray = array[' dynatree-expand'].split('%2C');
+
                     }
 
                     var initFromCookie = function(i) {
-                        if (idsArray[i] == '') {
-                            i++;
-                        }
-                        var node = $(treeId).dynatree('getTree').getNodeByKey(idsArray[i]);
-                        if (null != node) {
-                            node.appendAjax({
-                                url: onLazyReadUrl(node),
-                                success: function(node) {
-                                    var children = node.getChildren();
-                                    for (var i in children) {
-                                        for (var j in idsArray) {
-                                            if(idsArray[j] == children[i].data.key) {
-                                                initFromCookie(j);
+                        if(idsArray != undefined){
+                            if (idsArray[i] == '' ) {
+                                i++;
+                            }
+
+                            var node = $(treeId).dynatree('getTree').getNodeByKey(idsArray[i]);
+                            if (null != node) {
+                                node.appendAjax({
+                                    url: onLazyReadUrl(node),
+                                    success: function(node) {
+                                        var children = node.getChildren();
+                                        for (var i in children) {
+                                            for (var j in idsArray) {
+                                                if(idsArray[j] == children[i].data.key) {
+                                                    initFromCookie(j);
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            })
+                                })
+                            }
                         }
                     }
 
