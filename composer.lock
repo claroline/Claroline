@@ -5,7 +5,7 @@
             "package": "claroline/front-end-bundle",
             "version": "dev-master",
             "source-reference": "02e142fad61bd680d931983032aea123088435ab",
-            "commit-date": "1343834405"
+            "commit-date": "1343732416"
         },
         {
             "package": "doctrine/common",
@@ -68,14 +68,8 @@
         {
             "package": "gedmo/doctrine-extensions",
             "version": "dev-master",
-            "alias-pretty-version": "2.3.x-dev",
-            "alias-version": "2.3.9999999.9999999-dev"
-        },
-        {
-            "package": "gedmo/doctrine-extensions",
-            "version": "dev-master",
-            "source-reference": "c801d6f5d9f768680a7f71dc4f27c8cb11acd0af",
-            "commit-date": "1343804719"
+            "source-reference": "3881e19cc9497efa132a55e44aebbc62405a05b1",
+            "commit-date": "1343672222"
         },
         {
             "package": "jms/aop-bundle",
@@ -94,8 +88,8 @@
         {
             "package": "jms/di-extra-bundle",
             "version": "dev-master",
-            "source-reference": "912519a3dafc6318c781bd00a9ef7ff790b2c321",
-            "commit-date": "1343737883"
+            "source-reference": "19c78ddeb222b0e911eb87c9b3c07d5dc0f9f9ea",
+            "commit-date": "1343655179"
         },
         {
             "package": "jms/metadata",
@@ -186,14 +180,8 @@
         {
             "package": "symfony/assetic-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "symfony/assetic-bundle",
-            "version": "dev-master",
-            "source-reference": "0c09207be07b044e06d28a4111f554f071e5b658",
-            "commit-date": "1343812720"
+            "source-reference": "24df9ede95084be882aeb557eaef5b761cfa00e0",
+            "commit-date": "1343684934"
         },
         {
             "package": "symfony/monolog-bundle",
@@ -216,8 +204,8 @@
         {
             "package": "symfony/symfony",
             "version": "dev-master",
-            "source-reference": "b1618d210cb7e27036edcea9c163a94167e7df59",
-            "commit-date": "1343747192"
+            "source-reference": "788e5eb730ad1c0436c519cf0b878fc48b854044",
+            "commit-date": "1343723577"
         },
         {
             "package": "twig/extensions",
