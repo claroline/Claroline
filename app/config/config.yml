@@ -23,8 +23,12 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
+    variables:
+        locale: [en, fr]
     filters:
         cssrewrite: ~
+        #twig_js:
+        #    resource: "%kernel.root_dir%/../vendor/jms/twig-js-bundle/JMS/TwigJsBundle/Resources/config/services.xml"
         # closure:
         #     jar: %kernel.root_dir%/java/compiler.jar
         # yui_css:

@@ -70,6 +70,7 @@ $(function() {
                                 $('#source_tree').dynatree('destroy');
                                 $('#source_tree').empty();
                                 createTree('#source_tree');
+                                var cookie = document.cookie;
                             });
 
                             setFilters();
@@ -379,10 +380,9 @@ $(function() {
 
                     var children = initChildren();
                     var array = ClaroUtils.splitCookieValue(document.cookie);
-                    if (array[' dynatree-expand'] != undefined && array[' dynatree-expand'] != '') {
-                        console.debug(array[' dynatree-expand']);
-                        var idsArray = array[' dynatree-expand'].split('%2C');
-
+                    if (array[' dynatree_'+params.displayMode+'-expand'] != undefined && array[' dynatree-expand'] != '') {
+                        console.debug(array[' dynatree_'+params.displayMode+'-expand']);
+                        var idsArray = array[' dynatree_'+params.displayMode+'-expand'].split('%2C');
                     }
 
                     var initFromCookie = function(i) {
@@ -413,6 +413,7 @@ $(function() {
                     $(treeId).dynatree({
                         checkbox: true,
                         persist: true,
+                        cookieId: 'dynatree_'+params.displayMode,
                         imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../../../../icons/',
                         title: 'myTree',
                         children: children,
