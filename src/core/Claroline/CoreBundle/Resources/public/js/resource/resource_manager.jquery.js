@@ -58,6 +58,12 @@ $(function() {
                                 workspaceroots: jsonroots
                             });
                             div.append(content);
+                            //Sets the correct displayMode from the cookie.
+                            var array = ClaroUtils.splitCookieValue(document.cookie);
+                            if(array[' displayMode'] != undefined) {
+                                params.displayMode = array[' displayMode'];
+                                $('#ct_switch_mode').val(params.displayMode);
+                            }
                             if (true === params.checkbox) {
                                 //On download event.
                                 $('#ct_download').live('click', function() {
@@ -88,6 +94,8 @@ $(function() {
                                     $('#source_tree').empty();
                                     $('#folder_content').empty();
                                     createTree('#source_tree');
+                                    //cookie for ... wich is the currentDisplayMode.
+                                    $.cookie('displayMode', params.displayMode);
                                 }
                             });
 
