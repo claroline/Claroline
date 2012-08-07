@@ -1,5 +1,7 @@
 /*
  * dependencies: dynatree, contextualMenu, jquery, some templates.
+ * Jquery plugin.
+ * The picker mode is not fully supported yet.
  */
 $(function() {
     var jsonmenu = {};
@@ -10,6 +12,7 @@ $(function() {
                 mode: 'manager',
                 displayMode: 'classic',
                 checkbox: true,
+                //Function called on double click for the picker mode.
                 resourcePickedHandler: function(resourceId) {
                     alert('DEFAULT SUBMIT HANDLER MUST BE CHANGED');
                 }
@@ -18,6 +21,7 @@ $(function() {
                 var currentDiv = $(this);
                 var moveForm = Twig.render(move_resource_form);
 
+                //Gets the json for contextual menus.
                 ClaroUtils.sendRequest(
                     Routing.generate('claro_resource_menus'),
                     function(data) {
@@ -31,6 +35,7 @@ $(function() {
                         }
                     },
                     function() {
+                        //Gets the workspace roots for the current user.
                         ClaroUtils.sendRequest(Routing.generate('claro_resource_roots'),
                             function(data) {
                                 jsonroots = data;
@@ -38,7 +43,13 @@ $(function() {
                             });
                         });
 
+                /**
+                 * Generates the basic HTML for the resource manager.
+                 *
+                 * @param div the div id where the manager is built.
+                 */
                 function createDivTree(div) {
+                    //Gets the resource types (will be needed later for the linker mode & the filters).
                     ClaroUtils.sendRequest(Routing.generate('claro_resource_types'),
                         function(rtdata) {
                             var content = Twig.render(resource_filter, {
@@ -47,9 +58,11 @@ $(function() {
                             });
                             div.append(content);
                             if (true === params.checkbox) {
+                                //On download event.
                                 $('#ct_download').live('click', function() {
                                     var children = $('#source_tree').dynatree('getTree').getSelectedNodes();
                                     var parameters = {};
+                                    //Generates a usable instance list id for the php controller.
                                     for (var i in children) {
                                         if (children[i].isTool !== true) {
                                             parameters[i] = children[i].data.instanceId;
@@ -63,7 +76,7 @@ $(function() {
                                 });
                             }
 
-
+                            //On switch mode event.
                             $('#ct_switch_mode').change(function() {
                                 params.displayMode = $('#ct_switch_mode').val();
                                 if (params.displayMode == 'spiral') {
@@ -72,6 +85,7 @@ $(function() {
                                     //page reloaded
                                     //this name must be changed
                                 } else {
+                                    //The tree must be reloaded.
                                     $('#source_tree').dynatree('destroy');
                                     $('#source_tree').empty();
                                     $('#folder_content').empty();
@@ -84,7 +98,9 @@ $(function() {
                         });
                 }
 
-                //filters definitions.
+                /**
+                 * Sets a filter on the datas.
+                 */
                 function setFilters() {
                     $('#ct_filter').click(function() {
                         showNodes();
@@ -150,27 +166,27 @@ $(function() {
                     });
 
                     var filterBlobByType = function(searchArray) {
-                        $('.resource_figure').each(function(i){
+                        $('.resource_figure').each(function(i) {
                               if (0 > searchArray.indexOf(this.getAttribute('data-type'))) {
-                                  $('#'+this.getAttribute('id')).hide();
+                                  $('#' + this.getAttribute('id')).hide();
                               }
-                        })
+                        });
                     }
 
                     var filterBlobFromDate = function(date) {
-                       $('.resource_figure').each(function(i){
+                       $('.resource_figure').each(function(i) {
                               if (this.getAttribute('data-date_instance_creation') < date) {
-                                  $('#'+this.getAttribute('id')).hide();
+                                  $('#' + this.getAttribute('id')).hide();
                               }
-                        })
+                        });
                     }
 
                     var filterBlobToDate = function(date) {
-                       $('.resource_figure').each(function(i){
+                       $('.resource_figure').each(function(i) {
                               if (this.getAttribute('data-date_instance_creation') >= date) {
-                                  $('#'+this.getAttribute('id')).hide();
+                                  $('#' + this.getAttribute('id')).hide();
                               }
-                        })
+                        });
                     }
 
                     var filterTreeByType = function(searchArray, targetNode) {
@@ -237,17 +253,27 @@ $(function() {
                     }
                 }
 
-                function bindContextMenu (node, selector, isDynatree) {
+                /**
+                 * Binds the contextual menu on a item.
+                 *
+                 * @param node a dynatree node (or a fake contaning the needed datas: see createTmpNode).
+                 * @param selector the item id.
+                 * @param isDynatree
+                 */
+                function bindContextMenu(node, selector, isDynatree) {
                     var type = node.data.type;
                     var menuDefaultOptions = {
                         selector: selector,
+                        //See the contextual menu documentation.
                         callback: function(key, options) {
+                            //Finds and executes the action for the right menu item.
                             findMenuObject(jsonmenu[type], node, key);
                         }
                     };
 
                     menuDefaultOptions.items = jsonmenu[type].items;
                     $.contextMenu(menuDefaultOptions);
+                    //Left click menu.
                     var additionalMenuOptions = $.extend(menuDefaultOptions, {
                         selector: '#dynatree-custom-claro-menu-' + node.data.key,
                         trigger: 'left'
@@ -255,9 +281,12 @@ $(function() {
 
                     $.contextMenu(additionalMenuOptions);
 
+                    //Executes the menu action.
                     var executeMenuActions = function(obj, node)
                     {
+                        //Sometimes the menu action will display a form. This is the submission handler.
                         var submissionHandler = function(xhr) {
+                            //If there is a json response, a node was returned.
                             if (xhr.getResponseHeader('Content-Type') === 'application/json') {
                                 var JSONObject = JSON.parse(xhr.responseText);
                                 var instance = JSONObject[0];
@@ -275,12 +304,13 @@ $(function() {
                                 }
 
                                 if (isDynatree == true) {
+                                    //If the node is unknown, we reload the active node.
                                     if (node.data.instanceId !== newNode.instanceId) {
-
                                         node.appendAjax({
                                             url: onLazyReadUrl(node)
                                         });
                                         node.expand();
+                                    //OtherwIse the node was edited and we set the new parameters.
                                     } else {
                                         node.data.title = newNode.title;
                                         node.data.shareType = newNode.shareType;
@@ -289,10 +319,13 @@ $(function() {
                                 }
                                 $('#ct_tree').show();
                                 $('#ct_form').empty();
+                            //If it's not a json response, we append the response at the top of the tree.
                             } else {
                                 $('#ct_form').empty().append(xhr.responseText).find('form').submit(function(e) {
                                     e.preventDefault();
                                     var action = $('#ct_form').find('form').attr('action');
+                                    //If it's a form, placeholders must be removed (the twig form doesn't know the instance parent,
+                                    //that's why placeholders are used).'
                                     action = action.replace('_instanceId', node.data.instanceId);
                                     action = action.replace('_resourceId', node.data.resourceId);
                                     var id = $('#ct_form').find('form').attr('id');
@@ -301,7 +334,9 @@ $(function() {
                             }
                         };
 
+                        //Sometimes the action must be executed asynchronously.
                         var executeAsync = function(obj, node, route) {
+                            //Delete is a special case. See below.
                             var removeNode = function() {
                                 ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
                                     if (204 === jqXHR.status) {
@@ -309,10 +344,12 @@ $(function() {
                                     }
                                 });
                             };
-
+                            //Executes the Ajax request for the menu action.
                             var executeRequest = function() {
                                 ClaroUtils.sendRequest(route, function(data) {
                                     $('#ct_tree').hide();
+                                    //If there is a form, the submission handler above is used.
+                                    //There is no handler otherwise.
                                     $('#ct_form').empty().append(data).find('form').submit(function(e) {
                                         e.preventDefault();
                                         var action = $('#ct_form').find('form').attr('action');
@@ -322,16 +359,19 @@ $(function() {
                                     });
                                 });
                             };
-
+                            //Delete was a special case as every node can be removed.
                             (obj.name === 'delete') ? removeNode(node, route) : executeRequest(node, route);
                         };
 
+                        //Removes the placeholders in the route
                         var route = obj.route;
                         var compiledRoute = route.replace('_instanceId', node.data.instanceId);
                         compiledRoute = compiledRoute.replace('_resourceId', node.data.resourceId);
                         obj.async ? executeAsync(obj, node, compiledRoute) : window.location = compiledRoute;
                     };
 
+                    //Finds wich menu was fired for a node.
+                    //@params items is the menu object used.
                     var findMenuObject = function(items, node, menuItem)
                     {
                         for (var property in items.items) {
@@ -346,6 +386,11 @@ $(function() {
                     };
                 };
 
+                /**
+                 * Creates a fake dynatree node (usefull for generating the contextual menu if the menu is not bound
+                 * to a dynatree node because the bindContextMenu function is dynatree node informations. This node will
+                 * contains all the needed datas).
+                 */
                 function createTmpNode(jsonNode)
                 {
                     var tmpNode = {};
@@ -357,9 +402,14 @@ $(function() {
                     return tmpNode;
                 }
 
+                /**
+                 * Fired when the user clicks on a dynatree node.
+                 *
+                 * @param node the dynatree node.
+                 */
                 function onClickItem(node) {
+                    //on hybrid mode, "blobs" are displayed.
                     if (params.displayMode == 'hybrid') {
-                        //show children in teh data tree !
                         $('#folder_content').empty();
 
                         node.appendAjax({
@@ -370,35 +420,40 @@ $(function() {
                             'instanceId': node.data.instanceId
                         });
 
-                        ClaroUtils.sendRequest(route, function(children){
+                        ClaroUtils.sendRequest(route, function(children) {
                             for (var i in children) {
-                                if(children[i].type !== 'directory') {
-                                    var title = 'instance'+children[i].key;
+                                if (children[i].type !== 'directory') {
+                                    var title = 'instance' + children[i].key;
                                     var imagePath = ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../images/resources/icon/biblio_spiral.png';
                                     $('#folder_content').append(
-                                        '<figure id="figure_'+children[i].instanceId+'"class="resource_figure" data-type="'+children[i].type+'" data-date_instance_creation="'+children[i].dateInstanceCreation+'"><img title="'+children[i].tooltip+'"id="'+title+'" src="'+imagePath+'"><figcaption>'+children[i].title+'</figcaption></figure>'
+                                        '<figure id="figure_' + children[i].instanceId + '"class="resource_figure" data-type="' + children[i].type + '" data-date_instance_creation="' + children[i].dateInstanceCreation + '"><img title="' + children[i].tooltip + '"id="' + title + '" src="' + imagePath + '"><figcaption>' + children[i].title + '</figcaption></figure>'
                                         );
                                     var tmpNode = createTmpNode(children[i]);
-                                    bindContextMenu(tmpNode, '#'+title, false);
+                                    bindContextMenu(tmpNode, '#' + title, false);
                                 }
                             }
-                        })
+                        });
                     }
                 }
 
+                /**
+                 * Gets correct url when a node is lazy loaded.
+                 *
+                 * @params node the dynatree node loaded.
+                 */
                 function onLazyReadUrl(node) {
                     var url = '';
                     if (params.displayMode === 'classic') {
                         url = Routing.generate('claro_resource_children', {
                             'instanceId': node.data.instanceId
-                            })
+                            });
                     }
                     if (params.displayMode === 'hybrid') {
                         url = Routing.generate('claro_resource_children', {
                             'instanceId': node.data.instanceId,
                             //always directory
                             'resourceTypeId': node.data.typeId
-                            })
+                            });
                     }
                     if (params.displayMode === 'linker') {
                         url = Routing.generate('claro_resources_list', {
@@ -410,16 +465,23 @@ $(function() {
                     return url;
                 };
 
+                /**
+                 * Creates the dynatree datatee.
+                 *
+                 * @params treeId the tree id
+                 */
                 function createTree(treeId)
                 {
+                    //We already loaded the workspaces roots at the beginning, so we know the 1st level of the tree.
                     var initChildren = function() {
                         if (params.displayMode === 'classic' || params.displayMode === 'hybrid') {
-                            return jsonroots
+                            return jsonroots;
                         } else {
                             return [];
                         }
                     };
 
+                    //The linker mode is a bit wierd. This is the 1st level initialization.
                     var initLinker = function() {
                         ClaroUtils.sendRequest(Routing.generate('claro_resource_types'), function(data) {
                             //JSON.parse not working: why ?
@@ -450,11 +512,13 @@ $(function() {
                         });
                     };
 
-                    function dropNode(node, sourceNode, hitMode)
+                    //Drag&drop drop node event.
+                    var dropNode = function(node, sourceNode, hitMode)
                     {
                         $('#ct_form').empty().append(moveForm);
                         $('#move_resource_form_submit').click(function(e) {
                             e.preventDefault();
+                            //form needed (the resource must be copied or moved ?)
                             var option = ClaroUtils.getCheckedValue(document.forms.move_resource_form.options);
                             var route = {};
 
@@ -467,7 +531,8 @@ $(function() {
                                     }
                                 };
 
-                                ClaroUtils.sendRequest(route, function(data){
+                                ClaroUtils.sendRequest(route, function(data) {
+                                    //We always reload everything because the name could be changed by the core.
                                     node.reloadChildren();
                                     sourceNode.getParent().reloadChildren();
                                 });
@@ -481,7 +546,8 @@ $(function() {
                                         'instanceDestinationId': node.data.instanceId
                                     }
                                 };
-                                ClaroUtils.sendRequest(route, function(data){
+                                ClaroUtils.sendRequest(route, function(data) {
+                                    //We always reload everything because the name could be changed by the core
                                     node.reloadChildren();
                                 });
 
@@ -489,17 +555,19 @@ $(function() {
                             }
                         });
                     }
-
+                    //1st children level.
                     var children = initChildren();
                     var array = ClaroUtils.splitCookieValue(document.cookie);
 
-                    if (array[' dynatree_'+params.displayMode+'-expand'] != undefined && array[' dynatree-expand'] != '') {
-                        var idsArray = array[' dynatree_'+params.displayMode+'-expand'].split('%2C');
+                    if (array[' dynatree_' + params.displayMode + '-expand'] != undefined && array[' dynatree-expand'] != '') {
+                        var idsArray = array[' dynatree_' + params.displayMode + '-expand'].split('%2C');
                     }
 
+                    //Initialization from the cookie. Fired during the dynatree onPostInit event.
+                    //! not working the the linker mode yet.
                     var initFromCookie = function(i) {
-                        if(idsArray != undefined){
-                            if (idsArray[i] == '' ) {
+                        if (idsArray != undefined) {
+                            if (idsArray[i] == '') {
                                 i++;
                             }
 
@@ -511,21 +579,22 @@ $(function() {
                                         var children = node.getChildren();
                                         for (var i in children) {
                                             for (var j in idsArray) {
-                                                if(idsArray[j] == children[i].data.key) {
+                                                if (idsArray[j] == children[i].data.key) {
                                                     initFromCookie(j);
                                                 }
                                             }
                                         }
                                     }
-                                })
+                                });
                             }
                         }
                     }
 
+                    //Dynatree initialization.
                     $(treeId).dynatree({
                         checkbox: true,
                         persist: true,
-                        cookieId: 'dynatree_'+params.displayMode,
+                        cookieId: 'dynatree_' + params.displayMode,
                         imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../../../../icons/',
                         title: 'myTree',
                         children: children,
