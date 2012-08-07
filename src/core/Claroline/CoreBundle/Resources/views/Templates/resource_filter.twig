@@ -1,7 +1,13 @@
 {% twig_js name="resource_filter" %}
 <div id ='ct_content'>
     <div id='ct_form'></div><br>
-    <button id='ct_switch_mode'>switch mode</button><br>
+    <select id='ct_switch_mode' size="1" style='width:125px'>
+        <option value='classic'>Classic</option>
+        <option value='linker'>Linker</option>
+        <option value='spiral'>Spiral</option>
+        <option value='hybrid'>Hybrid</option>
+    </select>
+        <br>
     <div id = 'rf_left_div' style='float:left;'>
         <select id = 'select_root' style='width:125px' class='rf_input' multiple = 'multiple'>
             {% for workspaceroot in workspaceroots %}
@@ -20,7 +26,8 @@
         <button id='ct_filter'>filter</button><br>
     </div>
     <div id ='rf_right_div' style='float:left;'>
-        <div id='source_tree'></div>
+        <div id='source_tree'></div><br>
+        <div id='folder_content'></div>
     </div>
 </div>
 <script>
