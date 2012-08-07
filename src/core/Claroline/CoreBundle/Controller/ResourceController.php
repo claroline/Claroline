@@ -315,10 +315,11 @@ class ResourceController extends Controller
      * Returns a json representation of the children of a resource instance.
      *
      * @param integer $instanceId
+     * @param integer $type
      *
      * @return Response
      */
-    public function childrenAction($instanceId)
+    public function childrenAction($instanceId, $resourceTypeId)
     {
         if (0 == $instanceId) {
             return new Response('[]');
@@ -326,7 +327,7 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $parent = $repo->find($instanceId);
-        $resourceInstances = $repo->getListableChildren($parent);
+        $resourceInstances = $repo->getListableChildren($parent, $resourceTypeId);
         $content = $this->get('templating')->render(
             'ClarolineCoreBundle:Resource:instances.json.twig', array('instances' => $resourceInstances)
         );

@@ -65,8 +65,8 @@ claro_resource_root:
         expose: true
 
 claro_resource_children:
-    pattern: children/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:children }
+    pattern: children/{instanceId}/{resourceTypeId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:children, resourceTypeId:0}
     options:
         expose: true
 
