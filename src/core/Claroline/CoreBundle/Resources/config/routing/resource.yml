@@ -93,4 +93,9 @@ claro_resource_add_workspace:
     defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
     options:
         expose: true
-        options: ref|copy
+
+claro_resource_accessibility_manager:
+    pattern: /manager/{parentId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:accessibilityManager, parentId:0 }
+    options:
+        expose: true

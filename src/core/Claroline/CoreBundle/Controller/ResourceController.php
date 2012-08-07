@@ -421,4 +421,28 @@ class ResourceController extends Controller
 
         return new Response('success');
     }
+
+    public function accessibilityManagerAction($parentId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if ($parentId == 0) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getAllWsOfUser($user);
+            $instances = array();
+
+            foreach ($workspaces as $workspace) {
+                $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+                    ->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
+                $instances[] = $instance;
+            }
+
+        } else {
+            $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+            $parent = $repo->find($parentId);
+            $instances = $repo->getListableChildren($parent, 0);
+        }
+
+        return $this->render('ClarolineCoreBundle:Resource:manager.html.twig', array('instances' => $instances));
+    }
 }

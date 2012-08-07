@@ -1,0 +1,29 @@
+{% extends "ClarolineCoreBundle:Dashboard:layout.html.twig" %}
+{% block section_content %}
+<select id='ct_switch_mode' size="1" style='width:125px'>
+    <option value='classic'>Classic</option>
+    <option value='linker'>Linker</option>
+    <option value='spiral'>Spiral</option>
+    <option value='hybrid'>Hybrid</option>
+</select><br>
+
+{% for instance in instances %}
+    <div class='accessibility_instance'>
+        <img src='{{ asset('icons/biblio_spiral.png')}}'>
+        {% if instance.getResource().getResourceType().getType() == 'directory' %}
+            <a href='{{ path('claro_resource_accessibility_manager', {'parentId':instance.getId()})}}'> {{ instance.name }} </a>
+            {% else %}
+                {{ instance.name }}
+        {% endif %}
+        <div class='accessibility_action'>
+            <a href='{{ path('claro_resource_export', {'instanceId': instance.getId()}) }}'>export</a>
+            <a href='{{ path('claro_resource_delete', {'instanceId': instance.getId()}) }}'>delete</a>
+            <a href='{{ path('claro_resource_properties_form', {'resourceId': instance.getId()})}}'>properties</a>
+            {% for customAction in instance.getResource().getResourceType().getCustomActions() %}
+                <a href='{{ path('claro_resource_custom', {'resourceType': customAction.getResourceType().getType(), 'action': customAction.getAction(), 'resourceId': instance.getResource().getId()}) }}"'>{{ customAction.getAction() }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}
