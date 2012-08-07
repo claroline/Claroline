@@ -74,35 +74,37 @@ $(function() {
                                 } else {
                                     $('#source_tree').dynatree('destroy');
                                     $('#source_tree').empty();
+                                    $('#folder_content').empty();
                                     createTree('#source_tree');
-                                    createBlobView();
                                 }
                             });
 
                             setFilters();
                             createTree('#source_tree');
-                            createBlobView();
                         });
                 }
 
+                //filters definitions.
                 function setFilters() {
                     $('#ct_filter').click(function() {
                         showNodes();
+                        showBlobs();
+
                         if (params.displayMode == 'classic') {
                             if ($('#select_root').val() !== null) {
-                                filterByWorkspace(($('#select_root').val()));
+                                filterTreeByWorkspace(($('#select_root').val()));
                             }
 
                             if ($('#select_type').val() !== null) {
-                                filterByType($('#select_type').val());
+                                filterTreeByType($('#select_type').val());
                             }
 
                             if ($('#rf_date_from').val() !== '') {
-                                filterFromDate($('#rf_date_from').val());
+                                filterTreeFromDate($('#rf_date_from').val());
                             }
 
                             if ($('#rf_date_to').val() !== '') {
-                                filterToDate($('#rf_date_to').val());
+                                filterTreeToDate($('#rf_date_to').val());
                             }
                         }
 
@@ -110,30 +112,68 @@ $(function() {
                             if ($('#select_root').val()) {
                                 var types = $('#source_tree').dynatree('getRoot').getChildren();
                                 for (var i in types) {
-                                    filterByWorkspace($('#select_root').val(), types[i]);
+                                    filterTreeByWorkspace($('#select_root').val(), types[i]);
                                 }
                             }
 
                             if ($('#select_type').val() !== null) {
-                                filterByType($('#select_type').val());
+                                filterTreeByType($('#select_type').val());
                             }
 
                             if ($('#rf_date_from').val() !== '') {
-                                filterFromDate($('#rf_date_from').val());
+                                filterTreeFromDate($('#rf_date_from').val());
                             }
 
                             if ($('#rf_date_to').val() !== '') {
-                                filterToDate($('#rf_date_to').val());
+                                filterTreeToDate($('#rf_date_to').val());
                             }
                         }
 
                         if (params.displayMode == 'hybrid') {
-                            //do something
+                            if ($('#select_root').val() !== null) {
+                                filterTreeByWorkspace(($('#select_root').val()));
+                            }
+
+                            if ($('#select_type').val() !== null) {
+                                filterBlobByType($('#select_type').val());
+                            }
+
+                            if ($('#rf_date_from').val() !== '') {
+                                filterBlobFromDate($('#rf_date_from').val());
+                            }
+
+                            if ($('#rf_date_to').val() !== '') {
+                                filterBlobToDate($('#rf_date_to').val());
+                            }
                         }
 
                     });
 
-                    var filterByType = function(searchArray, targetNode) {
+                    var filterBlobByType = function(searchArray) {
+                        $('.resource_figure').each(function(i){
+                              if (0 > searchArray.indexOf(this.getAttribute('data-type'))) {
+                                  $('#'+this.getAttribute('id')).hide();
+                              }
+                        })
+                    }
+
+                    var filterBlobFromDate = function(date) {
+                       $('.resource_figure').each(function(i){
+                              if (this.getAttribute('data-date_instance_creation') < date) {
+                                  $('#'+this.getAttribute('id')).hide();
+                              }
+                        })
+                    }
+
+                    var filterBlobToDate = function(date) {
+                       $('.resource_figure').each(function(i){
+                              if (this.getAttribute('data-date_instance_creation') >= date) {
+                                  $('#'+this.getAttribute('id')).hide();
+                              }
+                        })
+                    }
+
+                    var filterTreeByType = function(searchArray, targetNode) {
                         var startNode = targetNode || $('#source_tree').dynatree('getRoot');
                         startNode.visit(function(node) {
                             if (node.isVisible() && node.data.title) {
@@ -146,7 +186,7 @@ $(function() {
                         });
                     };
 
-                    var filterByWorkspace = function(searchArray, targetNode) {
+                    var filterTreeByWorkspace = function(searchArray, targetNode) {
                         var startNode = targetNode || $('#source_tree').dynatree('getRoot');
                         startNode.visit(function(node) {
                             if (node.isVisible() && node.data.title) {
@@ -159,7 +199,7 @@ $(function() {
                         });
                     }
 
-                    var filterFromDate = function(date, targetNode) {
+                    var filterTreeFromDate = function(date, targetNode) {
                         var startNode = targetNode || $('#source_tree').dynatree('getRoot');
                         startNode.visit(function(node) {
                             if (node.isVisible() && node.data.title && node.data.dateInstanceCreation) {
@@ -171,7 +211,8 @@ $(function() {
                             }
                         });
                     }
-                    var filterToDate = function(date, targetNode) {
+
+                    var filterTreeToDate = function(date, targetNode) {
                         var startNode = targetNode || $('#source_tree').dynatree('getRoot');
                         startNode.visit(function(node) {
                             if (node.isVisible() && node.data.title) {
@@ -183,15 +224,20 @@ $(function() {
                             }
                         });
                     }
+
                     var showNodes = function(targetNode) {
                         var startNode = targetNode || $('#source_tree').dynatree('getRoot');
                         startNode.visit(function(node) {
                             $(node.li).show();
                         });
                     };
+
+                    var showBlobs = function() {
+                        $('.resource_figure').show();
+                    }
                 }
 
-                function bindContextMenuTree (node, selector) {
+                function bindContextMenu (node, selector, isDynatree) {
                     var type = node.data.type;
                     var menuDefaultOptions = {
                         selector: selector,
@@ -228,15 +274,18 @@ $(function() {
                                     newNode.isFolder = true;
                                 }
 
-                                if (node.data.instanceId !== newNode.instanceId) {
-                                    node.appendAjax({
-                                        url: onLazyReadUrl(node)
-                                    });
-                                    node.expand();
-                                } else {
-                                    node.data.title = newNode.title;
-                                    node.data.shareType = newNode.shareType;
-                                    node.render();
+                                if (isDynatree == true) {
+                                    if (node.data.instanceId !== newNode.instanceId) {
+
+                                        node.appendAjax({
+                                            url: onLazyReadUrl(node)
+                                        });
+                                        node.expand();
+                                    } else {
+                                        node.data.title = newNode.title;
+                                        node.data.shareType = newNode.shareType;
+                                        node.render();
+                                    }
                                 }
                                 $('#ct_tree').show();
                                 $('#ct_form').empty();
@@ -264,11 +313,6 @@ $(function() {
                             var executeRequest = function() {
                                 ClaroUtils.sendRequest(route, function(data) {
                                     $('#ct_tree').hide();
-                                    if (node.data.isTool === true) {
-                                        $('#modal-body').append(Twig.render(select_workspace_form));
-                                        $('#modal-body').append('he');
-                                        $('#bootstrap-modal').modal('show');
-                                    }
                                     $('#ct_form').empty().append(data).find('form').submit(function(e) {
                                         e.preventDefault();
                                         var action = $('#ct_form').find('form').attr('action');
@@ -302,25 +346,6 @@ $(function() {
                     };
                 };
 
-                function updateFolderContent(node) {
-                    var imagePath = ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../../../../icons/';
-                    imagePath+='biblio_spiral';
-                    $('#folder_content').append('<img src="'+imagePath+'"/>')
-                }
-
-                function createBlobView()
-                {
-                    var imagePath = ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../images/resources/icon/biblio_spiral.png';
-                    if (params.displayMode == 'hybrid') {
-                        for (var i in jsonroots) {
-                            var title = 'instance'+jsonroots[i].key;
-                            $('#folder_content').append('<figure><img id="'+title+'" src="'+imagePath+'"><figcaption>'+jsonroots[i].title+'</figcaption></figure>');
-                            var tmpNode = createTmpNode(jsonroots[i]);
-                            bindContextMenuTree(tmpNode, '#'+title);
-                        }
-                    }
-                }
-
                 function createTmpNode(jsonNode)
                 {
                     var tmpNode = {};
@@ -347,13 +372,15 @@ $(function() {
 
                         ClaroUtils.sendRequest(route, function(children){
                             for (var i in children) {
-                                var title = 'instance'+children[i].key;
-                                var imagePath = ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../images/resources/icon/biblio_spiral.png';
-                                $('#folder_content').append(
-                                    '<figure><img id="'+title+'" src="'+imagePath+'"><figcaption>'+children[i].title+'</figcaption></figure>'
-                                    );
-                                var tmpNode = createTmpNode(children[i]);
-                                bindContextMenuTree(tmpNode, '#'+title);
+                                if(children[i].type !== 'directory') {
+                                    var title = 'instance'+children[i].key;
+                                    var imagePath = ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../images/resources/icon/biblio_spiral.png';
+                                    $('#folder_content').append(
+                                        '<figure id="figure_'+children[i].instanceId+'"class="resource_figure" data-type="'+children[i].type+'" data-date_instance_creation="'+children[i].dateInstanceCreation+'"><img title="'+children[i].tooltip+'"id="'+title+'" src="'+imagePath+'"><figcaption>'+children[i].title+'</figcaption></figure>'
+                                        );
+                                    var tmpNode = createTmpNode(children[i]);
+                                    bindContextMenu(tmpNode, '#'+title, false);
+                                }
                             }
                         })
                     }
@@ -369,7 +396,8 @@ $(function() {
                     if (params.displayMode === 'hybrid') {
                         url = Routing.generate('claro_resource_children', {
                             'instanceId': node.data.instanceId,
-                            'resourceTypeId': node.parent.data.typeId
+                            //always directory
+                            'resourceTypeId': node.data.typeId
                             })
                     }
                     if (params.displayMode === 'linker') {
@@ -416,7 +444,7 @@ $(function() {
                                 $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).addChild(rootChildren);
                                 rootChildren = $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).getChildren();
                                 for (var k in rootChildren) {
-                                    bindContextMenuTree(rootChildren[k]);
+                                    bindContextMenu(rootChildren[k], '#node_' + rootChildren[k].key, true);
                                }
                             }
                         });
@@ -466,7 +494,6 @@ $(function() {
                     var array = ClaroUtils.splitCookieValue(document.cookie);
 
                     if (array[' dynatree_'+params.displayMode+'-expand'] != undefined && array[' dynatree-expand'] != '') {
-                        console.debug(array[' dynatree_'+params.displayMode+'-expand']);
                         var idsArray = array[' dynatree_'+params.displayMode+'-expand'].split('%2C');
                     }
 
@@ -506,7 +533,6 @@ $(function() {
                             if (params.displayMode === 'linker') {
                                 initLinker(treeId);
                             } else {
-                                console.debug(array[' dynatree-expand']);
                                 initFromCookie(0);
                             }
 
@@ -539,7 +565,7 @@ $(function() {
                         onCreate: function(node, span) {
                             if (node.data.hasOwnProperty('type')) {
                                 if (node.data.isTool !== true) {
-                                    bindContextMenuTree(node, '#node_' + node.data.key);
+                                    bindContextMenu(node, '#node_' + node.data.key, true);
                                 }
                             }
                         },
