@@ -1,0 +1,9 @@
+{% extends "ClarolineCoreBundle:Dashboard:layout.html.twig" %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/resource/accessibility_form.js')}}'></script>
+{% endblock %}
+{% block section_content %}
+<div id='claro_data' data-parent_id='{{parentId}}'></div>
+{{form|raw}}
+{% endblock %}

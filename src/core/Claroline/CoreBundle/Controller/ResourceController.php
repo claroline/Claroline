@@ -425,7 +425,7 @@ class ResourceController extends Controller
     public function accessibilityManagerAction($parentId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-
+        $parent = null;
         if ($parentId == 0) {
             $user = $this->get('security.context')->getToken()->getUser();
             $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getAllWsOfUser($user);
@@ -443,6 +443,17 @@ class ResourceController extends Controller
             $instances = $repo->getListableChildren($parent, 0);
         }
 
-        return $this->render('ClarolineCoreBundle:Resource:manager.html.twig', array('instances' => $instances));
+        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findBy(array('isListable' => 1));
+
+        return $this->render('ClarolineCoreBundle:Resource:accessibility_manager.html.twig', array('instances' => $instances, 'parent' => $parent, 'resourceTypes' => $resourceTypes));
+    }
+
+    public function accessibilityFormCreationAction($resourceType, $parentId)
+    {
+        $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create_form', $resourceType);
+        $event = new CreateFormResourceEvent();
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        return $this->render('ClarolineCoreBundle:Resource:accessibility_form.html.twig', array('form' => $event->getResponseContent(), 'parentId' => $parentId, 'resourceType' => $resourceType));
     }
 }
