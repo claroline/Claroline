@@ -2,6 +2,7 @@
  * dependencies: dynatree, contextualMenu, jquery, some templates.
  * Jquery plugin.
  * The picker mode is not fully supported yet.
+ * //the displayMode should be initialized from a cookie but it's not the case yet.
  */
 $(function() {
     var jsonmenu = {};

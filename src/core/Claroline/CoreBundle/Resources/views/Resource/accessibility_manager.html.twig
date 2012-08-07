@@ -4,7 +4,7 @@
     <script src='{{ asset('bundles/clarolinecore/js/resource/accessibility_manager.js')}}'></script>
 {% endblock %}
 {% block section_content %}
-<select id='ct_switch_mode' size="1" style='width:125px'>
+<select id='switch_mode' size="1" style='width:125px'>
     <option value='classic'>Classic</option>
     <option value='linker'>Linker</option>
     <option value='spiral'>Spiral</option>
@@ -33,7 +33,7 @@
         {% if instance.getResource().getResourceType().getType() == 'directory' %}
             <a href='{{ path('claro_resource_accessibility_manager', {'parentId':instance.getId()})}}'> {{ instance.name }} </a>
             {% else %}
-                {{ instance.name }} | create
+                {{ instance.name }}
             {% endif %}
             <div class='accessibility_action'>
             <a href='{{ path('claro_resource_export', {'instanceId': instance.getId()}) }}'>export</a>
