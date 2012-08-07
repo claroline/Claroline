@@ -99,3 +99,9 @@ claro_resource_accessibility_manager:
     defaults: { _controller: ClarolineCoreBundle:Resource:accessibilityManager, parentId:0 }
     options:
         expose: true
+
+claro_resource_accessibility_form:
+    pattern: /form/accessibility/{resourceType}/{parentId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:accessibilityFormCreation }
+    options:
+        expose: true
