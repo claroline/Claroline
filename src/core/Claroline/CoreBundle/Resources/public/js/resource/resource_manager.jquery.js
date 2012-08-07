@@ -2,7 +2,7 @@
  * dependencies: dynatree, contextualMenu, jquery, some templates.
  * Jquery plugin.
  * The picker mode is not fully supported yet.
- * //the displayMode should be initialized from a cookie but it's not the case yet.
+ * The displayMode should be initialized from a cookie but it's not the case yet.
  */
 $(function() {
     var jsonmenu = {};
@@ -401,7 +401,7 @@ $(function() {
                 }
 
                 /**
-                 * Fired when the user clicks on a dynatree node.
+                 * Fired when the user clicks on a dynatree node name.
                  *
                  * @param node the dynatree node.
                  */
@@ -593,7 +593,7 @@ $(function() {
                         checkbox: true,
                         persist: true,
                         cookieId: 'dynatree_' + params.displayMode,
-                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '/../../../../../../icons/',
+                        imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '../../../../../../icons/',
                         title: 'myTree',
                         children: children,
                         onPostInit: function(isReloading, isError) {
@@ -611,7 +611,6 @@ $(function() {
                                 url: onLazyReadUrl(node),
                                 success: function(node) {
                                     var children = node.getChildren();
-
                                     if (node.isSelected()) {
                                         for (var i in children) {
                                             children[i].select();
@@ -636,8 +635,10 @@ $(function() {
                                 }
                             }
                         },
-                        onClick: function(node) {
-                            onClickItem(node);
+                        onClick: function(node, event) {
+                            if(event.target.className == 'dynatree-title') {
+                                onClickItem(node);
+                            }
                         },
                         onDblClick: function(node) {
                             if (params.mode === 'picker' && node.data.type !== 'resourceType') {
@@ -666,12 +667,12 @@ $(function() {
                                 return true;
                             },
                             onDragOver: function(node, sourceNode, hitMode) {
-                                if (node.isDescendantOf(sourceNode)) {
+                                if (node.isDescendantOf(sourceNode) || node.data.type != 'directory' || node == $(treeId).dynatree('getTree')) {
                                     return false;
                                 }
                             },
                             onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-                                if (node.isDescendantOf(sourceNode)) {
+                                if (node.isDescendantOf(sourceNode) || node.data.type != 'directory' || node == $(treeId).dynatree('getTree')) {
                                     return false;
                                 }
                                 else {/*
