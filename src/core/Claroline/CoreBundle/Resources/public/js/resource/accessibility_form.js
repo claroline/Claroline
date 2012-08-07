@@ -10,6 +10,7 @@ $(function(){
     })
 
     var submissionHandler = function(){
-        //verifications go here.
+        //Verifications go here.
+        //If wrong, display the form with erros.
     }
 });
