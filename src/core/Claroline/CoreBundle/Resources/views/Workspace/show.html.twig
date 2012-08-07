@@ -2,8 +2,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/dynatree/src/skin/ui.dynatree.css') }}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.css') }}'>
 {% endblock %}
 
 {% block javascripts %}
@@ -15,8 +15,8 @@
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/clarolinecore/js/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
+    <script src='{{ asset('bundles/frontend/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
     <script src='{{ asset('bundles/clarolinecore/js/resource/resource_manager.jquery.js') }}' type="text/javascript"></script>
     <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_show.js')}}'></script>
 {% endblock %}
@@ -24,7 +24,7 @@
 {% block section_content %}
 <div id='jsdata' data-ws-id='{{workspace.getId()}}'></div>
 <div id="div_WS_show">
-{{ 'workspace'|trans({}, 'platform') }}: {{workspace.getName()}}
+{{ 'workspace'|trans({}, 'platform') }}: {{ workspace.getName() }}
 {% if is_granted(workspace.getManagerRole().getName()) %}
     | <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platform') }} </a>|
 {% endif %}
