@@ -80,10 +80,7 @@ $(function() {
                             $('#ct_switch_mode').change(function() {
                                 params.displayMode = $('#ct_switch_mode').val();
                                 if (params.displayMode == 'spiral') {
-                                    alert('do sthg');
-                                    //accessibility full php version
-                                    //page reloaded
-                                    //this name must be changed
+                                    window.location = Routing.generate('claro_resource_accessibility_manager');
                                 } else {
                                     //The tree must be reloaded.
                                     $('#source_tree').dynatree('destroy');
