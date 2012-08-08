@@ -514,15 +514,16 @@ $(function() {
 
                                 root.addChild(node);
 
-                                var rootChildren = eval(jsonroots);
+                                var rootChildren = jsonroots;
 
                                 $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).addChild(rootChildren);
                                 rootChildren = $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).getChildren();
                                 for (var k in rootChildren) {
                                     bindContextMenu(rootChildren[k], '#node_' + rootChildren[k].key, true);
+                                    rootChildren[k].data.key = resourceTypes[i].type+rootChildren[k].data.key
                                }
                             }
-                            initFromCookie(0, false);
+                            initFromCookie();
                         });
                     };
 
@@ -578,44 +579,46 @@ $(function() {
                     }
 
                     //Initialization from the cookie. Fired during the dynatree onPostInit event.
-                    //! not working the the linker mode yet.
-                    var initFromCookie = function(i, isLazy) {
-                        var lazyVisit = function(node){
-                            node.reloadChildren(function(node, isOk){
-                                if(isOk) {
-                                    node.visit(function(node){
-                                        for (var j in idsArray) {
-                                            if (idsArray[j] == node.data.key) {
-                                                initFromCookie(j, node.isLazy());
-                                            }
-                                        }
-                                    })
-                                }
-                            })
-                        }
-
-                        var stdVisit = function(node){
+                    //! not working the the linker mode yet. It can't work because the key is the same for the directories root
+                    var initFromCookie = function() {
+                        var expandNode = function(node) {
                             node.expand();
                             node.visit(function(node){
-                                for (var j in idsArray) {
-                                    if (idsArray[j] == node.data.key) {
-                                        initFromCookie(j, node.isLazy());
-                                    }
+                                if(idsArray.indexOf(node.data.key) >= 0) {
+                                    deploy(node);
                                 }
                             })
                         }
 
-
-                        if (idsArray != undefined) {
-                            if (idsArray[i] == '') {
-                                i++;
-                            }
-                            var node = $(treeId).dynatree('getTree').getNodeByKey(idsArray[i]);
-                            if (null != node) {
-                                isLazy ? lazyVisit(node): stdVisit(node);
+                        var deploy = function(node) {
+                            if(node.data.isLazy) {
+                                node.reloadChildren(function(node, isOk){
+                                    if(isOk) {
+                                        expandNode(node);
+                                    }
+                                })
+                            } else {
+                                expandNode(node);
                             }
                         }
+
+                        if (idsArray != undefined) {
+                            //1st level
+                            var roots = $(treeId).dynatree('getTree').getRoot().getChildren();
+                            var keys = {}
+                            for (var i in roots) {
+                                keys[i] = roots[i].data.key;
+                            }
+                            for (var k in keys) {
+                                if(idsArray.indexOf(keys[k])>=0){
+                                    var node = $(treeId).dynatree('getTree').getNodeByKey(keys[k]);
+                                    if (null != node) {
+                                        deploy(node);
+                                    }
+                                }
+                            }
                     }
+                }
 
                     //Dynatree initialization.
                     $(treeId).dynatree({
@@ -629,7 +632,7 @@ $(function() {
                             if (params.displayMode === 'linker') {
                                 initLinker(treeId);
                             } else {
-                                initFromCookie(0, true);
+                                initFromCookie();
                             }
 
                         },
