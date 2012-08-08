@@ -511,6 +511,7 @@ $(function() {
                                     'isLazy': false,
                                     'isTool': true
                                 };
+
                                 root.addChild(node);
 
                                 var rootChildren = eval(jsonroots);
@@ -521,6 +522,7 @@ $(function() {
                                     bindContextMenu(rootChildren[k], '#node_' + rootChildren[k].key, true);
                                }
                             }
+                            initFromCookie(0, false);
                         });
                     };
 
@@ -577,27 +579,40 @@ $(function() {
 
                     //Initialization from the cookie. Fired during the dynatree onPostInit event.
                     //! not working the the linker mode yet.
-                    var initFromCookie = function(i) {
+                    var initFromCookie = function(i, isLazy) {
+                        var lazyVisit = function(node){
+                            node.reloadChildren(function(node, isOk){
+                                if(isOk) {
+                                    node.visit(function(node){
+                                        for (var j in idsArray) {
+                                            if (idsArray[j] == node.data.key) {
+                                                initFromCookie(j, node.isLazy());
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+
+                        var stdVisit = function(node){
+                            node.expand();
+                            node.visit(function(node){
+                                for (var j in idsArray) {
+                                    if (idsArray[j] == node.data.key) {
+                                        initFromCookie(j, node.isLazy());
+                                    }
+                                }
+                            })
+                        }
+
+
                         if (idsArray != undefined) {
                             if (idsArray[i] == '') {
                                 i++;
                             }
-
                             var node = $(treeId).dynatree('getTree').getNodeByKey(idsArray[i]);
                             if (null != node) {
-                                node.appendAjax({
-                                    url: onLazyReadUrl(node),
-                                    success: function(node) {
-                                        var children = node.getChildren();
-                                        for (var i in children) {
-                                            for (var j in idsArray) {
-                                                if (idsArray[j] == children[i].data.key) {
-                                                    initFromCookie(j);
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
+                                isLazy ? lazyVisit(node): stdVisit(node);
                             }
                         }
                     }
@@ -614,7 +629,7 @@ $(function() {
                             if (params.displayMode === 'linker') {
                                 initLinker(treeId);
                             } else {
-                                initFromCookie(0);
+                                initFromCookie(0, true);
                             }
 
                         },
