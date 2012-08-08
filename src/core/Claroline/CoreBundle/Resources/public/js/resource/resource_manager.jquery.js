@@ -58,11 +58,17 @@ $(function() {
                                 workspaceroots: jsonroots
                             });
                             div.append(content);
-                            //Sets the correct displayMode from the cookie.
-                            var array = ClaroUtils.splitCookieValue(document.cookie);
-                            if(array[' displayMode'] != undefined) {
-                                params.displayMode = array[' displayMode'];
+                            //Sets the correct displayMode from the cookie or from the url.
+                            var parameters = ClaroUtils.getUriParameters();
+                            if(parameters['mode'] != undefined) {
+                                params.displayMode = parameters['mode'];
                                 $('#ct_switch_mode').val(params.displayMode);
+                            } else {
+                                var array = ClaroUtils.splitCookieValue(document.cookie);
+                                if(array[' displayMode'] != undefined) {
+                                    params.displayMode = array[' displayMode'];
+                                    $('#ct_switch_mode').val(params.displayMode);
+                                }
                             }
                             if (true === params.checkbox) {
                                 //On download event.
