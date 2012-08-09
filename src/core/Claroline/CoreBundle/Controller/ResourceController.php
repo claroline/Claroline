@@ -268,22 +268,8 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
-
-        $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
-            ->getAllWsOfUser($user);
-        $roots = array();
-
-        // TODO : use a one-to-one relationship between workspace and root directory
-        foreach ($workspaces as $workspace) {
-            $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-                ->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
-            $roots[] = $root;
-        }
-
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:instances.json.twig',
-            array('instances' => $roots)
-        );
+        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
+        $content = $this->generateDynatreeJsonFromSql($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
