@@ -290,7 +290,7 @@ class Manager
             $resType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $split[0]));
             $instances = $repoIns->getChildrenInstanceList($dir, $resType);
             foreach ($instances as $instance) {
-                $toAppend[] = $instance->getId();
+                $toAppend[] = $instance['id'];
             }
         }
 

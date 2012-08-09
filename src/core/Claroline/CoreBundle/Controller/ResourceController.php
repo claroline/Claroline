@@ -327,10 +327,8 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $parent = $repo->find($instanceId);
-        $resourceInstances = $repo->getListableChildren($parent, $resourceTypeId);
-        $content = $this->get('templating')->render(
-            'ClarolineCoreBundle:Resource:instances.json.twig', array('instances' => $resourceInstances)
-        );
+        $results = $repo->getChildrenNodes($parent, $resourceTypeId);
+        $content = $this->generateDynatreeJsonFromSql($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -370,11 +368,8 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
-        $instances = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:instances.json.twig',
-            array('instances' => $instances)
-        );
+        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
+        $content = $this->generateDynatreeJsonFromSql($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -456,13 +451,52 @@ class ResourceController extends Controller
 
         return $this->render('ClarolineCoreBundle:Resource:accessibility_form.html.twig', array('form' => $event->getResponseContent(), 'parentId' => $parentId, 'resourceType' => $resourceType));
     }
-    /*
+
+    //performance test function
     public function getDataTreeAction($rootId) {
         $em = $this->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find(1);
         $root = $repo->find($rootId);
-        $treeNodes = $repo->children($root, false, null, 'asc', true);
+        $results = $repo->getChildrenInstanceList($root, $resourceType);
+        $json = $this->generateDynatreeJsonFromSql($results);
 
-        return new Response(var_dump(count($treeNodes)));
-    }*/
+        return new Response(var_dump($json));
+    }
+
+    private function generateDynatreeJsonFromSql($results)
+    {
+        $json = "[";
+        $i = 0;
+        foreach ($results as $key => $item){
+            $stringitem ='';
+            if($i != 0){
+                $stringitem.=",";
+            } else {
+                $i++;
+            }
+            $stringitem.= '{';
+            $stringitem.= ' "title": "'.$item['name'].'", ';
+            $stringitem.= ' "key": "'.$item['id'].'", ';
+            $stringitem.= ' "instanceId": "'.$item['id'].'", ';
+            $stringitem.= ' "resourceId": "'.$item['resource_id'].'", ';
+            $stringitem.= ' "type": "'.$item['type'].'", ';
+            $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
+            $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
+            $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
+            if ($item['icon'] != null ){
+                $stringitem.= ' ", icon": "'.$item['icon'].'" ';
+            }
+            if ($item['is_navigable'] != 0) {
+                $stringitem.=', "isFolder": true ';
+                $stringitem.=', "isLazy": true ';
+            }
+            $stringitem.='}';
+            $json.=$stringitem;
+        }
+
+        $json.="]";
+
+        return $json;
+    }
 }

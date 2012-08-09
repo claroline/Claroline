@@ -105,3 +105,7 @@ claro_resource_accessibility_form:
     defaults: { _controller: ClarolineCoreBundle:Resource:accessibilityFormCreation }
     options:
         expose: true
+
+claro_resource_data_tree:
+    pattern: /datatree/{rootId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:getDataTree }
