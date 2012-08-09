@@ -10,10 +10,7 @@
         "type": "{{ instance.getResource().getResourceType().getType() }}",
         "typeId": "{{ instance.getResource().getResourceType().getId() }}",
         "workspaceId": "{{ instance.getWorkspace().getId() }}",
-        "path" : "{{ instance.getPath() }}",
-        "dateInstanceCreation" : "{{ instance.getCreationDate()|date('m/d/Y') }}",
-        "tooltip":
-            "added by {{ instance.getCreator().getUsername() }} the {{ instance.getCreationDate()|date('m/d/Y') }}\ncreated by {{ instance.getResource().getCreator().getUsername() }} the {{ instance.getResource().getCreationDate()|date('m/d/Y') }}\nthis instance is {{ instance.getResource().getShareType(true) }}\npath is {{ instance.getPath() }} "
+        "dateInstanceCreation" : "{{ instance.getCreationDate()|date('m/d/Y') }}"
         {% if instance.getResourceType.getNavigable() == 1 %}
             ,"isFolder": true
             ,"isLazy": true
