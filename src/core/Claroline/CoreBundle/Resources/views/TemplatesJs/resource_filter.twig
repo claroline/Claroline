@@ -1,0 +1,38 @@
+{% twig_js name="resource_filter" %}
+<div id ='ct_content'>
+    <div id='ct_form'></div><br>
+    <select id='ct_switch_mode' size="1" style='width:125px'>
+        <option value='classic'>Classic</option>
+        <option value='linker'>Linker</option>
+        <option value='spiral'>Spiral</option>
+        <option value='hybrid'>Hybrid</option>
+    </select>
+        <br>
+    <div id = 'rf_left_div' style='float:left;'>
+        <select id = 'select_root' style='width:125px' class='rf_input' multiple = 'multiple'>
+            {% for workspaceroot in workspaceroots %}
+                <option value = {{ workspaceroot.workspaceId }}> {{ workspaceroot.title }} </option>
+            {% endfor %}
+        </select><br>
+        <select id = 'select_type' style='width:125px' class='rf_input' multiple = 'multiple'>
+            {% for resourceType in resourceTypes %}
+                    <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+            {% endfor %}
+        </select><br>
+        <input type='text' style='width:120px' class='rf_input' placeholder='text'></input><br>
+        <input id='rf_date_from' type='text' style='width:120px' class='rf_input' placeholder='date début'></input><br>
+        <input id='rf_date_to' type='text' style='width:120px' class='rf_input' placeholder='date fin'></input><br>
+        <button id='ct_download'>download</button><br>
+        <button id='ct_filter'>filter</button><br>
+    </div>
+    <div id ='rf_right_div' style='float:left;'>
+        <div id='source_tree'></div><br>
+        <div id='folder_content'></div>
+    </div>
+</div>
+<script>
+    $( "#rf_date_from" ).datepicker();
+    $( "#rf_date_to" ).datepicker();
+</script>
+
+
