@@ -456,4 +456,13 @@ class ResourceController extends Controller
 
         return $this->render('ClarolineCoreBundle:Resource:accessibility_form.html.twig', array('form' => $event->getResponseContent(), 'parentId' => $parentId, 'resourceType' => $resourceType));
     }
+    /*
+    public function getDataTreeAction($rootId) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $root = $repo->find($rootId);
+        $treeNodes = $repo->children($root, false, null, 'asc', true);
+
+        return new Response(var_dump(count($treeNodes)));
+    }*/
 }
