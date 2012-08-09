@@ -338,27 +338,22 @@ class Manager
 
     private function deleteDirectory($directoryInstance)
     {
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, true);
-
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, false);
         foreach ($children as $child) {
             $rsrc = $child->getResource();
-
-            if ($rsrc->getInstanceCount() === 1 || $rsrc->getCreator() == $this->sc->getToken()->getUser()) {
-
-                if ($child->getResourceType()->getType() === 'directory') {
-                    $this->em->remove($rsrc);
+            if ($rsrc->getInstanceCount() === 1) {
+                if ($child->getResourceType()->getType() == 'directory') {
+                   $this->em->remove($rsrc);
+                   $this->em->flush();
                 } else {
                     $event = new DeleteResourceEvent(array($child->getResource()));
                     $this->ed->dispatch("delete_{$child->getResourceType()->getType()}", $event);
+                    $this->em->flush();
                 }
             }
-
-            $rsrc->removeResourceInstance($child);
-            $this->em->remove($child);
         }
 
         $this->em->remove($directoryInstance->getResource());
-        $this->em->flush();
     }
 
     private function addDirectoryToArchive($resourceInstance, $archive)
@@ -420,7 +415,7 @@ class Manager
                 }
             }
         }
-        if (0!= $nbName) {
+        if (0 != $nbName) {
             $newName = $baseName.'~'.$nbName.'.'.pathinfo($resourceInstance->getName(), PATHINFO_EXTENSION);
         } else {
             $newName = $resourceInstance->getName();

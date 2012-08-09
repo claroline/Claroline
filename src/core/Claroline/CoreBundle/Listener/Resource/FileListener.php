@@ -76,8 +76,10 @@ class FileListener extends ContainerAware
             $pathName = $this->container->getParameter('claroline.files.directory')
                 . DIRECTORY_SEPARATOR
                 . $file->getHashName();
-            chmod($pathName, 0777);
-            unlink($pathName);
+            if(file_exists($pathName)){
+                chmod($pathName, 0777);
+                unlink($pathName);
+            }
         }
 
         $event->stopPropagation();
