@@ -184,4 +184,54 @@ class ResourceInstanceRepository extends NestedTreeRepository
                 ->query($sql)
                 ->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    public function getRoots($user) {
+        $sql = "
+            SELECT
+            ri.id as id,
+            ri.name as name,
+            ri.created as created,
+            ri.updated as updated,
+            ri.lft as lft,
+            ri.lvl as lvl,
+            ri.rgt as rgt,
+            ri.root as root,
+            ri.parent_id as parent_id,
+            ri.workspace_id as workspace_id,
+            ri.resource_id as resource_id,
+            uri.id as instance_creator_id,
+            uri.username as instance_creator_username,
+            ures.id as resource_creator_id,
+            ures.username as resource_creator_username,
+            rt.id as resource_type_id,
+            rt.type as type,
+            rt.is_navigable as is_navigable,
+            rt.icon as icon
+            FROM claro_resource_instance ri
+            INNER JOIN  claro_user uri
+            ON uri.id = ri.user_id
+            INNER JOIN claro_resource res
+            ON res.id = ri.resource_id
+            INNER JOIN claro_resource_type rt
+            ON res.resource_type_id = rt.id
+            INNER JOIN claro_user ures
+            ON res.user_id = ures.id
+            WHERE ri.parent_id IS NULL
+            AND ri.workspace_id IN(
+                SELECT cw.id FROM claro_workspace cw
+                INNER JOIN claro_role cr
+                ON cr.workspace_id = cw.id
+                INNER JOIN claro_user_role cur
+                ON cur.role_id = cr.id
+                INNER JOIN claro_user cu
+                ON cu.id = cur.user_id
+                WHERE cu.id = {$user->getId()}
+                )
+           ";
+
+        return $this->_em
+            ->getConnection()
+            ->query($sql)
+            ->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
