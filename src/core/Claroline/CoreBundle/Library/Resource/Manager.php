@@ -304,16 +304,10 @@ class Manager
      *
      * @return string
      */
-    public function initClassicMode($ids)
+    public function initTreeMode($ids, $resourceTypeId = 0)
     {
         $ids = explode(',', $ids);
-        //removes 'trashes' from the cookie
-        /*
-        foreach ($ids as $key => $id){
-            if(!is_int($id)){
-                unset($ids[$key]);
-            }
-        }*/
+
         $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
         $jsonstring = $this->generateDynatreeJsonFromSql($roots);
         for ($i = 0; count($ids) > 0; $i++) {
@@ -321,7 +315,7 @@ class Manager
             if (array_key_exists($i, $ids)) {
                 if (strpos($jsonstring, '"key": "' . $ids[$i] . '"') != false) {
                     $found = true;
-                    $nodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getChildrenNodes($ids[$i]);
+                    $nodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getChildrenNodes($ids[$i], $resourceTypeId);
                     $substring = 'children" :' . $this->generateDynatreeJsonFromSql($nodes);
                     $replace = '"key": "' . $ids[$i] . '", "' . $substring;
                     $jsonstring = str_replace('"key": "' . $ids[$i] . '"', $replace, $jsonstring);

@@ -31,17 +31,43 @@ class DashboardController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $cookie = $request->cookies->all();
-            $manager = $this->get('claroline.resource.manager');
-            $string = null;
-            if(isset($cookie['dynatree_classic-expand'])){
-                $string = $cookie['dynatree_classic-expand'];
-            }
-            $response = new Response($manager->initClassicMode($string));
-            $response->headers->set('Content-Type', 'application/json');
 
-            return $response;
+            if (isset($cookie['displayMode'])) {
+
+                switch($cookie['displayMode']) {
+                    case 'classic': $content = $this->initClassic($cookie);break;
+                    case 'hybrid' : $content = $this->initHybrid($cookie);break;
+                }
+
+                $response = new Response($content);
+                $response->headers->set('Content-Type', 'application/json');
+
+                return $response;
+            }
         }
 
         return $this->render('ClarolineCoreBundle:Dashboard:resources.html.twig');
+    }
+
+    private function initClassic($cookie)
+    {
+        $manager = $this->get('claroline.resource.manager');
+        $string = null;
+        if (isset($cookie['dynatree_classic-expand'])) {
+            $string = $cookie['dynatree_classic-expand'];
+        }
+
+        return $manager->initTreeMode($string);
+    }
+
+    private function initHybrid($cookie)
+    {
+        $manager = $this->get('claroline.resource.manager');
+        $string = null;
+        if (isset($cookie['dynatree_hybrid-expand'])) {
+            $string = $cookie['dynatree_hybrid-expand'];
+        }
+        //directory type id is 2
+        return $manager->initTreeMode($string, 2);
     }
 }
