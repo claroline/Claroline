@@ -364,7 +364,8 @@ class Manager
 
             $stringitem.= '{';
             $stringitem.= '"title": "'.$resourceType->getType().'"';
-            $stringitem.= ',"children": '.$jsonRootsString;
+            $tmpJsonRootsString = str_replace('"key": "', '"key": "'.$resourceType->getType().'_', $jsonRootsString);
+            $stringitem.= ',"children": '.$tmpJsonRootsString;
             $stringitem.= ',"isFolder": true';
             $stringitem.= ',"id": "'.$resourceType->getId().'"';
             $stringitem.= '}';
@@ -386,7 +387,7 @@ class Manager
     {
         $json = "[";
         $i = 0;
-        foreach ($results as $key => $item){
+        foreach ($results as $item){
             $stringitem ='';
             if($i != 0){
                 $stringitem.=",";
