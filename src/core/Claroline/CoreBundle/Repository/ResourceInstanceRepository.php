@@ -91,36 +91,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getChildrenInstanceList(ResourceInstance $resourceInstance, ResourceType $resourceType)
     {
-        $sql = "
-            SELECT
-            ri.id as id,
-            ri.name as name,
-            ri.created as created,
-            ri.updated as updated,
-            ri.lft as lft,
-            ri.lvl as lvl,
-            ri.rgt as rgt,
-            ri.root as root,
-            ri.parent_id as parent_id,
-            ri.workspace_id as workspace_id,
-            ri.resource_id as resource_id,
-            uri.id as instance_creator_id,
-            uri.username as instance_creator_username,
-            ures.id as resource_creator_id,
-            ures.username as resource_creator_username,
-            rt.id as resource_type_id,
-            rt.type as type,
-            rt.is_navigable as is_navigable,
-            rt.icon as icon
-            FROM claro_resource_instance ri
-            INNER JOIN  claro_user uri
-            ON uri.id = ri.user_id
-            INNER JOIN claro_resource res
-            ON res.id = ri.resource_id
-            INNER JOIN claro_resource_type rt
-            ON res.resource_type_id = rt.id
-            INNER JOIN claro_user ures
-            ON res.user_id = ures.id
+        $sql = $this->selectSqlInstance()."
             WHERE ri.lft > {$resourceInstance->getLft()}
             AND ri.rgt < {$resourceInstance->getRgt()}
             AND rt.type = '{$resourceType->getType()}'
@@ -141,38 +112,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getChildrenNodes($parent, $resourceTypeId = 0, $isListable = true)
     {
-        $sql = "
-            SELECT
-            ri.id as id,
-            ri.name as name,
-            ri.created as created,
-            ri.updated as updated,
-            ri.lft as lft,
-            ri.lvl as lvl,
-            ri.rgt as rgt,
-            ri.root as root,
-            ri.parent_id as parent_id,
-            ri.workspace_id as workspace_id,
-            ri.resource_id as resource_id,
-            uri.id as instance_creator_id,
-            uri.username as instance_creator_username,
-            ures.id as resource_creator_id,
-            ures.username as resource_creator_username,
-            rt.id as resource_type_id,
-            rt.type as type,
-            rt.is_navigable as is_navigable,
-            rt.icon as icon
-            FROM claro_resource_instance ri
-            INNER JOIN  claro_user uri
-            ON uri.id = ri.user_id
-            INNER JOIN claro_resource res
-            ON res.id = ri.resource_id
-            INNER JOIN claro_resource_type rt
-            ON res.resource_type_id = rt.id
-            INNER JOIN claro_user ures
-            ON res.user_id = ures.id
-            WHERE
-            ri.parent_id = {$parent->getId()}
+        $sql = $this->selectSqlInstance()."
+            WHERE ri.parent_id = {$parent->getId()}
             AND rt.is_listable = {$isListable}
             ";
             if ($resourceTypeId != 0) {
@@ -186,36 +127,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
     }
 
     public function getRoots($user) {
-        $sql = "
-            SELECT
-            ri.id as id,
-            ri.name as name,
-            ri.created as created,
-            ri.updated as updated,
-            ri.lft as lft,
-            ri.lvl as lvl,
-            ri.rgt as rgt,
-            ri.root as root,
-            ri.parent_id as parent_id,
-            ri.workspace_id as workspace_id,
-            ri.resource_id as resource_id,
-            uri.id as instance_creator_id,
-            uri.username as instance_creator_username,
-            ures.id as resource_creator_id,
-            ures.username as resource_creator_username,
-            rt.id as resource_type_id,
-            rt.type as type,
-            rt.is_navigable as is_navigable,
-            rt.icon as icon
-            FROM claro_resource_instance ri
-            INNER JOIN  claro_user uri
-            ON uri.id = ri.user_id
-            INNER JOIN claro_resource res
-            ON res.id = ri.resource_id
-            INNER JOIN claro_resource_type rt
-            ON res.resource_type_id = rt.id
-            INNER JOIN claro_user ures
-            ON res.user_id = ures.id
+        $sql = $this->selectSqlInstance()."
             WHERE ri.parent_id IS NULL
             AND ri.workspace_id IN(
                 SELECT cw.id FROM claro_workspace cw
@@ -233,5 +145,41 @@ class ResourceInstanceRepository extends NestedTreeRepository
             ->getConnection()
             ->query($sql)
             ->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    //ri resource_instance
+    //uri user resource instance
+    //ures user resource
+    //rt resource type
+    private function selectSqlInstance() {
+            return "SELECT
+            ri.id as id,
+            ri.name as name,
+            ri.created as created,
+            ri.updated as updated,
+            ri.lft as lft,
+            ri.lvl as lvl,
+            ri.rgt as rgt,
+            ri.root as root,
+            ri.parent_id as parent_id,
+            ri.workspace_id as workspace_id,
+            ri.resource_id as resource_id,
+            uri.id as instance_creator_id,
+            uri.username as instance_creator_username,
+            ures.id as resource_creator_id,
+            ures.username as resource_creator_username,
+            rt.id as resource_type_id,
+            rt.type as type,
+            rt.is_navigable as is_navigable,
+            rt.icon as icon
+            FROM claro_resource_instance ri
+            INNER JOIN  claro_user uri
+            ON uri.id = ri.user_id
+            INNER JOIN claro_resource res
+            ON res.id = ri.resource_id
+            INNER JOIN claro_resource_type rt
+            ON res.resource_type_id = rt.id
+            INNER JOIN claro_user ures
+            ON res.user_id = ures.id";
     }
 }
