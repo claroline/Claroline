@@ -297,6 +297,94 @@ class Manager
         return array_merge($toAppend, $resIds);
     }
 
+    /**
+     * Returns the json represenation of the current state of the datatree for the classic mode.
+     *
+     * @param string $ids (from a cookie)
+     *
+     * @return string
+     */
+    public function initClassicMode($ids)
+    {
+        $ids = explode(',', $ids);
+        //removes 'trashes' from the cookie
+        /*
+        foreach ($ids as $key => $id){
+            if(!is_int($id)){
+                unset($ids[$key]);
+            }
+        }*/
+        $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
+        $jsonstring = $this->generateDynatreeJsonFromSql($roots);
+        for ($i = 0; count($ids) > 0; $i++) {
+            $found = false;
+            if (array_key_exists($i, $ids)) {
+                if (strpos($jsonstring, '"key": "' . $ids[$i] . '"') != false) {
+                    $found = true;
+                    $nodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getChildrenNodes($ids[$i]);
+                    $substring = 'children" :' . $this->generateDynatreeJsonFromSql($nodes);
+                    $replace = '"key": "' . $ids[$i] . '", "' . $substring;
+                    $jsonstring = str_replace('"key": "' . $ids[$i] . '"', $replace, $jsonstring);
+
+                    unset($ids[$i]);
+                    $i = 0;
+                }
+            }
+            $size = count($ids);
+            $size--;
+            if ($i == $size) {
+                $i = 0;
+                if ($found == false) {
+                    return $jsonstring;
+                }
+            }
+        }
+        return $jsonstring;
+    }
+
+    /**
+     * Generates a json representation of resources from a sql response from the ResourceInstanceRepository.
+     *
+     * @param array $results
+     *
+     * @return string
+     */
+    public function generateDynatreeJsonFromSql($results)
+    {
+        $json = "[";
+        $i = 0;
+        foreach ($results as $key => $item){
+            $stringitem ='';
+            if($i != 0){
+                $stringitem.=",";
+            } else {
+                $i++;
+            }
+            $stringitem.= '{';
+            $stringitem.= ' "title": "'.$item['name'].'", ';
+            $stringitem.= ' "key": "'.$item['id'].'", ';
+            $stringitem.= ' "instanceId": "'.$item['id'].'", ';
+            $stringitem.= ' "resourceId": "'.$item['resource_id'].'", ';
+            $stringitem.= ' "type": "'.$item['type'].'", ';
+            $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
+            $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
+            $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
+            if ($item['icon'] != null ){
+                $stringitem.= ' ", icon": "'.$item['icon'].'" ';
+            }
+            if ($item['is_navigable'] != 0) {
+                $stringitem.=', "isFolder": true ';
+                $stringitem.=', "isLazy": true ';
+            }
+            $stringitem.='}';
+            $json.=$stringitem;
+        }
+
+        $json.="]";
+
+        return $json;
+    }
+
     private function createCopy(ResourceInstance $resourceInstance)
     {
         $user = $this->sc->getToken()->getUser();
@@ -423,5 +511,4 @@ class Manager
 
         return $newName;
     }
-
 }
