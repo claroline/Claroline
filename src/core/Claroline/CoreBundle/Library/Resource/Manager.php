@@ -298,9 +298,10 @@ class Manager
     }
 
     /**
-     * Returns the json represenation of the current state of the datatree for the classic mode.
+     * Returns the json represenation of the current state of the datatree for the classic/hybrid mode.
      *
      * @param string $ids (from a cookie)
+     * @param integer resourceTypeId (helpfull for the hybrid mode)
      *
      * @return string
      */
@@ -334,6 +335,44 @@ class Manager
             }
         }
         return $jsonstring;
+    }
+
+    /**
+     * Returns the json represenation of the current state of the datatree for the linker mode.
+     *
+     * @param string $ids (from a cookie)
+     *
+     * @return string
+     */
+    public function initLinkerMode($ids)
+    {
+        //1st & 2nd levels always known
+        $repoType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceTypes = $repoType->findNavigableResourceTypeWithoutDirectory();
+
+        $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
+        $jsonRootsString = $this->generateDynatreeJsonFromSql($roots);
+        $json ="[";
+        $i = 0;
+        foreach ($resourceTypes as $resourceType) {
+            $stringitem = '';
+            if ($i != 0) {
+                $stringitem.=",";
+            } else {
+                $i++;
+            }
+
+            $stringitem.= '{';
+            $stringitem.= '"title": "'.$resourceType->getType().'"';
+            $stringitem.= ',"children": '.$jsonRootsString;
+            $stringitem.= ',"isFolder": true';
+            $stringitem.= ',"id": "'.$resourceType->getId().'"';
+            $stringitem.= '}';
+            $json.=$stringitem;
+        }
+        $json.=']';
+
+        return $json;
     }
 
     /**
