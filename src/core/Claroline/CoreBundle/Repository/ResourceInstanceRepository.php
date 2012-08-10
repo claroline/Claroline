@@ -110,20 +110,27 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
-    public function getChildrenNodes($parent, $resourceTypeId = 0, $isListable = true)
+    public function getChildrenNodes($parentId, $resourceTypeId = 0, $isListable = true)
     {
         $sql = $this->selectSqlInstance()."
-            WHERE ri.parent_id = {$parent->getId()}
+            WHERE ri.parent_id = {$parentId}
             AND rt.is_listable = {$isListable}
             ";
             if ($resourceTypeId != 0) {
                 $sql .= "AND rt.id = {$resourceTypeId}";
             }
 
-        return $this->_em
-                ->getConnection()
-                ->query($sql)
-                ->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $this->_em
+            ->getConnection()
+            ->query($sql);
+
+        $instances = array();
+
+        while ($row = $result->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
     }
 
     public function getRoots($user) {
@@ -141,10 +148,17 @@ class ResourceInstanceRepository extends NestedTreeRepository
                 )
            ";
 
-        return $this->_em
+        $result = $this->_em
             ->getConnection()
-            ->query($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC);
+            ->query($sql);
+
+        $instances = array();
+
+        while ($row = $result->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
     }
 
     //ri resource_instance

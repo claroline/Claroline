@@ -485,45 +485,10 @@ $(function() {
                 function createTree(treeId)
                 {
                     //We already loaded the workspaces roots at the beginning, so we know the 1st level of the tree.
-                    var initChildren = function() {
-                        if (params.displayMode === 'classic' || params.displayMode === 'hybrid') {
-                            return jsonroots;
-                        } else {
-                            return [];
-                        }
-                    };
-
-                    //The linker mode is a bit wierd. This is the 1st level initialization.
-                    var initLinker = function() {
-                        ClaroUtils.sendRequest(Routing.generate('claro_resource_types'), function(data) {
-                            //JSON.parse not working: why ?
-                            var resourceTypes = eval(data);
-                            var root = $(treeId).dynatree('getTree').getRoot();
-                            for (var i in resourceTypes) {
-                                var node = {
-                                    'id': resourceTypes[i].id,
-                                    'key': resourceTypes[i].type,
-                                    'title': resourceTypes[i].type,
-                                    'tooltip': resourceTypes[i].type,
-                                    'type': resourceTypes[i].type,
-                                    'shareType': 1,
-                                    'isFolder': true,
-                                    'isLazy': false,
-                                    'isTool': true
-                                };
-
-                                root.addChild(node);
-
-                                var rootChildren = jsonroots;
-
-                                $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).addChild(rootChildren);
-                                rootChildren = $(treeId).dynatree('getTree').getNodeByKey(resourceTypes[i].type).getChildren();
-                                for (var k in rootChildren) {
-                                    bindContextMenu(rootChildren[k], '#node_' + rootChildren[k].key, true);
-                                    rootChildren[k].data.key = resourceTypes[i].type+rootChildren[k].data.key
-                               }
-                            }
-                            initFromCookie();
+                    var initTree = function() {
+                        ClaroUtils.sendRequest(Routing.generate('claro_dashboard_resources'),function(data){
+                            var children = data;
+                            dynatreeCreation(children);
                         });
                     };
 
@@ -570,56 +535,10 @@ $(function() {
                             }
                         });
                     }
-                    //1st children level.
-                    var children = initChildren();
-                    var array = ClaroUtils.splitCookieValue(document.cookie);
+                //1st children level.
+                initTree();
 
-                    if (array[' dynatree_' + params.displayMode + '-expand'] != undefined && array[' dynatree-expand'] != '') {
-                        var idsArray = array[' dynatree_' + params.displayMode + '-expand'].split('%2C');
-                    }
-
-                    //Initialization from the cookie. Fired during the dynatree onPostInit event.
-                    //! not working the the linker mode yet. It can't work because the key is the same for the directories root
-                    var initFromCookie = function() {
-                        var expandNode = function(node) {
-                            node.expand();
-                            node.visit(function(node){
-                                if(idsArray.indexOf(node.data.key) >= 0) {
-                                    deploy(node);
-                                }
-                            })
-                        }
-
-                        var deploy = function(node) {
-                            if(node.data.isLazy) {
-                                node.reloadChildren(function(node, isOk){
-                                    if(isOk) {
-                                        expandNode(node);
-                                    }
-                                })
-                            } else {
-                                expandNode(node);
-                            }
-                        }
-
-                        if (idsArray != undefined) {
-                            //1st level
-                            var roots = $(treeId).dynatree('getTree').getRoot().getChildren();
-                            var keys = {}
-                            for (var i in roots) {
-                                keys[i] = roots[i].data.key;
-                            }
-                            for (var k in keys) {
-                                if(idsArray.indexOf(keys[k])>=0){
-                                    var node = $(treeId).dynatree('getTree').getNodeByKey(keys[k]);
-                                    if (null != node) {
-                                        deploy(node);
-                                    }
-                                }
-                            }
-                    }
-                }
-
+                var dynatreeCreation = function(children){
                     //Dynatree initialization.
                     $(treeId).dynatree({
                         checkbox: true,
@@ -628,14 +547,6 @@ $(function() {
                         imagePath: ClaroUtils.findLoadedJsPath('resource_manager.jquery.js') + '../../../../../../icons/',
                         title: 'myTree',
                         children: children,
-                        onPostInit: function(isReloading, isError) {
-                            if (params.displayMode === 'linker') {
-                                initLinker(treeId);
-                            } else {
-                                initFromCookie();
-                            }
-
-                        },
                         clickFolderMode: 1,
                         selectMode: 3,
                         onLazyRead: function(node) {
@@ -718,6 +629,7 @@ $(function() {
                             }
                         }
                     });
+                }
                 }
                 return (this);
             });

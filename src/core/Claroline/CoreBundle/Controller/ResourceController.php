@@ -269,7 +269,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        $content = $this->generateDynatreeJsonFromSql($results);
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromSql($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -312,9 +312,8 @@ class ResourceController extends Controller
         }
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $parent = $repo->find($instanceId);
-        $results = $repo->getChildrenNodes($parent, $resourceTypeId);
-        $content = $this->generateDynatreeJsonFromSql($results);
+        $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromSql($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -355,7 +354,7 @@ class ResourceController extends Controller
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->generateDynatreeJsonFromSql($results);
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromSql($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -403,6 +402,12 @@ class ResourceController extends Controller
         return new Response('success');
     }
 
+    /**
+     * Renders an accessibility version of the resource manager.
+     *
+     * @param integer $parentId
+     * @return Response
+     */
     public function accessibilityManagerAction($parentId)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -429,6 +434,14 @@ class ResourceController extends Controller
         return $this->render('ClarolineCoreBundle:Resource:accessibility_manager.html.twig', array('instances' => $instances, 'parent' => $parent, 'resourceTypes' => $resourceTypes));
     }
 
+    /**
+     * Renders an accessibility version of resource creation.
+     *
+     * @param string $resourceType
+     * @param integer $parentId
+     *
+     * @return Response
+     */
     public function accessibilityFormCreationAction($resourceType, $parentId)
     {
         $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create_form', $resourceType);
@@ -448,41 +461,5 @@ class ResourceController extends Controller
         $json = $this->generateDynatreeJsonFromSql($results);
 
         return new Response(var_dump($json));
-    }
-
-    private function generateDynatreeJsonFromSql($results)
-    {
-        $json = "[";
-        $i = 0;
-        foreach ($results as $key => $item){
-            $stringitem ='';
-            if($i != 0){
-                $stringitem.=",";
-            } else {
-                $i++;
-            }
-            $stringitem.= '{';
-            $stringitem.= ' "title": "'.$item['name'].'", ';
-            $stringitem.= ' "key": "'.$item['id'].'", ';
-            $stringitem.= ' "instanceId": "'.$item['id'].'", ';
-            $stringitem.= ' "resourceId": "'.$item['resource_id'].'", ';
-            $stringitem.= ' "type": "'.$item['type'].'", ';
-            $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
-            $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
-            $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
-            if ($item['icon'] != null ){
-                $stringitem.= ' ", icon": "'.$item['icon'].'" ';
-            }
-            if ($item['is_navigable'] != 0) {
-                $stringitem.=', "isFolder": true ';
-                $stringitem.=', "isLazy": true ';
-            }
-            $stringitem.='}';
-            $json.=$stringitem;
-        }
-
-        $json.="]";
-
-        return $json;
     }
 }
