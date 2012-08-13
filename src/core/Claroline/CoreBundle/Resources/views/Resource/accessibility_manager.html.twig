@@ -1,0 +1,50 @@
+{% extends "ClarolineCoreBundle:Dashboard:layout.html.twig" %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/resource/accessibility_manager.js')}}'></script>
+{% endblock %}
+{% block section_content %}
+<select id='switch_mode' size="1" style='width:125px'>
+    <option value='classic'>Classic</option>
+    <option value='linker'>Linker</option>
+    <option value='spiral'>Spiral</option>
+    <option value='hybrid'>Hybrid</option>
+</select>
+{% if parent != null %}
+    <div id='claro_data' data-parent_id='{{parent.getId()}}'></div>
+    <br>
+    <select id='select_type' style='width:125px' class='rf_input'>
+    {% for resourceType in resourceTypes %}
+        <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+    {% endfor %}
+    </select>
+    <button id='submit_select'>créer</button>
+    <br>
+    {% if parent.getParent() != null %}
+        <a href='{{ path('claro_resource_accessibility_manager', {'parentId':parent.getParent().getId()})}}'>retour</a><br>
+    {% else %}
+        <a href='{{ path('claro_resource_accessibility_manager')}}'>retour</a><br>
+    {% endif %}
+{% endif %}
+
+{% for instance in instances %}
+    <div class='accessibility_instance'>
+        <img src='{{ asset('icons/biblio_spiral.png')}}'>
+        {% if instance.getResource().getResourceType().getType() == 'directory' %}
+            <a href='{{ path('claro_resource_accessibility_manager', {'parentId':instance.getId()})}}'> {{ instance.name }} </a>
+            {% else %}
+                {{ instance.name }}
+            {% endif %}
+            <div class='accessibility_action'>
+            <a href='{{ path('claro_resource_export', {'instanceId': instance.getId()}) }}'>export</a>
+            <!-- reload the page -->
+            <a href='{{ path('claro_resource_delete', {'instanceId': instance.getId()}) }}' onclick="window.location.reload();">delete</a>
+            <a href='{{ path('claro_resource_properties_form', {'resourceId': instance.getId()})}}'>properties</a>
+            {% for customAction in instance.getResource().getResourceType().getCustomActions() %}
+                <a href='{{ path('claro_resource_custom', {'resourceType': customAction.getResourceType().getType(), 'action': customAction.getAction(), 'resourceId': instance.getResource().getId()}) }}"'>{{ customAction.getAction() }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}
