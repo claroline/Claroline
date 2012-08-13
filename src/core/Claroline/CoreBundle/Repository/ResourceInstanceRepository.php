@@ -10,6 +10,36 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class ResourceInstanceRepository extends NestedTreeRepository
 {
+    const SELECT_INSTANCE = "SELECT
+            ri.id as id,
+            ri.name as name,
+            ri.created as created,
+            ri.updated as updated,
+            ri.lft as lft,
+            ri.lvl as lvl,
+            ri.rgt as rgt,
+            ri.root as root,
+            ri.parent_id as parent_id,
+            ri.workspace_id as workspace_id,
+            ri.resource_id as resource_id,
+            uri.id as instance_creator_id,
+            uri.username as instance_creator_username,
+            ures.id as resource_creator_id,
+            ures.username as resource_creator_username,
+            rt.id as resource_type_id,
+            rt.type as type,
+            rt.is_navigable as is_navigable,
+            rt.icon as icon
+            FROM claro_resource_instance ri
+            INNER JOIN  claro_user uri
+            ON uri.id = ri.user_id
+            INNER JOIN claro_resource res
+            ON res.id = ri.resource_id
+            INNER JOIN claro_resource_type rt
+            ON res.resource_type_id = rt.id
+            INNER JOIN claro_user ures
+            ON res.user_id = ures.id";
+
     public function getWSListableRootResource(AbstractWorkspace $ws)
     {
         $dql = "
@@ -91,19 +121,20 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getChildrenInstanceList(ResourceInstance $resourceInstance, ResourceType $resourceType)
     {
-        $sql = $this->selectSqlInstance()."
-            WHERE ri.lft > {$resourceInstance->getLft()}
-            AND ri.rgt < {$resourceInstance->getRgt()}
-            AND rt.type = '{$resourceType->getType()}'
+        $sql = self::SELECT_INSTANCE."
+            WHERE ri.lft > :left
+            AND ri.rgt < :right
+            AND rt.type = :type
             ";
 
-        $result = $this->_em
-            ->getConnection()
-            ->query($sql);
-
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('left', $resourceInstance->getLft());
+        $stmt->bindValue('right', $resourceInstance->getRgt());
+        $stmt->bindValue('type', $resourceType->getType());
+        $stmt->execute();
         $instances = array();
 
-        while ($row = $result->fetch()) {
+        while ($row = $stmt->fetch()) {
             $instances[$row['id']] = $row;
         }
 
@@ -112,21 +143,25 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getChildrenNodes($parentId, $resourceTypeId = 0, $isListable = true)
     {
-        $sql = $this->selectSqlInstance()."
-            WHERE ri.parent_id = {$parentId}
-            AND rt.is_listable = {$isListable}
+        $sql = self::SELECT_INSTANCE."
+            WHERE ri.parent_id = :parentId
+            AND rt.is_listable = :isListable
             ";
             if ($resourceTypeId != 0) {
-                $sql .= "AND rt.id = {$resourceTypeId}";
+                $sql .= "AND rt.id = :resourceTypeId";
             }
 
-        $result = $this->_em
-            ->getConnection()
-            ->query($sql);
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('parentId', $parentId);
+        $stmt->bindValue('isListable', $isListable);
+        if($resourceTypeId != 0) {
+            $stmt->bindValue('resourceTypeId', $resourceTypeId);
+        }
+        $stmt->execute();
 
         $instances = array();
 
-        while ($row = $result->fetch()) {
+        while ($row = $stmt->fetch()) {
             $instances[$row['id']] = $row;
         }
 
@@ -134,7 +169,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
     }
 
     public function getRoots($user) {
-        $sql = $this->selectSqlInstance()."
+        $sql = self::SELECT_INSTANCE."
             WHERE ri.parent_id IS NULL
             AND ri.workspace_id IN(
                 SELECT cw.id FROM claro_workspace cw
@@ -144,56 +179,20 @@ class ResourceInstanceRepository extends NestedTreeRepository
                 ON cur.role_id = cr.id
                 INNER JOIN claro_user cu
                 ON cu.id = cur.user_id
-                WHERE cu.id = {$user->getId()}
+                WHERE cu.id = :userId
                 )
            ";
 
-        $result = $this->_em
-            ->getConnection()
-            ->query($sql);
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
 
         $instances = array();
 
-        while ($row = $result->fetch()) {
+        while ($row = $stmt->fetch()) {
             $instances[$row['id']] = $row;
         }
 
         return $instances;
-    }
-
-    //ri resource_instance
-    //uri user resource instance
-    //ures user resource
-    //rt resource type
-    private function selectSqlInstance() {
-            return "SELECT
-            ri.id as id,
-            ri.name as name,
-            ri.created as created,
-            ri.updated as updated,
-            ri.lft as lft,
-            ri.lvl as lvl,
-            ri.rgt as rgt,
-            ri.root as root,
-            ri.parent_id as parent_id,
-            ri.workspace_id as workspace_id,
-            ri.resource_id as resource_id,
-            uri.id as instance_creator_id,
-            uri.username as instance_creator_username,
-            ures.id as resource_creator_id,
-            ures.username as resource_creator_username,
-            rt.id as resource_type_id,
-            rt.type as type,
-            rt.is_navigable as is_navigable,
-            rt.icon as icon
-            FROM claro_resource_instance ri
-            INNER JOIN  claro_user uri
-            ON uri.id = ri.user_id
-            INNER JOIN claro_resource res
-            ON res.id = ri.resource_id
-            INNER JOIN claro_resource_type rt
-            ON res.resource_type_id = rt.id
-            INNER JOIN claro_user ures
-            ON res.user_id = ures.id";
     }
 }
