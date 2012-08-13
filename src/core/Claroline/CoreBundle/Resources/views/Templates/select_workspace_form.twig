@@ -1,7 +1,0 @@
-{% twig_js name="select_workspace_form" %}
-<form id ='select_workspace_form'>
-    {% for workspace in workspaces %}
-        <input type='radio' name='options' value={{ workspace.getId() }}>{{ workspace.getName() }}<br>
-    {% endfor %}
-    <input type='submit' id='select_workspace_submit'>
-</form>
