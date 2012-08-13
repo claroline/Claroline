@@ -53,7 +53,8 @@ class ResourceInstance
     /**
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      inversedBy="resourceInstances"
+     *      inversedBy="resourceInstances",
+     *      fetch="EAGER"
      * )
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */

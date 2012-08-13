@@ -5,3 +5,5 @@ claro_dashboard_index:
 claro_dashboard_resources:
     pattern: /resources
     defaults: { _controller: ClarolineCoreBundle:Dashboard:resourceManager }
+    options:
+        expose: true

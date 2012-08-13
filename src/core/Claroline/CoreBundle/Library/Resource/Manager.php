@@ -290,11 +290,132 @@ class Manager
             $resType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $split[0]));
             $instances = $repoIns->getChildrenInstanceList($dir, $resType);
             foreach ($instances as $instance) {
-                $toAppend[] = $instance->getId();
+                $toAppend[] = $instance['id'];
             }
         }
 
         return array_merge($toAppend, $resIds);
+    }
+
+    /**
+     * Returns the json represenation of the current state of the datatree for the classic/hybrid mode.
+     *
+     * @param string $ids (from a cookie)
+     * @param integer resourceTypeId (helpfull for the hybrid mode)
+     *
+     * @return string
+     */
+    public function initTreeMode($ids, $resourceTypeId = 0)
+    {
+        $ids = explode(',', $ids);
+
+        $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
+        $jsonstring = $this->generateDynatreeJsonFromSql($roots);
+        for ($i = 0; count($ids) > 0; $i++) {
+            $found = false;
+            if (array_key_exists($i, $ids)) {
+                if (strpos($jsonstring, '"key": "' . $ids[$i] . '"') != false) {
+                    $found = true;
+                    $nodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getChildrenNodes($ids[$i], $resourceTypeId);
+                    $substring = 'children" :' . $this->generateDynatreeJsonFromSql($nodes);
+                    $replace = '"key": "' . $ids[$i] . '", "' . $substring;
+                    $jsonstring = str_replace('"key": "' . $ids[$i] . '"', $replace, $jsonstring);
+
+                    unset($ids[$i]);
+                    $i = 0;
+                }
+            }
+            $size = count($ids);
+            $size--;
+            if ($i == $size) {
+                $i = 0;
+                if ($found == false) {
+                    return $jsonstring;
+                }
+            }
+        }
+        return $jsonstring;
+    }
+
+    /**
+     * Returns the json represenation of the current state of the datatree for the linker mode.
+     *
+     * @param string $ids (from a cookie)
+     *
+     * @return string
+     */
+    public function initLinkerMode($ids)
+    {
+        //1st & 2nd levels always known
+        $repoType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceTypes = $repoType->findNavigableResourceTypeWithoutDirectory();
+
+        $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
+        $jsonRootsString = $this->generateDynatreeJsonFromSql($roots);
+        $json ="[";
+        $i = 0;
+        foreach ($resourceTypes as $resourceType) {
+            $stringitem = '';
+            if ($i != 0) {
+                $stringitem.=",";
+            } else {
+                $i++;
+            }
+
+            $stringitem.= '{';
+            $stringitem.= '"title": "'.$resourceType->getType().'"';
+            $stringitem.= ',"children": '.$jsonRootsString;
+            $stringitem.= ',"isFolder": true';
+            $stringitem.= ',"id": "'.$resourceType->getId().'"';
+            $stringitem.= '}';
+            $json.=$stringitem;
+        }
+        $json.=']';
+
+        return $json;
+    }
+
+    /**
+     * Generates a json representation of resources from a sql response from the ResourceInstanceRepository.
+     *
+     * @param array $results
+     *
+     * @return string
+     */
+    public function generateDynatreeJsonFromSql($results)
+    {
+        $json = "[";
+        $i = 0;
+        foreach ($results as $key => $item){
+            $stringitem ='';
+            if($i != 0){
+                $stringitem.=",";
+            } else {
+                $i++;
+            }
+            $stringitem.= '{';
+            $stringitem.= ' "title": "'.$item['name'].'", ';
+            $stringitem.= ' "key": "'.$item['id'].'", ';
+            $stringitem.= ' "instanceId": "'.$item['id'].'", ';
+            $stringitem.= ' "resourceId": "'.$item['resource_id'].'", ';
+            $stringitem.= ' "type": "'.$item['type'].'", ';
+            $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
+            $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
+            $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
+            if ($item['icon'] != null ){
+                $stringitem.= ' ", icon": "'.$item['icon'].'" ';
+            }
+            if ($item['is_navigable'] != 0) {
+                $stringitem.=', "isFolder": true ';
+                $stringitem.=', "isLazy": true ';
+            }
+            $stringitem.='}';
+            $json.=$stringitem;
+        }
+
+        $json.="]";
+
+        return $json;
     }
 
     private function createCopy(ResourceInstance $resourceInstance)
@@ -338,27 +459,22 @@ class Manager
 
     private function deleteDirectory($directoryInstance)
     {
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, true);
-
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, false);
         foreach ($children as $child) {
             $rsrc = $child->getResource();
-
-            if ($rsrc->getInstanceCount() === 1 || $rsrc->getCreator() == $this->sc->getToken()->getUser()) {
-
-                if ($child->getResourceType()->getType() === 'directory') {
-                    $this->em->remove($rsrc);
+            if ($rsrc->getInstanceCount() === 1) {
+                if ($child->getResourceType()->getType() == 'directory') {
+                   $this->em->remove($rsrc);
+                   $this->em->flush();
                 } else {
                     $event = new DeleteResourceEvent(array($child->getResource()));
                     $this->ed->dispatch("delete_{$child->getResourceType()->getType()}", $event);
+                    $this->em->flush();
                 }
             }
-
-            $rsrc->removeResourceInstance($child);
-            $this->em->remove($child);
         }
 
         $this->em->remove($directoryInstance->getResource());
-        $this->em->flush();
     }
 
     private function addDirectoryToArchive($resourceInstance, $archive)
@@ -420,7 +536,7 @@ class Manager
                 }
             }
         }
-        if (0!= $nbName) {
+        if (0 != $nbName) {
             $newName = $baseName.'~'.$nbName.'.'.pathinfo($resourceInstance->getName(), PATHINFO_EXTENSION);
         } else {
             $newName = $resourceInstance->getName();
@@ -428,5 +544,4 @@ class Manager
 
         return $newName;
     }
-
 }
