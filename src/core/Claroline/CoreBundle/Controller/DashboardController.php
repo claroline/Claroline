@@ -41,11 +41,13 @@ class DashboardController extends Controller
                     case 'linker' : $content = $this->initLinker($cookie);break;
                 }
             } else {
+
                 $content = $this->initClassic($cookie);
             }
 
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
+
             return $response;
         }
 
@@ -55,10 +57,10 @@ class DashboardController extends Controller
     private function initClassic($cookie)
     {
         $manager = $this->get('claroline.resource.manager');
-        $string = '';
+        $string = null;
         if (isset($cookie['dynatree_classic-expand'])) {
             $string = $cookie['dynatree_classic-expand'];
-        } else
+        }
 
         return $manager->initTreeMode($string);
     }
@@ -66,7 +68,7 @@ class DashboardController extends Controller
     private function initHybrid($cookie)
     {
         $manager = $this->get('claroline.resource.manager');
-        $string = '';
+        $string = null;
         if (isset($cookie['dynatree_hybrid-expand'])) {
             $string = $cookie['dynatree_hybrid-expand'];
         }
@@ -77,7 +79,7 @@ class DashboardController extends Controller
    private function initLinker($cookie)
     {
         $manager = $this->get('claroline.resource.manager');
-        $string = '';
+        $string = null;
         if (isset($cookie['dynatree_linker-expand'])) {
             $string = $cookie['dynatree_linker-expand'];
         }
