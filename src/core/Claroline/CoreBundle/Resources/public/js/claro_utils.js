@@ -1,4 +1,4 @@
-(function () {
+(function ($, window, undefined) {
 
     $('#bootstrap-modal').modal({
         show: false,
@@ -149,4 +149,4 @@
 
         return vars;
     }
-})();
+})(jQuery, window);

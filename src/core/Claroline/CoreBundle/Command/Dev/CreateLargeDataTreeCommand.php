@@ -13,6 +13,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 class CreateLargeDataTreeCommand extends ContainerAwareCommand
 {
+    var $directoryCount = 0;
+    var $fileCount = 0;
+
     protected function configure()
     {
         $this->setName('claroline:datatree:create')
@@ -71,6 +74,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
             ->findOneBy(array ('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
 
         $this->generateItems($depth, $directoryCount, $fileCount, $userRootDirectory, $user);
+        echo "\n+++++++++++++++++++ FILE +++++++++++++++++++++++: $this->filesCount";
+        echo "\n+++++++++++++++++++ DIR +++++++++++++++++++++++: $this->directoryCount";
         $em->flush();
 
     }
@@ -90,13 +95,23 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
 
         for ($j = 0; $j < $directoryCount; $j++) {
             $ri = $this->addDirectory($this->generateGuid(), $parent, $dirType, $user);
+            $this->directoryCount++;
+            if ($this->directoryCount%100 === 0) {
+                $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+            }
             for ($k = 0; $k < $fileCount; $k++) {
                 $this->addFile($this->generateGuid(), $ri, $fileType, $user);
+                $this->filesCount++;
+                if ($this->filesCount%100 === 0) {
+                    $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+                }
             }
 
             echo($depth.' - '.$j.'\n');
             $this->generateItems($depth, $directoryCount, $fileCount, $ri, $user);
         }
+
+
     }
 
     private function addDirectory($name, $parent, $dirType, $user) {
