@@ -193,18 +193,13 @@ class Manager
      *
      * @return file
      */
-    public function multiExport($type)
+    public function multiExport()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->container->get('claroline.listener.file_listener')->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        switch ($type) {
-            case 'classic': $instanceIds = $this->getClassicExportList($this->container->get('request')->query->all());
-                break;
-            case 'linker': $instanceIds = $this->getLinkerExportList($this->container->get('request')->query->all());
-                break;
-        }
+        $instanceIds = $this->getClassicExportList($this->container->get('request')->query->all());
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
@@ -273,30 +268,6 @@ class Manager
         return array_merge($toAppend, $resIds);
     }
 
-    public function getLinkerExportList($instanceIds)
-    {
-        $repoIns = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
-        $dirPseudoIds = array();
-        $resIds = array();
-        $toAppend = array();
-
-        foreach ($instanceIds as $instanceId) {
-             (true == is_numeric($instanceId) || true == is_int($instanceId)) ? $resIds[] = $instanceId : $dirPseudoIds[] = $instanceId;
-        }
-
-        foreach($dirPseudoIds as $dirPseudoId) {
-            $split = explode('_', $dirPseudoId);
-            $dir = $repoIns->find($split[1]);
-            $resType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $split[0]));
-            $instances = $repoIns->getChildrenInstanceList($dir, $resType);
-            foreach ($instances as $instance) {
-                $toAppend[] = $instance['id'];
-            }
-        }
-
-        return array_merge($toAppend, $resIds);
-    }
-
     /**
      * Returns the json represenation of the current state of the datatree for the classic/hybrid mode.
      *
@@ -305,6 +276,7 @@ class Manager
      *
      * @return string
      */
+    //check the if the id list is correct because it can go for an infinite loop otherwise.
     public function initTreeMode($ids, $resourceTypeId = 0)
     {
         $ids = explode(',', $ids);
