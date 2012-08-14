@@ -30,6 +30,7 @@ class Creator
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setType($config->getType());
+        $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
         $this->entityManager->flush();
         $workspace->initBaseRoles();
@@ -41,7 +42,7 @@ class Creator
         $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
         $root = new ResourceInstance();
         $rootDir = new Directory();
-        $root->setName($workspace->getName());
+        $root->setName($workspace->getCode().' - '.$workspace->getName());
         $rootDir->setShareType(0);
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager

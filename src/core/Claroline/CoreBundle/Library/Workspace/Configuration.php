@@ -12,6 +12,7 @@ class Configuration
 
     private $workspaceType;
     private $workspaceName;
+    private $workspaceCode;
     private $isPublic;
     private $visitorTranslationKey;
     private $collaboratorTranslationKey;
@@ -112,5 +113,15 @@ class Configuration
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new RuntimeException('Workspace name must be a non empty string');
         }
+    }
+
+    public function setWorkspaceCode($workspaceCode)
+    {
+        $this->workspaceCode = $workspaceCode;
+    }
+
+    public function getWorkspaceCode()
+    {
+        return $this->workspaceCode;
     }
 }

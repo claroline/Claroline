@@ -37,6 +37,12 @@ abstract class AbstractWorkspace
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $code;
+
+    /**
      * @ORM\Column(type="integer", length=255)
      */
     private $type;
@@ -273,5 +279,15 @@ abstract class AbstractWorkspace
     public function getType()
     {
         return $this->type;
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
     }
 }

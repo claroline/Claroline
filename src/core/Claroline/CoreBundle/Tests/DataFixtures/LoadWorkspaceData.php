@@ -35,12 +35,12 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
         $admin = $this->getReference('user/admin');
         $wsCreator = $this->getReference('user/ws_creator');
 
-        $wsA = $this->createSimpleWorkspace('Workspace_A', $wsCreator);
-        $wsB = $this->createSimpleWorkspace('Workspace_B', $wsCreator);
-        $wsC = $this->createSimpleWorkspace('Workspace_C', $wsCreator);
-        $wsD = $this->createSimpleWorkspace('Workspace_D', $wsCreator);
-        $wsE = $this->createSimpleWorkspace('Workspace_E', $admin);
-        $wsF = $this->createSimpleWorkspace('Workspace_F', $admin);
+        $wsA = $this->createSimpleWorkspace('Workspace_A', $wsCreator, 'wsA');
+        $wsB = $this->createSimpleWorkspace('Workspace_B', $wsCreator, 'wsB');
+        $wsC = $this->createSimpleWorkspace('Workspace_C', $wsCreator, 'wsC');
+        $wsD = $this->createSimpleWorkspace('Workspace_D', $wsCreator, 'wsD');
+        $wsE = $this->createSimpleWorkspace('Workspace_E', $admin, 'wsE');
+        $wsF = $this->createSimpleWorkspace('Workspace_F', $admin, 'wsF');
 
         $wsD->setPublic(false);
         $wsE->setPublic(false);
@@ -68,11 +68,12 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
         $this->addReference('workspace/ws_f', $wsF);
     }
 
-    private function createSimpleWorkspace($name, $user)
+    private function createSimpleWorkspace($name, $user, $code)
     {
         $wsCreator = $this->container->get('claroline.workspace.creator');
         $config = new Configuration();
         $config->setWorkspaceName($name);
+        $config->setWorkspaceCode($code);
         $ws = $wsCreator->createWorkspace($config, $user);
 
         return $ws;
