@@ -40,6 +40,7 @@ class WorkspaceRepositoryTest extends FixtureTestCase
     {
         $config = new Configuration();
         $config->setWorkspaceName($name);
+        $config->setWorkspaceCode('code');
         $wsCreator = $this->client->getContainer()->get('claroline.workspace.creator');
 
         return $wsCreator->createWorkspace($config, $user);

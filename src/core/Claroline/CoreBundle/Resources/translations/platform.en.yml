@@ -7,6 +7,13 @@ administration: Administration
 dashboard: Dashboard
 home: Home
 my_account: My account
+my_workspace: My workspace
+my_resources: My resources
+my_contacts: My contacts
+my_notes: My notes
+my_portfolio: My portfolio
+my_agenda: My agenda
+all_workspaces: All workspaces
 
 # administration links
 add_user: Add user

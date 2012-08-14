@@ -24,7 +24,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSCreatorCanSeeHisWS()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $link = $crawler->filter('#link_workspace')->link();
+        $link = $crawler->filter('#link_all_workspaces')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_owned_WS')->link();
         $crawler = $this->client->click($link);
@@ -34,7 +34,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testAdminCanSeeHisWs()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_workspace')->link();
+        $link = $crawler->filter('#link_all_workspaces')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_owned_WS')->link();
         $crawler = $this->client->click($link);
@@ -45,13 +45,14 @@ class WorkspaceControllerTest extends FunctionalTestCase
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', "/workspace/{$this->getFixtureReference('user/ws_creator')->getId()}/list.page");
-        $link = $crawler->filter('#link_workspace')->link();
+        $link = $crawler->filter('#link_all_workspaces')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_create_WS_form')->link();
         $crawler = $this->client->click($link);
         $form = $crawler->filter('input[type=submit]')->form();
         $form['workspace_form[name]'] = 'new_workspace';
         $form['workspace_form[type]'] = 'simple';
+        $form['workspace_form[code]'] = 'code';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspace/{$this->getFixtureReference('user/ws_creator')->getId()}/list.page");
         $this->assertEquals(5, $crawler->filter('.row_workspace')->count());

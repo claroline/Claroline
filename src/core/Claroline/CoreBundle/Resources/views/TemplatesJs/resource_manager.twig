@@ -1,0 +1,20 @@
+{% twig_js name="resource_manager" %}
+<div id ='ct_content'>
+    <div id='ct_form'></div><br>
+    <select id='ct_switch_mode' size="1" style='width:125px'>
+        <option value='classic'>Classic</option>
+        <option value='spiral'>Spiral</option>
+    </select>
+    <br>
+    <div id ='rf_right_div' style='float:left;'>
+        <div id='source_tree'></div><br>
+        <button id='ct_download'>download</button><br>
+        <div id='folder_content'></div>
+    </div>
+</div>
+<script>
+    $( "#rf_date_from" ).datepicker();
+    $( "#rf_date_to" ).datepicker();
+</script>
+
+

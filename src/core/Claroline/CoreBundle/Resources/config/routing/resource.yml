@@ -35,7 +35,7 @@ claro_resource_export:
         expose: true
 
 claro_multi_export:
-    pattern: /multiexport/{type}
+    pattern: /multiexport
     defaults: { _controller: ClarolineCoreBundle:Resource:multiExport }
     options:
         expose: true
