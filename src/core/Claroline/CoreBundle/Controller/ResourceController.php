@@ -244,9 +244,9 @@ class ResourceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiExportAction($type)
+    public function multiExportAction()
     {
-        $file = $this->get('claroline.resource.manager')->multiExport($type);
+        $file = $this->get('claroline.resource.manager')->multiExport();
         $response = new Response();
         $response->setContent($file);
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');

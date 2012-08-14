@@ -149,51 +149,10 @@
                     filterTreeToDate($('#rf_date_to').val());
                 }
             }
-
-            if ($('#ct_switch_mode').val() == 'linker') {
-                if ($('#select_root').val()) {
-                    var types = $('#source_tree').dynatree('getRoot').getChildren();
-                    for (var i in types) {
-                        filterTreeByWorkspace($('#select_root').val(), types[i]);
-                    }
-                }
-
-                if ($('#select_type').val() !== null) {
-                    filterTreeByType($('#select_type').val());
-                }
-
-                if ($('#rf_date_from').val() !== '') {
-                    filterTreeFromDate($('#rf_date_from').val());
-                }
-
-                if ($('#rf_date_to').val() !== '') {
-                    filterTreeToDate($('#rf_date_to').val());
-                }
-            }
-
-            if ($('#ct_switch_mode').val() == 'hybrid') {
-                if ($('#select_root').val() !== null) {
-                    filterTreeByWorkspace(($('#select_root').val()));
-                }
-
-                if ($('#select_type').val() !== null) {
-                    filterBlobByType($('#select_type').val());
-                }
-
-                if ($('#rf_date_from').val() !== '') {
-                    filterBlobFromDate($('#rf_date_from').val());
-                }
-
-                if ($('#rf_date_to').val() !== '') {
-                    filterBlobToDate($('#rf_date_to').val());
-                }
-            }
-
         });
     }
 
-    filter.getActiveFilters()
-    {
+    filter.getActiveFilters = function(){
         var activeFilters = {};
         activeFilters.root = $('#select_root').val();
         activeFilters.type = $('#select_type').val();

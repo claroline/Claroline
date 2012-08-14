@@ -112,7 +112,7 @@
                                 }
                             }
                         }
-                        parameters.type = params.displayMode;
+
                         window.location = Routing.generate('claro_multi_export', parameters);
                     });
                 }
@@ -122,14 +122,6 @@
                     params.displayMode = $('#ct_switch_mode').val();
                     if (params.displayMode == 'spiral') {
                         window.location = Routing.generate('claro_resource_accessibility_manager');
-                    } else {
-                        //The tree must be reloaded.
-                        $('#source_tree').dynatree('destroy');
-                        $('#source_tree').empty();
-                        $('#folder_content').empty();
-                        createTree('#source_tree');
-                        //cookie for ... wich is the currentDisplayMode.
-                        $.cookie('displayMode', params.displayMode);
                     }
                 });
 
@@ -333,19 +325,6 @@
                 if (params.displayMode === 'classic') {
                     url = Routing.generate('claro_resource_children', {
                         'instanceId': node.data.instanceId
-                    });
-                }
-                if (params.displayMode === 'hybrid') {
-                    url = Routing.generate('claro_resource_children', {
-                        'instanceId': node.data.instanceId,
-                        //always directory
-                        'resourceTypeId': node.data.typeId
-                    });
-                }
-                if (params.displayMode === 'linker') {
-                    url = Routing.generate('claro_resources_list', {
-                        'resourceTypeId': node.parent.data.id,
-                        'rootId': node.data.instanceId
                     });
                 }
 
