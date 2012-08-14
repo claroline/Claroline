@@ -31,6 +31,7 @@ class CreatorTest extends FunctionalTestCase
     {
         $config = new Configuration();
         $config->setWorkspaceName('Workspace Foo');
+        $config->setWorkspaceCode('WFOO');
         $user = $this->getFixtureReference('user/user');
 
         $workspace = $this->creator->createWorkspace($config, $user);
@@ -49,6 +50,7 @@ class CreatorTest extends FunctionalTestCase
         $config = new Configuration();
         $config->setWorkspaceType(Configuration::TYPE_AGGREGATOR);
         $config->setWorkspaceName('Workspace Bar');
+        $config->setWorkspaceCode('WBAR');
         $config->setPublic(true);
         $config->setVisitorTranslationKey('Guest');
         $config->setCollaboratorTranslationKey('Student');
@@ -70,6 +72,7 @@ class CreatorTest extends FunctionalTestCase
 
         $config = new Configuration();
         $config->setWorkspaceName('Workspace Test');
+        $config->setWorkspaceCode('WTEST');
 
         $workspace = $this->creator->createWorkspace($config, $manager);
         $this->logUser($manager);

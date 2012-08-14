@@ -11,6 +11,7 @@
    {% javascripts
       "@ClarolineCoreBundle/Resources/views/TemplatesJs/move_resource_form.twig"
       "@ClarolineCoreBundle/Resources/views/TemplatesJs/select_workspace_form.twig"
+      "@ClarolineCoreBundle/Resources/views/TemplatesJs/resource_manager.twig"
       "@ClarolineCoreBundle/Resources/views/TemplatesJs/resource_filter.twig"
        filter="twig_js"
     %}
@@ -20,6 +21,7 @@
     <script src='{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}' type="text/javascript"></script>
     <script src='{{ asset('bundles/clarolinecore/js/resource/resource_manager.jquery.js')}}' type="text/javascript"></script>
     <script src='{{ asset('bundles/clarolinecore/js/dashboard/resource_manager.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/datatree_filter.js') }}' type="text/javascript"></script>
 {% endblock %}
 
 {% block section_content %}

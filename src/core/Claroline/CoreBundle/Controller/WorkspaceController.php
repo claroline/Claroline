@@ -128,6 +128,7 @@ class WorkspaceController extends Controller
             $config = new Configuration();
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
+            $config->setWorkspaceCode($form->get('code')->getData());
             $user = $this->get('security.context')->getToken()->getUser();
             $wsCreator = $this->get('claroline.workspace.creator');
             $wsCreator->createWorkspace($config, $user);

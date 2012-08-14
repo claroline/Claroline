@@ -24,6 +24,7 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
         $this->config = new Configuration();
         $this->config->setWorkspaceType($type);
         $this->config->setWorkspaceName("my workspace");
+        $this->config->setWorkspaceCode("perso");
     }
 
     public function setContainer(ContainerInterface $container = null)

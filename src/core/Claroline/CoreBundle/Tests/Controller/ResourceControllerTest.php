@@ -227,36 +227,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
         $this->client->request(
             'GET',
-            "/resource/multiexport/classic?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+            "/resource/multiexport?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
         );
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
         //the archive content should be tested
-    }
-
-    //this test should be improved but there is no other "exportable" resource atm.
-    public function testMultiExportLinker()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createBigTree($this->userRoot[0]->getId());
-        $pseudoId = 'file_'.$this->userRoot[0]->getId();
-        $this->client->request(
-            'GET',
-            "/resource/multiexport/linker?0={$pseudoId}"
-        );
-        $headers = $this->client->getResponse()->headers;
-        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
-        //the archive content should be tested
-    }
-
-    public function testGetEveryInstancesIdsFromTheLinkerMultiExportArray()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
-        $this->createForum($theBigTree[0]->key, 'lonelyForum');
-        $pseudoId = 'file_'.$this->userRoot[0]->getId();
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getLinkerExportList((array) $pseudoId);
-        $this->assertEquals(3, count($toExport));
     }
 
     public function testCustomActionThrowExceptionOnUknownAction()

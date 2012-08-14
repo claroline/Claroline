@@ -44,11 +44,18 @@ class LayoutController extends Controller
         $username = null;
         $registerTarget = null;
         $loginTarget = null;
+        $workspaces = null;
+        $personalWs = null;
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($user instanceof User) {
             $connected = true;
             $username = $user->getFirstName() . ' ' . $user->getLastName();
+            $workspaces = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+                ->getAllWsOfUser($user);
+            $personalWs = $user->getPersonalWorkspace();
+
         } else {
             $configHandler = $this->get('claroline.config.platform_config_handler');
 
@@ -60,13 +67,16 @@ class LayoutController extends Controller
             $loginTarget = 'claro_dashboard_index';
         }
 
+
         return $this->render(
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
                 'connected' => $connected,
                 'username' => $username,
                 'register_target' => $registerTarget,
-                'login_target' => $loginTarget
+                'login_target' => $loginTarget,
+                'workspaces' => $workspaces,
+                'personalWs' => $personalWs
             )
         );
     }
