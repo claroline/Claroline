@@ -7,6 +7,13 @@ administration: Administration
 dashboard: Tableau de bord
 home: Accueil
 my_account: Mon compte
+my_workspace: Mon espace de travail
+my_resources: Mes resources
+my_contacts: Mes contacts
+my_notes: Mes notes
+my_portfolio: Mon portfolio
+my_agenda: Mon agenda
+all_workspaces: Tous les espaces
 
 # administration links
 add_user: Ajouter un utilisateur

@@ -24,7 +24,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSCreatorCanSeeHisWS()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $link = $crawler->filter('#link_workspace')->link();
+        $link = $crawler->filter('#link_all_workspaces')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_owned_WS')->link();
         $crawler = $this->client->click($link);
@@ -34,7 +34,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testAdminCanSeeHisWs()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_workspace')->link();
+        $link = $crawler->filter('#link_all_workspaces')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_owned_WS')->link();
         $crawler = $this->client->click($link);
@@ -45,7 +45,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', "/workspace/{$this->getFixtureReference('user/ws_creator')->getId()}/list.page");
-        $link = $crawler->filter('#link_workspace')->link();
+        $link = $crawler->filter('#link_all_workspaces')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_create_WS_form')->link();
         $crawler = $this->client->click($link);
