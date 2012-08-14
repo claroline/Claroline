@@ -78,7 +78,7 @@
                         {% for workspace in workspaces %}
                             <li>
                              <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" id="link_workspace_{{ workspace.getId() }}">
-                             {{ workspace.getName() }}
+                             {{workspace.getCode()}} - {{ workspace.getName() }}
                              </a>
                             </li>
                         {% endfor %}

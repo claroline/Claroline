@@ -35,7 +35,7 @@ class ProfileType extends BaseProfileType
                     'expanded' => false,
                     'multiple' => true,
                     'property' => 'name',
-                    'disabled' => true
+                    'disabled' => false
                 )
             );
         } else {

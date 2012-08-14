@@ -56,7 +56,8 @@ class RegistrationController extends Controller
             $em->persist($user);
             $config = new Configuration();
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $config->setWorkspaceName('my workspace');
+            $config->setWorkspaceName($user->getUsername());
+            $config->setWorkspaceCode('PERSO');
             $wsCreator = $this->get('claroline.workspace.creator');
             $workspace = $wsCreator->createWorkspace($config, $user);
             $workspace->setType(AbstractWorkspace::STANDARD);

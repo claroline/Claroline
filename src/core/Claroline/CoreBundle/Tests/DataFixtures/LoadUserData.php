@@ -42,6 +42,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $config = new Configuration();
         $config->setWorkspaceType($type);
         $config->setWorkspaceName("my workspace");
+        $config->setWorkspaceCode("PERSO");
 
         $user = new User();
         $user->setFirstName('Jane');

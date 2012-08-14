@@ -52,6 +52,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $form = $crawler->filter('input[type=submit]')->form();
         $form['workspace_form[name]'] = 'new_workspace';
         $form['workspace_form[type]'] = 'simple';
+        $form['workspace_form[code]'] = 'code';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspace/{$this->getFixtureReference('user/ws_creator')->getId()}/list.page");
         $this->assertEquals(5, $crawler->filter('.row_workspace')->count());
