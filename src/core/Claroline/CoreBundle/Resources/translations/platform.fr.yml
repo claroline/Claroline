@@ -15,6 +15,11 @@ my_portfolio: Mon portfolio
 my_agenda: Mon agenda
 all_workspaces: Tous les espaces
 
+# tabs
+dashboard_tab_info: Informations
+dashboard_tab_perso: Perso
+dashboard_tab_resources: Ressources
+
 # administration links
 add_user: Ajouter un utilisateur
 list_users: Lister les utilisateurs
@@ -137,3 +142,4 @@ unregister: Désinscription
 # resource type
 directory: Répertoire
 file: Fichier
+

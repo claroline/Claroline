@@ -15,6 +15,11 @@ my_portfolio: My portfolio
 my_agenda: My agenda
 all_workspaces: All workspaces
 
+# tabs
+dashboard_tab_info: Informations
+dashboard_tab_perso: Perso
+dashboard_tab_resources: Resources
+
 # administration links
 add_user: Add user
 list_users: List users
@@ -141,3 +146,4 @@ unregister: Unregister
 # resource type
 directory: Directory
 file: File
+
