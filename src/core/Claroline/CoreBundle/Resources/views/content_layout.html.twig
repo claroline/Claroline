@@ -1,8 +1,6 @@
 {% extends 'ClarolineCoreBundle::common_layout.html.twig' %}
 
 {% block global_content %}
-    
-    {% render 'ClarolineCoreBundle:Layout:topBar' %}
 
     {% if app.session.hasFlash('notice') %}
     <div class="flash_msg flash_notice">
@@ -17,8 +15,7 @@
     {% endif %}
 
     <div id="content" class="container-fluid">
-    {% block content %}
-    {% endblock %}
+        {% block content %}{% endblock %}
     </div>
 
 {% endblock %}
