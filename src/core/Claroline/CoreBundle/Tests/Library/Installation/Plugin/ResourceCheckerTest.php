@@ -96,4 +96,11 @@ class ResourceCheckerTest extends WebTestCase
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
         $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_ICON, $errors[0]->getCode());
     }
+
+    public function testCheckerReturnsAnErrorOnUnexpectedThumbnail()
+    {
+        $pluginFqcn = 'Invalid\UnexpectedThumbnail\InvalidUnexpectedThumbnail';
+        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_THUMBNAIL, $errors[0]->getCode());
+    }
 }

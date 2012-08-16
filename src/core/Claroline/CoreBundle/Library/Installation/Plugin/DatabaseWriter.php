@@ -179,6 +179,15 @@ class DatabaseWriter
                     $img = $imgFolder.$ds.$properties['icon'];
                     copy($img, $this->imgPath.$ds.$properties['icon']);
                 }
+
+                // TODO : this should be moved to another part of the installation process
+                if (isset($properties['thumbnail'])) {
+                    $resourceType->setThumbnail($properties['thumbnail']);
+                    $ds = DIRECTORY_SEPARATOR;
+                    $imgFolder = $plugin->getImgFolder();
+                    $img = $imgFolder.$ds.$properties['thumbnail'];
+                    copy($img, $this->imgPath.$ds.$properties['thumbnail']);
+                }
             }
         }
     }
