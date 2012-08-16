@@ -4,9 +4,9 @@
 
 /* TO DO: add sticky footer when Twitter Bootstrap add functionality for this. */
 footer{
- height:40px;
- background-color: #000000;
- color: #FFFFFF;
+    height:40px;
+    background-color: #000;
+    color: #999;
 }
 
 #content{
