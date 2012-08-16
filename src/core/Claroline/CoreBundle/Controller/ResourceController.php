@@ -419,7 +419,7 @@ class ResourceController extends Controller
             ->findNavigableResourceTypeWithoutDirectory();
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('divPrefix' => $prefix, 'workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
+            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('divPrefix' => $prefix, 'workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
         );
     }
 

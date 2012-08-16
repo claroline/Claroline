@@ -114,7 +114,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
 
     }
 
-    private function addDirectory($name, $parent, $dirType, $user) {
+    private function addDirectory($name, $parent, $dirType, $user)
+    {
         $dir = new Directory();
         $dir->setResourceType($dirType);
         $dir->setCreator($user);
