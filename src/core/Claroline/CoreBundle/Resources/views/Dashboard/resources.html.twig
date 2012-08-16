@@ -21,17 +21,16 @@
             <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
         {% endfor %}
     </select>
-     <button id='dr_submit_select'>new</button>
-    <div id='div_resource'>
-        <div id ='dr_resource_manager_content'>
-    <div id='dr_manager_options' style='float:right;'>
-        <button id='dr_tree_button'>Arbre</button>
-        <button id='dr_thumbnail_button'>vignette</button><br>
-        <input type='checkbox' id='dr_is_flat' value='1'>vue "plate"</input>
+    <button id='dr_submit_select'>new</button>
+    <div id ='dr_resource_manager_content'>
+        <div id='dr_manager_options' style='float:right;'>
+            <button id='dr_tree_button'>Arbre</button>
+            <button id='dr_thumbnail_button'>vignette</button><br>
+            <input type='checkbox' id='dr_is_flat' value='1'>vue "plate"</input>
+        </div>
+        <div id='dr_div_form'></div>
+        <a href='#' id='dr_resources_back'>back</a>
+        <div id='dr_resources_content'></div>
+        <button id='dr_download_button'>{{ 'download'|trans({}, 'platform') }}</button>
     </div>
-    <div id='dr_div_form'></div>
-    <a href='#' id='dr_resources_back'>back</a>
-    <div id='dr_resources_content'></div>
-    <button id='dr_download_button'>{{ 'download'|trans({}, 'platform') }}</button>
-</div>
 {% endblock %}
