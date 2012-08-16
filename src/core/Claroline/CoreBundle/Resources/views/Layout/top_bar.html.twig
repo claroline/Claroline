@@ -3,25 +3,17 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    {% if connected %}
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <span class="icon-bar"></span>
-                        {% endif %}
-                    {% else %}
-                        <span class="icon-bar"></span>
-                        {% if register_target is not null %}
-                            <span class="icon-bar"></span>
-                        {% endif %}
-                    {% endif %}
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </a>
+
                 <a class="brand" href="{{ path('claro_index')}}">Claroline</a>
+
                 {% if connected %}
-                <div class="btn-group pull-right">
+                    <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i> {{ username }}
-                    <span class="caret"></span>
+                        <i class="icon-user"></i> {{ username }}<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
@@ -89,38 +81,44 @@
                             </a>
                         </li>
                     </ul>
-                </div>
-                    {% else %}
+                    </div>
+
+                {% else %}
+
+                    {# Not connected #}
                     <div class="nav-collapse">
                         <ul class="nav pull-right">
-                    {% if register_target is not null %}
-                    <li><a id="link_registration" href="{{ path(register_target) }}">
-                    {{ 'register'|trans({}, 'platform') }}
-                    </a></li>
-                    {% endif %}
+                        {% if register_target is not null %}
+                            <li><a id="link_registration" href="{{ path(register_target) }}">
+                                {{ 'register'|trans({}, 'platform') }}
+                            </a></li>
+                        {% endif %}
                         <li><a href="{{ path(login_target) }}" id="link_login">
-                        {{ 'login'|trans({}, 'platform') }}
+                            {{ 'login'|trans({}, 'platform') }}
                         </a></li>
-                        </div>
-                    {% endif %}
-                <div class="nav-collapse">
-                    <ul class="nav">
+                    </div>
+
+                {% endif %}
+
                 {% if connected %}
-                    <li>
-                        <a href="{{ path('claro_dashboard_index') }}" id="link_dashboard">
-                        {{ 'dashboard'|trans({}, 'platform') }}
-                        </a>
-                    </li>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    <div class="nav-collapse">
+                    <ul class="nav">
                         <li>
-                            <a href="{{ path('claro_admin_index') }}" id="link_administration">
-                            {{ 'administration'|trans({}, 'platform') }}
+                            <a href="{{ path('claro_dashboard_index') }}" id="link_dashboard">
+                            {{ 'dashboard'|trans({}, 'platform') }}
                             </a>
                         </li>
-                    {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a href="{{ path('claro_admin_index') }}" id="link_administration">
+                                {{ 'administration'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
-                </div>
+                    </div>
+                {% endif %}
+                
             </div>
-            {% endif %}
         </div>
     </div>
