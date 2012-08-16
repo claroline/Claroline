@@ -1,0 +1,11 @@
+{% if currentFolder is not null %}
+    <div class='current_folder' data-key='{{currentFolder.id}}'>current folder: {{currentFolder.name}}</div>
+{% endif %}
+{% for instance in resources %}
+    <div id = '{{prefix}}_instance_{{instance.id}}'>
+        {{instance.name}}
+        {% if instance.type == 'directory' %}
+            <a data-key='{{instance.id}}'class='link_navigate_instance' id='{{prefix}}_link_navigate_instance_{{instance.id}}' href="#">navigate</a>
+        {% endif %}
+    </div>
+{% endfor %}

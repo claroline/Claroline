@@ -101,7 +101,7 @@ claro_resource_renders_filter:
         expose: true
 
 claro_resource_renders_thumbnail:
-    pattern: /renders/thumb/{parentId}
+    pattern: /renders/thumb/{parentId}/{prefix}
     defaults: { _controller: ClarolineCoreBundle:Resource:rendersResourceThumbnailView, parentId:0}
     options:
         expose: true
