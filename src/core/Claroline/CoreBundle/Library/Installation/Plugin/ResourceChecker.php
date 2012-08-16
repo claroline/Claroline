@@ -23,6 +23,7 @@ class ResourceChecker implements CheckerInterface
     const INVALID_RESOURCE_CLASS = 'invalid_resource_class';
     const UNLOADABLE_PARENT_RESOURCE = 'unloadable_parent_resource';
     const UNEXPECTED_RESOURCE_ICON = 'unexpected_resource_icon';
+    const UNEXPECTED_RESOURCE_THUMBNAIL = 'unexpected_resource_thumbnail';
 
     private $yamlParser;
     private $plugin;
@@ -202,6 +203,20 @@ class ResourceChecker implements CheckerInterface
                         "{$this->pluginFqcn} : {$resource['icon']} (declared in {$resourceFile}) "
                         . "cannot be found (looked for {$expectedImgLocation}).",
                         self::UNEXPECTED_RESOURCE_ICON
+                    );
+                }
+            }
+
+            if (isset($resource['thumbnail'])) {
+                $ds = DIRECTORY_SEPARATOR;
+                $imgFolder = $this->plugin->getImgFolder();
+                $expectedImgLocation = $imgFolder . $ds . $resource['thumbnail'];
+
+                if (!file_exists($expectedImgLocation)) {
+                    $this->errors[] = new ValidationError(
+                            "{$this->pluginFqcn} : {$resource['thumbnail']} (declared in {$resourceFile}) "
+                            . "cannot be found (looked for {$expectedImgLocation}).",
+                            self::UNEXPECTED_RESOURCE_THUMBNAIL
                     );
                 }
             }

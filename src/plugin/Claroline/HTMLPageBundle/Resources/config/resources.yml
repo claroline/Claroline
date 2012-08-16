@@ -5,3 +5,4 @@ HTMLElement:
     actions:
       open: false
     downloadable: true
+    thumbnail: forum.png
