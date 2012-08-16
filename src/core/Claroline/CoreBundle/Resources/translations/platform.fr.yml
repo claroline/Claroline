@@ -116,6 +116,7 @@ resources: Ressources
 resource_manager: Gestionnaire de ressources
 owner: Propriétaire
 open: Ouvrir
+download: télécharger
 
 # workspace
 workspace: Espace d'activités

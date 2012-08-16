@@ -120,6 +120,7 @@ resources: Resources
 resource_manager: Resource manager
 owner: Owner
 open: Open
+download: download
 
 # workspace
 workspace: Workspace
