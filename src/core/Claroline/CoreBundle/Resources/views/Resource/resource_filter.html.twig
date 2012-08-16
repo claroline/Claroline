@@ -1,0 +1,16 @@
+<div id="{{divPrefix}}_active_filters"></div></br>
+<select id = '{{divPrefix}}_select_root' style='width:125px' multiple = 'multiple'>
+    {% for workspaceroot in workspaceroots %}
+        <option value = {{ workspaceroot.id }}> {{ workspaceroot.name }} </option>
+    {% endfor %}
+</select><br>
+<select id = '{{divPrefix}}_select_type' style='width:125px' multiple = 'multiple'>
+    {% for resourceType in resourceTypes %}
+            <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+    {% endfor %}
+</select><br>
+<input type='text' style='width:120px' placeholder='text'></input><br>
+<input id='{{divPrefix}}_date_from' type='text' style='width:120px' placeholder='date début'></input><br>
+<input id='{{divPrefix}}_date_to' type='text' style='width:120px' placeholder='date fin'></input><br>
+<button id='{{divPrefix}}_filter_button'>filter</button>
+<button id='{{divPrefix}}_reset_button'>reset</button>

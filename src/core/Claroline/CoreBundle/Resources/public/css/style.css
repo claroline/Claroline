@@ -1,0 +1,17 @@
+/* ===== Primary Styles ========================================================
+   Author: Claroline team
+   ========================================================================== */
+
+/* TO DO: add sticky footer when Twitter Bootstrap add functionality for this. */
+footer{
+    height:40px;
+    background-color: #000;
+    color: #999;
+}
+
+#content{
+    min-height: 500px;
+
+}
+
+
