@@ -55,12 +55,10 @@ class ResourceController extends Controller
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
             $instance = $manager->create($resource, $parentInstanceId, $resourceType);
-            $content = $this->renderView(
-                'ClarolineCoreBundle:Resource:instances.json.twig',
-                array('instances' => array($instance))
-            );
+            $phpArray = $manager->convertInstanceToArray($instance);
+            $json = $manager->generateDynatreeJsonFromArray($phpArray);
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($content);
+            $response->setContent($json);
         } else {
             $response->setContent($event->getErrorFormContent());
         }
@@ -269,7 +267,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromSql($results);
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -286,12 +284,11 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-        $roots = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:instances.json.twig',
-            array('instances' => $roots)
-        );
-        $response = new Response($content);
+        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
+        $manager = $this->get('claroline.resource.manager');
+        $phpArray = $manager->convertInstanceToArray($root);
+        $json = $manager->generateDynatreeJsonFromArray($phpArray);
+        $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -313,7 +310,7 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromSql($results);
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -354,7 +351,7 @@ class ResourceController extends Controller
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromSql($results);
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -403,63 +400,32 @@ class ResourceController extends Controller
     }
 
     /**
-     * Renders an accessibility version of the resource manager.
+     * Renders the resource filter
      *
-     * @param integer $parentId
-     * @return Response
-     */
-    public function accessibilityManagerAction($parentId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $parent = null;
-        if ($parentId == 0) {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $workspaces = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->getAllWsOfUser($user);
-            $instances = array();
-
-            foreach ($workspaces as $workspace) {
-                $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-                    ->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
-                $instances[] = $instance;
-            }
-
-        } else {
-            $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-            $parent = $repo->find($parentId);
-            $instances = $repo->getListableChildren($parent, 0);
-        }
-
-        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findBy(array('isListable' => 1));
-
-        return $this->render('ClarolineCoreBundle:Resource:accessibility_manager.html.twig', array('instances' => $instances, 'parent' => $parent, 'resourceTypes' => $resourceTypes));
-    }
-
-    /**
-     * Renders an accessibility version of resource creation.
-     *
-     * @param string $resourceType
-     * @param integer $parentId
+     * @param string $prefix
      *
      * @return Response
      */
-    public function accessibilityFormCreationAction($resourceType, $parentId)
+    public function rendersFiltersAction($prefix)
     {
-        $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create_form', $resourceType);
-        $event = new CreateFormResourceEvent();
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        return $this->render('ClarolineCoreBundle:Resource:accessibility_form.html.twig', array('form' => $event->getResponseContent(), 'parentId' => $parentId, 'resourceType' => $resourceType));
+        $roots = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getRoots($user);
+
+        $resourceTypes = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findNavigableResourceTypeWithoutDirectory();
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:resource_filter.html.twig',
+            array('divPrefix' => $prefix, 'workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
+        );
     }
 
-    //performance test function
-    public function getDataTreeAction($rootId) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find(1);
-        $root = $repo->find($rootId);
-        $results = $repo->getChildrenInstanceList($root, $resourceType);
-        $json = $this->generateDynatreeJsonFromSql($results);
-
-        return new Response(var_dump($json));
+    public function rendersResourceThumbnailViewAction($parentId)
+    {
+        return new Response('list resource');
     }
 }

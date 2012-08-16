@@ -25,31 +25,8 @@ class DashboardController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    //todo also check the url and move the xmlHttp part somewhere else.
     public function resourceManagerAction()
     {
-        $request = $this->get('request');
-
-        if ($request->isXmlHttpRequest()) {
-            $cookie = $request->cookies->all();
-            $content = $this->initClassic($cookie);
-            $response = new Response($content);
-            $response->headers->set('Content-Type', 'application/json');
-
-            return $response;
-        }
-
         return $this->render('ClarolineCoreBundle:Dashboard:resources.html.twig');
-    }
-
-    private function initClassic($cookie)
-    {
-        $manager = $this->get('claroline.resource.manager');
-        $string = null;
-        if (isset($cookie['dynatree_classic-expand'])) {
-            $string = $cookie['dynatree_classic-expand'];
-        }
-
-        return $manager->initTreeMode($string);
     }
 }

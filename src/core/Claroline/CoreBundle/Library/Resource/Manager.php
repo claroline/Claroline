@@ -269,7 +269,7 @@ class Manager
     }
 
     /**
-     * Returns the json represenation of the current state of the datatree for the classic/hybrid mode.
+     * Returns the json represenation of the current state of the datatree for the classic
      *
      * @param string $ids (from a cookie)
      * @param integer resourceTypeId (helpfull for the hybrid mode)
@@ -282,14 +282,14 @@ class Manager
         $ids = explode(',', $ids);
 
         $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
-        $jsonstring = $this->generateDynatreeJsonFromSql($roots);
+        $jsonstring = $this->generateDynatreeJsonFromArray($roots);
         for ($i = 0; count($ids) > 0; $i++) {
             $found = false;
             if (array_key_exists($i, $ids)) {
                 if (strpos($jsonstring, '"key": "' . $ids[$i] . '"') != false) {
                     $found = true;
                     $nodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getChildrenNodes($ids[$i], $resourceTypeId);
-                    $substring = 'children" :' . $this->generateDynatreeJsonFromSql($nodes);
+                    $substring = 'children" :' . $this->generateDynatreeJsonFromArray($nodes);
                     $replace = '"key": "' . $ids[$i] . '", "' . $substring;
                     $jsonstring = str_replace('"key": "' . $ids[$i] . '"', $replace, $jsonstring);
 
@@ -310,52 +310,13 @@ class Manager
     }
 
     /**
-     * Returns the json represenation of the current state of the datatree for the linker mode.
-     *
-     * @param string $ids (from a cookie)
-     *
-     * @return string
-     */
-    public function initLinkerMode($ids)
-    {
-        //1st & 2nd levels always known
-        $repoType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repoType->findNavigableResourceTypeWithoutDirectory();
-
-        $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
-        $jsonRootsString = $this->generateDynatreeJsonFromSql($roots);
-        $json ="[";
-        $i = 0;
-        foreach ($resourceTypes as $resourceType) {
-            $stringitem = '';
-            if ($i != 0) {
-                $stringitem.=",";
-            } else {
-                $i++;
-            }
-
-            $stringitem.= '{';
-            $stringitem.= '"title": "'.$resourceType->getType().'"';
-            $tmpJsonRootsString = str_replace('"key": "', '"key": "'.$resourceType->getType().'_', $jsonRootsString);
-            $stringitem.= ',"children": '.$tmpJsonRootsString;
-            $stringitem.= ',"isFolder": true';
-            $stringitem.= ',"id": "'.$resourceType->getId().'"';
-            $stringitem.= '}';
-            $json.=$stringitem;
-        }
-        $json.=']';
-
-        return $json;
-    }
-
-    /**
      * Generates a json representation of resources from a sql response from the ResourceInstanceRepository.
      *
      * @param array $results
      *
      * @return string
      */
-    public function generateDynatreeJsonFromSql($results)
+    public function generateDynatreeJsonFromArray($results)
     {
         $json = "[";
         $i = 0;
@@ -376,7 +337,10 @@ class Manager
             $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
             $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
             if ($item['icon'] != null ){
-                $stringitem.= ' ", icon": "'.$item['icon'].'" ';
+                $stringitem.= ' , "icon": "'.$item['icon'].'" ';
+            }
+            if ($item['thumbnail'] != null) {
+                $stringitem.= ' , "thumbnail":"'.$item['thumbnail'].'" ';
             }
             if ($item['is_navigable'] != 0) {
                 $stringitem.=', "isFolder": true ';
@@ -389,6 +353,35 @@ class Manager
         $json.="]";
 
         return $json;
+    }
+
+    public function convertInstanceToArray(ResourceInstance $instance)
+    {
+        $instanceArray = array();
+        $instanceArray['id'] = $instance->getId();
+        $instanceArray['name'] = $instance->getName();
+        $instanceArray['created'] = $instance->getCreationDate()->format('d-m-Y H:i:s');
+        $instanceArray['updated'] = $instance->getModificationDate()->format('d-m-Y H:i:s');;
+        $instanceArray['lft'] = $instance->getLft();
+        $instanceArray['lvl'] = $instance->getLvl();
+        $instanceArray['rgt'] = $instance->getRgt();
+        $instanceArray['root'] = $instance->getRoot();
+        ($instance->getParent() != null) ? $instanceArray['parent_id'] = $instance->getParent()->getId() : $instanceArray['parent_id'] = null;
+        $instanceArray['workspace_id'] = $instance->getWorkspace()->getId();
+        $instanceArray['resource_id'] = $instance->getResource()->getId();
+        $instanceArray['instance_creator_id'] = $instance->getCreator()->getId();
+        $instanceArray['instance_creator_username'] = $instance->getCreator()->getUsername();
+        $instanceArray['resource_creator_id'] = $instance->getResource()->getCreator()->getId();
+        $instanceArray['resource_creator_username'] = $instance->getResource()->getCreator()->getUsername();
+        $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
+        $instanceArray['type'] = $instance->getResource()->getResourceType()->getType();
+        $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
+        $instanceArray['icon'] = $instance->getResourceType()->getIcon();
+        $instanceArray['thumbnail'] = $instance->getResourceType()->getThumbnail();
+        $array = array();
+        $array[0] = $instanceArray;
+
+        return $array;
     }
 
     private function createCopy(ResourceInstance $resourceInstance)
