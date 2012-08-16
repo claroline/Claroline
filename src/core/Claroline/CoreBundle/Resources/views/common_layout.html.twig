@@ -25,13 +25,11 @@
 {% endblock %}
 
 {% block body %}
-
+    <div id="main-container">
     {% render 'ClarolineCoreBundle:Layout:topBar' %}
-
     {% block global_content %}{% endblock %}
-
     {% render 'ClarolineCoreBundle:Layout:footer' %}
-
+    </div>
 {% endblock %}
 
 {% block javascripts %}
