@@ -23,6 +23,6 @@ class DashboardSecurityTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/dashboard');
-        $this->assertTrue($crawler->filter('#dashboard')->count() > 0);
+        $this->assertTrue($crawler->filter('#link_dashboard')->count() > 0);
     }
 }
