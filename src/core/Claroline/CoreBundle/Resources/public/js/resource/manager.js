@@ -90,14 +90,14 @@
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;
-            bindContextMenu(parameters, div);
+            bindContextMenu(parameters, div, element);
         });
     }
 
-    function bindContextMenu(parameters, divForm) {
+    function bindContextMenu(parameters, divForm, menuElement) {
         var type = parameters.type;
         var menuDefaultOptions = {
-            selector: '#'+parameters.id,
+            selector: '#'+menuElement.id,
             trigger: 'left',
             //See the contextual menu documentation.
             callback: function(key, options) {
