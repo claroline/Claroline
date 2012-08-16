@@ -29,7 +29,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             rt.id as resource_type_id,
             rt.type as type,
             rt.is_navigable as is_navigable,
-            rt.icon as icon
+            rt.icon as icon,
+            rt.thumbnail as thumbnail
             FROM claro_resource_instance ri
             INNER JOIN  claro_user uri
             ON uri.id = ri.user_id

@@ -283,6 +283,16 @@ class ResourceInstance
     }
 
     /**
+     * Return the lvl value of the instance in the nested tree.
+     *
+     * @return integer
+     */
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    /**
      * Returns the root value of the instance in the nested tree.
      *
      * @return integer
