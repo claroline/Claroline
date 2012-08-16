@@ -2,7 +2,7 @@
     var manager = this.ClaroResourceManager = {};
     var jsonmenu = {};
 
-    manager.init = function(div, prefix, backButton, divForm, selectType, submitButton) {
+    manager.init = function(div, prefix, backButton, divForm, selectType, submitButton, downloadButton) {
         selectType.hide();
         submitButton.hide();
 
@@ -80,6 +80,16 @@
                 }
                 )
             });
+
+        downloadButton.on('click', function(e){
+            var ids = {};
+            var i = 0;
+            $('.'+prefix+'_chk_instance').each(function(index, element){
+                ids[i] = element.value;
+                i++;
+            })
+            window.location = Routing.generate('claro_multi_export', ids);
+        })
     }
 
     function appendThumbnails(div, data) {
