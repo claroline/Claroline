@@ -6,31 +6,27 @@
 
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/css/bootstrap.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/css/bootstrap-responsive.css')}}'>
     <style>
      body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar; will require media queries ? */
         padding-bottom: 40px;
       }
     </style>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/css/bootstrap-responsive.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/style.css')}}'>
 {% endblock %}
 
 {% block favicon %}
     <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/claro_favicon.ico') }}" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png')}}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png')}}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png')}}">
+    <link rel="apple-touch-icon-precomposed" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png')}}">
 {% endblock %}
 
 {% block body %}
-    <div id='bootstrap-modal' class='modal fade'>
-           <div class="modal-header">
-               <button id="close_dialog_button" class="close" data-dismiss="modal">×</button>
-               <h3>Modal header</h3>
-           </div>
-           <div class="modal-body" id="modal-login"></div>
-           <div class="modal-body" id="modal-body"></div>
-           <div class="modal-footer">
-               FOOTER
-            </div>
-    </div>
+
+    {% render 'ClarolineCoreBundle:Layout:topBar' %}
 
     {% block global_content %}{% endblock %}
 
@@ -46,11 +42,7 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.8.18.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    <script src='{{ asset('bundles/frontend/jquery/plugin/jquery.cookie.js')}}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/jquery.cookie.js')}}'></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/js/bootstrap.js')}}"></script>
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png')}}">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png')}}">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png')}}">
-    <link rel="apple-touch-icon-precomposed" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png')}}">
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/claro_utils.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/claro_utils.js') }}" /></script>
 {% endblock %}

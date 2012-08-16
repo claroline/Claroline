@@ -8,22 +8,30 @@
 
 {% block javascripts %}
     {{ parent() }}
-   {% javascripts
-      "@ClarolineCoreBundle/Resources/views/TemplatesJs/move_resource_form.twig"
-      "@ClarolineCoreBundle/Resources/views/TemplatesJs/select_workspace_form.twig"
-      "@ClarolineCoreBundle/Resources/views/TemplatesJs/resource_manager.twig"
-      "@ClarolineCoreBundle/Resources/views/TemplatesJs/resource_filter.twig"
-       filter="twig_js"
-    %}
-       <script src="{{ asset_url }}" type="text/javascript"></script>
-    {% endjavascripts %}
-    <script src='{{ asset('bundles/frontend/jquery/plugin/dynatree/src/jquery.dynatree.js') }}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/clarolinecore/js/resource/resource_manager.jquery.js')}}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/clarolinecore/js/dashboard/resource_manager.js') }}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/clarolinecore/js/datatree_filter.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/resource/data_filter.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/resource/manager.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/dashboard/dashboard_resource.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
 {% endblock %}
 
 {% block section_content %}
-<div id="ct_dialog"></div>
+    <div id='div_filter' style='float:left;'></div>
+    <select id='dr_select_creation'>
+        {% for resourceType in resourceTypes %}
+            <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+        {% endfor %}
+    </select>
+     <button id='dr_submit_select'>new</button>
+    <div id='div_resource'>
+        <div id ='dr_resource_manager_content'>
+    <div id='dr_manager_options' style='float:right;'>
+        <button id='dr_tree_button'>Arbre</button>
+        <button id='dr_thumbnail_button'>vignette</button><br>
+        <input type='checkbox' id='dr_is_flat' value='1'>vue "plate"</input>
+    </div>
+    <div id='dr_div_form'></div>
+    <a href='#' id='dr_resources_back'>back</a>
+    <div id='dr_resources_content'>
+    </div>
+</div>
 {% endblock %}
