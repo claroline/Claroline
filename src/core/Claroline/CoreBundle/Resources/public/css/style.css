@@ -9,9 +9,10 @@ footer{
     color: #999;
 }
 
-#content{
-    min-height: 500px;
 
+#main-container {
+    min-height: 500px;
 }
+
 
 
