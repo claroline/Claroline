@@ -1,14 +1,33 @@
 (function () {
     var manager = this.ClaroResourceManager = {};
 
-    /* private attributes */
-    var buildPrefix = 'default';
+    manager.init = function(div, prefix, backButton) {
+        $('.link_navigate_instance').live('click', function(e){
+            var key = e.target.dataset.key;
+            ClaroUtils.sendRequest(
+                Routing.generate('claro_resource_renders_thumbnail', {'parentId': key, 'prefix':prefix}),
+                function(data){
+                    div.empty();
+                    div.append(data);
+                }
+             );
+        })
 
-    manager.rendersThumbnailRoots = function(div) {
+        backButton.on('click', function(e){
+            var key = e.target.dataset.key;
+            ClaroUtils.sendRequest(
+                Routing.generate('claro_resource_renders_thumbnail', {'parentId': key, 'prefix':prefix}),
+                function(data){
+                    div.empty();
+                    div.append(data);
+                }
+             );
+        })
+    }
 
-        //get the 1st level
+    manager.rendersThumbnailRoots = function(div, prefix) {
         ClaroUtils.sendRequest(
-            Routing.generate('claro_resource_renders_thumbnail'),
+            Routing.generate('claro_resource_renders_thumbnail', {'prefix': prefix}),
             function(data){
                 div.append(data);
             }

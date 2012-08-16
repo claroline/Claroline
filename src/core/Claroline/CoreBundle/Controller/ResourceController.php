@@ -419,13 +419,24 @@ class ResourceController extends Controller
             ->findNavigableResourceTypeWithoutDirectory();
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:resource_filter.html.twig',
-            array('divPrefix' => $prefix, 'workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
+                'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('divPrefix' => $prefix, 'workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
         );
     }
 
-    public function rendersResourceThumbnailViewAction($parentId)
+    public function rendersResourceThumbnailViewAction($parentId, $prefix)
     {
-        return new Response('list resource');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $currentFolder = null;
+        //user root
+        if ($parentId == 0) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
+        } else {
+            $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenNodes($parentId);
+            $currentFolder = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($parentId);
+        }
+
+        return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig', array('currentFolder' => $currentFolder, 'resources' => $results, 'prefix' => $prefix));
     }
+
 }
