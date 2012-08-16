@@ -1,5 +1,5 @@
-{% block log_action %}
-    <nav id="top_bar" class="navbar navbar-fixed-top">
+
+    <div id="top_bar" class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -68,8 +68,8 @@
                             </a>
                         </li>
                         </ul>
-                 </div>
-                 <div class="btn-group pull-right">
+                    </div>
+                    <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         {{ 'workspaces'|trans({}, 'platform') }}
                         <span class="caret"></span>
@@ -77,15 +77,15 @@
                     <ul class="dropdown-menu">
                         {% for workspace in workspaces %}
                             <li>
-                             <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" id="link_workspace_{{ workspace.getId() }}">
-                             {{workspace.getCode()}} - {{ workspace.getName() }}
-                             </a>
+                                <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" id="link_workspace_{{ workspace.getId() }}">
+                                {{workspace.getCode()}} - {{ workspace.getName() }}
+                                </a>
                             </li>
                         {% endfor %}
                         <li class="divider"></li>
                         <li>
                             <a href="{{ path('claro_ws_list') }}" id="link_all_workspaces">
-                                 {{ 'all_workspaces'|trans({}, 'platform') }}
+                                    {{ 'all_workspaces'|trans({}, 'platform') }}
                             </a>
                         </li>
                     </ul>
@@ -120,8 +120,7 @@
                     {% endif %}
                     </ul>
                 </div>
-           </div>
-           {% endif %}
+            </div>
+            {% endif %}
         </div>
-    </nav>
-{% endblock %}
+    </div>
