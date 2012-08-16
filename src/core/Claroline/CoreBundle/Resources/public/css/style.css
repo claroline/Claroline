@@ -2,17 +2,21 @@
    Author: Claroline team
    ========================================================================== */
 
-/* TO DO: add sticky footer when Twitter Bootstrap add functionality for this. */
-footer{
-    height:40px;
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+footer {
+    height: 40px;
     background-color: #2C2C2C;
     color: #999;
+    margin: 0;
 }
 
 
 #main-container {
-    min-height: 500px;
+    min-height: 86%;
+    margin: 0;
 }
-
-
-
