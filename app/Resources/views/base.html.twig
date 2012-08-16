@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ app.request.attributes.get('_locale')|default('fr') }}"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="{{ app.request.attributes.get('_locale')|default('fr') }}"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="{{ app.request.attributes.get('_locale')|default('fr') }}"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.request.attributes.get('_locale')|default('fr') }}"> <!--<![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ app.request.locale|default('fr') }}"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="{{ app.request.locale|default('fr') }}"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="{{ app.request.locale|default('fr') }}"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.request.locale|default('fr') }}"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -15,6 +15,8 @@
         <title>{% block title %}Claroline{% endblock %}</title>
 
         {% block stylesheets %}{% endblock %}
+
+        {# The Modernizr script MUST stay before the body tag. #}
         <script src="{{ asset('bundles/frontend/modernizr/modernizr-2.5.3.min.js') }}"></script>
 
         {% block favicon %}
