@@ -4,19 +4,17 @@
 
 <div id="dashboard_top" class="row-fluid dashboard">
     <div class="span12">
-
         <h2>{{ 'dashboard'|trans({}, 'platform') }}</h2>
-
         <ul class="nav nav-tabs">
-        <li class="{% if 'claro_dashboard_info' == app.request.get('_route') %}active{% endif %}">
-            <a href="{{ path('claro_dashboard_info') }}" id="dashboard_info_link">{{ 'dashboard_tab_info'|trans({}, 'platform') }}</a>
-        </li>
-        <li class="{% if 'claro_dashboard_perso' == app.request.get('_route') %}active{% endif %}">
-            <a href="{{ path('claro_dashboard_perso') }}" id="dashboard_perso_link">{{ 'dashboard_tab_perso'|trans({}, 'platform') }}</a>
-        </li>
-        <li class="{% if 'claro_dashboard_resources' == app.request.get('_route') %}active{% endif %}">
-            <a href="{{ path('claro_dashboard_resources') }}" id="resource_manager_link">{{ 'dashboard_tab_resources'|trans({}, 'platform') }}</a>
-        </li>
+            <li class="{% if 'claro_dashboard_info' == app.request.get('_route') %}active{% endif %}">
+                <a href="{{ path('claro_dashboard_info') }}" id="dashboard_info_link">{{ 'dashboard_tab_info'|trans({}, 'platform') }}</a>
+            </li>
+            <li class="{% if 'claro_dashboard_perso' == app.request.get('_route') %}active{% endif %}">
+                <a href="{{ path('claro_dashboard_perso') }}" id="dashboard_perso_link">{{ 'dashboard_tab_perso'|trans({}, 'platform') }}</a>
+            </li>
+            <li class="{% if 'claro_dashboard_resources' == app.request.get('_route') %}active{% endif %}">
+                <a href="{{ path('claro_dashboard_resources') }}" id="resource_manager_link">{{ 'dashboard_tab_resources'|trans({}, 'platform') }}</a>
+            </li>
         </ul>
     </div>
 </div>
