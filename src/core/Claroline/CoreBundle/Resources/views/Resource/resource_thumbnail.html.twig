@@ -4,7 +4,7 @@
 {% for instance in resources %}
     <div id = '{{prefix}}_instance_{{instance.id}}'>
         {{instance.name}}
-        <div id='resource_menu_{{instance.id}}' class='resource_menu' data-key='{{instance.id}}' data-type='{{instance.type}}'>menu</div>
+        <div id='resource_menu_{{instance.id}}' class='resource_menu' data-key='{{instance.id}}' data-type='{{instance.type}}' data-resource-id='{{instance.resource_id}}'>menu</div>
         {% if instance.type == 'directory' %}
             <a data-key='{{instance.id}}'class='link_navigate_instance' id='{{prefix}}_link_navigate_instance_{{instance.id}}' href="#">navigate</a>
         {% endif %}
