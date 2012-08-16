@@ -169,7 +169,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
-    public function getRoots($user) {
+    public function getRoots($user)
+    {
         $sql = self::SELECT_INSTANCE."
             WHERE ri.parent_id IS NULL
             AND ri.workspace_id IN(
