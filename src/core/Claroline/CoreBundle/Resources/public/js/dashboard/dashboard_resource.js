@@ -17,5 +17,4 @@
     );
 
     ClaroResourceManager.init($('#dr_resources_content'), 'cr', $('#dr_resources_back'));
-    ClaroResourceManager.rendersThumbnailRoots($('#dr_resources_content'), 'cr');
 })();
