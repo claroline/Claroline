@@ -15,15 +15,14 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id='div_filter' style='float:left;'></div>
-    <select id='dr_select_creation'>
-        {% for resourceType in resourceTypes %}
-            <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
-        {% endfor %}
+<div id='div_filter' style='float:left;'></div>
+<select id='dr_select_creation'>
+    {% for resourceType in resourceTypes %}
+        <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+    {% endfor %}
     </select>
-     <button id='dr_submit_select'>new</button>
-    <div id='div_resource'>
-        <div id ='dr_resource_manager_content'>
+    <button id='dr_submit_select'>new</button>
+<div id ='dr_resource_manager_content'>
     <div id='dr_manager_options' style='float:right;'>
         <button id='dr_tree_button'>Arbre</button>
         <button id='dr_thumbnail_button'>vignette</button><br>

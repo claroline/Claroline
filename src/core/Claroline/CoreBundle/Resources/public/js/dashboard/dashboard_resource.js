@@ -1,9 +1,8 @@
 (function () {
 
     var param = 'param';
-    function filterCallBack(activeFilters, parameter) {
-        alert(activeFilters);
-        alert(parameter);
+    function filterCallBack(data, parameter) {
+        alert(data);
     };
     function resetCallBack(parameter) {
         alert(parameter);
@@ -12,7 +11,7 @@
     ClaroFilter.build(
         $('#div_filter'),
         'cr',
-        function(activeFilters){filterCallBack(activeFilters, param)},
+        function(data){filterCallBack(data, param)},
         function(){resetCallBack(param)}
     );
 
