@@ -2,7 +2,7 @@
 
     var param = 'param';
     function filterCallBack(data, parameter) {
-        alert(data);
+        console.debug(data);
     };
     function resetCallBack(parameter) {
         alert(parameter);
