@@ -20,7 +20,7 @@
                     'prefix': prefix
                 }),
                 function(data){
-                    appendThumbnails(divForm, data);
+                    appendThumbnails(div, data);
                 }
             )
         });
@@ -33,7 +33,7 @@
                     'prefix':prefix
                 }),
                 function(data){
-                    appendThumbnails(divForm, data);
+                    appendThumbnails(div, data);
                     selectType.show();
                     submitButton.show();
                 }
@@ -48,7 +48,7 @@
                     'prefix':prefix
                 }),
                 function(data){
-                    appendThumbnails(divForm, data);
+                    appendThumbnails(div, data);
                     if ($('#'+prefix+'_current_folder').size() == 0) {
                         selectType.hide();
                         submitButton.hide();

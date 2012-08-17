@@ -15,22 +15,28 @@
 {% endblock %}
 
 {% block section_content %}
-<div id='div_filter' style='float:left;'></div>
-<select id='dr_select_creation'>
-    {% for resourceType in resourceTypes %}
-        <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
-    {% endfor %}
-    </select>
-    <button id='dr_submit_select'>new</button>
-    <div id ='dr_resource_manager_content'>
+
+<div id='div_filter' class='span2'></div>
+<div id='div_resources' class='span10'>
+    <div id='div_resources_top'>
+        <select id='dr_select_creation'>
+        {% for resourceType in resourceTypes %}
+            <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+        {% endfor %}
+        </select>
+        <button id='dr_submit_select'>new</button>
         <div id='dr_manager_options' style='float:right;'>
             <button id='dr_tree_button'>Arbre</button>
             <button id='dr_thumbnail_button'>vignette</button><br>
             <input type='checkbox' id='dr_is_flat' value='1'>vue "plate"</input>
         </div>
+    </div>
+    <div id ='dr_resource_manager_content'>
         <div id='dr_div_form'></div>
         <a href='#' id='dr_resources_back'>back</a>
         <div id='dr_resources_content'></div>
+        <br>
         <button id='dr_download_button'>{{ 'download'|trans({}, 'platform') }}</button>
     </div>
+</div>
 {% endblock %}
