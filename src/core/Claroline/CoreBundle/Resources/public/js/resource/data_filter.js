@@ -34,12 +34,46 @@
             + $('#'+buildPrefix+'_date_to').val();
     }
 
+    function createFilterRoute() {
+        var parameters = {};
+        var i = 0;
+
+        var values = $('#'+buildPrefix+'_select_type').val();
+        if (values != undefined){
+            for(i=0; i< values.length; i++) {
+                parameters['types'+i] = values[i];
+            }
+        }
+
+        values = $('#'+buildPrefix+'_select_root').val();
+        if (values != undefined){
+            for(i=0; i< values.length; i++) {
+                parameters['roots'+i] = values[i];
+            }
+        }
+
+        if ($('#'+buildPrefix+'_date_from').val()!= '') {
+            parameters['dateFrom'] = $('#'+buildPrefix+'_date_from').val();
+        }
+
+        if($('#'+buildPrefix+'_date_to').val()!= '') {
+            parameters['dateTo'] = $('#'+buildPrefix+'_date_to').val();
+        }
+
+        return Routing.generate('claro_resource_filter', parameters);
+    }
+
     filter.build = function(div, prefix, callBackFilter, callBackReset){
         buildPrefix = prefix;
         buildFilter(div);
-        
+
         $('#'+buildPrefix+'_filter_button').live('click', function(){
-            callBackFilter(filter.getActiveFilters());
+
+            var route = createFilterRoute();
+            ClaroUtils.sendRequest(route, function(data){
+                callBackFilter(data);
+            })
+        //            callBackFilter(filter.getActiveFilters());
         })
         $('#'+buildPrefix+'_reset_button').live('click', function(){
             callBackReset();

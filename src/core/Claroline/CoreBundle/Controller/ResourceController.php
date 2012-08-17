@@ -423,6 +423,14 @@ class ResourceController extends Controller
         );
     }
 
+    /**
+     * Renders the resource list as thumbnails.
+     *
+     * @param integer $parentId
+     * @param string $prefix
+     *
+     * @return Response
+     */
     public function rendersResourceThumbnailViewAction($parentId, $prefix)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -439,4 +447,55 @@ class ResourceController extends Controller
         return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig', array('currentFolder' => $currentFolder, 'resources' => $results, 'prefix' => $prefix));
     }
 
+    /**
+     * Renders the searched resource list.
+     *
+     * @return Response
+     */
+    public function filterAction()
+    {
+        $criterias = $this->container->get('request')->query->all();
+        $compiledArray = array();
+        $types = array();
+        $roots = array();
+        //get the criterias list as an array
+        foreach ($criterias as $key => $item) {
+
+            if (substr_count ($key, 'types') > 0) {
+
+                $types[] = $item;
+            }
+            if (substr_count($key, 'roots') > 0) {
+                $roots[] = $item;
+            }
+        }
+
+        if (count($types) != 0) {
+            $compiledArray['types'] = $types;
+        }
+
+        if (count($roots) != 0) {
+            $compiledArray['roots'] = $roots;
+        }
+
+        if (array_key_exists('dateTo', $criterias)) {
+            $compiledArray['dateTo'] = $criterias['dateTo'];
+        }
+
+        if (array_key_exists('dateFrom', $criterias)) {
+            $compiledArray['dateFrom'] = $criterias['dateFrom'];
+        }
+
+//        var_dump($compiledArray);
+
+        $result = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->filter($compiledArray);
+
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($result);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
 }

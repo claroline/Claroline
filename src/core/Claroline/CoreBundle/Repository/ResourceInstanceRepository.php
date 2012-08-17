@@ -197,4 +197,76 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         return $instances;
     }
+
+    public function filter($criterias)
+    {
+        $whereType = '';
+        $whereRoot = '';
+        $whereDateFrom = '';
+        $whereDateTo = '';
+
+        foreach ($criterias as $key => $value) {
+
+            switch($key){
+                case 'roots': $whereRoot = $this->filterWhereRoot($value);
+                    break;
+                case 'types': $whereType = $this->filterWhereType($value);
+                    break;
+                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($value);
+                    break;
+                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($value);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $sql = self::SELECT_INSTANCE."
+            WHERE 1 = 1".$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
+    }
+
+    private function filterWhereType($criteria) {
+        $string = '';
+
+        foreach ($criteria as $item) {
+            $string.= " AND rt.type = '{$item}'";
+        }
+
+        return $string;
+    }
+
+    private function filterWhereRoot($criteria) {
+        $string = '';
+
+        foreach ($criteria as $item) {
+            $string.= " AND ri.root ='{$item}'";
+        }
+
+        return $string;
+    }
+
+   private function filterWhereDateFrom($criteria) {
+       $string = '';
+       $string.=" AND ri.created >= '{$criteria}'";
+
+       return $string;
+   }
+
+   private function filterWhereDateTo($criteria) {
+       $string = '';
+       $string.=" AND ri.created <= '{$criteria}'";
+
+       return $string;
+   }
 }
