@@ -44,7 +44,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
         $this->cleanDirectory($this->upDir);
     }
-
+/*
     public function testDirectoryCreationFormCanBeDisplayed()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -240,6 +240,39 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "resource/custom/directory/thisactiondoesntexists/{$this->pwr[0]->getResource()->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("didn\'t bring back any response")')));
+    }
+*/
+    public function testFilters()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->userRoot[0]->getId());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $adminpwr = $this->resourceInstanceRepository->getWSListableRootResource($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+        $this->createBigTree($adminpwr[0]->getId());
+        $wsEroot = $this->resourceInstanceRepository->getWSListableRootResource($this->getFixtureReference('workspace/ws_e'));
+        $this->createBigTree($wsEroot[0]->getId());
+
+        //filter by types (1)
+        $this->client->request('GET','/resource/filter?types0=file');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(6, count($jsonResponse));
+
+        //filter by types (2)
+        $this->client->request('GET','/resource/filter?types0=file&types1=text');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(6, count($jsonResponse));
+
+        //filter by root (2)
+        $this->client->request('GET',"/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(6, count($jsonResponse));
+
+        //filter by root (1)
+        $this->client->request('GET',"/resource/filter?roots0={$adminpwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($jsonResponse));
+
+        //no test by date yet
     }
 
     private function uploadFile($parentId, $name, $shareType = 1)

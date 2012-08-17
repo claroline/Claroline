@@ -454,6 +454,7 @@ class ResourceController extends Controller
      */
     public function filterAction()
     {
+        $user = $this->get('security.context')->getToken()->getUser();
         $criterias = $this->container->get('request')->query->all();
         $compiledArray = array();
         $types = array();
@@ -487,7 +488,7 @@ class ResourceController extends Controller
 
         $result = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->filter($compiledArray);
+            ->filter($compiledArray, $user);
 
         $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($result);
         $response = new Response($content);
