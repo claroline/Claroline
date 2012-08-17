@@ -461,8 +461,7 @@ class ResourceController extends Controller
         //get the criterias list as an array
         foreach ($criterias as $key => $item) {
 
-            if (substr_count ($key, 'types') > 0) {
-
+            if (substr_count($key, 'types') > 0) {
                 $types[] = $item;
             }
             if (substr_count($key, 'roots') > 0) {
@@ -484,9 +483,7 @@ class ResourceController extends Controller
 
         if (array_key_exists('dateFrom', $criterias)) {
             $compiledArray['dateFrom'] = $criterias['dateFrom'];
-        }
-
-//        var_dump($compiledArray);
+        };
 
         $result = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')

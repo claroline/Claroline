@@ -236,7 +236,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
-    private function filterWhereType($criteria) {
+    private function filterWhereType($criteria)
+    {
         $string = '';
 
         foreach ($criteria as $item) {
@@ -246,7 +247,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $string;
     }
 
-    private function filterWhereRoot($criteria) {
+    private function filterWhereRoot($criteria)
+    {
         $string = '';
 
         foreach ($criteria as $item) {
@@ -256,14 +258,16 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $string;
     }
 
-   private function filterWhereDateFrom($criteria) {
+   private function filterWhereDateFrom($criteria)
+   {
        $string = '';
        $string.=" AND ri.created >= '{$criteria}'";
 
        return $string;
    }
 
-   private function filterWhereDateTo($criteria) {
+   private function filterWhereDateTo($criteria)
+   {
        $string = '';
        $string.=" AND ri.created <= '{$criteria}'";
 
