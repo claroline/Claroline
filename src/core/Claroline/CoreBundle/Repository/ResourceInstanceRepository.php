@@ -198,7 +198,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
-    public function filter($criterias)
+    public function filter($criterias, $user)
     {
         $whereType = '';
         $whereRoot = '';
@@ -208,23 +208,51 @@ class ResourceInstanceRepository extends NestedTreeRepository
         foreach ($criterias as $key => $value) {
 
             switch($key){
-                case 'roots': $whereRoot = $this->filterWhereRoot($value);
+                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
                     break;
-                case 'types': $whereType = $this->filterWhereType($value);
+                case 'types': $whereType = $this->filterWhereType($key, $value);
                     break;
-                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($value);
+                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
                     break;
-                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($value);
+                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
                     break;
                 default:
                     break;
             }
         }
 
-        $sql = self::SELECT_INSTANCE."
-            WHERE 1 = 1".$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
-
+        $sql = self::SELECT_INSTANCE . "
+            WHERE rt.is_listable = 1
+            AND rt.type != 'directory'
+            AND ri.workspace_id IN(
+               SELECT cw.id FROM claro_workspace cw
+               INNER JOIN claro_role cr
+               ON cr.workspace_id = cw.id
+               INNER JOIN claro_user_role cur
+               ON cur.role_id = cr.id
+               INNER JOIN claro_user cu
+               ON cu.id = cur.user_id
+               WHERE cu.id = :userId
+            )".$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
         $stmt = $this->_em->getConnection()->prepare($sql);
+
+        $stmt->bindValue('userId', $user->getId());
+
+        foreach ($criterias as $key => $value) {
+            switch($key){
+                case 'roots': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'types': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'dateTo': $stmt->bindValue($key, $criteria);
+                    break;
+                case 'dateFrom': $stmt->bindValue($key, $criteria);
+                    break;
+               default:
+                    break;
+            }
+        }
+
         $stmt->execute();
 
         $instances = array();
@@ -236,41 +264,64 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
-    private function filterWhereType($criteria)
+    private function filterWhereType($key, $criteria)
     {
         $string = '';
+        $i = 0;
 
-        foreach ($criteria as $item) {
-            $string.= " AND rt.type = '{$item}'";
+        foreach ($criteria as $i => $item) {
+            if ($i == 0) {
+                $string.= " AND (rt.type = :{$key}{$i}";
+                $i++;
+            } else {
+                $string .= " OR rt.type = :{$key}{$i}";
+            }
         }
+
+        $string .= ')';
 
         return $string;
     }
 
-    private function filterWhereRoot($criteria)
+    private function filterWhereRoot($key, $criteria)
     {
         $string = '';
+        $i = 0;
 
-        foreach ($criteria as $item) {
-            $string.= " AND ri.root ='{$item}'";
+        foreach ($criteria as $i => $item) {
+            if ($i == 0) {
+                $string.= " AND (ri.root =:{$key}{$i}";
+                $i++;
+            } else {
+                $string.= " OR ri.root = :{$key}{$i}";
+            }
         }
+
+        $string .= ')';
 
         return $string;
     }
 
-   private function filterWhereDateFrom($criteria)
+   private function filterWhereDateFrom($key)
    {
        $string = '';
-       $string.=" AND ri.created >= '{$criteria}'";
+       $string.=" AND ri.created >= :{$key}";
 
        return $string;
    }
 
-   private function filterWhereDateTo($criteria)
+   private function filterWhereDateTo($key)
    {
        $string = '';
-       $string.=" AND ri.created <= '{$criteria}'";
+       $string.=" AND ri.created <= :{$key}";
 
        return $string;
+   }
+
+   private function bindArray($stmt, $key, $criteria)
+   {
+       foreach ($criteria as $i => $item) {
+           $stmt->bindValue("{$key}{$i}", $item);
+       }
    }
 }
