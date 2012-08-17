@@ -318,6 +318,25 @@ class ResourceController extends Controller
     }
 
     /**
+     * Returns a json representation of a user instances.
+     *
+     * @return Response
+     */
+    public function userEveryInstancesAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $results = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getInstanceList($user);
+
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * Returns a json representation of the resource types.
      * It doesn't include the directory.
      * Ony listable types are included.
