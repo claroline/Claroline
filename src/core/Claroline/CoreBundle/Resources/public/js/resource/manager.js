@@ -63,7 +63,7 @@
                     'resourceType': selectType.val()
                 }),
                 function(data) {
-                    divForm.append(data);
+                    divForm.empty().append(data);
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
@@ -148,7 +148,7 @@
     function executeAsync(obj, parameters, route, divForm) {
 
         //Delete was a special case as every node can be removed.
-        (obj.name === 'delete') ? removeNode(menuElement, route) : executeRequest(parameters, route, divForm);
+        (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route, divForm);
     };
 
     function removeNode(parameters, route) {
@@ -177,11 +177,13 @@
         });
     };
 
-    function submissionHandler(xhr, menuElement, divForm) {
+    function submissionHandler(xhr, parameters, divForm) {
         //If there is a json response, a node was returned.
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
-            var JSONObject = JSON.parse(xhr.responseText);
+            var JSONObject = JSON.parse(xhr.rsesponseText);
             var instance = JSONObject[0];
+            //New item creation goes here.
+            //
             alert('action from form done');
         //If it's not a json response, we append the response at the top of the tree.
         } else {
@@ -190,11 +192,11 @@
                 var action = divForm.find('form').attr('action');
                 //If it's a form, placeholders must be removed (the twig form doesn't know the instance parent,
                 //that's why placeholders are used).'
-                action = action.replace('_instanceId', menuElement.dataset.key);
-                action = action.replace('_resourceId', menuElement.dataset.resourceId);
+                action = action.replace('_instanceId', parameters.key);
+                action = action.replace('_resourceId', parameters.resourceId);
                 var id = divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, menuElement, divForm);
+                    submissionHandler(xhr, parameters, divForm);
                 });
             });
         }

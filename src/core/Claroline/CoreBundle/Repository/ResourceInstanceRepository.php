@@ -41,6 +41,17 @@ class ResourceInstanceRepository extends NestedTreeRepository
             INNER JOIN claro_user ures
             ON res.user_id = ures.id";
 
+    const SELECT_USER_WORKSPACES_ID = "SELECT
+            cw.id FROM claro_workspace cw
+            INNER JOIN claro_role cr
+            ON cr.workspace_id = cw.id
+            INNER JOIN claro_user_role cur
+            ON cur.role_id = cr.id
+            INNER JOIN claro_user cu
+            ON cu.id = cur.user_id
+            WHERE cu.id = :userId
+        ";
+
     public function getWSListableRootResource(AbstractWorkspace $ws)
     {
         $dql = "
@@ -76,26 +87,36 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getInstanceList(ResourceType $resourceType, User $user)
+    /**
+     * Gets every instance in every workspace the is registered.
+     *
+     * @param ResourceType $resourceType
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getInstanceList(User $user, ResourceType $resourceType = null)
     {
-        $dql = "
-            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
-            JOIN ri.abstractResource ar
-            JOIN ar.resourceType rt
-            WHERE rt.type = '{$resourceType->getType()}'
-            AND ri.workspace IN
-            (
-                SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                JOIN w.roles wr
-                JOIN wr.users u
-                WHERE u.id = '{$user->getId()}'
-            )
-            ORDER BY ar.name
-        ";
+        $sql = self::SELECT_INSTANCE."
+            WHERE ri.workspace_id IN
+            (".self::SELECT_USER_WORKSPACES_ID.")";
+        if ($resourceType === null) {
+            $sql.="AND rt.type !='directory'";
+        } else {
+            $sql.="AND rt.id = {$resourceType->getId()}";
+        }
 
-        $query = $this->_em->createQuery($dql);
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
 
-        return $query->getResult();
+        $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
     }
 
 
@@ -173,17 +194,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
     {
         $sql = self::SELECT_INSTANCE."
             WHERE ri.parent_id IS NULL
-            AND ri.workspace_id IN(
-                SELECT cw.id FROM claro_workspace cw
-                INNER JOIN claro_role cr
-                ON cr.workspace_id = cw.id
-                INNER JOIN claro_user_role cur
-                ON cur.role_id = cr.id
-                INNER JOIN claro_user cu
-                ON cu.id = cur.user_id
-                WHERE cu.id = :userId
-                )
-           ";
+            AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")";
 
         $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt->bindValue('userId', $user->getId());
@@ -224,16 +235,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $sql = self::SELECT_INSTANCE . "
             WHERE rt.is_listable = 1
             AND rt.type != 'directory'
-            AND ri.workspace_id IN(
-               SELECT cw.id FROM claro_workspace cw
-               INNER JOIN claro_role cr
-               ON cr.workspace_id = cw.id
-               INNER JOIN claro_user_role cur
-               ON cur.role_id = cr.id
-               INNER JOIN claro_user cu
-               ON cu.id = cur.user_id
-               WHERE cu.id = :userId
-            )".$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
+            AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")"
+            .$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
         $stmt = $this->_em->getConnection()->prepare($sql);
 
         $stmt->bindValue('userId', $user->getId());

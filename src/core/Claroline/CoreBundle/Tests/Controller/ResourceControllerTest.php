@@ -44,7 +44,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
         $this->cleanDirectory($this->upDir);
     }
-/*
+
     public function testDirectoryCreationFormCanBeDisplayed()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -241,7 +241,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("didn\'t bring back any response")')));
     }
-*/
+
     public function testFilters()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -273,6 +273,15 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count($jsonResponse));
 
         //no test by date yet
+    }
+
+    public function testEveryUserInstances()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->pwr[0]->getId());
+        $this->client->request('GET','/resource/user/instances/all');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($jsonResponse));
     }
 
     private function uploadFile($parentId, $name, $shareType = 1)
