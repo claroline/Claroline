@@ -262,7 +262,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
                     break;
                 case 'dateFrom': $stmt->bindValue($key, $criteria);
                     break;
-               default:
+                default:
                     break;
             }
         }
