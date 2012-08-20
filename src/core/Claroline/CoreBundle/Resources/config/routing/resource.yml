@@ -41,8 +41,14 @@ claro_multi_export:
         expose: true
 
 claro_resource_move:
-   pattern: move/{instanceId}/{newParentId}
+   pattern: /move/{instanceId}/{newParentId}
    defaults: { _controller: ClarolineCoreBundle:Resource:move }
+   options:
+        expose: true
+
+claro_resource_multimove:
+   pattern: /multimove/{newParentId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:multimove }
    options:
         expose: true
 

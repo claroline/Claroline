@@ -20,6 +20,9 @@
         $('#dr_div_form'),
         $('#dr_select_creation'),
         $('#dr_submit_select'),
-        $('#dr_download_button')
+        $('#dr_download_button'),
+        $('#dr_cut_button'),
+        $('#dr_copy_button'),
+        $('#dr_paste_button')
     );
 })();

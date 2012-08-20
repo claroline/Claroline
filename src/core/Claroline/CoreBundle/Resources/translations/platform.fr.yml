@@ -117,6 +117,9 @@ resource_manager: Gestionnaire de ressources
 owner: Propriétaire
 open: Ouvrir
 download: télécharger
+copy: copier
+cut: couper
+paste: coller
 
 # workspace
 workspace: Espace d'activités

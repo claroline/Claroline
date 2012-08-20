@@ -183,6 +183,31 @@ class ResourceController extends Controller
     }
 
     /**
+     * Moves many instances (changes their parents).
+     * This function takes an array of parameters wich are the ids of the moved instances.
+     *
+     * @return Response
+     */
+    //no verification yet
+    public function multiMoveAction($newParentId)
+    {
+        $ids = $this->container->get('request')->query->all();
+        $em = $this->getDoctrine()->getEntityManager();
+        $newParent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($newParentId);
+
+        foreach ($ids as $id) {
+            $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+
+            if ($instance != null){
+                var_dump('je bouge');
+                $this->get('claroline.resource.manager')->move($instance, $newParent);
+            }
+        }
+
+        return new Response('Resource moved');
+    }
+
+    /**
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
@@ -238,7 +263,6 @@ class ResourceController extends Controller
 
     /**
      * This function takes an array of parameters. Theses parameters are the ids of the instances which are going to be downloaded.
-     * It also needs the "displayMode".
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

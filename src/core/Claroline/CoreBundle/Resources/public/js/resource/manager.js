@@ -2,9 +2,22 @@
     var manager = this.ClaroResourceManager = {};
     var jsonmenu = {};
     var construct = {};
+    var pasteIds = {};
+    //0 = cut; 1 = copy
+    var cpd = null;
 
-    manager.init = function(div, prefix, backButton, divForm, selectType, submitButton, downloadButton) {
-
+    manager.init = function(
+        div,
+        prefix,
+        backButton,
+        divForm,
+        selectType,
+        submitButton,
+        downloadButton,
+        cutButton,
+        copyButton,
+        pasteButton
+    ) {
         construct.div = div;
         construct.prefix = prefix;
         construct.backButton = backButton;
@@ -12,6 +25,9 @@
         construct.selectType = selectType;
         construct.submitButton = submitButton;
         construct.downloadButton = downloadButton;
+        construct.cutButton = cutButton;
+        construct.copyButton = copyButton;
+        construct.pasteButton = pasteButton;
 
         selectType.hide();
         submitButton.hide();
@@ -92,14 +108,50 @@
             });
 
         downloadButton.on('click', function(e){
-            var ids = {};
-            var i = 0;
-            $('.'+prefix+'_chk_instance').each(function(index, element){
-                ids[i] = element.value;
-                i++;
-            })
+            var ids = getSelectedItems();
             window.location = Routing.generate('claro_multi_export', ids);
         })
+
+        cutButton.on('click', function(e){
+            pasteIds = {};
+            pasteIds = getSelectedItems();
+            cpd = 0;
+        })
+
+        pasteButton.on('click', function(e){
+            var params = {};
+            params = pasteIds;
+            params.newParentId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+            var route = Routing.generate('claro_resource_multimove', params);
+            ClaroUtils.sendRequest(route);
+            manager.reload();
+        })
+    }
+
+    manager.reload = function() {
+        var key = $('#'+construct.prefix+'_current_folder').attr('data-key');
+        ClaroUtils.sendRequest(
+            Routing.generate('claro_resource_renders_thumbnail', {
+                'parentId': key,
+                'prefix':construct.prefix
+            }),
+            function(data){
+                appendThumbnails(construct.div, data);
+                if ($('#'+construct.prefix+'_current_folder').size() == 0) {
+                }
+            });
+    }
+
+    function getSelectedItems()
+    {
+        var ids = {};
+        var i = 0;
+        $('.'+construct.prefix+'_chk_instance:checked').each(function(index, element){
+            ids[i] = element.value;
+            i++;
+        })
+
+        return ids;
     }
 
     function appendThumbnails(div, data) {
@@ -188,18 +240,8 @@
 
     function submissionHandler(xhr, parameters) {
         //If there is a json response, a node was returned.
-        var key = $('#'+construct.prefix+'_current_folder').attr('data-key');
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
-            ClaroUtils.sendRequest(
-                Routing.generate('claro_resource_renders_thumbnail', {
-                    'parentId': key,
-                    'prefix':construct.prefix
-                }),
-                function(data){
-                    appendThumbnails(construct.div, data);
-                    if ($('#'+construct.prefix+'_current_folder').size() == 0) {
-                    }
-                });
+            manager.reload();
         //If it's not a json response, we append the response at the top of the tree.
         } else {
             construct.divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
