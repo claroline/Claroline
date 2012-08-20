@@ -4,7 +4,7 @@
     <br>
 {% endif %}
 {% for instance in resources %}
-    <span id = '{{prefix}}_instance_{{instance.id}}' style='display:inline-block;'>
+    <span id = '{{prefix}}_instance_{{instance.id}}' style='display:inline-block; width:200px'>
         <img src="{{asset('icons/' ~ instance.thumbnail)}}"><br>
         <input class='{{prefix}}_chk_instance'type='checkbox' value='{{instance.id}}'/> {{instance.name}}
         <div class='resource_bar'>
