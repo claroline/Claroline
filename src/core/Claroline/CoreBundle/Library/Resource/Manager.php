@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
+use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
@@ -95,7 +96,11 @@ class Manager
         $child->setParent($parent);
         $rename = $this->getUniqueName($child, $parent);
         $child->setName($rename);
-        $this->em->flush();
+        try {
+            $this->em->flush();
+        } catch (UnexpectedValueException $e) {
+            throw $e;
+        }
     }
 
     /**
