@@ -200,11 +200,10 @@ class ResourceController extends Controller
 
             if ($instance != null){
                 try {
-                    $this->get('claroline.resource.manager')->move($instance, $newParent);
-                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                     return new Response ('cannot move a resource into itself', 500);
-                 }
-
+                     $this->get('claroline.resource.manager')->move($instance, $newParent);
+                } catch (\Gedmo\Exception\UnexpectedValueException $e) {
+                     return new Response('cannot move a resource into itself', 500);
+                }
             }
         }
 
