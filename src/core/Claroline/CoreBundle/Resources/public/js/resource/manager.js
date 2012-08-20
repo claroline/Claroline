@@ -31,6 +31,7 @@
 
         selectType.hide();
         submitButton.hide();
+        pasteButton.attr('disabled', 'disabled');
 
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
@@ -62,8 +63,7 @@
                     appendThumbnails(div, data);
                     selectType.show();
                     submitButton.show();
-                }
-                );
+                });
         })
 
         backButton.on('click', function(e){
@@ -115,6 +115,7 @@
         cutButton.on('click', function(e){
             pasteIds = {};
             pasteIds = getSelectedItems();
+            construct.pasteButton.removeAttr('disabled');
             cpd = 0;
         })
 

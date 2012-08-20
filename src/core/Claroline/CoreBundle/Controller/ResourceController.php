@@ -199,8 +199,12 @@ class ResourceController extends Controller
             $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
 
             if ($instance != null){
-                var_dump('je bouge');
-                $this->get('claroline.resource.manager')->move($instance, $newParent);
+                try {
+                    $this->get('claroline.resource.manager')->move($instance, $newParent);
+                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
+                     return new Response ('cannot move a resource into itself', 500);
+                 }
+
             }
         }
 
