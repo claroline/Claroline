@@ -121,6 +121,9 @@ resource_manager: Resource manager
 owner: Owner
 open: Open
 download: download
+copy: copy
+cut: cut
+paste: paste
 
 # workspace
 workspace: Workspace

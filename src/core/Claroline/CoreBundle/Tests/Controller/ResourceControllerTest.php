@@ -103,6 +103,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count($jsonResponse));
     }
 
+    public function testMultiMove()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
+        $theContainer = $this->createDirectory($this->userRoot[0]->getId(), 'container');
+        $this->client->request(
+            'GET', "/resource/multimove/{$theContainer->key}?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $this->client->request('GET', "/resource/children/{$theContainer->key}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+    }
+
     public function testResourceCanBeAddedToWorkspaceByRef()
     {
         $this->logUser($this->getFixtureReference('user/user'));
