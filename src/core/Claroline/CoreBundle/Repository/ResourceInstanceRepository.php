@@ -8,6 +8,14 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
+/*
+ * Lists of usefull common platform methods
+ * getDateFormatString
+ * getTimeFormatString
+ * getIsNullExpression
+ * getIsNotNullExpression
+ * getWildCards
+ */
 class ResourceInstanceRepository extends NestedTreeRepository
 {
     const SELECT_INSTANCE = "SELECT
@@ -192,8 +200,11 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getRoots($user)
     {
+        $platform = $this->_em->getConnection()->getDatabasePlatform();
+        $isNull = $platform->getIsNullExpression('ri.parent_id');
+
         $sql = self::SELECT_INSTANCE."
-            WHERE ri.parent_id IS NULL
+            WHERE {$isNull}
             AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")";
 
         $stmt = $this->_em->getConnection()->prepare($sql);
@@ -237,8 +248,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             AND rt.type != 'directory'
             AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")"
             .$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
-        $stmt = $this->_em->getConnection()->prepare($sql);
 
+        $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt->bindValue('userId', $user->getId());
 
         foreach ($criterias as $key => $value) {
