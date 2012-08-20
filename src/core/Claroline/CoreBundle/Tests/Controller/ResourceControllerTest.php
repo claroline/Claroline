@@ -129,6 +129,24 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($file), 2);
         $this->assertEquals(count($this->getUploadedFiles()), 2);
+        $this->client->request('GET', "/resource/workspace/add/{$this->userRoot[0]->getId()}/{$this->userRoot[0]->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
+        var_dump($this->client->getResponse()->getContent());
+        $file = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(count($file), 2);
+    }
+
+    public function testMultiAdd()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
+        $this->client->request(
+            'GET', "/resource/workspace/multi/add/{$this->userRoot[0]->getId()}?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(4, count($jsonResponse));
     }
 
     public function testResourceProportiesCanBeEdited()

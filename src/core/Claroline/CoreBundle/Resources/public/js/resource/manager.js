@@ -119,12 +119,26 @@
             cpd = 0;
         })
 
+        copyButton.on('click', function(e){
+            pasteIds = {};
+            pasteIds = getSelectedItems();
+            construct.pasteButton.removeAttr('disabled');
+            cpd = 1;
+        })
+
         pasteButton.on('click', function(e){
             var params = {};
+            var route = '';
             params = pasteIds;
-            params.newParentId = $('#'+construct.prefix+'_current_folder').attr('data-key');
-            var route = Routing.generate('claro_resource_multimove', params);
-            ClaroUtils.sendRequest(route);
+            if (cpd == 0) {
+                params.newParentId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+                route = Routing.generate('claro_resource_multimove', params);
+                ClaroUtils.sendRequest(route);
+            } else {
+                params.instanceDestinationId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+                route = Routing.generate('claro_resource_multi_add_workspace', params);
+                ClaroUtils.sendRequest(route);
+            }
             manager.reload();
         })
     }
