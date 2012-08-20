@@ -428,7 +428,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Adds a resource instance to a workspace. Options must be must be 'ref' or 'copy'.
+     * Adds a resource instance to a workspace.
      *
      * @param integer $instanceId
      * @param integer $instanceDestinationId
@@ -444,6 +444,30 @@ class ResourceController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    /**
+     * Adds multiple resource instance to a workspace.
+     *
+     * @param integer $instanceDestinationId
+     *
+     * @return Response
+     */
+    public function multiAddToWorkspaceAction($instanceDestinationId)
+    {
+        $ids = $this->container->get('request')->query->all();
+        $em = $this->getDoctrine()->getEntityManager();
+        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+
+        foreach ($ids as $id) {
+            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+            if ($resource != null) {
+                $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
+                $em->flush();
+            }
+        }
+
+        return new Response('success', 200);
     }
 
     /**

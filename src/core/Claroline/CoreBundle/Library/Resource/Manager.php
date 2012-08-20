@@ -163,29 +163,27 @@ class Manager
     {
         $resource = $resourceInstance->getResource();
 
-        if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE
-            || $resource->getCreator() == $this->sc->getToken()->getUser()) {
+        if ($resource->getResourceType()->getType() != 'directory') {
+            $instanceCopy = $this->createReference($resource);
+            $instanceCopy->setParent($parent);
+            $instanceCopy->setWorkspace($parent->getWorkspace());
+            $rename = $this->getUniqueName($resourceInstance, $parent);
+            $instanceCopy->setName($rename);
+        } else {
+            $instances = $resource->getResourceInstances();
+            $instanceCopy = $this->createCopy($instances[0]);
+            $instanceCopy->setParent($parent);
+            $instanceCopy->setWorkspace($parent->getWorkspace());
+            $rename = $this->getUniqueName($resourceInstance, $parent);
+            $instanceCopy->setName($rename);
 
-           if ($resource->getResourceType()->getType() != 'directory') {
-                $instanceCopy = $this->createReference($resource);
-                $instanceCopy->setParent($parent);
-                $instanceCopy->setWorkspace($parent->getWorkspace());
-           } else {
-                $instances = $resource->getResourceInstances();
-                $instanceCopy = $this->createCopy($instances[0]);
-                $instanceCopy->setParent($parent);
-                $instanceCopy->setWorkspace($parent->getWorkspace());
-
-                foreach ($instances[0]->getChildren() as $child) {
-                    $this->addToDirectoryByReference($child, $instanceCopy);
-                }
-           }
-
-           $this->em->persist($instanceCopy);
-           $rename = $this->getUniqueName($resourceInstance, $parent);
-           $instanceCopy->setName($rename);
-           $this->em->persist($instanceCopy);
+            foreach ($instances[0]->getChildren() as $child) {
+                $this->addToDirectoryByReference($child, $instanceCopy);
+            }
         }
+
+
+        $this->em->persist($instanceCopy);
     }
 
     public function normalizeEventName($prefix, $resourceType)
