@@ -129,3 +129,9 @@ claro_resource_every_instances:
     defaults: { _controller: ClarolineCoreBundle:Resource:userEveryInstances }
     options:
         expose: true
+
+claro_resource_count_instances:
+    pattern: /count/instances
+    defaults: { _controller: ClarolineCoreBundle:Resource:countInstance }
+    options:
+        expose: true
