@@ -16,7 +16,8 @@
         downloadButton,
         cutButton,
         copyButton,
-        pasteButton
+        pasteButton,
+        closeButton
     ) {
         construct.div = div;
         construct.prefix = prefix;
@@ -28,6 +29,7 @@
         construct.cutButton = cutButton;
         construct.copyButton = copyButton;
         construct.pasteButton = pasteButton;
+        construct.closeButton = closeButton;
 
         selectType.hide();
         submitButton.hide();
@@ -54,6 +56,7 @@
 
         $('.link_navigate_instance').live('click', function(e){
             var key = e.target.dataset.key;
+            construct.divForm.empty();
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_renders_thumbnail', {
                     'parentId': key,
@@ -68,6 +71,7 @@
 
         backButton.on('click', function(e){
             var key = $('#'+construct.prefix+'_current_folder').attr('data-parent-id');
+            construct.divForm.empty();
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_renders_thumbnail', {
                     'parentId': key,
@@ -103,8 +107,7 @@
                             submissionHandler(xhr, parameters);
                         });
                     })
-                }
-                )
+                })
             });
 
         downloadButton.on('click', function(e){
@@ -140,6 +143,10 @@
                 ClaroUtils.sendRequest(route);
             }
             manager.reload();
+        })
+
+        closeButton.on('click', function(e){
+            construct.divForm.empty();
         })
     }
 

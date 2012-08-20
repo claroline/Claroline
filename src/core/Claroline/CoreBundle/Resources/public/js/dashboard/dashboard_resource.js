@@ -23,6 +23,7 @@
         $('#dr_download_button'),
         $('#dr_cut_button'),
         $('#dr_copy_button'),
-        $('#dr_paste_button')
+        $('#dr_paste_button'),
+        $('#dr_close_button')
     );
 })();
