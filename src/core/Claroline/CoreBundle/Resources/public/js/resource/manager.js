@@ -1,8 +1,18 @@
 (function () {
     var manager = this.ClaroResourceManager = {};
     var jsonmenu = {};
+    var construct = {};
 
     manager.init = function(div, prefix, backButton, divForm, selectType, submitButton, downloadButton) {
+
+        construct.div = div;
+        construct.prefix = prefix;
+        construct.backButton = backButton;
+        construct.divForm = divForm;
+        construct.selectType = selectType;
+        construct.submitButton = submitButton;
+        construct.downloadButton = downloadButton;
+
         selectType.hide();
         submitButton.hide();
 
@@ -74,7 +84,7 @@
                         action = action.replace('_instanceId', parameters.key)
                         var id = divForm.find('form').attr('id');
                         ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                            submissionHandler(xhr, parameters, divForm);
+                            submissionHandler(xhr, parameters);
                         });
                     })
                 }
@@ -100,11 +110,11 @@
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;
-            bindContextMenu(parameters, div, element);
+            bindContextMenu(parameters, element);
         });
     }
 
-    function bindContextMenu(parameters, divForm, menuElement) {
+    function bindContextMenu(parameters, menuElement) {
         var type = parameters.type;
         var menuDefaultOptions = {
             selector: '#'+menuElement.id,
@@ -112,7 +122,7 @@
             //See the contextual menu documentation.
             callback: function(key, options) {
                 //Finds and executes the action for the right menu item.
-                findMenuObject(jsonmenu[type], parameters, key, divForm);
+                findMenuObject(jsonmenu[type], parameters, key);
             }
         };
 
@@ -123,80 +133,85 @@
 
     //Finds wich menu was fired for a node.
     //@params items is the menu object used.
-    function findMenuObject(items, parameters, menuItem, divForm)
+    function findMenuObject(items, parameters, menuItem)
     {
         for (var property in items.items) {
             if (property === menuItem) {
-                executeMenuActions(items.items[property], parameters, divForm);
+                executeMenuActions(items.items[property], parameters);
             } else {
                 if (items.items[property].hasOwnProperty('items')) {
-                    findMenuObject(items.items[property], parameters, menuItem, divForm);
+                    findMenuObject(items.items[property], parameters, menuItem);
                 }
             }
         }
     };
 
-    function executeMenuActions (obj, parameters, divForm)
+    function executeMenuActions (obj, parameters)
     {
         //Removes the placeholders in the route
         var route = obj.route;
         var compiledRoute = route.replace('_instanceId', parameters.key);
         compiledRoute = compiledRoute.replace('_resourceId', parameters.resourceId);
-        obj.async ? executeAsync(obj, parameters, compiledRoute, divForm) : window.location = compiledRoute;
+        obj.async ? executeAsync(obj, parameters, compiledRoute) : window.location = compiledRoute;
     }
 
-    function executeAsync(obj, parameters, route, divForm) {
+    function executeAsync(obj, parameters, route) {
 
         //Delete was a special case as every node can be removed.
-        (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route, divForm);
+        (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route);
     };
 
     function removeNode(parameters, route) {
-        alert('element not yet removed');
-//        ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
-//            if (204 === jqXHR.status) {
-//                node.remove();
-//            }
-//        });
+        ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
+            if (204 === jqXHR.status) {
+                $('#'+construct.prefix+"_instance_"+parameters.key).remove();
+            }
+        });
     };
 
-    function executeRequest(parameters, route, divForm) {
+    function executeRequest(parameters, route) {
 
         ClaroUtils.sendRequest(route, function(data) {
             //If there is a form, the submission handler above is used.
             //There is no handler otherwise.
-            divForm.empty().append(data).find('form').submit(function(e) {
+            construct.divForm.empty().append(data).find('form').submit(function(e) {
                 e.preventDefault();
-                var action = divForm.find('form').attr('action');
+                var action = construct.divForm.find('form').attr('action');
                 action = action.replace('_instanceId', parameters.key)
-                var id = divForm.find('form').attr('id');
+                var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, parameters, divForm);
+                    submissionHandler(xhr, parameters);
                 });
             });
         });
     };
 
-    function submissionHandler(xhr, parameters, divForm) {
+    function submissionHandler(xhr, parameters) {
         //If there is a json response, a node was returned.
+        var key = $('#'+construct.prefix+'_current_folder').attr('data-key');
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
-            var JSONObject = JSON.parse(xhr.rsesponseText);
-            var instance = JSONObject[0];
-            //New item creation goes here.
-            //
-            alert('action from form done');
+            ClaroUtils.sendRequest(
+                Routing.generate('claro_resource_renders_thumbnail', {
+                    'parentId': key,
+                    'prefix':construct.prefix
+                }),
+                function(data){
+                    appendThumbnails(construct.div, data);
+                    if ($('#'+construct.prefix+'_current_folder').size() == 0) {
+                    }
+                });
         //If it's not a json response, we append the response at the top of the tree.
         } else {
-            divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
+            construct.divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
                 e.preventDefault();
-                var action = divForm.find('form').attr('action');
+                var action = construct.divForm.find('form').attr('action');
                 //If it's a form, placeholders must be removed (the twig form doesn't know the instance parent,
                 //that's why placeholders are used).'
                 action = action.replace('_instanceId', parameters.key);
                 action = action.replace('_resourceId', parameters.resourceId);
-                var id = divForm.find('form').attr('id');
+                var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, parameters, divForm);
+                    submissionHandler(xhr, parameters);
                 });
             });
         }
