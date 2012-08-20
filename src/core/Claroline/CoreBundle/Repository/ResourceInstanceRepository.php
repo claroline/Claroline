@@ -15,6 +15,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  * getIsNullExpression
  * getIsNotNullExpression
  * getWildCards
+ * getCountExpression
  */
 class ResourceInstanceRepository extends NestedTreeRepository
 {
@@ -211,13 +212,40 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt->bindValue('userId', $user->getId());
         $stmt->execute();
 
-        $instances = array();
+       $instances = array();
 
         while ($row = $stmt->fetch()) {
             $instances[$row['id']] = $row;
         }
 
         return $instances;
+    }
+
+    //count non directory instances for a user.
+    public function countInstancesForUser($user)
+    {
+
+        $platform = $this->_em->getConnection()->getDatabasePlatform();
+        $count = $platform->getCountExpression('ri.id');
+
+        $sql = "
+            SELECT {$count} as count FROM claro_resource_instance ri
+            INNER JOIN  claro_user uri
+            ON uri.id = ri.user_id
+            INNER JOIN claro_resource res
+            ON res.id = ri.resource_id
+            INNER JOIN claro_resource_type rt
+            ON res.resource_type_id = rt.id
+            IN (" .
+            self::SELECT_USER_WORKSPACES_ID . ")
+            WHERE rt.type != 'directory'";
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results[0]['count'];
     }
 
     public function filter($criterias, $user)

@@ -566,4 +566,14 @@ class ResourceController extends Controller
 
         return $response;
     }
+
+    public function countInstanceAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $count = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->countInstancesForUser($user);
+
+        return new Response($count);
+    }
 }
