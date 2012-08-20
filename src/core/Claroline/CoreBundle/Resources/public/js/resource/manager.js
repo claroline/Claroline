@@ -51,7 +51,7 @@
         })
 
         backButton.on('click', function(e){
-            var key = e.target.dataset.key;
+            var key = $('#'+construct.prefix+'_current_folder').attr('data-parent-id');
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_renders_thumbnail', {
                     'parentId': key,
