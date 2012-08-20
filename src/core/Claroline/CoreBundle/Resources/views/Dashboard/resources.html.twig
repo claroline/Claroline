@@ -19,7 +19,7 @@
 <div id='div_filter' class='span2'></div>
 <div id='div_resources' class='span10'>
     <div id='div_resources_top'>
-        <select id='dr_select_creation'>
+        <select id='dr_select_creation' style='width:150px'>
         {% for resourceType in resourceTypes %}
             <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
         {% endfor %}
