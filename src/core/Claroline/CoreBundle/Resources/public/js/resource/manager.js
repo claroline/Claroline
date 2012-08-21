@@ -65,7 +65,7 @@
                 function(data){
                     appendThumbnails(div, data);
                 });
-        })
+        });
 
         backButton.on('click', function(e){
             var key = $('#'+construct.prefix+'_current_folder').attr('data-parent-id');
@@ -212,7 +212,7 @@
             'prefix':construct.prefix
         });
         ClaroUtils.sendRequest(route, function(data){
-            $('.instance_thumbnail_item').remove();
+            $('.res-block').remove();
             construct.div.prepend(data);
             setMenu();
         })
