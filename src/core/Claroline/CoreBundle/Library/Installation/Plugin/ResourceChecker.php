@@ -214,9 +214,9 @@ class ResourceChecker implements CheckerInterface
 
                 if (!file_exists($expectedImgLocation)) {
                     $this->errors[] = new ValidationError(
-                            "{$this->pluginFqcn} : {$resource['thumbnail']} (declared in {$resourceFile}) "
-                            . "cannot be found (looked for {$expectedImgLocation}).",
-                            self::UNEXPECTED_RESOURCE_THUMBNAIL
+                        "{$this->pluginFqcn} : {$resource['thumbnail']} (declared in {$resourceFile}) "
+                        . "cannot be found (looked for {$expectedImgLocation}).",
+                        self::UNEXPECTED_RESOURCE_THUMBNAIL
                     );
                 }
             }

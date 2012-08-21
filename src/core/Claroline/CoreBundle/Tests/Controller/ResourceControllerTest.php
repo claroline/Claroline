@@ -103,6 +103,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count($jsonResponse));
     }
 
+    public function testMultiMove()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
+        $theContainer = $this->createDirectory($this->userRoot[0]->getId(), 'container');
+        $this->client->request(
+            'GET', "/resource/multimove/{$theContainer->key}?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $this->client->request('GET', "/resource/children/{$theContainer->key}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+    }
+
     public function testResourceCanBeAddedToWorkspaceByRef()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -115,6 +129,23 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($file), 2);
         $this->assertEquals(count($this->getUploadedFiles()), 2);
+        $this->client->request('GET', "/resource/workspace/add/{$this->userRoot[0]->getId()}/{$this->userRoot[0]->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
+        $file = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(count($file), 2);
+    }
+
+    public function testMultiAdd()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
+        $this->client->request(
+            'GET', "/resource/workspace/multi/add/{$this->userRoot[0]->getId()}?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(4, count($jsonResponse));
     }
 
     public function testResourceProportiesCanBeEdited()
@@ -242,6 +273,57 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("didn\'t bring back any response")')));
     }
 
+    public function testFilters()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->userRoot[0]->getId());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $adminpwr = $this->resourceInstanceRepository->getWSListableRootResource($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+        $this->createBigTree($adminpwr[0]->getId());
+        $wsEroot = $this->resourceInstanceRepository->getWSListableRootResource($this->getFixtureReference('workspace/ws_e'));
+        $this->createBigTree($wsEroot[0]->getId());
+
+        //filter by types (1)
+        $this->client->request('GET', '/resource/filter?types0=file');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(6, count($jsonResponse));
+
+        //filter by types (2)
+        $this->client->request('GET', '/resource/filter?types0=file&types1=text');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(6, count($jsonResponse));
+
+        //filter by root (2)
+        $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(6, count($jsonResponse));
+
+        //filter by root (1)
+        $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($jsonResponse));
+
+        //no test by date yet
+    }
+
+    public function testEveryUserInstances()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->pwr[0]->getId());
+        $this->client->request('GET', '/resource/user/instances/all');
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($jsonResponse));
+    }
+    /*
+    public function testCountInstances()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->pwr[0]->getId());
+        $this->client->request('GET', '/resource/count/instances');
+        var_dump( $this->client->getResponse()->getContent());
+        $this->assertEquals('3', $this->client->getResponse()->getContent());
+    }
+*/
     private function uploadFile($parentId, $name, $shareType = 1)
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);

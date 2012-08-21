@@ -14,3 +14,7 @@
 <input id='{{divPrefix}}_date_to' type='text' style='width:120px' placeholder='date fin'></input><br>
 <button id='{{divPrefix}}_filter_button'>filter</button>
 <button id='{{divPrefix}}_reset_button'>reset</button>
+<script>
+    $('#{{divPrefix}}_date_from').datepicker({dateFormat: "yy-mm-dd"});
+    $('#{{divPrefix}}_date_to').datepicker({dateFormat: "yy-mm-dd"});
+</script>
