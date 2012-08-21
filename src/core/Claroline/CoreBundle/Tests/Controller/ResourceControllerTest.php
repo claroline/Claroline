@@ -314,6 +314,24 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(3, count($jsonResponse));
     }
+
+    public function testRendersThumbnails()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->pwr[0]->getId());
+        $crawler = $this->client->request('POST', "/resource/renders/thumb/cr");
+        $this->assertEquals(1, $crawler->filter('.res-block')->count());
+        $crawler = $this->client->request('POST', "/resource/renders/thumb/cr/{$theBigTree[0]->key}");
+        $this->assertEquals(3, $crawler->filter('.res-block')->count());
+    }
+
+    public function testRendersFlatView()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->pwr[0]->getId());
+        $crawler = $this->client->request('POST', "/resource/renders/flat/1/cr");
+        $this->assertEquals(3, $crawler->filter('.res-block')->count());
+    }
     /*
     public function testCountInstances()
     {
