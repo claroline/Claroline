@@ -131,7 +131,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(count($this->getUploadedFiles()), 2);
         $this->client->request('GET', "/resource/workspace/add/{$this->userRoot[0]->getId()}/{$this->userRoot[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
-        var_dump($this->client->getResponse()->getContent());
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($file), 2);
     }
@@ -315,7 +314,16 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(3, count($jsonResponse));
     }
-
+    /*
+    public function testCountInstances()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->createBigTree($this->pwr[0]->getId());
+        $this->client->request('GET', '/resource/count/instances');
+        var_dump( $this->client->getResponse()->getContent());
+        $this->assertEquals('3', $this->client->getResponse()->getContent());
+    }
+*/
     private function uploadFile($parentId, $name, $shareType = 1)
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);

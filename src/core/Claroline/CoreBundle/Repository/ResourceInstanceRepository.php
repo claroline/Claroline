@@ -61,6 +61,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             WHERE cu.id = :userId
         ";
 
+    const PAGE_INSTANCE_LIMIT = 12;
+
     public function getWSListableRootResource(AbstractWorkspace $ws)
     {
         $dql = "
@@ -128,7 +130,35 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
+    public function getPaginatedInstanceList(User $user, $page, $resourceType = null)
+    {
+        $sql = self::SELECT_INSTANCE . "
+            WHERE ri.workspace_id IN
+            (" . self::SELECT_USER_WORKSPACES_ID . ")";
+        if ($resourceType === null) {
+            $sql.="AND rt.type !='directory'";
+        } else {
+            $sql.="AND rt.id = {$resourceType->getId()}";
+        }
 
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+        $instances = array();
+
+        $offset = self::PAGE_INSTANCE_LIMIT * (--$page);
+        $w = $offset + self::PAGE_INSTANCE_LIMIT;
+        $i = 0;
+
+        while ($i < $w && $row = $stmt->fetch()) {
+            if ($i < $w && $i >= $offset) {
+                $instances[$row['id']] = $row;
+            }
+            $i++;
+        }
+
+        return $instances;
+    }
 
     public function findInstancesFromType(ResourceType $resourceType, User $user)
     {
