@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 
 class ResourceController extends Controller
 {
+    const THUMB_PER_PAGE = 12;
+
     /**
      * Renders the creation form for a given resource type.
      *
@@ -572,14 +574,15 @@ class ResourceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function countInstanceAction()
+    public function countPageInstanceAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $count = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->countInstancesForUser($user);
+        $pages = ceil($count/self::THUMB_PER_PAGE);
 
-        return new Response($count);
+        return new Response($pages);
     }
 
     public function rendersPaginatedFlatThumbnailsInstanceAction($page, $prefix)
@@ -587,7 +590,7 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getPaginatedInstanceList($user, $page);
+            ->getInstanceList($user, $page, self::THUMB_PER_PAGE);
         $currentFolder = null;
 
          return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig',
