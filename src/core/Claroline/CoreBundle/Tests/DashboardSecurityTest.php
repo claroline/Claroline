@@ -16,7 +16,7 @@ class DashboardSecurityTest extends FunctionalTestCase
     public function testDashboardSectionRequiresAuthenticatedUser()
     {
         $crawler = $this->client->request('GET', '/dashboard');
-        $this->assertTrue($crawler->filter('#login_form')->count() > 0);
+        $this->assertTrue($crawler->filter('#login-form')->count() > 0);
     }
 
     public function testAccessToDashboardSectionIsAllowedToSimpleUsers()

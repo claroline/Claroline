@@ -1,23 +1,27 @@
-{% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-<div class="row-fluid administration">
-    <div class="span2">
-        <div class="well sidebar-nav">
-        <ul class="nav nav-list">
+    <div class="span3 administration">
+        <ul class="nav nav-list well">
             <li class="nav-header">{{ 'administration'|trans({}, 'platform') }}</li>
-            <li><a href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user"> {{ 'add_user'|trans({}, 'platform') }} </a></li>
-            <li><a href="{{ path('claro_admin_user_list') }}" id="link_list_user"> {{ 'list_users'|trans({}, 'platform') }} </a></li>
-            <li><a href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form"> {{ 'create_group'|trans({}, 'platform') }} </a></li>
-            <li><a href="{{ path('claro_admin_group_list') }}" id="link_group_list"> {{ 'list_groups'|trans({}, 'platform') }} </a> </li>
-            <li><a href="{{ path('claro_admin_platform_settings_form') }}" id="link_platform_parameters">{{ 'platform_parameters'|trans({}, 'platform') }}</a></li>
+            <li>
+                <a href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">{{ 'add_user'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_user_list') }}" id="link_list_user">{{ 'list_users'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">{{ 'create_group'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_group_list') }}" id="link_group_list">{{ 'list_groups'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_platform_settings_form') }}" id="link_platform_parameters">{{ 'platform_parameters'|trans({}, 'platform') }}</a>
+            </li>
         </ul>
-        </div><!--/.well -->
     </div>
-    <div class="span10">
-        <!--Body content-->
-        {% block section_content %}
-        {% endblock %}
+    <div class="span9">
+        {% block section_content %}{% endblock %}
     </div>
-</div>
 {% endblock %}

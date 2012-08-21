@@ -1,9 +1,9 @@
 {% extends "ClarolineCoreBundle:Administration:index.html.twig" %}
 
 {% block content %}
-{% for difference in differences %}
-{{difference|raw}}
-</br>-------------------------------</br>
-{% endfor %}
-{{original|raw}}
+    {% for difference in differences %}
+        {{ difference|raw }}
+            </br>-------------------------------</br>
+        {% endfor %}
+    {{ original|raw }}
 {% endblock %}

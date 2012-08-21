@@ -1,22 +1,25 @@
-{% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-<div class="row-fluid">
-    <div class="span2">
+    <div class="span3">
         <div class="well sidebar-nav">
-        <ul class="nav nav-list">
-        <li><a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platform') }} </a></li>
-        <li><a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platform') }}</a></li>
-        {% if is_granted('ROLE_WS_CREATOR') %}
-        <li><a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platform') }}</a>
-        {% endif %}
-        </ul>
-        </div><!--/.well -->
+            <ul class="nav nav-list">
+                <li>
+                    <a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platform') }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platform') }}</a>
+                </li>
+                {% if is_granted('ROLE_WS_CREATOR') %}
+                <li>
+                    <a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platform') }}</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-    <div class="span10">
-        <!--Body content-->
-        {% block section_content %}
-        {% endblock %}
+    <div class="span9">
+        {{ macros.flashBox() }}
+        {% block section_content %}{% endblock %}
     </div>
-</div>
 {% endblock %}

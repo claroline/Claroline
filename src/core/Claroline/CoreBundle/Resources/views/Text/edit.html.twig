@@ -1,16 +1,16 @@
-{% extends "ClarolineCoreBundle:Administration:index.html.twig" %}
+{% extends "ClarolineCoreBundle:layout.html.twig" %}
 
 {% block content %}
-<!-- editeur wysiwyg -->
-    <script src='{{asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}' type='text/javascript'></script>
-    <script type="text/javascript">
-tinyMCE.init({
-    // General options
-    mode : "textareas"
-});
-</script>
-<form novalidate="validate" method="post" action="{{ path('claro_text_edit', {'textId':textId}) }}" id="edit_form">
-    <textarea name="content" cols="50" rows="15">{{ text|raw }}</textarea>
-    <input type="submit" formnovalidate="formnovalidate" />
-</form>
+    <!-- editeur wysiwyg -->
+        <script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js') }}' type='text/javascript'></script>
+        <script type="text/javascript">
+    tinyMCE.init({
+        // General options
+        mode : "textareas"
+    });
+    </script>
+    <form novalidate="validate" method="post" action="{{ path('claro_text_edit', {'textId':textId}) }}" id="edit_form">
+        <textarea name="content" cols="50" rows="15">{{ text|raw }}</textarea>
+        <button type="submit" formnovalidate="formnovalidate" />
+    </form>
 {% endblock %}

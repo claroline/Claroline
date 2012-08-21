@@ -6,8 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * Actions of this controller are not routed. They're intended to be
- * rendered directly in the "common_layout" and "content_layout" templates.
+ * Actions of this controller are not routed. They're intended to be rendered
+ * directly in the base "ClarolineCoreBundle::layout.html.twig" template.
  */
 class LayoutController extends Controller
 {

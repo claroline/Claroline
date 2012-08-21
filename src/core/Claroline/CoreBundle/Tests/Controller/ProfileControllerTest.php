@@ -27,7 +27,7 @@ class ProfileControllerTest extends FunctionalTestCase
 
         // change credentials
         $crawler = $this->client->submit(
-            $crawler->filter('input[type=submit]')->form(), array(
+            $crawler->filter('button[type=submit]')->form(), array(
             'profile_form[username]' => 'new_username',
             'profile_form[plainPassword][first]' => 'new_password',
             'profile_form[plainPassword][second]' => 'new_password'
@@ -39,7 +39,7 @@ class ProfileControllerTest extends FunctionalTestCase
         $user->setUsername('new_username');
         $user->setPlainPassword('new_password');
         $crawler = $this->logUser($user);
-        $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
+        $this->assertEquals(0, $crawler->filter('#login-error')->count());
     }
 
     public function testPublicProfileCanBeSeenByOtherUsers()

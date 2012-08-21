@@ -42,28 +42,28 @@ list_workspaces: List workspaces
 #########
 
 #users form field labels
-user_form_firstName: "First name :"
-user_form_lastName: "Last name :"
-user_form_username: "Username :"
-user_form_plainPassword_first: "Password :"
-user_form_plainPassword_second: "Verification :"
-user_form_administrativeCode: "Administrative code :"
-user_form_mail: "Mail :"
-user_form_phone: "Phone :"
-user_form_ownedRoles: "Role(s) :"
-user_form_note: "Personnal note :"
+user_form_firstName: First name
+user_form_lastName: Last name
+user_form_username: Username
+user_form_plainPassword_first: Password
+user_form_plainPassword_second: Verification
+user_form_administrativeCode: Administrative code
+user_form_mail: Mail
+user_form_phone: Phone
+user_form_ownedRoles: Role(s)
+user_form_note: Personnal note
 
 # profile form field labels
-profile_form_firstName: "First name :"
-profile_form_lastName: "Last name :"
-profile_form_username: "Username :"
-profile_form_plainPassword_first: "Password :"
-profile_form_plainPassword_second: "Verification :"
-profile_form_administrativeCode: "Administrative code :"
-profile_form_mail: "Mail :"
-profile_form_phone: "Phone :"
-profile_form_ownedRoles: "Role(s) :"
-profile_form_note: "Personnal note :"
+profile_form_firstName: First name
+profile_form_lastName: Last name
+profile_form_username: Username
+profile_form_plainPassword_first: Password
+profile_form_plainPassword_second: Verification
+profile_form_administrativeCode: Administrative code
+profile_form_mail: Mail
+profile_form_phone: Phone
+profile_form_ownedRoles: Role(s)
+profile_form_note: Personnal note
 
 # platform settings form field labels
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -78,19 +78,19 @@ workspace_form_name: Name
 workspace_form_type: Type
 
 # file manager form field labels
-choose_resource_form_type: "Resource type :"
+choose_resource_form_type: Resource type
+
+# form buttons
+ok: Ok
+cancel: Cancel
 
 ############
 # MESSAGES #
 ############
 
 login_failure: Login has failed. Check your username and password are correct.
-account_created: Account created
+account_created: Account created.
 workspace.name_not_blank: The workspace's name is required.
-
-##########
-# COMMON #
-##########
 
 ########
 # MISC #

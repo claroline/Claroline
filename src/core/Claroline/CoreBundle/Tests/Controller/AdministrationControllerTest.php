@@ -52,7 +52,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_add_user')->link();
         $crawler = $this->client->click($link);
-        $form = $crawler->filter('input[type=submit]')->form();
+        $form = $crawler->filter('button[type=submit]')->form();
         $form['profile_form[firstName]'] = 'toto';
         $form['profile_form[lastName]'] = 'tata';
         $form['profile_form[username]'] = 'tototata';
@@ -95,7 +95,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_group_create_form')->link();
         $crawler = $this->client->click($link);
-        $form = $crawler->filter('input[type=submit]')->form();
+        $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[name]'] = 'Group D';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/admin/group/list');
@@ -141,7 +141,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->click($link);
         $selected = $crawler->filterXpath("//select/option[. = 'ROLE_A']")->attr('selected');
         $this->assertEquals("selected", $selected);
-        $form = $crawler->filter('input[type=submit]')->form();
+        $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[ownedRoles]'] = $this->getFixtureReference('role/admin')->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
@@ -159,7 +159,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/admin');
         $link = $crawler->filter("#link_platform_parameters")->link();
         $crawler = $this->client->click($link);
-        $form = $crawler->filter('input[type=submit]')->form();
+        $form = $crawler->filter('button[type=submit]')->form();
         $form['platform_parameters_form[selfRegistration]'] = true;
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/logout');
@@ -173,7 +173,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals('Logout', trim($crawler->filter("#link_logout")->text()));
 
         $crawler = $this->client->request('GET', '/admin/platform/settings/form');
-        $form = $crawler->filter('input[type=submit]')->form();
+        $form = $crawler->filter('button[type=submit]')->form();
         $form['platform_parameters_form[localLanguage]'] = 'fr';
         $crawler = $this->client->submit($form);
 

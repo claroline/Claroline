@@ -49,7 +49,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_create_WS_form')->link();
         $crawler = $this->client->click($link);
-        $form = $crawler->filter('input[type=submit]')->form();
+        $form = $crawler->filter('button[type=submit]')->form();
         $form['workspace_form[name]'] = 'new_workspace';
         $form['workspace_form[type]'] = 'simple';
         $form['workspace_form[code]'] = 'code';

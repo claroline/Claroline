@@ -1,0 +1,33 @@
+{% macro flashBox() %}
+    {% set flashBag = app.session.getFlashBag() %}
+    {% if flashBag.count() > 0 %}
+        {% set flashes =
+            {
+                'info': flashBag.get('info'),
+                'success': flashBag.get('success'),
+                'error': flashBag.get('error'),
+                'alert': flashBag.get('alert')
+            }
+        %}
+        {% for category, msgs in flashes %}
+            {% if msgs|length > 0 %}
+                <div class="alert alert-{{ category }}">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <ul>
+                        {% for msg in msgs %}
+                            <li>{{ msg }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro sectionHeader(text) %}
+    <div id="tabs" class="row-fluid">
+        <div class="span12">
+            <h2 class="section-header">{{ text }}</h2>
+        </div>
+    </div>
+{% endmacro %}
