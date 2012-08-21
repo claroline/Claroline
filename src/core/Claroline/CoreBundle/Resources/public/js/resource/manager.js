@@ -53,13 +53,12 @@
                 )
             });
 
-        $('.link_navigate_instance').live('click', function(e){
-            console.debug(e);
+        $('.link-navigate-instance').live('click', function(e){
             navigate(e.currentTarget.parentElement.parentElement.dataset.key);
         });
 
         backButton.on('click', function(e){
-            var key = $('#'+construct.prefix+'_current_folder').attr('data-parent-id');
+            var key = $('#'+construct.prefix+'-current-folder').attr('data-parent-id');
             construct.divForm.empty();
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_renders_thumbnail', {
@@ -81,9 +80,9 @@
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
-                        parameters.key = $('#'+prefix+'_current_folder').attr('data-key')
-                        parameters.resourceId = $('#'+prefix+'_current_folder').attr('data-resource-id')
-                        parameters.type = $('#'+prefix+'_current_folder').attr('data-type')
+                        parameters.key = $('#'+prefix+'-current-folder').attr('data-key')
+                        parameters.resourceId = $('#'+prefix+'-current-folder').attr('data-resource-id')
+                        parameters.type = $('#'+prefix+'-current-folder').attr('data-type')
                         var action = divForm.find('form').attr('action');
                         action = action.replace('_instanceId', parameters.key)
                         var id = divForm.find('form').attr('id');
@@ -118,11 +117,11 @@
             var route = '';
             params = pasteIds;
             if (cpd == 0) {
-                params.newParentId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+                params.newParentId = $('#'+construct.prefix+'-current-folder').attr('data-key');
                 route = Routing.generate('claro_resource_multimove', params);
                 ClaroUtils.sendRequest(route, function(){manager.reload()});
             } else {
-                params.instanceDestinationId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+                params.instanceDestinationId = $('#'+construct.prefix+'-current-folder').attr('data-key');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
                 ClaroUtils.sendRequest(route, function(){manager.reload()});
             }
@@ -152,17 +151,17 @@
 
                     })
 
-                    $('.instance_paginator_item').on('click', function(e){
+                    $('.instance-paginator-item').on('click', function(e){
                         activePagerItem = e.target.innerHTML;
                         rendersFlatPaginatedThumbnails(activePagerItem);
                     });
 
-                    $('.instance_paginator_next_item').on('click', function(e){
+                    $('.instance-paginator-next-item').on('click', function(e){
                         activePagerItem++;
                         rendersFlatPaginatedThumbnails(activePagerItem);
                     })
 
-                    $('.instance_paginator_prev_item').on('click', function(e){
+                    $('.instance-paginator-prev-item').on('click', function(e){
                         activePagerItem--;
                         rendersFlatPaginatedThumbnails(activePagerItem);
                     })
@@ -185,7 +184,7 @@
     }
 
     manager.reload = function() {
-        var key = $('#'+construct.prefix+'_current_folder').attr('data-key');
+        var key = $('#'+construct.prefix+'-current-folder').attr('data-key');
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_renders_thumbnail', {
                 'parentId': key,
@@ -223,7 +222,7 @@
 
     function activePage(item)
     {
-        $('.instance_paginator_item').each(function(index, element){
+        $('.instance-paginator-item').each(function(index, element){
             element.parentElement.className = '';
         })
 
@@ -234,16 +233,16 @@
     function buildPaginator(nbPage)
     {
         var paginator = '';
-        paginator += '<div id="instances_paginator" class="pagination"><ul><li><a class="instance_paginator_prev_item" href="#">Prev</a></li>'
+        paginator += '<div id="instances-paginator" class="pagination"><ul><li><a class="instance-paginator-prev-item" href="#">Prev</a></li>'
         for (var i = 0; i < nbPage;) {
             i++;
             if (i==1) {
-                paginator += '<li data-page="'+i+'" class="active"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+                paginator += '<li data-page="'+i+'" class="active"><a class="instance-paginator_--item" href="#">'+i+'</a></li>';
             } else {
-                paginator += '<li data-page="'+i+'"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+                paginator += '<li data-page="'+i+'"><a class="instance-paginator-item" href="#">'+i+'</a></li>';
             }
         }
-        paginator += '<li><a href="#" class="instance_paginator_next_item">Next</a></li></ul></div>';
+        paginator += '<li><a href="#" class="instance-paginator-next-item">Next</a></li></ul></div>';
 
         return paginator;
     }
@@ -252,7 +251,7 @@
     {
         var ids = {};
         var i = 0;
-        $('.'+construct.prefix+'_chk_instance:checked').each(function(index, element){
+        $('.'+construct.prefix+'-chk-instance:checked').each(function(index, element){
             ids[i] = element.value;
             i++;
         })
@@ -262,7 +261,7 @@
 
     function setMenu()
     {
-        $('.resource_menu').each(function(index, element){
+        $('.resource-menu').each(function(index, element){
             var parameters = {};
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
@@ -416,13 +415,13 @@
             construct.backButton.hide();
         } else {
             activePagerItem = 1;
-            if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'_current_folder').size() == 0){
+            if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'-current-folder').size() == 0){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
             }
             construct.backButton.show();
-            if ($('#'+construct.prefix+'_current_folder').size() == 0) {
+            if ($('#'+construct.prefix+'-current-folder').size() == 0) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
             } else {

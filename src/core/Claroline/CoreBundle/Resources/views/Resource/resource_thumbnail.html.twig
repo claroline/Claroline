@@ -1,6 +1,6 @@
 
 {% if currentFolder is not null %}
-    <div class="current_folder" id="{{prefix}}_current_folder"
+    <div class="current-folder" id="{{prefix}}-current-folder"
         data-key="{{currentFolder.id}}"
         data-type="{{currentFolder.getResourceType().getType()}}"
         data-resource-id="{{currentFolder.getResource().getId()}}"
@@ -17,11 +17,11 @@
 
 
 {% for instance in resources %}
-    <span id="{{prefix}}_instance_{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+    <span id="{{prefix}}-instance-{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
-            <input class="{{prefix}}_chk_instance"type="checkbox" value="{{instance.id}}" style="vertical-align: top;"/>
+            <input class="{{prefix}}-chk-instance"type="checkbox" value="{{instance.id}}" style="vertical-align: top;"/>
             {% if instance.type == "directory" %}
-                <a class="link_navigate_instance" id="{{prefix}}_link_navigate_instance_{{instance.id}}" href="#">
+                <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
             <img src="{{asset("icons/" ~ instance.thumbnail)}}"/>
             {% if instance.type == "directory" %}
@@ -31,8 +31,8 @@
         <div class="wrapper">
             <span class="res-name">{{instance.name}}</span>
         </div>
-        <div class="resource_bar">
-            <a href="#" id="resource_menu_{{instance.id}}" class="resource_menu" data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}">Menu</a>
+        <div class="resource-bar">
+            <a href="#" id="resource-menu-{{instance.id}}" class="resource-menu" data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}">Menu</a>
         </div>
         <br/>
     </span>
