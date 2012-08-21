@@ -2,9 +2,17 @@
 
 {% block section_content %}
     {% form_theme form_complete_user 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form action="{{path('claro_admin_create_user')}}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user">
-        {{ form_errors(form_complete_user) }}
-        {{ form_widget(form_complete_user) }}
-        <input type="submit" />
+    <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user">
+        <fieldset>
+            <legend>{{ 'add_user'|trans({}, 'platform') }} :</legend>
+            {{ form_errors(form_complete_user) }}
+            {{ form_widget(form_complete_user) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <button class="btn cancel">
+                    <a href="{{ path('claro_admin_index') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
+                </button>
+            </div>
+        </fieldset>
     </form>
 {% endblock %}

@@ -1,9 +1,10 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-    <table class="claroTable userList" width="100%" cellspacing="2" border="0">
+    <h3 class="sub-section-header">{{ 'users'|trans({}, 'platform') }}</h3>
+    <table class="table table-striped table-bordered table-condensed">
         <thead>
-            <tr class="headerX" align="center" valign"=top">
+            <tr>
                 <th>{{ 'id'|trans({}, 'platform') }}</th>
                 <th>{{ 'username'|trans({}, 'platform') }}</th>
                 <th>{{ 'last_name'|trans({}, 'platform') }}</th>
@@ -15,39 +16,40 @@
             </tr>
         </thead>
         <tbody>
-        {% for user in users %}
-        <tr id="{{ user.getId() }}" class="row_user">
-            <td align="center">{{ user.getId() }}</td>
-            <td align="center">{{ user.getUsername() }}</td>
-            <td align="center">{{ user.getLastName() }}</td>
-            <td align="center">{{ user.getFirstName() }}</td>
-            <td align="center">{{ user.getMail() }}</td>
-            <td align="center">
-                <div>
-                    {%for role in user.getOwnedRoles() %}
-                        {{role.getTranslationKey()}}<br/>
-                    {% endfor %}
-                </div>
-            </td>
-            {% if is_granted('user', 'EDIT') %}
-                {% if app.user.id == user.getId() %}
-                    <td align="center"> - </td>
-                {% else %}
-                    <td align="center">
-                        <a class="link_delete"
-                           href="{{ path('claro_admin_delete_user', {'userId': user.getId()}) }}">
-                            {{ 'delete'|trans({}, 'platform') }}
+            {% for user in users %}
+                <tr id="{{ user.getId() }}" class="row_user">
+                    <td>{{ user.getId() }}</td>
+                    <td>{{ user.getUsername() }}</td>
+                    <td>{{ user.getLastName() }}</td>
+                    <td>{{ user.getFirstName() }}</td>
+                    <td>{{ user.getMail() }}</td>
+                    <td>
+                        <div>
+                            {% for role in user.getOwnedRoles() %}
+                                {{ role.getTranslationKey() }}
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    {% if is_granted('user', 'EDIT') %}
+                        {% if app.user.id == user.getId() %}
+                            <td> - </td>
+                        {% else %}
+                            <td>
+                                <a class="link_delete"
+                                   href="{{ path('claro_admin_delete_user', {'userId': user.getId()}) }}">
+                                    {{ 'delete'|trans({}, 'platform') }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                    <td>
+                        <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
+                            {{ 'show'|trans({}, 'platform') }}
                         </a>
                     </td>
-                {% endif %}
-            {% endif %}
-            <td align="center">
-                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
-                    {{ 'show'|trans({}, 'platform') }}
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endblock %}

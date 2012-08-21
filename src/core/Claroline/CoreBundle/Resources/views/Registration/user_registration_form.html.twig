@@ -1,14 +1,19 @@
-{% extends 'ClarolineCoreBundle::content_layout.html.twig' %}
-
-{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-
-<h4>{{ 'register'|trans({}, 'platform') }}</h4>
-
-<form id="user_registration_form" action="{{ path('claro_registration_register_user') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
-    <input type="submit" />
-</form>
-
+    {{ macros.flashBox() }}
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form id="user_registration_form" action="{{ path('claro_registration_register_user') }}" method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            <legend>{{ 'register'|trans({}, 'platform') }} :</legend>
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <button class="btn cancel">
+                    <a href="{{ path('claro_index') }}">{{ 'cancel'|trans({}, 'platform') }}</a>
+                </button>
+            </div>
+        </fieldset>
+    </form>
 {% endblock %}

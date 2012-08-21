@@ -16,7 +16,7 @@ class AdminSecurityTest extends FunctionalTestCase
     public function testAdminSectionRequiresAuthenticatedUser()
     {
         $crawler = $this->client->request('GET', '/admin');
-        $this->assertTrue($crawler->filter('#login_form')->count() > 0);
+        $this->assertTrue($crawler->filter('#login-form')->count() > 0);
     }
 
     public function testAccessToAdminSectionIsDeniedToSimpleUsers()

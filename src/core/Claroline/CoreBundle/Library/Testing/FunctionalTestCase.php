@@ -10,7 +10,7 @@ abstract class FunctionalTestCase extends FixtureTestCase
     {
         $this->client->request('GET', '/logout');
         $crawler = $this->client->request('GET', '/login');
-        $form = $crawler->filter('#login_form input[type=submit]')->form();
+        $form = $crawler->filter('#login-form button[type=submit]')->form();
         $form['_username'] = $user->getUsername();
         $form['_password'] = $user->getPlainPassword();
 

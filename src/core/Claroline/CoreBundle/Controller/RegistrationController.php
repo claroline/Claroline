@@ -67,7 +67,7 @@ class RegistrationController extends Controller
             $em->flush();
 
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
-            $this->getRequest()->getSession()->setFlash('notice', $msg);
+            $this->getRequest()->getSession()->getFlashBag()->add('success', $msg);
         }
 
         return $this->render(

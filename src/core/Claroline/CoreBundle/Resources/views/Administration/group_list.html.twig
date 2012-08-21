@@ -1,35 +1,47 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-<table class="claroTable group" width="100%" cellspacing="2" border="0">
-    <thead class="headerX" align="center" valign="top">
-        <tr>
-            <th id="c0" scope="col">{{ 'groupes'|trans({}, 'platform') }}</th>
-            <th id="c6" scope="col">{{ 'role'|trans({}, 'platform') }}</th>
-            <th id="c1" scope="col">{{ 'users'|trans({}, 'platform') }}</th>
-            <th id="c2" scope="col">{{ 'resources'|trans({}, 'platform') }}</th>
-            <th id="c3" scope="col">{{ 'settings'|trans({}, 'platform') }}</th>
-            <th id="c4" scope="col">{{ 'move'|trans({}, 'platform') }}</th>
-            <th id="c5" scope="col">{{ 'delete'|trans({}, 'platform') }}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for group in groups %}
-            <tr id="group_{{group.getId()}}" class="row_group"/>
-                <td align="center" headers="c0 L0">{{group.getName()}}</td>
-                <td align="center" headers="c6 L0">
-                <div id="roleName">
-                {% for role in group.getWorkspaceRoleCollection() %}
-                    {{role.getName}}
-                {% endfor %}
-                </div>
-                <td align="center" headers="c1 L0"><a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link_show_{{ group.getId() }}">{{ 'show'|trans({}, 'platform') }}</a></td>
-                <td align="center" headers="c2 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c3 L0"><a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link_settings_{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a></td>
-                <td align="center" headers="c4 L0"><a href="todo">todo</a></td>
-                <td align="center" headers="c5 L0"><a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" id="link_delete_{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a></td>
+    <h3 class="sub-section-header">{{ 'groups'|trans({}, 'platform') }}</h3>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
             <tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <th>{{ 'name'|trans({}, 'platform') }}</th>
+                <th>{{ 'role'|trans({}, 'platform') }}</th>
+                <th>{{ 'users'|trans({}, 'platform') }}</th>
+                <th>{{ 'resources'|trans({}, 'platform') }}</th>
+                <th>{{ 'settings'|trans({}, 'platform') }}</th>
+                <th>{{ 'move'|trans({}, 'platform') }}</th>
+                <th>{{ 'delete'|trans({}, 'platform') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+                <tr id="group_{{ group.getId() }}" class="row_group"/>
+                    <td>{{ group.getName() }}</td>
+                    <td>
+                        <div id="roleName">
+                            {% for role in group.getWorkspaceRoleCollection() %}
+                                {{ role.getName }}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link_show_{{ group.getId() }}">{{ 'show'|trans({}, 'platform') }}</a>
+                    </td>
+                    <td>
+                        <a href="todo">todo</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link_settings_{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a>
+                    </td>
+                    <td>
+                        <a href="todo">todo</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" id="link_delete_{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

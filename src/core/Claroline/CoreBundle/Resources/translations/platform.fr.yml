@@ -27,43 +27,43 @@ create_group: Créer un groupe
 list_groups: Lister les groupes
 platform_parameters: Paramètres de la plateforme
 
-# workspace links
-create_workspace: Ajouter un espace d'activités
-my_workspaces: Mes espaces d'activités
-list_workspaces: Tous les espaces d'activités
-
 # registration
 login: Connexion
 logout: Déconnexion
 register: Inscription
+
+# workspace links
+create_workspace: Ajouter un espace d'activités
+my_workspaces: Mes espaces d'activités
+list_workspaces: Tous les espaces d'activités
 
 #########
 # FORMS #
 #########
 
 # user form field labels
-user_form_firstName: "Nom :"
-user_form_lastName: "Prénom :"
-user_form_username: "Nom d'utilisateur:"
-user_form_plainPassword_first: "Mot de passe :"
-user_form_plainPassword_second: "Vérification :"
-user_form_administrativeCode: "Code administratif :"
-user_form_mail: "Mail :"
-user_form_phone: "Téléphone :"
-user_form_ownedRoles: "Role(s) :"
-user_form_note: "Note personnelle :"
+user_form_firstName: Nom
+user_form_lastName: Prénom
+user_form_username: Nom d'utilisateur
+user_form_plainPassword_first: Mot de passe
+user_form_plainPassword_second: Vérification
+user_form_administrativeCode: Code administratif
+user_form_mail: Mail
+user_form_phone: Téléphone
+user_form_ownedRoles: Role(s)
+user_form_note: Note personnelle
 
 # profile form field labels
-profile_form_firstName: "Nom :"
-profile_form_lastName: "Prénom :"
-profile_form_username: "Nom d'utilisateur:"
-profile_form_plainPassword_first: "Mot de passe :"
-profile_form_plainPassword_second: "Vérification :"
-profile_form_administrativeCode: "Code administratif :"
-profile_form_mail: "Mail :"
-profile_form_phone: "Téléphone :"
-profile_form_ownedRoles: "Role(s) :"
-profile_form_note: "Note personnelle :"
+profile_form_firstName: Nom
+profile_form_lastName: Prénom
+profile_form_username: Nom d'utilisateur
+profile_form_plainPassword_first: Mot de passe
+profile_form_plainPassword_second: Vérification
+profile_form_administrativeCode: Code administratif
+profile_form_mail: Mail
+profile_form_phone: Téléphone
+profile_form_ownedRoles: Role(s)
+profile_form_note: Note personnelle
 
 # platform settings form field labels
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -78,7 +78,11 @@ workspace_form_name: Nom
 workspace_form_type: Type
 
 # file manager form field labels
-choose_resource_form_type: "Type de ressource :"
+choose_resource_form_type: Type de ressource
+
+# form buttons
+ok: Ok
+cancel: Annuler
 
 ############
 # MESSAGES #

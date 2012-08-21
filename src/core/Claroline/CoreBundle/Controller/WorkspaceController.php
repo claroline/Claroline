@@ -132,7 +132,7 @@ class WorkspaceController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $wsCreator = $this->get('claroline.workspace.creator');
             $wsCreator->createWorkspace($config, $user);
-            $this->get('session')->setFlash('notice', 'Workspace created');
+            $this->get('session')->getFlashBag()->add('success', 'Workspace created');
             $route = $this->get('router')->generate('claro_ws_list');
 
             return new RedirectResponse($route);
@@ -165,7 +165,7 @@ class WorkspaceController extends Controller
         $em->remove($workspace);
         $em->flush();
 
-        $this->get('session')->setFlash('notice', 'Workspace deleted');
+        $this->get('session')->getFlashBag()->add('success', 'Workspace deleted');
         $route = $this->get('router')->generate('claro_ws_list');
 
         return new RedirectResponse($route);

@@ -1,0 +1,46 @@
+/*
+ * This stylesheet can be included after "bootstrap-responsive.css". It contains all
+ * the specific styles (layout/fluid independent).
+ */
+
+footer {
+    background-color: #2C2C2C;
+    color: #999;
+}
+
+/* Matches the div inserted in forms by the Form Component */
+form fieldset>div:first-of-type {
+    padding-top: 20px;
+}
+
+/* Displays links in forms cancel buttons as regular text  */
+button.cancel a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+#login-form, #login-error {
+    width: 420px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+#login-form {
+    margin-top: 12px;
+    background-color: whiteSmoke;
+}
+
+h2.section-header {
+    margin: 20px auto;
+}
+
+h3.sub-section-header {
+    height: 30px;
+    margin-bottom: 16px;
+    border-bottom: solid #EEE 1px;
+}
+
+form {
+    max-width: 500px;
+}

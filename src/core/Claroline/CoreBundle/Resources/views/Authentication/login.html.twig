@@ -1,20 +1,34 @@
-{% extends 'ClarolineCoreBundle::common_layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block global_content %}
+{#
+    This form doesn't include the usual form theme as we want it to always display the
+    same message when authentication has failed (no precise validation errors).
+#}
 
-<form id="login_form" action="{{ path('claro_security_login_check') }}" method="post">
-
-{% if error %}
-     <div class="failure_msg">{{ 'login_failure'|trans({}, 'platform') }}</div>
-{% endif %}
-
-    <label for="username">{{ 'username'|trans({}, 'platform') }} :</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
-
-    <label for="password">{{ 'password'|trans({}, 'platform') }} :</label>
-    <input type="password" id="password" name="_password" />
-
-    <input type="submit" id="submit" name="_submit" value="{{ 'login'|trans({}, 'platform') }}" />
-</form>
-
-{% endblock global_content %}
+{% block content %}
+    {% if error %}
+        <div id="login-error" class="alert-error">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{ 'login_failure'|trans({}, 'platform') }}
+        </div>
+    {% endif %}
+    <form id="login-form" class="form-horizontal" action="{{ path('claro_security_login_check') }}" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="username">{{ 'username'|trans({}, 'platform') }} :</label>
+                <div class="controls">
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="username">{{ 'password'|trans({}, 'platform') }} :</label>
+                <div class="controls">
+                    <input type="password" id="password" name="_password" required="required" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

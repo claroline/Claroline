@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Administration:index.html.twig' %}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,13 +15,13 @@
 {% endblock %}
 
 {% block section_content %}
-<div id='jsdata' data-ws-id='{{workspace.getId()}}'></div>
-<div id="div_WS_show">
-{{ 'workspace'|trans({}, 'platform') }}: {{ workspace.getName() }}
-{% if is_granted(workspace.getManagerRole().getName()) %}
-    | <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platform') }} </a>|
-{% endif %}
-    <div id="filepicker"></div>
-    <div id="currentWorkspaceTree"></div>
-</div>
+    <h3 class="sub-section-header">{{ 'workspace'|trans({}, 'platform') }}: {{ workspace.getName() }}</h3>
+    <div id='jsdata' data-ws-id='{{workspace.getId()}}'></div>
+    <div id="div_WS_show">
+        {% if is_granted(workspace.getManagerRole().getName()) %}
+            <a href ="{{ path('claro_ws_users_ws', {'workspaceId':workspace.getId()}) }}" id="link_workspace_users"> {{ 'add_user'|trans({}, 'platform') }} </a>
+        {% endif %}
+        <div id="filepicker"></div>
+        <div id="currentWorkspaceTree"></div>
+    </div>
 {% endblock %}

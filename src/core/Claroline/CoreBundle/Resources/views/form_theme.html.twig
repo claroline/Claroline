@@ -1,13 +1,32 @@
 {% block field_row %}
-    <div class="form_row">
+    <div class="control-group {% if errors|length > 0 %}error{% endif %}">
         {{ form_label(form) }}
-        {{ form_widget(form) }}
-        <div class="form_error">{{ form_errors(form) }}</div>
+        <div class="controls">
+            {{ form_widget(form) }}
+            <span class="help-inline">{{ form_errors(form) }}</span>
+        </div>
     </div>
 {% endblock field_row %}
 
 {% block field_label %}
 {% spaceless %}
-    <label for="{{ id }}">{{ id|trans([], 'platform') }}</label>
+    <label class="control-label" for="{{ id }}">{{ id|trans([], 'platform') }} :</label>
 {% endspaceless %}
 {% endblock field_label %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+        *
+        {% for error in errors %}
+            {{
+                error.messagePluralization is null
+                    ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                    : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+            }}
+            {% if not loop.last %} - {% endif %}
+        {% endfor %}
+
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}

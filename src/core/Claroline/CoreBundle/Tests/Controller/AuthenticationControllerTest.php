@@ -17,7 +17,7 @@ class AuthenticationControllerTest extends FunctionalTestCase
     public function testLoginWithValidCredentialsDoesntReturnFailureMsg()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertEquals(0, $crawler->filter('#login_form .failure_msg')->count());
+        $this->assertEquals(0, $crawler->filter('#login-error')->count());
     }
 
     public function testLoginWithWrongCredentialsReturnsFailureMsg()
@@ -26,6 +26,6 @@ class AuthenticationControllerTest extends FunctionalTestCase
         $unknownUser->setUsername('unknown_user');
         $unknownUser->setPlainPassword('bad_password');
         $crawler = $this->logUser($unknownUser);
-        $this->assertEquals(1, $crawler->filter('#login_form .failure_msg')->count());
+        $this->assertEquals(1, $crawler->filter('#login-error')->count());
     }
 }
