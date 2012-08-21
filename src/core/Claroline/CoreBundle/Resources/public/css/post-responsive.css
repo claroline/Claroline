@@ -13,12 +13,6 @@ form fieldset>div:first-of-type {
     padding-top: 20px;
 }
 
-/* Displays links in forms cancel buttons as regular text  */
-button.cancel a {
-    color: inherit;
-    text-decoration: inherit;
-}
-
 #login-form, #login-error {
     width: 420px;
     margin: auto;
@@ -42,5 +36,5 @@ h3.sub-section-header {
 }
 
 form {
-    max-width: 500px;
+    max-width: 600px;
 }
