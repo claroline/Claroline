@@ -5,6 +5,7 @@
     var pasteIds = {};
     //0 = cut; 1 = copy
     var cpd = null;
+    var limit = 12;
 
     manager.init = function(
         div,
@@ -17,8 +18,9 @@
         cutButton,
         copyButton,
         pasteButton,
-        closeButton
-    ) {
+        closeButton,
+        flatChkBox
+        ) {
         construct.div = div;
         construct.prefix = prefix;
         construct.backButton = backButton;
@@ -30,10 +32,7 @@
         construct.copyButton = copyButton;
         construct.pasteButton = pasteButton;
         construct.closeButton = closeButton;
-
-        selectType.hide();
-        submitButton.hide();
-        pasteButton.attr('disabled', 'disabled');
+        construct.flatChkBox = flatChkBox;
 
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
@@ -44,15 +43,15 @@
                 }
             },
             function() {
-            ClaroUtils.sendRequest(
-                Routing.generate('claro_resource_renders_thumbnail', {
-                    'prefix': prefix
-                }),
-                function(data){
-                    appendThumbnails(div, data);
-                }
-            )
-        });
+                ClaroUtils.sendRequest(
+                    Routing.generate('claro_resource_renders_thumbnail', {
+                        'prefix': prefix
+                    }),
+                    function(data){
+                        appendThumbnails(div, data);
+                    }
+                )
+            });
 
         $('.link_navigate_instance').live('click', function(e){
             var key = e.target.dataset.key;
@@ -64,8 +63,6 @@
                 }),
                 function(data){
                     appendThumbnails(div, data);
-                    selectType.show();
-                    submitButton.show();
                 });
         })
 
@@ -79,11 +76,6 @@
                 }),
                 function(data){
                     appendThumbnails(div, data);
-                    if ($('#'+prefix+'_current_folder').size() == 0) {
-                        selectType.hide();
-                        submitButton.hide();
-                    }
-
                 });
         })
 
@@ -108,7 +100,7 @@
                         });
                     })
                 })
-            });
+        });
 
         downloadButton.on('click', function(e){
             var ids = getSelectedItems();
@@ -118,14 +110,14 @@
         cutButton.on('click', function(e){
             pasteIds = {};
             pasteIds = getSelectedItems();
-            construct.pasteButton.removeAttr('disabled');
+            setLayout();
             cpd = 0;
         })
 
         copyButton.on('click', function(e){
             pasteIds = {};
             pasteIds = getSelectedItems();
-            construct.pasteButton.removeAttr('disabled');
+            setLayout();
             cpd = 1;
         })
 
@@ -136,18 +128,67 @@
             if (cpd == 0) {
                 params.newParentId = $('#'+construct.prefix+'_current_folder').attr('data-key');
                 route = Routing.generate('claro_resource_multimove', params);
-                ClaroUtils.sendRequest(route);
+                ClaroUtils.sendRequest(route, function(){manager.reload()});
             } else {
                 params.instanceDestinationId = $('#'+construct.prefix+'_current_folder').attr('data-key');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
-                ClaroUtils.sendRequest(route);
+                ClaroUtils.sendRequest(route, function(){manager.reload()});
             }
-            manager.reload();
         })
 
         closeButton.on('click', function(e){
             construct.divForm.empty();
         })
+
+        flatChkBox.on('change', function(e){
+            if(e.target.checked) {
+                setLayout();
+                var route = Routing.generate('claro_resource_count_instances');
+                ClaroUtils.sendRequest(route,
+                function(count){
+                    construct.div.empty();
+                    var paginator = buildPaginator(count);
+                    div.append(paginator);
+
+                    route = Routing.generate('claro_resource_flat_view_page', {
+                        'page':1,
+                        'prefix':construct.prefix
+                    });
+                    ClaroUtils.sendRequest(route, function(data){
+                        div.prepend(data);
+                        setMenu();
+
+                    })
+
+                    $('.instance_paginator_item').on('click', function(e){
+                        console.debug(e);
+                        activeCurrentPage(e.target);
+//                        e.target.className = 'active'
+                        route = Routing.generate('claro_resource_flat_view_page', {
+                            'page':e.target.innerHTML,
+                            'prefix':construct.prefix
+                        });
+                        ClaroUtils.sendRequest(route, function(data){
+                            $('.instance_thumbnail_item').remove();
+                            div.prepend(data);
+                            setMenu();
+                        })
+                    });
+
+                });
+            } else {
+
+                ClaroUtils.sendRequest(
+                    Routing.generate('claro_resource_renders_thumbnail', {
+                        'prefix': construct.prefix
+                    }),
+                    function(data){
+                        appendThumbnails(construct.div, data);
+                    }
+                )
+            }
+        })
+
     }
 
     manager.reload = function() {
@@ -159,9 +200,34 @@
             }),
             function(data){
                 appendThumbnails(construct.div, data);
-                if ($('#'+construct.prefix+'_current_folder').size() == 0) {
-                }
             });
+    }
+
+    function activeCurrentPage(link)
+    {
+        $('.instance_paginator_item').each(function(index, element){
+            element.parentElement.className = '';
+        })
+        link.parentElement.className = 'active';
+    }
+
+    function buildPaginator(count)
+    {
+        var nbPage = Math.floor(count/limit);
+        nbPage++;
+        var paginator = '';
+        paginator += '<div id="instances_paginator" class="pagination"><ul><li><a href="#">Prev</a></li>'
+        for (var i = 0; i < nbPage;) {
+            i++;
+            if (i==1) {
+                paginator += '<li class="active"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+            } else {
+                paginator += '<li><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+            }
+        }
+        paginator += '<li><a href="#">Next</a></li></ul></div>';
+
+        return paginator;
     }
 
     function getSelectedItems()
@@ -176,9 +242,8 @@
         return ids;
     }
 
-    function appendThumbnails(div, data) {
-        div.empty();
-        div.append(data);
+    function setMenu()
+    {
         $('.resource_menu').each(function(index, element){
             var parameters = {};
             parameters.key = element.dataset.key;
@@ -186,6 +251,13 @@
             parameters.type = element.dataset.type;
             bindContextMenu(parameters, element);
         });
+    }
+
+    function appendThumbnails(div, data) {
+        div.empty();
+        div.append(data);
+        setMenu();
+        setLayout();
     }
 
     function bindContextMenu(parameters, menuElement) {
@@ -281,5 +353,24 @@
         }
     };
 
-
+    function setLayout() {
+        if(construct.flatChkBox.is(':checked')){
+            construct.pasteButton.attr('disabled', 'disabled');
+            construct.backButton.hide();
+        } else {
+            if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'_current_folder').size() == 0){
+                construct.pasteButton.attr('disabled', 'disabled');
+            } else {
+                construct.pasteButton.removeAttr('disabled');
+            }
+            construct.backButton.show();
+            if ($('#'+construct.prefix+'_current_folder').size() == 0) {
+                construct.selectType.hide();
+                construct.submitButton.hide();
+            } else {
+                construct.selectType.show();
+                construct.submitButton.show();
+            }
+        }
+    }
 })();

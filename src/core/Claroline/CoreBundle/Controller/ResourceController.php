@@ -567,6 +567,11 @@ class ResourceController extends Controller
         return $response;
     }
 
+    /**
+     * Returns the number of non directory instances for the current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function countInstanceAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
@@ -575,5 +580,17 @@ class ResourceController extends Controller
             ->countInstancesForUser($user);
 
         return new Response($count);
+    }
+
+    public function rendersPaginatedFlatThumbnailsInstanceAction($page, $prefix)
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $results = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getPaginatedInstanceList($user, $page);
+        $currentFolder = null;
+
+         return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig',
+             array('resources' => $results, 'prefix' => $prefix, 'currentFolder' => $currentFolder));
     }
 }
