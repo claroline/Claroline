@@ -5,7 +5,6 @@
     var pasteIds = {};
     //0 = cut; 1 = copy
     var cpd = null;
-    var limit = 12;
     var activePagerItem = 1;
 
     manager.init = function(
@@ -152,7 +151,7 @@
                     div.append(paginator);
 
                     route = Routing.generate('claro_resource_flat_view_page', {
-                        'page':1,
+                        'page':activePagerItem,
                         'prefix':construct.prefix
                     });
                     ClaroUtils.sendRequest(route, function(data){
@@ -228,10 +227,8 @@
         searched.first().addClass('active');
     }
 
-    function buildPaginator(count)
+    function buildPaginator(nbPage)
     {
-        var nbPage = Math.floor(count/limit);
-        nbPage++;
         var paginator = '';
         paginator += '<div id="instances_paginator" class="pagination"><ul><li><a class="instance_paginator_prev_item" href="#">Prev</a></li>'
         for (var i = 0; i < nbPage;) {

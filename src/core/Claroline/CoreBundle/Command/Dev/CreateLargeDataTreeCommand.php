@@ -94,13 +94,13 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
             ->findOneBy(array('type' => 'file'));
 
         for ($j = 0; $j < $directoryCount; $j++) {
-            $ri = $this->addDirectory($this->generateGuid(), $parent, $dirType, $user);
+            $ri = $this->addDirectory($this->getContainer()->get('claroline.listener.file_listener')->generateGuid(), $parent, $dirType, $user);
             $this->directoryCount++;
             if ($this->directoryCount%100 === 0) {
                 $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
             }
             for ($k = 0; $k < $fileCount; $k++) {
-                $this->addFile($this->generateGuid(), $ri, $fileType, $user);
+                $this->addFile($this->getContainer()->get('claroline.listener.file_listener')->generateGuid(), $ri, $fileType, $user);
                 $this->filesCount++;
                 if ($this->filesCount%100 === 0) {
                     $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -137,7 +137,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $file = new File();
         $file->setResourceType($fileType);
         $file->setCreator($user);
-        $file->setHashName($this->generateGuid());
+        $file->setHashName($this->getContainer()->get('claroline.listener.file_listener')->generateGuid());
         $file->setSize(0);
         $ri = new ResourceInstance();
         $ri->setCreator($user);
@@ -151,24 +151,4 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
 
         return $ri;
     }
-
-    private function generateGuid()
-    {
-        if (function_exists('com_create_guid') === true) {
-            return trim(com_create_guid(), '{}');
-        }
-
-        return sprintf(
-            '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(16384, 20479),
-            mt_rand(32768, 49151),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535)
-        );
-    }
-
 }
