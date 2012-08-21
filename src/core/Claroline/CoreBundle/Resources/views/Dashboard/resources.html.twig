@@ -18,7 +18,21 @@
 
 <div id='div_filter' class='span2'></div>
 <div id='div_resources' class='span10'>
+
+    <div id='dr_manager_options'>
+        {#<button id='dr_tree_button'>Arbre</button>
+        <button id='dr_thumbnail_button'>vignette</button><br>#}
+        <input type='checkbox' id='dr_is_flat' value='1'>&nbsp;Voir aussi le contenu de tous les sous-répertoires</input>
+    </div>
+
+    <div id ='dr_resource_manager_content'>
+        {# TODO: back button should be hidden when we are at root #}
+        <a href='#' id='dr_resources_back'>back</a>
+        <div id='dr_resources_content'></div>
+    </div>
+
     <div id='div_resources_top'>
+        <div id='dr_div_form'></div>
         <select id='dr_select_creation' style='width:150px'>
         {% for resourceType in resourceTypes %}
             <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
@@ -31,17 +45,7 @@
         <button id='dr_copy_button'>{{ 'copy'|trans({}, 'platform') }}</button>
         <button id='dr_paste_button'>{{ 'paste'|trans({}, 'platform') }}</button>
         <button id='dr_close_button'>{{ 'close'|trans({}, 'platform') }}</button>
-        <div id='dr_manager_options' style='float:right;'>
-            <button id='dr_tree_button'>Arbre</button>
-            <button id='dr_thumbnail_button'>vignette</button><br>
-            <input type='checkbox' id='dr_is_flat' value='1'>vue "plate"</input>
-        </div>
     </div>
     <br>
-    <div id ='dr_resource_manager_content'>
-        <div id='dr_div_form'></div>
-        <a href='#' id='dr_resources_back'>back</a>
-        <div id='dr_resources_content'></div>
-    </div>
 </div>
 {% endblock %}
