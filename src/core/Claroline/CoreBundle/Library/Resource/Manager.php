@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
+use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
@@ -95,7 +96,11 @@ class Manager
         $child->setParent($parent);
         $rename = $this->getUniqueName($child, $parent);
         $child->setName($rename);
-        $this->em->flush();
+        try {
+            $this->em->flush();
+        } catch (UnexpectedValueException $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -158,29 +163,27 @@ class Manager
     {
         $resource = $resourceInstance->getResource();
 
-        if ($resource->getShareType() == AbstractResource::PUBLIC_RESOURCE
-            || $resource->getCreator() == $this->sc->getToken()->getUser()) {
+        if ($resource->getResourceType()->getType() != 'directory') {
+            $instanceCopy = $this->createReference($resource);
+            $instanceCopy->setParent($parent);
+            $instanceCopy->setWorkspace($parent->getWorkspace());
+            $rename = $this->getUniqueName($resourceInstance, $parent);
+            $instanceCopy->setName($rename);
+        } else {
+            $instances = $resource->getResourceInstances();
+            $instanceCopy = $this->createCopy($instances[0]);
+            $instanceCopy->setParent($parent);
+            $instanceCopy->setWorkspace($parent->getWorkspace());
+            $rename = $this->getUniqueName($resourceInstance, $parent);
+            $instanceCopy->setName($rename);
 
-           if ($resource->getResourceType()->getType() != 'directory') {
-                $instanceCopy = $this->createReference($resource);
-                $instanceCopy->setParent($parent);
-                $instanceCopy->setWorkspace($parent->getWorkspace());
-           } else {
-                $instances = $resource->getResourceInstances();
-                $instanceCopy = $this->createCopy($instances[0]);
-                $instanceCopy->setParent($parent);
-                $instanceCopy->setWorkspace($parent->getWorkspace());
-
-                foreach ($instances[0]->getChildren() as $child) {
-                    $this->addToDirectoryByReference($child, $instanceCopy);
-                }
-           }
-
-           $this->em->persist($instanceCopy);
-           $rename = $this->getUniqueName($resourceInstance, $parent);
-           $instanceCopy->setName($rename);
-           $this->em->persist($instanceCopy);
+            foreach ($instances[0]->getChildren() as $child) {
+                $this->addToDirectoryByReference($child, $instanceCopy);
+            }
         }
+
+
+        $this->em->persist($instanceCopy);
     }
 
     public function normalizeEventName($prefix, $resourceType)

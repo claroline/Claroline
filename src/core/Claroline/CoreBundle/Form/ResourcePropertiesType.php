@@ -15,6 +15,7 @@ class ResourcePropertiesType extends AbstractType
             'expanded' => true,
             'label' => 'sharable'
         ));
+        $builder->add('name', 'text');
     }
 
     public function getName()
