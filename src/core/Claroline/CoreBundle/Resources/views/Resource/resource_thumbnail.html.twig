@@ -16,16 +16,13 @@
 
 
 {% for instance in resources %}
-    <span id = '{{prefix}}_instance_{{instance.id}}' style='display:inline-block; width:200px; border: 1px solid #000; text-align: center;' >
-        <img src="{{asset('icons/' ~ instance.thumbnail)}}" style="text-align: center; "/>
-        <div id="res-sel-name" style="border: 1px solid #000;">
-            <div style="float: left; vertical-align: top;">
-                <input class='{{prefix}}_chk_instance'type='checkbox' value='{{instance.id}}' style="vertical-align: top;margin-right: 0px;"/>
-            </div>
-            <div style="float: left;" class='res-name'>{{instance.name}}</div>
+    <span id = '{{prefix}}_instance_{{instance.id}}' style='display:inline-block; width:180px; text-align: center; vertical-align: top;' >
+        <div>
+            <input class='{{prefix}}_chk_instance'type='checkbox' value='{{instance.id}}' style="vertical-align: top;"/>
+            <img src="{{asset('icons/' ~ instance.thumbnail)}}" />
         </div>
-        <div style="clear: both"/>
-        <div class='resource_bar' style="border: 1px solid #000;">
+        <div class='res-name'>{{instance.name}}</div>
+        <div class='resource_bar'>
             <a href="#" id='resource_menu_{{instance.id}}' class='resource_menu' data-key='{{instance.id}}' data-type='{{instance.type}}' data-resource-id='{{instance.resource_id}}'>menu</a>
             {% if instance.type == 'directory' %}
                 <a data-key='{{instance.id}}' class='link_navigate_instance' id='{{prefix}}_link_navigate_instance_{{instance.id}}' href="#">navigate</a>
