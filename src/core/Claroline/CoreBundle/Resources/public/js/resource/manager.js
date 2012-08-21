@@ -112,7 +112,47 @@
             parameters.type = element.dataset.type;
             bindContextMenu(parameters, element);
         });
+        $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
+
+    /* Cut the name of the resource if its length is more than maxLength,
+     * adding '...' at the end. And cut multilines, trying to cut between words when possible. */
+    function formatResName(element, maxLines, maxLengthPerLine) {
+        maxLines = typeof maxLines !== 'undefined' ? maxLines : 2;
+        maxLengthPerLine = typeof maxLengthPerLine !== 'undefined' ? maxLengthPerLine : 20;
+        if (typeof element !== 'undefined' && element.text() !== 'undefined'
+            && element.text().length > maxLengthPerLine) {
+            var newText = new Array(maxLines);
+            var curLine = 0;
+            var curText = element.text();
+            while (curText.length > 0 && curLine < maxLines) {
+                newText[curLine] = curText.substr(0, maxLengthPerLine);
+                if (curLine == maxLines-1) {
+                } else {
+                    var i = newText[curLine].length;
+                    while (i>0) {
+                        var c = newText[curLine].charAt(i-1);
+                        if ( !((c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9')) )
+                            break;
+                        i--;
+                    }
+                    if (i > 0)
+                        newText[curLine] = newText[curLine].substr(0,i);
+                    curText = curText.substr(newText[curLine].length, curText.length);
+                    newText[curLine] = newText[curLine]+"<br>";
+                }
+                curLine++;
+            }
+            if (curText.length > 0) {
+                if (newText[curLine-1].length > maxLengthPerLine-3) {
+                    newText[curLine-1] = newText[curLine-1].substr(0, maxLengthPerLine-3);
+                    newText[curLine-1] = newText[curLine-1]+"...";
+                }
+            }
+            element.html(newText.join(""));
+        }
+    };
+
 
     function bindContextMenu(parameters, menuElement) {
         var type = parameters.type;
