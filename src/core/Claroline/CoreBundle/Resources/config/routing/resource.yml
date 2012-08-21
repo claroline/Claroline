@@ -132,7 +132,7 @@ claro_resource_every_instances:
 
 claro_resource_count_instances:
     pattern: /count/instances
-    defaults: { _controller: ClarolineCoreBundle:Resource:countInstance }
+    defaults: { _controller: ClarolineCoreBundle:Resource:countPageInstance }
     options:
         expose: true
 
