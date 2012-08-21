@@ -266,9 +266,10 @@ class ResourceInstanceRepository extends NestedTreeRepository
             ON res.id = ri.resource_id
             INNER JOIN claro_resource_type rt
             ON res.resource_type_id = rt.id
+            WHERE ri.workspace_id
             IN (" .
             self::SELECT_USER_WORKSPACES_ID . ")
-            WHERE rt.type != 'directory'";
+            AND rt.type != 'directory'";
 
         $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt->bindValue('userId', $user->getId());
