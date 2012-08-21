@@ -17,19 +17,22 @@
 
 
 {% for instance in resources %}
-    <span id="{{prefix}}_instance_{{instance.id}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+    <span id="{{prefix}}_instance_{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
             <input class="{{prefix}}_chk_instance"type="checkbox" value="{{instance.id}}" style="vertical-align: top;"/>
-            <img src="{{asset("icons/" ~ instance.thumbnail)}}" />
+            {% if instance.type == "directory" %}
+                <a class="link_navigate_instance" id="{{prefix}}_link_navigate_instance_{{instance.id}}" href="#">
+            {% endif %}
+            <img src="{{asset("icons/" ~ instance.thumbnail)}}"/>
+            {% if instance.type == "directory" %}
+                </a>
+            {% endif %}
         </div>
         <div class="wrapper">
             <span class="res-name">{{instance.name}}</span>
         </div>
         <div class="resource_bar">
             <a href="#" id="resource_menu_{{instance.id}}" class="resource_menu" data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}">Menu</a>
-            {% if instance.type == "directory" %}
-                <a data-key="{{instance.id}}" class="link_navigate_instance" id="{{prefix}}_link_navigate_instance_{{instance.id}}" href="#">Open</a>
-            {% endif %}
         </div>
         <br/>
     </span>

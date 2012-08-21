@@ -54,16 +54,8 @@
             });
 
         $('.link_navigate_instance').live('click', function(e){
-            var key = e.target.dataset.key;
-            construct.divForm.empty();
-            ClaroUtils.sendRequest(
-                Routing.generate('claro_resource_renders_thumbnail', {
-                    'parentId': key,
-                    'prefix':prefix
-                }),
-                function(data){
-                    appendThumbnails(div, data);
-                });
+            console.debug(e);
+            navigate(e.currentTarget.parentElement.parentElement.dataset.key);
         });
 
         backButton.on('click', function(e){
@@ -194,6 +186,18 @@
 
     manager.reload = function() {
         var key = $('#'+construct.prefix+'_current_folder').attr('data-key');
+        ClaroUtils.sendRequest(
+            Routing.generate('claro_resource_renders_thumbnail', {
+                'parentId': key,
+                'prefix':construct.prefix
+            }),
+            function(data){
+                appendThumbnails(construct.div, data);
+            });
+    }
+
+    function navigate(key) {
+        construct.divForm.empty();
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_renders_thumbnail', {
                 'parentId': key,
