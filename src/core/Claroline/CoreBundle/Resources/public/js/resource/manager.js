@@ -6,6 +6,7 @@
     //0 = cut; 1 = copy
     var cpd = null;
     var limit = 12;
+    var activePagerItem = 1;
 
     manager.init = function(
         div,
@@ -161,19 +162,20 @@
                     })
 
                     $('.instance_paginator_item').on('click', function(e){
-                        console.debug(e);
-                        activeCurrentPage(e.target);
-//                        e.target.className = 'active'
-                        route = Routing.generate('claro_resource_flat_view_page', {
-                            'page':e.target.innerHTML,
-                            'prefix':construct.prefix
-                        });
-                        ClaroUtils.sendRequest(route, function(data){
-                            $('.instance_thumbnail_item').remove();
-                            div.prepend(data);
-                            setMenu();
-                        })
+                        activePagerItem = e.target.innerHTML;
+                        rendersFlatPaginatedThumbnails(activePagerItem);
                     });
+
+                    $('.instance_paginator_next_item').on('click', function(e){
+                        activePagerItem++;
+                        rendersFlatPaginatedThumbnails(activePagerItem);
+                    })
+
+                    $('.instance_paginator_prev_item').on('click', function(e){
+                        activePagerItem--;
+                        rendersFlatPaginatedThumbnails(activePagerItem);
+                    })
+
 
                 });
             } else {
@@ -203,12 +205,27 @@
             });
     }
 
-    function activeCurrentPage(link)
+    function rendersFlatPaginatedThumbnails(page) {
+        activePage(page);
+        var route = Routing.generate('claro_resource_flat_view_page', {
+            'page':page,
+            'prefix':construct.prefix
+        });
+        ClaroUtils.sendRequest(route, function(data){
+            $('.instance_thumbnail_item').remove();
+            construct.div.prepend(data);
+            setMenu();
+        })
+    }
+
+    function activePage(item)
     {
         $('.instance_paginator_item').each(function(index, element){
             element.parentElement.className = '';
         })
-        link.parentElement.className = 'active';
+
+        var searched = $('li[data-page="'+item+'"]');
+        searched.first().addClass('active');
     }
 
     function buildPaginator(count)
@@ -216,16 +233,16 @@
         var nbPage = Math.floor(count/limit);
         nbPage++;
         var paginator = '';
-        paginator += '<div id="instances_paginator" class="pagination"><ul><li><a href="#">Prev</a></li>'
+        paginator += '<div id="instances_paginator" class="pagination"><ul><li><a class="instance_paginator_prev_item" href="#">Prev</a></li>'
         for (var i = 0; i < nbPage;) {
             i++;
             if (i==1) {
-                paginator += '<li class="active"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+                paginator += '<li data-page="'+i+'" class="active"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
             } else {
-                paginator += '<li><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+                paginator += '<li data-page="'+i+'"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
             }
         }
-        paginator += '<li><a href="#">Next</a></li></ul></div>';
+        paginator += '<li><a href="#" class="instance_paginator_next_item">Next</a></li></ul></div>';
 
         return paginator;
     }
@@ -358,6 +375,7 @@
             construct.pasteButton.attr('disabled', 'disabled');
             construct.backButton.hide();
         } else {
+            activePagerItem = 1;
             if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'_current_folder').size() == 0){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
