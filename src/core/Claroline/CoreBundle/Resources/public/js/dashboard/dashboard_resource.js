@@ -9,7 +9,7 @@
     };
 
     ClaroFilter.build(
-        $('#div_filter'),
+        $('#div-filter'),
         'cr',
         function(data){filterCallBack(data, param)},
         function(){resetCallBack(param)}

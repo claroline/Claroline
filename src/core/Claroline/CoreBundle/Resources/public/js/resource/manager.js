@@ -424,9 +424,11 @@
             if ($('#'+construct.prefix+'-current-folder').size() == 0) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
+                construct.backButton.hide();
             } else {
                 construct.selectType.show();
                 construct.submitButton.show();
+                construct.backButton.show();
             }
         }
     }
