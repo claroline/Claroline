@@ -15,6 +15,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  * getIsNullExpression
  * getIsNotNullExpression
  * getWildCards
+ * getCountExpression
  */
 class ResourceInstanceRepository extends NestedTreeRepository
 {
@@ -59,6 +60,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             ON cu.id = cur.user_id
             WHERE cu.id = :userId
         ";
+
+    const PAGE_INSTANCE_LIMIT = 12;
 
     public function getWSListableRootResource(AbstractWorkspace $ws)
     {
@@ -127,7 +130,35 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $instances;
     }
 
+    public function getPaginatedInstanceList(User $user, $page, $resourceType = null)
+    {
+        $sql = self::SELECT_INSTANCE . "
+            WHERE ri.workspace_id IN
+            (" . self::SELECT_USER_WORKSPACES_ID . ")";
+        if ($resourceType === null) {
+            $sql.="AND rt.type !='directory'";
+        } else {
+            $sql.="AND rt.id = {$resourceType->getId()}";
+        }
 
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+        $instances = array();
+
+        $offset = self::PAGE_INSTANCE_LIMIT * (--$page);
+        $w = $offset + self::PAGE_INSTANCE_LIMIT;
+        $i = 0;
+
+        while ($i < $w && $row = $stmt->fetch()) {
+            if ($i < $w && $i >= $offset) {
+                $instances[$row['id']] = $row;
+            }
+            $i++;
+        }
+
+        return $instances;
+    }
 
     public function findInstancesFromType(ResourceType $resourceType, User $user)
     {
@@ -211,13 +242,40 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt->bindValue('userId', $user->getId());
         $stmt->execute();
 
-        $instances = array();
+       $instances = array();
 
         while ($row = $stmt->fetch()) {
             $instances[$row['id']] = $row;
         }
 
         return $instances;
+    }
+
+    //count non directory instances for a user.
+    public function countInstancesForUser($user)
+    {
+
+        $platform = $this->_em->getConnection()->getDatabasePlatform();
+        $count = $platform->getCountExpression('ri.id');
+
+        $sql = "
+            SELECT {$count} as count FROM claro_resource_instance ri
+            INNER JOIN  claro_user uri
+            ON uri.id = ri.user_id
+            INNER JOIN claro_resource res
+            ON res.id = ri.resource_id
+            INNER JOIN claro_resource_type rt
+            ON res.resource_type_id = rt.id
+            IN (" .
+            self::SELECT_USER_WORKSPACES_ID . ")
+            WHERE rt.type != 'directory'";
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results[0]['count'];
     }
 
     public function filter($criterias, $user)
@@ -262,7 +320,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
                     break;
                 case 'dateFrom': $stmt->bindValue($key, $criteria);
                     break;
-               default:
+                default:
                     break;
             }
         }
