@@ -41,8 +41,14 @@ claro_multi_export:
         expose: true
 
 claro_resource_move:
-   pattern: move/{instanceId}/{newParentId}
+   pattern: /move/{instanceId}/{newParentId}
    defaults: { _controller: ClarolineCoreBundle:Resource:move }
+   options:
+        expose: true
+
+claro_resource_multimove:
+   pattern: /multimove/{newParentId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:multimove }
    options:
         expose: true
 
@@ -94,6 +100,12 @@ claro_resource_add_workspace:
     options:
         expose: true
 
+claro_resource_multi_add_workspace:
+    pattern: /workspace/multi/add/{instanceDestinationId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:multiAddToWorkspace }
+    options:
+        expose: true
+
 claro_resource_renders_filter:
     pattern: /filter/renders/{prefix}
     defaults: { _controller: ClarolineCoreBundle:Resource:rendersFilters }
@@ -103,5 +115,29 @@ claro_resource_renders_filter:
 claro_resource_renders_thumbnail:
     pattern: /renders/thumb/{parentId}/{prefix}
     defaults: { _controller: ClarolineCoreBundle:Resource:rendersResourceThumbnailView, parentId:0}
+    options:
+        expose: true
+
+claro_resource_filter:
+    pattern: /filter
+    defaults: { _controller: ClarolineCoreBundle:Resource:filter }
+    options:
+        expose: true
+
+claro_resource_every_instances:
+    pattern: /user/instances/all
+    defaults: { _controller: ClarolineCoreBundle:Resource:userEveryInstances }
+    options:
+        expose: true
+
+claro_resource_count_instances:
+    pattern: /count/instances
+    defaults: { _controller: ClarolineCoreBundle:Resource:countInstance }
+    options:
+        expose: true
+
+claro_resource_flat_view_page:
+    pattern: /flat/{page}/{prefix}
+    defaults: { _controller: ClarolineCoreBundle:Resource:rendersPaginatedFlatThumbnailsInstance }
     options:
         expose: true

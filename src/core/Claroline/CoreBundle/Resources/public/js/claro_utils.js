@@ -59,16 +59,14 @@
                 if ('function' == typeof completeHandler){
                     completeHandler(data)}
             },
-            error: function(xhr, e){
+            error: function(xhr, e, errorThrown){
                 xhr.status == 403 ?
                     utils.ajaxAuthenticationErrorHandler(function () {
                         'function' == typeof successHandler ?
                             utils.sendRequest(route, successHandler) :
                             window.location.reload();
                     }) :
-                    alert('error for the route '+route+' (check your js debugger)');
-                    console.error(xhr);
-                    console.error(e);
+                    alert(xhr.responseText);
             }
         });
     }

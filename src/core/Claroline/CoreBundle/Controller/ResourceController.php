@@ -183,6 +183,34 @@ class ResourceController extends Controller
     }
 
     /**
+     * Moves many instances (changes their parents).
+     * This function takes an array of parameters wich are the ids of the moved instances.
+     *
+     * @return Response
+     */
+    //no verification yet
+    public function multiMoveAction($newParentId)
+    {
+        $ids = $this->container->get('request')->query->all();
+        $em = $this->getDoctrine()->getEntityManager();
+        $newParent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($newParentId);
+
+        foreach ($ids as $id) {
+            $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+
+            if ($instance != null){
+                try {
+                     $this->get('claroline.resource.manager')->move($instance, $newParent);
+                } catch (\Gedmo\Exception\UnexpectedValueException $e) {
+                     return new Response('cannot move a resource into itself', 500);
+                }
+            }
+        }
+
+        return new Response('Resource moved');
+    }
+
+    /**
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
@@ -238,7 +266,6 @@ class ResourceController extends Controller
 
     /**
      * This function takes an array of parameters. Theses parameters are the ids of the instances which are going to be downloaded.
-     * It also needs the "displayMode".
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -318,6 +345,25 @@ class ResourceController extends Controller
     }
 
     /**
+     * Returns a json representation of a user instances.
+     *
+     * @return Response
+     */
+    public function userEveryInstancesAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $results = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getInstanceList($user);
+
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * Returns a json representation of the resource types.
      * It doesn't include the directory.
      * Ony listable types are included.
@@ -381,7 +427,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Adds a resource instance to a workspace. Options must be must be 'ref' or 'copy'.
+     * Adds a resource instance to a workspace.
      *
      * @param integer $instanceId
      * @param integer $instanceDestinationId
@@ -397,6 +443,30 @@ class ResourceController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    /**
+     * Adds multiple resource instance to a workspace.
+     *
+     * @param integer $instanceDestinationId
+     *
+     * @return Response
+     */
+    public function multiAddToWorkspaceAction($instanceDestinationId)
+    {
+        $ids = $this->container->get('request')->query->all();
+        $em = $this->getDoctrine()->getEntityManager();
+        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+
+        foreach ($ids as $id) {
+            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+            if ($resource != null) {
+                $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
+                $em->flush();
+            }
+        }
+
+        return new Response('success', 200);
     }
 
     /**
@@ -423,6 +493,14 @@ class ResourceController extends Controller
         );
     }
 
+    /**
+     * Renders the resource list as thumbnails.
+     *
+     * @param integer $parentId
+     * @param string $prefix
+     *
+     * @return Response
+     */
     public function rendersResourceThumbnailViewAction($parentId, $prefix)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -439,4 +517,80 @@ class ResourceController extends Controller
         return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig', array('currentFolder' => $currentFolder, 'resources' => $results, 'prefix' => $prefix));
     }
 
+    /**
+     * Renders the searched resource list.
+     *
+     * @return Response
+     */
+    public function filterAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $criterias = $this->container->get('request')->query->all();
+        $compiledArray = array();
+        $types = array();
+        $roots = array();
+        //get the criterias list as an array
+        foreach ($criterias as $key => $item) {
+
+            if (substr_count($key, 'types') > 0) {
+                $types[] = $item;
+            }
+            if (substr_count($key, 'roots') > 0) {
+                $roots[] = $item;
+            }
+        }
+
+        if (count($types) != 0) {
+            $compiledArray['types'] = $types;
+        }
+
+        if (count($roots) != 0) {
+            $compiledArray['roots'] = $roots;
+        }
+
+        if (array_key_exists('dateTo', $criterias)) {
+            $compiledArray['dateTo'] = $criterias['dateTo'];
+        }
+
+        if (array_key_exists('dateFrom', $criterias)) {
+            $compiledArray['dateFrom'] = $criterias['dateFrom'];
+        };
+
+        $result = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->filter($compiledArray, $user);
+
+        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($result);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns the number of non directory instances for the current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function countInstanceAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $count = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->countInstancesForUser($user);
+
+        return new Response($count);
+    }
+
+    public function rendersPaginatedFlatThumbnailsInstanceAction($page, $prefix)
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $results = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getPaginatedInstanceList($user, $page);
+        $currentFolder = null;
+
+         return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig',
+             array('resources' => $results, 'prefix' => $prefix, 'currentFolder' => $currentFolder));
+    }
 }

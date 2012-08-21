@@ -1,10 +1,39 @@
 (function () {
     var manager = this.ClaroResourceManager = {};
     var jsonmenu = {};
+    var construct = {};
+    var pasteIds = {};
+    //0 = cut; 1 = copy
+    var cpd = null;
+    var limit = 12;
+    var activePagerItem = 1;
 
-    manager.init = function(div, prefix, backButton, divForm, selectType, submitButton, downloadButton) {
-        selectType.hide();
-        submitButton.hide();
+    manager.init = function(
+        div,
+        prefix,
+        backButton,
+        divForm,
+        selectType,
+        submitButton,
+        downloadButton,
+        cutButton,
+        copyButton,
+        pasteButton,
+        closeButton,
+        flatChkBox
+        ) {
+        construct.div = div;
+        construct.prefix = prefix;
+        construct.backButton = backButton;
+        construct.divForm = divForm;
+        construct.selectType = selectType;
+        construct.submitButton = submitButton;
+        construct.downloadButton = downloadButton;
+        construct.cutButton = cutButton;
+        construct.copyButton = copyButton;
+        construct.pasteButton = pasteButton;
+        construct.closeButton = closeButton;
+        construct.flatChkBox = flatChkBox;
 
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
@@ -15,45 +44,39 @@
                 }
             },
             function() {
-            ClaroUtils.sendRequest(
-                Routing.generate('claro_resource_renders_thumbnail', {
-                    'prefix': prefix
-                }),
-                function(data){
-                    appendThumbnails(divForm, data);
-                }
-            )
-        });
+                ClaroUtils.sendRequest(
+                    Routing.generate('claro_resource_renders_thumbnail', {
+                        'prefix': prefix
+                    }),
+                    function(data){
+                        appendThumbnails(div, data);
+                    }
+                )
+            });
 
         $('.link_navigate_instance').live('click', function(e){
             var key = e.target.dataset.key;
+            construct.divForm.empty();
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_renders_thumbnail', {
                     'parentId': key,
                     'prefix':prefix
                 }),
                 function(data){
-                    appendThumbnails(divForm, data);
-                    selectType.show();
-                    submitButton.show();
-                }
-                );
-        })
+                    appendThumbnails(div, data);
+                });
+        });
 
         backButton.on('click', function(e){
-            var key = e.target.dataset.key;
+            var key = $('#'+construct.prefix+'_current_folder').attr('data-parent-id');
+            construct.divForm.empty();
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_renders_thumbnail', {
                     'parentId': key,
                     'prefix':prefix
                 }),
                 function(data){
-                    appendThumbnails(divForm, data);
-                    if ($('#'+prefix+'_current_folder').size() == 0) {
-                        selectType.hide();
-                        submitButton.hide();
-                    }
-
+                    appendThumbnails(div, data);
                 });
         })
 
@@ -63,7 +86,7 @@
                     'resourceType': selectType.val()
                 }),
                 function(data) {
-                    divForm.append(data);
+                    divForm.empty().append(data);
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
@@ -74,37 +97,226 @@
                         action = action.replace('_instanceId', parameters.key)
                         var id = divForm.find('form').attr('id');
                         ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                            submissionHandler(xhr, parameters, divForm);
+                            submissionHandler(xhr, parameters);
                         });
                     })
-                }
-                )
-            });
+                })
+        });
 
         downloadButton.on('click', function(e){
-            var ids = {};
-            var i = 0;
-            $('.'+prefix+'_chk_instance').each(function(index, element){
-                ids[i] = element.value;
-                i++;
-            })
+            var ids = getSelectedItems();
             window.location = Routing.generate('claro_multi_export', ids);
+        })
+
+        cutButton.on('click', function(e){
+            pasteIds = {};
+            pasteIds = getSelectedItems();
+            setLayout();
+            cpd = 0;
+        })
+
+        copyButton.on('click', function(e){
+            pasteIds = {};
+            pasteIds = getSelectedItems();
+            setLayout();
+            cpd = 1;
+        })
+
+        pasteButton.on('click', function(e){
+            var params = {};
+            var route = '';
+            params = pasteIds;
+            if (cpd == 0) {
+                params.newParentId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+                route = Routing.generate('claro_resource_multimove', params);
+                ClaroUtils.sendRequest(route, function(){manager.reload()});
+            } else {
+                params.instanceDestinationId = $('#'+construct.prefix+'_current_folder').attr('data-key');
+                route = Routing.generate('claro_resource_multi_add_workspace', params);
+                ClaroUtils.sendRequest(route, function(){manager.reload()});
+            }
+        })
+
+        closeButton.on('click', function(e){
+            construct.divForm.empty();
+        })
+
+        flatChkBox.on('change', function(e){
+            if(e.target.checked) {
+                setLayout();
+                var route = Routing.generate('claro_resource_count_instances');
+                ClaroUtils.sendRequest(route,
+                function(count){
+                    construct.div.empty();
+                    var paginator = buildPaginator(count);
+                    div.append(paginator);
+
+                    route = Routing.generate('claro_resource_flat_view_page', {
+                        'page':1,
+                        'prefix':construct.prefix
+                    });
+                    ClaroUtils.sendRequest(route, function(data){
+                        div.prepend(data);
+                        setMenu();
+
+                    })
+
+                    $('.instance_paginator_item').on('click', function(e){
+                        activePagerItem = e.target.innerHTML;
+                        rendersFlatPaginatedThumbnails(activePagerItem);
+                    });
+
+                    $('.instance_paginator_next_item').on('click', function(e){
+                        activePagerItem++;
+                        rendersFlatPaginatedThumbnails(activePagerItem);
+                    })
+
+                    $('.instance_paginator_prev_item').on('click', function(e){
+                        activePagerItem--;
+                        rendersFlatPaginatedThumbnails(activePagerItem);
+                    })
+
+
+                });
+            } else {
+
+                ClaroUtils.sendRequest(
+                    Routing.generate('claro_resource_renders_thumbnail', {
+                        'prefix': construct.prefix
+                    }),
+                    function(data){
+                        appendThumbnails(construct.div, data);
+                    }
+                )
+            }
+        })
+
+    }
+
+    manager.reload = function() {
+        var key = $('#'+construct.prefix+'_current_folder').attr('data-key');
+        ClaroUtils.sendRequest(
+            Routing.generate('claro_resource_renders_thumbnail', {
+                'parentId': key,
+                'prefix':construct.prefix
+            }),
+            function(data){
+                appendThumbnails(construct.div, data);
+            });
+    }
+
+    function rendersFlatPaginatedThumbnails(page) {
+        activePage(page);
+        var route = Routing.generate('claro_resource_flat_view_page', {
+            'page':page,
+            'prefix':construct.prefix
+        });
+        ClaroUtils.sendRequest(route, function(data){
+            $('.res-block').remove();
+            construct.div.prepend(data);
+            setMenu();
         })
     }
 
-    function appendThumbnails(div, data) {
-        div.empty();
-        div.append(data);
+    function activePage(item)
+    {
+        $('.instance_paginator_item').each(function(index, element){
+            element.parentElement.className = '';
+        })
+
+        var searched = $('li[data-page="'+item+'"]');
+        searched.first().addClass('active');
+    }
+
+    function buildPaginator(count)
+    {
+        var nbPage = Math.floor(count/limit);
+        nbPage++;
+        var paginator = '';
+        paginator += '<div id="instances_paginator" class="pagination"><ul><li><a class="instance_paginator_prev_item" href="#">Prev</a></li>'
+        for (var i = 0; i < nbPage;) {
+            i++;
+            if (i==1) {
+                paginator += '<li data-page="'+i+'" class="active"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+            } else {
+                paginator += '<li data-page="'+i+'"><a class="instance_paginator_item" href="#">'+i+'</a></li>';
+            }
+        }
+        paginator += '<li><a href="#" class="instance_paginator_next_item">Next</a></li></ul></div>';
+
+        return paginator;
+    }
+
+    function getSelectedItems()
+    {
+        var ids = {};
+        var i = 0;
+        $('.'+construct.prefix+'_chk_instance:checked').each(function(index, element){
+            ids[i] = element.value;
+            i++;
+        })
+
+        return ids;
+    }
+
+    function setMenu()
+    {
         $('.resource_menu').each(function(index, element){
             var parameters = {};
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;
-            bindContextMenu(parameters, div, element);
+            bindContextMenu(parameters, element);
         });
     }
 
-    function bindContextMenu(parameters, divForm, menuElement) {
+    /* Cut the name of the resource if its length is more than maxLength,
+     * adding '...' at the end. And cut multilines, trying to cut between words when possible. */
+    function formatResName(element, maxLines, maxLengthPerLine) {
+        maxLines = typeof maxLines !== 'undefined' ? maxLines : 2;
+        maxLengthPerLine = typeof maxLengthPerLine !== 'undefined' ? maxLengthPerLine : 20;
+        if (typeof element !== 'undefined' && element.text() !== 'undefined'
+            && element.text().length > maxLengthPerLine) {
+            var newText = new Array(maxLines);
+            var curLine = 0;
+            var curText = element.text();
+            while (curText.length > 0 && curLine < maxLines) {
+                newText[curLine] = curText.substr(0, maxLengthPerLine);
+                if (curLine == maxLines-1) {
+                } else {
+                    var i = newText[curLine].length;
+                    while (i>0) {
+                        var c = newText[curLine].charAt(i-1);
+                        if ( !((c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9')) )
+                            break;
+                        i--;
+                    }
+                    if (i > 0)
+                        newText[curLine] = newText[curLine].substr(0,i);
+                    curText = curText.substr(newText[curLine].length, curText.length);
+                    newText[curLine] = newText[curLine]+"<br>";
+                }
+                curLine++;
+            }
+            if (curText.length > 0) {
+                if (newText[curLine-1].length > maxLengthPerLine-3) {
+                    newText[curLine-1] = newText[curLine-1].substr(0, maxLengthPerLine-3);
+                    newText[curLine-1] = newText[curLine-1]+"...";
+                }
+            }
+            element.html(newText.join(""));
+        }
+    };
+
+    function appendThumbnails(div, data) {
+        div.empty();
+        div.append(data);
+        setMenu();
+        setLayout();
+        $(".res-name").each(function(){formatResName($(this), 2, 20)});
+    }
+
+    function bindContextMenu(parameters, menuElement) {
         var type = parameters.type;
         var menuDefaultOptions = {
             selector: '#'+menuElement.id,
@@ -112,7 +324,7 @@
             //See the contextual menu documentation.
             callback: function(key, options) {
                 //Finds and executes the action for the right menu item.
-                findMenuObject(jsonmenu[type], parameters, key, divForm);
+                findMenuObject(jsonmenu[type], parameters, key);
             }
         };
 
@@ -123,82 +335,99 @@
 
     //Finds wich menu was fired for a node.
     //@params items is the menu object used.
-    function findMenuObject(items, parameters, menuItem, divForm)
+    function findMenuObject(items, parameters, menuItem)
     {
         for (var property in items.items) {
             if (property === menuItem) {
-                executeMenuActions(items.items[property], parameters, divForm);
+                executeMenuActions(items.items[property], parameters);
             } else {
                 if (items.items[property].hasOwnProperty('items')) {
-                    findMenuObject(items.items[property], parameters, menuItem, divForm);
+                    findMenuObject(items.items[property], parameters, menuItem);
                 }
             }
         }
     };
 
-    function executeMenuActions (obj, parameters, divForm)
+    function executeMenuActions (obj, parameters)
     {
         //Removes the placeholders in the route
         var route = obj.route;
         var compiledRoute = route.replace('_instanceId', parameters.key);
         compiledRoute = compiledRoute.replace('_resourceId', parameters.resourceId);
-        obj.async ? executeAsync(obj, parameters, compiledRoute, divForm) : window.location = compiledRoute;
+        obj.async ? executeAsync(obj, parameters, compiledRoute) : window.location = compiledRoute;
     }
 
-    function executeAsync(obj, parameters, route, divForm) {
+    function executeAsync(obj, parameters, route) {
 
         //Delete was a special case as every node can be removed.
-        (obj.name === 'delete') ? removeNode(menuElement, route) : executeRequest(parameters, route, divForm);
+        (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route);
     };
 
     function removeNode(parameters, route) {
-        alert('element not yet removed');
-//        ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
-//            if (204 === jqXHR.status) {
-//                node.remove();
-//            }
-//        });
+        ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
+            if (204 === jqXHR.status) {
+                $('#'+construct.prefix+"_instance_"+parameters.key).remove();
+            }
+        });
     };
 
-    function executeRequest(parameters, route, divForm) {
+    function executeRequest(parameters, route) {
 
         ClaroUtils.sendRequest(route, function(data) {
             //If there is a form, the submission handler above is used.
             //There is no handler otherwise.
-            divForm.empty().append(data).find('form').submit(function(e) {
+            construct.divForm.empty().append(data).find('form').submit(function(e) {
                 e.preventDefault();
-                var action = divForm.find('form').attr('action');
+                var action = construct.divForm.find('form').attr('action');
                 action = action.replace('_instanceId', parameters.key)
-                var id = divForm.find('form').attr('id');
+                var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, parameters, divForm);
+                    submissionHandler(xhr, parameters);
                 });
             });
         });
     };
 
-    function submissionHandler(xhr, menuElement, divForm) {
+    function submissionHandler(xhr, parameters) {
         //If there is a json response, a node was returned.
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
-            var JSONObject = JSON.parse(xhr.responseText);
-            var instance = JSONObject[0];
-            alert('action from form done');
+            manager.reload();
         //If it's not a json response, we append the response at the top of the tree.
         } else {
-            divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
+            construct.divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
                 e.preventDefault();
-                var action = divForm.find('form').attr('action');
+                var action = construct.divForm.find('form').attr('action');
                 //If it's a form, placeholders must be removed (the twig form doesn't know the instance parent,
                 //that's why placeholders are used).'
-                action = action.replace('_instanceId', menuElement.dataset.key);
-                action = action.replace('_resourceId', menuElement.dataset.resourceId);
-                var id = divForm.find('form').attr('id');
+                action = action.replace('_instanceId', parameters.key);
+                action = action.replace('_resourceId', parameters.resourceId);
+                var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, menuElement, divForm);
+                    submissionHandler(xhr, parameters);
                 });
             });
         }
     };
 
-
+    function setLayout() {
+        if(construct.flatChkBox.is(':checked')){
+            construct.pasteButton.attr('disabled', 'disabled');
+            construct.backButton.hide();
+        } else {
+            activePagerItem = 1;
+            if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'_current_folder').size() == 0){
+                construct.pasteButton.attr('disabled', 'disabled');
+            } else {
+                construct.pasteButton.removeAttr('disabled');
+            }
+            construct.backButton.show();
+            if ($('#'+construct.prefix+'_current_folder').size() == 0) {
+                construct.selectType.hide();
+                construct.submitButton.hide();
+            } else {
+                construct.selectType.show();
+                construct.submitButton.show();
+            }
+        }
+    }
 })();

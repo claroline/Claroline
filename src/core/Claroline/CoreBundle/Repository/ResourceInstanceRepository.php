@@ -8,6 +8,15 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
+/*
+ * Lists of usefull common platform methods
+ * getDateFormatString
+ * getTimeFormatString
+ * getIsNullExpression
+ * getIsNotNullExpression
+ * getWildCards
+ * getCountExpression
+ */
 class ResourceInstanceRepository extends NestedTreeRepository
 {
     const SELECT_INSTANCE = "SELECT
@@ -40,6 +49,19 @@ class ResourceInstanceRepository extends NestedTreeRepository
             ON res.resource_type_id = rt.id
             INNER JOIN claro_user ures
             ON res.user_id = ures.id";
+
+    const SELECT_USER_WORKSPACES_ID = "SELECT
+            cw.id FROM claro_workspace cw
+            INNER JOIN claro_role cr
+            ON cr.workspace_id = cw.id
+            INNER JOIN claro_user_role cur
+            ON cur.role_id = cr.id
+            INNER JOIN claro_user cu
+            ON cu.id = cur.user_id
+            WHERE cu.id = :userId
+        ";
+
+    const PAGE_INSTANCE_LIMIT = 12;
 
     public function getWSListableRootResource(AbstractWorkspace $ws)
     {
@@ -76,29 +98,67 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getInstanceList(ResourceType $resourceType, User $user)
+    /**
+     * Gets every instance in every workspace the is registered.
+     *
+     * @param ResourceType $resourceType
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getInstanceList(User $user, ResourceType $resourceType = null)
     {
-        $dql = "
-            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
-            JOIN ri.abstractResource ar
-            JOIN ar.resourceType rt
-            WHERE rt.type = '{$resourceType->getType()}'
-            AND ri.workspace IN
-            (
-                SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                JOIN w.roles wr
-                JOIN wr.users u
-                WHERE u.id = '{$user->getId()}'
-            )
-            ORDER BY ar.name
-        ";
+        $sql = self::SELECT_INSTANCE."
+            WHERE ri.workspace_id IN
+            (".self::SELECT_USER_WORKSPACES_ID.")";
+        if ($resourceType === null) {
+            $sql.="AND rt.type !='directory'";
+        } else {
+            $sql.="AND rt.id = {$resourceType->getId()}";
+        }
 
-        $query = $this->_em->createQuery($dql);
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
 
-        return $query->getResult();
+        $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
     }
 
+    public function getPaginatedInstanceList(User $user, $page, $resourceType = null)
+    {
+        $sql = self::SELECT_INSTANCE . "
+            WHERE ri.workspace_id IN
+            (" . self::SELECT_USER_WORKSPACES_ID . ")";
+        if ($resourceType === null) {
+            $sql.="AND rt.type !='directory'";
+        } else {
+            $sql.="AND rt.id = {$resourceType->getId()}";
+        }
 
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+        $instances = array();
+
+        $offset = self::PAGE_INSTANCE_LIMIT * (--$page);
+        $w = $offset + self::PAGE_INSTANCE_LIMIT;
+        $i = 0;
+
+        while ($i < $w && $row = $stmt->fetch()) {
+            if ($i < $w && $i >= $offset) {
+                $instances[$row['id']] = $row;
+            }
+            $i++;
+        }
+
+        return $instances;
+    }
 
     public function findInstancesFromType(ResourceType $resourceType, User $user)
     {
@@ -171,22 +231,100 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getRoots($user)
     {
+        $platform = $this->_em->getConnection()->getDatabasePlatform();
+        $isNull = $platform->getIsNullExpression('ri.parent_id');
+
         $sql = self::SELECT_INSTANCE."
-            WHERE ri.parent_id IS NULL
-            AND ri.workspace_id IN(
-                SELECT cw.id FROM claro_workspace cw
-                INNER JOIN claro_role cr
-                ON cr.workspace_id = cw.id
-                INNER JOIN claro_user_role cur
-                ON cur.role_id = cr.id
-                INNER JOIN claro_user cu
-                ON cu.id = cur.user_id
-                WHERE cu.id = :userId
-                )
-           ";
+            WHERE {$isNull}
+            AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")";
 
         $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+
+       $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
+    }
+
+    //count non directory instances for a user.
+    public function countInstancesForUser($user)
+    {
+
+        $platform = $this->_em->getConnection()->getDatabasePlatform();
+        $count = $platform->getCountExpression('ri.id');
+
+        $sql = "
+            SELECT {$count} as count FROM claro_resource_instance ri
+            INNER JOIN  claro_user uri
+            ON uri.id = ri.user_id
+            INNER JOIN claro_resource res
+            ON res.id = ri.resource_id
+            INNER JOIN claro_resource_type rt
+            ON res.resource_type_id = rt.id
+            IN (" .
+            self::SELECT_USER_WORKSPACES_ID . ")
+            WHERE rt.type != 'directory'";
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results[0]['count'];
+    }
+
+    public function filter($criterias, $user)
+    {
+        $whereType = '';
+        $whereRoot = '';
+        $whereDateFrom = '';
+        $whereDateTo = '';
+
+        foreach ($criterias as $key => $value) {
+
+            switch($key){
+                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
+                    break;
+                case 'types': $whereType = $this->filterWhereType($key, $value);
+                    break;
+                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
+                    break;
+                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $sql = self::SELECT_INSTANCE . "
+            WHERE rt.is_listable = 1
+            AND rt.type != 'directory'
+            AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")"
+            .$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue('userId', $user->getId());
+
+        foreach ($criterias as $key => $value) {
+            switch($key){
+                case 'roots': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'types': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'dateTo': $stmt->bindValue($key, $criteria);
+                    break;
+                case 'dateFrom': $stmt->bindValue($key, $criteria);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         $stmt->execute();
 
         $instances = array();
@@ -197,4 +335,65 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         return $instances;
     }
+
+    private function filterWhereType($key, $criteria)
+    {
+        $string = '';
+        $i = 0;
+
+        foreach ($criteria as $i => $item) {
+            if ($i == 0) {
+                $string.= " AND (rt.type = :{$key}{$i}";
+                $i++;
+            } else {
+                $string .= " OR rt.type = :{$key}{$i}";
+            }
+        }
+
+        $string .= ')';
+
+        return $string;
+    }
+
+    private function filterWhereRoot($key, $criteria)
+    {
+        $string = '';
+        $i = 0;
+
+        foreach ($criteria as $i => $item) {
+            if ($i == 0) {
+                $string.= " AND (ri.root =:{$key}{$i}";
+                $i++;
+            } else {
+                $string.= " OR ri.root = :{$key}{$i}";
+            }
+        }
+
+        $string .= ')';
+
+        return $string;
+    }
+
+   private function filterWhereDateFrom($key)
+   {
+       $string = '';
+       $string.=" AND ri.created >= :{$key}";
+
+       return $string;
+   }
+
+   private function filterWhereDateTo($key)
+   {
+       $string = '';
+       $string.=" AND ri.created <= :{$key}";
+
+       return $string;
+   }
+
+   private function bindArray($stmt, $key, $criteria)
+   {
+       foreach ($criteria as $i => $item) {
+           $stmt->bindValue("{$key}{$i}", $item);
+       }
+   }
 }
