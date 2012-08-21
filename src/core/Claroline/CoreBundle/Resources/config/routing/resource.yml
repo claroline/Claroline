@@ -113,7 +113,7 @@ claro_resource_renders_filter:
         expose: true
 
 claro_resource_renders_thumbnail:
-    pattern: /renders/thumb/{parentId}/{prefix}
+    pattern: /renders/thumb/{prefix}/{parentId}
     defaults: { _controller: ClarolineCoreBundle:Resource:rendersResourceThumbnailView, parentId:0}
     options:
         expose: true
@@ -137,7 +137,7 @@ claro_resource_count_instances:
         expose: true
 
 claro_resource_flat_view_page:
-    pattern: /flat/{page}/{prefix}
+    pattern: /renders/flat/{page}/{prefix}
     defaults: { _controller: ClarolineCoreBundle:Resource:rendersPaginatedFlatThumbnailsInstance }
     options:
         expose: true
