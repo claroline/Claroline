@@ -9,6 +9,7 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
+        $this->createMimeTypeTable($schema);
         $this->createMetaTypeTable($schema);
         $this->createLicenseTable($schema);
         $this->createWorkspaceTable($schema);
@@ -240,7 +241,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => false));
-        $table->addColumn('mime_type', 'string', array('notnull' => false));
+        $table->addColumn('image_id', 'integer', array('notnull' => false));
 
         $this->addDiscriminator($table);
 
@@ -252,6 +253,9 @@ class Version20120119000000 extends BundleMigration
         );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_types_image'), array('image_id'), array('id'), array('onDelete' => 'CASCADE')
         );
 
         $this->storeTable($table);
@@ -359,7 +363,7 @@ class Version20120119000000 extends BundleMigration
 
     private function createMetaTypeResourceTypeTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_meta_type_resource_type");
+        $table = $schema->createTable('claro_meta_type_resource_type');
         $this->addId($table);
         $table->addColumn('meta_type_id', 'integer', array('notnull' => true));
         $table->addColumn('resource_type_id', 'integer', array('notnull' => true));
@@ -374,14 +378,14 @@ class Version20120119000000 extends BundleMigration
 
     private function createLinkTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_link");
+        $table = $schema->createTable('claro_link');
         $this->addId($table);
         $table->addColumn('url', 'string');
     }
 
     private function createTextTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_text");
+        $table = $schema->createTable('claro_text');
         $this->addId($table);
         $table->addColumn('version', 'integer');
         $table->addColumn('current_text_id', 'integer');
@@ -391,7 +395,7 @@ class Version20120119000000 extends BundleMigration
 
     private function createTextContentTable(Schema $schema)
     {
-        $table = $schema->createTable("claro_text_revision");
+        $table = $schema->createTable('claro_text_revision');
         $this->addId($table);
         $table->addColumn('content', 'text');
         $table->addColumn('version', 'integer');
@@ -401,6 +405,17 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'SET NULL')
         );
+
+        $this->storeTable($table);
+    }
+
+    private function createMimeTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_types_image');
+        $this->addId($table);
+        $table->addColumn('type', 'text');
+        $table->addColumn('thumbnail', 'text', array('notnull' => false));
+        $table->addColumn('icon', 'text', array('notnull' => false));
 
         $this->storeTable($table);
     }
