@@ -8,38 +8,38 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/resource/data_filter.js') }}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/clarolinecore/js/resource/manager.js') }}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/clarolinecore/js/dashboard/dashboard_resource.js') }}' type="text/javascript"></script>
-    <script src='{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}'></script>
+    <script src="{{ asset('bundles/clarolinecore/js/resource/data_filter.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/clarolinecore/js/dashboard/dashboard_resource.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}"></script>
 {% endblock %}
 
 {% block content %}
-    <div id='div-filter' class='span2'></div>
-        <div id='div-resources' class='span10'>
-        <div id='dr-manager-options'>
+    <div id="div-filter" class="span2"></div>
+        <div id="div-resources" class="span10">
+        <div id="dr-manager-options">
             {#<button id='dr_tree_button'>Arbre</button>
             <button id='dr_thumbnail_button'>vignette</button><br>#}
-            <input type='checkbox' id='dr-is-flat' value='1'>&nbsp;Voir aussi le contenu de tous les sous-répertoires</input>
+            <input type="checkbox" id="dr-is-flat" value="1">&nbsp;Voir aussi le contenu de tous les sous-répertoires</input>
         </div>
-        <div id ='dr-resource-manager-content'>
-            <a href='#' id='dr-resources-back'>back</a>
-            <div id='dr-resources-content'></div>
+        <div id ="dr-resource-manager-content">
+            <a href="#" id="dr-resources-back">back</a>
+            <div id="dr-resources-content"></div>
         </div>
-        <div id='div-resources-top'>
-            <div id='dr-div-form'></div>
-            <select id='dr-select-creation' style='width:150px'>
+        <div id="div-resources-top">
+            <div id="dr-div-form"></div>
+            <select id="dr-select-creation" style="width:150px">
             {% for resourceType in resourceTypes %}
                 <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
             {% endfor %}
             </select>
-            <button id='dr-submit-select'>new</button>
+            <button id="dr-submit-select">new</button>
             <br>
-            <button id='dr-download-button'>{{ 'download'|trans({}, 'platform') }}</button>
-            <button id='dr-cut-button'>{{ 'cut'|trans({}, 'platform') }}</button>
-            <button id='dr-copy-button'>{{ 'copy'|trans({}, 'platform') }}</button>
-            <button id='dr-paste-button'>{{ 'paste'|trans({}, 'platform') }}</button>
-            <button id='dr-close-button'>{{ 'close'|trans({}, 'platform') }}</button>
+            <button id="dr-download-button">{{ 'download'|trans({}, 'platform') }}</button>
+            <button id="dr-cut-button">{{ 'cut'|trans({}, 'platform') }}</button>
+            <button id="dr-copy-button">{{ 'copy'|trans({}, 'platform') }}</button>
+            <button id="dr-paste-button">{{ 'paste'|trans({}, 'platform') }}</button>
+            <button id="dr-close-button">{{ 'close'|trans({}, 'platform') }}</button>
         </div>
         </br>
     </div>
