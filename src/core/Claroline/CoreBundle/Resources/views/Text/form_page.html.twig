@@ -2,7 +2,7 @@
 
 {% block content %}
     <!-- editeur wysiwyg -->
-        <script src='{{asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}' type='text/javascript'></script>
+        <script src="{{asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}" type="text/javascript"></script>
         <script type="text/javascript">
     tinyMCE.init({
         // General options
@@ -10,7 +10,7 @@
     });
     </script>
 
-    <form novalidate="validate" action="{{ path('claro_resource_create', {'type': type, 'instanceParentId': id} ) }}" method="post" {{ form_enctype(form) }} id="generic_form">
+    <form novalidate="validate" action="{{ path('claro_resource_create', {'type': type, 'instanceParentId': id} ) }}" method="post" {{ form_enctype(form) }} id="generic-form">
        {{ form_errors(form) }}
        {{ form_widget(form) }}
        <button type="submit" formnovalidate="formnovalidate" />
