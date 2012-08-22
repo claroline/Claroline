@@ -59,6 +59,10 @@
             navigate(e.currentTarget.dataset.key);
         })
 
+        window.onresize = function(e) {
+            resizeBreadcrums();
+        }
+
         submitButton.on('click', function(e){
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_creation_form', {
@@ -299,6 +303,7 @@
         div.append(data);
         setMenu();
         setLayout();
+        resizeBreadcrums();
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
@@ -413,5 +418,38 @@
                 construct.submitButton.show();
             }
         }
+    }
+
+    function resizeBreadcrums(){
+        var resize = function(index, divSize) {
+            var size = getCrumsSize();
+            if(size > divSize && index >= 0) {
+                var crumLink = (($("."+construct.prefix+"-breadcrum-link")).eq(index));
+                formatResName(crumLink, 1, 9);
+                index --;
+                resize(index, divSize);
+            }
+        }
+
+        var getCrumsSize = function(){
+            var crumsSize = 0;
+            $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
+                crumsSize += ($(this).width());
+            })
+
+            return crumsSize;
+        }
+
+        var makeCrums = function() {
+            $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
+                element.innerHTML = " /"+element.title;
+            })
+        }
+
+        makeCrums();
+        var divSize = $('#res-breadcrums').width();
+        var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
+
+        resize(crumsIndex, divSize);
     }
 })();
