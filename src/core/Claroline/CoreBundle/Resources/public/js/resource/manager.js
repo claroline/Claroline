@@ -59,6 +59,10 @@
             navigate(e.currentTarget.dataset.key);
         })
 
+        window.onresize = function(e) {
+            resizeBreadcrums();
+        }
+
         submitButton.on('click', function(e){
             ClaroUtils.sendRequest(
                 Routing.generate('claro_resource_creation_form', {
@@ -247,12 +251,16 @@
 
     function setMenu()
     {
+        var parameters = {};
         $('.resource-menu').each(function(index, element){
-            var parameters = {};
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;
-            bindContextMenu(parameters, element);
+            bindContextMenu(parameters, element, 'left');
+        });
+
+        $('.'+construct.prefix+'-instance-img').each(function(index, element){
+            bindContextMenu(parameters, element, 'right');
         });
     }
 
@@ -299,14 +307,15 @@
         div.append(data);
         setMenu();
         setLayout();
+        resizeBreadcrums();
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
-    function bindContextMenu(parameters, menuElement) {
+    function bindContextMenu(parameters, menuElement, trigger) {
         var type = parameters.type;
         var menuDefaultOptions = {
             selector: '#'+menuElement.id,
-            trigger: 'left',
+            trigger: trigger,
             //See the contextual menu documentation.
             callback: function(key, options) {
                 //Finds and executes the action for the right menu item.
@@ -405,7 +414,8 @@
             } else {
                 construct.pasteButton.removeAttr('disabled');
             }
-            if ($('#'+construct.prefix+'-current-folder').size() == 0) {
+
+            if ($("."+construct.prefix+"-breadcrum-link").size() == 1) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
             } else {
@@ -413,5 +423,38 @@
                 construct.submitButton.show();
             }
         }
+    }
+
+    function resizeBreadcrums(){
+        var resize = function(index, divSize) {
+            var size = getCrumsSize();
+            if(size > divSize && index >= 0) {
+                var crumLink = (($("."+construct.prefix+"-breadcrum-link")).eq(index));
+                formatResName(crumLink, 1, 9);
+                index --;
+                resize(index, divSize);
+            }
+        }
+
+        var getCrumsSize = function(){
+            var crumsSize = 0;
+            $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
+                crumsSize += ($(this).width());
+            })
+
+            return crumsSize;
+        }
+
+        var makeCrums = function() {
+            $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
+                element.innerHTML = " /"+element.title;
+            })
+        }
+
+        makeCrums();
+        var divSize = $('#'+construct.prefix+'-res-breadcrums').width();
+        var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
+
+        resize(crumsIndex, divSize);
     }
 })();
