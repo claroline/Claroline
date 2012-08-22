@@ -251,12 +251,16 @@
 
     function setMenu()
     {
+        var parameters = {};
         $('.resource-menu').each(function(index, element){
-            var parameters = {};
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;
-            bindContextMenu(parameters, element);
+            bindContextMenu(parameters, element, 'left');
+        });
+
+        $('.'+construct.prefix+'-instance-img').each(function(index, element){
+            bindContextMenu(parameters, element, 'right');
         });
     }
 
@@ -307,11 +311,11 @@
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
-    function bindContextMenu(parameters, menuElement) {
+    function bindContextMenu(parameters, menuElement, trigger) {
         var type = parameters.type;
         var menuDefaultOptions = {
             selector: '#'+menuElement.id,
-            trigger: 'left',
+            trigger: trigger,
             //See the contextual menu documentation.
             callback: function(key, options) {
                 //Finds and executes the action for the right menu item.

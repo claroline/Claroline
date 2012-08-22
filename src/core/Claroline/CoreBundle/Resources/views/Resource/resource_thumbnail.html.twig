@@ -16,7 +16,7 @@
             {% if instance.type == "directory" %}
                 <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
-            <img src="{{asset("icons/" ~ instance.thumbnail)}}"
+            <img id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset("icons/" ~ instance.thumbnail)}}"
                  {% if instance.path is defined %}
                     title="{{instance.path}}"
                  {% endif %}
