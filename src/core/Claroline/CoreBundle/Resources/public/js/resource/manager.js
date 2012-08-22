@@ -148,7 +148,7 @@
                     ClaroUtils.sendRequest(route, function(data){
                         div.prepend(data);
                         setMenu();
-
+                        $(".res-name").each(function(){formatResName($(this), 2, 20)});
                     })
 
                     $('.instance-paginator-item').on('click', function(e){
@@ -217,6 +217,7 @@
             $('.res-block').remove();
             construct.div.prepend(data);
             setMenu();
+            $(".res-name").each(function(){formatResName($(this), 2, 20)});
         })
     }
 
