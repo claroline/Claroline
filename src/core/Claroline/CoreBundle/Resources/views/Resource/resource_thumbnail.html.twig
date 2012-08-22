@@ -1,10 +1,12 @@
 {% if breadCrums is defined %}
-<div id="res-breadcrums">
-<a href="#" class="{{prefix}}-breadcrum-link" >/root</a>
+{% spaceless %}
+<div id="{{prefix}}-res-breadcrums">
+<a href="#" class="{{prefix}}-breadcrum-link" title="root">root</a>
 {% for breadCrum in breadCrums %}
-    <a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}">/{{breadCrum.name}}</a>
+<a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}" title="{{breadCrum.name}}"> /{{breadCrum.name}}</a>
 {% endfor %}
 </div>
+{% endspaceless %}
 {% endif %}
 
 {% for instance in resources %}
@@ -14,7 +16,7 @@
             {% if instance.type == "directory" %}
                 <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
-            <img src="{{asset("icons/" ~ instance.thumbnail)}}"
+            <img id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset("icons/" ~ instance.thumbnail)}}"
                  {% if instance.path is defined %}
                     title="{{instance.path}}"
                  {% endif %}
