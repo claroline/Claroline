@@ -1,9 +1,11 @@
+{% if breadCrums is defined %}
 <div id="res-breadcrums">
 <a href="#" class="{{prefix}}-breadcrum-link" >/root</a>
 {% for breadCrum in breadCrums %}
     <a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}">/{{breadCrum.name}}</a>
 {% endfor %}
 </div>
+{% endif %}
 
 {% for instance in resources %}
     <span id="{{prefix}}-instance-{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
