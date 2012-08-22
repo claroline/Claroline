@@ -1,20 +1,20 @@
-<div id="{{divPrefix}}_active_filters"></div></br>
-<select id = '{{divPrefix}}_select_root' style='width:125px' multiple = 'multiple'>
+<div id="{{divPrefix}}-active-filters"></div></br>
+<select id="{{divPrefix}}-select-root" style="width:125px" multiple="multiple">
     {% for workspaceroot in workspaceroots %}
-        <option value = {{ workspaceroot.id }}> {{ workspaceroot.name }} </option>
+        <option value={{ workspaceroot.id }}> {{ workspaceroot.name }} </option>
     {% endfor %}
 </select><br>
-<select id = '{{divPrefix}}_select_type' style='width:125px' multiple = 'multiple'>
+<select id="{{divPrefix}}-select-type" style="width:125px" multiple="multiple">
     {% for resourceType in resourceTypes %}
-            <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+            <option value={{ resourceType.type }}> {{ resourceType.type }} </option>
     {% endfor %}
 </select><br>
-<input type='text' style='width:120px' placeholder='text'></input><br>
-<input id='{{divPrefix}}_date_from' type='text' style='width:120px' placeholder='date début'></input><br>
-<input id='{{divPrefix}}_date_to' type='text' style='width:120px' placeholder='date fin'></input><br>
-<button id='{{divPrefix}}_filter_button'>filter</button>
-<button id='{{divPrefix}}_reset_button'>reset</button>
+<input type="text" style="width:120px" placeholder="text"></input><br>
+<input id="{{divPrefix}}-date-from" type="text" style="width:120px" placeholder="date début"></input><br>
+<input id="{{divPrefix}}-date-to" type="text" style="width:120px" placeholder="date fin"></input><br>
+<button id="{{divPrefix}}-filter-button">filter</button>
+<button id="{{divPrefix}}-reset-button">reset</button>
 <script>
-    $('#{{divPrefix}}_date_from').datepicker({dateFormat: "yy-mm-dd"});
-    $('#{{divPrefix}}_date_to').datepicker({dateFormat: "yy-mm-dd"});
+    $('#{{divPrefix}}-date-from').datepicker({dateFormat: "yy-mm-dd"});
+    $('#{{divPrefix}}-date-to').datepicker({dateFormat: "yy-mm-dd"});
 </script>
