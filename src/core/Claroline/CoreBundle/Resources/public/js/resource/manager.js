@@ -410,7 +410,8 @@
             } else {
                 construct.pasteButton.removeAttr('disabled');
             }
-            if ($('#'+construct.prefix+'-current-folder').size() == 0) {
+
+            if ($("."+construct.prefix+"-breadcrum-link").size() == 1) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
             } else {
@@ -447,7 +448,7 @@
         }
 
         makeCrums();
-        var divSize = $('#res-breadcrums').width();
+        var divSize = $('#'+construct.prefix+'-res-breadcrums').width();
         var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
 
         resize(crumsIndex, divSize);

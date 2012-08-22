@@ -1,6 +1,6 @@
 {% if breadCrums is defined %}
 {% spaceless %}
-<div id="res-breadcrums">
+<div id="{{prefix}}-res-breadcrums">
 <a href="#" class="{{prefix}}-breadcrum-link" title="root">root</a>
 {% for breadCrum in breadCrums %}
 <a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}" title="{{breadCrum.name}}"> /{{breadCrum.name}}</a>
