@@ -1,20 +1,9 @@
-
-{% if currentFolder is not null %}
-    <div class="current-folder" id="{{prefix}}-current-folder"
-        data-key="{{currentFolder.id}}"
-        data-type="{{currentFolder.getResourceType().getType()}}"
-        data-resource-id="{{currentFolder.getResource().getId()}}"
-        {% if currentFolder.getParent() is not null %}
-            data-parent-id="{{currentFolder.getParent().getId()}}"
-        {% endif %}
-        >
-        {# TODO: display full path (breadcrumb-like) #}
-        Current folder: {{currentFolder.name}}
-    </div>
-    <br>
-    <br>
-{% endif %}
-
+<div id="res-breadcrums">
+<a href="#" class="{{prefix}}-breadcrum-link" >/root</a>
+{% for breadCrum in breadCrums %}
+    <a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}">/{{breadCrum.name}}</a>
+{% endfor %}
+</div>
 
 {% for instance in resources %}
     <span id="{{prefix}}-instance-{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
@@ -23,7 +12,11 @@
             {% if instance.type == "directory" %}
                 <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
-            <img src="{{asset("icons/" ~ instance.thumbnail)}}"/>
+            <img src="{{asset("icons/" ~ instance.thumbnail)}}"
+                 {% if instance.path is defined %}
+                    title="{{instance.path}}"
+                 {% endif %}
+             />
             {% if instance.type == "directory" %}
                 </a>
             {% endif %}

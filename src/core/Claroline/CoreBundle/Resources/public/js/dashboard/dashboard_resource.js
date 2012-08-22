@@ -16,7 +16,7 @@
     );
 
     ClaroResourceManager.init($('#dr-resources-content'),
-        'cr', $('#dr-resources-back'),
+        'cr', 
         $('#dr-div-form'),
         $('#dr-select-creation'),
         $('#dr-submit-select'),

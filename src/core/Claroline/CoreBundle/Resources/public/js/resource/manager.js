@@ -10,7 +10,6 @@
     manager.init = function(
         div,
         prefix,
-        backButton,
         divForm,
         selectType,
         submitButton,
@@ -23,7 +22,6 @@
         ) {
         construct.div = div;
         construct.prefix = prefix;
-        construct.backButton = backButton;
         construct.divForm = divForm;
         construct.selectType = selectType;
         construct.submitButton = submitButton;
@@ -57,17 +55,8 @@
             navigate(e.currentTarget.parentElement.parentElement.dataset.key);
         });
 
-        backButton.on('click', function(e){
-            var key = $('#'+construct.prefix+'-current-folder').attr('data-parent-id');
-            construct.divForm.empty();
-            ClaroUtils.sendRequest(
-                Routing.generate('claro_resource_renders_thumbnail', {
-                    'parentId': key,
-                    'prefix':prefix
-                }),
-                function(data){
-                    appendThumbnails(div, data);
-                });
+        $('.'+prefix+'-breadcrum-link').live('click', function(e){
+            navigate(e.currentTarget.dataset.key);
         })
 
         submitButton.on('click', function(e){
@@ -165,11 +154,8 @@
                         activePagerItem--;
                         rendersFlatPaginatedThumbnails(activePagerItem);
                     })
-
-
                 });
             } else {
-
                 ClaroUtils.sendRequest(
                     Routing.generate('claro_resource_renders_thumbnail', {
                         'prefix': construct.prefix
@@ -180,7 +166,6 @@
                 )
             }
         })
-
     }
 
     manager.reload = function() {
@@ -413,7 +398,6 @@
     function setLayout() {
         if(construct.flatChkBox.is(':checked')){
             construct.pasteButton.attr('disabled', 'disabled');
-            construct.backButton.hide();
         } else {
             activePagerItem = 1;
             if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'-current-folder').size() == 0){
@@ -421,15 +405,12 @@
             } else {
                 construct.pasteButton.removeAttr('disabled');
             }
-            construct.backButton.show();
             if ($('#'+construct.prefix+'-current-folder').size() == 0) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
-                construct.backButton.hide();
             } else {
                 construct.selectType.show();
                 construct.submitButton.show();
-                construct.backButton.show();
             }
         }
     }

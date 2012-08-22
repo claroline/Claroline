@@ -506,7 +506,7 @@ class ResourceController extends Controller
     public function rendersResourceThumbnailViewAction($parentId, $prefix)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $currentFolder = null;
+        $breadCrums = null;
         //user root
         if ($parentId == 0) {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -514,9 +514,10 @@ class ResourceController extends Controller
         } else {
             $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenNodes($parentId);
             $currentFolder = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($parentId);
+            $breadCrums = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->parents($currentFolder);
         }
 
-        return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig', array('currentFolder' => $currentFolder, 'resources' => $results, 'prefix' => $prefix));
+        return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig', array('breadCrums' => $breadCrums, 'resources' => $results, 'prefix' => $prefix));
     }
 
     /**
