@@ -16,6 +16,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  * getIsNotNullExpression
  * getWildCards
  * getCountExpression
+ * getConcatExpression
  */
 class ResourceInstanceRepository extends NestedTreeRepository
 {
@@ -40,6 +41,16 @@ class ResourceInstanceRepository extends NestedTreeRepository
             rt.is_navigable as is_navigable,
             rt.icon as icon,
             rt.thumbnail as thumbnail
+            ";
+
+    const SELECT_PATHNAME = "
+        (SELECT group_concat(ri2.name order by ri2.lft SEPARATOR ' > ')
+                FROM claro_resource_instance ri2
+                WHERE ri.lft between ri2.lft and ri2.rgt
+                AND ri.root = ri2.root group by root )
+            as path ";
+
+    const FROM_INSTANCE ="
             FROM claro_resource_instance ri
             INNER JOIN  claro_user uri
             ON uri.id = ri.user_id
@@ -98,7 +109,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getInstanceList(User $user, $page = null, $limit = null, $resourceType = null)
     {
-        $sql = self::SELECT_INSTANCE . "
+        $sql = self::SELECT_INSTANCE . ",".self::SELECT_PATHNAME.' '.self::FROM_INSTANCE."
             WHERE ri.workspace_id IN
             (" . self::SELECT_USER_WORKSPACES_ID . ")";
         if ($resourceType === null) {
@@ -145,7 +156,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getChildrenInstanceList(ResourceInstance $resourceInstance, ResourceType $resourceType)
     {
-        $sql = self::SELECT_INSTANCE."
+        $sql = self::SELECT_INSTANCE.' '.self::FROM_INSTANCE."
             WHERE ri.lft > :left
             AND ri.rgt < :right
             AND rt.type = :type
@@ -167,7 +178,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function getChildrenNodes($parentId, $resourceTypeId = 0, $isListable = true)
     {
-        $sql = self::SELECT_INSTANCE."
+        $sql = self::SELECT_INSTANCE.' '.self::FROM_INSTANCE."
             WHERE ri.parent_id = :parentId
             AND rt.is_listable = :isListable
             ";
@@ -197,7 +208,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $platform = $this->_em->getConnection()->getDatabasePlatform();
         $isNull = $platform->getIsNullExpression('ri.parent_id');
 
-        $sql = self::SELECT_INSTANCE."
+        $sql = self::SELECT_INSTANCE.' '.self::FROM_INSTANCE."
             WHERE {$isNull}
             AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")";
 
@@ -265,7 +276,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             }
         }
 
-        $sql = self::SELECT_INSTANCE . "
+        $sql = self::SELECT_INSTANCE .' '.self::FROM_INSTANCE. "
             WHERE rt.is_listable = 1
             AND rt.type != 'directory'
             AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")"
@@ -291,6 +302,24 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         $stmt->execute();
 
+        $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+        }
+
+        return $instances;
+    }
+
+    public function parents($instance)
+    {
+        $sql = self::SELECT_INSTANCE . ' ' . self::FROM_INSTANCE . "
+            WHERE {$instance->getLft()} BETWEEN ri.lft AND ri.rgt
+            AND root = {$instance->getRoot()}
+            ";
+
+        $stmt = $this->_em->getConnection()->prepare($sql);
+        $stmt->execute();
         $instances = array();
 
         while ($row = $stmt->fetch()) {

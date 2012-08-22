@@ -345,6 +345,10 @@ class Manager
             if ($item['thumbnail'] != null) {
                 $stringitem.= ' , "thumbnail":"'.$item['thumbnail'].'" ';
             }
+            if (array_key_exists('path', $item)) {
+                $stringitem.= ' , "path":"'.$item['path'].'" ';
+            }
+
             if ($item['is_navigable'] != 0) {
                 $stringitem.=', "isFolder": true ';
                 $stringitem.=', "isLazy": true ';
@@ -381,6 +385,14 @@ class Manager
         $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
         $instanceArray['icon'] = $instance->getResourceType()->getIcon();
         $instanceArray['thumbnail'] = $instance->getResourceType()->getThumbnail();
+        // null or use doctrine to retrieve the path
+        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $nodes = $repo->getPath($instance);
+        $path = '';
+        foreach ($nodes as $node) {
+            $path.="{$node->getName()} >";
+        }
+        $instanceArray['path'] = $path;
         $array = array();
         $array[0] = $instanceArray;
 
