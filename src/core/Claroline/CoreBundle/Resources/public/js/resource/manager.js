@@ -110,11 +110,11 @@
             var route = '';
             params = pasteIds;
             if (cpd == 0) {
-                params.newParentId = $('#'+construct.prefix+'-current-folder').attr('data-key');
+                params.newParentId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                 route = Routing.generate('claro_resource_multimove', params);
                 ClaroUtils.sendRequest(route, function(){manager.reload()});
             } else {
-                params.instanceDestinationId = $('#'+construct.prefix+'-current-folder').attr('data-key');
+                params.instanceDestinationId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
                 ClaroUtils.sendRequest(route, function(){manager.reload()});
             }
@@ -173,7 +173,7 @@
     }
 
     manager.reload = function() {
-        var key = $('#'+construct.prefix+'-current-folder').attr('data-key');
+        var key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_renders_thumbnail', {
                 'parentId': key,
@@ -409,7 +409,7 @@
             construct.pasteButton.attr('disabled', 'disabled');
         } else {
             activePagerItem = 1;
-            if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'-current-folder').size() == 0){
+            if($.isEmptyObject(pasteIds) || $("."+construct.prefix+"-breadcrum-link").size() == 1){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
