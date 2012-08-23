@@ -3,7 +3,7 @@
 <div id="{{prefix}}-res-breadcrums">
 <a href="#" class="{{prefix}}-breadcrum-link" title="root">root</a>
 {% for breadCrum in breadCrums %}
-<a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}"> /{{breadCrum.name}}</a>
+<a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}" title="{{breadCrum.name}}"> /{{breadCrum.name}}</a>
 {% endfor %}
 </div>
 {% endspaceless %}
