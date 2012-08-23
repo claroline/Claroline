@@ -25,10 +25,10 @@ class PlatformInstallCommand extends ContainerAwareCommand
             'When set to true, available plugins will be installed'
         );
         $this->addOption(
-            'with-prod-fixtures',
+            'with-fixtures',
             'wf',
             InputOption::VALUE_NONE,
-            'When set to true, production data fixtures will be loaded'
+            'When set to true, data fixtures will be loaded'
         );
     }
 
@@ -41,16 +41,25 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $aclCommand = $this->getApplication()->find('init:acl');
         $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
 
-        if ($input->getOption('with-prod-fixtures')) {
-            $output->writeln('Loading platform basic data...');
-            $fixtureCommand = $this->getApplication()->find('doctrine:fixture:load');
-            $coreFixturesPath = realpath(__DIR__ . '/../../../../../src/core/Claroline/CoreBundle/DataFixtures');
-            $fixtureInput = new ArrayInput(array(
-                'command' => 'doctrine:fixtures:load',
-                '--fixtures' => $coreFixturesPath,
-                '--append' => true
-            ));
-            $fixtureCommand->run($fixtureInput, $output);
+        if ($input->getOption('with-fixtures')) {
+            $kernel = $this->getApplication()->getKernel();
+            $environment = $kernel->getEnvironment();
+
+            if ($environment === 'prod' || $environment === 'dev' || $environment == 'test') {
+                $coreBundleDirectory = $kernel->getRootDir()
+                    . '/../src/core/Claroline/CoreBundle';
+                $fixturesPath = $environment === 'test'
+                    ? $coreBundleDirectory.'/Tests/DataFixtures/Required'
+                    : $coreBundleDirectory.'/DataFixtures';
+                $output->writeln("Loading {$environment} fixtures...");
+                $fixtureCommand = $this->getApplication()->find('doctrine:fixture:load');
+                $fixtureInput = new ArrayInput(array(
+                    'command' => 'doctrine:fixtures:load',
+                    '--fixtures' => $fixturesPath,
+                    '--append' => true
+                ));
+                $fixtureCommand->run($fixtureInput, $output);
+            }
         }
 
         if ($input->getOption('with-plugins')) {
