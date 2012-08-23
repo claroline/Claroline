@@ -249,15 +249,21 @@
 
     function setMenu()
     {
-        var parameters = {};
+
         $('.resource-menu').each(function(index, element){
-            parameters.key = element.dataset.key;
-            parameters.resourceId = element.dataset.resourceId;
-            parameters.type = element.dataset.type;
+            var parameters = {};
+            parameters.key = element.parentElement.parentElement.dataset.key;
+            parameters.resourceId = element.parentElement.parentElement.dataset.resourceId;
+            parameters.type = element.parentElement.parentElement.dataset.type;
             bindContextMenu(parameters, element, 'left');
         });
 
         $('.'+construct.prefix+'-instance-img').each(function(index, element){
+            var parameters = {};
+            console.debug(element.parentElement.parentElement.parentElement);
+            parameters.key = element.dataset.key;
+            parameters.resourceId = element.dataset.resourceId;
+            parameters.type = element.dataset.type;
             bindContextMenu(parameters, element, 'right');
         });
     }
@@ -351,7 +357,6 @@
     }
 
     function executeAsync(obj, parameters, route) {
-
         //Delete was a special case as every node can be removed.
         (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route);
     };
@@ -359,7 +364,7 @@
     function removeNode(parameters, route) {
         ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
             if (204 === jqXHR.status) {
-                $('#'+construct.prefix+"_instance_"+parameters.key).remove();
+                $('#'+construct.prefix+"-instance-"+parameters.key).remove();
             }
         });
     };
