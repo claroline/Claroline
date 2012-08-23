@@ -9,7 +9,8 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $this->createMimeTypeTable($schema);
+        $this->createIconTypeTable($schema);
+        $this->createResourceIconTable($schema);
         $this->createMetaTypeTable($schema);
         $this->createLicenseTable($schema);
         $this->createWorkspaceTable($schema);
@@ -43,6 +44,8 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_directory');
         $schema->dropTable('claro_resource');
         $schema->dropTable('claro_resource_type');
+        $schema->dropTable('claro_resource_icon');
+        $schema->dropTable('claro_resource_icon_type');
         $schema->dropTable('claro_extension');
         $schema->dropTable('claro_tool_instance');
         $schema->dropTable('claro_tool');
@@ -239,7 +242,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => false));
-        $table->addColumn('image_id', 'integer', array('notnull' => false));
+        $table->addColumn('icon_id', 'integer', array('notnull' => false));
 
         $this->addDiscriminator($table);
 
@@ -253,7 +256,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource_types_image'), array('image_id'), array('id'), array('onDelete' => 'CASCADE')
+            $this->getStoredTable('claro_resource_icon'), array('icon_id'), array('id'), array('onDelete' => 'CASCADE')
         );
 
         $this->storeTable($table);
@@ -407,13 +410,27 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    private function createMimeTypeTable(Schema $schema)
+    private function createResourceIconTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_resource_types_image');
+        $table = $schema->createTable('claro_resource_icon');
         $this->addId($table);
-        $table->addColumn('type', 'text');
+        $table->addColumn('resource_icons', 'text');
         $table->addColumn('thumbnail', 'text', array('notnull' => false));
         $table->addColumn('icon', 'text', array('notnull' => false));
+        $table->addColumn('icon_type_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_icon_type'), array('icon_type_id'), array('id'), array('onDelete' => 'SET NULL')
+        );
+
+        $this->storeTable($table);
+    }
+
+    private function createIconTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_icon_type');
+        $this->addId($table);
+        $table->addColumn('icon_type', 'text');
 
         $this->storeTable($table);
     }

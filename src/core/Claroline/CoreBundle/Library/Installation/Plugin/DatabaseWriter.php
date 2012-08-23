@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceImage;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
 /**
@@ -172,35 +172,39 @@ class DatabaseWriter
                     }
                 }
 
-                $resourceImage = new ResourceImage();
-                $resourceImage->setType($resourceType->getType());
+                $resourceIcon = new ResourceIcon();
+
                 $defaultImg = $this->em
-                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceImage')
-                    ->findOneBy(array('type' => 'default'));
-                
+                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                    ->findOneBy(array('iconType' => 1));
+                $defaultIconType = $this->em
+                    ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+                    ->findOneBy(array('iconType' => 'default'));
+                $resourceIcon->setIconType($defaultIconType);
+
                 // TODO : this should be moved to another part of the installation process
                 if (isset($properties['icon'])) {
-                    $resourceImage->setIcon($properties['icon']);
+                    $resourceIcon->setIcon($properties['icon']);
                     $ds = DIRECTORY_SEPARATOR;
                     $imgFolder = $plugin->getImgFolder();
                     $img = $imgFolder.$ds.$properties['icon'];
                     copy($img, $this->imgPath.$ds.$properties['icon']);
                 } else {
-                    $resourceImage->setIcon($defaultImg->getIcon());
+                    $resourceIcon->setIcon($defaultImg->getIcon());
                 }
 
                 // TODO : this should be moved to another part of the installation process
                 if (isset($properties['thumbnail'])) {
-                    $resourceImage->setThumbnail($properties['thumbnail']);
+                    $resourceIcon->setThumbnail($properties['thumbnail']);
                     $ds = DIRECTORY_SEPARATOR;
                     $imgFolder = $plugin->getImgFolder();
                     $img = $imgFolder . $ds . $properties['thumbnail'];
                     copy($img, $this->imgPath . $ds . $properties['thumbnail']);
                 } else {
-                    $resourceImage->setThumbnail($defaultImg->getThumbnail());
+                    $resourceIcon->setThumbnail($defaultImg->getThumbnail());
                 }
 
-                $this->em->persist($resourceImage);
+                $this->em->persist($resourceIcon);
             }
         }
     }
