@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_resource_types_image")
+ * @ORM\Table(name="claro_resource_icon")
  */
-class ResourceImage
+class ResourceIcon
 {
     /**
      * @ORM\Id
@@ -17,11 +17,6 @@ class ResourceImage
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", name="type")
-     */
-    private $type;
 
     /**
      * @ORM\Column(type="string", name="thumbnail")
@@ -43,6 +38,12 @@ class ResourceImage
     private $abstractResources;
 
     /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\IconType")
+     * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id")
+     */
+    private $iconType;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -53,16 +54,6 @@ class ResourceImage
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     public function getThumbnail()
@@ -93,5 +84,15 @@ class ResourceImage
     public function addAbstractResource($abstractResource)
     {
         $this->abstractResource->add($abstractResource);
+    }
+
+    public function setIconType($iconType)
+    {
+        $this->iconType = $iconType;
+    }
+
+    public function getIconType()
+    {
+        return $this->iconType;
     }
 }

@@ -7,10 +7,11 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceImage;
+use Claroline\CoreBundle\Entity\Resource\IconType;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 
 /**
- * Resource types data fixture.
+ * Resource images data fixture.
  */
 class LoadResourceImagesData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -27,24 +28,37 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function load (ObjectManager $manager)
     {
+        $iconsType = array('default', 'generated', 'basic_mime_type', 'complete_mime_type');
+        $defaultIconType = null;
+
+        foreach($iconsType as $type) {
+            $iconType = new IconType();
+            $iconType->setIconType($type);
+            $manager->persist($iconType);
+            if($type === 'default') {
+                $defaultIconType = $iconType;
+            }
+        }
+
+
         $fileThumb = 'res_file.png';
         $folderThumb = 'res_folder.png';
         $textThumb = 'res_text.png';
         $defaultIcon = 'default_icon.img';
 
         $resourceImages = array(
-            array('file', $fileThumb, $defaultIcon),
-            array('directory', $folderThumb, $defaultIcon),
-            array('text', $textThumb, $defaultIcon),
-            array('default', $fileThumb, $defaultIcon)
+            array($fileThumb, $defaultIcon),
+            array($folderThumb, $defaultIcon),
+            array($textThumb, $defaultIcon),
+            array($fileThumb, $defaultIcon)
         );
 
         foreach ($resourceImages as $resourceImage) {
-            $rimg = new ResourceImage();
-            $rimg->setType($resourceImage[0]);
-            $rimg->setThumbnail($resourceImage[1]);
+            $rimg = new ResourceIcon();
+            $rimg->setThumbnail($resourceImage[0]);
+            $rimg->setIcon($resourceImage[1]);
+            $rimg->setIconType($defaultIconType);
             $manager->persist($rimg);
-            $this->addReference("resource_image/{$resourceImage[0]}", $rimg);
         }
 
         $manager->flush();

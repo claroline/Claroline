@@ -74,7 +74,7 @@ class Manager
             $ri->setName($resource->getName());
             $rename = $this->getUniqueName($ri, $dir);
             $ri->setName($rename);
-            $resource = $this->setResourceImage($resource, $resourceType, $rename);
+            $resource = $this->setResourceIcon($resource, $resourceType, $rename);
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
@@ -532,7 +532,7 @@ class Manager
      * @param ResourceType $type
      * @param string $name (required if it's a file)
      */
-    private function setResourceImage(AbstractResource $resource, $type)
+    private function setResourceIcon(AbstractResource $resource, $type)
     {
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceImage');
         if ($type->getType() !== 'file') {
@@ -551,7 +551,7 @@ class Manager
             }
         }
 
-        $resource->setImage($imgs);
+        $resource->setIcon($imgs);
 
         return $resource;
     }
