@@ -10,13 +10,13 @@
 {% endif %}
 
 {% for instance in resources %}
-    <span id="{{prefix}}-instance-{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+    <span id="{{prefix}}-instance-{{instance.id}}" data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
             <input class="{{prefix}}-chk-instance"type="checkbox" value="{{instance.id}}" style="vertical-align: top;"/>
             {% if instance.type == "directory" %}
                 <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
-            <img id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset("icons/" ~ instance.thumbnail)}}"
+            <img data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}" id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset("icons/" ~ instance.thumbnail)}}"
                  {% if instance.path is defined %}
                     title="{{instance.path}}"
                  {% endif %}
@@ -29,7 +29,7 @@
             <span class="res-name">{{instance.name}}</span>
         </div>
         <div class="resource-bar">
-            <a href="#" id="resource-menu-{{instance.id}}" class="resource-menu" data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}">Menu</a>
+            <a href="#" id="resource-menu-{{instance.id}}" class="resource-menu">Menu</a>
         </div>
         <br/>
     </span>
