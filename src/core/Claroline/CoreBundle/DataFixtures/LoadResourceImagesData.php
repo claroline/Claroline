@@ -28,15 +28,25 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function load (ObjectManager $manager)
     {
-        $iconsType = array('default', 'generated', 'basic_mime_type', 'complete_mime_type');
+        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type');
         $defaultIconType = null;
+        $basicIconMimeType = null;
+        $completeIconMimeType = null;
 
         foreach($iconsType as $type) {
             $iconType = new IconType();
             $iconType->setIconType($type);
             $manager->persist($iconType);
-            if($type === 'default') {
-                $defaultIconType = $iconType;
+            switch($type) {
+                case 'type':
+
+                    $defaultIconType = $iconType; break;
+                case 'basic_mime_type':
+                    $basicIconMimeType = $iconType; break;
+                case 'complete_mime_type':
+                    $completeIconMimeType = $iconType; break;
+                default:
+                    break;
             }
         }
 
@@ -45,19 +55,28 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
         $folderThumb = 'res_folder.png';
         $textThumb = 'res_text.png';
         $defaultIcon = 'default_icon.img';
+        $textPlainThumb = 'plain_text.png';
 
+        /*
+         * [1] thumbnail link
+         * [2] icon link
+         * [3] icontype
+         * [4] type (either resource type or mime type-
+         */
         $resourceImages = array(
-            array($fileThumb, $defaultIcon),
-            array($folderThumb, $defaultIcon),
-            array($textThumb, $defaultIcon),
-            array($fileThumb, $defaultIcon)
+            array($fileThumb, $defaultIcon, $defaultIconType, 'file'),
+            array($folderThumb, $defaultIcon, $defaultIconType, 'directory'),
+            array($textThumb, $defaultIcon, $defaultIconType, 'text'),
+            array($fileThumb, $defaultIcon, $defaultIconType, 'default'),
+            array($textPlainThumb, $defaultIcon, $completeIconMimeType, 'text/plain')
         );
 
         foreach ($resourceImages as $resourceImage) {
             $rimg = new ResourceIcon();
             $rimg->setThumbnail($resourceImage[0]);
             $rimg->setIcon($resourceImage[1]);
-            $rimg->setIconType($defaultIconType);
+            $rimg->setIconType($resourceImage[2]);
+            $rimg->setType($resourceImage[3]);
             $manager->persist($rimg);
         }
 

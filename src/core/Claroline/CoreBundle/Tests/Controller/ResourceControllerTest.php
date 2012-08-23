@@ -122,6 +122,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
         $this->client->request('GET', "/resource/workspace/add/{$rootRi[0]->key}/{$this->pwr[0]->getId()}");
+
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -147,7 +148,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(4, count($jsonResponse));
     }
-
+/*
     public function testResourceProportiesCanBeEdited()
     {
         $this->markTestSkipped('irrelevant since the name was moved from abstractResource to ResourceInstance');

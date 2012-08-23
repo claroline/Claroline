@@ -10,6 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IconType
 {
+    const TYPE = 1;
+    const GENERATED = 2;
+    const BASIC_MIME_TYPE = 3;
+    const COMPLETE_MIME_TYPE = 4;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

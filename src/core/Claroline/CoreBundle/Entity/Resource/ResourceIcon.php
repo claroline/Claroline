@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Resource\IconType;
 
 /**
  * @ORM\Entity
@@ -26,7 +27,12 @@ class ResourceIcon
     /**
      * @ORM\Column(type="string", name="icon")
      */
+
     private $icon;
+    /**
+     * @ORM\Column(type="string", name="type")
+     */
+    private $type;
 
     /**
      * @ORM\OneToMany(
@@ -42,6 +48,8 @@ class ResourceIcon
      * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id")
      */
     private $iconType;
+
+
 
     /**
      * Constructor.
@@ -86,7 +94,7 @@ class ResourceIcon
         $this->abstractResource->add($abstractResource);
     }
 
-    public function setIconType($iconType)
+    public function setIconType(IconType $iconType)
     {
         $this->iconType = $iconType;
     }
@@ -94,5 +102,15 @@ class ResourceIcon
     public function getIconType()
     {
         return $this->iconType;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 }
