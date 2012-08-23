@@ -389,6 +389,7 @@
         //If there is a json response, a node was returned.
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
             manager.reload();
+            construct.divForm.empty();
         //If it's not a json response, we append the response at the top of the tree.
         } else {
             construct.divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
