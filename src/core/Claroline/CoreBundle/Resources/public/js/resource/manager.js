@@ -73,9 +73,7 @@
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
-                        parameters.key = $('#'+prefix+'-current-folder').attr('data-key')
-                        parameters.resourceId = $('#'+prefix+'-current-folder').attr('data-resource-id')
-                        parameters.type = $('#'+prefix+'-current-folder').attr('data-type')
+                        parameters.key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                         var action = divForm.find('form').attr('action');
                         action = action.replace('_instanceId', parameters.key)
                         var id = divForm.find('form').attr('id');
