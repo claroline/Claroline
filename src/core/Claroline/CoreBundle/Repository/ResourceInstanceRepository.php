@@ -59,8 +59,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             ON res.resource_type_id = rt.id
             INNER JOIN claro_user ures
             ON res.user_id = ures.id
-            INNER JOIN claro_resource_types_image rti
-            ON res.image_id = rti.id";
+            INNER JOIN claro_resource_icon rti
+            ON res.icon_id = rti.id";
 
 
     const SELECT_USER_WORKSPACES_ID = "SELECT

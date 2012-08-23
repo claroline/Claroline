@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
 /**
@@ -176,11 +177,12 @@ class DatabaseWriter
 
                 $defaultImg = $this->em
                     ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-                    ->findOneBy(array('iconType' => 1));
+                    ->findOneBy(array('iconType' => IconType::TYPE));
                 $defaultIconType = $this->em
                     ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
-                    ->findOneBy(array('iconType' => 'default'));
+                    ->findOneBy(array('iconType' => 'type'));
                 $resourceIcon->setIconType($defaultIconType);
+                $resourceIcon->setType($resourceType->getType());
 
                 // TODO : this should be moved to another part of the installation process
                 if (isset($properties['icon'])) {

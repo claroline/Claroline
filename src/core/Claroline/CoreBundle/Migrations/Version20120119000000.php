@@ -418,6 +418,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('thumbnail', 'text', array('notnull' => false));
         $table->addColumn('icon', 'text', array('notnull' => false));
         $table->addColumn('icon_type_id', 'integer', array('notnull' => false));
+        $table->addColumn('type', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_icon_type'), array('icon_type_id'), array('id'), array('onDelete' => 'SET NULL')

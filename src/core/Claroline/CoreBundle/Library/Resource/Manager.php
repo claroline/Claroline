@@ -10,6 +10,7 @@ use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
@@ -183,7 +184,6 @@ class Manager
                 $this->addToDirectoryByReference($child, $instanceCopy);
             }
         }
-
 
         $this->em->persist($instanceCopy);
     }
@@ -382,8 +382,8 @@ class Manager
         $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
         $instanceArray['type'] = $instance->getResource()->getResourceType()->getType();
         $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
-        $instanceArray['icon'] = $instance->getResource()->getImage()->getIcon();
-        $instanceArray['thumbnail'] = $instance->getResource()->getImage()->getThumbnail();
+        $instanceArray['icon'] = $instance->getResource()->getIcon()->getIcon();
+        $instanceArray['thumbnail'] = $instance->getResource()->getIcon()->getThumbnail();
         // null or use doctrine to retrieve the path
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $nodes = $repo->getPath($instance);
@@ -411,6 +411,7 @@ class Manager
             $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
             $resourceCopy->addResourceInstance($ric);
+            $resourceCopy->setIcon($resourceInstance->getResource()->getIcon());
         } else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
             $eventName = $this->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
@@ -532,22 +533,28 @@ class Manager
      * @param ResourceType $type
      * @param string $name (required if it's a file)
      */
-    private function setResourceIcon(AbstractResource $resource, $type)
+    private function setResourceIcon(AbstractResource $resource, ResourceType $type)
     {
-        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceImage');
-        if ($type->getType() !== 'file') {
-            $imgs = $repo->findOneBy(array('type' => $type));
+        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        if ($type->getType() != 'file') {
+            $imgs = $repo->findOneBy(array('type' => $type->getType(), 'iconType' => IconType::TYPE));
             if ($imgs == null) {
-                $imgs = $repo->findOneBy(array('default' => $type));
-                //doctrine research like /*/
+                $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::TYPE));
             }
         } else {
+            //if video or img => generate the thumbnail, otherwise find an existing one.
+
             $files = $this->container->get('request')->files->all();
             $mimeType = $files["file_form"]["name"]->getClientMimeType();
-            $imgs = $repo->findOneBy(array('type' => $mimeType));
+            $mimeElements = explode('/', $mimeType);
 
-            if ($imgs == null) {
-                $imgs = $repo->findOneBy(array('type' => 'file'));
+            $imgs = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
+
+            if ($imgs === null) {
+                $imgs = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
+                if ($imgs === null) {
+                     $imgs = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
+                }
             }
         }
 
