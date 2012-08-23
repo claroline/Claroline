@@ -48,6 +48,10 @@ class Creator
         $directoryType = $this->entityManager
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findOneBy(array('type' => 'directory'));
+        $directoryImage = $this->entityManager
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceImage')
+            ->findOneBy(array('type' => 'directory'));
+        $rootDir->setImage($directoryImage);
         $rootDir->setResourceType($directoryType);
         $root->setResource($rootDir);
         $root->setWorkspace($workspace);

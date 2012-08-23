@@ -27,15 +27,16 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function load (ObjectManager $manager)
     {
-        $fileThumb ='res_file.png';
-        $folderThumb ='res_folder.png';
-        $textThumb ='res_text.png';
+        $fileThumb = 'res_file.png';
+        $folderThumb = 'res_folder.png';
+        $textThumb = 'res_text.png';
+        $defaultIcon = 'default_icon.img';
 
         $resourceImages = array(
-            array('file', $fileThumb),
-            array('directory', $folderThumb),
-            array('text', $textThumb),
-            array('default', $fileThumb)
+            array('file', $fileThumb, $defaultIcon),
+            array('directory', $folderThumb, $defaultIcon),
+            array('text', $textThumb, $defaultIcon),
+            array('default', $fileThumb, $defaultIcon)
         );
 
         foreach ($resourceImages as $resourceImage) {
@@ -43,6 +44,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             $rimg->setType($resourceImage[0]);
             $rimg->setThumbnail($resourceImage[1]);
             $manager->persist($rimg);
+            $this->addReference("resource_image/{$resourceImage[0]}", $rimg);
         }
 
         $manager->flush();
@@ -53,6 +55,6 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function getOrder()
     {
-        return 5;
+        return 4;
     }
 }

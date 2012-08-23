@@ -142,7 +142,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $ri = new ResourceInstance();
         $ri->setCreator($user);
         $ri->setResource($file);
-        $ri->setName($name);
+        $ri->setName($name.'.txt');
         $ri->setParent($parent);
         $ri->setWorkspace($parent->getWorkspace());
         $em = $this->getContainer()->get('doctrine.orm.entity_manager')->persist($file);

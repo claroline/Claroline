@@ -260,7 +260,6 @@
 
         $('.'+construct.prefix+'-instance-img').each(function(index, element){
             var parameters = {};
-            console.debug(element.parentElement.parentElement.parentElement);
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;

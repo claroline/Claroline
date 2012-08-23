@@ -207,8 +207,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('class', 'string', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('is_downloadable', 'boolean');
-        $table->addColumn('icon', 'string', array('notnull' => false));
-        $table->addColumn('thumbnail', 'string', array('notnull' => false));
         $table->addUniqueIndex(array('type'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), array('plugin_id'), array('id'), array('onDelete' => 'CASCADE')
