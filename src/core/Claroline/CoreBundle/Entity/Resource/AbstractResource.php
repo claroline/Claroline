@@ -74,6 +74,12 @@ abstract class AbstractResource
     private $creator;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceImage", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+     */
+    private $images;
+
+    /**
      * @Assert\NotBlank()
      */
     private $name;
@@ -280,5 +286,15 @@ abstract class AbstractResource
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getImage()
+    {
+        return $this->images;
+    }
+
+    public function setImage($images)
+    {
+        $this->images = $images;
     }
 }
