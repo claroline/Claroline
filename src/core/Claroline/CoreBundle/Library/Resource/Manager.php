@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 class Manager
 {
@@ -73,6 +74,7 @@ class Manager
             $ri->setName($resource->getName());
             $rename = $this->getUniqueName($ri, $dir);
             $ri->setName($rename);
+            $resource = $this->setResourceImage($resource, $resourceType, $rename);
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
@@ -524,5 +526,35 @@ class Manager
         }
 
         return $newName;
+    }
+
+    /**
+     * Sets the correct ResourceImage to the resource.
+     *
+     * @param AbstractResource $resource
+     * @param ResourceType $type
+     * @param string $name (required if it's a file)
+     */
+    private function setResourceImage(AbstractResource $resource, $type)
+    {
+        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceImage');
+        if ($type->getType() !== 'file') {
+            $imgs = $repo->findOneBy(array('type' => $type));
+            if ($imgs == null) {
+                $imgs = $repo->findOneBy(array('default' => $type));
+            }
+        } else {
+            $files = $this->container->get('request')->files->all();
+            $mimeType = $files["file_form"]["name"]->getClientMimeType();
+            $imgs = $repo->findOneBy(array('type' => $mimeType));
+
+            if ($imgs == null) {
+                $imgs = $repo->findOneBy(array('type' => 'file'));
+            }
+        }
+
+        $resource->setImage($imgs);
+
+        return $resource;
     }
 }

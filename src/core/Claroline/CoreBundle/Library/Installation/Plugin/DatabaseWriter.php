@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceImage;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
 /**
@@ -171,23 +172,35 @@ class DatabaseWriter
                     }
                 }
 
+                $resourceImage = new ResourceImage();
+                $resourceImage->setType($resourceType->getType());
+                $defaultImg = $this->em
+                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceImage')
+                    ->findOneBy(array('type' => 'default'));
+                
                 // TODO : this should be moved to another part of the installation process
                 if (isset($properties['icon'])) {
-                    $resourceType->setIcon($properties['icon']);
+                    $resourceImage->setIcon($properties['icon']);
                     $ds = DIRECTORY_SEPARATOR;
                     $imgFolder = $plugin->getImgFolder();
                     $img = $imgFolder.$ds.$properties['icon'];
                     copy($img, $this->imgPath.$ds.$properties['icon']);
+                } else {
+                    $resourceImage->setIcon($defaultImg->getIcon());
                 }
 
                 // TODO : this should be moved to another part of the installation process
                 if (isset($properties['thumbnail'])) {
-                    $resourceType->setThumbnail($properties['thumbnail']);
+                    $resourceImage->setThumbnail($properties['thumbnail']);
                     $ds = DIRECTORY_SEPARATOR;
                     $imgFolder = $plugin->getImgFolder();
-                    $img = $imgFolder.$ds.$properties['thumbnail'];
-                    copy($img, $this->imgPath.$ds.$properties['thumbnail']);
+                    $img = $imgFolder . $ds . $properties['thumbnail'];
+                    copy($img, $this->imgPath . $ds . $properties['thumbnail']);
+                } else {
+                    $resourceImage->setThumbnail($defaultImg->getThumbnail());
                 }
+
+                $this->em->persist($resourceImage);
             }
         }
     }
