@@ -48,8 +48,6 @@ class FileListener extends ContainerAware
             $file->setSize($size);
             $file->setName($fileName);
             $file->setHashName($hashName);
-            $mimeType = MimeTypes::getMimeType($extension);
-            $file->setMimeType($mimeType);
             $event->setResource($file);
             $event->stopPropagation();
             return;

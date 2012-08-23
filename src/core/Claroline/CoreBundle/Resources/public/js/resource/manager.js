@@ -73,9 +73,7 @@
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
-                        parameters.key = $('#'+prefix+'-current-folder').attr('data-key')
-                        parameters.resourceId = $('#'+prefix+'-current-folder').attr('data-resource-id')
-                        parameters.type = $('#'+prefix+'-current-folder').attr('data-type')
+                        parameters.key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                         var action = divForm.find('form').attr('action');
                         action = action.replace('_instanceId', parameters.key)
                         var id = divForm.find('form').attr('id');
@@ -110,11 +108,11 @@
             var route = '';
             params = pasteIds;
             if (cpd == 0) {
-                params.newParentId = $('#'+construct.prefix+'-current-folder').attr('data-key');
+                params.newParentId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                 route = Routing.generate('claro_resource_multimove', params);
                 ClaroUtils.sendRequest(route, function(){manager.reload()});
             } else {
-                params.instanceDestinationId = $('#'+construct.prefix+'-current-folder').attr('data-key');
+                params.instanceDestinationId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
                 ClaroUtils.sendRequest(route, function(){manager.reload()});
             }
@@ -173,7 +171,7 @@
     }
 
     manager.reload = function() {
-        var key = $('#'+construct.prefix+'-current-folder').attr('data-key');
+        var key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_renders_thumbnail', {
                 'parentId': key,
@@ -251,15 +249,21 @@
 
     function setMenu()
     {
-        var parameters = {};
+
         $('.resource-menu').each(function(index, element){
-            parameters.key = element.dataset.key;
-            parameters.resourceId = element.dataset.resourceId;
-            parameters.type = element.dataset.type;
+            var parameters = {};
+            parameters.key = element.parentElement.parentElement.dataset.key;
+            parameters.resourceId = element.parentElement.parentElement.dataset.resourceId;
+            parameters.type = element.parentElement.parentElement.dataset.type;
             bindContextMenu(parameters, element, 'left');
         });
 
         $('.'+construct.prefix+'-instance-img').each(function(index, element){
+            var parameters = {};
+            console.debug(element.parentElement.parentElement.parentElement);
+            parameters.key = element.dataset.key;
+            parameters.resourceId = element.dataset.resourceId;
+            parameters.type = element.dataset.type;
             bindContextMenu(parameters, element, 'right');
         });
     }
@@ -353,7 +357,6 @@
     }
 
     function executeAsync(obj, parameters, route) {
-
         //Delete was a special case as every node can be removed.
         (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route);
     };
@@ -361,7 +364,7 @@
     function removeNode(parameters, route) {
         ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
             if (204 === jqXHR.status) {
-                $('#'+construct.prefix+"_instance_"+parameters.key).remove();
+                $('#'+construct.prefix+"-instance-"+parameters.key).remove();
             }
         });
     };
@@ -409,7 +412,7 @@
             construct.pasteButton.attr('disabled', 'disabled');
         } else {
             activePagerItem = 1;
-            if($.isEmptyObject(pasteIds) || $('#'+construct.prefix+'-current-folder').size() == 0){
+            if($.isEmptyObject(pasteIds) || $("."+construct.prefix+"-breadcrum-link").size() == 1){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
