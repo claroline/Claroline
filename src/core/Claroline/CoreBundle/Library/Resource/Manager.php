@@ -341,12 +341,9 @@ class Manager
             $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
             $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
             $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
-            if ($item['icon'] != null ){
-                $stringitem.= ' , "icon": "'.$item['icon'].'" ';
-            }
-            if ($item['thumbnail'] != null) {
-                $stringitem.= ' , "thumbnail":"'.$item['thumbnail'].'" ';
-            }
+            $stringitem.= ' , "icon": "'.$item['icon'].'" ';
+            $stringitem.= ' , "thumbnail":"'.$item['thumbnail'].'" ';
+
             if (array_key_exists('path', $item)) {
                 $stringitem.= ' , "path":"'.$item['path'].'" ';
             }
@@ -385,8 +382,8 @@ class Manager
         $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
         $instanceArray['type'] = $instance->getResource()->getResourceType()->getType();
         $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
-        $instanceArray['icon'] = $instance->getResourceType()->getIcon();
-        $instanceArray['thumbnail'] = $instance->getResourceType()->getThumbnail();
+        $instanceArray['icon'] = $instance->getResource()->getImage()->getIcon();
+        $instanceArray['thumbnail'] = $instance->getResource()->getImage()->getThumbnail();
         // null or use doctrine to retrieve the path
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $nodes = $repo->getPath($instance);
@@ -542,6 +539,7 @@ class Manager
             $imgs = $repo->findOneBy(array('type' => $type));
             if ($imgs == null) {
                 $imgs = $repo->findOneBy(array('default' => $type));
+                //doctrine research like /*/
             }
         } else {
             $files = $this->container->get('request')->files->all();

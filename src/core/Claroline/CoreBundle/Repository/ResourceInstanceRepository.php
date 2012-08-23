@@ -39,9 +39,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             rt.id as resource_type_id,
             rt.type as type,
             rt.is_navigable as is_navigable,
-            rt.icon as icon,
-            rt.thumbnail as thumbnail
-            ";
+            rti.icon as icon,
+            rti.thumbnail as thumbnail";
 
     const SELECT_PATHNAME = "
         (SELECT group_concat(ri2.name order by ri2.lft SEPARATOR ' > ')
@@ -59,7 +58,10 @@ class ResourceInstanceRepository extends NestedTreeRepository
             INNER JOIN claro_resource_type rt
             ON res.resource_type_id = rt.id
             INNER JOIN claro_user ures
-            ON res.user_id = ures.id";
+            ON res.user_id = ures.id
+            INNER JOIN claro_resource_types_image rti
+            ON res.image_id = rti.id";
+
 
     const SELECT_USER_WORKSPACES_ID = "SELECT
             cw.id FROM claro_workspace cw
@@ -333,8 +335,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
     {
         $string = '';
         $i = 0;
+        $keys = array_keys($criteria);
 
-        foreach ($criteria as $i => $item) {
+        foreach ($keys as $i) {
             if ($i == 0) {
                 $string.= " AND (rt.type = :{$key}{$i}";
                 $i++;
@@ -352,8 +355,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
     {
         $string = '';
         $i = 0;
+        $keys = array_keys($criteria);
 
-        foreach ($criteria as $i => $item) {
+        foreach ($keys as $i) {
             if ($i == 0) {
                 $string.= " AND (ri.root =:{$key}{$i}";
                 $i++;
@@ -391,7 +395,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
    }
 
    private function paginate($page, $limit, $stmt)
-    {
+   {
         $instances = array();
 
         $offset = $limit* (--$page);
@@ -406,6 +410,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
 
         return $instances;
-    }
+   }
 
 }
