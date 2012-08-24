@@ -20,12 +20,12 @@ class ResourceIcon
     private $id;
 
     /**
-     * @ORM\Column(type="string", name="thumbnail")
+     * @ORM\Column(type="string", name="large_icon")
      */
     private $largeIcon;
 
     /**
-     * @ORM\Column(type="string", name="icon")
+     * @ORM\Column(type="string", name="small_icon")
      */
 
     private $smallIcon;

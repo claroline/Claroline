@@ -415,8 +415,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_icon');
         $this->addId($table);
         $table->addColumn('resource_icons', 'text');
-        $table->addColumn('thumbnail', 'text', array('notnull' => false));
-        $table->addColumn('icon', 'text', array('notnull' => false));
+        $table->addColumn('large_icon', 'text', array('notnull' => false));
+        $table->addColumn('small_icon', 'text', array('notnull' => false));
         $table->addColumn('icon_type_id', 'integer', array('notnull' => false));
         $table->addColumn('type', 'string');
 

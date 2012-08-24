@@ -342,8 +342,8 @@ class Manager
             $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
             $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
             $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
-            $stringitem.= ' , "icon": "'.$item['icon'].'" ';
-            $stringitem.= ' , "thumbnail":"'.$item['thumbnail'].'" ';
+            $stringitem.= ' , "small_icon": "'.$item['small_icon'].'" ';
+            $stringitem.= ' , "large_icon":"'.$item['large_icon'].'" ';
 
             if (array_key_exists('path', $item)) {
                 $stringitem.= ' , "path":"'.$item['path'].'" ';
@@ -383,8 +383,8 @@ class Manager
         $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
         $instanceArray['type'] = $instance->getResource()->getResourceType()->getType();
         $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
-        $instanceArray['icon'] = $instance->getResource()->getIcon()->getSmallIcon();
-        $instanceArray['thumbnail'] = $instance->getResource()->getIcon()->getLargeIcon();
+        $instanceArray['small_icon'] = $instance->getResource()->getIcon()->getSmallIcon();
+        $instanceArray['large_icon'] = $instance->getResource()->getIcon()->getLargeIcon();
         // null or use doctrine to retrieve the path
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $nodes = $repo->getPath($instance);
