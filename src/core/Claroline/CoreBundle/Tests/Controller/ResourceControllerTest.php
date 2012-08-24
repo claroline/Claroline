@@ -207,9 +207,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        //HTMLElement, Forum, file, text
-        //directory is not included
-        //only listable included
         $this->assertEquals(4, count($jsonResponse));
     }
 
