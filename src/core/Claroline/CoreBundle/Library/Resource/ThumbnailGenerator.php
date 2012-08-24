@@ -34,7 +34,7 @@ class ThumbnailGenerator
     }
 
     //the end could be refactored: what does imagedestroy should do ? is everything clean ?
-    public function createThumbNail($name, $filename, $newWidth, $newHeight)
+    public function createThumbNail($name, $destinationPath, $newWidth, $newHeight)
     {
         $extension = pathinfo($name, PATHINFO_EXTENSION);
 
@@ -42,32 +42,35 @@ class ThumbnailGenerator
             switch ($extension) {
                 case "jpeg":
                     $srcImg = imagecreatefromjpeg($name);
-                    $filename = preg_replace('"\.jpeg$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
+                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
                     break;
                 case "jpg":
                     $srcImg = imagecreatefromjpeg($name);
-                    $filename = preg_replace('"\.jpg$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
+                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
                     break;
                 case "png":
                     $srcImg = imagecreatefrompng($name);
-                    $filename = preg_replace('"\.png$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
+                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
                     break;
                 case "mov":
                     $srcImg = $this->createMpegGDI($name);
-                    $filename = preg_replace('"\.mov$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
+                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
                     break;
                 case "mp4":
                     $srcImg = $this->createMpegGDI($name);
-                    $filename = preg_replace('"\.mp4$"', '@' . self::WIDTH . 'x' . self::HEIGHT . '.png', $filename);
+                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
                     break;
                 default:
                     return null;
             }
 
-            return $this->getFormatedImg($newWidth, $newHeight, $srcImg, $filename);
+            $this->getFormatedImg($newWidth, $newHeight, $srcImg, $destinationPath);
+
+            return $destinationPath;
+
         } else {
             //something went wrong.
-            return 1;
+            return null;
         }
     }
 
@@ -117,7 +120,7 @@ class ThumbnailGenerator
             return $gdImage;
         } else {
             //something went wrong
-            return "1";
+            return null;
         }
     }
 }

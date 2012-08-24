@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Resource\IconType;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
@@ -75,10 +76,10 @@ class Manager
             $ri->setName($resource->getName());
             $rename = $this->getUniqueName($ri, $dir);
             $ri->setName($rename);
-            $resource = $this->setResourceIcon($resource, $resourceType, $rename);
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
+            $resource = $this->setResourceIcon($resource, $resourceType, $rename);
             $this->em->flush();
 
             return $returnInstance ? $ri : $resource;
@@ -527,13 +528,14 @@ class Manager
     }
 
     /**
-     * Sets the correct ResourceImage to the resource.
+     * Sets the correct ResourceIcon to the resource. Persist the resource is required
+     * before firing this.
      *
      * @param AbstractResource $resource
      * @param ResourceType $type
      * @param string $name (required if it's a file)
      */
-    private function setResourceIcon(AbstractResource $resource, ResourceType $type)
+    public function setResourceIcon(AbstractResource $resource, ResourceType $type)
     {
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         if ($type->getType() != 'file') {
@@ -542,18 +544,45 @@ class Manager
                 $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::TYPE));
             }
         } else {
-            //if video or img => generate the thumbnail, otherwise find an existing one.
-
             $files = $this->container->get('request')->files->all();
-            $mimeType = $files["file_form"]["name"]->getClientMimeType();
+            $file = $files["file_form"]["name"];
+            $mimeType = $file->getClientMimeType();
             $mimeElements = explode('/', $mimeType);
-
-            $imgs = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
-
-            if ($imgs === null) {
-                $imgs = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
+            //if video or img => generate the thumbnail, otherwise find an existing one.
+            if($mimeElements[0] === 'video' || $mimeElements[0] === 'image') {
+                var_dump('je passeu');
+                $thumbGenerator = $this->container->get('claroline.thumbnail.creator');
+                $originalPath = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$resource->getHashName();
+                $newPath = $this->container->getParameter('claroline.icons.directory').DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.$this->container->get('claroline.listener.file_listener')->generateGuid();
+                $generatedFilePath = $thumbGenerator->createThumbnail($originalPath, $newPath, 100, 100);
+                $generatedFile = pathinfo($generatedFilePath, PATHINFO_FILENAME);
+                $iconName = 'generated'.DIRECTORY_SEPARATOR.$generatedFile;
+                $imgs = new ResourceIcon();
+                if($imgs != null) {
+                    $generatedIconType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::GENERATED);
+                    $imgs->setIconType($generatedIconType);
+                    $imgs->setThumbnail($iconName);
+                    //null for now
+                    $imgs->setType('generated');
+                    $imgs->setIcon(null);
+                    $this->em->persist($imgs);
+                    $this->em->flush();
+                } else {
+                    $imgs = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
+                    if ($imgs === null) {
+                        $imgs = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
+                        if ($imgs === null) {
+                            $imgs = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
+                        }
+                    }
+                }
+            } else {
+                $imgs = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
                 if ($imgs === null) {
-                     $imgs = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
+                    $imgs = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
+                    if ($imgs === null) {
+                        $imgs = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
+                    }
                 }
             }
         }
@@ -561,5 +590,9 @@ class Manager
         $resource->setIcon($imgs);
 
         return $resource;
+    }
+
+    private function findIconForMimeType($mimeType) {
+
     }
 }
