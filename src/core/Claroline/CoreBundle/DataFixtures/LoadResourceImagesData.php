@@ -51,9 +51,11 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             }
         }
 
+
         $ds = DIRECTORY_SEPARATOR;
         $largeIconsWebFolder = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}";
         $defaultIcon = null;
+
 
         /*
          * [1] thumbnail link
@@ -67,13 +69,15 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             array($largeIconsWebFolder.'res_default.png', $defaultIcon, $defaultIconType, 'default'),
             array($largeIconsWebFolder.'res_file.png', $defaultIcon, $typeIconType, 'file'),
             array($largeIconsWebFolder.'res_folder.png', $defaultIcon, $typeIconType, 'directory'),
+            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $completeIconMimeType, 'text/plain'),
+            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $basicIconMimeType, 'text'),
+            array($largeIconsWebFolder.'res_url.png', $defaultIcon, $typeIconType, 'url'),
+            array($largeIconsWebFolder.'res_exercice.png', $defaultIcon, $typeIconType, 'exercice'),
+            array($largeIconsWebFolder.'res_video.png', $defaultIcon, $basicIconMimeType, 'video'),
             array($largeIconsWebFolder.'res_msexcel.png', $defaultIcon, $completeIconMimeType, 'application/excel'),
             array($largeIconsWebFolder.'res_mspowerpoint.png', $defaultIcon, $completeIconMimeType, 'application/powerpoint'),
             array($largeIconsWebFolder.'res_msword.png', $defaultIcon, $completeIconMimeType, 'application/msword'),
-            array($largeIconsWebFolder.'res_pdf.png', $defaultIcon, $completeIconMimeType, 'application/pdf'),
-            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $completeIconMimeType, 'text/plain'),
-            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $basicIconMimeType, 'text'),
-            array($largeIconsWebFolder.'res_video.png', $defaultIcon, $basicIconMimeType, 'video'),
+            array($largeIconsWebFolder.'res_pdf.png', $defaultIcon, $completeIconMimeType, 'application/pdf')
         );
 
         foreach ($resourceImages as $resourceImage) {
