@@ -383,8 +383,8 @@ class Manager
         $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
         $instanceArray['type'] = $instance->getResource()->getResourceType()->getType();
         $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
-        $instanceArray['icon'] = $instance->getResource()->getIcon()->getIcon();
-        $instanceArray['thumbnail'] = $instance->getResource()->getIcon()->getThumbnail();
+        $instanceArray['icon'] = $instance->getResource()->getIcon()->getSmallIcon();
+        $instanceArray['thumbnail'] = $instance->getResource()->getIcon()->getLargeIcon();
         // null or use doctrine to retrieve the path
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $nodes = $repo->getPath($instance);
@@ -493,7 +493,6 @@ class Manager
 
     private function getUniqueName ($resourceInstance, $parent)
     {
-
         $children = $parent->getChildren();
         $name = $resourceInstance->getName();
         $arName = explode('~', pathinfo($name, PATHINFO_FILENAME));
@@ -541,7 +540,7 @@ class Manager
         if ($type->getType() != 'file') {
             $imgs = $repo->findOneBy(array('type' => $type->getType(), 'iconType' => IconType::TYPE));
             if ($imgs == null) {
-                $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::TYPE));
+                $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));
             }
         } else {
             $files = $this->container->get('request')->files->all();
@@ -550,21 +549,20 @@ class Manager
             $mimeElements = explode('/', $mimeType);
             //if video or img => generate the thumbnail, otherwise find an existing one.
             if($mimeElements[0] === 'video' || $mimeElements[0] === 'image') {
-                var_dump('je passeu');
                 $thumbGenerator = $this->container->get('claroline.thumbnail.creator');
                 $originalPath = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$resource->getHashName();
-                $newPath = $this->container->getParameter('claroline.icons.directory').DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.$this->container->get('claroline.listener.file_listener')->generateGuid();
+                $newPath = $this->container->getParameter('claroline.thumbnails.directory').DIRECTORY_SEPARATOR.$this->container->get('claroline.listener.file_listener')->generateGuid();
                 $generatedFilePath = $thumbGenerator->createThumbnail($originalPath, $newPath, 100, 100);
                 $generatedFile = pathinfo($generatedFilePath, PATHINFO_FILENAME);
-                $iconName = 'generated'.DIRECTORY_SEPARATOR.$generatedFile;
+                $iconName = 'thumbnails'.DIRECTORY_SEPARATOR.$generatedFile;
                 $imgs = new ResourceIcon();
                 if($imgs != null) {
                     $generatedIconType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::GENERATED);
                     $imgs->setIconType($generatedIconType);
-                    $imgs->setThumbnail($iconName);
+                    $imgs->setLargeIcon($iconName);
                     //null for now
                     $imgs->setType('generated');
-                    $imgs->setIcon(null);
+                    $imgs->setSmallIcon(null);
                     $this->em->persist($imgs);
                     $this->em->flush();
                 } else {
@@ -590,9 +588,5 @@ class Manager
         $resource->setIcon($imgs);
 
         return $resource;
-    }
-
-    private function findIconForMimeType($mimeType) {
-
     }
 }

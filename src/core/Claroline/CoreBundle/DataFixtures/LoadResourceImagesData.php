@@ -28,7 +28,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function load (ObjectManager $manager)
     {
-        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type');
+        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type', 'default');
         $defaultIconType = null;
         $basicIconMimeType = null;
         $completeIconMimeType = null;
@@ -39,23 +39,21 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             $manager->persist($iconType);
             switch($type) {
                 case 'type':
-
-                    $defaultIconType = $iconType; break;
+                    $typeIconType = $iconType; break;
                 case 'basic_mime_type':
                     $basicIconMimeType = $iconType; break;
                 case 'complete_mime_type':
                     $completeIconMimeType = $iconType; break;
+                case 'default':
+                    $defaultIconType = $iconType; break;
                 default:
                     break;
             }
         }
 
-
-        $fileThumb = 'res_file.png';
-        $folderThumb = 'res_folder.png';
-        $textThumb = 'res_text.png';
-        $defaultIcon = 'default_icon.img';
-        $textPlainThumb = 'plain_text.png';
+        $ds = DIRECTORY_SEPARATOR;
+        $largeIconsWebFolder = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}";
+        $defaultIcon = null;
 
         /*
          * [1] thumbnail link
@@ -63,18 +61,25 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
          * [3] icontype
          * [4] type (either resource type or mime type-
          */
+
+        //see www.webmaster-toolkit.com/mime-types.shtml for mime types
         $resourceImages = array(
-            array($fileThumb, $defaultIcon, $defaultIconType, 'file'),
-            array($folderThumb, $defaultIcon, $defaultIconType, 'directory'),
-            array($textThumb, $defaultIcon, $defaultIconType, 'text'),
-            array($fileThumb, $defaultIcon, $defaultIconType, 'default'),
-            array($textPlainThumb, $defaultIcon, $completeIconMimeType, 'text/plain')
+            array($largeIconsWebFolder.'res_default.png', $defaultIcon, $defaultIconType, 'default'),
+            array($largeIconsWebFolder.'res_file.png', $defaultIcon, $typeIconType, 'file'),
+            array($largeIconsWebFolder.'res_folder.png', $defaultIcon, $typeIconType, 'directory'),
+            array($largeIconsWebFolder.'res_msexcel.png', $defaultIcon, $completeIconMimeType, 'application/excel'),
+            array($largeIconsWebFolder.'res_mspowerpoint.png', $defaultIcon, $completeIconMimeType, 'application/powerpoint'),
+            array($largeIconsWebFolder.'res_msword.png', $defaultIcon, $completeIconMimeType, 'application/msword'),
+            array($largeIconsWebFolder.'res_pdf.png', $defaultIcon, $completeIconMimeType, 'application/pdf'),
+            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $completeIconMimeType, 'text/plain'),
+            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $basicIconMimeType, 'text'),
+            array($largeIconsWebFolder.'res_video.png', $defaultIcon, $basicIconMimeType, 'video'),
         );
 
         foreach ($resourceImages as $resourceImage) {
             $rimg = new ResourceIcon();
-            $rimg->setThumbnail($resourceImage[0]);
-            $rimg->setIcon($resourceImage[1]);
+            $rimg->setLargeIcon($resourceImage[0]);
+            $rimg->setSmallIcon($resourceImage[1]);
             $rimg->setIconType($resourceImage[2]);
             $rimg->setType($resourceImage[3]);
             $manager->persist($rimg);

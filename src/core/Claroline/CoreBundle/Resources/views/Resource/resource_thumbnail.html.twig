@@ -16,7 +16,7 @@
             {% if instance.type == "directory" %}
                 <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
-            <img data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}" id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset("icons/" ~ instance.thumbnail)}}"
+            <img data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}" id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset(instance.thumbnail)}}"
                  {% if instance.path is defined %}
                     title="{{instance.path}}"
                  {% endif %}

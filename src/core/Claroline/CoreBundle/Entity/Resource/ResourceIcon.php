@@ -22,13 +22,13 @@ class ResourceIcon
     /**
      * @ORM\Column(type="string", name="thumbnail")
      */
-    private $thumbnail;
+    private $largeIcon;
 
     /**
      * @ORM\Column(type="string", name="icon")
      */
 
-    private $icon;
+    private $smallIcon;
     /**
      * @ORM\Column(type="string", name="type")
      */
@@ -64,24 +64,24 @@ class ResourceIcon
         return $this->id;
     }
 
-    public function getThumbnail()
+    public function getLargeIcon()
     {
-        return $this->thumbnail;
+        return $this->largeIcon;
     }
 
-    public function setThumbnail($thumbnail)
+    public function setLargeIcon($largeIcon)
     {
-        $this->thumbnail = $thumbnail;
+        $this->largeIcon = $largeIcon;
     }
 
-    public function getIcon()
+    public function getSmallIcon()
     {
-        return $this->icon;
+        return $this->smallIcon;
     }
 
-    public function setIcon($icon)
+    public function setSmallIcon($smallIcon)
     {
-        $this->icon = $icon;
+        $this->smallIcon = $smallIcon;
     }
 
     public function getAbstractResources()
