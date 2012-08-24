@@ -275,54 +275,13 @@ class Manager
     }
 
     /**
-     * Returns the json represenation of the current state of the datatree for the classic
-     *
-     * @param string $ids (from a cookie)
-     * @param integer resourceTypeId (helpfull for the hybrid mode)
-     *
-     * @return string
-     */
-    //check the if the id list is correct because it can go for an infinite loop otherwise.
-    public function initTreeMode($ids, $resourceTypeId = 0)
-    {
-        $ids = explode(',', $ids);
-
-        $roots = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getRoots($this->sc->getToken()->getUser());
-        $jsonstring = $this->generateDynatreeJsonFromArray($roots);
-        for ($i = 0; count($ids) > 0; $i++) {
-            $found = false;
-            if (array_key_exists($i, $ids)) {
-                if (strpos($jsonstring, '"key": "' . $ids[$i] . '"') != false) {
-                    $found = true;
-                    $nodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->getChildrenNodes($ids[$i], $resourceTypeId);
-                    $substring = 'children" :' . $this->generateDynatreeJsonFromArray($nodes);
-                    $replace = '"key": "' . $ids[$i] . '", "' . $substring;
-                    $jsonstring = str_replace('"key": "' . $ids[$i] . '"', $replace, $jsonstring);
-
-                    unset($ids[$i]);
-                    $i = 0;
-                }
-            }
-            $size = count($ids);
-            $size--;
-            if ($i == $size) {
-                $i = 0;
-                if ($found == false) {
-                    return $jsonstring;
-                }
-            }
-        }
-        return $jsonstring;
-    }
-
-    /**
      * Generates a json representation of resources from a sql response from the ResourceInstanceRepository.
      *
      * @param array $results
      *
      * @return string
      */
-    public function generateDynatreeJsonFromArray($results)
+    public function generateJsonFromArray($results)
     {
         $json = "[";
         $i = 0;
