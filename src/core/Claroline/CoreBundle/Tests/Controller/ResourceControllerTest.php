@@ -148,7 +148,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(4, count($jsonResponse));
     }
-/*
+
     public function testResourceProportiesCanBeEdited()
     {
         $this->markTestSkipped('irrelevant since the name was moved from abstractResource to ResourceInstance');
