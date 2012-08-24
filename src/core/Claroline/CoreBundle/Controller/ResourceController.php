@@ -58,7 +58,7 @@ class ResourceController extends Controller
             $manager = $this->get('claroline.resource.manager');
             $instance = $manager->create($resource, $parentInstanceId, $resourceType);
             $phpArray = $manager->convertInstanceToArray($instance);
-            $json = $manager->generateDynatreeJsonFromArray($phpArray);
+            $json = $manager->generateJsonFromArray($phpArray);
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent($json);
         } else {
@@ -296,7 +296,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
+        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -316,7 +316,7 @@ class ResourceController extends Controller
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
         $manager = $this->get('claroline.resource.manager');
         $phpArray = $manager->convertInstanceToArray($root);
-        $json = $manager->generateDynatreeJsonFromArray($phpArray);
+        $json = $manager->generateJsonFromArray($phpArray);
         $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -339,7 +339,7 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
+        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -358,7 +358,7 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->getInstanceList($user);
 
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
+        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -399,7 +399,7 @@ class ResourceController extends Controller
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($results);
+        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -563,7 +563,7 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->filter($compiledArray, $user);
 
-        $content = $this->get('claroline.resource.manager')->generateDynatreeJsonFromArray($result);
+        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($result);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
