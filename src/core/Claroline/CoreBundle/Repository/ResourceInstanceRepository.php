@@ -39,8 +39,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             rt.id as resource_type_id,
             rt.type as type,
             rt.is_navigable as is_navigable,
-            rti.icon as icon,
-            rti.thumbnail as thumbnail";
+            rti.small_icon as small_icon,
+            rti.large_icon as large_icon";
 
     const SELECT_PATHNAME = "
         (SELECT group_concat(ri2.name order by ri2.lft SEPARATOR ' > ')
