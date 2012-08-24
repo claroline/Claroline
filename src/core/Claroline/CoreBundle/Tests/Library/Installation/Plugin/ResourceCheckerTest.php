@@ -90,17 +90,17 @@ class ResourceCheckerTest extends WebTestCase
         $this->assertEquals(ResourceChecker::UNLOADABLE_PARENT_RESOURCE, $errors[0]->getCode());
     }
 
-    public function testCheckerReturnsAnErrorOnUnexpectedIcon()
+    public function testCheckerReturnsAnErrorOnUnexpectedSmallIcon()
     {
-        $pluginFqcn = 'Invalid\UnexpectedIcon\InvalidUnexpectedIcon';
+        $pluginFqcn = 'Invalid\UnexpectedSmallIcon\InvalidUnexpectedSmallIcon';
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
-        $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_ICON, $errors[0]->getCode());
+        $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_SMALL_ICON, $errors[0]->getCode());
     }
 
-    public function testCheckerReturnsAnErrorOnUnexpectedThumbnail()
+    public function testCheckerReturnsAnErrorOnUnexpectedLargeIcon()
     {
-        $pluginFqcn = 'Invalid\UnexpectedThumbnail\InvalidUnexpectedThumbnail';
+        $pluginFqcn = 'Invalid\UnexpectedLargeIcon\InvalidUnexpectedLargeIcon';
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
-        $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_THUMBNAIL, $errors[0]->getCode());
+        $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_LARGE_ICON, $errors[0]->getCode());
     }
 }

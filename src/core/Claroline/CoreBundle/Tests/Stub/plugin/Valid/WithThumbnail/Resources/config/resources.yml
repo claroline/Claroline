@@ -1,6 +1,0 @@
-ResourceX:
-  class: Valid\WithThumbnail\Entity\ResourceX
-  listable: true
-  navigable: false
-  downloadable: true
-  thumbnail: icon.gif

@@ -1,7 +1,7 @@
 parameters:
    # next lines are overriden by app config_test.yml in test environment
    claroline.files.directory: "%kernel.root_dir%/../files"
-   claroline.icons.directory: "%kernel.root_dir%/../web/icons"
+   claroline.thumbnails.directory: "%kernel.root_dir%/../web/thumbnails"
 
 services:
 

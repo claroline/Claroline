@@ -1,0 +1,6 @@
+ResourceX:
+  class: Invalid\UnexpectedSmallIcon\Entity\ResourceX
+  listable: true
+  navigable: false
+  downloadable: true
+  small_icon: icn.gif

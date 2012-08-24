@@ -22,8 +22,8 @@ class ResourceChecker implements CheckerInterface
     const UNLOADABLE_RESOURCE_CLASS = 'unloadable_resource_class';
     const INVALID_RESOURCE_CLASS = 'invalid_resource_class';
     const UNLOADABLE_PARENT_RESOURCE = 'unloadable_parent_resource';
-    const UNEXPECTED_RESOURCE_ICON = 'unexpected_resource_icon';
-    const UNEXPECTED_RESOURCE_THUMBNAIL = 'unexpected_resource_thumbnail';
+    const UNEXPECTED_RESOURCE_SMALL_ICON = 'unexpected_resource_small_icon';
+    const UNEXPECTED_RESOURCE_LARGE_ICON = 'unexpected_resource_large_icon';
 
     private $yamlParser;
     private $plugin;
@@ -193,30 +193,30 @@ class ResourceChecker implements CheckerInterface
                 }
             }
 
-            if (isset($resource['icon'])) {
+            if (isset($resource['small_icon'])) {
                 $ds = DIRECTORY_SEPARATOR;
                 $imgFolder = $this->plugin->getImgFolder();
-                $expectedImgLocation = $imgFolder . $ds . $resource['icon'];
+                $expectedImgLocation = $imgFolder . $ds . 'small'. $ds . $resource['small_icon'];
 
                 if (!file_exists($expectedImgLocation)) {
                     $this->errors[] = new ValidationError(
-                        "{$this->pluginFqcn} : {$resource['icon']} (declared in {$resourceFile}) "
+                        "{$this->pluginFqcn} : {$resource['small_icon']} (declared in {$resourceFile}) "
                         . "cannot be found (looked for {$expectedImgLocation}).",
-                        self::UNEXPECTED_RESOURCE_ICON
+                        self::UNEXPECTED_RESOURCE_SMALL_ICON
                     );
                 }
             }
 
-            if (isset($resource['thumbnail'])) {
+            if (isset($resource['large_icon'])) {
                 $ds = DIRECTORY_SEPARATOR;
                 $imgFolder = $this->plugin->getImgFolder();
-                $expectedImgLocation = $imgFolder . $ds . $resource['thumbnail'];
+                $expectedImgLocation = $imgFolder . $ds . 'large' .$ds. $resource['large_icon'];
 
                 if (!file_exists($expectedImgLocation)) {
                     $this->errors[] = new ValidationError(
-                        "{$this->pluginFqcn} : {$resource['thumbnail']} (declared in {$resourceFile}) "
+                        "{$this->pluginFqcn} : {$resource['large_icon']} (declared in {$resourceFile}) "
                         . "cannot be found (looked for {$expectedImgLocation}).",
-                        self::UNEXPECTED_RESOURCE_THUMBNAIL
+                        self::UNEXPECTED_RESOURCE_LARGE_ICON
                     );
                 }
             }

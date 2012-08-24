@@ -1,6 +1,0 @@
-ResourceX:
-  class: Invalid\UnexpectedThumbnail\Entity\ResourceX
-  listable: true
-  navigable: false
-  downloadable: true
-  thumbnail: icn.gif
