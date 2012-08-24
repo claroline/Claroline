@@ -189,6 +189,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "/resource/roots");
+        var_dump($this->client->getResponse()->getContent());
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(3, count($jsonResponse));
     }

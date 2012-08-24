@@ -307,11 +307,12 @@ class Manager
             if (array_key_exists('path', $item)) {
                 $stringitem.= ' , "path":"'.$item['path'].'" ';
             }
-
+            /*
+             * dynatree needs these fields
             if ($item['is_navigable'] != 0) {
                 $stringitem.=', "isFolder": true ';
                 $stringitem.=', "isLazy": true ';
-            }
+            }*/
             $stringitem.='}';
             $json.=$stringitem;
         }
