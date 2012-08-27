@@ -224,11 +224,7 @@
         paginator += '<div id="instances-paginator" class="pagination"><ul><li><a class="instance-paginator-prev-item" href="#">Prev</a></li>'
         for (var i = 0; i < nbPage;) {
             i++;
-            if (i==1) {
-                paginator += '<li data-page="'+i+'" class="active"><a class="instance-paginator_--item" href="#">'+i+'</a></li>';
-            } else {
-                paginator += '<li data-page="'+i+'"><a class="instance-paginator-item" href="#">'+i+'</a></li>';
-            }
+            paginator += '<li data-page="'+i+'"><a class="instance-paginator-item" href="#">'+i+'</a></li>';
         }
         paginator += '<li><a href="#" class="instance-paginator-next-item">Next</a></li></ul></div>';
 
