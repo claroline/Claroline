@@ -4,17 +4,12 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 class ThumbnailGenerator
 {
-    /** @var string */
-    private $dir;
 
-    /** @var bool */
-    private $hasGdExtension;
+    /** @var string */ private $dir;
 
-    /** @var bool */
-    private $hasFfmpegExtension;
+    /** @var bool */ private $hasGdExtension;
 
-    const WIDTH = 50;
-    const HEIGHT = 50;
+    /** @var bool */ private $hasFfmpegExtension;
 
     public function __construct($dir)
     {
@@ -36,9 +31,9 @@ class ThumbnailGenerator
     //the end could be refactored: what does imagedestroy should do ? is everything clean ?
     public function createThumbNail($name, $destinationPath, $newWidth, $newHeight)
     {
-        $extension = pathinfo($name, PATHINFO_EXTENSION);
-
         if ($this->hasGdExtension) {
+            $extension = pathinfo($name, PATHINFO_EXTENSION);
+
             switch ($extension) {
                 case "jpeg":
                     $srcImg = imagecreatefromjpeg($name);
@@ -66,10 +61,10 @@ class ThumbnailGenerator
 
             $this->getFormatedImg($newWidth, $newHeight, $srcImg, $destinationPath);
 
-            return $destinationPath;
+            imagedestroy($srcImg);
 
+            return $destinationPath;
         } else {
-            //something went wrong.
             return null;
         }
     }
@@ -83,30 +78,23 @@ class ThumbnailGenerator
             $thumbWidth = $newWidth;
             $thumbHeight = $oldY * ($newHeight / $oldX);
         } else {
-            if ($oldX < $oldY) {
+            if ($oldX <= $oldY) {
                 $thumbWidth = $oldX * ($newWidth / $oldY);
                 $thumbHeight = $newHeight;
             }
         }
 
+        //white background
         $dstImg = imagecreatetruecolor($thumbWidth, $thumbHeight);
+        $bg = imagecolorallocate($dstImg, 255, 255, 255);
+        imagefill($dstImg, 0, 0, $bg);
+
+        //resizing
         imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $oldX, $oldY);
+        $srcImg = imagepng($dstImg, $filename);
 
-        return $srcImg = imagepng($dstImg, $filename);
-    }
-
-    public function parseAllAndGenerate()
-    {
-        $iterator = new \DirectoryIterator($this->dir);
-
-        foreach ($iterator as $fileInfo) {
-            if ($fileInfo->isFile()) {
-                $pathName = $fileInfo->getPathname();
-                $path = $fileInfo->getPath();
-                $fileName = $fileInfo->getFileName();
-                $this->createThumbNail("{$pathName}", "{$path}/thumbs/tn@{$fileName}", self::WIDTH, self::HEIGHT);
-            }
-        }
+        //free memory
+        imagedestroy($dstImg);
     }
 
     private function createMpegGDI($name)
@@ -118,9 +106,7 @@ class ThumbnailGenerator
             $gdImage = $frame->toGDImage();
 
             return $gdImage;
-        } else {
-            //something went wrong
-            return null;
         }
     }
+
 }
