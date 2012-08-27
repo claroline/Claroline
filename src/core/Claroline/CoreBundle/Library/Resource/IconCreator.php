@@ -131,7 +131,7 @@ class IconCreator
      * @param ResourceType $type
      * @param string $name (required if it's a file)
      */
-    public function setResourceIcon(AbstractResource $resource, ResourceType $type)
+    public function setResourceIcon(AbstractResource $resource, ResourceType $type, $mimeType = null)
     {
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         if ($type->getType() != 'file') {
@@ -140,9 +140,9 @@ class IconCreator
                 $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));
             }
         } else {
-            $files = $this->container->get('request')->files->all();
-            $file = $files["file_form"]["name"];
-            $mimeType = $file->getClientMimeType();
+            if($mimeType == null){
+                throw new \Exception("no mimeType specified for the file: {$resource->getId()}");
+            }
             $mimeElements = explode('/', $mimeType);
             //if video or img => generate the thumbnail, otherwise find an existing one.
             if($mimeElements[0] === 'video' || $mimeElements[0] === 'image') {

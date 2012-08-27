@@ -58,7 +58,7 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true)
+    public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null)
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
         $user = $this->sc->getToken()->getUser();
@@ -79,7 +79,7 @@ class Manager
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
-            $resource = $this->container->get('claroline.icon.creator')->setResourceIcon($resource, $resourceType, $rename);
+            $resource = $this->container->get('claroline.icon.creator')->setResourceIcon($resource, $resourceType, $rename, $mimeType);
             $this->em->flush();
 
             return $returnInstance ? $ri : $resource;
