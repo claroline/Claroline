@@ -8,7 +8,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 
-class Exporter{
+class Exporter
+{
 
     /* @var EntityManager */
     private $em;
