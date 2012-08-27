@@ -56,7 +56,14 @@ class ResourceController extends Controller
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-            $instance = $manager->create($resource, $parentInstanceId, $resourceType);
+            if($resource instanceof \Claroline\CoreBundle\Entity\Resource\File) {
+                $files = $this->container->get('request')->files->all();
+                $file = $files["file_form"]["name"];
+                $mimeType = $file->getClientMimeType();
+                $instance = $manager->create($resource, $parentInstanceId, $resourceType, true, $mimeType);
+            } else {
+                $instance = $manager->create($resource, $parentInstanceId, $resourceType);
+            }
             $phpArray = $manager->convertInstanceToArray($instance);
             $json = $manager->generateJsonFromArray($phpArray);
             $response->headers->set('Content-Type', 'application/json');

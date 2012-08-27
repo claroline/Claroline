@@ -125,6 +125,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $ri->setName($name);
         $ri->setParent($parent);
         $ri->setWorkspace($parent->getWorkspace());
+        $dir = $this->getContainer()->get('claroline.icon.creator')->setResourceIcon($dir, $dirType);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager')->persist($dir);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager')->persist($ri);
         echo "addDirectory $name \n";
@@ -134,11 +135,14 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
 
     private function addFile($name, $parent, $fileType, $user)
     {
+        $file = tempnam($this->getContainer()->getParameter('claroline.files.directory'), 'tmpfile');
+        $hash = pathinfo($file, PATHINFO_FILENAME);
         $file = new File();
         $file->setResourceType($fileType);
         $file->setCreator($user);
-        $file->setHashName($this->getContainer()->get('claroline.listener.file_listener')->generateGuid());
+        $file->setHashName($hash);
         $file->setSize(0);
+        $file = $this->getContainer()->get('claroline.icon.creator')->setResourceIcon($file, $fileType, 'text/plain');
         $ri = new ResourceInstance();
         $ri->setCreator($user);
         $ri->setResource($file);
