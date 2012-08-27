@@ -43,7 +43,7 @@ class FileListener extends ContainerAware
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
-            $hashName = $this->generateGuid() . "." . $extension;
+            $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
             $tmpFile->move($this->container->getParameter('claroline.files.directory'), $hashName);
             $file->setSize($size);
             $file->setName($fileName);
@@ -89,7 +89,7 @@ class FileListener extends ContainerAware
         $newFile = new File();
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
-        $hashName = $this->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
         $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
         $newPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hashName;
@@ -108,31 +108,5 @@ class FileListener extends ContainerAware
         $hash = $file->getHashName();
         $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
         $event->stopPropagation();
-    }
-
-    /**
-     * Generates a globally unique identifier.
-     *
-     * @see http://php.net/manual/fr/function.com-create-guid.php
-     *
-     * @return string
-     */
-    public function generateGuid()
-    {
-        if (function_exists('com_create_guid') === true) {
-            return trim(com_create_guid(), '{}');
-        }
-
-        return sprintf(
-            '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(16384, 20479),
-            mt_rand(32768, 49151),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535)
-        );
     }
 }
