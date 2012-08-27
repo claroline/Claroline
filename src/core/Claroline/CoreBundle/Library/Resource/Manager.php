@@ -79,7 +79,7 @@ class Manager
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
-            $resource = $this->setResourceIcon($resource, $resourceType, $rename);
+            $resource = $this->container->get('claroline.icon.creator')->setResourceIcon($resource, $resourceType, $rename);
             $this->em->flush();
 
             return $returnInstance ? $ri : $resource;
@@ -484,69 +484,5 @@ class Manager
         }
 
         return $newName;
-    }
-
-    /**
-     * Sets the correct ResourceIcon to the resource. Persist the resource is required
-     * before firing this.
-     *
-     * @param AbstractResource $resource
-     * @param ResourceType $type
-     * @param string $name (required if it's a file)
-     */
-    public function setResourceIcon(AbstractResource $resource, ResourceType $type)
-    {
-        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        if ($type->getType() != 'file') {
-            $imgs = $repo->findOneBy(array('type' => $type->getType(), 'iconType' => IconType::TYPE));
-            if ($imgs == null) {
-                $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));
-            }
-        } else {
-            $files = $this->container->get('request')->files->all();
-            $file = $files["file_form"]["name"];
-            $mimeType = $file->getClientMimeType();
-            $mimeElements = explode('/', $mimeType);
-            //if video or img => generate the thumbnail, otherwise find an existing one.
-            if($mimeElements[0] === 'video' || $mimeElements[0] === 'image') {
-                $thumbGenerator = $this->container->get('claroline.thumbnail.creator');
-                $originalPath = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$resource->getHashName();
-                $newPath = $this->container->getParameter('claroline.thumbnails.directory').DIRECTORY_SEPARATOR.$this->container->get('claroline.listener.file_listener')->generateGuid();
-                $generatedFilePath = $thumbGenerator->createThumbnail($originalPath, $newPath, 100, 100);
-                $generatedFile = pathinfo($generatedFilePath, PATHINFO_FILENAME);
-                $iconName = 'thumbnails'.DIRECTORY_SEPARATOR.$generatedFile;
-                $imgs = new ResourceIcon();
-                if($imgs != null) {
-                    $generatedIconType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::GENERATED);
-                    $imgs->setIconType($generatedIconType);
-                    $imgs->setLargeIcon($iconName);
-                    //null for now
-                    $imgs->setType('generated');
-                    $imgs->setSmallIcon(null);
-                    $this->em->persist($imgs);
-                    $this->em->flush();
-                } else {
-                    $imgs = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
-                    if ($imgs === null) {
-                        $imgs = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
-                        if ($imgs === null) {
-                            $imgs = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
-                        }
-                    }
-                }
-            } else {
-                $imgs = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
-                if ($imgs === null) {
-                    $imgs = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
-                    if ($imgs === null) {
-                        $imgs = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
-                    }
-                }
-            }
-        }
-
-        $resource->setIcon($imgs);
-
-        return $resource;
     }
 }

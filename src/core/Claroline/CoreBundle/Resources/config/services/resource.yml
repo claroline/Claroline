@@ -5,17 +5,11 @@ parameters:
 
 services:
 
-    claroline.text.manager:
-        class: Claroline\CoreBundle\Resource\TextManager
-        arguments:
-          - "@service_container"
-        tags:
-           - { name: resource.controller }
-
-    claroline.thumbnail.creator:
-        class: Claroline\CoreBundle\Library\Resource\ThumbnailGenerator
+    claroline.icon.creator:
+        class: Claroline\CoreBundle\Library\Resource\IconCreator
         arguments:
           - %claroline.files.directory%
+          - "@service_container"
 
     claroline.resource.manager:
         class: Claroline\CoreBundle\Library\Resource\Manager
