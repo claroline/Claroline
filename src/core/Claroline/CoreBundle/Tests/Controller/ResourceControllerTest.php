@@ -189,7 +189,6 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "/resource/roots");
-        var_dump($this->client->getResponse()->getContent());
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(3, count($jsonResponse));
     }
@@ -238,15 +237,15 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList((array) $this->userRoot[0]->getId());
+        $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList((array) $this->userRoot[0]->getId());
         $this->assertEquals(3, count($toExport));
         $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList((array) $theLoneFile->key);
+        $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList((array) $theLoneFile->key);
         $this->assertEquals(1, count($toExport));
         $complexExportList = array();
         $complexExportList[] = $theBigTree[0]->key;
         $complexExportList[] = $theLoneFile->key;
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList($complexExportList);
+        $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList($complexExportList);
         $this->assertEquals(4, count($toExport));
     }
 

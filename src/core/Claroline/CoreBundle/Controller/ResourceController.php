@@ -31,7 +31,7 @@ class ResourceController extends Controller
      */
     public function creationFormAction($resourceType)
     {
-        $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create_form', $resourceType);
+        $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create_form', $resourceType);
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
@@ -49,14 +49,14 @@ class ResourceController extends Controller
      */
     public function createAction($resourceType, $parentInstanceId)
     {
-        $eventName = $this->get('claroline.resource.manager')->normalizeEventName('create', $resourceType);
+        $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create', $resourceType);
         $event = new CreateResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         $response = new Response();
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-            if($resource instanceof \Claroline\CoreBundle\Entity\Resource\File) {
+            if($resourceType === 'file') {
                 $files = $this->container->get('request')->files->all();
                 $file = $files["file_form"]["name"];
                 $mimeType = $file->getClientMimeType();
@@ -64,10 +64,9 @@ class ResourceController extends Controller
             } else {
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType);
             }
-            $phpArray = $manager->convertInstanceToArray($instance);
-            $json = $manager->generateJsonFromArray($phpArray);
+
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($json);
+            $response->setContent($this->get('claroline.resource.converter')->instanceToJson($instance));
         } else {
             $response->setContent($event->getErrorFormContent());
         }
@@ -231,7 +230,7 @@ class ResourceController extends Controller
      */
     public function customAction($resourceType, $action, $resourceId)
     {
-        $eventName = $this->get('claroline.resource.manager')->normalizeEventName($action, $resourceType);
+        $eventName = $this->get('claroline.resource.utilities')->normalizeEventName($action, $resourceType);
         $event = new CustomActionResourceEvent($resourceId);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
@@ -256,7 +255,7 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $item = $this->get('claroline.resource.manager')->export($resourceInstance);
+        $item = $this->get('claroline.resource.exporter')->export($resourceInstance);
         $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getName()));
         if ($resourceInstance->getResourceType()->getType() == 'directory') {
             $nameDownload.='.zip';
@@ -280,7 +279,8 @@ class ResourceController extends Controller
      */
     public function multiExportAction()
     {
-        $file = $this->get('claroline.resource.manager')->multiExport();
+        $ids = $this->container->get('request')->query->all();
+        $file = $this->get('claroline.resource.exporter')->multiExport($ids);
         $response = new Response();
         $response->setContent($file);
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
@@ -303,7 +303,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
+        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -321,10 +321,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $manager = $this->get('claroline.resource.manager');
-        $phpArray = $manager->convertInstanceToArray($root);
-        $json = $manager->generateJsonFromArray($phpArray);
-        $response = new Response($json);
+        $response = new Response($this->get('claroline.resource.converter')->instanceToJson($root));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -346,7 +343,7 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
-        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
+        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -365,7 +362,7 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->getInstanceList($user);
 
-        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
+        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -406,7 +403,7 @@ class ResourceController extends Controller
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($results);
+        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -535,12 +532,12 @@ class ResourceController extends Controller
     public function filterAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $compiledArray = $this->get('claroline.resource.manager')->createSearchArray();
+        $compiledArray = $this->get('claroline.resource.searcher')->createSearchArray($this->container->get('request')->query->all());
         $result = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->filter($compiledArray, $user);
 
-        $content = $this->get('claroline.resource.manager')->generateJsonFromArray($result);
+        $content = $this->get('claroline.resource.converter')->arrayToJson($result);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 

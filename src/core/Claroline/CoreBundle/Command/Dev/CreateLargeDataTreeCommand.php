@@ -94,13 +94,13 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
             ->findOneBy(array('type' => 'file'));
 
         for ($j = 0; $j < $directoryCount; $j++) {
-            $ri = $this->addDirectory($this->getContainer()->get('claroline.listener.file_listener')->generateGuid(), $parent, $dirType, $user);
+            $ri = $this->addDirectory($this->getContainer()->get('claroline.resource.utilities')->generateGuid(), $parent, $dirType, $user);
             $this->directoryCount++;
             if ($this->directoryCount%100 === 0) {
                 $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
             }
             for ($k = 0; $k < $fileCount; $k++) {
-                $this->addFile($this->getContainer()->get('claroline.listener.file_listener')->generateGuid(), $ri, $fileType, $user);
+                $this->addFile($this->getContainer()->get('claroline.resource.utilities')->generateGuid(), $ri, $fileType, $user);
                 $this->filesCount++;
                 if ($this->filesCount%100 === 0) {
                     $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -125,7 +125,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $ri->setName($name);
         $ri->setParent($parent);
         $ri->setWorkspace($parent->getWorkspace());
-        $dir = $this->getContainer()->get('claroline.icon.creator')->setResourceIcon($dir, $dirType);
+        $dir = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($dir, $dirType);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager')->persist($dir);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager')->persist($ri);
         echo "addDirectory $name \n";
@@ -142,7 +142,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $file->setCreator($user);
         $file->setHashName($hash);
         $file->setSize(0);
-        $file = $this->getContainer()->get('claroline.icon.creator')->setResourceIcon($file, $fileType, 'text/plain');
+        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, $fileType, 'text/plain');
         $ri = new ResourceInstance();
         $ri->setCreator($user);
         $ri->setResource($file);

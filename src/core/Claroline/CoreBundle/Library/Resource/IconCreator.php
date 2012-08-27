@@ -130,6 +130,7 @@ class IconCreator
      * @param AbstractResource $resource
      * @param ResourceType $type
      * @param string $name (required if it's a file)
+     * @param
      */
     public function setResourceIcon(AbstractResource $resource, ResourceType $type, $mimeType = null)
     {
@@ -146,9 +147,10 @@ class IconCreator
             $mimeElements = explode('/', $mimeType);
             //if video or img => generate the thumbnail, otherwise find an existing one.
             if($mimeElements[0] === 'video' || $mimeElements[0] === 'image') {
+
                 $originalPath = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$resource->getHashName();
-                $newPath = $this->container->getParameter('claroline.thumbnails.directory').DIRECTORY_SEPARATOR.$this->container->get('claroline.listener.file_listener')->generateGuid();
-                $generatedFilePath = $this->createThumbnail($originalPath, $newPath, 100, 100);
+                $newPath = $this->container->getParameter('claroline.thumbnails.directory').DIRECTORY_SEPARATOR.$this->container->get('claroline.resource.utilities')->generateGuid();
+                $generatedFilePath = $this->createThumbNail($originalPath, $newPath, 100, 100);
                 $generatedFile = pathinfo($generatedFilePath, PATHINFO_FILENAME);
                 $iconName = 'thumbnails'.DIRECTORY_SEPARATOR.$generatedFile;
                 $imgs = new ResourceIcon();
