@@ -54,7 +54,6 @@ class DirectoryControllerTest extends FunctionalTestCase
 
     public function testUserCanCreateSubResource()
     {
-        $this->markTestSkipped("can't add a file with the addResource method becaue there is no request");
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
@@ -105,6 +104,6 @@ class DirectoryControllerTest extends FunctionalTestCase
         return $this->client
             ->getContainer()
             ->get('claroline.resource.manager')
-            ->create($object, $parentId, $resourceType, true);
+            ->create($object, $parentId, $resourceType, true, 'text/plain');
     }
 }
