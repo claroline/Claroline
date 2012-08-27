@@ -16,13 +16,14 @@
     );
 
     ClaroResourceManager.init($('#dr-resources-content'),
-        'cr', 
+        'cr',
         $('#dr-div-form'),
         $('#dr-select-creation'),
         $('#dr-submit-select'),
         $('#dr-download-button'),
         $('#dr-cut-button'),
         $('#dr-copy-button'),
+        $('#dr-delete-button'),
         $('#dr-paste-button'),
         $('#dr-close-button'),
         $('#dr-is-flat')

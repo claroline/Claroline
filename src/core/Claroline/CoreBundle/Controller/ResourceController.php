@@ -93,6 +93,25 @@ class ResourceController extends Controller
     }
 
     /**
+     * Removes a many resources from a workspace. If the instance is the last to refer to the
+     * original instance, the latter will be deleted as well.
+     *
+     * @return Response
+     */
+    public function multiDeleteAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $ids = $this->getRequestParameters();
+        foreach ($ids as $id) {
+            $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+                ->find($id);
+            $this->get('claroline.resource.manager')->delete($resourceInstance);
+        }
+
+        return new Response('Resource deleted', 204);
+    }
+
+    /**
      * Renders the form allowing to edit the base properties (currently the
      * sharable/public/private attribute) of a given resource.
      *
@@ -199,7 +218,7 @@ class ResourceController extends Controller
     //no verification yet
     public function multiMoveAction($newParentId)
     {
-        $ids = $this->container->get('request')->query->all();
+        $ids = $this->getRequestParameters();
         $em = $this->getDoctrine()->getEntityManager();
         $newParent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($newParentId);
 
@@ -279,7 +298,7 @@ class ResourceController extends Controller
      */
     public function multiExportAction()
     {
-        $ids = $this->container->get('request')->query->all();
+        $ids = $this->getRequestParameters();
         $file = $this->get('claroline.resource.exporter')->multiExport($ids);
         $response = new Response();
         $response->setContent($file);
@@ -460,7 +479,7 @@ class ResourceController extends Controller
      */
     public function multiAddToWorkspaceAction($instanceDestinationId)
     {
-        $ids = $this->container->get('request')->query->all();
+        $ids = $this->getRequestParameters();
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
 
@@ -570,5 +589,13 @@ class ResourceController extends Controller
 
          return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig',
              array('resources' => $results, 'prefix' => $prefix, 'currentFolder' => $currentFolder));
+    }
+
+    private function getRequestParameters()
+    {
+        $ids = $this->container->get('request')->query->all();
+        unset($ids['_']);
+
+        return $ids;
     }
 }

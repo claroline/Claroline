@@ -330,6 +330,24 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('POST', "/resource/renders/flat/1/cr");
         $this->assertEquals(3, $crawler->filter('.res-block')->count());
     }
+
+    public function testMultiDelete()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->pwr[0]->getId());
+        $theLoneFile = $this->uploadFile($this->pwr[0]->getId(), 'theLoneFile.txt');
+        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+        $this->client->request(
+            'GET',
+            "/resource/multidelete?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($jsonResponse));
+    }
+
     /*
     public function testCountInstances()
     {

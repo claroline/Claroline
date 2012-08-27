@@ -16,6 +16,7 @@
         downloadButton,
         cutButton,
         copyButton,
+        deleteButton,
         pasteButton,
         closeButton,
         flatChkBox
@@ -28,6 +29,7 @@
         construct.downloadButton = downloadButton;
         construct.cutButton = cutButton;
         construct.copyButton = copyButton;
+        construct.deleteButton = deleteButton;
         construct.pasteButton = pasteButton;
         construct.closeButton = closeButton;
         construct.flatChkBox = flatChkBox;
@@ -101,6 +103,19 @@
             pasteIds = getSelectedItems();
             setLayout();
             cpd = 1;
+        })
+
+        deleteButton.on('click', function(e){
+            var params = getSelectedItems();
+            var route = Routing.generate('claro_resource_multi_delete', params);
+            ClaroUtils.sendRequest(route, function(data, textstatus, xhr){
+                if (204 === xhr.status) {
+                    for (var i in params) {
+                        $('#'+construct.prefix+"-instance-"+params[i]).remove();
+                    }
+                }
+            });
+
         })
 
         pasteButton.on('click', function(e){
