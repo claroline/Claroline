@@ -9,12 +9,17 @@
             <option value={{ resourceType.type }}> {{ resourceType.type }} </option>
     {% endfor %}
 </select><br>
-<input type="text" style="width:120px" placeholder="text"></input><br>
-<input id="{{divPrefix}}-date-from" type="text" style="width:120px" placeholder="date début"></input><br>
-<input id="{{divPrefix}}-date-to" type="text" style="width:120px" placeholder="date fin"></input><br>
+<div class="input-append date" id="{{divPrefix}}-date-from" data-date="21/12/2012" data-date-format="dd/mm/yyyy">
+    <input class="span8" size="10" type="text" value="21/12/2012" style="display:inline-block;">
+    <span class="add-on"><i class="icon-th"></i></span>
+</div>
+<div class="input-append date" id="{{divPrefix}}-date-to" data-date="21/12/2012" data-date-format="dd/mm/yyyy">
+    <input class="span8" size="10" type="text" value="21/12/2012" style="display:inline-block;">
+    <span class="add-on"><i class="icon-th"></i></span>
+</div>
 <button id="{{divPrefix}}-filter-button">filter</button>
 <button id="{{divPrefix}}-reset-button">reset</button>
 <script>
-    $('#{{divPrefix}}-date-from').datepicker({dateFormat: "yy-mm-dd"});
-    $('#{{divPrefix}}-date-to').datepicker({dateFormat: "yy-mm-dd"});
+    $('#{{divPrefix}}-date-from').datepicker();
+    $('#{{divPrefix}}-date-to').datepicker();
 </script>
