@@ -5,7 +5,7 @@
             "package": "claroline/front-end-bundle",
             "version": "dev-master",
             "source-reference": "c471fa4ba33f5126bc8cf14ef24b39a3d2c3db55",
-            "commit-date": "1346050852"
+            "commit-date": "1345197071"
         },
         {
             "package": "doctrine/common",
@@ -20,8 +20,8 @@
         {
             "package": "doctrine/dbal",
             "version": "2.2.x-dev",
-            "source-reference": "da4b7b4d965db0c1c1d23333e87ee5ae8994e249",
-            "commit-date": "1344978731"
+            "source-reference": "b961a3fce6bf220f1dca47d7d747b9074bea4730",
+            "commit-date": "1341779435"
         },
         {
             "package": "doctrine/doctrine-bundle",
@@ -32,14 +32,14 @@
         {
             "package": "doctrine/doctrine-bundle",
             "version": "dev-master",
-            "source-reference": "4d9bb0f3af470556983eb41a7d19ede23401ef0b",
-            "commit-date": "1344549563"
+            "source-reference": "ed8d02b491512f947fdb2f8b665dc8fd72b5879c",
+            "commit-date": "1343657020"
         },
         {
             "package": "doctrine/doctrine-fixtures-bundle",
             "version": "dev-master",
-            "source-reference": "186d605aa6b592bd577e07e0e9a2c420b02b2492",
-            "commit-date": "1345465418"
+            "source-reference": "a5103a71bcd9b2f851ca6c16519a077784a3184a",
+            "commit-date": "1341472847"
         },
         {
             "package": "doctrine/doctrine-migrations-bundle",
@@ -62,26 +62,14 @@
         {
             "package": "friendsofsymfony/jsrouting-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "1.0.x-dev",
-            "alias-version": "1.0.9999999.9999999-dev"
-        },
-        {
-            "package": "friendsofsymfony/jsrouting-bundle",
-            "version": "dev-master",
-            "source-reference": "1.0.1",
-            "commit-date": "1344246467"
+            "source-reference": "69a8b5cb437ce415a72ad12274bb59a06b2c0cf5",
+            "commit-date": "1343207051"
         },
         {
             "package": "gedmo/doctrine-extensions",
             "version": "dev-master",
-            "alias-pretty-version": "2.3.x-dev",
-            "alias-version": "2.3.9999999.9999999-dev"
-        },
-        {
-            "package": "gedmo/doctrine-extensions",
-            "version": "dev-master",
-            "source-reference": "ceb6e562931ac4a86ec103773ecc0919acd74678",
-            "commit-date": "1345826395"
+            "source-reference": "3881e19cc9497efa132a55e44aebbc62405a05b1",
+            "commit-date": "1343672222"
         },
         {
             "package": "jms/aop-bundle",
@@ -100,8 +88,8 @@
         {
             "package": "jms/di-extra-bundle",
             "version": "dev-master",
-            "source-reference": "3420add7ca1957b60c7e250506d7c59ea7012747",
-            "commit-date": "1345140102"
+            "source-reference": "19c78ddeb222b0e911eb87c9b3c07d5dc0f9f9ea",
+            "commit-date": "1343655179"
         },
         {
             "package": "jms/metadata",
@@ -116,8 +104,8 @@
         {
             "package": "jms/security-extra-bundle",
             "version": "dev-master",
-            "source-reference": "dc76f47a5f4171abfd958fe4d277dfa11a3290ce",
-            "commit-date": "1345840275"
+            "source-reference": "75b21cce40f7714f462deb4292f093a566958b02",
+            "commit-date": "1343654921"
         },
         {
             "package": "jms/twig-js",
@@ -140,60 +128,42 @@
         {
             "package": "kriswallsmith/assetic",
             "version": "dev-master",
-            "source-reference": "db682ee6bf6b15131a5433f2a71f8ca39555ccaa",
-            "commit-date": "1346007196"
+            "source-reference": "11324294acf2dcf6b7f7cb0c4f35fd77e6f01cb7",
+            "commit-date": "1343684910"
         },
         {
             "package": "mikey179/vfsStream",
             "version": "dev-master",
-            "source-reference": "v1.1.0",
-            "commit-date": "1345898969"
+            "source-reference": "v1.0.0",
+            "commit-date": "1337108740"
         },
         {
             "package": "monolog/monolog",
-            "version": "1.2.0"
+            "version": "1.1.0"
         },
         {
             "package": "sensio/distribution-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "sensio/distribution-bundle",
-            "version": "dev-master",
-            "source-reference": "f7e9231c36c3badc43f40d025a0ad12939b91df7",
-            "commit-date": "1345982505"
+            "source-reference": "5886adae1613c0a72fbb95259a83ae798e86c0d3",
+            "commit-date": "1342347850"
         },
         {
             "package": "sensio/framework-extra-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "sensio/framework-extra-bundle",
-            "version": "dev-master",
-            "source-reference": "ade2d53b20a9fc3428f04c863b3fd4fca0b62181",
-            "commit-date": "1344072374"
+            "source-reference": "dbe4432742e16ee9ca550a2f953b059f0a80c53d",
+            "commit-date": "1343637454"
         },
         {
             "package": "sensio/generator-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "sensio/generator-bundle",
-            "version": "dev-master",
-            "source-reference": "d8fc1666f3cdb403f1b2d4320c45ddd6adbdf6a5",
-            "commit-date": "1343980150"
+            "source-reference": "4436c2e24301123fb413baf3f78cd93bbc016c07",
+            "commit-date": "1343291371"
         },
         {
             "package": "stof/doctrine-extensions-bundle",
             "version": "dev-master",
-            "source-reference": "63c2aa344bd45ca8cf16d778bb8d382bf18b09e3",
-            "commit-date": "1345420848"
+            "source-reference": "f31a0861de08b6594f09430a4cbaf0618e5e11ad",
+            "commit-date": "1343029923"
         },
         {
             "package": "swiftmailer/swiftmailer",
@@ -204,32 +174,20 @@
         {
             "package": "swiftmailer/swiftmailer",
             "version": "dev-master",
-            "source-reference": "e12e4ef3a9d6dd60fb734a01984a6e6627aea764",
-            "commit-date": "1345630910"
+            "source-reference": "8b2aa953f87da228ba413e8fb1372e49c1374050",
+            "commit-date": "1342198037"
         },
         {
             "package": "symfony/assetic-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "symfony/assetic-bundle",
-            "version": "dev-master",
-            "source-reference": "ec3a65d3eab342af9e93a3c21af0ac7b78e01c17",
-            "commit-date": "1344507386"
+            "source-reference": "24df9ede95084be882aeb557eaef5b761cfa00e0",
+            "commit-date": "1343684934"
         },
         {
             "package": "symfony/monolog-bundle",
             "version": "dev-master",
-            "alias-pretty-version": "2.1.x-dev",
-            "alias-version": "2.1.9999999.9999999-dev"
-        },
-        {
-            "package": "symfony/monolog-bundle",
-            "version": "dev-master",
-            "source-reference": "10c3d6fcda8d73eb1a35860eeea2933d1ab2c1f6",
-            "commit-date": "1345557954"
+            "source-reference": "v2.1.0-BETA4",
+            "commit-date": "1341078487"
         },
         {
             "package": "symfony/swiftmailer-bundle",
@@ -246,8 +204,8 @@
         {
             "package": "symfony/symfony",
             "version": "dev-master",
-            "source-reference": "2c0e851059905307e5a28ebe0b5153e8676585d1",
-            "commit-date": "1345978996"
+            "source-reference": "788e5eb730ad1c0436c519cf0b878fc48b854044",
+            "commit-date": "1343723577"
         },
         {
             "package": "twig/extensions",
@@ -264,8 +222,8 @@
         {
             "package": "twig/twig",
             "version": "dev-master",
-            "source-reference": "32c4867f68c1bacc758602d602e18a3ac1598c76",
-            "commit-date": "1345916214"
+            "source-reference": "51c866f415bbee670cd9ba13591307bce8dabdca",
+            "commit-date": "1343464333"
         }
     ],
     "packages-dev": null,
