@@ -35,7 +35,7 @@ class IconType
 
 
     public function setIconType($iconType)
-        {
+    {
         $this->iconType = $iconType;
     }
 
