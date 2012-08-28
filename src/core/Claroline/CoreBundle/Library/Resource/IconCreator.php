@@ -43,12 +43,11 @@ class IconCreator
     }
 
     //the end could be refactored: what does imagedestroy should do ? is everything clean ?
-    private function createThumbNail($name, $destinationPath, $newWidth, $newHeight)
+    private function createThumbNail($name, $destinationPath, $newWidth, $newHeight, $mimeExtension)
     {
         if ($this->hasGdExtension) {
-            $extension = pathinfo($name, PATHINFO_EXTENSION);
 
-            switch ($extension) {
+            switch ($mimeExtension) {
                 case "jpeg":
                     $srcImg = imagecreatefromjpeg($name);
                     $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
@@ -71,6 +70,10 @@ class IconCreator
                     break;
                 default:
                     return null;
+            }
+
+            if($srcImg == null) {
+                return null;
             }
 
             $this->getFormatedImg($newWidth, $newHeight, $srcImg, $destinationPath);
@@ -120,6 +123,8 @@ class IconCreator
             $gdImage = $frame->toGDImage();
 
             return $gdImage;
+        } else {
+            return null;
         }
     }
 
@@ -128,12 +133,12 @@ class IconCreator
      * before firing this.
      *
      * @param AbstractResource $resource
-     * @param ResourceType $type
      * @param string $name (required if it's a file)
      * @param
      */
-    public function setResourceIcon(AbstractResource $resource, ResourceType $type, $mimeType = null)
+    public function setResourceIcon(AbstractResource $resource, $mimeType = null)
     {
+        $type = $resource->getResourceType();
         if ($type->getType() !== 'file') {
             $imgs = $this->getTypeIcon($type);
         } else {
@@ -145,10 +150,10 @@ class IconCreator
         return $resource;
     }
 
-    private function getFileIcon($resource, $mimeType)
+    public function getFileIcon($resource, $mimeType)
     {
         if ($mimeType === null) {
-            throw new \Exception("no mimeType specified for the file: {$resource->getId()}");
+            throw new \InvalidArgumentException("no mimeType specified for the file icon: {$resource->getId()}");
         }
         $mimeElements = explode('/', $mimeType);
         //if video or img => generate the thumbnail, otherwise find an existing one.
@@ -156,7 +161,7 @@ class IconCreator
 
             $originalPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
             $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid();
-            $generatedFilePath = $this->createThumbNail($originalPath, $newPath, 100, 100);
+            $generatedFilePath = $this->createThumbNail($originalPath, $newPath, 100, 100, $mimeElements[1]);
             $generatedFile = pathinfo($generatedFilePath, PATHINFO_FILENAME);
             $iconName = 'thumbnails' . DIRECTORY_SEPARATOR . $generatedFile;
             $imgs = new ResourceIcon();
@@ -179,17 +184,19 @@ class IconCreator
         return $imgs;
     }
 
-    private function getTypeIcon(ResourceType $type)
+    public function getTypeIcon(ResourceType $type)
     {
-            $imgs = $repo->findOneBy(array('type' => $type->getType(), 'iconType' => IconType::TYPE));
-            if ($imgs === null) {
-                $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));
-            }
+        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
 
-            return $imgs;
+        $imgs = $repo->findOneBy(array('type' => $type->getType(), 'iconType' => IconType::TYPE));
+        if ($imgs === null) {
+            $imgs = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));
+        }
+
+        return $imgs;
     }
 
-    private function searchFileIcon($mimeType)
+    public function searchFileIcon($mimeType)
     {
         $mimeElements = explode('/', $mimeType);
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
