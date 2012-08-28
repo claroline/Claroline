@@ -125,7 +125,7 @@ claro_resource_renders_thumbnail:
         expose: true
 
 claro_resource_filter:
-    pattern: /filter
+    pattern: /filter/{prefix}
     defaults: { _controller: ClarolineCoreBundle:Resource:filter }
     options:
         expose: true
