@@ -1,14 +1,18 @@
-/*
- * This stylesheet can be included after "bootstrap-responsive.css". It contains all
- * the specific styles (layout/fluid independent).
- */
+////////////////////////////
+// Additional style rules //
+////////////////////////////
 
 footer {
-    background-color: #2C2C2C;
-    color: #999;
+    background-color: @navbarBackground;
+    color: @navbarText;
 }
 
-/* Matches the div inserted in forms by the Form Component */
+#footer-content {
+    padding: 11px;
+    text-align: center;
+    max-height: 100%;
+}
+
 form fieldset>div:first-of-type {
     padding-top: 20px;
 }
@@ -22,7 +26,7 @@ form fieldset>div:first-of-type {
 
 #login-form {
     margin-top: 12px;
-    background-color: whiteSmoke;
+    background-color: @formActionsBackground;
 }
 
 h2.section-header {
@@ -32,7 +36,7 @@ h2.section-header {
 h3.sub-section-header {
     height: 30px;
     margin-bottom: 16px;
-    border-bottom: solid #EEE 1px;
+    border-bottom: solid @grayLighter 1px;
 }
 
 form {

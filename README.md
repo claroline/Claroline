@@ -2,7 +2,7 @@
 
 ### Quick start
 
-After having cloned the project :
+After cloning the project :
 
 * make sure the version of PHP you're running is >= 5.3.2 (required)
 
@@ -17,13 +17,19 @@ After having cloned the project :
   (and their children) writable from the webserver (for further explanation on common
   permissions issues and solutions with Symfony, read [this][symfony_doc_install])
 
-* *For dev* : check that either the SQLite3 or PDO_SQLite extension are enabled in your
-  PHP configuration in order for the profiler to work
+* *For dev* :
+    * check that either the SQLite3 or PDO_SQLite extension are enabled in your
+      PHP configuration in order for the profiler to work
+    * make a global installation of [less][less_install] ([node][node_website] module)
+      in order to have the css files compiled (*src/core/Claroline/CoreBundle/Resources/public/css/themes*
+      must be writable)
 
 * open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
 [composer_website]: http://getcomposer.org/download/
 [symfony_doc_install]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
+[less_install]: http://lesscss.org/#-server-side-usage
+[node_website]: http://nodejs.org/
 
 ### Quick update
 

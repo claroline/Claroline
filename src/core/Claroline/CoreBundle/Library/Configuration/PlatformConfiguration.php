@@ -6,11 +6,13 @@ class PlatformConfiguration
 {
     private $selfRegistration;
     private $localLanguage;
+    private $theme;
 
-    public function __construct($selfRegistration, $localLanguage)
+    public function __construct($selfRegistration, $localLanguage, $theme)
     {
         $this->selfRegistration = $selfRegistration;
         $this->localLanguage = $localLanguage;
+        $this->theme = $theme;
     }
 
     public function getSelfRegistration()
@@ -31,5 +33,15 @@ class PlatformConfiguration
     public function setLocalLanguage($localLanguage)
     {
         $this->localLanguage = $localLanguage;
+    }
+
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
     }
 }

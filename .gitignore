@@ -25,4 +25,4 @@ files/tmp/*
 test/files/*
 test/icons/*
 test/files/tmp/*
-/src/core/Claroline/CoreBundle/Resources/public/twitter-bootstrap-b261f97/docs/build/node_modules/.bin/
+/src/core/Claroline/CoreBundle/Resources/public/css/themes/*
