@@ -53,7 +53,8 @@ class PlatformConfigurationHandler
     {
         $platformConfig = new PlatformConfiguration(
             $this->getParameter('allow_self_registration'),
-            $this->getParameter('locale_language')
+            $this->getParameter('locale_language'),
+            $this->getParameter('theme')
         );
 
         return $platformConfig;
