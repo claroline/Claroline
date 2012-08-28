@@ -257,51 +257,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function filter($criterias, $user)
     {
-        $whereType = '';
-        $whereRoot = '';
-        $whereDateFrom = '';
-        $whereDateTo = '';
-
-        foreach ($criterias as $key => $value) {
-
-            switch($key){
-                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
-                    break;
-                case 'types': $whereType = $this->filterWhereType($key, $value);
-                    break;
-                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
-                    break;
-                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        $sql = self::SELECT_INSTANCE .' '.self::FROM_INSTANCE. "
-            WHERE rt.is_listable = 1
-            AND rt.type != 'directory'
-            AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")"
-            .$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
-
+        $sql = $this->generateFilterSQL($criterias);
         $stmt = $this->_em->getConnection()->prepare($sql);
-        $stmt->bindValue('userId', $user->getId());
-
-        foreach ($criterias as $key => $value) {
-            switch($key){
-                case 'roots': $this->bindArray($stmt, $key, $value);
-                    break;
-                case 'types': $this->bindArray($stmt, $key, $value);
-                    break;
-                case 'dateTo': $stmt->bindValue($key, $criteria);
-                    break;
-                case 'dateFrom': $stmt->bindValue($key, $criteria);
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        $stmt = $this->bindFilter($stmt, $criterias, $user);
         $stmt->execute();
 
         $instances = array();
@@ -386,6 +344,60 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
        return $string;
    }
+
+   private function bindFilter($stmt, $criterias, $user)
+   {
+        $stmt->bindValue('userId', $user->getId());
+
+        foreach ($criterias as $key => $value) {
+            switch($key){
+                case 'roots': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'types': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'dateTo': $stmt->bindValue($key, $criteria);
+                    break;
+                case 'dateFrom': $stmt->bindValue($key, $criteria);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return $stmt;
+   }
+
+   private function generateFilterSQL($criterias)
+    {
+        $whereType = '';
+        $whereRoot = '';
+        $whereDateFrom = '';
+        $whereDateTo = '';
+
+        foreach ($criterias as $key => $value) {
+
+            switch ($key) {
+                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
+                    break;
+                case 'types': $whereType = $this->filterWhereType($key, $value);
+                    break;
+                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
+                    break;
+                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $sql = self::SELECT_INSTANCE . ' ' . self::FROM_INSTANCE . "
+            WHERE rt.is_listable = 1
+            AND rt.type != 'directory'
+            AND ri.workspace_id IN(" . self::SELECT_USER_WORKSPACES_ID . ")"
+            . $whereType . $whereRoot . $whereDateTo . $whereDateFrom;
+
+        return $sql;
+    }
 
    private function bindArray($stmt, $key, $criteria)
    {
