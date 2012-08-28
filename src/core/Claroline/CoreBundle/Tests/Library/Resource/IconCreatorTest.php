@@ -15,7 +15,7 @@ class IconCreatorTest extends FixtureTestCase
     private $thumbDir;
     private $iconCreator;
     private $fileType;
-    private $isLoaded;
+    private $areLoaded;
 
     protected function setUp()
     {
@@ -23,7 +23,7 @@ class IconCreatorTest extends FixtureTestCase
         $this->loadFixture(new LoadResourceTypeData());
         $ds = DIRECTORY_SEPARATOR;
         if( extension_loaded('gd') && extension_loaded('ffmpeg')){
-            $this->isLoaded = true;
+            $this->areLoaded = true;
         }
 
         $this->videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.mp4";
@@ -69,7 +69,7 @@ class IconCreatorTest extends FixtureTestCase
         $file->setResourceType($this->fileType);
         $file->setHashName('video.mp4');
         $file = $this->iconCreator->setResourceIcon($file, 'video/mp4');
-        if ($this->isLoaded) {
+        if ($this->areLoaded) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
             $this->assertEquals(1, count($thumbs));
         } else {
@@ -84,12 +84,12 @@ class IconCreatorTest extends FixtureTestCase
         $file->setResourceType($this->fileType);
         $file->setHashName('image.jpg');
         $file = $this->iconCreator->setResourceIcon($file, 'image/jpg');
-        if ($this->isLoaded) {
+        if (extension_loaded('gd')) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
             $this->assertEquals(1, count($thumbs));
         } else {
             $name = $file->getIcon()->getLargeIcon();
-            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_video.png', $name);
+            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_file.png', $name);
         }
     }
 
