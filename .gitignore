@@ -22,6 +22,7 @@ web/HTMLPage/*
 files/*
 files/tmp/*
 test/files/*
+test/thumbnails/*
 web/thumbnails/*
 test/files/tmp/*
 /src/core/Claroline/CoreBundle/Resources/public/twitter-bootstrap-b261f97/docs/build/node_modules/.bin/

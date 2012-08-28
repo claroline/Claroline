@@ -77,7 +77,7 @@ class Manager
             $this->em->persist($ri);
             $resource->setCreator($user);
             $this->em->persist($resource);
-            $resource = $this->ic->setResourceIcon($resource, $resourceType, $mimeType);
+            $resource = $this->ic->setResourceIcon($resource, $mimeType);
             $this->em->flush();
 
             return $returnInstance ? $ri : $resource;
