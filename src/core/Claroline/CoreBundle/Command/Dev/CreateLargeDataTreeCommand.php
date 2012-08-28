@@ -13,8 +13,12 @@ use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 class CreateLargeDataTreeCommand extends ContainerAwareCommand
 {
-    var $directoryCount = 0;
-    var $fileCount = 0;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->directoryCount = 0;
+        $this->fileCount = 0;
+    }
 
     protected function configure()
     {

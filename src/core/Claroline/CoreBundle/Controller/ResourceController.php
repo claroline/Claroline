@@ -548,19 +548,15 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function filterAction()
+    public function filterAction($prefix)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $compiledArray = $this->get('claroline.resource.searcher')->createSearchArray($this->container->get('request')->query->all());
-        $result = $this->get('doctrine.orm.entity_manager')
+        $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->filter($compiledArray, $user);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($result);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+          return $this->render('ClarolineCoreBundle:Resource:resource_list.html.twig', array('resources' => $results, 'prefix' => $prefix));
     }
 
     /**
@@ -593,9 +589,9 @@ class ResourceController extends Controller
 
     private function getRequestParameters()
     {
-        $ids = $this->container->get('request')->query->all();
-        unset($ids['_']);
+        $params = $this->container->get('request')->query->all();
+        unset($params['_']);
 
-        return $ids;
+        return $params;
     }
 }
