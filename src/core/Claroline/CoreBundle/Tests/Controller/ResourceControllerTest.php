@@ -282,24 +282,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->createBigTree($wsEroot[0]->getId());
 
         //filter by types (1)
-        $this->client->request('GET', '/resource/filter?types0=file');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(6, count($jsonResponse));
+        $crawler = $this->client->request('GET', '/resource/filter/ct?types0=file');
+        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
 
         //filter by types (2)
-        $this->client->request('GET', '/resource/filter?types0=file&types1=text');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(6, count($jsonResponse));
+        $crawler = $this->client->request('GET', '/resource/filter/ct?types0=file&types1=text');
+        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
 
         //filter by root (2)
-        $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(6, count($jsonResponse));
+        $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
+        $this->assertEquals(6,  count($crawler->filter('.ct_resource_list')));
 
         //filter by root (1)
-        $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
+        $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}");
+        $this->assertEquals(3,  count($crawler->filter('.ct_resource_list')));
 
         //no test by date yet
     }

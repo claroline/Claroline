@@ -368,7 +368,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
    }
 
    private function generateFilterSQL($criterias)
-    {
+   {
         $whereType = '';
         $whereRoot = '';
         $whereDateFrom = '';
@@ -397,7 +397,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             . $whereType . $whereRoot . $whereDateTo . $whereDateFrom;
 
         return $sql;
-    }
+   }
 
    private function bindArray($stmt, $key, $criteria)
    {
