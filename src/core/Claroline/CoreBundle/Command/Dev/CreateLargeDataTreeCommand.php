@@ -142,7 +142,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $file->setCreator($user);
         $file->setHashName($hash);
         $file->setSize(0);
-        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, $fileType, 'text/plain');
+        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, 'text/plain');
         $ri = new ResourceInstance();
         $ri->setCreator($user);
         $ri->setResource($file);
