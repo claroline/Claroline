@@ -9,12 +9,27 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Filesystem\Filesystem;
 
-class CompileLessCommand extends ContainerAwareCommand
+/**
+ * This command compiles the bootstrap theme(s) located in "Resources/less/themes".
+ *
+ * If no specific theme is passed as argument, all the themes are compiled.
+ *
+ * For each theme, compilation follows these steps :
+ *
+ * - The ".less.pre" files from "Resources/bootstrap" are preprocessed (true less
+ *   files are generated in the cache, resolving all the @import directives as well
+ *   as the special directives related to the current theme).
+ * - The generated less files are compiled into css files whithin a dedicated theme
+ *   folder in the public css directory.
+ * - The "img" directory of the theme, if any, is mirrored in the public css theme
+ *   directory.
+ */
+class CompileThemesCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:less:compile')
-            ->setDescription('Compiles the less files.');
+        $this->setName('claroline:themes:compile')
+            ->setDescription('Compiles the core less/bootstrap themes.');
         $this->addOption(
             'theme', 'thm', InputOption::VALUE_OPTIONAL, 'Selects the theme that will be compiled'
         );
@@ -39,6 +54,7 @@ class CompileLessCommand extends ContainerAwareCommand
 
         foreach ($themesToCompile as $theme)
         {
+            // Each theme must include the following files
             $expectedFiles = array(
                 "{$themesDir}/{$theme}/variables.less",
                 "{$themesDir}/{$theme}/theme.less"
@@ -61,6 +77,8 @@ class CompileLessCommand extends ContainerAwareCommand
 
     private function compileTheme($theme)
     {
+        // All the relative paths below are relative to the cache
+        // directory, where the valid less files are generated
         $themeRelativePath = "../../src/core/Claroline/CoreBundle/Resources/less/themes/{$theme}";
         $preLessFiles = array(
             __DIR__ . '/../Resources/less/bootstrap/bootstrap.less.pre'
@@ -75,6 +93,7 @@ class CompileLessCommand extends ContainerAwareCommand
             $preProcessedContent = '';
 
             while ($line = fgets($fp)) {
+                // Makes all the @import urls point to the bootstrap package (FrontEndBundle)
                 if (preg_match('#\s*@import\s+"(.+)"\s*;#', $line, $matches)) {
                     $line = str_replace(
                         $matches[1],
@@ -83,14 +102,17 @@ class CompileLessCommand extends ContainerAwareCommand
                     );
                 }
 
+                // Imports the theme variables
                 if (preg_match('#^\s*@variables\s*?#', $line, $matches)) {
                     $line = "@import \"{$themeRelativePath}/variables.less\";\n";
                 }
 
+                // Imports the common layout
                 if (preg_match('#^\s*@layout\s*?#', $line, $matches)) {
                     $line = '@import "../../src/core/Claroline/CoreBundle/Resources/less/layout.less";';
                 }
 
+                // Imports the theme main file
                 if (preg_match('#^\s*@theme\s*?#', $line, $matches)) {
                     $line = "@import \"{$themeRelativePath}/theme.less\";\n";
                 }
@@ -99,6 +121,7 @@ class CompileLessCommand extends ContainerAwareCommand
             }
 
             fclose($fp);
+            // Generates a less file in the cache, compiles it, then removes it
             $tmpLessFile = __DIR__ . '/../../../../../app/cache/' . uniqid();
             file_put_contents($tmpLessFile, $preProcessedContent);
             $this->doCompile($tmpLessFile, $targetCssFile, $theme);
@@ -123,24 +146,5 @@ class CompileLessCommand extends ContainerAwareCommand
             $fileSystem = new FileSystem();
             $fileSystem->mirror($themeImgDir, "{$publicCssThemesDir}/{$theme}/img");
         }
-
-
-        /*
-        if (is_dir($themeImgDir)) {
-            $copyItem = function ($source, $destination, $isDir = false) use ($copyItem) {
-                if (!$isDir) {
-                    if (!copy($source, $destination)) {
-                        $output->writeln("<error>Cannot copy '{$source}' to '{$destination}'");
-                    }
-                } else {
-                    mkdir($destination);
-                    $sourceItems = new DirectoryIterator($source);
-
-                    foreach ($sourceItems as $item) {
-                        $copyItem();
-                    }
-                }
-            };
-        }*/
     }
 }
