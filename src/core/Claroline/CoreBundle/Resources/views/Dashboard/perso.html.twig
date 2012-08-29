@@ -1,5 +1,59 @@
 {% extends 'ClarolineCoreBundle:Dashboard:layout.html.twig' %}
 
 {% block content %}
-    Perso content
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="widget" id="w-activites">
+                <div class="widget-header">
+                    <span class="icon-tasks"></span>
+                    <h3>Activités</h3>
+                    <div class="widget-commands">
+                        <a href="" onClick="$('#w-activites-content').toggle('fast'); return false;"><span class="icon-minus"</span></a>
+                        <a href="" onClick="$('#w-activites').remove(); return false;"><span class="icon-remove"></span></a>
+                    </div>
+                </div> <!-- /widget-header -->
+                <div class="widget-content" id="w-activites-content">
+                    Cras fermentum tempus congue. Pellentesque quam magna, aliquet eget laoreet sed,
+                    tincidunt et purus. Quisque dignissim consectetur convallis. Mauris nunc erat,
+                    ornare id pharetra ac, ullamcorper id enim. Aenean varius est a nisi ornare congue.
+                    Proin est libero, pulvinar semper convallis nec, semper non orci. Phasellus fermentum
+                    sodales lacus, sed pulvinar metus tristique a. Vestibulum placerat, nisi sit amet
+                    mattis laoreet, mi est mattis eros, sit amet rutrum ante sem eu sapien. Mauris erat purus,
+                    ultricies a varius et, tincidunt at mi. Mauris quam ipsum, blandit non rutrum nec,
+                    cursus vel elit. Duis at velit sit amet massa porta faucibus. Nam nec adipiscing dolor.
+                    Phasellus elit ante, malesuada et congue non, rutrum venenatis nibh. Praesent eu augue
+                    non sapien fermentum iaculis sed quis sem. Sed sapien dolor, pharetra quis laoreet at,
+                    tincidunt suscipit eros.
+                </div> <!-- /widget-content -->
+            </div> <!-- /widget -->
+
+            <div class="widget" id="w-news">
+                <div class="widget-header">
+                    <span class="icon-globe"></span>
+                    <h3>News</h3>
+                    <div class="widget-commands">
+                        <a href="" onClick="$('#w-news-content').toggle('fast'); return false;"><span class="icon-minus"></span></a>
+                        <a href="" onClick="$('#w-news').remove(); return false;"><span class="icon-remove"></span></a>
+                    </div>
+                </div> <!-- .widget-header -->
+                <div class="widget-content" id="w-agenda-content">
+                    Cras fermentum tempus congue. Pellentesque quam magna, aliquet eget laoreet sed,
+                    tincidunt et purus. Quisque dignissim consectetur convallis. Mauris nunc erat,
+                    ornare id pharetra ac, ullamcorper id enim. Aenean varius est a nisi ornare congue.
+                    Proin est libero, pulvinar semper convallis nec, semper non orci. Phasellus fermentum
+                    sodales lacus, sed pulvinar metus tristique a. Vestibulum placerat, nisi sit amet
+                    mattis laoreet, mi est mattis eros, sit amet rutrum ante sem eu sapien. Mauris erat purus,
+                    ultricies a varius et, tincidunt at mi. Mauris quam ipsum, blandit non rutrum nec,
+                    cursus vel elit. Duis at velit sit amet massa porta faucibus. Nam nec adipiscing dolor.
+                    Phasellus elit ante, malesuada et congue non, rutrum venenatis nibh. Praesent eu augue
+                    non sapien fermentum iaculis sed quis sem. Sed sapien dolor, pharetra quis laoreet at,
+                    tincidunt suscipit eros.
+                </div> <!-- .widget-content -->
+            </div> <!-- /widget -->
+        </div> <!-- /span4 -->
+    </div>
+</div>
+
 {% endblock %}

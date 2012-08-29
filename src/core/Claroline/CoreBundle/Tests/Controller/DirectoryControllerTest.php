@@ -104,6 +104,6 @@ class DirectoryControllerTest extends FunctionalTestCase
         return $this->client
             ->getContainer()
             ->get('claroline.resource.manager')
-            ->create($object, $parentId, $resourceType, true);
+            ->create($object, $parentId, $resourceType, true, 'text/plain');
     }
 }

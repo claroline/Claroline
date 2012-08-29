@@ -24,7 +24,9 @@ function emptyDir($directory)
 $directories = array(
     realpath(__DIR__.'/../../files'),
     realpath(__DIR__.'/../../test/files'),
-    realpath(__DIR__.'/../../web/HTMLPage')
+    realpath(__DIR__.'/../../web/HTMLPage'),
+    realpath(__DIR__.'/../../test/thumbnails'),
+    realpath(__DIR__.'/../../web/thumbnails')
 );
 
 foreach ($directories as $directory) {

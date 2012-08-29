@@ -39,9 +39,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
             rt.id as resource_type_id,
             rt.type as type,
             rt.is_navigable as is_navigable,
-            rt.icon as icon,
-            rt.thumbnail as thumbnail
-            ";
+            rti.small_icon as small_icon,
+            rti.large_icon as large_icon";
 
     const SELECT_PATHNAME = "
         (SELECT group_concat(ri2.name order by ri2.lft SEPARATOR ' > ')
@@ -59,7 +58,10 @@ class ResourceInstanceRepository extends NestedTreeRepository
             INNER JOIN claro_resource_type rt
             ON res.resource_type_id = rt.id
             INNER JOIN claro_user ures
-            ON res.user_id = ures.id";
+            ON res.user_id = ures.id
+            INNER JOIN claro_resource_icon rti
+            ON res.icon_id = rti.id";
+
 
     const SELECT_USER_WORKSPACES_ID = "SELECT
             cw.id FROM claro_workspace cw
@@ -255,51 +257,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
     public function filter($criterias, $user)
     {
-        $whereType = '';
-        $whereRoot = '';
-        $whereDateFrom = '';
-        $whereDateTo = '';
-
-        foreach ($criterias as $key => $value) {
-
-            switch($key){
-                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
-                    break;
-                case 'types': $whereType = $this->filterWhereType($key, $value);
-                    break;
-                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
-                    break;
-                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        $sql = self::SELECT_INSTANCE .' '.self::FROM_INSTANCE. "
-            WHERE rt.is_listable = 1
-            AND rt.type != 'directory'
-            AND ri.workspace_id IN(".self::SELECT_USER_WORKSPACES_ID.")"
-            .$whereType.$whereRoot.$whereDateTo.$whereDateFrom;
-
+        $sql = $this->generateFilterSQL($criterias);
         $stmt = $this->_em->getConnection()->prepare($sql);
-        $stmt->bindValue('userId', $user->getId());
-
-        foreach ($criterias as $key => $value) {
-            switch($key){
-                case 'roots': $this->bindArray($stmt, $key, $value);
-                    break;
-                case 'types': $this->bindArray($stmt, $key, $value);
-                    break;
-                case 'dateTo': $stmt->bindValue($key, $criteria);
-                    break;
-                case 'dateFrom': $stmt->bindValue($key, $criteria);
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        $stmt = $this->bindFilter($stmt, $criterias, $user);
         $stmt->execute();
 
         $instances = array();
@@ -333,8 +293,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
     {
         $string = '';
         $i = 0;
+        $keys = array_keys($criteria);
 
-        foreach ($criteria as $i => $item) {
+        foreach ($keys as $i) {
             if ($i == 0) {
                 $string.= " AND (rt.type = :{$key}{$i}";
                 $i++;
@@ -352,8 +313,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
     {
         $string = '';
         $i = 0;
+        $keys = array_keys($criteria);
 
-        foreach ($criteria as $i => $item) {
+        foreach ($keys as $i) {
             if ($i == 0) {
                 $string.= " AND (ri.root =:{$key}{$i}";
                 $i++;
@@ -383,6 +345,60 @@ class ResourceInstanceRepository extends NestedTreeRepository
        return $string;
    }
 
+   private function bindFilter($stmt, $criterias, $user)
+   {
+        $stmt->bindValue('userId', $user->getId());
+
+        foreach ($criterias as $key => $value) {
+            switch($key){
+                case 'roots': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'types': $this->bindArray($stmt, $key, $value);
+                    break;
+                case 'dateTo': $stmt->bindValue($key, $criteria);
+                    break;
+                case 'dateFrom': $stmt->bindValue($key, $criteria);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return $stmt;
+   }
+
+   private function generateFilterSQL($criterias)
+   {
+        $whereType = '';
+        $whereRoot = '';
+        $whereDateFrom = '';
+        $whereDateTo = '';
+
+        foreach ($criterias as $key => $value) {
+
+            switch ($key) {
+                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
+                    break;
+                case 'types': $whereType = $this->filterWhereType($key, $value);
+                    break;
+                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
+                    break;
+                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $sql = self::SELECT_INSTANCE . ' ' . self::FROM_INSTANCE . "
+            WHERE rt.is_listable = 1
+            AND rt.type != 'directory'
+            AND ri.workspace_id IN(" . self::SELECT_USER_WORKSPACES_ID . ")"
+            . $whereType . $whereRoot . $whereDateTo . $whereDateFrom;
+
+        return $sql;
+   }
+
    private function bindArray($stmt, $key, $criteria)
    {
        foreach ($criteria as $i => $item) {
@@ -391,7 +407,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
    }
 
    private function paginate($page, $limit, $stmt)
-    {
+   {
         $instances = array();
 
         $offset = $limit* (--$page);
@@ -406,6 +422,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
 
         return $instances;
-    }
+   }
 
 }

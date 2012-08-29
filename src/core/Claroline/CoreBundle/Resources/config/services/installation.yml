@@ -96,7 +96,6 @@ services:
             - "@validator"
             - "@doctrine.orm.entity_manager"
             - "@symfony.yaml"
-            - "%claroline.icons.directory%"
 
     # symfony class used as service argument
     symfony.yaml:

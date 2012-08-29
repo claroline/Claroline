@@ -74,10 +74,10 @@ abstract class AbstractResource
     private $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceImage", inversedBy="abstractResources", cascade={"persist"})
-     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id")
      */
-    private $images;
+    private $icon;
 
     /**
      * @Assert\NotBlank()
@@ -288,13 +288,13 @@ abstract class AbstractResource
         return $this->name;
     }
 
-    public function getImage()
+    public function getIcon()
     {
-        return $this->images;
+        return $this->icon;
     }
 
-    public function setImage($images)
+    public function setIcon($icon)
     {
-        $this->images = $images;
+        $this->icon = $icon;
     }
 }

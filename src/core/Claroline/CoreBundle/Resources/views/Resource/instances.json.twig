@@ -15,8 +15,8 @@
             ,"isFolder": true
             ,"isLazy": true
         {% endif %}
-        {% if instance.getResourceType.getIcon() is not null %}
-            ,"icon" : "{{ instance.getResourceType.getIcon() }}"
+        {% if instance.getResourceType.getSmallIcon() is not null %}
+            ,"icon" : "{{ instance.getResourceType.getSmallIcon() }}"
         {% endif %}
     }
     {% if not loop.last %},{% endif %}

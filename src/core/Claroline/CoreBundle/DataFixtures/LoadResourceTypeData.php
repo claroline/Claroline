@@ -38,14 +38,11 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $documentMetatype = new MetaType();
         $documentMetatype->setName('document');
         $manager->persist($documentMetatype);
-        $fileThumb ='res_file.png';
-        $folderThumb ='res_folder.png';
-        $textThumb ='res_text.png';
         // resource type attributes : name, listable, navigable, class, download
         $resourceTypes = array(
-            array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File', true, $fileThumb),
-            array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory', true, $folderThumb),
-            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true, $textThumb)
+            array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File', true),
+            array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory', true),
+            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true)
         );
 
         foreach ($resourceTypes as $attributes) {
@@ -55,7 +52,6 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->setNavigable($attributes[2]);
             $type->setClass($attributes[3]);
             $type->setDownloadable($attributes[4]);
-            $type->setThumbnail($attributes[5]);
             $type->addMetaType($documentMetatype);
             $manager->persist($type);
             $this->addReference("resource_type/{$attributes[0]}", $type);

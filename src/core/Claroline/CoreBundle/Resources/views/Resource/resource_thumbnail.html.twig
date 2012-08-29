@@ -14,9 +14,9 @@
         <div class="wrapper">
             <input class="{{prefix}}-chk-instance"type="checkbox" value="{{instance.id}}" style="vertical-align: top;"/>
             {% if instance.type == "directory" %}
-                <a class="link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
+                <a class="{{prefix}}-link-navigate-instance" id="{{prefix}}-link-navigate-instance-{{instance.id}}" href="#">
             {% endif %}
-            <img data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}" id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset("icons/" ~ instance.thumbnail)}}"
+            <img data-key="{{instance.id}}" data-type="{{instance.type}}" data-resource-id="{{instance.resource_id}}" id="{{prefix}}-instance-img-{{instance.id}}" class="{{prefix}}-instance-img" src="{{asset(instance.large_icon)}}"
                  {% if instance.path is defined %}
                     title="{{instance.path}}"
                  {% endif %}
@@ -29,7 +29,7 @@
             <span class="res-name">{{instance.name}}</span>
         </div>
         <div class="resource-bar">
-            <a href="#" id="resource-menu-{{instance.id}}" class="resource-menu">Menu</a>
+            <a href="#" id="{{prefix}}-resource-menu-{{instance.id}}" class="{{prefix}}-resource-menu">Menu</a>
         </div>
         <br/>
     </span>

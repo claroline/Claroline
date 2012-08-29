@@ -1,23 +1,35 @@
 parameters:
    # next lines are overriden by app config_test.yml in test environment
    claroline.files.directory: "%kernel.root_dir%/../files"
-   claroline.icons.directory: "%kernel.root_dir%/../web/icons"
+   claroline.thumbnails.directory: "%kernel.root_dir%/../web/thumbnails"
 
 services:
 
-    claroline.text.manager:
-        class: Claroline\CoreBundle\Resource\TextManager
-        arguments:
-          - "@service_container"
-        tags:
-           - { name: resource.controller }
-
-    claroline.thumbnail.creator:
-        class: Claroline\CoreBundle\Library\Resource\ThumbnailGenerator
+    claroline.resource.icon_creator:
+        class: Claroline\CoreBundle\Library\Resource\IconCreator
         arguments:
           - %claroline.files.directory%
+          - "@service_container"
 
     claroline.resource.manager:
         class: Claroline\CoreBundle\Library\Resource\Manager
         arguments:
           - "@service_container"
+
+    claroline.resource.exporter:
+        class: Claroline\CoreBundle\Library\Resource\Exporter
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@event_dispatcher"
+          - "@claroline.resource.utilities"
+
+    claroline.resource.utilities:
+         class: Claroline\CoreBundle\Library\Resource\Utilities
+
+    claroline.resource.searcher:
+         class: Claroline\CoreBundle\Library\Resource\Searcher
+
+    claroline.resource.converter:
+         class: Claroline\CoreBundle\Library\Resource\Converter
+         arguments:
+           - "@doctrine.orm.entity_manager"
