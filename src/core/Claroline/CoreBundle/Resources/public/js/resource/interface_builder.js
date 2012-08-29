@@ -54,7 +54,7 @@
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             });
 
-        $('.link-navigate-instance').live('click', function(e){
+        $('.'+prefix+'-link-navigate-instance').live('click', function(e){
             navigate(e.currentTarget.parentElement.parentElement.dataset.key, construct);
         });
 
@@ -248,7 +248,7 @@
     function setMenu(construct)
     {
 
-        $('.resource-menu').each(function(index, element){
+        $('.'+construct.prefix+'-resource-menu').each(function(index, element){
             var parameters = {};
             parameters.key = element.parentElement.parentElement.dataset.key;
             parameters.resourceId = element.parentElement.parentElement.dataset.resourceId;
