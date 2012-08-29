@@ -8,13 +8,22 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts
+      "@ClarolineCoreBundle/Resources/views/Resource/twigJsTest.twig"
+       filter="twig_js"
+    %}
+
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script src="{{ asset('bundles/clarolinecore/js/resource/interface_builder.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/clarolinecore/js/resource/resource_getter.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/clarolinecore/js/dashboard/dashboard_resource.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}"></script>
     <script src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js')}}"></script>
 {% endblock %}
 
 {% block content %}
+
     <div id="div-filter" class="span2"></div>
         <div id="div-resources" class="span10">
         <div id="dr-manager-options">

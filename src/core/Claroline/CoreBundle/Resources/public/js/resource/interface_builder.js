@@ -1,7 +1,6 @@
 (function() {
 
     var builder = this.ClaroResourceInterfaceBuilder = {};
-    var self = this.ClaroResourceInterfaceBuilder.builder;
 
     ClaroResourceInterfaceBuilder.menu = {};
 
@@ -41,6 +40,7 @@
         construct.pasteIds = {};
         construct.cpd = null;
         construct.activePagerItem = 1;
+        resourceGetter.setPrefix(prefix);
 
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
@@ -51,14 +51,7 @@
                 }
             },
             function() {
-                ClaroUtils.sendRequest(
-                    Routing.generate('claro_resource_renders_thumbnail', {
-                        'prefix': prefix
-                    }),
-                    function(data){
-                        appendThumbnails(construct, data);
-                    }
-                    )
+                resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             });
 
         $('.link-navigate-instance').live('click', function(e){
@@ -157,18 +150,7 @@
                         construct.div.empty();
                         var paginator = buildPaginator(count);
                         div.append(paginator);
-
-                        route = Routing.generate('claro_resource_flat_view_page', {
-                            'page':construct.activePagerItem,
-                            'prefix':construct.prefix
-                        });
-                        ClaroUtils.sendRequest(route, function(data){
-                            div.prepend(data);
-                            setMenu(construct);
-                            $(".res-name").each(function(){
-                                formatResName($(this), 2, 20)
-                                });
-                        })
+                        rendersFlatPaginatedThumbnails(construct);
 
                         $('.instance-paginator-item').on('click', function(e){
                             construct.activePagerItem = e.target.innerHTML;
@@ -191,7 +173,7 @@
                         'prefix': construct.prefix
                     }),
                     function(data){
-                        appendThumbnails(construct, data);
+                        appendThumbnails(data, construct);
                     })
             }
         })
@@ -204,42 +186,27 @@
         }
     }
 
-
     function navigate(key, construct) {
         construct.divForm.empty();
-        ClaroUtils.sendRequest(
-            Routing.generate('claro_resource_renders_thumbnail', {
-                'parentId': key,
-                'prefix':construct.prefix
-            }),
-            function(data){
-                appendThumbnails(construct, data);
-            });
+        construct.resourceGetter.getChildren(key, function(data){
+              appendThumbnails(data, construct);
+        })
     }
 
     function reload(construct){
         var key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
-        ClaroUtils.sendRequest(
-            Routing.generate('claro_resource_renders_thumbnail', {
-                'parentId': key,
-                'prefix':construct.prefix
-            }),
-            function(data){
-                appendThumbnails(construct, data);
-            });
+        navigate(key, construct);
     }
 
     function rendersFlatPaginatedThumbnails(construct) {
         activePage(construct.activePagerItem);
-        var route = Routing.generate('claro_resource_flat_view_page', {
-            'page':construct.activePagerItem,
-            'prefix':construct.prefix
-        });
-        ClaroUtils.sendRequest(route, function(data){
+        construct.resourceGetter.getFlatPaginatedThumbnails(construct.activePagerItem, function(data){
             $('.res-block').remove();
             construct.div.prepend(data);
             setMenu(construct);
-            $(".res-name").each(function(){formatResName($(this), 2, 20)});
+            $(".res-name").each(function(){
+                formatResName($(this), 2, 20)
+            });
         })
     }
 
@@ -336,7 +303,7 @@
         }
     };
 
-    function appendThumbnails(construct, data) {
+    function appendThumbnails(data, construct) {
         construct.div.empty();
         construct.div.append(data);
         setMenu(construct);
