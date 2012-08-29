@@ -353,6 +353,7 @@ class AdministrationController extends Controller
         if ($form->isValid()) {
             $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
             $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
+            $configHandler->setParameter('theme', $form['theme']->getData());
 
             return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
         }
