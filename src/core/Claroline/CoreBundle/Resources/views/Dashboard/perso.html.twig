@@ -11,7 +11,7 @@
                     <h3>Activités</h3>
                     <div class="widget-commands">
                         <a href="" onClick="$('#w-activites-content').toggle('fast'); return false;"><span class="icon-minus"</span></a>
-                        <a href="" onClick="$('#w-activites').remove(); return false;"><span class="icon-remove"></span></a>
+                        <a href="" onClick="$('#w-activites').hide('fast',function () { $('#w-activites').remove(); } ); return false;"><span class="icon-remove"></span></a>
                     </div>
                 </div> <!-- /widget-header -->
                 <div class="widget-content" id="w-activites-content">
@@ -35,7 +35,7 @@
                     <h3>News</h3>
                     <div class="widget-commands">
                         <a href="" onClick="$('#w-news-content').toggle('fast'); return false;"><span class="icon-minus"></span></a>
-                        <a href="" onClick="$('#w-news').remove(); return false;"><span class="icon-remove"></span></a>
+                        <a href="" onClick="$('#w-news').hide('fast',function () { $('#w-activites').remove(); } ); return false;"><span class="icon-remove"></span></a>
                     </div>
                 </div> <!-- .widget-header -->
                 <div class="widget-content" id="w-agenda-content">

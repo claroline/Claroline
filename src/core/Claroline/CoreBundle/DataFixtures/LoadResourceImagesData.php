@@ -55,11 +55,8 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             }
         }
 
-
-        $ds = DIRECTORY_SEPARATOR;
-        $largeIconsWebFolder = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}";
+        $largeIconsWebFolder = "bundles/clarolinecore/images/resources/icons/large/";
         $defaultIcon = null;
-
 
         /*
          * [1] thumbnail link

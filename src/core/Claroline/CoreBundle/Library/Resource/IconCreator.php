@@ -163,7 +163,7 @@ class IconCreator
             $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid();
             $generatedFilePath = $this->createThumbNail($originalPath, $newPath, 100, 100, $mimeElements[1]);
             $generatedFile = pathinfo($generatedFilePath, PATHINFO_BASENAME);
-            $iconName = 'thumbnails' . DIRECTORY_SEPARATOR . $generatedFile;
+            $iconName = "thumbnails/{$generatedFile}";
             $imgs = new ResourceIcon();
             if ($generatedFilePath !== null) {
                 $generatedIconType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::GENERATED);
