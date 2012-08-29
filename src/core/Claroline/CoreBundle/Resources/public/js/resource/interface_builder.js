@@ -42,6 +42,16 @@
         construct.activePagerItem = 1;
         resourceGetter.setPrefix(prefix);
 
+        //sets the resource filter callbacks
+        resourceFilter.setCallBackToFilter(function(data){
+            construct.div.empty();
+            construct.div.append(data);
+        });
+
+        resourceFilter.setCallResetFilter(function(data){
+             resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
+        })
+
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
             function(data) {
