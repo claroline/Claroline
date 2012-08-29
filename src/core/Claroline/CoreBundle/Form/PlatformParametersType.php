@@ -14,6 +14,13 @@ class PlatformParametersType extends AbstractType
             'choices' => array('en' => 'en', 'fr' => 'fr')
             )
         );
+        $builder->add('theme', 'choice', array(
+            'choices' => array(
+                'bootstrap-default' => 'bootstrap-default',
+                'bootswatch-cyborg' => 'bootswatch-cyborg',
+                'claroline' => 'claroline'
+            )
+        ));
     }
 
     public function getName()

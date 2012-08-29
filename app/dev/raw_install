@@ -27,6 +27,7 @@ deleteIfExists("{$rootDirectory}/app/logs/dev.log");
 deleteIfExists("{$rootDirectory}/app/logs/test.log");
 
 system("php {$rootDirectory}/composer.phar install");
+system("php {$rootDirectory}/app/console claroline:themes:compile");
 
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
 system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
