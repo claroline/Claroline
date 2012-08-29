@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CompileLessCommand extends ContainerAwareCommand
 {
@@ -115,5 +116,31 @@ class CompileLessCommand extends ContainerAwareCommand
         }
 
         system("lessc {$lessFile} > {$targetThemeDir}/{$cssFile}");
+
+        $themeImgDir = __DIR__ . "/../Resources/less/themes/{$theme}/img";
+
+        if (is_dir($themeImgDir)) {
+            $fileSystem = new FileSystem();
+            $fileSystem->mirror($themeImgDir, "{$publicCssThemesDir}/{$theme}/img");
+        }
+
+
+        /*
+        if (is_dir($themeImgDir)) {
+            $copyItem = function ($source, $destination, $isDir = false) use ($copyItem) {
+                if (!$isDir) {
+                    if (!copy($source, $destination)) {
+                        $output->writeln("<error>Cannot copy '{$source}' to '{$destination}'");
+                    }
+                } else {
+                    mkdir($destination);
+                    $sourceItems = new DirectoryIterator($source);
+
+                    foreach ($sourceItems as $item) {
+                        $copyItem();
+                    }
+                }
+            };
+        }*/
     }
 }
