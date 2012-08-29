@@ -17,12 +17,12 @@ app/config/local/parameters.yml
 app/config/local/plugin/*
 vendor/*
 web/bundles/*
-web/icons/*
 web/js/*
 web/HTMLPage/*
 files/*
 files/tmp/*
 test/files/*
-test/icons/*
+test/thumbnails/*
+web/thumbnails/*
 test/files/tmp/*
 /src/core/Claroline/CoreBundle/Resources/public/css/themes/*

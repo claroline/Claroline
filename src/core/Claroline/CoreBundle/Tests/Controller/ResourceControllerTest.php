@@ -122,6 +122,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot[0]->getId());
         $this->client->request('GET', "/resource/workspace/add/{$rootRi[0]->key}/{$this->pwr[0]->getId()}");
+
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(count($rootDir), 1);
@@ -206,9 +207,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        //HTMLElement, Forum, file, text
-        //directory is not included
-        //only listable included
         $this->assertEquals(4, count($jsonResponse));
     }
 
@@ -239,15 +237,15 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList((array) $this->userRoot[0]->getId());
+        $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList((array) $this->userRoot[0]->getId());
         $this->assertEquals(3, count($toExport));
         $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList((array) $theLoneFile->key);
+        $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList((array) $theLoneFile->key);
         $this->assertEquals(1, count($toExport));
         $complexExportList = array();
         $complexExportList[] = $theBigTree[0]->key;
         $complexExportList[] = $theLoneFile->key;
-        $toExport = $this->client->getContainer()->get('claroline.resource.manager')->getClassicExportList($complexExportList);
+        $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList($complexExportList);
         $this->assertEquals(4, count($toExport));
     }
 
@@ -284,24 +282,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->createBigTree($wsEroot[0]->getId());
 
         //filter by types (1)
-        $this->client->request('GET', '/resource/filter?types0=file');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(6, count($jsonResponse));
+        $crawler = $this->client->request('GET', '/resource/filter/ct?types0=file');
+        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
 
         //filter by types (2)
-        $this->client->request('GET', '/resource/filter?types0=file&types1=text');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(6, count($jsonResponse));
+        $crawler = $this->client->request('GET', '/resource/filter/ct?types0=file&types1=text');
+        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
 
         //filter by root (2)
-        $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(6, count($jsonResponse));
+        $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
+        $this->assertEquals(6,  count($crawler->filter('.ct_resource_list')));
 
         //filter by root (1)
-        $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
+        $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}");
+        $this->assertEquals(3,  count($crawler->filter('.ct_resource_list')));
 
         //no test by date yet
     }
@@ -332,6 +326,24 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('POST', "/resource/renders/flat/1/cr");
         $this->assertEquals(3, $crawler->filter('.res-block')->count());
     }
+
+    public function testMultiDelete()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->pwr[0]->getId());
+        $theLoneFile = $this->uploadFile($this->pwr[0]->getId(), 'theLoneFile.txt');
+        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+        $this->client->request(
+            'GET',
+            "/resource/multidelete?0={$theBigTree[0]->key}&1={$theLoneFile->key}"
+        );
+        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($jsonResponse));
+    }
+
     /*
     public function testCountInstances()
     {

@@ -58,11 +58,11 @@ class CreateRootsCommand extends ContainerAwareCommand
         $amount = $input->getArgument('count');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->findOneBy(array('username'=> $username));
-        
+
         for ($i = 0; $i < $amount; $i++) {
             $config = new Configuration();
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $config->setWorkspaceName($this->getContainer()->get('claroline.listener.file_listener')->generateGuid());
+            $config->setWorkspaceName($this->getContainer()->get('claroline.resource.utilities')->generateGuid());
             $config->setWorkspaceCode('CODE');
             $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
             $wsCreator->createWorkspace($config, $user);

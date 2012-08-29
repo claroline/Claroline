@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
 /**
@@ -20,7 +22,6 @@ class DatabaseWriter
     private $validator;
     private $em;
     private $yamlParser;
-    private $imgPath;
 
     /**
      * Constructor.
@@ -33,15 +34,12 @@ class DatabaseWriter
     public function __construct(
         SymfonyValidator $validator,
         EntityManager $em,
-        Yaml $yamlParser,
-        $imgPath
-
+        Yaml $yamlParser
     )
     {
         $this->validator = $validator;
         $this->em = $em;
         $this->yamlParser = $yamlParser;
-        $this->imgPath = $imgPath;
     }
 
     /**
@@ -171,23 +169,31 @@ class DatabaseWriter
                     }
                 }
 
-                // TODO : this should be moved to another part of the installation process
-                if (isset($properties['icon'])) {
-                    $resourceType->setIcon($properties['icon']);
-                    $ds = DIRECTORY_SEPARATOR;
-                    $imgFolder = $plugin->getImgFolder();
-                    $img = $imgFolder.$ds.$properties['icon'];
-                    copy($img, $this->imgPath.$ds.$properties['icon']);
+                $resourceIcon = new ResourceIcon();
+
+                $defaultIcon = $this->em
+                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                    ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+                $defaultIconType = $this->em
+                    ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+                    ->findOneBy(array('iconType' => 'type'));
+                $resourceIcon->setIconType($defaultIconType);
+                $resourceIcon->setType($resourceType->getType());
+                $ds = DIRECTORY_SEPARATOR;
+
+                if (isset($properties['small_icon'])) {
+                    $resourceIcon->setSmallIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}small{$ds}{$properties['small_icon']}");
+                } else {
+                    $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
                 }
 
-                // TODO : this should be moved to another part of the installation process
-                if (isset($properties['thumbnail'])) {
-                    $resourceType->setThumbnail($properties['thumbnail']);
-                    $ds = DIRECTORY_SEPARATOR;
-                    $imgFolder = $plugin->getImgFolder();
-                    $img = $imgFolder.$ds.$properties['thumbnail'];
-                    copy($img, $this->imgPath.$ds.$properties['thumbnail']);
+                if (isset($properties['large_icon'])) {
+                    $resourceIcon->setLargeIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}large{$ds}{$properties['large_icon']}");
+                } else {
+                    $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
                 }
+
+                $this->em->persist($resourceIcon);
             }
         }
     }
