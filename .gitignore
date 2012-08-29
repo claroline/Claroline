@@ -25,4 +25,4 @@ test/files/*
 test/thumbnails/*
 web/thumbnails/*
 test/files/tmp/*
-/src/core/Claroline/CoreBundle/Resources/public/css/themes/*
+src/core/Claroline/CoreBundle/Resources/public/css/themes/*
