@@ -291,11 +291,11 @@ class ResourceControllerTest extends FunctionalTestCase
 
         //filter by root (2)
         $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
-        $this->assertEquals(6,  count($crawler->filter('.ct_resource_list')));
+        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
 
         //filter by root (1)
         $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}");
-        $this->assertEquals(3,  count($crawler->filter('.ct_resource_list')));
+        $this->assertEquals(3, count($crawler->filter('.ct_resource_list')));
 
         //no test by date yet
     }
