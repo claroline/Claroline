@@ -1,5 +1,5 @@
 (function () {
-
+/*
     var param = 'param';
     function filterCallBack(data, parameter) {
         console.debug(data);
@@ -14,8 +14,10 @@
         function(data){filterCallBack(data, param)},
         function(){resetCallBack(param)}
     );
+*/
 
-    ClaroResourceManager.init($('#dr-resources-content'),
+    var interfaceBuilder = new ClaroResourceInterfaceBuilder.builder(
+        $('#dr-resources-content'),
         'cr',
         $('#dr-div-form'),
         $('#dr-select-creation'),
@@ -28,4 +30,8 @@
         $('#dr-close-button'),
         $('#dr-is-flat')
     );
+
+    var builder = interfaceBuilder.getBuilder();
+    console.debug(builder);
+
 })();
