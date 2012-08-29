@@ -1,10 +1,15 @@
 (function () {
     var filter = this.ClaroFilter = {};
 
-    filter.filter = function(div, prefix, callBackToFilter, callBackResetFilter){
+    filter.filter = function(
+        div,
+        prefix,
+        callBackToFilter,
+        callBackResetFilter
+        ){
         filter.toFilter = callBackToFilter;
         filter.resetFilter = callBackResetFilter;
-        filter.prefix = prefix
+        filter.prefix = prefix;
 
         buildFilter(div, filter.prefix);
 
@@ -12,18 +17,28 @@
 
             var route = createFilterRoute(filter.prefix);
             ClaroUtils.sendRequest(route, function(data){
-                callBackFilter(data);
+                filter.toFilter(data)
             })
-        //            callBackFilter(filter.getActiveFilters());
-        })
+
+        });
         $('#'+filter.prefix+'-reset-button').live('click', function(){
-            callBackReset();
-        })
+            filter.resetFilter();
+        });
+
+        return {
+            setCallBackToFilter: function(callBack){
+                filter.toFilter = callBack;
+            },
+            setCallResetFilter: function(callBack){
+                filter.resetFilter = callBack;
+            }
+        }
     }
 
-
     function buildFilter(div, buildPrefix){
-        ClaroUtils.sendRequest(Routing.generate('claro_resource_renders_filter', {prefix: buildPrefix}), function(data){
+        ClaroUtils.sendRequest(Routing.generate('claro_resource_renders_filter', {
+            prefix: buildPrefix
+        }), function(data){
             div.append(data);
             initOnChange(buildPrefix);
         });
@@ -47,9 +62,9 @@
 
     function getActiveFilterString(buildPrefix) {
         return $('#'+buildPrefix+'-select-root').val()+','
-            +$('#'+buildPrefix+'-select-type').val()+','
-            +$('#'+buildPrefix+'-date-from').val()+','
-            + $('#'+buildPrefix+'-date-to').val();
+        +$('#'+buildPrefix+'-select-type').val()+','
+        +$('#'+buildPrefix+'-date-from').val()+','
+        + $('#'+buildPrefix+'-date-to').val();
     }
 
     function createFilterRoute(buildPrefix) {
@@ -80,15 +95,5 @@
 
         parameters.prefix = buildPrefix;
         return Routing.generate('claro_resource_filter', parameters);
-    }
-
-    function getActiveFilters (){
-        var activeFilters = {};
-        activeFilters.root = $('#select-root').val();
-        activeFilters.type = $('#select-type').val();
-        activeFilters.dateSubmissionTo = $('#rf-date-from').val();
-        activeFilters.dateSubmissionFrom = $('#rf-date-to').val();
-
-        return activeFilters;
     }
 })();

@@ -1,6 +1,7 @@
 (function () {
-
     var resourceGetter = new ClaroResourceGetter.getter();
+    var resourceFilter = new ClaroFilter.filter($('#div-filter'),'cr');
+
     var interfaceBuilder = new ClaroResourceInterfaceBuilder.builder(
         $('#dr-resources-content'),
         'cr',
@@ -14,9 +15,9 @@
         $('#dr-paste-button'),
         $('#dr-close-button'),
         $('#dr-is-flat'),
-        resourceGetter
+        resourceGetter,
+        resourceFilter
     );
-    var filter = new ClaroFilter.filter($('#div-filter'), 'cr');
 
     var builder = interfaceBuilder.getBuilder();
     console.debug(builder);
