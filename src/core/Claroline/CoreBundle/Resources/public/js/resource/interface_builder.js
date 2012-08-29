@@ -1,13 +1,11 @@
-(function () {
-    var manager = this.ClaroResourceManager = {};
-    var jsonmenu = {};
-    var construct = {};
-    var pasteIds = {};
-    //0 = cut; 1 = copy
-    var cpd = null;
-    var activePagerItem = 1;
+(function() {
 
-    manager.init = function(
+    var builder = this.ClaroResourceInterfaceBuilder = {};
+    var self = this.ClaroResourceInterfaceBuilder.builder;
+
+    ClaroResourceInterfaceBuilder.menu = {};
+
+    builder.builder = function(
         div,
         prefix,
         divForm,
@@ -19,8 +17,13 @@
         deleteButton,
         pasteButton,
         closeButton,
-        flatChkBox
-        ) {
+        flatChkBox,
+        resourceGetter,
+        resourceFilter
+        )
+        {
+        var construct = {};
+
         construct.div = div;
         construct.prefix = prefix;
         construct.divForm = divForm;
@@ -33,13 +36,18 @@
         construct.pasteButton = pasteButton;
         construct.closeButton = closeButton;
         construct.flatChkBox = flatChkBox;
+        construct.resourceGetter = resourceGetter;
+        construct.resourceFilter = resourceFilter;
+        construct.pasteIds = {};
+        construct.cpd = null;
+        construct.activePagerItem = 1;
 
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
             function(data) {
-                jsonmenu = JSON.parse(data);
-                for (var menu in jsonmenu) {
-                    delete jsonmenu[menu].items['new'];
+                builder.menu = JSON.parse(data);
+                for (var menu in builder.menu) {
+                    delete builder.menu[menu].items['new'];
                 }
             },
             function() {
@@ -48,21 +56,21 @@
                         'prefix': prefix
                     }),
                     function(data){
-                        appendThumbnails(div, data);
+                        appendThumbnails(construct, data);
                     }
-                )
+                    )
             });
 
         $('.link-navigate-instance').live('click', function(e){
-            navigate(e.currentTarget.parentElement.parentElement.dataset.key);
+            navigate(e.currentTarget.parentElement.parentElement.dataset.key, construct);
         });
 
         $('.'+prefix+'-breadcrum-link').live('click', function(e){
-            navigate(e.currentTarget.dataset.key);
-        })
+            navigate(e.currentTarget.dataset.key, construct);
+        });
 
         window.onresize = function(e) {
-            resizeBreadcrums();
+            resizeBreadcrums(construct);
         }
 
         submitButton.on('click', function(e){
@@ -80,33 +88,33 @@
                         action = action.replace('_instanceId', parameters.key)
                         var id = divForm.find('form').attr('id');
                         ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                            submissionHandler(xhr, parameters);
+                            submissionHandler(xhr, parameters, construct);
                         });
                     })
                 })
         });
 
-        downloadButton.on('click', function(e){
-            var ids = getSelectedItems();
-            window.location = Routing.generate('claro_multi_export', ids);
-        })
-
         cutButton.on('click', function(e){
-            pasteIds = {};
-            pasteIds = getSelectedItems();
-            setLayout();
-            cpd = 0;
+            construct.pasteIds = {};
+            construct.pasteIds = getSelectedItems(construct);
+            setLayout(construct);
+            construct.cpd = 0;
         })
 
         copyButton.on('click', function(e){
-            pasteIds = {};
-            pasteIds = getSelectedItems();
-            setLayout();
-            cpd = 1;
+            construct.pasteIds = {};
+            construct.pasteIds = getSelectedItems(construct);
+            setLayout(construct);
+            construct.cpd = 1;
+        })
+
+        downloadButton.on('click', function(e){
+            var ids = getSelectedItems(construct);
+            window.location = Routing.generate('claro_multi_export', ids);
         })
 
         deleteButton.on('click', function(e){
-            var params = getSelectedItems();
+            var params = getSelectedItems(construct);
             var route = Routing.generate('claro_resource_multi_delete', params);
             ClaroUtils.sendRequest(route, function(data, textstatus, xhr){
                 if (204 === xhr.status) {
@@ -115,21 +123,24 @@
                     }
                 }
             });
-
         })
 
         pasteButton.on('click', function(e){
             var params = {};
             var route = '';
-            params = pasteIds;
-            if (cpd == 0) {
+            params = construct.pasteIds;
+            if (construct.cpd == 0) {
                 params.newParentId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                 route = Routing.generate('claro_resource_multimove', params);
-                ClaroUtils.sendRequest(route, function(){manager.reload()});
+                ClaroUtils.sendRequest(route, function(){
+                    reload(construct);
+                    });
             } else {
                 params.instanceDestinationId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
-                ClaroUtils.sendRequest(route, function(){manager.reload()});
+                ClaroUtils.sendRequest(route, function(){
+                    reload(construct);
+                });
             }
         })
 
@@ -139,65 +150,62 @@
 
         flatChkBox.on('change', function(e){
             if(e.target.checked) {
-                setLayout();
+                setLayout(construct);
                 var route = Routing.generate('claro_resource_count_instances');
                 ClaroUtils.sendRequest(route,
-                function(count){
-                    construct.div.empty();
-                    var paginator = buildPaginator(count);
-                    div.append(paginator);
+                    function(count){
+                        construct.div.empty();
+                        var paginator = buildPaginator(count);
+                        div.append(paginator);
 
-                    route = Routing.generate('claro_resource_flat_view_page', {
-                        'page':activePagerItem,
-                        'prefix':construct.prefix
+                        route = Routing.generate('claro_resource_flat_view_page', {
+                            'page':construct.activePagerItem,
+                            'prefix':construct.prefix
+                        });
+                        ClaroUtils.sendRequest(route, function(data){
+                            div.prepend(data);
+                            setMenu(construct);
+                            $(".res-name").each(function(){
+                                formatResName($(this), 2, 20)
+                                });
+                        })
+
+                        $('.instance-paginator-item').on('click', function(e){
+                            construct.activePagerItem = e.target.innerHTML;
+                            rendersFlatPaginatedThumbnails(construct);
+                        });
+
+                        $('.instance-paginator-next-item').on('click', function(e){
+                            construct.activePagerItem++;
+                            rendersFlatPaginatedThumbnails(construct);
+                        })
+
+                        $('.instance-paginator-prev-item').on('click', function(e){
+                            construct.activePagerItem--;
+                            rendersFlatPaginatedThumbnails(construct);
+                        })
                     });
-                    ClaroUtils.sendRequest(route, function(data){
-                        div.prepend(data);
-                        setMenu();
-                        $(".res-name").each(function(){formatResName($(this), 2, 20)});
-                    })
-
-                    $('.instance-paginator-item').on('click', function(e){
-                        activePagerItem = e.target.innerHTML;
-                        rendersFlatPaginatedThumbnails(activePagerItem);
-                    });
-
-                    $('.instance-paginator-next-item').on('click', function(e){
-                        activePagerItem++;
-                        rendersFlatPaginatedThumbnails(activePagerItem);
-                    })
-
-                    $('.instance-paginator-prev-item').on('click', function(e){
-                        activePagerItem--;
-                        rendersFlatPaginatedThumbnails(activePagerItem);
-                    })
-                });
             } else {
                 ClaroUtils.sendRequest(
                     Routing.generate('claro_resource_renders_thumbnail', {
                         'prefix': construct.prefix
                     }),
                     function(data){
-                        appendThumbnails(construct.div, data);
-                    }
-                )
+                        appendThumbnails(construct, data);
+                    })
             }
         })
+
+        return  {
+            //return the construct object
+            getBuilder:function() {
+                return construct;
+            }
+        }
     }
 
-    manager.reload = function() {
-        var key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
-        ClaroUtils.sendRequest(
-            Routing.generate('claro_resource_renders_thumbnail', {
-                'parentId': key,
-                'prefix':construct.prefix
-            }),
-            function(data){
-                appendThumbnails(construct.div, data);
-            });
-    }
 
-    function navigate(key) {
+    function navigate(key, construct) {
         construct.divForm.empty();
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_renders_thumbnail', {
@@ -205,20 +213,32 @@
                 'prefix':construct.prefix
             }),
             function(data){
-                appendThumbnails(construct.div, data);
+                appendThumbnails(construct, data);
             });
     }
 
-    function rendersFlatPaginatedThumbnails(page) {
-        activePage(page);
+    function reload(construct){
+        var key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
+        ClaroUtils.sendRequest(
+            Routing.generate('claro_resource_renders_thumbnail', {
+                'parentId': key,
+                'prefix':construct.prefix
+            }),
+            function(data){
+                appendThumbnails(construct, data);
+            });
+    }
+
+    function rendersFlatPaginatedThumbnails(construct) {
+        activePage(construct.activePagerItem);
         var route = Routing.generate('claro_resource_flat_view_page', {
-            'page':page,
+            'page':construct.activePagerItem,
             'prefix':construct.prefix
         });
         ClaroUtils.sendRequest(route, function(data){
             $('.res-block').remove();
             construct.div.prepend(data);
-            setMenu();
+            setMenu(construct);
             $(".res-name").each(function(){formatResName($(this), 2, 20)});
         })
     }
@@ -246,7 +266,7 @@
         return paginator;
     }
 
-    function getSelectedItems()
+    function getSelectedItems(construct)
     {
         var ids = {};
         var i = 0;
@@ -258,7 +278,7 @@
         return ids;
     }
 
-    function setMenu()
+    function setMenu(construct)
     {
 
         $('.resource-menu').each(function(index, element){
@@ -266,7 +286,7 @@
             parameters.key = element.parentElement.parentElement.dataset.key;
             parameters.resourceId = element.parentElement.parentElement.dataset.resourceId;
             parameters.type = element.parentElement.parentElement.dataset.type;
-            bindContextMenu(parameters, element, 'left');
+            bindContextMenu(parameters, element, 'left', construct);
         });
 
         $('.'+construct.prefix+'-instance-img').each(function(index, element){
@@ -274,7 +294,7 @@
             parameters.key = element.dataset.key;
             parameters.resourceId = element.dataset.resourceId;
             parameters.type = element.dataset.type;
-            bindContextMenu(parameters, element, 'right');
+            bindContextMenu(parameters, element, 'right', construct);
         });
     }
 
@@ -316,16 +336,16 @@
         }
     };
 
-    function appendThumbnails(div, data) {
-        div.empty();
-        div.append(data);
-        setMenu();
-        setLayout();
-        resizeBreadcrums();
+    function appendThumbnails(construct, data) {
+        construct.div.empty();
+        construct.div.append(data);
+        setMenu(construct);
+        setLayout(construct);
+        resizeBreadcrums(construct);
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
-    function bindContextMenu(parameters, menuElement, trigger) {
+    function bindContextMenu(parameters, menuElement, trigger, construct) {
         var type = parameters.type;
         var menuDefaultOptions = {
             selector: '#'+menuElement.id,
@@ -333,45 +353,45 @@
             //See the contextual menu documentation.
             callback: function(key, options) {
                 //Finds and executes the action for the right menu item.
-                findMenuObject(jsonmenu[type], parameters, key);
+                findMenuObject(builder.menu[type], parameters, key, construct);
             }
         };
 
-        menuDefaultOptions.items = jsonmenu[type].items;
+        menuDefaultOptions.items = builder.menu[type].items;
         $.contextMenu(menuDefaultOptions);
         //Left click menu.
     };
 
     //Finds wich menu was fired for a node.
     //@params items is the menu object used.
-    function findMenuObject(items, parameters, menuItem)
+    function findMenuObject(items, parameters, menuItem, construct)
     {
         for (var property in items.items) {
             if (property === menuItem) {
-                executeMenuActions(items.items[property], parameters);
+                executeMenuActions(items.items[property], parameters, construct);
             } else {
                 if (items.items[property].hasOwnProperty('items')) {
-                    findMenuObject(items.items[property], parameters, menuItem);
+                    findMenuObject(items.items[property], parameters, menuItem, construct);
                 }
             }
         }
     };
 
-    function executeMenuActions (obj, parameters)
+    function executeMenuActions (obj, parameters, construct)
     {
         //Removes the placeholders in the route
         var route = obj.route;
         var compiledRoute = route.replace('_instanceId', parameters.key);
         compiledRoute = compiledRoute.replace('_resourceId', parameters.resourceId);
-        obj.async ? executeAsync(obj, parameters, compiledRoute) : window.location = compiledRoute;
+        obj.async ? executeAsync(obj, parameters, compiledRoute, construct) : window.location = compiledRoute;
     }
 
-    function executeAsync(obj, parameters, route) {
+    function executeAsync(obj, parameters, route, construct) {
         //Delete was a special case as every node can be removed.
-        (obj.name === 'delete') ? removeNode(parameters, route) : executeRequest(parameters, route);
+        (obj.name === 'delete') ? removeNode(parameters, route, construct) : executeRequest(parameters, route, construct);
     };
 
-    function removeNode(parameters, route) {
+    function removeNode(parameters, route, construct) {
         ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
             if (204 === jqXHR.status) {
                 $('#'+construct.prefix+"-instance-"+parameters.key).remove();
@@ -379,7 +399,7 @@
         });
     };
 
-    function executeRequest(parameters, route) {
+    function executeRequest(parameters, route, construct) {
 
         ClaroUtils.sendRequest(route, function(data) {
             //If there is a form, the submission handler above is used.
@@ -390,16 +410,17 @@
                 action = action.replace('_instanceId', parameters.key)
                 var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, parameters);
+                    submissionHandler(xhr, parameters, construct);
                 });
             });
         });
     };
 
-    function submissionHandler(xhr, parameters) {
+    function submissionHandler(xhr, parameters, construct) {
         //If there is a json response, a node was returned.
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
-            manager.reload();
+            reload(construct);
+            console.debug(construct);
             construct.divForm.empty();
         //If it's not a json response, we append the response at the top of the tree.
         } else {
@@ -412,18 +433,18 @@
                 action = action.replace('_resourceId', parameters.resourceId);
                 var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
-                    submissionHandler(xhr, parameters);
+                    submissionHandler(xhr, parameters, construct);
                 });
             });
         }
     };
 
-    function setLayout() {
+    function setLayout(construct) {
         if(construct.flatChkBox.is(':checked')){
             construct.pasteButton.attr('disabled', 'disabled');
         } else {
-            activePagerItem = 1;
-            if($.isEmptyObject(pasteIds) || $("."+construct.prefix+"-breadcrum-link").size() == 1){
+            construct.activePagerItem = 1;
+            if($.isEmptyObject(construct.pasteIds) || $("."+construct.prefix+"-breadcrum-link").size() == 1){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
@@ -439,18 +460,18 @@
         }
     }
 
-    function resizeBreadcrums(){
+    function resizeBreadcrums(construct){
         var resize = function(index, divSize) {
-            var size = getCrumsSize();
+            var size = getCrumsSize(construct);
             if(size > divSize && index >= 0) {
                 var crumLink = (($("."+construct.prefix+"-breadcrum-link")).eq(index));
                 formatResName(crumLink, 1, 9);
                 index --;
-                resize(index, divSize);
+                resize(index, divSize, construct);
             }
         }
 
-        var getCrumsSize = function(){
+        var getCrumsSize = function(construct){
             var crumsSize = 0;
             $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
                 crumsSize += ($(this).width());
@@ -459,16 +480,17 @@
             return crumsSize;
         }
 
-        var makeCrums = function() {
+        var makeCrums = function(construct) {
             $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
                 element.innerHTML = " /"+element.title;
             })
         }
 
-        makeCrums();
+        makeCrums(construct);
         var divSize = $('#'+construct.prefix+'-res-breadcrums').width();
         var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
 
-        resize(crumsIndex, divSize);
+        resize(crumsIndex, divSize, construct);
     }
-})();
+})()
+
