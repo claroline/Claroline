@@ -85,8 +85,9 @@
                 });
                 ClaroUtils.sendRequest(route, function(data){
                     var html = Twig.render(templates.thumbnailTemplate, {
+                        'prefix': getterPrefix,
                         'resources':data,
-                         'webRoot': webRoot
+                        'webRoot': webRoot
                     })
                     callBack(html);
                 })
