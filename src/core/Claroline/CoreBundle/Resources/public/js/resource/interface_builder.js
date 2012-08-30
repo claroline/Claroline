@@ -65,11 +65,11 @@
             });
 
         $('.'+prefix+'-link-navigate-instance').live('click', function(e){
-            navigate(e.currentTarget.parentElement.parentElement.getAttribute('data-key'), construct);
+            navigate( $('#'+e.currentTarget.id).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
         });
 
         $('.'+prefix+'-breadcrum-link').live('click', function(e){
-            navigate(e.currentTarget.getAttribute('data-key'), construct);
+            navigate($('#'+e.currentTarget.id).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
         });
 
         window.onresize = function(e) {
@@ -86,9 +86,9 @@
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
-                        parameters.key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
+                        parameters.id = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
                         var action = divForm.find('form').attr('action');
-                        action = action.replace('_instanceId', parameters.key)
+                        action = action.replace('_instanceId', parameters.id)
                         var id = divForm.find('form').attr('id');
                         ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
                             submissionHandler(xhr, parameters, construct);
@@ -133,13 +133,13 @@
             var route = '';
             params = construct.pasteIds;
             if (construct.cpd == 0) {
-                params.newParentId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
+                params.newParentId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
                 route = Routing.generate('claro_resource_multimove', params);
                 ClaroUtils.sendRequest(route, function(){
                     reload(construct);
                     });
             } else {
-                params.instanceDestinationId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
+                params.instanceDestinationId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
                 ClaroUtils.sendRequest(route, function(){
                     reload(construct);
@@ -190,16 +190,16 @@
         }
     }
 
-    function navigate(key, construct) {
+    function navigate(id, construct) {
         construct.divForm.empty();
-        construct.resourceGetter.getChildren(key, function(data){
+        construct.resourceGetter.getChildren(id, function(data){
               appendThumbnails(data, construct);
         })
     }
 
     function reload(construct){
-        var key = $("."+construct.prefix+"-breadcrum-link").last().attr('data-key');
-        navigate(key, construct);
+        var id = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
+        navigate(id, construct);
     }
 
     function rendersFlatPaginatedThumbnails(construct) {
@@ -251,19 +251,21 @@
 
     function setMenu(construct)
     {
-        $('.'+construct.prefix+'-resource-menu').each(function(index, element){
+        $('.'+construct.prefix+'-resource-menu-left').each(function(index, element){
+            var resSpan =  $('#'+element.id).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
-            parameters.key = element.parentElement.parentElement.getAttribute('data-key')
-            parameters.resourceId = element.parentElement.parentElement.getAttribute('data-resourceId');
-            parameters.type = element.parentElement.parentElement.getAttribute('data-type');
+            parameters.id = resSpan.attr('data-id')
+            parameters.resourceId = resSpan.attr('data-resourceId');
+            parameters.type = resSpan.attr('data-type');
             bindContextMenu(parameters, element, 'left', construct);
         });
 
-        $('.'+construct.prefix+'-instance-img').each(function(index, element){
+        $('.'+construct.prefix+'-resource-menu-right').each(function(index, element){
+            var resSpan =  $('#'+element.id).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
-            parameters.key = element.getAttribute('data-key');
-            parameters.resourceId = element.getAttribute('data-resourceId');
-            parameters.type = element.getAttribute('data-type');
+            parameters.id = resSpan.attr('data-id');
+            parameters.resourceId = resSpan.attr('data-resourceId');
+            parameters.type = resSpan.attr('data-type');
             bindContextMenu(parameters, element, 'right', construct);
         });
     }
@@ -321,9 +323,9 @@
             selector: '#'+menuElement.id,
             trigger: trigger,
             //See the contextual menu documentation.
-            callback: function(key, options) {
+            callback: function(id, options) {
                 //Finds and executes the action for the right menu item.
-                findMenuObject(builder.menu[type], parameters, key, construct);
+                findMenuObject(builder.menu[type], parameters, id, construct);
             }
         };
 
@@ -351,7 +353,7 @@
     {
         //Removes the placeholders in the route
         var route = obj.route;
-        var compiledRoute = route.replace('_instanceId', parameters.key);
+        var compiledRoute = route.replace('_instanceId', parameters.id);
         compiledRoute = compiledRoute.replace('_resourceId', parameters.resourceId);
         obj.async ? executeAsync(obj, parameters, compiledRoute, construct) : window.location = compiledRoute;
     }
@@ -364,7 +366,7 @@
     function removeNode(parameters, route, construct) {
         ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
             if (204 === jqXHR.status) {
-                $('#'+construct.prefix+"-instance-"+parameters.key).remove();
+                $('#'+construct.prefix+"-instance-"+parameters.id).remove();
             }
         });
     };
@@ -377,7 +379,7 @@
             construct.divForm.empty().append(data).find('form').submit(function(e) {
                 e.preventDefault();
                 var action = construct.divForm.find('form').attr('action');
-                action = action.replace('_instanceId', parameters.key)
+                action = action.replace('_instanceId', parameters.id)
                 var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
                     submissionHandler(xhr, parameters, construct);
@@ -399,7 +401,7 @@
                 var action = construct.divForm.find('form').attr('action');
                 //If it's a form, placeholders must be removed (the twig form doesn't know the instance parent,
                 //that's why placeholders are used).'
-                action = action.replace('_instanceId', parameters.key);
+                action = action.replace('_instanceId', parameters.id);
                 action = action.replace('_resourceId', parameters.resourceId);
                 var id = construct.divForm.find('form').attr('id');
                 ClaroUtils.sendForm(action, document.getElementById(id), function(xhr){
@@ -461,6 +463,11 @@
         var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
 
         resize(crumsIndex, divSize, construct);
+    }
+
+    function findResourceSpan(elementId, construct) {
+        var parent = $('#'+elementId).parents('.'+construct.prefix+'-res-block');
+        return parent;
     }
 })()
 
