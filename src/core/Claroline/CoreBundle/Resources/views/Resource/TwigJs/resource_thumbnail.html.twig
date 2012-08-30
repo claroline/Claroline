@@ -1,22 +1,22 @@
 {% twig_js name="resource_thumbnail_template" %}
-{% if breadCrums is defined %}
+{% if parents is defined %}
 {% spaceless %}
 <div id="{{ prefix }}-res-breadcrums">
 <a href="#" class="{{ prefix }}-breadcrum-link" title="root">root</a>
-{% for breadCrum in breadCrums %}
-<a href="#" class="{{ prefix }}-breadcrum-link" data-key="{{ breadCrum.id }}" title="{{ breadCrum.name }}"> /{{ breadCrum.name }}</a>
+{% for parent in parents %}
+<a href="#" class="{{ prefix }}-breadcrum-link" data-id="{{ parent.id }}" title="{{ parent.name }}"> /{{ parent.name }}</a>
 {% endfor %}
 </div>
 {% endspaceless %}
 {% endif %}
 {% for instance in resources %}
-    <span id="{{ prefix }}-instance-{{ instance.id }}" data-key="{{ instance.id }}" data-type="{{ instance.type }}" data-resource-id="{{ instance.resource_id }}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+    <span id="{{ prefix }}-instance-{{ instance.id }}" data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource-id="{{ instance.resource_id }}" class="{{ prefix }}-res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
             <input class="{{ prefix }}-chk-instance"type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
             {% if instance.type == "directory" %}
                 <a class="{{ prefix }}-link-navigate-instance" id="{{ prefix }}-link-navigate-instance-{{ instance.id }}" href="#">
             {% endif %}
-            <img data-key="{{ instance.id }}" data-type="{{ instance.type }}" data-resource-id="{{ instance.resource_id }}" id="{{ prefix }}-instance-img-{{ instance.id }}" class="{{ prefix }}-instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
+            <img id="{{ prefix }}-instance-img-{{ instance.id }}" class="{{ prefix }}-instance-img {{ prefix }}-resource-menu-right" src="{{webRoot}}/{{ instance.large_icon}}"
                  {% if instance.path is defined %}
                     title="{{ instance.path }}"
                  {% endif %}
@@ -29,7 +29,7 @@
             <span class="res-name">{{ instance.name }}</span>
         </div>
         <div class="resource-bar">
-            <a href="#" id="{{ prefix }}-resource-menu-{{ instance.id }}" class="{{ prefix }}-resource-menu">Menu</a>
+            <a href="#" id="{{ prefix }}-resource-menu-{{ instance.id }}" class="{{ prefix }}-resource-menu-left">Menu</a>
         </div>
         <br/>
     </span>

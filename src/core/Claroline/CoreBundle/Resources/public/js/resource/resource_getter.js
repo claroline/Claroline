@@ -29,7 +29,7 @@
                         var resources = data;
                         var parents = {};
                         var html = Twig.render(templates.thumbnailTemplate, {
-                            'breadCrums':parents,
+                            'parents':parents,
                             'resources':resources,
                             'prefix':getterPrefix,
                             'webRoot': webRoot
@@ -50,7 +50,7 @@
                         iRequest++;
                         if (iRequest == 2) {
                             var html = Twig.render(templates.thumbnailTemplate, {
-                                'breadCrums':parents,
+                                'parents':parents,
                                 'resources':resources,
                                 'prefix':getterPrefix,
                                 'webRoot': webRoot
@@ -70,7 +70,7 @@
                         iRequest++;
                         if (iRequest == 2) {
                             var html = Twig.render(templates.thumbnailTemplate, {
-                                'breadCrums':parents,
+                                'parents':parents,
                                 'resources':resources,
                                 'prefix':getterPrefix,
                                 'webRoot': webRoot
