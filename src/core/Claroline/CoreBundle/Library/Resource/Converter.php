@@ -56,7 +56,7 @@ class Converter
     {
         $json = "[";
         $i = 0;
-        foreach ($results as $item){
+        foreach ($results as $resource){
             $stringitem ='';
             if($i != 0){
                 $stringitem.=",";
@@ -64,26 +64,16 @@ class Converter
                 $i++;
             }
             $stringitem.= '{';
-            $stringitem.= ' "title": "'.$item['name'].'", ';
-            $stringitem.= ' "key": "'.$item['id'].'", ';
-            $stringitem.= ' "instanceId": "'.$item['id'].'", ';
-            $stringitem.= ' "resourceId": "'.$item['resource_id'].'", ';
-            $stringitem.= ' "type": "'.$item['type'].'", ';
-            $stringitem.= ' "typeId": "'.$item['resource_type_id'].'", ';
-            $stringitem.= ' "workspaceId": "'.$item['workspace_id'].'", ';
-            $stringitem.= ' "dateInstanceCreation": "'.$item['created'].'" ';
-            $stringitem.= ' , "small_icon": "'.$item['small_icon'].'" ';
-            $stringitem.= ' , "large_icon":"'.$item['large_icon'].'" ';
-
-            if (array_key_exists('path', $item)) {
-                $stringitem.= ' , "path":"'.$item['path'].'" ';
+            $keys = array_keys($resource);
+            $j=0;
+            foreach ($keys as $key) {
+                if ($j != 0) {
+                    $stringitem.=",";
+                } else {
+                    $j++;
+                }
+                $stringitem.= '"' . $key . '": "' . $resource[$key] . '"';
             }
-            /*
-             * dynatree needs these fields
-            if ($item['is_navigable'] != 0) {
-                $stringitem.=', "isFolder": true ';
-                $stringitem.=', "isLazy": true ';
-            }*/
             $stringitem.='}';
             $json.=$stringitem;
         }
@@ -100,5 +90,4 @@ class Converter
 
         return $json;
     }
-
 }
