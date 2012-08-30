@@ -65,11 +65,11 @@
             });
 
         $('.'+prefix+'-link-navigate-instance').live('click', function(e){
-            navigate(e.currentTarget.parentElement.parentElement.dataset.key, construct);
+            navigate(e.currentTarget.parentElement.parentElement.getAttribute('data-key'), construct);
         });
 
         $('.'+prefix+'-breadcrum-link').live('click', function(e){
-            navigate(e.currentTarget.dataset.key, construct);
+            navigate(e.currentTarget.getAttribute('data-key'), construct);
         });
 
         window.onresize = function(e) {
@@ -257,20 +257,19 @@
 
     function setMenu(construct)
     {
-
         $('.'+construct.prefix+'-resource-menu').each(function(index, element){
             var parameters = {};
-            parameters.key = element.parentElement.parentElement.dataset.key;
-            parameters.resourceId = element.parentElement.parentElement.dataset.resourceId;
-            parameters.type = element.parentElement.parentElement.dataset.type;
+            parameters.key = element.parentElement.parentElement.getAttribute('data-key')
+            parameters.resourceId = element.parentElement.parentElement.getAttribute('data-resourceId');
+            parameters.type = element.parentElement.parentElement.getAttribute('data-type');
             bindContextMenu(parameters, element, 'left', construct);
         });
-
+        
         $('.'+construct.prefix+'-instance-img').each(function(index, element){
             var parameters = {};
-            parameters.key = element.dataset.key;
-            parameters.resourceId = element.dataset.resourceId;
-            parameters.type = element.dataset.type;
+            parameters.key = element.getAttribute('data-key');
+            parameters.resourceId = element.getAttribute('data-resourceId');
+            parameters.type = element.getAttribute('data-type');
             bindContextMenu(parameters, element, 'right', construct);
         });
     }
