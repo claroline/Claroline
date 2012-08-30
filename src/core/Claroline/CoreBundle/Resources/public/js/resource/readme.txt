@@ -15,7 +15,6 @@ Each resource must be rendered in a <span class='{{ prefix }}-res-block'> This b
     Navigation:
         must be defined in this span
         is a link from the class "{{ prefix }}-link-navigate-instance"
-        each link must have a different id
         Once a user clicks on the link, the page will be refreshed according to the data-id defined in the span.
     Selection:
         add this line in the resource span
@@ -27,7 +26,7 @@ Each resource must be rendered in a <span class='{{ prefix }}-res-block'> This b
 Menu:
     left click menu will be defined for each object of the class "{{ prefix }}-resource-menu-left"
     right click menu will be defined for each object of the class "{{ prefix }}-resource-menu-right"
-    they currently require a unique identifier
+    a menu must be defined in a .{{ prefix }}-res-block span
 
 
 
