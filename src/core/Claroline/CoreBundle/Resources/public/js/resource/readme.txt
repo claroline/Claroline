@@ -20,10 +20,14 @@ Each resource must be rendered in a <span class='{{ prefix }}-res-block'> This b
     Selection:
         add this line in the resource span
         <input class="{{ prefix }}-chk-instance"type="checkbox" value="{{ instance.id }}">
+    Thumbnails:
+        use "{{webRoot}}/{{ instance.large_icon}}" to get the large_icon url
+        use "{{webRoot}}/{{ instance.small_icon}}" to get the small_icon url
 
 Menu:
     left click menu will be defined for each object of the class "{{ prefix }}-resource-menu-left"
     right click menu will be defined for each object of the class "{{ prefix }}-resource-menu-right"
+    they currently require a unique identifier
 
 
 

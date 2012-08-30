@@ -45,7 +45,10 @@
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
-//            construct.div.append(data);
+            var templates = resourceGetter.getTemplates();
+            var html = Twig.render(templates.listTemplate, {'prefix':prefix, 'instances':data});
+            construct.div.append(html);
+            setMenu(construct);
         });
 
         resourceFilter.setCallResetFilter(function(data){
@@ -252,11 +255,15 @@
     function setMenu(construct)
     {
         $('.'+construct.prefix+'-resource-menu-left').each(function(index, element){
+
+            console.debug($('#'+element.id).parents());
             var resSpan =  $('#'+element.id).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
+            console.debug(resSpan);
             parameters.id = resSpan.attr('data-id')
             parameters.resourceId = resSpan.attr('data-resourceId');
             parameters.type = resSpan.attr('data-type');
+            console.debug(parameters);
             bindContextMenu(parameters, element, 'left', construct);
         });
 
@@ -392,7 +399,6 @@
         //If there is a json response, a node was returned.
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
             reload(construct);
-            console.debug(construct);
             construct.divForm.empty();
         //If it's not a json response, we append the response at the top of the tree.
         } else {
