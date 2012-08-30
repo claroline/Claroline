@@ -63,7 +63,7 @@ class Exporter
         $archive->open($pathArch, \ZipArchive::CREATE);
         $instanceIds = $this->getClassicExportList($ids);
 
-        if($instanceIds == null) {
+        if ($instanceIds == null) {
             throw new \LogicException("You must select some resources to export.");
         }
 

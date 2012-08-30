@@ -374,7 +374,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
    }
 
    private function paginate($page, $limit, $stmt)
-    {
+   {
         $instances = array();
 
         $offset = $limit * (--$page);
@@ -384,7 +384,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         while ($i < $w && $row = $stmt->fetch()) {
             if ($i < $w && $i >= $offset) {
                 $instances[$row['id']] = $row;
-                foreach ($instances[$row['id']] as $key => $value) {
+                $keys = array_keys($instances[$row['id']]);
+                foreach ($keys as $key) {
                     if (is_int($key)) {
                         unset($instances[$row['id']][$key]);
                     }
@@ -394,7 +395,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
 
         return $instances;
-    }
+   }
 
    private function fetchInstances($stmt)
    {
@@ -403,7 +404,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         while ($row = $stmt->fetch()) {
             $instances[$row['id']] = $row;
             //removing useless keys
-            foreach ($instances[$row['id']] as $key => $value) {
+            $keys = array_keys($instances[$row['id']]);
+            foreach ($keys as $key) {
                 if (is_int($key)) {
                     unset($instances[$row['id']][$key]);
                 }
@@ -411,6 +413,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
 
         return $instances;
-    }
+   }
 
 }
