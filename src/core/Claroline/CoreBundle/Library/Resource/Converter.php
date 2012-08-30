@@ -52,30 +52,30 @@ class Converter
         return $array;
     }
 
-    public function arrayToJson($results)
+    /**
+     * Converts a resource array to a json array.
+     *
+     * @param array $results
+     * @param string $wrapName
+     *
+     * @return string
+     */
+    public function arrayToJson($results, $wrapName = false)
     {
-        $json = "[";
+        ($wrapName != false ) ? $json = '"'.$wrapName.'" :[' : $json = "[";
         $i = 0;
+
         foreach ($results as $resource){
             $stringitem ='';
-            if($i != 0){
-                $stringitem.=",";
-            } else {
-                $i++;
-            }
+            ($i != 0) ? $stringitem.="," : $i++;
             $stringitem.= '{';
             $keys = array_keys($resource);
-            $j=0;
+            $j = 0;
             foreach ($keys as $key) {
-                if ($j != 0) {
-                    $stringitem.=",";
-                } else {
-                    $j++;
-                }
+                ($j != 0) ? $stringitem.=",": $j++;
                 $stringitem.= '"' . $key . '": "' . $resource[$key] . '"';
             }
-            $stringitem.='}';
-            $json.=$stringitem;
+            $json.=$stringitem.'}';
         }
 
         $json.="]";

@@ -233,7 +233,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $results[0]['count'];
     }
 
-    public function filter($criterias, $user)
+    public function filter($criterias, User $user)
     {
         $sql = $this->generateFilterSQL($criterias);
         $stmt = $this->_em->getConnection()->prepare($sql);
@@ -243,7 +243,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $this->fetchInstances($stmt);
     }
 
-    public function parents($instance)
+    public function parents(ResourceInstance $instance)
     {
         $sql = self::SELECT_INSTANCE . ' ' . self::FROM_INSTANCE . "
             WHERE {$instance->getLft()} BETWEEN ri.lft AND ri.rgt
@@ -252,13 +252,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt->execute();
-        $instances = array();
 
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     private function filterWhereType($key, $criteria)

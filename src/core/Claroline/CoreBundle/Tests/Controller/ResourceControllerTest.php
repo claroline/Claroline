@@ -282,20 +282,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->createBigTree($wsEroot[0]->getId());
 
         //filter by types (1)
-        $crawler = $this->client->request('GET', '/resource/filter/ct?types0=file');
-        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
+        $crawler = $this->client->request('GET', '/resource/filter?types0=file');
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
 
         //filter by types (2)
-        $crawler = $this->client->request('GET', '/resource/filter/ct?types0=file&types1=text');
-        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
+        $crawler = $this->client->request('GET', '/resource/filter?types0=file&types1=text');
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
 
         //filter by root (2)
-        $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
-        $this->assertEquals(6, count($crawler->filter('.ct_resource_list')));
+        $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
 
         //filter by root (1)
-        $crawler = $this->client->request('GET', "/resource/filter/ct?roots0={$adminpwr[0]->getId()}");
-        $this->assertEquals(3, count($crawler->filter('.ct_resource_list')));
+        $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
+        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
 
         //no test by date yet
     }
@@ -309,22 +309,12 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count($jsonResponse));
     }
 
-    public function testRendersThumbnails()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $theBigTree = $this->createBigTree($this->pwr[0]->getId());
-        $crawler = $this->client->request('POST', "/resource/renders/thumb/cr");
-        $this->assertEquals(1, $crawler->filter('.res-block')->count());
-        $crawler = $this->client->request('POST', "/resource/renders/thumb/cr/{$theBigTree[0]->id}");
-        $this->assertEquals(3, $crawler->filter('.res-block')->count());
-    }
-
-    public function testRendersFlatView()
+    public function testFlatPagination()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createBigTree($this->pwr[0]->getId());
-        $crawler = $this->client->request('POST', "/resource/renders/flat/1/cr");
-        $this->assertEquals(3, $crawler->filter('.res-block')->count());
+        $this->client->request('POST', "/resource/instance/flat/1");
+        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testMultiDelete()

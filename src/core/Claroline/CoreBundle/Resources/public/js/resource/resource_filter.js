@@ -93,7 +93,6 @@
             parameters['dateTo'] = $('#'+buildPrefix+'-date-to').val();
         }
 
-        parameters.prefix = buildPrefix;
         return Routing.generate('claro_resource_filter', parameters);
     }
 })();

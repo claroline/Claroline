@@ -45,7 +45,7 @@
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
-            construct.div.append(data);
+//            construct.div.append(data);
         });
 
         resourceFilter.setCallResetFilter(function(data){
@@ -178,13 +178,7 @@
                         })
                     });
             } else {
-                ClaroUtils.sendRequest(
-                    Routing.generate('claro_resource_renders_thumbnail', {
-                        'prefix': construct.prefix
-                    }),
-                    function(data){
-                        appendThumbnails(data, construct);
-                    })
+                resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             }
         })
 
@@ -264,7 +258,7 @@
             parameters.type = element.parentElement.parentElement.getAttribute('data-type');
             bindContextMenu(parameters, element, 'left', construct);
         });
-        
+
         $('.'+construct.prefix+'-instance-img').each(function(index, element){
             var parameters = {};
             parameters.key = element.getAttribute('data-key');
