@@ -1,3 +1,13 @@
-{% twig_js name="resource_thumbnail_template" %}
+{% twig_js name="resource_list_template" %}
 {% for instance in instances %}
-{%
+<div id="wrapper">
+    <span class="{{ prefix }}-res-block"
+          data-id="{{ instance.id }}"
+          data-type="{{ instance.type }}"
+          data-resource-id="{{ instance.resource_id }}">
+        <div id="{{ prefix }}-resource-item-{{ instance.id }}" class="{{prefix}}-resource-item {{prefix}}-resource-menu-left">
+            instance.name
+        </div>
+    </span>
+</div>
+{% endfor %}

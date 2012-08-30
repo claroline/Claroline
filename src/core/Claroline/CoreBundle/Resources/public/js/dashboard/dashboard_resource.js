@@ -1,5 +1,5 @@
 (function () {
-    var resourceGetter = new ClaroResourceGetter.getter(resource_thumbnail_template);
+    var resourceGetter = new ClaroResourceGetter.getter(resource_thumbnail_template, resource_list_template);
     var resourceFilter = new ClaroFilter.filter($('#div-filter'),'cr');
 
     var interfaceBuilder = new ClaroResourceInterfaceBuilder.builder(
