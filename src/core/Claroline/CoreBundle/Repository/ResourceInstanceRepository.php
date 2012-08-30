@@ -127,13 +127,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         if ($page != null) {
             return $this->paginate($page, $limit, $stmt);
         } else {
-            $instances = array();
-            while ($row = $stmt->fetch()) {
-                $instances[$row['id']] = $row;
-            }
+            return $this->fetchInstances($stmt);
         }
-
-        return $instances;
     }
 
     public function findInstancesFromType(ResourceType $resourceType, User $user)
@@ -169,13 +164,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt->bindValue('right', $resourceInstance->getRgt());
         $stmt->bindValue('type', $resourceType->getType());
         $stmt->execute();
-        $instances = array();
 
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     public function getChildrenNodes($parentId, $resourceTypeId = 0, $isListable = true)
@@ -196,13 +186,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
         $stmt->execute();
 
-        $instances = array();
-
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     public function getRoots($user)
@@ -218,13 +202,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt->bindValue('userId', $user->getId());
         $stmt->execute();
 
-       $instances = array();
-
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     //count non directory instances for a user.
@@ -262,13 +240,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt = $this->bindFilter($stmt, $criterias, $user);
         $stmt->execute();
 
-        $instances = array();
-
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     public function parents($instance)
@@ -407,21 +379,43 @@ class ResourceInstanceRepository extends NestedTreeRepository
    }
 
    private function paginate($page, $limit, $stmt)
-   {
+    {
         $instances = array();
 
-        $offset = $limit* (--$page);
+        $offset = $limit * (--$page);
         $w = $offset + $limit;
         $i = 0;
 
         while ($i < $w && $row = $stmt->fetch()) {
             if ($i < $w && $i >= $offset) {
                 $instances[$row['id']] = $row;
+                foreach ($instances[$row['id']] as $key => $value) {
+                    if (is_int($key)) {
+                        unset($instances[$row['id']][$key]);
+                    }
+                }
             }
             $i++;
         }
 
         return $instances;
-   }
+    }
+
+   private function fetchInstances($stmt)
+   {
+        $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+            //removing useless keys
+            foreach ($instances[$row['id']] as $key => $value) {
+                if (is_int($key)) {
+                    unset($instances[$row['id']][$key]);
+                }
+            }
+        }
+
+        return $instances;
+    }
 
 }

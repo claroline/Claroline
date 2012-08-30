@@ -26,14 +26,14 @@ class TextControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
-        $this->assertEquals('This is a text', $text->title);
+        $this->assertEquals('This is a text', $text->name);
     }
 
     public function testDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
-        $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->resourceId}");
+        $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->resource_id}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'hello world') !== false);
     }
@@ -50,7 +50,7 @@ class TextControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/resource/custom/text/open/{$textId}");
         $node = $crawler->filter('#content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
-        $textId = $text->resourceId;
+        $textId = $text->resource_id;
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($textId);
         $revisions = $text->getRevisions();
         $this->assertEquals(2, count($revisions));
