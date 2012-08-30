@@ -166,23 +166,16 @@ class ResourceControllerTest extends FunctionalTestCase
     public function testDirectoryDownload()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->createBigTree($this->userRoot[0]->getId());
+        //with an empty dir
         $this->client->request('GET', "/resource/export/{$this->userRoot[0]->getId()}");
         $headers = $this->client->getResponse()->headers;
         $name = strtolower(str_replace(' ', '_', $this->userRoot[0]->getName() . '.zip'));
         $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
-
-
-        //the code below doesn't work yet.
-        //the archive content should be tested
-
-//        $content = $this->client->getResponse()->getContent();
-//        $tmpname = tempnam(sys_get_temp_dir(), 'dlarch');
-//        file_put_contents($tmpname, $content);
-//        $tmparch = new \ZipArchive;
-//        $res = $tmparch->open($tmpname);
-//        var_dump($tmparch->getFromName('my workspace/rootDir/firstFile'));
-
+        $this->createBigTree($this->userRoot[0]->getId());
+        //with a full dir
+        $this->client->request('GET', "/resource/export/{$this->userRoot[0]->getId()}");
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
     }
 
     public function testRootsAction()
@@ -252,6 +245,13 @@ class ResourceControllerTest extends FunctionalTestCase
     public function testMultiExportClassic()
     {
         $this->logUser($this->getFixtureReference('user/user'));
+        //with an empty dir
+        $this->client->request(
+            'GET', "/resource/multiexport?0={$this->userRoot[0]->getId()}"
+        );
+        $headers = $this->client->getResponse()->headers;
+        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
+        //with a full dir
         $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
         $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
         $this->client->request(
