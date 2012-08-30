@@ -68,11 +68,11 @@
             });
 
         $('.'+prefix+'-link-navigate-instance').live('click', function(e){
-            navigate( $('#'+e.currentTarget.id).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
+            navigate( $(this).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
         });
 
         $('.'+prefix+'-breadcrum-link').live('click', function(e){
-            navigate($('#'+e.currentTarget.id).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
+            navigate($(this).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
         });
 
         window.onresize = function(e) {
@@ -255,11 +255,8 @@
     function setMenu(construct)
     {
         $('.'+construct.prefix+'-resource-menu-left').each(function(index, element){
-
-            console.debug($('#'+element.id).parents());
-            var resSpan =  $('#'+element.id).parents('.'+construct.prefix+'-res-block');
+            var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
-            console.debug(resSpan);
             parameters.id = resSpan.attr('data-id')
             parameters.resourceId = resSpan.attr('data-resourceId');
             parameters.type = resSpan.attr('data-type');
@@ -268,7 +265,7 @@
         });
 
         $('.'+construct.prefix+'-resource-menu-right').each(function(index, element){
-            var resSpan =  $('#'+element.id).parents('.'+construct.prefix+'-res-block');
+            var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
             parameters.id = resSpan.attr('data-id');
             parameters.resourceId = resSpan.attr('data-resourceId');
