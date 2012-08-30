@@ -30,7 +30,7 @@
                         var parents = {};
                         var html = Twig.render(templates.thumbnailTemplate, {
                             'parents':parents,
-                            'resources':resources,
+                            'instances':resources,
                             'prefix':getterPrefix,
                             'webRoot': webRoot
                         });
@@ -51,7 +51,7 @@
                         if (iRequest == 2) {
                             var html = Twig.render(templates.thumbnailTemplate, {
                                 'parents':parents,
-                                'resources':resources,
+                                'instances':resources,
                                 'prefix':getterPrefix,
                                 'webRoot': webRoot
                             });
@@ -71,7 +71,7 @@
                         if (iRequest == 2) {
                             var html = Twig.render(templates.thumbnailTemplate, {
                                 'parents':parents,
-                                'resources':resources,
+                                'instances':resources,
                                 'prefix':getterPrefix,
                                 'webRoot': webRoot
                             });
@@ -86,7 +86,7 @@
                 ClaroUtils.sendRequest(route, function(data){
                     var html = Twig.render(templates.thumbnailTemplate, {
                         'prefix': getterPrefix,
-                        'resources':data,
+                        'instances':data,
                         'webRoot': webRoot
                     })
                     callBack(html);

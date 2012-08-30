@@ -7,7 +7,7 @@ Each breadCrum element must
 - have the data-id="{{ parent.id }}" attribute defined
 
 Resource:
-in the loop {% foreach instance as resources %}
+in the loop {% foreach instance as instances %}
 Each resource must be rendered in a <span class='{{ prefix }}-res-block'> This block must have the following data-attributes:
     data-id="{{ instance.id }}"
     data-type="{{ instance.type }}"

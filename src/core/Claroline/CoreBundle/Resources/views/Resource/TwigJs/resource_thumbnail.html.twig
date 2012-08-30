@@ -9,7 +9,7 @@
 </div>
 {% endspaceless %}
 {% endif %}
-{% for instance in resources %}
+{% for instance in instances %}
     <span id="{{ prefix }}-instance-{{ instance.id }}" data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource-id="{{ instance.resource_id }}" class="{{ prefix }}-res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
             <input class="{{ prefix }}-chk-instance"type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
