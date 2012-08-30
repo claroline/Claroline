@@ -246,21 +246,25 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         //with an empty dir
-        $this->client->request(
-            'GET', "/resource/multiexport?0={$this->userRoot[0]->getId()}"
-        );
+        $this->client->request('GET', "/resource/multiexport?0={$this->userRoot[0]->getId()}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
         //with a full dir
         $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
         $theLoneFile = $this->uploadFile($this->userRoot[0]->getId(), 'theLoneFile.txt');
-        $this->client->request(
-            'GET',
-            "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
-        );
+        $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
+
         //the archive content should be tested
+    }
+
+    public function testMultiExportThrowsAnExceptionWithoutParameters()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', "/resource/multiexport");
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($crawler->filter('html:contains("You must select some resources to export.")')));
     }
 
     public function testCustomActionThrowExceptionOnUknownAction()
