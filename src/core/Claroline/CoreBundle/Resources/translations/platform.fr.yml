@@ -68,6 +68,7 @@ profile_form_note: Note personnelle
 # platform settings form field labels
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_localLanguage: Langue
+platform_parameters_form_theme: Thème
 
 # group form field labels
 group_form_name: Nom

@@ -3,18 +3,17 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/css/bootstrap.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/pre-responsive.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/css/bootstrap-responsive.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/post-responsive.css')}}'>
+    {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
-    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/claro_favicon.ico') }}" />
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png')}}">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png')}}">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png')}}">
-    <link rel="apple-touch-icon-precomposed" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png')}}">
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/claro_favicon.ico') }}"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png')}}"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png')}}"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png')}}"/>
+    <link rel="apple-touch-icon-precomposed" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png')}}"/>
 {% endblock %}
 
 {% block layout %}
@@ -36,7 +35,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src='{{ asset('../vendor//jms/twig-js/twig.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('../vendor/jms/twig-js/twig.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>

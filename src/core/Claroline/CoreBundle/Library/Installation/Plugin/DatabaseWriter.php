@@ -179,16 +179,15 @@ class DatabaseWriter
                     ->findOneBy(array('iconType' => 'type'));
                 $resourceIcon->setIconType($defaultIconType);
                 $resourceIcon->setType($resourceType->getType());
-                $ds = DIRECTORY_SEPARATOR;
 
                 if (isset($properties['small_icon'])) {
-                    $resourceIcon->setSmallIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}small{$ds}{$properties['small_icon']}");
+                    $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$properties['small_icon']}");
                 } else {
                     $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
                 }
 
                 if (isset($properties['large_icon'])) {
-                    $resourceIcon->setLargeIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}large{$ds}{$properties['large_icon']}");
+                    $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$properties['large_icon']}");
                 } else {
                     $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
                 }

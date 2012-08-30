@@ -1,0 +1,47 @@
+///////////////////////////////////////////////////////////////////////////////////
+// This less file contains only global layout rules (mainly for navbar, grid and //
+// footer positionning). It is included at the end of "bootstrap.less.pre". Keep //
+// it short and design-neutral.                                                  //
+///////////////////////////////////////////////////////////////////////////////////
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper {
+    min-height: 100%;
+}
+
+#grid {
+    overflow: auto;
+    // Reserves a space for the footer
+    padding-bottom: @navbarHeight;
+}
+
+@media (min-width: 768px) {
+    // Ensures the navbar doesn't hide the top content (only necessary on large screens)
+    #grid {
+        padding-top: @navbarHeight;
+    }
+}
+
+footer {
+    width: 100%;
+    position: relative;
+    height: @navbarHeight;
+    // Puts the footer in the grid with a negative margin
+    margin: -@navbarHeight 0 0 0;
+}
+
+@media (max-width: 767px) {
+    // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
+    // (makes the footer fill the whole screen width).
+    footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
