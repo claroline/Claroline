@@ -5,7 +5,7 @@
             "package": "claroline/front-end-bundle",
             "version": "dev-master",
             "source-reference": "c471fa4ba33f5126bc8cf14ef24b39a3d2c3db55",
-            "commit-date": "1345197071"
+            "commit-date": "1346050852"
         },
         {
             "package": "doctrine/common",
@@ -128,8 +128,8 @@
         {
             "package": "kriswallsmith/assetic",
             "version": "dev-master",
-            "source-reference": "11324294acf2dcf6b7f7cb0c4f35fd77e6f01cb7",
-            "commit-date": "1343684910"
+            "source-reference": "0410297526eacc3aa2146b55bc4e30e6fd3a50ed",
+            "commit-date": "1346167888"
         },
         {
             "package": "mikey179/vfsStream",
@@ -180,8 +180,14 @@
         {
             "package": "symfony/assetic-bundle",
             "version": "dev-master",
-            "source-reference": "24df9ede95084be882aeb557eaef5b761cfa00e0",
-            "commit-date": "1343684934"
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/assetic-bundle",
+            "version": "dev-master",
+            "source-reference": "4e7e8a039fa19434f04558473adbb201118af942",
+            "commit-date": "1346199949"
         },
         {
             "package": "symfony/monolog-bundle",
@@ -222,8 +228,8 @@
         {
             "package": "twig/twig",
             "version": "dev-master",
-            "source-reference": "51c866f415bbee670cd9ba13591307bce8dabdca",
-            "commit-date": "1343464333"
+            "source-reference": "f76ed618c890165fd107a9cd4a06c7d73da75b9c",
+            "commit-date": "1346324412"
         }
     ],
     "packages-dev": null,

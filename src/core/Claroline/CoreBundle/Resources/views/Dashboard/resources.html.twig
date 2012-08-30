@@ -9,6 +9,7 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
+       vars=["locale"]
       "@ClarolineCoreBundle/Resources/views/Resource/twigJsTest.twig"
        filter="twig_js"
     %}
