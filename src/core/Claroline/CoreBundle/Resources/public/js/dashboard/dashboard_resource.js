@@ -20,5 +20,5 @@
     );
 
     var builder = interfaceBuilder.getBuilder();
-    console.debug(builder);
+    console.log(builder);
 })();
