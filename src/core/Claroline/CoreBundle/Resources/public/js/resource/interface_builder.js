@@ -37,6 +37,7 @@
         construct.flatChkBox = flatChkBox;
         construct.resourceGetter = resourceGetter;
         construct.resourceFilter = resourceFilter;
+        construct.selectedIds = {};
         construct.pasteIds = {};
         construct.cpd = null;
         construct.activePagerItem = 1;
@@ -154,6 +155,17 @@
             construct.divForm.empty();
         })
 
+        $('.'+prefix+'-chk-instance').live('change', function(e){
+            var ids = {};
+            var i = 0;
+            $('.'+construct.prefix+'-chk-instance:checked').each(function(index, element){
+                ids[i] = element.value;
+                i++;
+            })
+            construct.selectedIds = ids;
+            setLayout(construct);
+        })
+
         flatChkBox.on('change', function(e){
             if(e.target.checked) {
                 setLayout(construct);
@@ -242,14 +254,7 @@
 
     function getSelectedItems(construct)
     {
-        var ids = {};
-        var i = 0;
-        $('.'+construct.prefix+'-chk-instance:checked').each(function(index, element){
-            ids[i] = element.value;
-            i++;
-        })
-
-        return ids;
+        return construct.selectedIds;
     }
 
     function setMenu(construct)
@@ -260,7 +265,6 @@
             parameters.id = resSpan.attr('data-id')
             parameters.resourceId = resSpan.attr('data-resourceId');
             parameters.type = resSpan.attr('data-type');
-            console.debug(parameters);
             bindContextMenu(parameters, element, 'left', construct);
         });
 
@@ -423,6 +427,13 @@
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
+            }
+            if($.isEmptyObject(construct.selectedIds)){
+                construct.deleteButton.attr('disabled', 'disabled');
+                construct.downloadButton.attr('disabled', 'disabled');
+            } else {
+                 construct.deleteButton.removeAttr('disabled');
+                 construct.downloadButton.removeAttr('disabled');
             }
 
             if ($("."+construct.prefix+"-breadcrum-link").size() == 1) {
