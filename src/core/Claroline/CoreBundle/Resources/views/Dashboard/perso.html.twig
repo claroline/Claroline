@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row">
         <div class="span12">
-            <div class="widget" id="w-activites">
+            <section class="widget" id="w-activites">
                 <div class="widget-header">
                     <span class="icon-tasks"></span>
                     <h3>Activités</h3>
@@ -27,18 +27,18 @@
                     non sapien fermentum iaculis sed quis sem. Sed sapien dolor, pharetra quis laoreet at,
                     tincidunt suscipit eros.
                 </div> <!-- /widget-content -->
-            </div> <!-- /widget -->
+            </section> <!-- /widget -->
 
-            <div class="widget" id="w-news">
+            <section class="widget" id="w-news">
                 <div class="widget-header">
                     <span class="icon-globe"></span>
                     <h3>News</h3>
                     <div class="widget-commands">
                         <a href="" onClick="$('#w-news-content').toggle('fast'); return false;"><span class="icon-minus"></span></a>
-                        <a href="" onClick="$('#w-news').hide('fast',function () { $('#w-activites').remove(); } ); return false;"><span class="icon-remove"></span></a>
+                        <a href="" onClick="$('#w-news').hide('fast',function () { $('#w-news').remove(); } ); return false;"><span class="icon-remove"></span></a>
                     </div>
                 </div> <!-- .widget-header -->
-                <div class="widget-content" id="w-agenda-content">
+                <div class="widget-content" id="w-news-content">
                     Cras fermentum tempus congue. Pellentesque quam magna, aliquet eget laoreet sed,
                     tincidunt et purus. Quisque dignissim consectetur convallis. Mauris nunc erat,
                     ornare id pharetra ac, ullamcorper id enim. Aenean varius est a nisi ornare congue.
@@ -51,8 +51,8 @@
                     non sapien fermentum iaculis sed quis sem. Sed sapien dolor, pharetra quis laoreet at,
                     tincidunt suscipit eros.
                 </div> <!-- .widget-content -->
-            </div> <!-- /widget -->
-        </div> <!-- /span4 -->
+            </section> <!-- /widget -->
+        </div> <!-- /span -->
     </div>
 </div>
 
