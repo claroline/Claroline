@@ -1,7 +1,4 @@
-////////////////////////////
-// Additional style rules //
-////////////////////////////
-
+/* Additional style rules */
 footer {
     background-color: @navbarBackground;
     color: @navbarText;
@@ -50,16 +47,10 @@ form {
 .widget-header {
     height: 26px;
     line-height: 26px;
-    /* Gradient */
-    background-color: #E9E9E9; /* fallback */
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E9E9E9), to(#FAFAFA)); /* Safari 4-5, Chrome 1-9 */
-    background-image: -webkit-linear-gradient(top, #FAFAFA, #E9E9E9);  /* Safari 5.1, Chrome 10+ */
-    background-image: -moz-linear-gradient(top, #FAFAFA, #E9E9E9);  /* Firefox 3.6+ */
-    background-image: -ms-linear-gradient(top, #FAFAFA, #E9E9E9); /* IE 10 */
-    background-image: -o-linear-gradient(top, #FAFAFA, #E9E9E9); /* Opera 11.10+ */
-    background-image: linear-gradient(top, #FAFAFA 0%,#E9E9E9 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E9E9E9'); /* IE */
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E9E9E9')"; /* IE */
+
+     #gradient > .vertical(#FAFAFA, #E9E9E9);
+
+
     /* Rounded corners */
     border: 1px solid #DDD;
     -webkit-border-top-left-radius: 4px;
