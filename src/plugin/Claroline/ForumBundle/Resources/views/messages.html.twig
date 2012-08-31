@@ -1,12 +1,12 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 {% block content %}
-SUBJECT: {{ subject.getName() }}
+SUBJECT: {{ subject.getTitle() }}
 {% for message in subject.getMessages() %}
 <br/>
-{{ subject.getCreator().getUsername() }}
+user : {{ subject.getCreator().getUsername() }}
 <br/>
 {{ message.getContent() }}
 <br/>
-<a href='todo'>ajouter un message</a>
+<a href='{{path('claro_forum_add_message', {'subjectId':subject.getId()})}}'>ajouter un message</a>
 {% endfor %}
 {% endblock %}

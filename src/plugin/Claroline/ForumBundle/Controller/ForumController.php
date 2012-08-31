@@ -4,6 +4,7 @@ namespace Claroline\ForumBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\ForumType;
@@ -28,7 +29,7 @@ class ForumController extends Controller
         return $response;
     }
 
-    public function forumSubjectCreationAction($forumId)
+    public function forumSubjectCreationFormAction($forumId)
     {
         $formSubject = $this->get('form.factory')->create(new SubjectType());
 
@@ -62,10 +63,9 @@ class ForumController extends Controller
         $message->setCreator($user);
         $em->persist($message);
         $em->persist($subject);
-
         $em->flush();
 
-        return new Response("hello world this is created");
+        return new RedirectResponse($this->generateUrl('claro_forum_open', array('forumId' => $forumId)));
     }
 
     public function showMessagesAction($subjectId)
@@ -78,12 +78,32 @@ class ForumController extends Controller
         );
     }
 
-    public function forumMessageCreationFormAction($subjectId)
+    public function messageCreationFormAction($subjectId)
     {
         $form = $this->get('form.factory')->create(new MessageType());
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectId', $subjectId, 'form', $form)
+            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' =>  $form->createView())
         );
+    }
+
+    public function createMessageAction($subjectId)
+    {
+        $form = $this->get('form.factory')->create(new MessageType());
+        $form->bindRequest($this->get('request'));
+        $em = $this->getDoctrine()->getEntityManager();
+        $subject = $em->getRepository('Claroline\ForumBundle\Entity\Subject')->find($subjectId);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'Message'));
+        $message = new Message();
+        $content = $form['content']->getData();
+        $message->setSubject($subject);
+        $message->setCreator($user);
+        $message->setResourceType($messageType);
+        $message->setContent($content);
+        $em->persist($message);;
+        $em->flush();
+
+        return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectId' => $subjectId)));
     }
 }
