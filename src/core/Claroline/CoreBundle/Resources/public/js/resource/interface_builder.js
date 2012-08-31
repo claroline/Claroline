@@ -263,7 +263,7 @@
             var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
             parameters.id = resSpan.attr('data-id')
-            parameters.resourceId = resSpan.attr('data-resourceId');
+            parameters.resourceId = resSpan.attr('data-resource_id');
             parameters.type = resSpan.attr('data-type');
             bindContextMenu(parameters, element, 'left', construct);
         });
@@ -272,8 +272,8 @@
             var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
             parameters.id = resSpan.attr('data-id');
-            parameters.resourceId = resSpan.attr('data-resourceId');
-            parameters.type = resSpan.attr('data-type');
+            parameters.resourceId = resSpan.attr('data-resource_id');
+            parameters.type = resSpan.attr('data-type')
             bindContextMenu(parameters, element, 'right', construct);
         });
     }
