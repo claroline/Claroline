@@ -1,0 +1,5 @@
+{% twig_js name="test" %}
+
+{{ 'name'|trans({}, 'platform') }}
+
+Hello world !
