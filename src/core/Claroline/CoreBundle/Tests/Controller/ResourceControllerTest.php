@@ -44,7 +44,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
         $this->cleanDirectory($this->upDir);
     }
-/*
+
     public function testDirectoryCreationFormCanBeDisplayed()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -225,7 +225,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(10, count(get_object_vars($jsonResponse)));
     }
-*/
+
     public function testGetEveryInstancesIdsFromTheClassicMultiExportArray()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -241,7 +241,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->getClassicExportList($complexExportList);
         $this->assertEquals(5, count($toExport));
     }
-/*
+
     public function testMultiExportClassic()
     {
         $this->logUser($this->getFixtureReference('user/user'));
