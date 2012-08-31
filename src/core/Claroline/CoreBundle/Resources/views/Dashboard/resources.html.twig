@@ -10,7 +10,7 @@
     {{ parent() }}
     {% javascripts
        vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/Resource/twigJsTest.twig"
+      "@ClarolineCoreBundle/Resources/views/Resource/test.twigjs"
        filter="twig_js"
     %}
 
@@ -22,7 +22,7 @@
     <script src="{{ asset('bundles/clarolinecore/js/dashboard/dashboard_resource.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/frontend/jquery/plugin/contextMenu-medialize/src/jquery.contextMenu.js')}}"></script>
     <script src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js')}}"></script>
-    <script>alert(Twig.render(twigJsTest));</script>
+    <script>alert(Twig.render(test));</script>
 {% endblock %}
 
 {% block content %}

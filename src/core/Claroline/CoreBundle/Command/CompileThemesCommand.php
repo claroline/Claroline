@@ -54,6 +54,8 @@ class CompileThemesCommand extends ContainerAwareCommand
 
         foreach ($themesToCompile as $theme)
         {
+            $output->writeln("Compiling theme {$theme}...");
+
             // Each theme must include the following files
             $expectedFiles = array(
                 "{$themesDir}/{$theme}/variables.less",
@@ -72,6 +74,7 @@ class CompileThemesCommand extends ContainerAwareCommand
             }
 
             $this->compileTheme($theme);
+            $output->writeln('Done');
         }
     }
 
