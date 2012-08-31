@@ -127,13 +127,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         if ($page != null) {
             return $this->paginate($page, $limit, $stmt);
         } else {
-            $instances = array();
-            while ($row = $stmt->fetch()) {
-                $instances[$row['id']] = $row;
-            }
+            return $this->fetchInstances($stmt);
         }
-
-        return $instances;
     }
 
     public function findInstancesFromType(ResourceType $resourceType, User $user)
@@ -169,13 +164,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt->bindValue('right', $resourceInstance->getRgt());
         $stmt->bindValue('type', $resourceType->getType());
         $stmt->execute();
-        $instances = array();
 
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     public function getChildrenNodes($parentId, $resourceTypeId = 0, $isListable = true)
@@ -196,13 +186,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
         $stmt->execute();
 
-        $instances = array();
-
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     public function getRoots($user)
@@ -218,13 +202,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $stmt->bindValue('userId', $user->getId());
         $stmt->execute();
 
-       $instances = array();
-
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     //count non directory instances for a user.
@@ -255,23 +233,17 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $results[0]['count'];
     }
 
-    public function filter($criterias, $user)
+    public function filter($criterias, User $user)
     {
         $sql = $this->generateFilterSQL($criterias);
         $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt = $this->bindFilter($stmt, $criterias, $user);
         $stmt->execute();
 
-        $instances = array();
-
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
-    public function parents($instance)
+    public function parents(ResourceInstance $instance)
     {
         $sql = self::SELECT_INSTANCE . ' ' . self::FROM_INSTANCE . "
             WHERE {$instance->getLft()} BETWEEN ri.lft AND ri.rgt
@@ -280,13 +252,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         $stmt = $this->_em->getConnection()->prepare($sql);
         $stmt->execute();
-        $instances = array();
 
-        while ($row = $stmt->fetch()) {
-            $instances[$row['id']] = $row;
-        }
-
-        return $instances;
+        return $this->fetchInstances($stmt);
     }
 
     private function filterWhereType($key, $criteria)
@@ -410,15 +377,39 @@ class ResourceInstanceRepository extends NestedTreeRepository
    {
         $instances = array();
 
-        $offset = $limit* (--$page);
+        $offset = $limit * (--$page);
         $w = $offset + $limit;
         $i = 0;
 
         while ($i < $w && $row = $stmt->fetch()) {
             if ($i < $w && $i >= $offset) {
                 $instances[$row['id']] = $row;
+                $keys = array_keys($instances[$row['id']]);
+                foreach ($keys as $key) {
+                    if (is_int($key)) {
+                        unset($instances[$row['id']][$key]);
+                    }
+                }
             }
             $i++;
+        }
+
+        return $instances;
+   }
+
+   private function fetchInstances($stmt)
+   {
+        $instances = array();
+
+        while ($row = $stmt->fetch()) {
+            $instances[$row['id']] = $row;
+            //removing useless keys
+            $keys = array_keys($instances[$row['id']]);
+            foreach ($keys as $key) {
+                if (is_int($key)) {
+                    unset($instances[$row['id']][$key]);
+                }
+            }
         }
 
         return $instances;

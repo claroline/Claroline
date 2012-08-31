@@ -63,6 +63,10 @@ class Exporter
         $archive->open($pathArch, \ZipArchive::CREATE);
         $instanceIds = $this->getClassicExportList($ids);
 
+        if ($instanceIds == null) {
+            throw new \LogicException("You must select some resources to export.");
+        }
+
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
 
@@ -76,6 +80,8 @@ class Exporter
                 if ($obj != null) {
                     $archive->addFile($obj, $instance->getPath());
                 }
+            } else {
+                $archive->addEmptyDir($instance->getName());
             }
         }
 
@@ -127,7 +133,11 @@ class Exporter
             }
         }
 
-        return array_merge($toAppend, $resIds);
+
+        $merge = array_merge($toAppend, $resIds);
+        $merge = array_merge($merge, $dirIds);
+
+        return $merge;
     }
 
     /**
@@ -139,6 +149,7 @@ class Exporter
     private function addDirectoryToArchive(ResourceInstance $resourceInstance, \ZipArchive $archive)
     {
         $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
+        $archive->addEmptyDir($resourceInstance->getName());
 
         foreach ($children as $child) {
             if ($child->getResource()->getResourceType()->getType() != 'directory') {
