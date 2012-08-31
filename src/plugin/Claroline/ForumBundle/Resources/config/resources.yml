@@ -5,7 +5,7 @@ Forum:
   downloadable: true
   actions:
     open: false
-  large_icon: forum.png
+  large_icon: res_forum.png
 
 Subject:
   class: Claroline\ForumBundle\Entity\Subject
