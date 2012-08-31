@@ -1,6 +1,10 @@
-_assetic:
-    resource: .
-    type:     assetic
+# Assetic controller is disabled until a solution is found for the
+# TwigJs translation filter in dev environment. Use assetic:dump
+# instead.
+#
+#_assetic:
+#    resource: .
+#    type:     assetic
 
 _wdt:
     resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"

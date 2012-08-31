@@ -356,14 +356,35 @@ class ResourceController extends Controller
      */
     public function childrenAction($instanceId, $resourceTypeId)
     {
-        if (0 == $instanceId) {
-            return new Response('[]');
+        if($instanceId == 0) {
+            return $this->rootsAction();
         }
-
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
         $content = $this->get('claroline.resource.converter')->arrayToJson($results);
         $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns a json representation of the parents of a resource instance.
+     *
+     * @param integer $instanceId
+     *
+     * @return Response
+     */
+    public function parentsAction($instanceId)
+    {
+        if (0 == $instanceId) {
+            return new Response('[]');
+        }
+        $repo = $parents = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $instance = $repo->find($instanceId);
+        $parents = $repo->parents($instance);
+        $jsonParents = $this->get('claroline.resource.converter')->arrayToJson($parents);
+        $response = new Response($jsonParents);
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -519,36 +540,11 @@ class ResourceController extends Controller
     }
 
     /**
-     * Renders the resource list as thumbnails.
-     *
-     * @param integer $parentId
-     * @param string $prefix
-     *
-     * @return Response
-     */
-    public function rendersResourceThumbnailViewAction($parentId, $prefix)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $breadCrums = null;
-        //user root
-        if ($parentId == 0) {
-            $user = $this->get('security.context')->getToken()->getUser();
-            $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        } else {
-            $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenNodes($parentId);
-            $currentFolder = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($parentId);
-            $breadCrums = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->parents($currentFolder);
-        }
-
-        return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig', array('breadCrums' => $breadCrums, 'resources' => $results, 'prefix' => $prefix));
-    }
-
-    /**
      * Renders the searched resource list.
      *
      * @return Response
      */
-    public function filterAction($prefix)
+    public function filterAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $compiledArray = $this->get('claroline.resource.searcher')->createSearchArray($this->container->get('request')->query->all());
@@ -556,7 +552,11 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->filter($compiledArray, $user);
 
-          return $this->render('ClarolineCoreBundle:Resource:resource_list.html.twig', array('resources' => $results, 'prefix' => $prefix));
+        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
@@ -575,16 +575,18 @@ class ResourceController extends Controller
         return new Response($pages);
     }
 
-    public function rendersPaginatedFlatThumbnailsInstanceAction($page, $prefix)
+    public function paginatedFlatResourceAction($page)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->getInstanceList($user, $page, self::THUMB_PER_PAGE);
-        $currentFolder = null;
 
-         return $this->render('ClarolineCoreBundle:Resource:resource_thumbnail.html.twig',
-             array('resources' => $results, 'prefix' => $prefix, 'currentFolder' => $currentFolder));
+        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     private function getRequestParameters()
