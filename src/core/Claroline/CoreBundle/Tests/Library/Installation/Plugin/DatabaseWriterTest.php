@@ -97,6 +97,63 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getType());
     }
 
+    public function testLargeIconsArePersisted()
+    {
+        $pluginFqcn = 'Valid\WithLargeIcon\ValidWithLargeIcon';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->dbWriter->insert($plugin);
+
+        $dql = "
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon ri
+            WHERE ri.largeIcon LIKE '%validwithlargeicon%'
+            ";
+
+        $resourceIcon = $this->em->createQuery($dql)->getResult();
+        $this->assertEquals(1, count($resourceIcon));
+        $this->assertEquals($resourceIcon[0]->getIconType()->getIconType(), 'type');
+    }
+
+    public function testSmallIconsArePersisted()
+    {
+        $pluginFqcn = 'Valid\WithSmallIcon\ValidWithSmallIcon';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->dbWriter->insert($plugin);
+
+        $dql = "
+            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon ri
+            WHERE ri.smallIcon LIKE '%validwithsmallicon%'
+            ";
+
+        $resourceIcon = $this->em->createQuery($dql)->getResult();
+        $this->assertEquals(1, count($resourceIcon));
+        $this->assertEquals($resourceIcon[0]->getIconType()->getIconType(), 'type');
+    }
+
+    public function testCustomActionsArePersited()
+    {
+        $pluginFqcn = 'Valid\WithCustomActions\ValidWithCustomActions';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->dbWriter->insert($plugin);
+
+        $dql = "
+            SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+            WHERE rt.type = 'ResourceXCustom'";
+
+        $resourceType = $this->em->createQuery($dql)->getResult();
+        $this->assertEquals(1, count($resourceType));
+
+        $dql = "
+            SELECT ca FROM Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction ca,
+            Claroline\CoreBundle\Entity\Resource\ResourceType rt
+            WHERE rt.type = 'ResourceXCustom'
+            AND ca.resourceType = '{$resourceType[0]->getId()}'";
+
+        $customAction = $this->em->createQuery($dql)->getResult();
+        $this->assertEquals(1, count($customAction));
+        $customName = $customAction[0]->getAction();
+        $this->assertEquals('open', $customName);
+    }
+
     public function pluginProvider()
     {
         return array(

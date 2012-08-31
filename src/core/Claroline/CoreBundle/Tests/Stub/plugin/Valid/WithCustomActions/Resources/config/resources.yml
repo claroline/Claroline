@@ -1,0 +1,7 @@
+ResourceXCustom:
+  class: Valid\WithCustomActions\Entity\ResourceXCustom
+  listable: true
+  navigable: false
+  downloadable: true
+  actions:
+    open: false
