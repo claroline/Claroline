@@ -63,3 +63,12 @@ PHPCS, Ant, etc.). You can install and use them locally (see their respective do
 for usage) or visit our continuous integration server [here][ci_website].
 
 [ci_website]: http://dev.claroline.net:8080/job/Claronext/
+
+### Other tools
+
+To have the core Less and TwigJs assets automatically processed and dumped when they have changed,
+you can run the provided [watchr][watchr_website] script :
+
+`watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb`
+
+[watchr_website]: https://github.com/mynyml/watchr

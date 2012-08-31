@@ -1,7 +1,9 @@
-{% extends "ClarolineCoreBundle:layout.html.twig" %}
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-    {{ text|raw }}
-    <a href="{{ path('claro_text_history', {'textId':textId}) }}">history</a>
-    <a href="{{ path('claro_text_edit_form', {'textId':textId}) }}">edit</a>
+    <div id="text_content">
+        {{ text|raw }}
+        <a href="{{ path('claro_text_history', {'textId':textId}) }}">history</a>
+        <a href="{{ path('claro_text_edit_form', {'textId':textId}) }}">edit</a>
+    </div>
 {% endblock %}

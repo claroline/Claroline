@@ -1,8 +1,8 @@
 claro_forum_form_subject_creation:
     pattern: /form/subject/{forumId}
-    defaults: { _controller: ClarolineForumBundle:Forum:forumSubjectCreation }
+    defaults: { _controller: ClarolineForumBundle:Forum:forumSubjectCreationForm }
 
-claro_forum_form_create_subject:
+claro_forum_create_subject:
     pattern: /subject/create/{forumId}
     defaults: { _controller: ClarolineForumBundle:Forum:createSubject }
 
@@ -13,3 +13,13 @@ claro_forum_show_message:
 claro_forum_open:
    pattern: /open/{forumId}
    defaults: { _controller: ClarolineForumBundle:Forum:open }
+
+claro_forum_add_message:
+   pattern: /add/message/{subjectId}
+   defaults: { _controller: ClarolineForumBundle:Forum:messageCreationForm }
+
+claro_forum_create_message:
+   pattern: /create/message/{subjectId}
+   defaults: { _controller: ClarolineForumBundle:Forum:createMessage }
+
+

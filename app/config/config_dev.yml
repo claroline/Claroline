@@ -19,5 +19,9 @@ monolog:
             type:  firephp
             level: info
 
-assetic:
-    use_controller: true
+# Assetic controller is disabled until a solution is found for the
+# TwigJs translation filter in dev environment. Use assetic:dump
+# instead.
+#
+#assetic:
+#    use_controller: false
