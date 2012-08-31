@@ -138,62 +138,77 @@ class DatabaseWriter
             $resources = (array) $this->yamlParser->parse($resourceFile);
 
             foreach ($resources as $name => $properties) {
-                $resourceType = new ResourceType();
-
-                if (isset($properties['class'])) {
-                    $resourceType->setClass($properties['class']);
-                }
-                if (isset($properties['extends'])) {
-                    $resourceExtended = $this->em
-                        ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-                        ->findOneBy(array('type' => $properties['extends']));
-                    $resourceType->setParent($resourceExtended);
-                }
-
-                $resourceType->setType($name);
-                $resourceType->setListable($properties['listable']);
-                $resourceType->setNavigable($properties['navigable']);
-                $resourceType->setDownloadable($properties['downloadable']);
-                $resourceType->setPlugin($pluginEntity);
-                $this->em->persist($resourceType);
-
-                if (isset($properties['actions'])) {
-                    $actions = $properties['actions'];
-
-                    foreach ($actions as $key => $action) {
-                        $rtca = new ResourceTypeCustomAction();
-                        $rtca->setAsync($action);
-                        $rtca->setAction($key);
-                        $rtca->setResourceType($resourceType);
-                        $this->em->persist($rtca);
-                    }
-                }
-
-                $resourceIcon = new ResourceIcon();
-
-                $defaultIcon = $this->em
-                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-                    ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
-                $defaultIconType = $this->em
-                    ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
-                    ->findOneBy(array('iconType' => 'type'));
-                $resourceIcon->setIconType($defaultIconType);
-                $resourceIcon->setType($resourceType->getType());
-
-                if (isset($properties['small_icon'])) {
-                    $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$properties['small_icon']}");
-                } else {
-                    $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
-                }
-
-                if (isset($properties['large_icon'])) {
-                    $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$properties['large_icon']}");
-                } else {
-                    $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
-                }
-
-                $this->em->persist($resourceIcon);
+                $resourceType = $this->persistResourceType($properties, $name, $pluginEntity, $plugin);
+                $this->persistCustomAction($properties, $resourceType);
+                $this->persistIcons($properties, $plugin, $resourceType);
             }
         }
+    }
+
+    private function persistIcons($properties, $plugin, $resourceType)
+    {
+        $resourceIcon = new ResourceIcon();
+
+        $defaultIcon = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+        $defaultIconType = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+            ->findOneBy(array('iconType' => 'type'));
+        $resourceIcon->setIconType($defaultIconType);
+        $resourceIcon->setType($resourceType->getType());
+
+        if (isset($properties['small_icon'])) {
+            $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$properties['small_icon']}");
+        } else {
+            $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
+        }
+
+        if (isset($properties['large_icon'])) {
+            $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$properties['large_icon']}");
+        } else {
+            $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
+        }
+
+        $this->em->persist($resourceIcon);
+    }
+
+    private function persistCustomAction($properties, $resourceType)
+    {
+        if (isset($properties['actions'])) {
+            $actions = $properties['actions'];
+
+            foreach ($actions as $key => $action) {
+                $rtca = new ResourceTypeCustomAction();
+                $rtca->setAsync($action);
+                $rtca->setAction($key);
+                $rtca->setResourceType($resourceType);
+                $this->em->persist($rtca);
+            }
+        }
+    }
+
+    private function persistResourceType($properties, $name, $pluginEntity, $plugin)
+    {
+        $resourceType = new ResourceType();
+
+        if (isset($properties['class'])) {
+            $resourceType->setClass($properties['class']);
+        }
+        if (isset($properties['extends'])) {
+            $resourceExtended = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                ->findOneBy(array('type' => $properties['extends']));
+            $resourceType->setParent($resourceExtended);
+        }
+
+        $resourceType->setType($name);
+        $resourceType->setListable($properties['listable']);
+        $resourceType->setNavigable($properties['navigable']);
+        $resourceType->setDownloadable($properties['downloadable']);
+        $resourceType->setPlugin($pluginEntity);
+        $this->em->persist($resourceType);
+
+        return $resourceType;
     }
 }
