@@ -2,18 +2,16 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
+{% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+
 {% block stylesheets %}
-    {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
-    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/claro_favicon.ico') }}"/>
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png')}}"/>
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png')}}"/>
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png')}}"/>
-    <link rel="apple-touch-icon-precomposed" href="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png')}}"/>
+    <link rel="shortcut icon" href="{{ asset(themePath ~ '/img/ico/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset(themePath ~ '/img/ico/apple-touch-icon.png')}}"/>
 {% endblock %}
 
 {% block layout %}
