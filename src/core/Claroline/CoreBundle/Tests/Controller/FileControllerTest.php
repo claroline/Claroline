@@ -57,7 +57,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $node = $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/export/{$node->key}");
+        $this->client->request('GET', "/resource/export/{$node->id}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=text.txt'));
     }
@@ -66,7 +66,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $node = $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/delete/{$node->key}");
+        $this->client->request('GET', "/resource/delete/{$node->id}");
         $this->client->request('POST', "/resource/children/{$this->pwr[0]->getId()}");
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($file));
@@ -103,7 +103,7 @@ class FileControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->find($stdFile->key)
+            ->find($stdFile->id)
             ->getResource();
         $event = new CopyResourceEvent($file);
         $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_file', $event);
