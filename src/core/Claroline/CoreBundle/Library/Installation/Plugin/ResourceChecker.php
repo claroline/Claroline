@@ -178,47 +178,60 @@ class ResourceChecker implements CheckerInterface
                 }
             }
 
-            if (isset($resource['extends'])) {
-                // TODO : look into registered resource in database rather than
-                // looking for a class file...
-                $expectedClassLocation = __DIR__ . '/../../../Entity/Resource/'
-                    . str_replace('\\', '/', $resource['extends']) . '.php';
+            $this->checkExtends($resource, $resourceFile);
+            $this->checkSmallIcon($resource, $resourceFile);
+            $this->checkLargeIcon($resource, $resourceFile);
+        }
+    }
 
-                if (!file_exists($expectedClassLocation)) {
-                    $this->errors[] = new ValidationError(
-                        "{$this->pluginFqcn} : {$resource['extends']} (declared in {$resourceFile}) "
-                        . "cannot be found (looked for {$expectedClassLocation}).",
-                        self::UNLOADABLE_PARENT_RESOURCE
-                    );
-                }
+    private function checkExtends($resource, $resourceFile)
+    {
+        if (isset($resource['extends'])) {
+            // TODO : look into registered resource in database rather than
+            // looking for a class file...
+            $expectedClassLocation = __DIR__ . '/../../../Entity/Resource/'
+                . str_replace('\\', '/', $resource['extends']) . '.php';
+
+            if (!file_exists($expectedClassLocation)) {
+                $this->errors[] = new ValidationError(
+                    "{$this->pluginFqcn} : {$resource['extends']} (declared in {$resourceFile}) "
+                    . "cannot be found (looked for {$expectedClassLocation}).",
+                    self::UNLOADABLE_PARENT_RESOURCE
+                );
             }
+        }
+    }
 
-            if (isset($resource['small_icon'])) {
-                $ds = DIRECTORY_SEPARATOR;
-                $imgFolder = $this->plugin->getImgFolder();
-                $expectedImgLocation = $imgFolder . $ds . 'small'. $ds . $resource['small_icon'];
+    private function checkSmallIcon($resource, $resourceFile)
+    {
+        if (isset($resource['small_icon'])) {
+            $ds = DIRECTORY_SEPARATOR;
+            $imgFolder = $this->plugin->getImgFolder();
+            $expectedImgLocation = $imgFolder . $ds . 'small' . $ds . $resource['small_icon'];
 
-                if (!file_exists($expectedImgLocation)) {
-                    $this->errors[] = new ValidationError(
-                        "{$this->pluginFqcn} : {$resource['small_icon']} (declared in {$resourceFile}) "
-                        . "cannot be found (looked for {$expectedImgLocation}).",
-                        self::UNEXPECTED_RESOURCE_SMALL_ICON
-                    );
-                }
+            if (!file_exists($expectedImgLocation)) {
+                $this->errors[] = new ValidationError(
+                    "{$this->pluginFqcn} : {$resource['small_icon']} (declared in {$resourceFile}) "
+                    . "cannot be found (looked for {$expectedImgLocation}).",
+                    self::UNEXPECTED_RESOURCE_SMALL_ICON
+                );
             }
+        }
+    }
 
-            if (isset($resource['large_icon'])) {
-                $ds = DIRECTORY_SEPARATOR;
-                $imgFolder = $this->plugin->getImgFolder();
-                $expectedImgLocation = $imgFolder . $ds . 'large' .$ds. $resource['large_icon'];
+    private function checkLargeIcon($resource, $resourceFile)
+    {
+        if (isset($resource['large_icon'])) {
+            $ds = DIRECTORY_SEPARATOR;
+            $imgFolder = $this->plugin->getImgFolder();
+            $expectedImgLocation = $imgFolder . $ds . 'large' . $ds . $resource['large_icon'];
 
-                if (!file_exists($expectedImgLocation)) {
-                    $this->errors[] = new ValidationError(
-                        "{$this->pluginFqcn} : {$resource['large_icon']} (declared in {$resourceFile}) "
-                        . "cannot be found (looked for {$expectedImgLocation}).",
-                        self::UNEXPECTED_RESOURCE_LARGE_ICON
-                    );
-                }
+            if (!file_exists($expectedImgLocation)) {
+                $this->errors[] = new ValidationError(
+                    "{$this->pluginFqcn} : {$resource['large_icon']} (declared in {$resourceFile}) "
+                    . "cannot be found (looked for {$expectedImgLocation}).",
+                    self::UNEXPECTED_RESOURCE_LARGE_ICON
+                );
             }
         }
     }
