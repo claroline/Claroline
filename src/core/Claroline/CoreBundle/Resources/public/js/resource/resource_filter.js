@@ -12,14 +12,13 @@
         buildFilter(div);
 
         $('.filter-button', div).live('click', function(){
-            alert('filter');
             var route = createFilterRoute(div);
             ClaroUtils.sendRequest(route, function(data){
                 filter.toFilter(data)
             })
 
         });
-        
+
         $('.reset-button', div).live('click', function(){
             filter.resetFilter();
         });
