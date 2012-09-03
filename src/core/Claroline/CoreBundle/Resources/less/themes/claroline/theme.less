@@ -13,3 +13,65 @@ body {
 .btn {
     letter-spacing: 0.06em;
 }
+
+
+/* WIDGETS */
+.widget {
+    margin-bottom: 22px;
+}
+
+.widget-header {
+    height: 26px;
+    line-height: 26px;
+    #gradient > .vertical(@widgetHeaderVariantDark, @widgetHeaderVariantLight);
+    /* Rounded corners */
+    border: 1px solid @widgetBorder;
+    -webkit-border-top-left-radius: 4px;
+        -moz-border-radius-topleft: 4px;
+            border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+        -moz-border-radius-topright: 4px;
+            border-top-right-radius: 4px;
+}
+
+.widget-header h3 {
+    position: relative;
+    top: 2px;
+    left: 10px;
+    display: inline;
+
+    font-size: 14px;
+    font-weight: 800;
+    color: @widgetHeaderColor;
+    line-height: 14px;
+
+    /*text-shadow: 1px 1px 2px rgba(255,255,255,.8);*/
+}
+
+.widget-commands {
+    float: right;
+    margin-right: 13px;
+    vertical-align: middle;
+}
+
+.widget-header [class^="icon-"], .widget-header [class*=" icon-"] {
+    color: @widgetHeaderColor;
+    font-size: 14px;
+    margin-left: 13px;
+    vertical-align: middle;
+}
+
+.widget-content {
+    padding: 15px 15px 15px;
+    background: @widgetContentBackground;
+    color:  @widgetContentColor;
+    border: 1px solid @widgetBorder;
+    border-top: none;
+    -webkit-border-bottom-left-radius: 5px;
+        -moz-border-radius-bottomleft: 5px;
+            border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+        -moz-border-radius-bottomright: 5px;
+            border-bottom-right-radius: 5px;
+    zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}

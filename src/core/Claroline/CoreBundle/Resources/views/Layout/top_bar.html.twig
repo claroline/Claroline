@@ -7,7 +7,12 @@
                 <span class="icon-bar"></span>
             </a>
 
-            <a class="brand" href="{{ path('claro_index')}}">Claroline</a>
+            {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+
+            <a class="brand" href="{{ path('claro_index')}}">
+                <img src="{{ asset(themePath ~ '/img/logo/claroline-logo-bulles-14x16.png') }}"/>
+                Claroline
+            </a>
 
             {% if connected %}
                 <div class="btn-group pull-right">
