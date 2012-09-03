@@ -466,7 +466,7 @@
         var resize = function(index, divSize) {
             var size = getCrumsSize(construct);
             if(size > divSize && index >= 0) {
-                var crumLink = (($("."+construct.prefix+"-breadcrumb-link")).eq(index));
+                var crumLink = (($(".breadcrumb-link", construct.div)).eq(index));
                 formatResName(crumLink, 1, 9);
                 index --;
                 resize(index, divSize, construct);
@@ -475,7 +475,7 @@
 
         var getCrumsSize = function(construct){
             var crumsSize = 0;
-            $("."+construct.prefix+"-breadcrumb-link").each(function(index, element){
+            $(".breadcrumb-link", construct.div).each(function(index, element){
                 crumsSize += ($(this).width());
             })
 
@@ -486,11 +486,6 @@
         var crumsIndex = ($(".breadcrumb-link", construct.div)).size();
 
         resize(crumsIndex, divSize, construct);
-    }
-
-    function findResourceSpan(elementId, construct) {
-        var parent = $('#'+elementId).parents('.'+construct.prefix+'-res-block');
-        return parent;
     }
 })()
 
