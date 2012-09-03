@@ -24,8 +24,7 @@ Each resource must be rendered in a <span class='{{ prefix }}-res-block'> This b
         use "{{webRoot}}/{{ instance.small_icon}}" to get the small_icon url
 
 Menu:
-    left click menu will be defined for each object of the class "{{ prefix }}-resource-menu-left"
-    right click menu will be defined for each object of the class "{{ prefix }}-resource-menu-right"
+    <div class="dropdown" href="#">menu</div>
     a menu must be defined in a .{{ prefix }}-res-block span
 
 
