@@ -43,7 +43,8 @@
 @import "tables.less";
 
 // Components: common
-@import "sprites.less";
+//@import "sprites.less"; // replaced by font-awesome
+
 @import "dropdowns.less";
 @import "wells.less";
 @import "component-animations.less";

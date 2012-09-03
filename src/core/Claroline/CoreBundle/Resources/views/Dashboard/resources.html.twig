@@ -26,17 +26,19 @@
 {% endblock %}
 
 {% block content %}
-
     <div id="div-filter" class="span2"></div>
         <div id="div-resources" class="span10">
         <div id="dr-manager-options">
-            {#<button id='dr_tree_button'>Arbre</button>
-            <button id='dr_thumbnail_button'>vignette</button><br>#}
             <input type="checkbox" id="dr-is-flat" value="1">&nbsp;Voir aussi le contenu de tous les sous-répertoires</input>
         </div>
         <div id ="dr-resource-manager-content">
             <div id="dr-resources-content"></div>
         </div>
+
+        <button id="dr-close-button" class="btn" title="{{ 'close'|trans({}, 'platform') }}">
+            {{ 'close'|trans({}, 'platform') }}
+        </button>
+
         <div id="div-resources-top">
             <div id="dr-div-form"></div>
             <select id="dr-select-creation" style="width:150px">
@@ -45,13 +47,23 @@
             {% endfor %}
             </select>
             <button id="dr-submit-select">new</button>
-            <br>
-            <button id="dr-download-button">{{ 'download'|trans({}, 'platform') }}</button>
-            <button id="dr-cut-button">{{ 'cut'|trans({}, 'platform') }}</button>
-            <button id="dr-copy-button">{{ 'copy'|trans({}, 'platform') }}</button>
-            <button id="dr-paste-button">{{ 'paste'|trans({}, 'platform') }}</button>
-            <button id="dr-delete-button">{{ 'delete'|trans({}, 'platform') }}</button>
-            <button id="dr-close-button">{{ 'close'|trans({}, 'platform') }}</button>
+            <div class="btn-group">
+                <button id="dr-cut-button" class="btn" rel="tooltip" title="{{ 'cut'|trans({}, 'platform') }}">
+                    <i class="icon-cut"></i>
+                </button>
+                <button id="dr-copy-button" class="btn" rel="tooltip" title="{{ 'copy'|trans({}, 'platform') }}">
+                    <i class="icon-copy"></i>
+                </button>
+                <button id="dr-paste-button" class="btn" rel="tooltip" title="{{ 'paste'|trans({}, 'platform') }}">
+                    <i class="icon-paste"></i>
+                </button>
+                <button id="dr-delete-button" class="btn" rel="tooltip" title="{{ 'delete'|trans({}, 'platform') }}">
+                    <i class="icon-remove-sign"></i>
+                </button>
+                <button id="dr-download-button" class="btn" rel="tooltip" title="{{ 'download'|trans({}, 'platform') }}">
+                    <i class="icon-download-alt"></i>
+                </button>
+            </div>
         </div>
         </br>
     </div>

@@ -1,14 +1,23 @@
 {% twig_js name="resource_thumbnail_template" %}
+
 {% if parents is defined %}
-{% spaceless %}
-<div id="{{ prefix }}-res-breadcrums">
-<a href="#" class="{{ prefix }}-breadcrum-link" title="root">root</a>
-{% for parent in parents %}
-<a href="#" class="{{ prefix }}-breadcrum-link" data-id="{{ parent.id }}" title="{{ parent.name }}"> /{{ parent.name }}</a>
-{% endfor %}
-</div>
-{% endspaceless %}
+    {% spaceless %}
+        <ul id="{{ prefix }}-res-breadcrums" class="breadcrumb">
+            <li>
+                <a href="#" class="{{ prefix }}-breadcrum-link">
+                    <i class="icon-home"></i>
+                </a>
+            </li>
+            {% for parent in parents %}
+                <span class="divider"> / </span>
+                <li>
+                    <a href="#" class="{{ prefix }}-breadcrum-link" data-id="{{ parent.id }}" title="{{ parent.name }}">{{ parent.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endspaceless %}
 {% endif %}
+
 {% for instance in instances %}
     <span id="{{ prefix }}-instance-{{ instance.id }}" data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="{{ prefix }}-res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
