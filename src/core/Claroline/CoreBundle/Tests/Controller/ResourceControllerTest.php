@@ -338,6 +338,28 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(0, count($jsonResponse));
     }
 
+    public function testDeleteRootThrowsAnException()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', "/resource/delete/{$this->userRoot[0]->getId()}");
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
+    }
+
+    public function testDeleteUserRemovesHisPersonnalDataTree()
+    {
+        $this->markTestSkipped("can't make it work");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot[0]->getId());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "admin/user/delete/{$this->getFixtureReference('user/user')->getId()}");
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $userRoot = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($this->userRoot[0]->getId());
+        $this->assertEquals($userRoot, null);
+        $tbg = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($theBigTree[0]->getId());
+        $this->assertEquals($tbg, null);
+    }
+
     /*
     public function testCountInstances()
     {

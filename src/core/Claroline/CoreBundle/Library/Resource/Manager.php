@@ -101,7 +101,7 @@ class Manager
         try {
             $this->em->flush();
         } catch (UnexpectedValueException $e) {
-            throw $e;
+            throw new \UnexpectedValueException("You cannot move a directory into itself");
         }
     }
 
@@ -202,8 +202,12 @@ class Manager
         return $ric;
     }
 
-    private function deleteDirectory($directoryInstance)
+    private function deleteDirectory(ResourceInstance $directoryInstance)
     {
+        if ($directoryInstance->getParent() === null){
+           throw new \LogicException('Root directory cannot be removed');
+        }
+
         $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, false);
         foreach ($children as $child) {
             $rsrc = $child->getResource();

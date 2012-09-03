@@ -24,6 +24,8 @@ class ResourceChecker implements CheckerInterface
     const UNLOADABLE_PARENT_RESOURCE = 'unloadable_parent_resource';
     const UNEXPECTED_RESOURCE_SMALL_ICON = 'unexpected_resource_small_icon';
     const UNEXPECTED_RESOURCE_LARGE_ICON = 'unexpected_resource_large_icon';
+    const MISSING_ASYNC_VALUE = 'missing_async_value';
+    const UNEXPECTED_ASYNC_VALUE = 'unexpected_async_value';
 
     private $yamlParser;
     private $plugin;
@@ -181,6 +183,7 @@ class ResourceChecker implements CheckerInterface
             $this->checkExtends($resource, $resourceFile);
             $this->checkSmallIcon($resource, $resourceFile);
             $this->checkLargeIcon($resource, $resourceFile);
+            $this->checkCustomResources($resource, $resourceFile);
         }
     }
 
@@ -232,6 +235,27 @@ class ResourceChecker implements CheckerInterface
                     . "cannot be found (looked for {$expectedImgLocation}).",
                     self::UNEXPECTED_RESOURCE_LARGE_ICON
                 );
+            }
+        }
+    }
+
+    private function checkCustomResources($resource, $resourceFile)
+    {
+        if (isset($resource['actions'])) {
+            foreach ($resource['actions'] as $action) {
+                if (is_array($action)) {
+                    if (gettype($action['async']) !== 'boolean') {
+                        $this->errors[] = new ValidationError(
+                            "{$this->pluginFqcn} : {$action['async']} (declared in {$resourceFile})is not set to true or false",
+                            self::UNEXPECTED_ASYNC_VALUE
+                        );
+                    }
+                } else {
+                    $this->errors[] = new ValidationError(
+                        "{$this->pluginFqcn} : missing async for the resource declared in {$resourceFile}",
+                        self::MISSING_ASYNC_VALUE
+                    );
+                }
             }
         }
     }

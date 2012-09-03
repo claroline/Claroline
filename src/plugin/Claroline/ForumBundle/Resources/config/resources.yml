@@ -4,8 +4,9 @@ Forum:
   navigable: false
   downloadable: true
   actions:
-    open: false
-  large_icon: forum.png
+    open:
+      async: false
+  large_icon: res_forum.png
 
 Subject:
   class: Claroline\ForumBundle\Entity\Subject
