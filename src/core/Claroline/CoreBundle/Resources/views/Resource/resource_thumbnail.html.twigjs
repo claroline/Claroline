@@ -18,6 +18,7 @@
     {% endspaceless %}
 {% endif %}
 
+<div class="res-thumb-list">
 {% for instance in instances %}
     <span data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
@@ -43,3 +44,4 @@
         <br/>
     </span>
 {% endfor %}
+</div>
