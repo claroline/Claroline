@@ -119,7 +119,7 @@ claro_resource_multi_add_workspace:
         expose: true
 
 claro_resource_renders_filter:
-    pattern: /filter/renders/{prefix}
+    pattern: /filter/renders
     defaults: { _controller: ClarolineCoreBundle:Resource:rendersFilters }
     options:
         expose: true
