@@ -261,26 +261,18 @@
 
     function setMenu(construct)
     {
-        //destroy the previous menus
-        $.contextMenu('destroy');
+        //destroy menus
 
-        $('.'+construct.prefix+'-resource-menu-left').each(function(index, element){
+        $('.dropdown').each(function(index, element){
             var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
             parameters.id = resSpan.attr('data-id')
             parameters.resourceId = resSpan.attr('data-resource_id');
             parameters.type = resSpan.attr('data-type');
-            bindContextMenu(parameters, element, 'left', construct);
+            bindContextMenu(parameters, element, construct);
         });
 
-        $('.'+construct.prefix+'-resource-menu-right').each(function(index, element){
-            var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
-            var parameters = {};
-            parameters.id = resSpan.attr('data-id');
-            parameters.resourceId = resSpan.attr('data-resource_id');
-            parameters.type = resSpan.attr('data-type')
-            bindContextMenu(parameters, element, 'right', construct);
-        });
+        $('.dropdown-toggle').dropdown();
     }
 
     /* Cut the name of the resource if its length is more than maxLength,
@@ -330,21 +322,31 @@
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
-    function bindContextMenu(parameters, menuElement, trigger, construct) {
-        var type = parameters.type;
-        var menuDefaultOptions = {
-            selector: '#'+menuElement.id,
-            trigger: trigger,
-            //See the contextual menu documentation.
-            callback: function(id, options) {
-                //Finds and executes the action for the right menu item.
-                findMenuObject(builder.menu[type], parameters, id, construct);
-            }
-        };
+    function buildMenu(type, name)
+    {
+        var html = '<a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">'+name+'</a>'
+        html += '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">';
 
-        menuDefaultOptions.items = builder.menu[type].items;
-        $.contextMenu(menuDefaultOptions);
-        //Left click menu.
+        for (var i in builder.menu[type]['items']) {
+            html += '<li><a tabindex="-1" href="#">'+i+'</a></li>';
+        }
+
+        html += '</ul>';
+
+        return html;
+    }
+
+    function bindContextMenu(parameters, menuElement, construct) {
+        var type = parameters.type;
+        var name = menuElement.innerHTML;
+        var html = buildMenu(type, name);
+        menuElement.innerHTML = html;
+
+        $('a', $(menuElement).find('.dropdown-menu')).each(function(index, element){
+            $(element).on('click', function(e){
+                findMenuObject(builder.menu[type], parameters, element.innerHTML, construct)
+            });
+        });
     };
 
     //Finds wich menu was fired for a node.
@@ -352,7 +354,7 @@
     function findMenuObject(items, parameters, menuItem, construct)
     {
         for (var property in items.items) {
-            if (property === menuItem) {
+            if (property == menuItem) {
                 executeMenuActions(items.items[property], parameters, construct);
             } else {
                 if (items.items[property].hasOwnProperty('items')) {

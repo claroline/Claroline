@@ -16,7 +16,7 @@
             {% if instance.type == "directory" %}
                 <a class="{{ prefix }}-link-navigate-instance" id="{{ prefix }}-link-navigate-instance-{{ instance.id }}" href="#">
             {% endif %}
-            <img id="{{ prefix }}-instance-img-{{ instance.id }}" class="{{ prefix }}-instance-img {{ prefix }}-resource-menu-right" src="{{webRoot}}/{{ instance.large_icon}}"
+            <img id="{{ prefix }}-instance-img-{{ instance.id }}" class="{{ prefix }}-instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
                  {% if instance.path is defined %}
                     title="{{ instance.path }}"
                  {% endif %}
@@ -29,7 +29,7 @@
             <span class="res-name">{{ instance.name }}</span>
         </div>
         <div class="resource-bar">
-            <a href="#" id="{{ prefix }}-resource-menu-{{ instance.id }}" class="{{ prefix }}-resource-menu-left">Menu</a>
+            <div class="dropdown" href="#">menu</div>
         </div>
         <br/>
     </span>
