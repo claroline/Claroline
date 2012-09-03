@@ -101,7 +101,7 @@ class Manager
         try {
             $this->em->flush();
         } catch (UnexpectedValueException $e) {
-            throw $e;
+            throw new \UnexpectedValueException("You cannot move a directory into itself");
         }
     }
 
