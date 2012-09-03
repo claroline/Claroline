@@ -22,8 +22,8 @@ The template should render three parts: the breadcrumb, the list of ressources a
 
 BreadCrumb:
     in the loop {% foreach parent in parents %}
-    Each breadCrum element must
-        - be defined in an HTML element from the class "breadcrum-link"
+    Each breadCrumb element must
+        - be defined in an HTML element from the class "breadcrumb-link"
         - have the data-id="{{ parent.id }}" attribute defined
 
 Resource:
@@ -48,7 +48,7 @@ the js file from the twigjs file.
 
 Menu:
     <div class="dropdown" href="#">menu</div>
-    a menu must be defined in a .{{ prefix }}-res-block span
+    a menu must be defined in a .res-block span
 
 
 
