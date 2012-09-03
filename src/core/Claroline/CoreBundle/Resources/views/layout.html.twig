@@ -7,11 +7,12 @@
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
-    <link rel="shortcut icon" href="{{ asset(themePath ~ '/img/ico/favicon.ico') }}"/>
-    <link rel="apple-touch-icon" href="{{ asset(themePath ~ '/img/ico/apple-touch-icon.png')}}"/>
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
 {% endblock %}
 
 {% block layout %}
