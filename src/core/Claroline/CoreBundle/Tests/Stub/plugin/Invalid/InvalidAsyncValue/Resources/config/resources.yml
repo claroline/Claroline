@@ -1,0 +1,8 @@
+ResourceXCustom:
+  class: Invalid\InvalidAsyncValue\Entity\ResourceX
+  listable: true
+  navigable: false
+  downloadable: true
+  actions:
+      open:
+        async: invalidValue

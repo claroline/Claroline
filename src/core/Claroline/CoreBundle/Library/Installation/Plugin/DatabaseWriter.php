@@ -180,7 +180,7 @@ class DatabaseWriter
 
             foreach ($actions as $key => $action) {
                 $rtca = new ResourceTypeCustomAction();
-                $rtca->setAsync($action);
+                $rtca->setAsync($action['async']);
                 $rtca->setAction($key);
                 $rtca->setResourceType($resourceType);
                 $this->em->persist($rtca);

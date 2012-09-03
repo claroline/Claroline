@@ -60,13 +60,21 @@
                     completeHandler(data)}
             },
             error: function(xhr, e, errorThrown){
-                xhr.status == 403 ?
+                if (xhr.status == 403){
                     utils.ajaxAuthenticationErrorHandler(function () {
                         'function' == typeof successHandler ?
                             utils.sendRequest(route, successHandler) :
                             window.location.reload();
-                    }) :
-                    alert(xhr.responseText);
+                    })
+                } else {
+                    var title = utils.getTitle(xhr.responseText)
+                    if(title !== '') {
+                        alert(title);
+                    }
+                    else {
+                        alert(xhr.responseText);
+                    }
+                }
             }
         });
     }
@@ -146,5 +154,30 @@
         }
 
         return vars;
+    }
+
+    /* Gets the <title> of a document
+    http://www.devnetwork.net/viewtopic.php?f=13&t=117065
+    */
+    utils.getTitle = function(html){
+    html = html.replace(/<script[^>]*>((\r|\n|.)*?)<\/script[^>]*>/mg, '');  //Removing <script> tags, because we don't want to execute them
+
+    //Extract <head>
+    var html_head = html.match(/<head[^>]*>((\r|\n|.)*)<\/head/m);
+    html_head = html_head ? html_head[1] : '';
+
+    var head = jQuery("<head></head>").append(html_head);
+    var body = jQuery("<div></div>").append(html);
+    var title = '';
+
+    if (!head.children().length) head = body;    //For Firefox
+
+    //IE - for some reason doesn't have <title> element
+    //using regular expression to extract it:
+    title = html_head.match(/<title[^>]*>((\r|\n|.)*)<\/title/m);
+    title = title ? title[1] : '';
+
+    console.log(title);  // => jQuery: The Write Less, Do More, JavaScript Library
+    return title;
     }
 })(jQuery, window);

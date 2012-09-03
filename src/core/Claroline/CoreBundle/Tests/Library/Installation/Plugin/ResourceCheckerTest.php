@@ -103,4 +103,18 @@ class ResourceCheckerTest extends WebTestCase
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
         $this->assertEquals(ResourceChecker::UNEXPECTED_RESOURCE_LARGE_ICON, $errors[0]->getCode());
     }
+
+    public function testCheckerReturnsAnErrorOnUnexepectedCustomAction()
+    {
+        $pluginFqcn = 'Invalid\MissingAsyncValue\InvalidMissingAsyncValue';
+        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $this->assertEquals(ResourceChecker::MISSING_ASYNC_VALUE, $errors[0]->getCode());
+    }
+
+    public function testCheckerReturnsAnErrorOnInvalidAsyncValue()
+    {
+        $pluginFqcn = 'Invalid\InvalidAsyncValue\InvalidInvalidAsyncValue';
+        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $this->assertEquals(ResourceChecker::UNEXPECTED_ASYNC_VALUE, $errors[0]->getCode());
+    }
 }
