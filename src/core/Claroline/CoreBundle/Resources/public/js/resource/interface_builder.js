@@ -68,16 +68,16 @@
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             });
 
-        $('.'+prefix+'-link-navigate-instance').live('click', function(e){
-            navigate( $(this).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
+        $('.link-navigate-instance', div).live('click', function(e){
+            navigate($(this).parents('.res-block').attr('data-id'), construct);
         });
 
-        $('.'+prefix+'-breadcrum-link').live('click', function(e){
-            navigate($(this).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
+        $('.breadcrumb-link', div).live('click', function(e){
+            navigate($(this).parents('.res-block', div).attr('data-id'), construct);
         });
 
         window.onresize = function(e) {
-            resizeBreadcrums(construct);
+            resizeBreadcrumb(construct);
         }
 
         submitButton.on('click', function(e){
@@ -90,7 +90,7 @@
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
-                        parameters.id = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
+                        parameters.id = $(".breadcrumb-link", div).last().attr('data-id');
                         var action = divForm.find('form').attr('action');
                         action = action.replace('_instanceId', parameters.id)
                         var id = divForm.find('form').attr('id');
@@ -138,13 +138,13 @@
             var route = '';
             params = construct.pasteIds;
             if (construct.cpd == 0) {
-                params.newParentId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
+                params.newParentId = $(".breadcrumb-link", div).last().attr('data-id');
                 route = Routing.generate('claro_resource_multimove', params);
                 ClaroUtils.sendRequest(route, function(){
                     reload(construct);
                     });
             } else {
-                params.instanceDestinationId = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
+                params.instanceDestinationId = $(".breadcrumb-link", div).last().attr('data-id');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
                 ClaroUtils.sendRequest(route, function(){
                     reload(construct);
@@ -157,10 +157,10 @@
             setLayout(construct);
         })
 
-        $('.'+prefix+'-chk-instance').live('change', function(e){
+        $('.chk-instance', div).live('change', function(e){
             var ids = {};
             var i = 0;
-            $('.'+construct.prefix+'-chk-instance:checked').each(function(index, element){
+            $('.chk-instance:checked', div).each(function(index, element){
                 ids[i] = element.value;
                 i++;
             })
@@ -215,7 +215,7 @@
     }
 
     function reload(construct){
-        var id = $("."+construct.prefix+"-breadcrum-link").last().attr('data-id');
+        var id = $(".breadcrumb-link", construct.div).last().attr('data-id');
         navigate(id, construct);
     }
 
@@ -264,7 +264,7 @@
         //destroy menus
 
         $('.dropdown').each(function(index, element){
-            var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
+            var resSpan =  $(this).parents('.res-block', construct.div);
             var parameters = {};
             parameters.id = resSpan.attr('data-id')
             parameters.resourceId = resSpan.attr('data-resource_id');
@@ -318,7 +318,7 @@
         construct.div.append(data);
         setMenu(construct);
         setLayout(construct);
-        resizeBreadcrums(construct);
+        resizeBreadcrumb(construct);
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
@@ -433,7 +433,7 @@
             construct.pasteButton.attr('disabled', 'disabled');
         } else {
             construct.activePagerItem = 1;
-            if($.isEmptyObject(construct.pasteIds) || $("."+construct.prefix+"-breadcrum-link").size() == 1){
+            if($.isEmptyObject(construct.pasteIds) || $(".breadcrumb-link", construct.div).size() == 1){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
@@ -446,7 +446,7 @@
                  construct.downloadButton.removeAttr('disabled');
             }
 
-            if($("."+construct.prefix+"-breadcrum-link").size() == 1) {
+            if($(".breadcrumb-link", construct.div).size() == 1) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
             } else {
@@ -462,11 +462,11 @@
         }
     }
 
-    function resizeBreadcrums(construct){
+    function resizeBreadcrumb(construct){
         var resize = function(index, divSize) {
             var size = getCrumsSize(construct);
             if(size > divSize && index >= 0) {
-                var crumLink = (($("."+construct.prefix+"-breadcrum-link")).eq(index));
+                var crumLink = (($("."+construct.prefix+"-breadcrumb-link")).eq(index));
                 formatResName(crumLink, 1, 9);
                 index --;
                 resize(index, divSize, construct);
@@ -475,15 +475,15 @@
 
         var getCrumsSize = function(construct){
             var crumsSize = 0;
-            $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
+            $("."+construct.prefix+"-breadcrumb-link").each(function(index, element){
                 crumsSize += ($(this).width());
             })
 
             return crumsSize;
         }
 
-        var divSize = $('#'+construct.prefix+'-res-breadcrums').width();
-        var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
+        var divSize = $('#'+construct.prefix+'-res-breadcrumb').width();
+        var crumsIndex = ($(".breadcrumb-link", construct.div)).size();
 
         resize(crumsIndex, divSize, construct);
     }

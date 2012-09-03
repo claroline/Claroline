@@ -4,14 +4,14 @@
     {% spaceless %}
         <ul id="{{ prefix }}-res-breadcrums" class="breadcrumb">
             <li>
-                <a href="#" class="{{ prefix }}-breadcrum-link">
+                <a href="#" class="breadcrumb-link">
                     <i class="icon-home"></i>
                 </a>
             </li>
             {% for parent in parents %}
                 <span class="divider"> / </span>
                 <li>
-                    <a href="#" class="{{ prefix }}-breadcrum-link" data-id="{{ parent.id }}" title="{{ parent.name }}">{{ parent.name }}</a>
+                    <a href="#" class="breadcrumb-link" data-id="{{ parent.id }}" title="{{ parent.name }}">{{ parent.name }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -19,13 +19,13 @@
 {% endif %}
 
 {% for instance in instances %}
-    <span id="{{ prefix }}-instance-{{ instance.id }}" data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="{{ prefix }}-res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+    <span id="{{ prefix }}-instance-{{ instance.id }}" data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
         <div class="wrapper">
-            <input class="{{ prefix }}-chk-instance" type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
+            <input class="chk-instance" type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
             {% if instance.type == "directory" %}
-                <a class="{{ prefix }}-link-navigate-instance" id="{{ prefix }}-link-navigate-instance-{{ instance.id }}" href="#">
+                <a class="link-navigate-instance" id="{{ prefix }}-link-navigate-instance-{{ instance.id }}" href="#">
             {% endif %}
-            <img id="{{ prefix }}-instance-img-{{ instance.id }}" class="{{ prefix }}-instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
+            <img id="{{ prefix }}-instance-img-{{ instance.id }}" class="instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
                  {% if instance.path is defined %}
                     title="{{ instance.path }}"
                  {% endif %}
