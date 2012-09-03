@@ -125,6 +125,7 @@ download: télécharger
 copy: copier
 cut: couper
 paste: coller
+close: fermer
 
 # workspace
 workspace: Espace d'activités
