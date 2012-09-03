@@ -482,13 +482,6 @@
             return crumsSize;
         }
 
-        var makeCrums = function(construct) {
-            $("."+construct.prefix+"-breadcrum-link").each(function(index, element){
-                element.innerHTML = " /"+element.title;
-            })
-        }
-
-        makeCrums(construct);
         var divSize = $('#'+construct.prefix+'-res-breadcrums').width();
         var crumsIndex = ($("."+construct.prefix+"-breadcrum-link")).size();
 
