@@ -125,6 +125,7 @@ download: download
 copy: copy
 cut: cut
 paste: paste
+close : close
 
 # workspace
 workspace: Workspace

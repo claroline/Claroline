@@ -98,6 +98,7 @@
                             submissionHandler(xhr, parameters, construct);
                         });
                     })
+                    setLayout(construct);
                 })
         });
 
@@ -153,6 +154,7 @@
 
         closeButton.on('click', function(e){
             construct.divForm.empty();
+            setLayout(construct);
         })
 
         $('.'+prefix+'-chk-instance').live('change', function(e){
@@ -393,6 +395,7 @@
                     submissionHandler(xhr, parameters, construct);
                 });
             });
+            setLayout(construct);
         });
     };
 
@@ -401,6 +404,7 @@
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
             reload(construct);
             construct.divForm.empty();
+            setLayout(construct);
         //If it's not a json response, we append the response at the top of the tree.
         } else {
             construct.divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
@@ -415,6 +419,7 @@
                     submissionHandler(xhr, parameters, construct);
                 });
             });
+            setLayout(construct);
         }
     };
 
@@ -436,12 +441,18 @@
                  construct.downloadButton.removeAttr('disabled');
             }
 
-            if ($("."+construct.prefix+"-breadcrum-link").size() == 1) {
+            if($("."+construct.prefix+"-breadcrum-link").size() == 1) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
             } else {
                 construct.selectType.show();
                 construct.submitButton.show();
+            }
+
+            if (construct.divForm.html()=='') {
+                construct.closeButton.attr('disabled', 'disabled');
+            } else {
+                construct.closeButton.removeAttr('disabled');
             }
         }
     }
