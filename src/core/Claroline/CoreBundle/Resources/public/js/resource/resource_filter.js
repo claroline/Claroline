@@ -3,25 +3,24 @@
 
     filter.filter = function(
         div,
-        prefix,
         callBackToFilter,
         callBackResetFilter
         ){
         filter.toFilter = callBackToFilter;
         filter.resetFilter = callBackResetFilter;
-        filter.prefix = prefix;
 
-        buildFilter(div, filter.prefix);
+        buildFilter(div);
 
-        $('#'+filter.prefix+'-filter-button').live('click', function(){
-
-            var route = createFilterRoute(filter.prefix);
+        $('.filter-button', div).live('click', function(){
+            alert('filter');
+            var route = createFilterRoute(div);
             ClaroUtils.sendRequest(route, function(data){
                 filter.toFilter(data)
             })
 
         });
-        $('#'+filter.prefix+'-reset-button').live('click', function(){
+        
+        $('.reset-button', div).live('click', function(){
             filter.resetFilter();
         });
 
@@ -35,62 +34,61 @@
         }
     }
 
-    function buildFilter(div, buildPrefix){
-        ClaroUtils.sendRequest(Routing.generate('claro_resource_renders_filter', {
-            prefix: buildPrefix
-        }), function(data){
+    function buildFilter(div){
+        ClaroUtils.sendRequest(Routing.generate('claro_resource_renders_filter'), function(data){
             div.append(data);
-            initOnChange(buildPrefix);
+            initOnChange(div);
         });
     }
 
-    function initOnChange(buildPrefix) {
-        var divFiltersString = document.getElementById(buildPrefix+'-active-filters');
-        $('#'+buildPrefix+'-select-root').on('change', function(){
-            divFiltersString.innerHTML = getActiveFilterString(buildPrefix);
+    function initOnChange(div) {
+        var divFiltersString = $('.active-filters', div).first();
+
+        $('.select-root', div).first().on('change', function(){
+            divFiltersString.html(getActiveFilterString(div));
         })
-        $('#'+buildPrefix+'-select-type').on('change', function(){
-            divFiltersString.innerHTML = getActiveFilterString(buildPrefix);
+        $('.select-type', div).first().on('change', function(){
+            divFiltersString.html(getActiveFilterString(div));
         })
-        $('#'+buildPrefix+'-date-from').on('change', function(){
-            divFiltersString.innerHTML = getActiveFilterString(buildPrefix);
+        $('.date-from', div).first().on('change', function(){
+            divFiltersString.html(getActiveFilterString(div));
         })
-        $('#'+buildPrefix+'-date-to').on('change', function(){
-            divFiltersString.innerHTML = getActiveFilterString(buildPrefix);
+        $('.date-to', div).first().on('change', function(){
+            divFiltersString.html(getActiveFilterString(div));
         })
     }
 
-    function getActiveFilterString(buildPrefix) {
-        return $('#'+buildPrefix+'-select-root').val()+','
-        +$('#'+buildPrefix+'-select-type').val()+','
-        +$('#'+buildPrefix+'-date-from').val()+','
-        + $('#'+buildPrefix+'-date-to').val();
+    function getActiveFilterString(div) {
+        return $('.select-root', div).first().val()+','
+        +$('.select-type', div).first().val()+','
+        +$('.date-from', div).first().val()+','
+        +$('.date-to', div).val();
     }
 
-    function createFilterRoute(buildPrefix) {
+    function createFilterRoute(div) {
         var parameters = {};
         var i = 0;
 
-        var values = $('#'+buildPrefix+'-select-type').val();
+        var values = $('.select-type', div).first().val();
         if (values != undefined){
             for(i=0; i< values.length; i++) {
                 parameters['types'+i] = values[i];
             }
         }
 
-        values = $('#'+buildPrefix+'-select-root').val();
+        values = $('.select-root', div).first().val();
         if (values != undefined){
             for(i=0; i< values.length; i++) {
                 parameters['roots'+i] = values[i];
             }
         }
 
-        if ($('#'+buildPrefix+'-date-from').val()!= '') {
-            parameters['dateFrom'] = $('#'+buildPrefix+'-date-from').val();
+        if ($('.date-from', div).first().val()!= '') {
+            parameters['dateFrom'] = $('.date-from', div).first().val();
         }
 
-        if($('#'+buildPrefix+'-date-to').val()!= '') {
-            parameters['dateTo'] = $('#'+buildPrefix+'-date-to').val();
+        if($('.date-to', div).first().val()!= '') {
+            parameters['dateTo'] = $('.date-to').first().val();
         }
 
         return Routing.generate('claro_resource_filter', parameters);

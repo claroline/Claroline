@@ -1,31 +1,27 @@
-<div id="{{ divPrefix }}-active-filters"></div>
+<div class="active-filters"></div>
 
-<select id="{{ divPrefix }}-select-root" style="width:125px" multiple="multiple">
+<select class="select-root" style="width:125px" multiple="multiple">
     {% for workspaceroot in workspaceroots %}
         <option value={{ workspaceroot.id }}> {{ workspaceroot.name }} </option>
     {% endfor %}
 </select>
-<select id="{{ divPrefix }}-select-type" style="width:125px" multiple="multiple">
+<select class="select-type" style="width:125px" multiple="multiple">
     {% for resourceType in resourceTypes %}
         <option value={{ resourceType.type }}> {{ resourceType.type }} </option>
     {% endfor %}
 </select>
 
 <input type="text"
-    id="{{ divPrefix }}-date-from"
-    class="span8 datepicker"
+    class="date-from span8 datepicker"
     data-date="2012-01-01"
-    data-date-format="yyyy-mm-dd"
-    value="2012-01-01"/>
+    data-date-format="yyyy-mm-dd"/>
 <input type="text"
-    id="{{ divPrefix }}-date-to"
-    class="span8 datepicker"
+    class="span8 datepicker date-to"
     data-date="2013-01-01"
-    data-date-format="yyyy-mm-dd"
-    value="2013-01-01"/>
+    data-date-format="yyyy-mm-dd"/>
 
-<button id="{{ divPrefix }}-filter-button">filter</button>
-<button id="{{ divPrefix }}-reset-button">reset</button>
+<button class="filter-button">filter</button>
+<button class="reset-button">reset</button>
 
 <script>
     $('.datepicker')

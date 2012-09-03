@@ -522,7 +522,7 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function rendersFiltersAction($prefix)
+    public function rendersFiltersAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -535,7 +535,7 @@ class ResourceController extends Controller
             ->findNavigableResourceTypeWithoutDirectory();
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('divPrefix' => $prefix, 'workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
+            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
         );
     }
 

@@ -1,10 +1,9 @@
 (function () {
     var resourceGetter = new ClaroResourceGetter.getter(resource_thumbnail_template, resource_list_template);
-    var resourceFilter = new ClaroFilter.filter($('#div-filter'),'cr');
+    var resourceFilter = new ClaroFilter.filter($('#div-filter'));
 
     var interfaceBuilder = new ClaroResourceInterfaceBuilder.builder(
         $('#dr-resources-content'),
-        'cr',
         $('#dr-div-form'),
         $('#dr-select-creation'),
         $('#dr-submit-select'),

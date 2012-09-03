@@ -6,7 +6,6 @@
 
     builder.builder = function(
         div,
-        prefix,
         divForm,
         selectType,
         submitButton,
@@ -24,7 +23,6 @@
         var construct = {};
 
         construct.div = div;
-        construct.prefix = prefix;
         construct.divForm = divForm;
         construct.selectType = selectType;
         construct.submitButton = submitButton;
@@ -41,13 +39,11 @@
         construct.pasteIds = {};
         construct.cpd = null;
         construct.activePagerItem = 1;
-        resourceGetter.setPrefix(prefix);
-
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
             var templates = resourceGetter.getTemplates();
-            var html = Twig.render(templates.listTemplate, {'prefix':prefix, 'instances':data});
+            var html = Twig.render(templates.listTemplate, {'instances':data});
             construct.div.append(html);
             setMenu(construct);
         });
@@ -126,9 +122,9 @@
             var route = Routing.generate('claro_resource_multi_delete', params);
             ClaroUtils.sendRequest(route, function(data, textstatus, xhr){
                 if (204 === xhr.status) {
-                    for (var i in params) {
-                        $('#'+construct.prefix+"-instance-"+params[i]).remove();
-                    }
+                    $('.chk-instance:checked', div).each(function(index, element){
+                        $(this).parents('.res-block').remove();
+                    })
                 }
             });
         })
@@ -381,7 +377,9 @@
     function removeNode(parameters, route, construct) {
         ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
             if (204 === jqXHR.status) {
-                $('#'+construct.prefix+"-instance-"+parameters.id).remove();
+                $('.chk-instance:checked', construct.div).each(function(index, element){
+                    $(this).parents('.res-block').remove();
+                })
             }
         });
     };
@@ -482,7 +480,7 @@
             return crumsSize;
         }
 
-        var divSize = $('#'+construct.prefix+'-res-breadcrumb').width();
+        var divSize = $('.breadcrumb', construct.div).width();
         var crumsIndex = ($(".breadcrumb-link", construct.div)).size();
 
         resize(crumsIndex, divSize, construct);
