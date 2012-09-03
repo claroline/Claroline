@@ -261,6 +261,9 @@
 
     function setMenu(construct)
     {
+        //destroy the previous menus
+        $.contextMenu('destroy');
+
         $('.'+construct.prefix+'-resource-menu-left').each(function(index, element){
             var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
             var parameters = {};
