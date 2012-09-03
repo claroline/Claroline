@@ -6,7 +6,6 @@
 
     builder.builder = function(
         div,
-        prefix,
         divForm,
         selectType,
         submitButton,
@@ -24,7 +23,6 @@
         var construct = {};
 
         construct.div = div;
-        construct.prefix = prefix;
         construct.divForm = divForm;
         construct.selectType = selectType;
         construct.submitButton = submitButton;
@@ -41,13 +39,11 @@
         construct.pasteIds = {};
         construct.cpd = null;
         construct.activePagerItem = 1;
-        resourceGetter.setPrefix(prefix);
-
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
             var templates = resourceGetter.getTemplates();
-            var html = Twig.render(templates.listTemplate, {'prefix':prefix, 'instances':data});
+            var html = Twig.render(templates.listTemplate, {'instances':data});
             construct.div.append(html);
             setMenu(construct);
         });
@@ -68,16 +64,16 @@
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             });
 
-        $('.'+prefix+'-link-navigate-instance').live('click', function(e){
-            navigate( $(this).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
+        $('.link-navigate-instance', div).live('click', function(e){
+            navigate($(this).parents('.res-block').attr('data-id'), construct);
         });
 
-        $('.'+prefix+'-breadcrumb-link').live('click', function(e){
-            navigate($(this).parents('.'+construct.prefix+'-res-block').attr('data-id'), construct);
+        $('.breadcrumb-link', div).live('click', function(e){
+            navigate($(this).parents('.res-block', div).attr('data-id'), construct);
         });
 
         window.onresize = function(e) {
-            resizeBreadcrumbs(construct);
+            resizeBreadcrumb(construct);
         }
 
         submitButton.on('click', function(e){
@@ -90,7 +86,7 @@
                     divForm.find('form').submit(function(e) {
                         e.preventDefault();
                         var parameters = {};
-                        parameters.id = $("."+construct.prefix+"-breadcrumb-link").last().attr('data-id');
+                        parameters.id = $(".breadcrumb-link", div).last().attr('data-id');
                         var action = divForm.find('form').attr('action');
                         action = action.replace('_instanceId', parameters.id)
                         var id = divForm.find('form').attr('id');
@@ -98,6 +94,7 @@
                             submissionHandler(xhr, parameters, construct);
                         });
                     })
+                    setLayout(construct);
                 })
         });
 
@@ -125,9 +122,9 @@
             var route = Routing.generate('claro_resource_multi_delete', params);
             ClaroUtils.sendRequest(route, function(data, textstatus, xhr){
                 if (204 === xhr.status) {
-                    for (var i in params) {
-                        $('#'+construct.prefix+"-instance-"+params[i]).remove();
-                    }
+                    $('.chk-instance:checked', div).each(function(index, element){
+                        $(this).parents('.res-block').remove();
+                    })
                 }
             });
         })
@@ -137,13 +134,13 @@
             var route = '';
             params = construct.pasteIds;
             if (construct.cpd == 0) {
-                params.newParentId = $("."+construct.prefix+"-breadcrumb-link").last().attr('data-id');
+                params.newParentId = $(".breadcrumb-link", div).last().attr('data-id');
                 route = Routing.generate('claro_resource_multimove', params);
                 ClaroUtils.sendRequest(route, function(){
                     reload(construct);
                     });
             } else {
-                params.instanceDestinationId = $("."+construct.prefix+"-breadcrumb-link").last().attr('data-id');
+                params.instanceDestinationId = $(".breadcrumb-link", div).last().attr('data-id');
                 route = Routing.generate('claro_resource_multi_add_workspace', params);
                 ClaroUtils.sendRequest(route, function(){
                     reload(construct);
@@ -153,12 +150,13 @@
 
         closeButton.on('click', function(e){
             construct.divForm.empty();
+            setLayout(construct);
         })
 
-        $('.'+prefix+'-chk-instance').live('change', function(e){
+        $('.chk-instance', div).live('change', function(e){
             var ids = {};
             var i = 0;
-            $('.'+construct.prefix+'-chk-instance:checked').each(function(index, element){
+            $('.chk-instance:checked', div).each(function(index, element){
                 ids[i] = element.value;
                 i++;
             })
@@ -213,7 +211,7 @@
     }
 
     function reload(construct){
-        var id = $("."+construct.prefix+"-breadcrumb-link").last().attr('data-id');
+        var id = $(".breadcrumb-link", construct.div).last().attr('data-id');
         navigate(id, construct);
     }
 
@@ -259,23 +257,18 @@
 
     function setMenu(construct)
     {
-        $('.'+construct.prefix+'-resource-menu-left').each(function(index, element){
-            var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
+        //destroy menus
+
+        $('.dropdown').each(function(index, element){
+            var resSpan =  $(this).parents('.res-block', construct.div);
             var parameters = {};
             parameters.id = resSpan.attr('data-id')
             parameters.resourceId = resSpan.attr('data-resource_id');
             parameters.type = resSpan.attr('data-type');
-            bindContextMenu(parameters, element, 'left', construct);
+            bindContextMenu(parameters, element, construct);
         });
 
-        $('.'+construct.prefix+'-resource-menu-right').each(function(index, element){
-            var resSpan =  $(this).parents('.'+construct.prefix+'-res-block');
-            var parameters = {};
-            parameters.id = resSpan.attr('data-id');
-            parameters.resourceId = resSpan.attr('data-resource_id');
-            parameters.type = resSpan.attr('data-type')
-            bindContextMenu(parameters, element, 'right', construct);
-        });
+        $('.dropdown-toggle').dropdown();
     }
 
     /* Cut the name of the resource if its length is more than maxLength,
@@ -321,25 +314,35 @@
         construct.div.append(data);
         setMenu(construct);
         setLayout(construct);
-        resizeBreadcrumbs(construct);
+        resizeBreadcrumb(construct);
         $(".res-name").each(function(){formatResName($(this), 2, 20)});
     }
 
-    function bindContextMenu(parameters, menuElement, trigger, construct) {
-        var type = parameters.type;
-        var menuDefaultOptions = {
-            selector: '#'+menuElement.id,
-            trigger: trigger,
-            //See the contextual menu documentation.
-            callback: function(id, options) {
-                //Finds and executes the action for the right menu item.
-                findMenuObject(builder.menu[type], parameters, id, construct);
-            }
-        };
+    function buildMenu(type, name)
+    {
+        var html = '<a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">'+name+'</a>'
+        html += '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">';
 
-        menuDefaultOptions.items = builder.menu[type].items;
-        $.contextMenu(menuDefaultOptions);
-        //Left click menu.
+        for (var i in builder.menu[type]['items']) {
+            html += '<li><a tabindex="-1" href="#">'+i+'</a></li>';
+        }
+
+        html += '</ul>';
+
+        return html;
+    }
+
+    function bindContextMenu(parameters, menuElement, construct) {
+        var type = parameters.type;
+        var name = menuElement.innerHTML;
+        var html = buildMenu(type, name);
+        menuElement.innerHTML = html;
+
+        $('a', $(menuElement).find('.dropdown-menu')).each(function(index, element){
+            $(element).on('click', function(e){
+                findMenuObject(builder.menu[type], parameters, element.innerHTML, construct)
+            });
+        });
     };
 
     //Finds wich menu was fired for a node.
@@ -347,7 +350,7 @@
     function findMenuObject(items, parameters, menuItem, construct)
     {
         for (var property in items.items) {
-            if (property === menuItem) {
+            if (property == menuItem) {
                 executeMenuActions(items.items[property], parameters, construct);
             } else {
                 if (items.items[property].hasOwnProperty('items')) {
@@ -374,7 +377,9 @@
     function removeNode(parameters, route, construct) {
         ClaroUtils.sendRequest(route, function(data, textStatus, jqXHR) {
             if (204 === jqXHR.status) {
-                $('#'+construct.prefix+"-instance-"+parameters.id).remove();
+                $('.chk-instance:checked', construct.div).each(function(index, element){
+                    $(this).parents('.res-block').remove();
+                })
             }
         });
     };
@@ -393,6 +398,7 @@
                     submissionHandler(xhr, parameters, construct);
                 });
             });
+            setLayout(construct);
         });
     };
 
@@ -401,6 +407,7 @@
         if (xhr.getResponseHeader('Content-Type') === 'application/json') {
             reload(construct);
             construct.divForm.empty();
+            setLayout(construct);
         //If it's not a json response, we append the response at the top of the tree.
         } else {
             construct.divForm.empty().append(xhr.responseText).find('form').submit(function(e) {
@@ -415,6 +422,7 @@
                     submissionHandler(xhr, parameters, construct);
                 });
             });
+            setLayout(construct);
         }
     };
 
@@ -423,7 +431,7 @@
             construct.pasteButton.attr('disabled', 'disabled');
         } else {
             construct.activePagerItem = 1;
-            if($.isEmptyObject(construct.pasteIds) || $("."+construct.prefix+"-breadcrumb-link").size() == 1){
+            if($.isEmptyObject(construct.pasteIds) || $(".breadcrumb-link", construct.div).size() == 1){
                 construct.pasteButton.attr('disabled', 'disabled');
             } else {
                 construct.pasteButton.removeAttr('disabled');
@@ -436,21 +444,27 @@
                  construct.downloadButton.removeAttr('disabled');
             }
 
-            if ($("."+construct.prefix+"-breadcrumb-link").size() == 1) {
+            if($(".breadcrumb-link", construct.div).size() == 1) {
                 construct.selectType.hide();
                 construct.submitButton.hide();
             } else {
                 construct.selectType.show();
                 construct.submitButton.show();
             }
+
+            if (construct.divForm.html()=='') {
+                construct.closeButton.attr('disabled', 'disabled');
+            } else {
+                construct.closeButton.removeAttr('disabled');
+            }
         }
     }
 
-    function resizeBreadcrumbs(construct){
+    function resizeBreadcrumb(construct){
         var resize = function(index, divSize) {
             var size = getCrumsSize(construct);
             if(size > divSize && index >= 0) {
-                var crumLink = (($("."+construct.prefix+"-breadcrumb-link")).eq(index));
+                var crumLink = (($(".breadcrumb-link", construct.div)).eq(index));
                 formatResName(crumLink, 1, 9);
                 index --;
                 resize(index, divSize, construct);
@@ -459,29 +473,16 @@
 
         var getCrumsSize = function(construct){
             var crumsSize = 0;
-            $("."+construct.prefix+"-breadcrumb-link").each(function(index, element){
+            $(".breadcrumb-link", construct.div).each(function(index, element){
                 crumsSize += ($(this).width());
             })
 
             return crumsSize;
         }
 
-        var makeCrums = function(construct) {
-            $("."+construct.prefix+"-breadcrumb-link").each(function(index, element){
-                element.innerHTML = " /"+element.title;
-            })
-        }
-
-        makeCrums(construct);
-        var divSize = $('#'+construct.prefix+'-res-breadcrumbs').width();
-        var crumsIndex = ($("."+construct.prefix+"-breadcrumb-link")).size();
+        var divSize = $('.breadcrumb', construct.div).width();
+        var crumsIndex = ($(".breadcrumb-link", construct.div)).size();
 
         resize(crumsIndex, divSize, construct);
     }
-
-    function findResourceSpan(elementId, construct) {
-        var parent = $('#'+elementId).parents('.'+construct.prefix+'-res-block');
-        return parent;
-    }
 })()
-

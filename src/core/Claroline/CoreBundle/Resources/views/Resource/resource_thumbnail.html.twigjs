@@ -1,4 +1,5 @@
 {% twig_js name="resource_thumbnail_template" %}
+
 {% if parents is defined %}
     {% spaceless %}
         <ul class="breadcrumb">
@@ -42,4 +43,3 @@
         <br/>
     </span>
 {% endfor %}
-
