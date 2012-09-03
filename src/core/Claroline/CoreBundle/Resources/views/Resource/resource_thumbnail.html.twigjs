@@ -1,10 +1,10 @@
 {% twig_js name="resource_thumbnail_template" %}
 {% if parents is defined %}
 {% spaceless %}
-<div id="{{ prefix }}-res-breadcrums">
-<a href="#" class="{{ prefix }}-breadcrum-link" title="root">root</a>
+<div id="{{ prefix }}-res-breadcrumbs">
+<a href="#" class="{{ prefix }}-breadcrumb-link" title="root">root</a>
 {% for parent in parents %}
-<a href="#" class="{{ prefix }}-breadcrum-link" data-id="{{ parent.id }}" title="{{ parent.name }}"> /{{ parent.name }}</a>
+<a href="#" class="{{ prefix }}-breadcrumb-link" data-id="{{ parent.id }}" title="{{ parent.name }}"> /{{ parent.name }}</a>
 {% endfor %}
 </div>
 {% endspaceless %}
