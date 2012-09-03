@@ -68,7 +68,12 @@
                     })
                 } else {
                     var title = utils.getTitle(xhr.responseText)
-                    alert(title);
+                    if(title !== '') {
+                        alert(title);
+                    }
+                    else {
+                        alert(xhr.responseText);
+                    }
                 }
             }
         });
