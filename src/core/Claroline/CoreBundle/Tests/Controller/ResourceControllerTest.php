@@ -223,7 +223,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/menus');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(10, count(get_object_vars($jsonResponse)));
+        $this->assertEquals(5, count(get_object_vars($jsonResponse)));
     }
 
     public function testGetEveryInstancesIdsFromTheClassicMultiExportArray()
