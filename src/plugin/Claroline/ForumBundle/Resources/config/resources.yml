@@ -4,7 +4,8 @@ Forum:
   navigable: false
   downloadable: true
   actions:
-    open: false
+    open:
+      async: false
   large_icon: res_forum.png
 
 Subject:

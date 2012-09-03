@@ -3,5 +3,6 @@ HTMLElement:
     listable: true
     navigable: false
     actions:
-      open: false
+      open:
+        async: false
     downloadable: true
