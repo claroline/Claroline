@@ -9,16 +9,9 @@
         var templates = {};
         templates.thumbnailTemplate = thumbnailTemplate;
         templates.listTemplate = listTemplate;
-        var getterPrefix = 'default';
         var webRoot = Routing.generate('claro_admin_index')+"/../../..";
 
         return {
-            setPrefix: function(prefix){
-                getterPrefix = prefix;
-            },
-            getPrefix: function() {
-                return getterPrefix
-            },
             getTemplates: function() {
                 return templates;
             },
@@ -31,7 +24,6 @@
                         var html = Twig.render(templates.thumbnailTemplate, {
                             'parents':parents,
                             'instances':resources,
-                            'prefix':getterPrefix,
                             'webRoot': webRoot
                         });
                         callBack(html);
@@ -52,7 +44,6 @@
                             var html = Twig.render(templates.thumbnailTemplate, {
                                 'parents':parents,
                                 'instances':resources,
-                                'prefix':getterPrefix,
                                 'webRoot': webRoot
                             });
                             callBack(html);
@@ -72,7 +63,6 @@
                             var html = Twig.render(templates.thumbnailTemplate, {
                                 'parents':parents,
                                 'instances':resources,
-                                'prefix':getterPrefix,
                                 'webRoot': webRoot
                             });
                             callBack(html);
@@ -85,7 +75,6 @@
                 });
                 ClaroUtils.sendRequest(route, function(data){
                     var html = Twig.render(templates.thumbnailTemplate, {
-                        'prefix': getterPrefix,
                         'instances':data,
                         'webRoot': webRoot
                     })
