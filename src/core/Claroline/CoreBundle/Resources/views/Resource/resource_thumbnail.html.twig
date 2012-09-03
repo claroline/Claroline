@@ -1,9 +1,9 @@
-{% if breadCrums is defined %}
+{% if breadcrumbs is defined %}
 {% spaceless %}
-<div id="{{prefix}}-res-breadcrums">
-<a href="#" class="{{prefix}}-breadcrum-link" title="root">root</a>
-{% for breadCrum in breadCrums %}
-<a href="#" class="{{prefix}}-breadcrum-link" data-key="{{breadCrum.id}}" title="{{breadCrum.name}}"> /{{breadCrum.name}}</a>
+<div id="{{prefix}}-res-breadcrumbs">
+<a href="#" class="{{prefix}}-breadcrumb-link" title="root">root</a>
+{% for breadcrumb in breadcrumbs %}
+<a href="#" class="{{prefix}}-breadcrumb-link" data-key="{{breadcrumb.id}}" title="{{breadcrumb.name}}"> /{{breadcrumb.name}}</a>
 {% endfor %}
 </div>
 {% endspaceless %}

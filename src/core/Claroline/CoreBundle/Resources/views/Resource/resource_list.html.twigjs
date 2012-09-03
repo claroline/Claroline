@@ -1,3 +1,34 @@
+
+
+{% for instance in instances %}
+    <span id="{{ prefix }}-instance-{{ instance.id }}" data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="{{ prefix }}-res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+        <div class="wrapper">
+            <input class="{{ prefix }}-chk-instance" type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
+            {% if instance.type == "directory" %}
+                <a class="{{ prefix }}-link-navigate-instance" id="{{ prefix }}-link-navigate-instance-{{ instance.id }}" href="#">
+            {% endif %}
+            <img id="{{ prefix }}-instance-img-{{ instance.id }}" class="{{ prefix }}-instance-img {{ prefix }}-resource-menu-right" src="{{webRoot}}/{{ instance.large_icon}}"
+                 {% if instance.path is defined %}
+                    title="{{ instance.path }}"
+                 {% endif %}
+             />
+            {% if instance.type == "directory" %}
+                </a>
+            {% endif %}
+        </div>
+        <div class="wrapper">
+            <span class="res-name">{{ instance.name }}</span>
+        </div>
+        <div class="resource-bar">
+            <a href="#" id="{{ prefix }}-resource-menu-{{ instance.id }}" class="{{ prefix }}-resource-menu-left">Menu</a>
+        </div>
+        <br/>
+    </span>
+{% endfor %}
+
+
+
+
 {% twig_js name="resource_list_template" %}
 {% for instance in instances %}
 <div id="wrapper">
@@ -6,7 +37,7 @@
           data-type="{{ instance.type }}"
           data-resource-id="{{ instance.resource_id }}">
         <div id="{{ prefix }}-resource-item-{{ instance.id }}" class="{{prefix}}-resource-item {{prefix}}-resource-menu-left">
-            {{ instance.name }}
+            {{ instance.name }}  tototototoo
         </div>
     </span>
 </div>
