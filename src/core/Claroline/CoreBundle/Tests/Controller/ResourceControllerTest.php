@@ -338,6 +338,14 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(0, count($jsonResponse));
     }
 
+    public function testDeleteRootThrowsAnException()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', "/resource/delete/{$this->userRoot[0]->getId()}");
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
+    }
+
     /*
     public function testCountInstances()
     {
