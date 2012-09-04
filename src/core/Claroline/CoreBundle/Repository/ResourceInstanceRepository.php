@@ -322,9 +322,9 @@ class ResourceInstanceRepository extends NestedTreeRepository
                     break;
                 case 'types': $this->bindArray($stmt, $key, $value);
                     break;
-                case 'dateTo': $stmt->bindValue($key, $criteria);
+                case 'dateTo': $stmt->bindValue($key, $value);
                     break;
-                case 'dateFrom': $stmt->bindValue($key, $criteria);
+                case 'dateFrom': $stmt->bindValue($key, $value);
                     break;
                 default:
                     break;
