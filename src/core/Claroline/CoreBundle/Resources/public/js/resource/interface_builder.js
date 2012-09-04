@@ -462,7 +462,7 @@
 
     function resizeBreadcrumb(construct){
         var resize = function(index, divSize) {
-            var size = getCrumsSize(construct);
+            var size = getBreadcrumbSize(construct);
             if(size > divSize && index >= 0) {
                 var crumLink = (($(".breadcrumb-link", construct.div)).eq(index));
                 formatResName(crumLink, 1, 9);
@@ -471,18 +471,18 @@
             }
         }
 
-        var getCrumsSize = function(construct){
-            var crumsSize = 0;
+        var getBreadcrumbSize = function(construct){
+            var breadcrumbSize = 0;
             $(".breadcrumb-link", construct.div).each(function(index, element){
-                crumsSize += ($(this).width());
+                breadcrumbSize += ($(this).width());
             })
 
-            return crumsSize;
+            return breadcrumbSize;
         }
 
         var divSize = $('.breadcrumb', construct.div).width();
-        var crumsIndex = ($(".breadcrumb-link", construct.div)).size();
+        var breadcrumbIndex = ($(".breadcrumb-link", construct.div)).size();
 
-        resize(crumsIndex, divSize, construct);
+        resize(breadcrumbIndex, divSize, construct);
     }
 })()

@@ -43,7 +43,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             rti.large_icon as large_icon";
 
     const SELECT_PATHNAME = "
-        (SELECT group_concat(ri2.name order by ri2.lft SEPARATOR ' > ')
+        (SELECT group_concat(ri2.name order by ri2.lft SEPARATOR ' / ')
                 FROM claro_resource_instance ri2
                 WHERE ri.lft between ri2.lft and ri2.rgt
                 AND ri.root = ri2.root group by root )
