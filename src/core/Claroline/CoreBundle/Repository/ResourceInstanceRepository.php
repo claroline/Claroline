@@ -357,7 +357,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
             }
         }
 
-        $sql = self::SELECT_INSTANCE . ' ' . self::FROM_INSTANCE . "
+        $sql = self::SELECT_INSTANCE . ",".self::SELECT_PATHNAME.' '. self::FROM_INSTANCE . "
             WHERE rt.is_listable = 1
             AND rt.type != 'directory'
             AND ri.workspace_id IN(" . self::SELECT_USER_WORKSPACES_ID . ")"
