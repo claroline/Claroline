@@ -43,7 +43,7 @@ class Converter
         $nodes = $repo->getPath($instance);
         $path = '';
         foreach ($nodes as $node) {
-            $path.="{$node->getName()} >";
+            $path.="{$node->getName()} /";
         }
         $instanceArray['path'] = $path;
         $array = array();
