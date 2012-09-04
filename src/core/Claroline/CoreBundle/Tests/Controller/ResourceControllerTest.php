@@ -480,12 +480,4 @@ class ResourceControllerTest extends FunctionalTestCase
             }
         }
     }
-
-    private function addResource($object, $parentId, $resourceType)
-    {
-        return $this->client
-            ->getContainer()
-            ->get('claroline.resource.manager')
-            ->create($object, $parentId, $resourceType, true, 'text/plain');
-    }
 }
