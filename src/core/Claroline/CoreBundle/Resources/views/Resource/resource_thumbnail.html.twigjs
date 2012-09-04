@@ -20,9 +20,9 @@
 
 <div class="res-thumb-list">
 {% for instance in instances %}
-    <span data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+    <span data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block">
         <div class="wrapper">
-            <input class="chk-instance" type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
+            <input class="chk-instance" type="checkbox" id="{{ instance.id }}" value="{{ instance.id }}"/>
             {% if instance.type == "directory" %}
                 <a class="link-navigate-instance" href="#">
             {% endif %}
@@ -35,13 +35,10 @@
                 </a>
             {% endif %}
         </div>
-        <div class="wrapper">
-            <span class="res-name">{{ instance.name }}</span>
-        </div>
-        <div class="resource-bar">
-            <div class="dropdown" href="#">menu</div>
-        </div>
-        <br/>
+        <label for="{{ instance.id }}">
+        <span class="res-name">{{ instance.name }}</span>
+        <span class="dropdown" href="#"><i class="icon-cog"></i></span>
+        </label>
     </span>
 {% endfor %}
 </div>
