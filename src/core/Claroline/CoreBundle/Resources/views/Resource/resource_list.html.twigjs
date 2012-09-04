@@ -16,7 +16,7 @@
             </a>
         {% endif %}
         <label for="{{ instance.id }}">
-            <span class="res-name" >{{ instance.name }}</span>
+            <span class="res-name" title="{{ instance.path }}">{{ instance.name }}</span>
         </label>
         <span class="resource-bar">
             <span class="dropdown" href="#"><i class="icon-cog"></i></span>
