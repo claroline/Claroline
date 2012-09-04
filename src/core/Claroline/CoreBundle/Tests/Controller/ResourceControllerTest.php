@@ -280,11 +280,15 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createBigTree($this->userRoot[0]->getId());
         $this->logUser($this->getFixtureReference('user/admin'));
+        $creationTimeAdminTreeOne = new \DateTime();
         $adminpwr = $this->resourceInstanceRepository->getWSListableRootResource($this->getFixtureReference('user/admin')->getPersonalWorkspace());
         $this->createBigTree($adminpwr[0]->getId());
+        sleep(2);
+        $creationTimeAdminTreeTwo = new \DateTime();
         $wsEroot = $this->resourceInstanceRepository->getWSListableRootResource($this->getFixtureReference('workspace/ws_e'));
         $this->createBigTree($wsEroot[0]->getId());
-
+        sleep(2);
+        $now = new \DateTime();
         //filter by types (1)
         $crawler = $this->client->request('GET', '/resource/filter?types0=file');
         $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
@@ -301,7 +305,15 @@ class ResourceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
 
-        //no test by date yet
+        //filter by datecreation
+        $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}");
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+
+        $crawler = $this->client->request('GET', "/resource/filter?dateTo={$now->format('Y-m-d H:i:s')}");
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+
+        $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeTwo->format('Y-m-d H:i:s')}&dateTo={$now->format('Y-m-d H:i:s')}");
+        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testEveryUserInstances()
@@ -467,5 +479,13 @@ class ResourceControllerTest extends FunctionalTestCase
                 unlink($file->getPathname());
             }
         }
+    }
+
+    private function addResource($object, $parentId, $resourceType)
+    {
+        return $this->client
+            ->getContainer()
+            ->get('claroline.resource.manager')
+            ->create($object, $parentId, $resourceType, true, 'text/plain');
     }
 }
