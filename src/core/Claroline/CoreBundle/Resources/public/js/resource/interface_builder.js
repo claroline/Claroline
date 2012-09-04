@@ -43,7 +43,7 @@
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
             var templates = resourceGetter.getTemplates();
-            var html = Twig.render(templates.listTemplate, {'instances':data});
+            var html = Twig.render(templates.listTemplate, {'instances':data,'webRoot':resourceGetter.getWebRoot()});
             construct.div.append(html);
             setMenu(construct);
         });
