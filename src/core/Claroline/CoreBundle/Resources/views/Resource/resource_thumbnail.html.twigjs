@@ -38,7 +38,7 @@
         <label for="{{ instance.id }}">
         <span class="res-name">{{ instance.name }}</span>
         </label>
-        <span class="dropdown" href="#"><i class="icon-cog"></i></span>
+        <span class="dropdown" href="#"><i class="icon-caret-down"></i></span>
     </span>
 {% endfor %}
 </div>
