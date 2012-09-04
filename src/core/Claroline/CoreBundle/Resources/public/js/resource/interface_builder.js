@@ -69,7 +69,7 @@
         });
 
         $('.breadcrumb-link', div).live('click', function(e){
-            navigate($(this).parents('.res-block', div).attr('data-id'), construct);
+            navigate($(this).attr('data-id'), construct);
         });
 
         window.onresize = function(e) {
