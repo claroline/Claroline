@@ -19,7 +19,7 @@
             <span class="res-name" title="{{ instance.path }}">{{ instance.name }}</span>
         </label>
         <span class="resource-bar">
-            <span class="dropdown" href="#"><i class="icon-cog"></i></span>
+            <span class="dropdown" href="#"><i class="icon-caret-down"></i></span>
         </span>
     </div>
 {% endfor %}
