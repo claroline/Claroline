@@ -1,0 +1,11 @@
+[
+    {% for user in users %}
+    {
+        "id": "{{ user.getId() }}",
+        "username": "{{ user.getUsername() }}",
+        "lastName": "{{ user.getLastName() }}",
+        "firstName": "{{ user.getFirstName() }}"
+    }
+    {% if not loop.last %},{% endif %}
+    {% endfor %}
+]

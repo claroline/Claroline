@@ -22,6 +22,12 @@ claro_admin_user_list:
     pattern: /user/list
     defaults: { _controller: ClarolineCoreBundle:Administration:userList }
 
+claro_admin_paginated_user_list:
+   pattern: /user/paginated/list/{page}/{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedJsonUserList }
+   options:
+      expose: true
+
 #groups
 
 claro_admin_group_creation_form:
