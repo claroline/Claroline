@@ -137,10 +137,12 @@
             paginator += '<li data-page="'+i+'"><a class="'+type+'-paginator-item" href="#">'+i+'</a></li>';
         }
         paginator += '<li><a href="#" class="'+type+'-paginator-next-item">Next</a></li></ul></div>';
-        alert('append');
+
         appendTo.after(paginator);
 
         var divSize = $('#'+type+'-paginator').width();
+
+        return $('#'+type+'-paginator');
     }
 
 
