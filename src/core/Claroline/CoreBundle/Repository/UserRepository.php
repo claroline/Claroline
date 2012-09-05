@@ -175,4 +175,19 @@ class UserRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+
+    public function findPaginatedUsers($page, $limit)
+    {
+        $offset = $limit * (--$page);
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'u')
+            ->add('from', 'Claroline\CoreBundle\Entity\User u')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $q = $qb->getQuery();
+
+        return $q->getResult();
+    }
 }

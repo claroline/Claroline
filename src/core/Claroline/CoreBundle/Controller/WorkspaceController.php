@@ -320,7 +320,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $nbIteration, self::NUMBER_USER_PER_ITERATION);
 
-        return $this->render("ClarolineCoreBundle:Workspace:dialog_user_list.{$format}.twig", array('users' => $users));
+        return $this->render("ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
     }
 
     /**
@@ -361,7 +361,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace);
 
-        return $this->render("ClarolineCoreBundle:Workspace:dialog_user_list.{$format}.twig", array('users' => $users));
+        return $this->render("ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
     }
 
     /**
@@ -391,7 +391,7 @@ class WorkspaceController extends Controller
         $em->flush();
 
         if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Workspace:dialog_user_list.json.twig', array('users' => array($user), 'workspace' => $workspace));
+            return $this->render('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => array($user)));
         }
 
         $route = $this->get('router')->generate('claro_ws_list');

@@ -19,6 +19,8 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
  */
 class AdministrationController extends Controller
 {
+    const USER_PER_PAGE = 16;
+
     /**
      * Displays the administration section index.
      *
@@ -114,12 +116,34 @@ class AdministrationController extends Controller
     public function userListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findAll();
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers(1, self::USER_PER_PAGE);
+        $query = $em->createQuery('SELECT COUNT(u.id) FROM Claroline\CoreBundle\Entity\User u');
+        $count = $query->getSingleScalarResult();
+        $pages = ceil($count/self::USER_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:user_list.html.twig',
-            array('users' => $users)
+            'ClarolineCoreBundle:Administration:user_list_main.html.twig',
+            array('users' => $users, 'pages' => $pages)
         );
+    }
+
+    /**
+     *
+     */
+    public function paginatedJsonUserListAction($page, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($page, self::USER_PER_PAGE);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
+
+        $response = new Response($content);
+        if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
     }
 
     /**
