@@ -55,13 +55,17 @@
         $('.date-to', div).first().on('change', function(){
             divFiltersString.html(getActiveFilterString(div));
         })
+        $('.field-res-name', div).first().on('change', function(){
+            divFiltersString.html(getActiveFilterString(div));
+        })
     }
 
     function getActiveFilterString(div) {
         return $('.select-root', div).first().val()+','
         +$('.select-type', div).first().val()+','
         +$('.date-from', div).first().val()+','
-        +$('.date-to', div).val();
+        +$('.date-to', div).val()+','
+        +$('.field-res-name', div).val();
     }
 
     function createFilterRoute(div) {
@@ -88,6 +92,10 @@
 
         if($('.date-to', div).first().val()!= '') {
             parameters['dateTo'] = $('.date-to').first().val();
+        }
+
+        if($('.field-res-name', div).first().val()!= '') {
+            parameters['name'] = $('.field-res-name').first().val();
         }
 
         return Routing.generate('claro_resource_filter', parameters);

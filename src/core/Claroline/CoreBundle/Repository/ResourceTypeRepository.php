@@ -40,11 +40,14 @@ class ResourceTypeRepository extends EntityRepository
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function findNavigableResourceTypeWithoutDirectory()
+    public function findNavigableResourceType($isDirectoryIncluded = true)
     {
         $dql = "
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.type != 'directory' and rt.isListable = true";
+            WHERE rt.isListable = true";
+        if (!$isDirectoryIncluded) {
+            $dql.="and rt.type != 'directory'";
+        }
 
         $query = $this->_em->createQuery($dql);
 
