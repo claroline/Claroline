@@ -129,6 +129,21 @@
         return values;
     }
 
+    utils.renderPager = function (nbPage, activePage, type, appendTo){
+        var paginator = '';
+        paginator += '<div id="'+type+'-paginator" class="pagination"><ul><li><a class="'+type+'-paginator-prev-item" href="#">Prev</a></li>'
+        for (var i = 0; i < nbPage;) {
+            i++;
+            paginator += '<li data-page="'+i+'"><a class="'+type+'-paginator-item" href="#">'+i+'</a></li>';
+        }
+        paginator += '<li><a href="#" class="'+type+'-paginator-next-item">Next</a></li></ul></div>';
+        alert('append');
+        appendTo.after(paginator);
+
+        var divSize = $('#'+type+'-paginator').width();
+    }
+
+
     utils.getUriParameters = function(name){
         var vars = [], hash;
         var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
