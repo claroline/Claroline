@@ -1,35 +1,35 @@
-$(function(){
-    var twigWorkspaceId = document.getElementById('twig_attributes').getAttribute('data-workspaceId');
-    var twigDeleteTranslation = document.getElementById('twig_attributes').getAttribute('data-translation.delete');
+(function(){
+    var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
+    var twigDeleteTranslation = document.getElementById('twig-attributes').getAttribute('data-translation.delete');
 
     var nbIterationUsers=0;
     var nbIterationGroups=0;
 
-    $(".loading").hide();
-    $('#user_dialog').dialog({
-        autoOpen: false,
-        height: 300,
-        width: 500,
-        maxHeight: 300,
-        minHeight: 150,
-        mawWidth: 500
-    });
-    $('#group_dialog').dialog({
-        autoOpen: false,
-        height: 300,
-        width: 500,
-        maxHeight: 300,
-        minHeight: 150,
-        maxWidth: 500
-    });
-    $('#show_user_dialog_button').click(function(){
-        $("#user_dialog").dialog('open');
-    });
-    $('#show_group_dialog_button').click(function(){
-        $("#group_dialog").dialog('open');
+    $('#user-loading').hide();
+
+    $('#bootstrap-modal').modal({
+        show: false,
+        backdrop: false
     });
 
-    $('#user_checkboxes').on('click', '.checkbox_user_name', function(event){
+    $('#bootstrap-modal').on('hidden', function(){
+        /*$('#modal-login').empty();
+        $('#modal-body').show();*/
+        //the page must be reloaded or it'll break dynatree
+        if ($('#modal-login').find('form').attr('id') == 'login_form'){
+            window.location.reload();
+        }
+    })
+
+    $('#add-user-button').click(function(){
+         $('#bootstrap-modal-user').modal('show');
+    });
+
+    $('#add-group-button').click(function(){
+         $('#bootstrap-modal-group').modal('show');
+    });
+
+    $('#user-checkboxes').on('click', '.checkbox-user-name', function(event){
         var userId = $(this).val();
         if ($(this).is(':checked')){
             setOnAddUserChkBox(userId);
@@ -47,19 +47,19 @@ $(function(){
         }
     });
 
-    $('#add_next_users').click(function(){
-        $('#user_loading').show();
-        sendRequest(
-            'claro_ws_users_limited_list',
-            {'workspaceId': twigWorkspaceId, 'nbIteration': nbIterationUsers, 'format':'json'},
+    $('#lazy-load-user-button').click(function(){
+        $('#user-loading').show();
+        var route = Routing.generate('claro_ws_users_limited_list', {'workspaceId': twigWorkspaceId, 'nbIteration': nbIterationUsers, 'format':'json'});
+        ClaroUtils.sendRequest(
+            route,
             function(data){
                 if (nbIterationUsers == 0){
-                    $('.checkbox_user_name').remove();
-                    $('user_table_checkboxes_body').empty();
+                    $('.checkbox-user-name').remove();
+                    $('#user-table-checkboxes-body').empty();
                 }
                 nbIterationUsers++;
                 createUsersChkBoxes(data);
-                $('#user_loading').hide();
+                $('#user-loading').hide();
             }
         );
     });
@@ -81,19 +81,18 @@ $(function(){
         );
     });
 
-    $('#search_user_button').click(function(){
-        $('#user_loading').show();
-        alert("click");
-        var search = document.getElementById('search_user_txt').value;
+    $('#search-user-button').click(function(){
+        $('#user-loading').show();
+        var search = document.getElementById('search-user-txt').value;
         nbIterationUsers = 0;
-        sendRequest(
-            'claro_ws_search_unregistered_users_by_names',
-            {'search': search, 'workspaceId': twigWorkspaceId, 'format': 'json'},
+        var route = Routing.generate('claro_ws_search_unregistered_users_by_names', {'search': search, 'workspaceId': twigWorkspaceId, 'format': 'json'})
+        ClaroUtils.sendRequest(
+            route,
             function(data){
-                $('.checkbox_user_name').remove();
-                $('#user_table_checkboxes_body').empty();
+                $('.checkbox-user-name').remove();
+                $('#user-table-checkboxes-body').empty();
                 createUsersChkBoxes(data);
-                $('#user_loading').hide();
+                $('#user-loading').hide();
             }
         );
     });
@@ -116,9 +115,9 @@ $(function(){
 
     function setOnAddUserChkBox(userId)
     {
-        sendRequest(
-            'claro_ws_add_user',
-            {'userId': userId, 'workspaceId': twigWorkspaceId},
+        var route = Routing.generate('claro_ws_add_user',  {'userId': userId, 'workspaceId': twigWorkspaceId});
+        ClaroUtils.sendRequest(
+            route,
             function(data){
                 createUserCallbackLi(data);
             }
@@ -127,11 +126,11 @@ $(function(){
 
     function setOnRemoveUserChkBox(userId)
     {
-        sendRequest(
-            'claro_ws_remove_user',
-            {'userId': userId, 'workspaceId': twigWorkspaceId},
+        var route = Routing.generate('claro_ws_remove_user', {'userId': userId, 'workspaceId': twigWorkspaceId});
+        ClaroUtils.sendRequest(
+            route,
             function(data){
-                $('#user_' + userId).remove();
+                $('#user-' + userId).remove();
             }
         );
     }
@@ -149,27 +148,13 @@ $(function(){
 
     function setOnRemoveGroupChkBox(groupId)
     {
-        sendRequest(
-            'claro_ws_remove_group',
-            {'groupId': groupId, 'workspaceId': twigWorkspaceId},
+        var route = Routing.generate('claro_ws_remove_group', {'groupId': groupId, 'workspaceId': twigWorkspaceId});
+        ClaroUtils.sendRequest(
+            route,
             function(data){
                 $('#group_' + groupId).remove();
             }
         );
-    }
-
-    function sendRequest(route, routeParams, successHandler)
-    {
-        $.ajax({
-            type: 'POST',
-            url: Routing.generate(route, routeParams),
-            cache: false,
-            dataType: 'html',
-            success: successHandler,
-            error: function(xhr){
-                alert(xhr.status);
-            }
-        });
     }
 
     function createGroupsChkBoxes(JSONString)
@@ -195,12 +180,12 @@ $(function(){
         while (i<JSONObject.length)
         {
             var list = '<tr>'
-            +'<td align="center"><input class="checkbox_user_name" id="checkbox_user_'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox_user_'+JSONObject[i].id+'"></input></td>'
+            +'<td align="center"><input class="checkbox-user-name" id="checkbox-user-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-user-'+JSONObject[i].id+'"></input></td>'
             +'<td align="center">'+JSONObject[i].username+'</td>'
             +'<td align="center">'+JSONObject[i].lastName+'</td>'
             +'<td align="center">'+JSONObject[i].firstName+'</td>'
             +'</tr>';
-            $('#user_table_checkboxes_body').append(list);
+            $('#user-table-checkboxes-body').append(list);
             i++;
         }
     }
@@ -211,12 +196,11 @@ $(function(){
         var i=0;
         while (i<JSONObject.length)
         {
-            var li = '<li class="row_user" id="user_'+JSONObject[i].id+'">'+JSONObject[i].username
-            +'<a href="'+Routing.generate('claro_ws_remove_user', {'userId':JSONObject[i].id, 'workspaceId':twigWorkspaceId })+' id="link_delete_user_'+JSONObject[i].id+'">'+ twigDeleteTranslation+'</a>'
+            var li = '<li class="row-user" id="user-'+JSONObject[i].id+'">'+JSONObject[i].username
+            +'<a href="'+Routing.generate('claro_ws_remove_user', {'userId':JSONObject[i].id, 'workspaceId':twigWorkspaceId})+' id="link_delete_user_'+JSONObject[i].id+'"> '+twigDeleteTranslation+'</a>'
             +'</li>';
-            alert(li);
-            $('#workspace_users').append(li);
+            $('#workspace-users').append(li);
             i++;
         }
     }
-});
+})()
