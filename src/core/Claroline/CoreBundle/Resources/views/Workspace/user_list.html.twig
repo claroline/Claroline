@@ -9,16 +9,16 @@
     <a href="{{ path('claro_ws_show', {'workspaceId': workspace.getId()}) }}" class="link_show" id="link_show_{{ workspace.getId }}">{{ workspace.getName() }}</a>
     {{ 'registered_users'|trans({}, 'platform') }}
     <!-- twig variables are here in order to make javascript happy -->
-    <div id="twig_attributes"
+    <div id="twig-attributes"
          data-workspaceId="{{workspace.getId()}}"
          data-translation.delete="{{ 'delete'|trans({}, 'platform') }}">
     </div>
-    <button id="show_user_dialog_button">{{ 'add_user'|trans({}, 'platform') }}</button>
-    <button id="show_group_dialog_button">{{ 'add_group'|trans({}, 'platform') }}</button>
+    <button id="add-user-button">{{ 'add_user'|trans({}, 'platform') }}</button>
+    <button id="add-group-button">{{ 'add_group'|trans({}, 'platform') }}</button>
 
-    <ul id="workspace_users">
+    <ul id="workspace-users">
         {% for user in users %}
-            <li class="row_user" id="user_{{user.getId()}}" >
+            <li class="row-user" id="user-{{user.getId()}}" >
                 {{ user.getUsername() }}
                 <a href="{{ path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() }) }}" id="link_delete_user_{{ user.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
             </li>
@@ -26,37 +26,55 @@
     </ul>
 
     {{ 'registered_groups'|trans({},'platform') }}
-    <ul id="workspace_groups">
+    <ul id="workspace-groups">
         {% for group in groups %}
-            <li class="row_group" id="group_{{group.getId()}}">
+            <li class="row-group" id="group-{{group.getId()}}">
                |<a href ="{{ path('claro_ws_remove_group', {'groupId':group.getId(), 'workspaceId':workspace.getId()}) }}" id="link_delete_group_{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
             </li>
         {% endfor %}
     </ul>
 
     <!-- dialog boxes ------------------------------------------------------------------->
-
-    <div id="user_dialog" title="{{ 'list_users'|trans({}, 'platform') }}">
-        <div id="user_search_div">
-            <input type="text" id="search_user_txt" value="" />
-            <input type="button" id="search_user_button" value ="search" /></br>
+    <div id="bootstrap-modal-user" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Modal header</h3>
         </div>
-        <form id="list_user_form" >
-            <div id="user_checkboxes">
-                <table id="user_table_checkboxes" class="table table-striped table-bordered table-condensed">
-                    <thead>
+        <div class="modal-body">
+            <div id="user-search-div">
+                <input type="text" id="search-user-txt" value="" />
+                <input type="button" id="search-user-button" value ="search" /></br>
+            </div>
+            <form id="list-user-form" >
+                <div id="user-checkboxes">
+                    <table id="user-table-checkboxes" class="table table-striped table-bordered table-condensed">
+                        <thead>
                         <th></th>
                         <th>{{ 'username'|trans({}, 'platform') }}</th>
                         <th>{{ 'last_name'|trans({}, 'platform') }}</th>
                         <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                    </thead>
-                    <tbody id="user_table_checkboxes_body">
-                    </tbody>
-                </table>
-            </div>
-            <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="user_loading" class="loading"/></br>
-            <input type="button" id="add_next_users" value="add next"/>
-        </form>
+                        </thead>
+                        <tbody id="user-table-checkboxes-body">
+                        </tbody>
+                    </table>
+                </div>
+                <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="user-loading" class="loading"/></br>
+                <input type="button" id="lazy-load-user-button" value="next"/>
+            </form>
+        </div>
+    </div>
+
+    <div id="bootstrap-modal-group" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Modal header</h3>
+        </div>
+        <div class="modal-body">
+            <p>One fine body…</p>
+        </div>
+    </div>
+<!--
+    <div id="user_dialog" title="{{ 'list_users'|trans({}, 'platform') }}">
     </div>
 
     <div id="group_dialog" title="{{ 'list_groups'|trans({}, 'platform') }}">
@@ -72,4 +90,5 @@
             <input type="button" id="add_next_groups" value="add next"/>
         </form>
     </div>
+-->
 {% endblock %}

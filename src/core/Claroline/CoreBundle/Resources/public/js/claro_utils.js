@@ -1,19 +1,5 @@
 (function ($, window, undefined) {
 
-    $('#bootstrap-modal').modal({
-        show: false,
-        backdrop: false
-    });
-
-    $('#bootstrap-modal').on('hidden', function(){
-        /*$('#modal-login').empty();
-        $('#modal-body').show();*/
-        //the page must be reloaded or it'll break dynatree
-        if ($('#modal-login').find('form').attr('id') == 'login_form'){
-            window.location.reload();
-        }
-    })
-
     var utils = this.ClaroUtils = {};
 
     utils.ajaxAuthenticationErrorHandler = function (callBack) {
