@@ -70,7 +70,8 @@ class CreateUsersCommand extends ContainerAwareCommand
             "Benjamen",
             "ObiWan",
             "George",
-            "Barack"
+            "Barack",
+            "Alfred"
             );
 
          $this->lastNames = array(
@@ -177,15 +178,13 @@ class CreateUsersCommand extends ContainerAwareCommand
             $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
 
             if ($input->getOption('admin')) {
-                $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
-                $user->addRole($adminRole);
+                $role = $roleRepo->findOneByName(PlatformRoles::ADMIN);
             } elseif ($input->getOption('ws_creator')) {
-                $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
-                $user->addRole($wsCreatorRole);
+                $role = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
             } else {
-                $userRole = $roleRepo->findOneByName(PlatformRoles::USER);
-                $user->addRole($userRole);
+                $role = $roleRepo->findOneByName(PlatformRoles::USER);
             }
+            $user->addRole($role);
 
             $em->persist($user);
             $config = new Configuration();
