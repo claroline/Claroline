@@ -78,7 +78,9 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             array($largeIconsWebFolder.'res_msexcel.png', $defaultIcon, $completeIconMimeType, 'application/excel'),
             array($largeIconsWebFolder.'res_mspowerpoint.png', $defaultIcon, $completeIconMimeType, 'application/powerpoint'),
             array($largeIconsWebFolder.'res_msword.png', $defaultIcon, $completeIconMimeType, 'application/msword'),
-            array($largeIconsWebFolder.'res_pdf.png', $defaultIcon, $completeIconMimeType, 'application/pdf')
+            array($largeIconsWebFolder.'res_msword.png', $defaultIcon, $completeIconMimeType, 'application/vnd.oasis.opendocument.text'),
+            array($largeIconsWebFolder.'res_pdf.png', $defaultIcon, $completeIconMimeType, 'application/pdf'),
+            array($largeIconsWebFolder.'res_image.png', $defaultIcon, $basicIconMimeType, 'image'),
         );
 
         foreach ($resourceImages as $resourceImage) {
