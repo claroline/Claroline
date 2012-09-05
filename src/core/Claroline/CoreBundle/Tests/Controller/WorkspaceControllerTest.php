@@ -88,10 +88,10 @@ class WorkspaceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-        $this->assertEquals(1, $crawler->filter(".row_user")->count());
-        $link = $crawler->filter("#link_delete_user_{$this->getFixtureReference('user/ws_creator')->getId()}")->link();
+        $this->assertEquals(1, $crawler->filter(".row-user")->count());
+        $link = $crawler->filter("#link-delete-user-{$this->getFixtureReference('user/ws_creator')->getId()}")->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(0, $crawler->filter(".row_user")->count());
+        $this->assertEquals(0, $crawler->filter(".row-user")->count());
     }
 
     public function testDeleteGroupFromWorkspace()
@@ -101,10 +101,10 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadManyGroupsData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', "workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-        $this->assertEquals(1, $crawler->filter(".row_group")->count());
-        $link = $crawler->filter("#link_delete_group_{$this->getFixtureReference('group/manyGroup1')->getId()}")->link();
+        $this->assertEquals(1, $crawler->filter(".row-group")->count());
+        $link = $crawler->filter("#link-delete-group-{$this->getFixtureReference('group/manyGroup1')->getId()}")->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(0, $crawler->filter(".row_group")->count());
+        $this->assertEquals(0, $crawler->filter(".row-group")->count());
     }
 
     public function testLimitedUserList()
@@ -131,7 +131,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $users = json_decode($response);
         $this->assertEquals(1, count($users));
         $crawler = $this->client->request('GET', "/workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-        $this->assertEquals(2, $crawler->filter(".row_user")->count());
+        $this->assertEquals(2, $crawler->filter(".row-user")->count());
     }
 
     public function testControllerDeleteUserFromWorkspaceWithAjax()
@@ -214,7 +214,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $groups = json_decode($response);
         $this->assertEquals(1, count($groups));
         $crawler = $this->client->request('GET', "/workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}");
-        $this->assertEquals(1, $crawler->filter(".row_group")->count());
+        $this->assertEquals(1, $crawler->filter(".row-group")->count());
     }
 
     public function testDeleteGroupFromWorkspaceWithAjax()

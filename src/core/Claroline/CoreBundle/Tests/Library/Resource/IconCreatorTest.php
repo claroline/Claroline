@@ -89,7 +89,7 @@ class IconCreatorTest extends FixtureTestCase
             $this->assertEquals(1, count($thumbs));
         } else {
             $name = $file->getIcon()->getLargeIcon();
-            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_file.png', $name);
+            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.png', $name);
         }
     }
 

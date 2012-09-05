@@ -13,7 +13,7 @@
     </thead>
     <tbody>
         {% for user in users %}
-            <tr id="{{ user.getId() }}" class="row_user">
+            <tr id="{{ user.getId() }}" class="row-user">
                 <td>{{ user.getId() }}</td>
                 <td>{{ user.getUsername() }}</td>
                 <td>{{ user.getLastName() }}</td>
@@ -32,7 +32,7 @@
                         <td> - </td>
                     {% else %}
                         <td>
-                            <a class="link_delete"
+                            <a class="link-delete" id='link-delete-user-{{user.getId()}}'
                                 href="{{ path('claro_admin_delete_user', {'userId': user.getId()}) }}">
                                 {{ 'delete'|trans({}, 'platform') }}
                             </a>

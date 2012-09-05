@@ -20,7 +20,7 @@
         {% for user in users %}
             <li class="row-user" id="user-{{user.getId()}}" >
                 {{ user.getUsername() }}
-                <a href="{{ path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() }) }}" id="link_delete_user_{{ user.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                <a href="{{ path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() }) }}" id="link-delete-user-{{ user.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
             </li>
         {% endfor %}
     </ul>
@@ -29,7 +29,7 @@
     <ul id="workspace-groups">
         {% for group in groups %}
             <li class="row-group" id="group-{{group.getId()}}">
-               |<a href ="{{ path('claro_ws_remove_group', {'groupId':group.getId(), 'workspaceId':workspace.getId()}) }}" id="link_delete_group_{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
+               |<a href ="{{ path('claro_ws_remove_group', {'groupId':group.getId(), 'workspaceId':workspace.getId()}) }}" id="link-delete-group-{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
             </li>
         {% endfor %}
     </ul>

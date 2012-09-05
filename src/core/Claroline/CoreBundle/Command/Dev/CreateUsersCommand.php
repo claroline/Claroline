@@ -78,7 +78,9 @@ class CreateUsersCommand extends ContainerAwareCommand
             "Rodney",
             "Greg",
             "Bob",
-            "Robert"
+            "Robert",
+            "Jean-Kevin",
+            "Charles-Henry"
             );
 
          $this->lastNames = array(
@@ -125,7 +127,9 @@ class CreateUsersCommand extends ContainerAwareCommand
              "McKay",
              "Fields",
              "Bruel",
-             "Kottick"
+             "Kottick",
+             "Dupond",
+             "Leloux"
         );
 
         $this->maxFirstNameOffset = count($this->firstNames);
