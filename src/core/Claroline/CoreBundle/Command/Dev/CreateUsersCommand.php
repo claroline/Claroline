@@ -26,6 +26,7 @@ class CreateUsersCommand extends ContainerAwareCommand
     public function __construct()
     {
         parent::__construct();
+
         $this->firstNames = array(
             "Mary",
             "Amanda",
@@ -46,13 +47,30 @@ class CreateUsersCommand extends ContainerAwareCommand
             "Frederic",
             "Luke",
             "Luc",
-            "Kenny",
-            "Stan",
+            "Kenneth",
+            "Stanley",
             "Kyle",
+            "Leopold",
             "Eric",
             "Matthieu",
             "Aurelie",
-            "Elisabeth"
+            "Elisabeth",
+            "Louis",
+            "Jerome",
+            "Ned",
+            "Ralph",
+            "Charles Montgomery",
+            "Waylon",
+            "Carl",
+            "Timothy",
+            "Kirk",
+            "Milhouse",
+            "Todd",
+            "Maude",
+            "Benjamen",
+            "ObiWan",
+            "George",
+            "Barack"
             );
 
          $this->lastNames = array(
@@ -67,15 +85,31 @@ class CreateUsersCommand extends ContainerAwareCommand
              "Klein",
              "Godfraind",
              "Gervy",
-             "Mervaille",
+             "Fervaille",
              "Minne",
              "Skywalker",
              "Marsh",
              "Broflovski",
              "Cartman",
+             "Stotch",
              "McCormick",
              "McLane",
-             "Bourne"
+             "Bourne",
+             "Yates",
+             "McElroy",
+             "Flanders",
+             "Wiggum",
+             "Burns",
+             "Smithers",
+             "Carlson",
+             "LoveJoy",
+             "Van Houten",
+             "Gate",
+             "Kenobi",
+             "Lucas",
+             "Clooney",
+             "Harisson",
+             "Obama"
         );
 
         $this->maxFirstNameOffset = count($this->firstNames);
@@ -117,7 +151,7 @@ class CreateUsersCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the user {$argumentName}: ", function($argument) {
+            $output, "Enter the {$argumentName}: ", function($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
@@ -165,6 +199,8 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);
             $em->flush();
+
+            echo('user ' +$i+ 'created\n');
         }
     }
 }
