@@ -80,7 +80,13 @@ class CreateUsersCommand extends ContainerAwareCommand
             "Bob",
             "Robert",
             "Jean-Kevin",
-            "Charles-Henry"
+            "Charles-Henry",
+            "Douglas",
+            "Arthur",
+            "Marvin",
+            "Bruce",
+            "William",
+            "Jason"
             );
 
          $this->lastNames = array(
@@ -129,7 +135,17 @@ class CreateUsersCommand extends ContainerAwareCommand
              "Bruel",
              "Kottick",
              "Dupond",
-             "Leloux"
+             "Leloux",
+             "Miller",
+             "Adams",
+             "Dent",
+             "Accroc",
+             "Prefect",
+             "Escort",
+             "Sheridan",
+             "William",
+             "Willis",
+             "Lee"
         );
 
         $this->maxFirstNameOffset = count($this->firstNames);

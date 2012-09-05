@@ -171,8 +171,7 @@
                 ClaroUtils.sendRequest(route,
                     function(count){
                         construct.div.empty();
-                        var paginator = buildPaginator(count);
-                        div.append(paginator);
+                        ClaroUtils.renderPager(count, 1, 'instance', div)
                         rendersFlatPaginatedThumbnails(construct);
 
                         $('.instance-paginator-item').on('click', function(e){
@@ -235,19 +234,6 @@
 
         var searched = $('li[data-page="'+item+'"]');
         searched.first().addClass('active');
-    }
-
-    function buildPaginator(nbPage)
-    {
-        var paginator = '';
-        paginator += '<div id="instances-paginator" class="pagination"><ul><li><a class="instance-paginator-prev-item" href="#">Prev</a></li>'
-        for (var i = 0; i < nbPage;) {
-            i++;
-            paginator += '<li data-page="'+i+'"><a class="instance-paginator-item" href="#">'+i+'</a></li>';
-        }
-        paginator += '<li><a href="#" class="instance-paginator-next-item">Next</a></li></ul></div>';
-
-        return paginator;
     }
 
     function getSelectedItems(construct)

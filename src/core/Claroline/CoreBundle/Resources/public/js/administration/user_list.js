@@ -1,6 +1,8 @@
 (function () {
     var activePagerItem = 1;
 
+    ClaroUtils.renderPager(document.getElementById('twig-attributes').getAttribute('data-pages'), 1, 'user', $('#user-table'));
+
     $('.user-paginator-item').on('click', function(e){
         activePagerItem = e.target.innerHTML;
         renderUsers();

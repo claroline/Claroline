@@ -57,11 +57,7 @@
         </tbody>
     </table>
 
-    <div id="user-paginator" class="pagination"><ul><li><a class="user-paginator-prev-item" href="#">Prev</a></li>
-    {% for i in 0..pages %}
-        <li data-page="'+i+'"><a class="user-paginator-item" href="#">{{ i+1 }}</a></li>
-    {% endfor %}
-    <li><a href="#" class="user-paginator-next-item">Next</a></li>
-    </ul>
+    <div id="twig-attributes"
+         data-pages="{{ pages }}"
     </div>
 {% endblock %}
