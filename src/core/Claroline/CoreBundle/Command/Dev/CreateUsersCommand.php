@@ -187,7 +187,7 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user = new User();
             $user->setFirstName($this->firstNames[rand(0, $this->maxFirstNameOffset)]);
             $user->setLastName($this->lastNames[rand(0, $this->maxLastNameOffset)]);
-            $user->setUsername($user->getFirstName().$user->getLastName().rand(0,1000));
+            $user->setUsername($user->getFirstName() . $user->getLastName() . rand(0, 1000));
             $user->setPlainPassword('123');
             $em = $this->getContainer()->get('doctrine.orm.entity_manager');
             $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
