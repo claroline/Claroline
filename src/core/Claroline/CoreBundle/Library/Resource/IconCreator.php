@@ -136,13 +136,13 @@ class IconCreator
      * @param string $name (required if it's a file)
      * @param
      */
-    public function setResourceIcon(AbstractResource $resource, $mimeType = null)
+    public function setResourceIcon(AbstractResource $resource, $mimeType = null, $isFixture = false)
     {
         $type = $resource->getResourceType();
         if ($type->getType() !== 'file') {
             $imgs = $this->getTypeIcon($type);
         } else {
-            $imgs = $this->getFileIcon($resource, $mimeType);
+            $imgs = $this->getFileIcon($resource, $mimeType, $isFixture);
         }
 
         $resource->setIcon($imgs);
@@ -150,14 +150,14 @@ class IconCreator
         return $resource;
     }
 
-    public function getFileIcon($resource, $mimeType)
+    public function getFileIcon($resource, $mimeType, $isFixture)
     {
         if ($mimeType === null) {
             throw new \InvalidArgumentException("no mimeType specified for the file icon: {$resource->getId()}");
         }
         $mimeElements = explode('/', $mimeType);
         //if video or img => generate the thumbnail, otherwise find an existing one.
-        if ($mimeElements[0] === 'video' || $mimeElements[0] === 'image') {
+        if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')&& $isFixture == false) {
 
             $originalPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
             $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid();
@@ -178,6 +178,7 @@ class IconCreator
                 $imgs = $this->searchFileIcon($mimeType);
             }
         } else {
+            echo($mimeType);
             $imgs = $this->searchFileIcon($mimeType);
         }
 

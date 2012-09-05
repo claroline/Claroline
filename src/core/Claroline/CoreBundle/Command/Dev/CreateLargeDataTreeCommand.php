@@ -18,6 +18,35 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         parent::__construct();
         $this->directoryCount = 0;
         $this->fileCount = 0;
+
+        $this->dirNames = array(
+            'my files',
+            'courses',
+            'lessons',
+            'misc',
+            'private',
+            'public',
+            'documents'
+        );
+
+        $this->dirNamesOffset = count($this->dirNames);
+        $this->dirNamesOffset--;
+
+        $this->fileNames = array(
+            'video.mp4',
+            'video.mov',
+            'video.flv',
+            'pdf.pdf',
+            'office.odt',
+            'text.txt',
+            'image.png',
+            'image.jpg',
+            'gif.gif'
+        );
+
+        $this->fileNamesOffset = count($this->fileNames);
+        $this->fileNamesOffset--;
+
     }
 
     protected function configure()
@@ -98,13 +127,14 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
             ->findOneBy(array('type' => 'file'));
 
         for ($j = 0; $j < $directoryCount; $j++) {
-            $ri = $this->addDirectory($this->getContainer()->get('claroline.resource.utilities')->generateGuid(), $parent, $dirType, $user);
+
+            $ri = $this->addDirectory($this->dirNames[rand(0, $this->dirNamesOffset)], $parent, $dirType, $user);
             $this->directoryCount++;
             if ($this->directoryCount%100 === 0) {
                 $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
             }
             for ($k = 0; $k < $fileCount; $k++) {
-                $this->addFile($this->getContainer()->get('claroline.resource.utilities')->generateGuid(), $ri, $fileType, $user);
+                $this->addFile($this->fileNames[rand(0, $this->fileNamesOffset)], $ri, $fileType, $user);
                 $this->filesCount++;
                 if ($this->filesCount%100 === 0) {
                     $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -146,11 +176,11 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $file->setCreator($user);
         $file->setHashName($hash);
         $file->setSize(0);
-        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, 'text/plain');
+        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, $this->getMimeType($name), true);
         $ri = new ResourceInstance();
         $ri->setCreator($user);
         $ri->setResource($file);
-        $ri->setName($name.'.txt');
+        $ri->setName($name);
         $ri->setParent($parent);
         $ri->setWorkspace($parent->getWorkspace());
         $em = $this->getContainer()->get('doctrine.orm.entity_manager')->persist($file);
@@ -158,5 +188,23 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         echo "addFile $name \n";
 
         return $ri;
+    }
+
+    private function getMimeType($name)
+    {
+        $ext = pathinfo($name, PATHINFO_EXTENSION);
+
+        $mimeTypes = array();
+        $mimeTypes['mov'] = 'video/mov';
+        $mimeTypes['flv'] = 'video/flv';
+        $mimeTypes['mp4'] = 'video/mp4';
+        $mimeTypes['pdf'] = 'application/pdf';
+        $mimeTypes['odt'] = 'application/vnd.oasis.opendocument.text';
+        $mimeTypes['txt'] = 'plain/text';
+        $mimeTypes['png'] = 'image/png';
+        $mimeTypes['jpg'] = 'image/jpg';
+        $mimeTypes['gif'] = 'image/gif';
+
+        return $mimeTypes[$ext];
     }
 }

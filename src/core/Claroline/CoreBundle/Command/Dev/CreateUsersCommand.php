@@ -18,11 +18,6 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  */
 class CreateUsersCommand extends ContainerAwareCommand
 {
-    private $firstNames;
-    private $lastNames;
-    private $maxFirstNameOffset;
-    private $maxLastNameOffset;
-
     public function __construct()
     {
         parent::__construct();
@@ -71,7 +66,11 @@ class CreateUsersCommand extends ContainerAwareCommand
             "ObiWan",
             "George",
             "Barack",
-            "Alfred"
+            "Alfred",
+            "Paul",
+            "Gabriel",
+            "Anne",
+            "Theophile"
             );
 
          $this->lastNames = array(
@@ -110,7 +109,8 @@ class CreateUsersCommand extends ContainerAwareCommand
              "Lucas",
              "Clooney",
              "Harisson",
-             "Obama"
+             "Obama",
+             "Bush"
         );
 
         $this->maxFirstNameOffset = count($this->firstNames);
@@ -199,7 +199,7 @@ class CreateUsersCommand extends ContainerAwareCommand
             $em->persist($workspace);
             $em->flush();
 
-            echo('user ' +$i+ 'created\n');
+            echo("--- user {$i} created \n");
         }
     }
 }

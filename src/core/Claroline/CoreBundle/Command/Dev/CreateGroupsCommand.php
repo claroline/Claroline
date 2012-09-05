@@ -87,6 +87,8 @@ class CreateGroupsCommand extends ContainerAwareCommand
 
             $em->persist($group);
             $em->flush();
+
+            echo("--- group {$i} created \n");
         }
     }
 }
