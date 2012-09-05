@@ -63,7 +63,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
-        $this->assertEquals(6, $crawler->filter('.row_user')->count());
+        $this->assertEquals(6, $crawler->filter('.row-user')->count());
     }
 
     public function testAdminCanDeleteUser()
@@ -71,10 +71,10 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $link = $crawler->filter('#link_administration')->link();
         $crawler = $this->client->request('GET', 'admin/user/list');
-        $this->assertEquals(5, $crawler->filter('.row_user')->count());
-        $link = $crawler->filter('.link_delete')->eq(0)->link();
+        $this->assertEquals(5, $crawler->filter('.row-user')->count());
+        $link = $crawler->filter('.link-delete')->eq(0)->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(4, $crawler->filter('.row_user')->count());
+        $this->assertEquals(4, $crawler->filter('.row-user')->count());
     }
 
     public function testAdminCannotDeleteHimself()
@@ -82,7 +82,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $admin = $this->getFixtureReference('user/admin');
         $crawler = $this->logUser($admin);
         $crawler = $this->client->request('GET', 'admin/user/list');
-        $this->assertEquals(5, $crawler->filter('.row_user')->count());
+        $this->assertEquals(5, $crawler->filter('.row-user')->count());
         $this->assertEquals(0, count($crawler->filter('.link_delete')->eq(4)));
         $this->client->request('GET', "/admin/user/delete/{$admin->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
