@@ -39,6 +39,7 @@
         construct.pasteIds = {};
         construct.cpd = null;
         construct.activePagerItem = 1;
+        construct.pager = null;
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
@@ -171,7 +172,7 @@
                 ClaroUtils.sendRequest(route,
                     function(count){
                         construct.div.empty();
-                        ClaroUtils.renderPager(count, 1, 'instance', div)
+                        construct.pager = ClaroUtils.renderPager(count, 1, 'instance', div)
                         rendersFlatPaginatedThumbnails(construct);
 
                         $('.instance-paginator-item').on('click', function(e){
@@ -190,6 +191,7 @@
                         })
                     });
             } else {
+                construct.pager.remove();
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             }
         })
