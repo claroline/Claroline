@@ -18,6 +18,72 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  */
 class CreateUsersCommand extends ContainerAwareCommand
 {
+    private $firstNames;
+    private $lastNames;
+    private $maxFirstNameOffset;
+    private $maxLastNameOffset;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->firstNames = array(
+            "Mary",
+            "Amanda",
+            "James",
+            "Patricia",
+            "Michael",
+            "Sarah",
+            "Patrick",
+            "Homer",
+            "Bart",
+            "Marge",
+            "Lisa",
+            "John",
+            "Stan",
+            "Stephane",
+            "Emmanuel",
+            "Nicolas",
+            "Frederic",
+            "Luke",
+            "Luc",
+            "Kenny",
+            "Stan",
+            "Kyle",
+            "Eric",
+            "Matthieu",
+            "Aurelie",
+            "Elisabeth"
+            );
+
+         $this->lastNames = array(
+             "Johnson",
+             "Miller",
+             "Brown",
+             "Williams",
+             "Davis",
+             "Simpson",
+             "Smith",
+             "Doe",
+             "Klein",
+             "Godfraind",
+             "Gervy",
+             "Mervaille",
+             "Minne",
+             "Skywalker",
+             "Marsh",
+             "Broflovski",
+             "Cartman",
+             "McCormick",
+             "McLane",
+             "Bourne"
+        );
+
+        $this->maxFirstNameOffset = count($this->firstNames);
+        $this->maxFirstNameOffset--;
+        $this->maxLastNameOffset = count($this->lastNames);
+        $this->maxLastNameOffset--;
+    }
+
     protected function configure()
     {
         $this->setName('claroline:users:create')
@@ -69,8 +135,8 @@ class CreateUsersCommand extends ContainerAwareCommand
 
         for ($i=0; $i<$number; $i++) {
             $user = new User();
-            $user->setFirstName($this->getContainer()->get('claroline.resource.utilities')->generateGuid());
-            $user->setLastName($this->getContainer()->get('claroline.resource.utilities')->generateGuid());
+            $user->setFirstName($this->firstNames[rand(0, $this->maxFirstNameOffset)]);
+            $user->setLastName($this->lastNames[rand(0, $this->maxLastNameOffset)]);
             $user->setUsername($this->getContainer()->get('claroline.resource.utilities')->generateGuid());
             $user->setPlainPassword('123');
             $em = $this->getContainer()->get('doctrine.orm.entity_manager');
