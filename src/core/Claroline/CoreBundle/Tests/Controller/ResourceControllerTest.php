@@ -200,7 +200,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(4, count($jsonResponse));
+        $this->assertEquals(5, count($jsonResponse));
     }
 
     public function testResourceListAction()
@@ -299,21 +299,21 @@ class ResourceControllerTest extends FunctionalTestCase
 
         //filter by root (2)
         $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(12, count(json_decode($this->client->getResponse()->getContent())));
 
         //filter by root (1)
         $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
 
         //filter by datecreation
         $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(10, count(json_decode($this->client->getResponse()->getContent())));
 
         $crawler = $this->client->request('GET', "/resource/filter?dateTo={$now->format('Y-m-d H:i:s')}");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(13, count(json_decode($this->client->getResponse()->getContent())));
 
         $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeTwo->format('Y-m-d H:i:s')}&dateTo={$now->format('Y-m-d H:i:s')}");
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testEveryUserInstances()

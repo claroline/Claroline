@@ -298,19 +298,21 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
    private function filterWhereDateFrom($key)
    {
-       $string = '';
-       $string.=" AND ri.created >= :{$key}";
-
-       return $string;
+       return " AND ri.created >= :{$key}";
    }
 
    private function filterWhereDateTo($key)
    {
-       $string = '';
-       $string.=" AND ri.created <= :{$key}";
-
-       return $string;
+       return " AND ri.created <= :{$key}";
    }
+
+    public function filterByName($key)
+    {
+        $string = '';
+        $string.= " AND ri.name LIKE :{$key}";
+
+        return $string;
+    }
 
    private function bindFilter($stmt, $criterias, $user)
    {
@@ -326,6 +328,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
                     break;
                 case 'dateFrom': $stmt->bindValue($key, $value);
                     break;
+                case 'name': $stmt->bindValue($key, "%$value%");
+                    break;
                 default:
                     break;
             }
@@ -340,6 +344,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         $whereRoot = '';
         $whereDateFrom = '';
         $whereDateTo = '';
+        $whereName = '';
 
         foreach ($criterias as $key => $value) {
 
@@ -352,6 +357,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
                     break;
                 case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
                     break;
+                case 'name': $whereName = $this->filterByName($key);
+                    break;
                 default:
                     break;
             }
@@ -359,9 +366,8 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
         $sql = self::SELECT_INSTANCE . ",".self::SELECT_PATHNAME.' '. self::FROM_INSTANCE . "
             WHERE rt.is_listable = 1
-            AND rt.type != 'directory'
             AND ri.workspace_id IN(" . self::SELECT_USER_WORKSPACES_ID . ")"
-            . $whereType . $whereRoot . $whereDateTo . $whereDateFrom;
+            . $whereType . $whereRoot . $whereDateTo . $whereDateFrom. $whereName;
 
         return $sql;
    }

@@ -419,7 +419,7 @@ class ResourceController extends Controller
     public function resourceTypesAction()
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findNavigableResourceTypeWithoutDirectory();
+        $resourceTypes = $repo->findNavigableResourceType(true);
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
@@ -532,7 +532,7 @@ class ResourceController extends Controller
 
         $resourceTypes = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findNavigableResourceTypeWithoutDirectory();
+            ->findNavigableResourceType();
 
         return $this->render(
             'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)

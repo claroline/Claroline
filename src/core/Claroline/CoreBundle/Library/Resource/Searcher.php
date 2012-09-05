@@ -36,6 +36,10 @@ class Searcher
             $compiledArray['dateFrom'] = $criterias['dateFrom'];
         };
 
+        if (array_key_exists('name', $criterias)) {
+            $compiledArray['name'] = $criterias['name'];
+        }
+
         return $compiledArray;
     }
 }
