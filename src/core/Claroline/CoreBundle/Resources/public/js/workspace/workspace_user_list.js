@@ -12,6 +12,15 @@
         backdrop: false
     });
 
+    $('.link-delete-user').live('click', function(e){
+        e.preventDefault();
+        var route = $(this).attr('href');
+        var element = $(this).parent();
+        ClaroUtils.sendRequest(route, function(data){
+            element.remove();
+        })
+    })
+
     $('#bootstrap-modal').on('hidden', function(){
         /*$('#modal-login').empty();
         $('#modal-body').show();*/
@@ -197,7 +206,7 @@
         while (i<JSONObject.length)
         {
             var li = '<li class="row-user" id="user-'+JSONObject[i].id+'">'+JSONObject[i].username
-            +'<a href="'+Routing.generate('claro_ws_remove_user', {'userId':JSONObject[i].id, 'workspaceId':twigWorkspaceId})+' id="link_delete_user_'+JSONObject[i].id+'"> '+twigDeleteTranslation+'</a>'
+            +'<a href="'+Routing.generate('claro_ws_remove_user', {'userId':JSONObject[i].id, 'workspaceId':twigWorkspaceId})+' id="link_delete_user_'+JSONObject[i].id+'" class="link-delete-user"> '+twigDeleteTranslation+'</a>'
             +'</li>';
             $('#workspace-users').append(li);
             i++;
