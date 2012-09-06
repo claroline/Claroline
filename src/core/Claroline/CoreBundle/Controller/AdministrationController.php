@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 class AdministrationController extends Controller
 {
     const USER_PER_PAGE = 16;
+    const GROUP_PER_PAGE = 16;
 
     /**
      * Displays the administration section index.
@@ -130,13 +131,32 @@ class AdministrationController extends Controller
     /**
      *
      */
-    public function paginatedJsonUserListAction($page, $format)
+    public function paginatedUserListAction($page, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($page, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
+
+        $response = new Response($content);
+        if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
+
+    /**
+     *
+     */
+    public function paginatedGroupListAction($page, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($page, self::USER_PER_PAGE);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
 
         $response = new Response($content);
         if  ($format == 'json') {
@@ -195,11 +215,14 @@ class AdministrationController extends Controller
     public function groupListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findAll();
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups(1, self::GROUP_PER_PAGE);
+        $query = $em->createQuery('SELECT COUNT(g.id) FROM Claroline\CoreBundle\Entity\Group g');
+        $count = $query->getSingleScalarResult();
+        $pages = ceil($count/self::USER_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:group_list.html.twig',
-            array('groups' => $groups)
+            'ClarolineCoreBundle:Administration:group_list_main.html.twig',
+            array('groups' => $groups, 'pages' => $pages)
         );
     }
 

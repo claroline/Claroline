@@ -61,4 +61,18 @@ class GroupRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findPaginatedGroups($page, $limit)
+    {
+        $offset = $limit * (--$page);
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'g')
+            ->add('from', 'Claroline\CoreBundle\Entity\Group g')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $q = $qb->getQuery();
+
+        return $q->getResult();
+    }
 }

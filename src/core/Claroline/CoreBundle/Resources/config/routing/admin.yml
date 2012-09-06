@@ -24,7 +24,7 @@ claro_admin_user_list:
 
 claro_admin_paginated_user_list:
    pattern: /user/paginated/list/{page}/{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedJsonUserList }
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserList }
    options:
       expose: true
 
@@ -69,6 +69,13 @@ claro_admin_group_settings_form:
 claro_admin_update_group_settings:
    pattern: /group/settings/update/{groupId}
    defaults: { _controller: ClarolineCoreBundle:Administration:updateGroupSettings }
+
+claro_admin_paginated_group_list:
+   pattern: /group/paginated/list/{page}/{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGroupList }
+   options:
+      expose: true
+
 
 #platform
 
