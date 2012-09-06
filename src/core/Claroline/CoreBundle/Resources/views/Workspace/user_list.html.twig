@@ -20,7 +20,7 @@
         {% for user in users %}
             <li class="row-user" id="user-{{user.getId()}}" >
                 {{ user.getUsername() }}
-                <a href="{{ path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() }) }}" id="link-delete-user-{{ user.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                <a href="{{ path('claro_ws_remove_user', {'userId':user.getId(), 'workspaceId':workspace.getId() }) }}" id="link-delete-user-{{ user.getId() }}" class="link-delete-user">{{ 'delete'|trans({}, 'platform') }}</a>
             </li>
         {% endfor %}
     </ul>
