@@ -33,14 +33,14 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_group_list')->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(3, $crawler->filter('.row_group')->count());
+        $this->assertEquals(3, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanSeeUsersFromGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/group/list');
-        $link = $crawler->filter("#link_show_{$this->getFixtureReference('group/group_a')->getId()}")->link();
+        $link = $crawler->filter("#link-show-{$this->getFixtureReference('group/group_a')->getId()}")->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(2, $crawler->filter('.row_user')->count());
     }
@@ -99,7 +99,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['group_form[name]'] = 'Group D';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/admin/group/list');
-        $this->assertEquals(4, $crawler->filter('.row_group')->count());
+        $this->assertEquals(4, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanAddUserToGroup()
@@ -128,16 +128,16 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/group/list');
-        $link = $crawler->filter("#link_delete_{$this->getFixtureReference('group/group_a')->getId()}")->link();
+        $link = $crawler->filter("#link-delete-{$this->getFixtureReference('group/group_a')->getId()}")->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(2, $crawler->filter('.row_group')->count());
+        $this->assertEquals(2, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanEditGroupSettings()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/group/list');
-        $link = $crawler->filter("#link_settings_{$this->getFixtureReference('group/group_a')->getId()}")->link();
+        $link = $crawler->filter("#link-settings-{$this->getFixtureReference('group/group_a')->getId()}")->link();
         $crawler = $this->client->click($link);
         $selected = $crawler->filterXpath("//select/option[. = 'ROLE_A']")->attr('selected');
         $this->assertEquals("selected", $selected);
