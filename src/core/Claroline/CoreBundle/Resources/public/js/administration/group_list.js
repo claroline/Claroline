@@ -4,6 +4,16 @@
 
     renderGroups(1);
 
+    $('.link-delete').live('click', function(e){
+        e.preventDefault();
+        var route = $(this).attr('href');
+        var element = $(this).parent().parent();
+        ClaroUtils.sendRequest(route, function(data){
+            element.remove();
+        })
+    })
+
+
     function renderGroups(activePagerItem) {
         var route = Routing.generate('claro_admin_paginated_group_list', {
             'page' : activePagerItem,

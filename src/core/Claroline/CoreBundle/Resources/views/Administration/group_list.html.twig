@@ -34,7 +34,7 @@
                         <a href="todo">todo</a>
                     </td>
                     <td>
-                        <a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" id="link-delete-{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                        <a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" class="link-delete" id="link-delete-{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
                     </td>
                 </tr>
             {% endfor %}
