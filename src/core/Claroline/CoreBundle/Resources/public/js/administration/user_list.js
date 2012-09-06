@@ -4,6 +4,15 @@
 
     renderUsers(1);
 
+    $('.link-delete').live('click', function(e){
+        e.preventDefault();
+        var route = $(this).attr('href');
+        var element = $(this).parent().parent();
+        ClaroUtils.sendRequest(route, function(data){
+            element.remove();
+        })
+    })
+
     function renderUsers(activePagerItem) {
         var route = Routing.generate('claro_admin_paginated_user_list', {
             'page' : activePagerItem,

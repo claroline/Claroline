@@ -298,7 +298,7 @@ class AdministrationController extends Controller
         $em->persist($group);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('claro_admin_group_list'));
+        return new Response('user removed', 204);
     }
 
     /**
@@ -315,7 +315,7 @@ class AdministrationController extends Controller
         $em->remove($group);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('claro_admin_group_list'));
+        return new Response('group removed', 204);
     }
 
     /**
