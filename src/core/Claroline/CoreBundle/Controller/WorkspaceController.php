@@ -400,6 +400,37 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * Adds many users to a workspace.
+     * It should be used with ajax and a list of userIds as parameter.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function multiAddUserAction($workspaceId)
+    {
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $users = array();
+
+        foreach ($params as $userId) {
+             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+             $users[] = $user;
+             $user->addRole($workspace->getCollaboratorRole());
+             $em->flush();
+        }
+
+        $content = $this->renderView('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * Adds a group to a workspace
      * if requested through ajax, it'll respond with a json object containing the group datas
      * otherwise it'll redirect to the workspace list.

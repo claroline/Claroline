@@ -38,13 +38,20 @@
          $('#bootstrap-modal-group').modal('show');
     });
 
-    $('#user-checkboxes').on('click', '.checkbox-user-name', function(event){
-        var userId = $(this).val();
-        if ($(this).is(':checked')){
-            setOnAddUserChkBox(userId);
-        } else {
-            setOnRemoveUserChkBox(userId);
-        }
+    $('#btn-save-users').on('click', function(event){
+        var parameters = {};
+        var i = 0;
+        $('.checkbox-user-name:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        })
+        parameters.workspaceId = twigWorkspaceId;
+        var route = Routing.generate('claro_ws_multiadd_user', parameters);
+        ClaroUtils.sendRequest(route, function(data){createUserCallbackLi(data)})
+        $('#bootstrap-modal-user').modal('hide');
+        $('.checkbox-user-name').remove();
+        $('#user-table-checkboxes-body').empty();
+        nbIterationUsers = 0;
     });
 
     $('#group_checkboxes').on('click', '.checkbox_group_name', function(event){
@@ -122,28 +129,6 @@
         );
     });
 
-    function setOnAddUserChkBox(userId)
-    {
-        var route = Routing.generate('claro_ws_add_user',  {'userId': userId, 'workspaceId': twigWorkspaceId});
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                createUserCallbackLi(data);
-            }
-        );
-    }
-
-    function setOnRemoveUserChkBox(userId)
-    {
-        var route = Routing.generate('claro_ws_remove_user', {'userId': userId, 'workspaceId': twigWorkspaceId});
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                $('#user-' + userId).remove();
-            }
-        );
-    }
-
     function setOnAddGroupChkBox(groupId)
     {
         sendRequest(
@@ -201,6 +186,7 @@
 
     function createUserCallbackLi(JSONString)
     {
+        console.debug(JSONString);
         JSONObject = eval(JSONString);
         var i=0;
         while (i<JSONObject.length)
