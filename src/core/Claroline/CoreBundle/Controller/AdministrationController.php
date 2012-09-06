@@ -117,14 +117,13 @@ class AdministrationController extends Controller
     public function userListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers(1, self::USER_PER_PAGE);
         $query = $em->createQuery('SELECT COUNT(u.id) FROM Claroline\CoreBundle\Entity\User u');
         $count = $query->getSingleScalarResult();
         $pages = ceil($count/self::USER_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Administration:user_list_main.html.twig',
-            array('users' => $users, 'pages' => $pages)
+            array('pages' => $pages)
         );
     }
 
@@ -215,14 +214,13 @@ class AdministrationController extends Controller
     public function groupListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups(1, self::GROUP_PER_PAGE);
         $query = $em->createQuery('SELECT COUNT(g.id) FROM Claroline\CoreBundle\Entity\Group g');
         $count = $query->getSingleScalarResult();
         $pages = ceil($count/self::USER_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Administration:group_list_main.html.twig',
-            array('groups' => $groups, 'pages' => $pages)
+            array('pages' => $pages)
         );
     }
 
