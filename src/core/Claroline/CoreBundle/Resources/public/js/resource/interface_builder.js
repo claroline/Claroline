@@ -40,6 +40,7 @@
         construct.cpd = null;
         construct.activePagerItem = 1;
         construct.pager = null;
+        construct.nbPage = 0;
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
@@ -75,6 +76,11 @@
 
         window.onresize = function(e) {
             resizeBreadcrumb(construct);
+            if (construct.pager !== null){
+                construct.pager.remove();
+            }
+            construct.pager = ClaroUtils.renderPager(construct.nbPages, construct.activePagerItem, 'instance', construct.div);
+            setPagerActions(construct);
         }
 
         submitButton.on('click', function(e){
@@ -171,24 +177,9 @@
                 var route = Routing.generate('claro_resource_count_instances');
                 ClaroUtils.sendRequest(route,
                     function(count){
+                        construct.nbPages = count;
                         construct.div.empty();
-                        construct.pager = ClaroUtils.renderPager(count, 1, 'instance', div)
                         rendersFlatPaginatedThumbnails(construct);
-
-                        $('.instance-paginator-item').on('click', function(e){
-                            construct.activePagerItem = e.target.innerHTML;
-                            rendersFlatPaginatedThumbnails(construct);
-                        });
-
-                        $('.instance-paginator-next-item').on('click', function(e){
-                            construct.activePagerItem++;
-                            rendersFlatPaginatedThumbnails(construct);
-                        })
-
-                        $('.instance-paginator-prev-item').on('click', function(e){
-                            construct.activePagerItem--;
-                            rendersFlatPaginatedThumbnails(construct);
-                        })
                     });
             } else {
                 construct.pager.remove();
@@ -204,6 +195,23 @@
         }
     }
 
+    function setPagerActions(construct){
+        $('.instance-paginator-item').on('click', function(e){
+            construct.activePagerItem = e.target.innerHTML;
+            rendersFlatPaginatedThumbnails(construct);
+        });
+
+        $('.instance-paginator-next-item').on('click', function(e){
+            construct.activePagerItem++;
+            rendersFlatPaginatedThumbnails(construct);
+        })
+
+        $('.instance-paginator-prev-item').on('click', function(e){
+            construct.activePagerItem--;
+            rendersFlatPaginatedThumbnails(construct);
+        })
+    }
+
     function navigate(id, construct) {
         construct.divForm.empty();
         construct.resourceGetter.getChildren(id, function(data){
@@ -217,7 +225,11 @@
     }
 
     function rendersFlatPaginatedThumbnails(construct) {
-        activePage(construct.activePagerItem);
+        if (construct.pager !== null){
+            construct.pager.remove();
+        }
+        construct.pager = ClaroUtils.renderPager(construct.nbPages, construct.activePagerItem, 'instance', construct.div);
+        setPagerActions(construct);
         construct.resourceGetter.getFlatPaginatedThumbnails(construct.activePagerItem, function(data){
             $('.res-block').remove();
             construct.div.prepend(data);
@@ -226,16 +238,6 @@
                 formatResName($(this), 2, 20)
             });
         })
-    }
-
-    function activePage(item)
-    {
-        $('.instance-paginator-item').each(function(index, element){
-            element.parentElement.className = '';
-        })
-
-        var searched = $('li[data-page="'+item+'"]');
-        searched.first().addClass('active');
     }
 
     function getSelectedItems(construct)

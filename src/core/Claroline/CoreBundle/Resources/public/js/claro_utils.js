@@ -130,6 +130,7 @@
     }
 
     utils.renderPager = function (nbPage, activePage, type, appendTo){
+
         var paginator = '';
         paginator += '<div id="'+type+'-paginator" class="pagination"><ul><li><a class="'+type+'-paginator-prev-item" href="#">Prev</a></li>'
         for (var i = 0; i < nbPage;) {
@@ -140,7 +141,100 @@
 
         appendTo.after(paginator);
 
-        var divSize = $('#'+type+'-paginator').width();
+        var resizePager = function(pagerItems, prev, next, activePage) {
+
+            //how many items can we put each pages ?
+            var maxSize = 0;
+
+            if(prev.offsetTop != next.offsetTop) {
+                $(pagerItems).each(function(index, value){
+                    if($(this)[0].offsetTop == prev.offsetTop){
+                        maxSize++;
+                    }
+                })
+            }
+
+            var resizeFromLeft = function (){
+                var iremove = (pagerItems.length)-maxSize;
+                while (iremove >= 0) {
+                    $(pagerItems[iremove].remove);
+                    iremove --;
+                }
+
+                var reduceLeft = function(pagerItems){
+                    if (prev.offsetTop != next.offsetTop) {
+                        pagerItems.first().remove();
+                        reduceLeft($('.'+type+'-paginator-item'));
+                    }
+                }
+
+                reduceLeft($('.'+type+'-paginator-item'));
+            }
+
+            var resizeFromRight = function(){
+                var iremove = maxSize;
+                while (iremove < pagerItems.length) {
+                    $(pagerItems[iremove]).remove();
+                    iremove++;
+                }
+
+                var reduceRight = function(pagerItems){
+                    if (prev.offsetTop != next.offsetTop) {
+                        pagerItems.last().remove();
+                        reduceRight($('.'+type+'-paginator-item'));
+                    }
+                }
+                reduceRight($('.'+type+'-paginator-item'));
+            }
+
+            var resizeFromCenter = function(){
+                var offset = Math.floor(maxSize/2)+parseInt(activePage); //lol
+                while (offset < pagerItems.length) {
+                    $(pagerItems[offset]).remove();
+                    offset++;
+                }
+
+                var start = parseInt(activePage)-Math.floor(maxSize/2);
+                start-=2;
+                while (start >= 0) {
+
+                    $(pagerItems[start]).remove();
+                    start--;
+                }
+
+                var reduceBothSide = function(pagerItems){
+                    if (prev.offsetTop != next.offsetTop) {
+                        pagerItems.first().remove();
+                        pagerItems.last().remove();
+                        reduceBothSide($('.'+type+'-paginator-item'));
+                    }
+                }
+
+                reduceBothSide($('.'+type+'-paginator-item'));
+            }
+
+            if(maxSize != 0){
+                if(activePage <= Math.floor(maxSize/2)) {
+                    resizeFromRight();
+                } else  {
+                    if(activePage >= ((pagerItems.length)-Math.floor(maxSize/2))){
+                        resizeFromLeft();
+                    } else {
+                        resizeFromCenter();
+                    }
+                }
+            }
+
+        }
+
+        resizePager($('.'+type+'-paginator-item'), $('.'+type+'-paginator-prev-item')[0],  $('.'+type+'-paginator-next-item')[0], activePage)
+
+        $('.instance-paginator-item').each(function(index, element){
+            element.parentElement.className = '';
+        })
+
+        var searched = $('li[data-page="'+activePage+'"]');
+        searched.first().addClass('active');
 
         return $('#'+type+'-paginator');
     }
