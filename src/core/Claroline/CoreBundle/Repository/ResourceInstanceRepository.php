@@ -87,28 +87,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getListableChildren(ResourceInstance $resourceInstance, $resourceTypeId = 0)
-    {
-        $dql = "
-            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
-            JOIN ri.parent par
-            JOIN ri.abstractResource res
-            WHERE par.id = {$resourceInstance->getId()}
-            AND res.resourceType IN
-            (
-                SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-                WHERE rt.isListable = 1";
-
-        if ($resourceTypeId != 0) {
-            $dql.= "AND rt.id = {$resourceTypeId}";
-        }
-        $dql.=')';
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
     public function getInstanceList(User $user, $page = null, $limit = null, $resourceType = null)
     {
         $sql = self::SELECT_INSTANCE . ",".self::SELECT_PATHNAME.' '.self::FROM_INSTANCE."
@@ -130,26 +108,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
             return $this->fetchInstances($stmt);
         }
     }
-
-    public function findInstancesFromType(ResourceType $resourceType, User $user)
-    {
-        $dql = "
-            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
-            JOIN ri.abstractResource ar
-            JOIN ar.resourceType rt
-            WHERE rt.type = '{$resourceType->getType()}'
-            AND ri.workspace IN
-            (
-                SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                JOIN w.roles wr JOIN wr.users u WHERE u.id = '{$user->getId()}'
-            )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
 
     public function getChildrenInstanceList(ResourceInstance $resourceInstance, ResourceType $resourceType)
     {
