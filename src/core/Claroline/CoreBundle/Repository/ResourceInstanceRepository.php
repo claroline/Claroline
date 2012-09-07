@@ -214,7 +214,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $this->fetchInstances($stmt);
     }
 
-    private function filterWhereType($key, $criteria)
+    public function filtertypes($key, $criteria)
     {
         $string = '';
         $i = 0;
@@ -234,7 +234,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $string;
     }
 
-    private function filterWhereRoot($key, $criteria)
+    public function filterroots($key, $criteria)
     {
         $string = '';
         $i = 0;
@@ -254,40 +254,36 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $string;
     }
 
-   private function filterWhereDateFrom($key)
+   public function filterdateFrom($key)
    {
        return " AND ri.created >= :{$key}";
    }
 
-   private function filterWhereDateTo($key)
+   public function filterdateTo($key)
    {
        return " AND ri.created <= :{$key}";
    }
 
-    public function filterByName($key)
-    {
-        $string = '';
-        $string.= " AND ri.name LIKE :{$key}";
+   public function filtername($key)
+   {
+      return " AND ri.name LIKE :{$key}";
+   }
 
-        return $string;
-    }
+   public function filtermimeTypes($key)
+   {
+       return '';
+   }
 
    private function bindFilter($stmt, $criterias, $user)
    {
         $stmt->bindValue('userId', $user->getId());
+        $bindArray = array('roots' => '', 'types' => '', 'mimeTypes' => '');
 
         foreach ($criterias as $key => $value) {
-            switch($key){
-                case 'roots': $this->bindArray($stmt, $key, $value);
-                    break;
-                case 'types': $this->bindArray($stmt, $key, $value);
-                    break;
-                case 'dateTo': $stmt->bindValue($key, $value);
-                    break;
-                case 'dateFrom': $stmt->bindValue($key, $value);
-                    break;
-                case 'name': $stmt->bindValue($key, "%$value%");
-                    break;
+            if(array_key_exists($key, $bindArray)) {
+                $this->bindArray($stmt, $key, $value);
+            } else {
+                 $stmt->bindValue($key, $value);
             }
         }
 
@@ -296,35 +292,17 @@ class ResourceInstanceRepository extends NestedTreeRepository
 
    private function generateFilterSQL($criterias)
    {
-        $whereType = '';
-        $whereRoot = '';
-        $whereDateFrom = '';
-        $whereDateTo = '';
-        $whereName = '';
+        $sql = self::SELECT_INSTANCE . "," . self::SELECT_PATHNAME . ' ' . self::FROM_INSTANCE . "
+            WHERE rt.is_listable = 1
+            AND ri.workspace_id IN(" . self::SELECT_USER_WORKSPACES_ID . ")";
 
         foreach ($criterias as $key => $value) {
-
-            switch ($key) {
-                case 'roots': $whereRoot = $this->filterWhereRoot($key, $value);
-                    break;
-                case 'types': $whereType = $this->filterWhereType($key, $value);
-                    break;
-                case 'dateTo': $whereDateTo = $this->filterWhereDateTo($key);
-                    break;
-                case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
-                    break;
-                case 'name': $whereName = $this->filterByName($key);
-                    break;
-            }
+            $methodName = 'filter' . $key;
+            $sql .= $this->$methodName($key, $value);
         }
 
-        $sql = self::SELECT_INSTANCE . ",".self::SELECT_PATHNAME.' '. self::FROM_INSTANCE . "
-            WHERE rt.is_listable = 1
-            AND ri.workspace_id IN(" . self::SELECT_USER_WORKSPACES_ID . ")"
-            . $whereType . $whereRoot . $whereDateTo . $whereDateFrom. $whereName;
-
         return $sql;
-   }
+    }
 
    private function bindArray($stmt, $key, $criteria)
    {
