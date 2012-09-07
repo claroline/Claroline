@@ -385,6 +385,13 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($tbg, null);
     }
 
+    public function testResourceFilterIsRendered()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', '/resource/filter/renders');
+        $this->assertEquals(1, count($crawler->filter('.active-filters')));
+    }
+
     /*
     public function testCountInstances()
     {
