@@ -288,8 +288,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
                     break;
                 case 'name': $stmt->bindValue($key, "%$value%");
                     break;
-                default:
-                    break;
             }
         }
 
@@ -316,8 +314,6 @@ class ResourceInstanceRepository extends NestedTreeRepository
                 case 'dateFrom': $whereDateFrom = $this->filterWhereDateFrom($key);
                     break;
                 case 'name': $whereName = $this->filterByName($key);
-                    break;
-                default:
                     break;
             }
         }

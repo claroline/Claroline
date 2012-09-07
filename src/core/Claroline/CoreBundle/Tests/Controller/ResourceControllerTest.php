@@ -314,6 +314,19 @@ class ResourceControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeTwo->format('Y-m-d H:i:s')}&dateTo={$now->format('Y-m-d H:i:s')}");
         $this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent())));
+
+        //filter by name
+        $crawler = $this->client->request('GET', "/resource/filter?name=firstFile");
+        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testParents()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $firstDir = $this->createDirectory($this->userRoot[0]->getId(), 'firstDir');
+        $file = $this->uploadFile($firstDir->id, 'file');
+        $this->client->request('GET', "/resource/parents/{$file->id}");
+        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testEveryUserInstances()
@@ -480,4 +493,5 @@ class ResourceControllerTest extends FunctionalTestCase
             }
         }
     }
+
 }
