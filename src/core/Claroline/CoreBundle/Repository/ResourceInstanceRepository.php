@@ -302,7 +302,7 @@ class ResourceInstanceRepository extends NestedTreeRepository
         }
 
         return $sql;
-    }
+   }
 
    private function bindArray($stmt, $key, $criteria)
    {
