@@ -190,4 +190,18 @@ class UserRepository extends EntityRepository
 
         return $q->getResult();
     }
+
+    //not working yet
+    public function findPaginatedUsersOfGroup($page, $limit, $groupId)
+    {
+//        $offset = $limit * (--$page);
+        $dql = "
+            SELECT u from Claroline\CoreBundle\Entity\User u
+            WHERE 1 IN (u.groups)";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setMaxResults(200);
+
+        return $query->getResult();
+    }
 }
