@@ -102,7 +102,7 @@
         values = $('.select-mime-type', div).first().val();
         if (values != undefined){
             for(i=0; i< values.length; i++) {
-                parameters['mimeType'+i] = values[i];
+                parameters['mimeTypes'+i] = values[i];
             }
         }
 
