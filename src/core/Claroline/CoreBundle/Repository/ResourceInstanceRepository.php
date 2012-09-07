@@ -269,21 +269,45 @@ class ResourceInstanceRepository extends NestedTreeRepository
       return " AND ri.name LIKE :{$key}";
    }
 
-   public function filtermimeTypes($key)
+   public function filtermimeTypes($key, $criteria)
    {
-       return '';
+        $string = '';
+        $i = 0;
+        $keys = array_keys($criteria);
+
+        foreach ($keys as $i) {
+            if ($i == 0) {
+                $string.=  "AND (rti.type LIKE :{$key}{$i}";
+                $i++;
+            } else {
+                $string.= " OR  rti.type LIKE :{$key}{$i}";
+            }
+        }
+
+        $string .= ')';
+
+        return $string;
    }
 
    private function bindFilter($stmt, $criterias, $user)
    {
         $stmt->bindValue('userId', $user->getId());
         $bindArray = array('roots' => '', 'types' => '', 'mimeTypes' => '');
+        $likeArray = array('name' => '', 'mimeTypes' => '');
 
         foreach ($criterias as $key => $value) {
             if(array_key_exists($key, $bindArray)) {
-                $this->bindArray($stmt, $key, $value);
+                if(!array_key_exists($key, $likeArray)){
+                    $this->bindArray($stmt, $key, $value);
+                } else {
+                    $this->bindArray($stmt, $key, $value, true);
+                }
             } else {
-                 $stmt->bindValue($key, $value);
+                 if(!array_key_exists($key, $likeArray)){
+                    $stmt->bindValue($key, $value);
+                 } else {
+                    $stmt->bindValue($key, "%$value%");
+                 }
             }
         }
 
@@ -304,9 +328,14 @@ class ResourceInstanceRepository extends NestedTreeRepository
         return $sql;
    }
 
-   private function bindArray($stmt, $key, $criteria)
+   private function bindArray($stmt, $key, $criteria, $isLike = false)
    {
        foreach ($criteria as $i => $item) {
+
+           if($isLike === true){
+               $item = "%{$item}%";
+           }
+
            $stmt->bindValue("{$key}{$i}", $item);
        }
    }
