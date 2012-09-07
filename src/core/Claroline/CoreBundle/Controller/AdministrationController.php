@@ -146,6 +146,7 @@ class AdministrationController extends Controller
         return $response;
     }
 
+    /* Doesn't work yet due to a sql error from the repository
     public function paginatedUserOfGroupListAction($groupId, $page, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -160,7 +161,7 @@ class AdministrationController extends Controller
         }
 
         return $response;
-    }
+    }*/
 
     /**
      *
