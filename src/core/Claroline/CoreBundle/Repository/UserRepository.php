@@ -58,86 +58,6 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getUnregisteredUsersOfWorkspace(AbstractWorkspace $workspace)
-    {
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u NOT IN
-            (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.workspaceRoles wr
-                JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
-            )
-        ";
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    public function getUnregisteredUsersOfWorkspaceByUsername($search, AbstractWorkspace $workspace)
-    {
-        $search = strtoupper($search);
-
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE UPPER(u.username) LIKE '%" . $search . "%'
-            AND u NOT IN
-            (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.workspaceRoles wr
-                JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
-            )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    public function getUnregisteredUsersOfWorkspaceByFirstName($search, AbstractWorkspace $workspace)
-    {
-        $search = strtoupper($search);
-
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE UPPER(u.firstName) LIKE '%" . $search . "%'
-            AND u NOT IN
-            (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.workspaceRoles wr
-                JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
-            )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    public function getUnregisteredUsersOfWorkspaceByLastName($search, AbstractWorkspace $workspace)
-    {
-        $search = strtoupper($search);
-
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE UPPER(u.lastName) LIKE '%" . $search . "%'
-            AND u NOT IN
-            (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.workspaceRoles wr
-                JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
-            )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
     public function getUnregisteredUsersOfWorkspaceFromGenericSearch($search, AbstractWorkspace $workspace)
     {
         $search = strtoupper($search);
@@ -192,9 +112,11 @@ class UserRepository extends EntityRepository
     }
 
     //not working yet
+    /*
     public function findPaginatedUsersOfGroup($page, $limit, $groupId)
     {
-//        $offset = $limit * (--$page);
+//      $offset = $limit * (--$page);
+
         $dql = "
             SELECT u from Claroline\CoreBundle\Entity\User u
             WHERE 1 IN (u.groups)";
@@ -203,5 +125,5 @@ class UserRepository extends EntityRepository
         $query->setMaxResults(200);
 
         return $query->getResult();
-    }
+    }*/
 }
