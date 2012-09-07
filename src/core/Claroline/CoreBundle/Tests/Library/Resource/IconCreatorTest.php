@@ -111,7 +111,7 @@ class IconCreatorTest extends FixtureTestCase
         $file = $this->iconCreator->setResourceIcon($file, 'image/ThatOneDoesntExists');
         $name = $file->getIcon()->getLargeIcon();
         //no res_image yet
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_file.png', $name);
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.png', $name);
     }
 
     public function testFileGetCompleteMimeThumbnail()

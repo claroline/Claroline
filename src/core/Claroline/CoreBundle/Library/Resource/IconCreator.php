@@ -178,7 +178,6 @@ class IconCreator
                 $imgs = $this->searchFileIcon($mimeType);
             }
         } else {
-            echo($mimeType);
             $imgs = $this->searchFileIcon($mimeType);
         }
 
