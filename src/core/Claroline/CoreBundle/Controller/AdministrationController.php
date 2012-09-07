@@ -146,6 +146,22 @@ class AdministrationController extends Controller
         return $response;
     }
 
+    public function paginatedUserOfGroupListAction($groupId, $page, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $page, self::USER_PER_PAGE);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_group_list.{$format}.twig", array('users' => $users));
+
+        $response = new Response($content);
+        if ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
+
     /**
      *
      */
@@ -237,7 +253,7 @@ class AdministrationController extends Controller
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:group_user_list.html.twig',
+            'ClarolineCoreBundle:Administration:group_user_list_main.html.twig',
             array('group' => $group)
         );
     }

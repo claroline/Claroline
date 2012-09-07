@@ -342,7 +342,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $nbIteration, self::NUMBER_GROUP_PER_ITERATION);
 
-        return $this->render("ClarolineCoreBundle:Workspace:dialog_group_list.{$format}.twig", array('groups' => $groups));
+        return $this->render("ClarolineCoreBundle:Workspace:group.{$format}.twig", array('groups' => $groups));
     }
 
     /**
@@ -450,12 +450,43 @@ class WorkspaceController extends Controller
         $em->flush();
 
         if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Workspace:dialog_group_list.json.twig', array('groups' => array($group), 'workspace' => $workspace));
+            return $this->render('ClarolineCoreBundle:Workspace:group.json.twig', array('groups' => array($group), 'workspace' => $workspace));
         }
 
         $route = $this->get('router')->generate('claro_ws_list');
 
         return new RedirectResponse($route);
+    }
+
+    /**
+     * Adds many groups to a workspace.
+     * It should be used with ajax and a list of grouppIds as parameter.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function multiAddGroupAction($workspaceId)
+    {
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $groups = array();
+
+        foreach ($params as $groupId) {
+             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+             $groups[] = $group;
+             $group->addRole($workspace->getCollaboratorRole());
+             $em->flush();
+        }
+
+        $content = $this->renderView('ClarolineCoreBundle:Workspace:group.json.twig', array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
@@ -474,7 +505,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
 
-        return $this->render("ClarolineCoreBundle:Workspace:dialog_group_list.{$format}.twig", array('groups' => $groups));
+        return $this->render("ClarolineCoreBundle:Workspace:group.{$format}.twig", array('groups' => $groups));
     }
 
     /**

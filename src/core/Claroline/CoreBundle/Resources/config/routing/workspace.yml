@@ -66,6 +66,12 @@ claro_ws_multiadd_user:
    options:
       expose: true
 
+claro_ws_multiadd_group:
+   pattern: /multiadd/group/{workspaceId}
+   defaults: { _controller: ClarolineCoreBundle:Workspace:multiAddGroup }
+   options:
+      expose: true
+
 claro_ws_groups_limited_list:
     pattern: /group/{workspaceId}/{nbIteration}/limited-list.{format}
     defaults: { _controller: ClarolineCoreBundle:Workspace:limitedGroupList }

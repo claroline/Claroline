@@ -251,4 +251,27 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
         $this->assertEquals(4, count($crawler->filter('.row-user')));
     }
+    public function testMultiAddGroup()
+    {
+        $this->loadFixture(new LoadRoleData());
+        $this->loadFixture(new LoadGroupData);
+
+        $groupA = $this->getFixtureReference('group/group_a')->getId();
+        $groupB = $this->getFixtureReference('group/group_b')->getId();
+        $groupC = $this->getFixtureReference('group/group_c')->getId();
+
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request(
+            'GET', "/workspace/multiadd/group/{$this->getFixtureReference('workspace/ws_a')->getId()}?0={$groupA}&1={$groupB}&2={$groupC}"
+        );
+
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($jsonResponse));
+
+        $crawler = $this->client->request(
+            'GET', "/workspace/show/list/user/{$this->getFixtureReference('workspace/ws_a')->getId()}"
+        );
+
+        $this->assertEquals(3, count($crawler->filter('.row-group')));
+    }
 }

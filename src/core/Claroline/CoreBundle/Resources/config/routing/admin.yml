@@ -28,6 +28,12 @@ claro_admin_paginated_user_list:
    options:
       expose: true
 
+claro_admin_paginated_group_user_list:
+   pattern: /group/user/paginated/list/{groupId}/{page}/{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserOfGroupList }
+   options:
+      expose: true
+
 #groups
 
 claro_admin_group_creation_form:

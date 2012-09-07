@@ -6,6 +6,7 @@
     var nbIterationGroups=0;
 
     $('#user-loading').hide();
+    $('#group-loading').hide();
 
     $('#bootstrap-modal').modal({
         show: false,
@@ -13,6 +14,15 @@
     });
 
     $('.link-delete-user').live('click', function(e){
+        e.preventDefault();
+        var route = $(this).attr('href');
+        var element = $(this).parent();
+        ClaroUtils.sendRequest(route, function(data){
+            element.remove();
+        })
+    })
+
+    $('.link-delete-group').live('click', function(e){
         e.preventDefault();
         var route = $(this).attr('href');
         var element = $(this).parent();
@@ -54,13 +64,20 @@
         nbIterationUsers = 0;
     });
 
-    $('#group_checkboxes').on('click', '.checkbox_group_name', function(event){
-        var groupId = $(this).val();
-        if( $(this).is(':checked')){
-            setOnAddGroupChkBox(groupId);
-        } else {
-            setOnRemoveGroupChkBox(groupId);
-        }
+    $('#btn-save-groups').on('click', function(event){
+        var parameters = {};
+        var i = 0;
+        $('.checkbox-group-name:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        })
+        parameters.workspaceId = twigWorkspaceId;
+        var route = Routing.generate('claro_ws_multiadd_group', parameters);
+        ClaroUtils.sendRequest(route, function(data){createGroupCallBackLi(data)})
+        $('#bootstrap-modal-group').modal('hide');
+        $('.checkbox-group-name').remove();
+        $('#group-checkboxes').empty();
+        nbIterationUsers = 0;
     });
 
     $('#lazy-load-user-button').click(function(){
@@ -80,19 +97,19 @@
         );
     });
 
-    $('#add_next_groups').click(function(){
-        $('#group_loading').show();
-        sendRequest(
-            'claro_ws_groups_limited_list',
-            {'workspaceId': twigWorkspaceId, 'nbIteration': nbIterationGroups, 'format':'json'},
+    $('#lazy-load-group-button').click(function(){
+        $('#group-loading').show();
+        var route = Routing.generate('claro_ws_groups_limited_list', {'workspaceId': twigWorkspaceId, 'nbIteration': nbIterationGroups, 'format':'json'})
+        ClaroUtils.sendRequest(
+            route,
             function(data){
                 if (nbIterationGroups == 0){
-                    $('.checkbox_group_name').remove();
-                    $('#group_checkboxes').empty();
+                    $('.checkbox-group-name').remove();
+                    $('#group-checkboxes').empty();
                 }
                 nbIterationGroups++;
                 createGroupsChkBoxes(data);
-                $('#group_loading').hide();
+                $('#group-loading').hide();
             }
         );
     });
@@ -113,43 +130,22 @@
         );
     });
 
-    $('#search_group_button').click(function(){
-        $('#group_loading').show();
-        var search = document.getElementById('search_group_txt').value;
+    $('#search-group-button').click(function(){
+        $('#group-loading').show();
+        var search = document.getElementById('search-group-txt').value;
         nbIterationGroups = 0;
-        sendRequest(
-            'claro_ws_search_unregistered_groups_by_name',
-            {'search': search, 'workspaceId': twigWorkspaceId, 'format': 'json'},
-            function(data){
-                $('.checkbox_group_name').remove();
-                $('#group_checkboxes').empty();
-                createGroupsChkBoxes(data);
-                $('#group_loading').hide();
-            }
-        );
-    });
-
-    function setOnAddGroupChkBox(groupId)
-    {
-        sendRequest(
-            'claro_ws_add_group',
-            {'groupId': groupId, 'workspaceId': twigWorkspaceId},
-            function(data){
-                $('#workspace_groups').append(data);
-            }
-        );
-    }
-
-    function setOnRemoveGroupChkBox(groupId)
-    {
-        var route = Routing.generate('claro_ws_remove_group', {'groupId': groupId, 'workspaceId': twigWorkspaceId});
+        var route = Routing.generate('claro_ws_search_unregistered_groups_by_name',
+        {'search': search, 'workspaceId': twigWorkspaceId, 'format': 'json'});
         ClaroUtils.sendRequest(
             route,
             function(data){
-                $('#group_' + groupId).remove();
+                $('.checkbox-group-name').remove();
+                $('#group-checkboxes').empty();
+                createGroupsChkBoxes(data);
+                $('#group-loading').hide();
             }
         );
-    }
+    });
 
     function createGroupsChkBoxes(JSONString)
     {
@@ -159,9 +155,9 @@
         while (i<JSONObject.length)
         {
             var list = '<tr>'
-            +'<td><input class="checkbox_group_name" id="checkbox_group_'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox_group_'+JSONObject[i].id+'">'+JSONObject[i].name+'</input></td>'
+            +'<td><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'">'+JSONObject[i].name+'</input></td>'
             +'</tr>';
-            $('#group_checkboxes').append(list);
+            $('#group-checkboxes').append(list);
             i++;
         }
     }
@@ -186,7 +182,6 @@
 
     function createUserCallbackLi(JSONString)
     {
-        console.debug(JSONString);
         JSONObject = eval(JSONString);
         var i=0;
         while (i<JSONObject.length)
@@ -198,4 +193,20 @@
             i++;
         }
     }
+
+    function createGroupCallBackLi(JSONString)
+    {
+        JSONObject = eval(JSONString);
+
+        var i=0;
+        while (i<JSONObject.length)
+        {
+            var li = '<li class="row-group" id="group-'+JSONObject[i].id+'">'+JSONObject[i].name
+            +'|<a href="'+Routing.generate('claro_ws_remove_group', {'groupId':JSONObject[i].id, 'workspaceId':twigWorkspaceId})+' id="link-delete-group-'+JSONObject[i].id+'" class=link-delete-group">'+twigDeleteTranslation+"</a>"
+            +'</li>';
+            $('#workspace-groups').append(li);
+            i++;
+        }
+    }
+
 })()
