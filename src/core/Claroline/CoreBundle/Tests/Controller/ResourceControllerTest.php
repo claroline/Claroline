@@ -318,6 +318,10 @@ class ResourceControllerTest extends FunctionalTestCase
         //filter by name
         $crawler = $this->client->request('GET', "/resource/filter?name=firstFile");
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+
+        //filter by mime
+        $crawler = $this->client->request('GET', "/resource/filter?mimeTypes=text");
+        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testParents()
