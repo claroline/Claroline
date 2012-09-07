@@ -9,6 +9,7 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
@@ -534,8 +535,12 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findNavigableResourceType();
 
+        $resourceIcons = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->findBy(array('iconType' => 3));
+
         return $this->render(
-            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
+            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes, 'resourceIcons' => $resourceIcons)
         );
     }
 
