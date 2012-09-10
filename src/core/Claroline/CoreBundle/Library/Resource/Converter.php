@@ -52,41 +52,10 @@ class Converter
         return $array;
     }
 
-    /**
-     * Converts a resource array to a json array.
-     *
-     * @param array $results
-     * @param string $wrapName
-     *
-     * @return string
-     */
-    public function arrayToJson($results, $wrapName = false)
-    {
-        ($wrapName != false ) ? $json = '"'.$wrapName.'" :[' : $json = "[";
-        $i = 0;
-
-        foreach ($results as $resource){
-            $stringitem ='';
-            ($i != 0) ? $stringitem.="," : $i++;
-            $stringitem.= '{';
-            $keys = array_keys($resource);
-            $j = 0;
-            foreach ($keys as $key) {
-                ($j != 0) ? $stringitem.=",": $j++;
-                $stringitem.= '"' . $key . '": "' . $resource[$key] . '"';
-            }
-            $json.=$stringitem.'}';
-        }
-
-        $json.="]";
-
-        return $json;
-    }
-
     public function instanceToJson(ResourceInstance $instance)
     {
         $phpArray = $this->instanceToArray($instance);
-        $json = $this->arrayToJson($phpArray);
+        $json = json_encode($phpArray);
 
         return $json;
     }

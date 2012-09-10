@@ -107,8 +107,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
             ->findOneBy(array ('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
 
         $this->generateItems($depth, $directoryCount, $fileCount, $userRootDirectory, $user);
-        echo "\n+++++++++++++++++++ FILE +++++++++++++++++++++++: $this->filesCount";
-        echo "\n+++++++++++++++++++ DIR +++++++++++++++++++++++: $this->directoryCount";
+        $output->writeln("\n+++++++++++++++++++ FILE +++++++++++++++++++++++: $this->filesCount");
+        $output->writeln("\n+++++++++++++++++++ DIR +++++++++++++++++++++++: $this->directoryCount");
         $em->flush();
 
     }

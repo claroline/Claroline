@@ -323,7 +323,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -362,7 +362,7 @@ class ResourceController extends Controller
         }
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -384,7 +384,7 @@ class ResourceController extends Controller
         $repo = $parents = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $instance = $repo->find($instanceId);
         $parents = $repo->parents($instance);
-        $jsonParents = $this->get('claroline.resource.converter')->arrayToJson($parents);
+        $jsonParents = json_encode($parents);
         $response = new Response($jsonParents);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -403,7 +403,7 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->getInstanceList($user);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -444,7 +444,7 @@ class ResourceController extends Controller
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -557,7 +557,7 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->filter($compiledArray, $user);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -587,7 +587,7 @@ class ResourceController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->getInstanceList($user, $page, self::THUMB_PER_PAGE);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
