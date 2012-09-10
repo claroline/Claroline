@@ -64,6 +64,16 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(6, $crawler->filter('.row-user')->count());
     }
 
+    public function testUserCreationFormIsDisplayedWithErrors()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/user/create');
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['profile_form[firstName]'] = '';
+        $crawler = $this->client->submit($form);
+        $this->assertEquals(1, count($crawler->filter('#profile_form')));
+    }
+
     public function testAdminCanDeleteUser()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -86,6 +96,13 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testUserCannotDeleteHimself()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/user/delete/{$this->getFixtureReference('user/admin')->getId()}");
+        $this->assertEquals($this->client->getResponse()->getStatusCode(), 500);
+    }
+
     public function testAdminCanCreateGroups()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
@@ -99,6 +116,16 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/admin/group/paginated/list/1/html');
         $this->assertEquals(4, $crawler->filter('.row-group')->count());
     }
+
+    public function testGroupCreationFormIsDisplayedWithErrors()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/group/create/form');
+        $form = $crawler->filter('button[type=submit]')->form();
+        $this->client->submit($form);
+        $this->assertEquals(1, count($crawler->filter('#group_form')));
+    }
+
 
     public function testAdminCanAddUserToGroup()
     {
@@ -146,6 +173,16 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
         $selected = $crawler->filter('option:contains("ROLE_ADMIN")')->attr('selected');
         $this->assertEquals("selected", $selected);
+    }
+
+    public function testGroupSettingsFormWithErrorsIsRendered()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['group_form[name]'] = '';
+        $crawler = $this->client->submit($form);
+        $this->assertEquals(1, count($crawler->filter('#group_form')));
     }
 
     public function testEditSelfRegistrationParameter()

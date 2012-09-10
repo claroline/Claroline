@@ -105,8 +105,11 @@ class AdministrationController extends Controller
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
-
-        throw new \Exception('An user cannot delete his own profile.');
+        
+//Doctrine throws an error itself because
+//"You cannot refresh a user from the EntityUserProvider that does not contain an identifier.
+//The user object has to be serialized with its own identifier mapped by Doctrine. (500 Internal Server Error)
+//        throw new \Exception('A user cannot delete his own profile.');
     }
 
     /**
