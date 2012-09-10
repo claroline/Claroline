@@ -148,6 +148,7 @@ move : Déplacer
 settings: Paramètres
 register: Inscription
 unregister: Désinscription
+save: sauvegarder
 
 # resource type
 directory: Répertoire

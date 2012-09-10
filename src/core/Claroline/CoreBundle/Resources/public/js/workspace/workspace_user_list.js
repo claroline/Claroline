@@ -105,7 +105,7 @@
             function(data){
                 if (nbIterationGroups == 0){
                     $('.checkbox-group-name').remove();
-                    $('#group-checkboxes').empty();
+                    $('#group-table-checkboxes-body').empty();
                 }
                 nbIterationGroups++;
                 createGroupsChkBoxes(data);
@@ -115,19 +115,21 @@
     });
 
     $('#search-user-button').click(function(){
-        $('#user-loading').show();
         var search = document.getElementById('search-user-txt').value;
-        nbIterationUsers = 0;
-        var route = Routing.generate('claro_ws_search_unregistered_users_by_names', {'search': search, 'workspaceId': twigWorkspaceId, 'format': 'json'})
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                $('.checkbox-user-name').remove();
-                $('#user-table-checkboxes-body').empty();
-                createUsersChkBoxes(data);
-                $('#user-loading').hide();
-            }
-        );
+        if (search !== ''){
+            $('#user-loading').show();
+            nbIterationUsers = 0;
+            var route = Routing.generate('claro_ws_search_unregistered_users_by_names', {'search': search, 'workspaceId': twigWorkspaceId, 'format': 'json'})
+            ClaroUtils.sendRequest(
+                route,
+                function(data){
+                    $('.checkbox-user-name').remove();
+                    $('#user-table-checkboxes-body').empty();
+                    createUsersChkBoxes(data);
+                    $('#user-loading').hide();
+                }
+            );
+        }
     });
 
     $('#search-group-button').click(function(){
@@ -155,9 +157,11 @@
         while (i<JSONObject.length)
         {
             var list = '<tr>'
-            +'<td><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'">'+JSONObject[i].name+'</input></td>'
+            +'<td align="center"><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
+            +'<td align="center">'+JSONObject[i].name+'</td>'
             +'</tr>';
-            $('#group-checkboxes').append(list);
+//        alert(list);
+            $('#group-table-checkboxes-body').append(list);
             i++;
         }
     }

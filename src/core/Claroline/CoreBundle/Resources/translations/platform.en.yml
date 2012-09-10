@@ -148,6 +148,7 @@ move : Move
 settings: Settings
 register: Register
 unregister: Unregister
+save: save
 
 # resource type
 directory: Directory

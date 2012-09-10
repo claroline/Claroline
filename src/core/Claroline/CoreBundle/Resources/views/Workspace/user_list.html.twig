@@ -13,8 +13,8 @@
          data-workspaceId="{{workspace.getId()}}"
          data-translation.delete="{{ 'delete'|trans({}, 'platform') }}">
     </div>
-    <button id="add-user-button">{{ 'add_user'|trans({}, 'platform') }}</button>
-    <button id="add-group-button">{{ 'add_group'|trans({}, 'platform') }}</button>
+    <button class="btn btn-secondary" id="add-user-button">{{ 'add_user'|trans({}, 'platform') }}</button>
+    <button class="btn btn-secondary" id="add-group-button">{{ 'add_group'|trans({}, 'platform') }}</button>
 
     <ul id="workspace-users">
         {% for user in users %}
@@ -38,12 +38,12 @@
     <div id="bootstrap-modal-user" class="modal hide fade">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Modal header</h3>
+            <h3>{{ 'add_user'|trans({}, 'platform') }}</h3>
         </div>
         <div class="modal-body">
             <div id="user-search-div">
                 <input type="text" id="search-user-txt" value="" />
-                <input type="button" id="search-user-button" value ="search" /></br>
+                <input type="button" id="search-user-button" value ="search" class="btn btn-secondary"/></br>
             </div>
             <form id="list-user-form" >
                 <div id="user-checkboxes">
@@ -59,38 +59,43 @@
                     </table>
                 </div>
                 <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="user-loading" class="loading"/></br>
-                <input type="button" id="lazy-load-user-button" value="next"/>
+                <input type="button" id="lazy-load-user-button" class="btn btn-secondary" value="next"/>
             </form>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary" id="btn-save-users">Save changes</a>
+                <a href="#" class="btn btn-primary" id="btn-save-users"> {{ 'save'|trans({}, 'platform') }}</a>
             </div>
         </div>
 
     <div id="bootstrap-modal-group" class="modal hide fade">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Modal header</h3>
+            <h3>{{ 'add_group'|trans({}, 'platform') }}</h3>
         </div>
         <div class="modal-body">
             <div id="group-dialog" title="{{ 'list_groups'|trans({}, 'platform') }}">
                 <div id="group-search_div">
                     <input type="text" id="search-group-txt" value=""/>
-                    <input type="button" id="search-group-button" value ="search name"/></br>
+                    <input type="button" id="search-group-button" value ="search name" class="btn btn-secondary"/></br>
                 </div>
                 <form id="list-group-form" class="form-horizontal">
                     <div id="group-checkboxes">
                         <table id="group-table-checkboxes" class="table table-striped table-bordered table-condensed">
-
+                            <thead>
+                            <th style="width: 30px;"></th>
+                            <th>{{ 'name'|trans({}, 'platform') }}</th>
+                            </thead>
+                            <tbody id="group-table-checkboxes-body">
+                            </tbody>
                         </table>
                     </div>
                     <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="group-loading" class="loading"/><br/>
-                    <input type="button" id="lazy-load-group-button" value="add next"/>
+                    <input type="button" id="lazy-load-group-button" class="btn btn-secondary" value="next"/>
                 </form>
             </div>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn btn-primary" id="btn-save-groups">Save changes</a>
+            <a href="#" class="btn btn-primary" id="btn-save-groups">{{ 'save'|trans({}, 'platform') }}</a>
         </div>
     </div>
 {% endblock %}
