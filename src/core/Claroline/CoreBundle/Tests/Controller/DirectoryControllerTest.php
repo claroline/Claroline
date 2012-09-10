@@ -81,7 +81,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/delete/{$dirRi->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(0, count(get_object_vars($dir)));
+        $this->assertEquals(0, count($dir));
     }
 
     private function cleanDirectory($dir)
