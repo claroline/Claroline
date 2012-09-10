@@ -100,7 +100,7 @@ class ResourceControllerTest extends FunctionalTestCase
         );
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($jsonResponse));
+        $this->assertEquals(2, count(get_object_vars($jsonResponse)));
     }
 
     public function testMultiMove()
@@ -114,8 +114,9 @@ class ResourceControllerTest extends FunctionalTestCase
         );
         $this->client->request('GET', "/resource/children/{$theContainer->id}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($jsonResponse));
+        $this->assertEquals(2, count(get_object_vars($jsonResponse)));
     }
+
 
     public function testResourceCanBeAddedToWorkspaceByRef()
     {
@@ -125,15 +126,17 @@ class ResourceControllerTest extends FunctionalTestCase
 
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $rootDir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(count($rootDir), 1);
-        $this->client->request('GET', "/resource/children/{$rootDir[0]->id}");
+        $this->assertEquals(count(get_object_vars($rootDir)), 1);
+        $rootDir = get_object_vars($rootDir);
+        $keys = array_keys($rootDir);
+        $this->client->request('GET', "/resource/children/{$rootDir[$keys[0]]->id}");
         $file = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(count($file), 2);
+        $this->assertEquals(count(get_object_vars($file)), 2);
         $this->assertEquals(count($this->getUploadedFiles()), 2);
         $this->client->request('GET', "/resource/workspace/add/{$this->userRoot[0]->getId()}/{$this->userRoot[0]->getId()}");
         $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
         $file = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(count($file), 2);
+        $this->assertEquals(count(get_object_vars($file)), 2);
     }
 
     public function testMultiAdd()
@@ -146,7 +149,7 @@ class ResourceControllerTest extends FunctionalTestCase
         );
         $this->client->request('GET', "/resource/children/{$this->userRoot[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(4, count($jsonResponse));
+        $this->assertEquals(4, count(get_object_vars($jsonResponse)));
     }
 
     public function testResourceProportiesCanBeEdited()
@@ -183,7 +186,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "/resource/roots");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
+        $this->assertEquals(3, count(get_object_vars($jsonResponse)));
     }
 
     public function testRootAction()
@@ -215,7 +218,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getId();
         $this->client->request('GET', "/resource/list/{$fileId}/{$this->userRoot[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($jsonResponse));
+        $this->assertEquals(2, count(get_object_vars($jsonResponse)));
     }
 
     public function testMenusAction()
@@ -291,37 +294,37 @@ class ResourceControllerTest extends FunctionalTestCase
         $now = new \DateTime();
         //filter by types (1)
         $crawler = $this->client->request('GET', '/resource/filter?types0=file');
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(6, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         //filter by types (2)
         $crawler = $this->client->request('GET', '/resource/filter?types0=file&types1=text');
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(6, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         //filter by root (2)
         $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}&roots1={$wsEroot[0]->getId()}");
-        $this->assertEquals(12, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(12, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         //filter by root (1)
         $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr[0]->getId()}");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(6, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         //filter by datecreation
         $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}");
-        $this->assertEquals(10, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(10, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         $crawler = $this->client->request('GET', "/resource/filter?dateTo={$now->format('Y-m-d H:i:s')}");
-        $this->assertEquals(13, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(13, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeTwo->format('Y-m-d H:i:s')}&dateTo={$now->format('Y-m-d H:i:s')}");
-        $this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(5, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         //filter by name
         $crawler = $this->client->request('GET', "/resource/filter?name=firstFile");
-        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(2, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
 
         //filter by mime
         $crawler = $this->client->request('GET', "/resource/filter?mimeTypes=text");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(6, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
     }
 
     public function testParents()
@@ -330,7 +333,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $firstDir = $this->createDirectory($this->userRoot[0]->getId(), 'firstDir');
         $file = $this->uploadFile($firstDir->id, 'file');
         $this->client->request('GET', "/resource/parents/{$file->id}");
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(3, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
     }
 
     public function testEveryUserInstances()
@@ -339,7 +342,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->createBigTree($this->pwr[0]->getId());
         $this->client->request('GET', '/resource/user/instances/all');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
+        $this->assertEquals(3, count(get_object_vars($jsonResponse)));
     }
 
     public function testFlatPagination()
@@ -347,7 +350,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createBigTree($this->pwr[0]->getId());
         $this->client->request('POST', "/resource/instance/flat/1");
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(3, count(get_object_vars(json_decode($this->client->getResponse()->getContent()))));
     }
 
     public function testMultiDelete()
@@ -357,7 +360,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $theLoneFile = $this->uploadFile($this->pwr[0]->getId(), 'theLoneFile.txt');
         $crawler = $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($jsonResponse));
+        $this->assertEquals(2, count(get_object_vars($jsonResponse)));
         $this->client->request(
             'GET',
             "/resource/multidelete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"

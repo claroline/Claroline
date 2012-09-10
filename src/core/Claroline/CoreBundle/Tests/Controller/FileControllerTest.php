@@ -49,7 +49,7 @@ class FileControllerTest extends FunctionalTestCase
         $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($dir));
+        $this->assertEquals(1, count(get_object_vars($dir)));
         $this->assertEquals(1, count($this->getUploadedFiles()));
     }
 

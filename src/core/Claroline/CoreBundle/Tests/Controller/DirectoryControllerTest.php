@@ -49,7 +49,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($dir));
+        $this->assertEquals(1, count(get_object_vars($dir)));
     }
 
     public function testUserCanCreateSubResource()
@@ -66,7 +66,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->addResource($object, $dirRi->getId(), 'file');
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($dir));
+        $this->assertEquals(1, count(get_object_vars($dir)));
     }
 
     public function testUserCanRemoveDirectoryAndItsContent()
@@ -81,7 +81,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/delete/{$dirRi->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(0, count($dir));
+        $this->assertEquals(0, count(get_object_vars($dir)));
     }
 
     private function cleanDirectory($dir)
