@@ -416,13 +416,9 @@ class AdministrationController extends Controller
             $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
             $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
             $configHandler->setParameter('theme', $form['theme']->getData());
-
-            return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
-            array('form_settings' => $form->createView())
-        );
+        //this form can't be invalid
+        return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
     }
 }
