@@ -15,18 +15,18 @@ class WorkspaceSecurityTest extends FunctionalTestCase
 
     public function testWorkspacesSectionRequiresAuthenticatedUser()
     {
-        $crawler = $this->client->request('GET', '/workspace/list');
+        $crawler = $this->client->request('GET', '/workspaces');
         $this->assertTrue($crawler->filter('#login-form')->count() > 0);
     }
 
     public function testWorkspaceCreationIsReservedToWorkspaceCreators()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('GET', '/workspace/new/form');
+        $this->client->request('GET', '/workspaces/new/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
         $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $crawler = $this->client->request('GET', '/workspace/new/form');
+        $crawler = $this->client->request('GET', '/workspaces/new/form');
         $this->assertTrue($crawler->filter('#ws_creation_form')->count() > 0);
     }
 }

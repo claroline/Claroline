@@ -23,7 +23,7 @@ claro_dashboard:
 
 claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
-    prefix: workspace
+    prefix: workspaces
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"

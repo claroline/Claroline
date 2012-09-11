@@ -1,11 +1,16 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block section_content %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/workspace/list.js') }}' type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
     <h3 class="sub-section-header">{{ 'workspaces'|trans({}, 'platform') }}</h3>
     <div id="workspaces">
         <ul>
             {% for workspace in workspaces %}
-                <li class="row_workspace" id="workspace_{{workspace.getId()}}" data-workspace_id={{workspace.getId()}}>
+                <li class="row-workspace" id="workspace-{{workspace.getId()}}">
                     {% set bool = 'false' %}
                     {% for role in workspace.getWorkspaceRoles() %}
                         {% if is_granted(role.getName()) %}
@@ -13,13 +18,13 @@
                         {% endif %}
                     {% endfor %}
                     {% if bool == 'true' %}
-                        <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" class="link_show" id="link_show_{{workspace.getId}}"</>
+                        <a href="{{path('claro_workspace_home', {'workspaceId': workspace.getId()})}}" class="link-home" id="link-home-{{workspace.getId}}">
                        {{ workspace.name}}</a>
                     {% else %}
                        {{ workspace.name}}
                     {% endif %}
                     {% if (is_granted(workspace.getManagerRole().getName())) %}|
-                        <a href = "{{path('claro_ws_delete', {'workspaceId': workspace.getId()})}}" class="link_delete" id="link_delete_{{workspace.getId}}"</>
+                        <a href="#" data-workspace-id="{{workspace.getId()}}" class="link-delete-workspace" id="link-delete-{{workspace.getId}}">
                         {{ 'delete'|trans({}, 'platform') }}</a>
                     {% endif %}
                     {% set bool = 'false' %}
@@ -29,9 +34,9 @@
                         {% endif %}
                     {% endfor %}
                     {% if bool == 'true' %}
-                        <a href="{{path('claro_ws_remove_user', {'workspaceId': workspace.getId()})}}" class="link_unregistration" id="link_unregistration_{{workspace.getId()}}"> | {{ 'unregister'|trans({}, 'platform') }} </a>
+                        <a href="{{path('claro_workspace_delete_user', {'workspaceId': workspace.getId(), 'userId': app.user.id})}}" class="link-unregistration" id="link-unregistration-{{workspace.getId()}}"> | {{ 'unregister'|trans({}, 'platform') }} </a>
                     {% else %}
-                        <a href="{{path('claro_ws_add_user', {'workspaceId': workspace.getId()})}}" class="link_registration" id="link_registration_{{workspace.getId()}}"> | {{ 'register'|trans({}, 'platform') }}</a>
+                        <a href="{{path('claro_workspace_add_user', {'workspaceId': workspace.getId(), 'userId': app.user.id})}}" class="link-registration" id="link-registration-{{workspace.getId()}}"> | {{ 'register'|trans({}, 'platform') }}</a>
                     {% endif %}
             </li>
             {% endfor %}

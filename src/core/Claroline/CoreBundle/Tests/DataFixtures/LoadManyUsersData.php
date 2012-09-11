@@ -38,15 +38,15 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
         $wsCreatorRole = $this->getReference('role/ws_creator');
         $adminRole = $this->getReference('role/admin');
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $this->createUser($i, $userRole, $manager);
         }
 
-        for ($i; $i < 120; $i++) {
+        for ($i; $i < 25; $i++) {
             $this->createUser($i, $wsCreatorRole, $manager);
         }
 
-        for ($i; $i < 125; $i++) {
+        for ($i; $i < 30; $i++) {
             $this->createUser($i, $adminRole, $manager);
         }
 
