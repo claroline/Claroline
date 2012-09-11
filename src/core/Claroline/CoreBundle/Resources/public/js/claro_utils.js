@@ -29,11 +29,14 @@
     }
 
 
-    utils.sendRequest = function (route, successHandler, completeHandler) {
+    utils.sendRequest = function (route, successHandler, completeHandler, method) {
         var url = '';
+        if (method == undefined){
+            method = 'GET';
+        }
         'string' == typeof route ? url = route : url = Routing.generate(route.name, route.parameters);
         $.ajax({
-            type: 'GET',
+            type: method,
             url: url,
             cache: false,
             success: function (data, textStatus, jqXHR) {

@@ -45,7 +45,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanCreateUser()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_administration')->link();
+        $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_add_user')->link();
         $crawler = $this->client->click($link);
@@ -106,7 +106,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanCreateGroups()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_administration')->link();
+        $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_group_create_form')->link();
         $crawler = $this->client->click($link);
@@ -189,7 +189,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->configHandler->setParameter('allow_self_registration', false);
         $crawler = $this->client->request('GET', '/');
-        $this->assertEquals(0, $crawler->filter("#link_registration")->count());
+        $this->assertEquals(0, $crawler->filter("#link-registration")->count());
 
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
@@ -199,21 +199,21 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['platform_parameters_form[selfRegistration]'] = true;
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/logout');
-        $this->assertEquals(1, $crawler->filter("#link_registration")->count());
+        $this->assertEquals(1, $crawler->filter("#link-registration")->count());
     }
 
     public function testEditLanguageParameter()
     {
         $this->configHandler->setParameter('locale_language', 'en');
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $this->assertEquals('Logout', trim($crawler->filter("#link_logout")->text()));
+        $this->assertEquals('Logout', trim($crawler->filter("#link-logout")->text()));
 
         $crawler = $this->client->request('GET', '/admin/platform/settings/form');
         $form = $crawler->filter('button[type=submit]')->form();
         $form['platform_parameters_form[localLanguage]'] = 'fr';
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals('Déconnexion', trim($crawler->filter("#link_logout")->text()));
+        $this->assertEquals('Déconnexion', trim($crawler->filter("#link-logout")->text()));
     }
 
     private function getUser($username)

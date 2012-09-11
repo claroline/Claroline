@@ -15,10 +15,20 @@ my_portfolio: My portfolio
 my_agenda: My agenda
 all_workspaces: All workspaces
 
-# tabs
+# tabs dashboard
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Resources
+
+# tabs workspace
+workspace_welcome: Welcome
+workspace_resource: Resources
+workspace_tools: Tools
+workspace_administration: Administration
+
+# workspace tools
+user_management: User management
+group_management: Group management
 
 # administration links
 add_user: Add user
@@ -36,6 +46,7 @@ register: Register
 create_workspace: New workspace
 my_workspaces: My workspaces
 list_workspaces: List workspaces
+find_workspaces: Find workspaces
 
 #########
 # FORMS #

@@ -1,25 +1,23 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% block sectionHeader %}
+    {{ macros.sectionHeader(workspace.getCode() ~' - '~ workspace.getName()) }}
+{% endblock %}
+
+{% block tabs %}
+    <ul class="nav nav-tabs">
+        <li class="{% if 'claro_workspace_home' == app.request.get('_route') %}active{% endif %}">
+            <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}" id="workspace_home_link">{{ 'workspace_welcome'|trans({}, 'platform') }}</a>
+        </li>
+        <li class="{% if 'claro_workspace_resources' == app.request.get('_route') %}active{% endif %}">
+            <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}" id="workspace_resource_link">{{ 'workspace_resource'|trans({}, 'platform') }}</a>
+        </li>
+        <li class="{% if 'claro_workspace_tools' == app.request.get('_route') %}active{% endif %}">
+            <a href="{{ path('claro_workspace_tools', {'workspaceId': workspace.getId()}) }}" id="resource_manager_link">{{ 'workspace_tools'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+{% endblock %}
+
 {% block content %}
-    <div class="span3">
-        <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-                <li>
-                    <a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platform') }}</a>
-                </li>
-                <li>
-                    <a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platform') }}</a>
-                </li>
-                {% if is_granted('ROLE_WS_CREATOR') %}
-                <li>
-                    <a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platform') }}</a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-    <div class="span9">
-        {{ macros.flashBox() }}
-        {% block section_content %}{% endblock %}
-    </div>
+  {% block section_content %}{% endblock %}
 {% endblock %}
