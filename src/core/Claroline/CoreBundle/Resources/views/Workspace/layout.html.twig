@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block tabs %}
+    {% set activateTools = [
+        'claro_workspace_tools',
+        'claro_workspace_tools_user_management',
+        'claro_workspace_tools_group_management']
+    %}
     <ul class="nav nav-tabs">
         <li class="{% if 'claro_workspace_home' == app.request.get('_route') %}active{% endif %}">
             <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}" id="workspace_home_link">{{ 'workspace_welcome'|trans({}, 'platform') }}</a>
@@ -12,7 +17,7 @@
         <li class="{% if 'claro_workspace_resources' == app.request.get('_route') %}active{% endif %}">
             <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}" id="workspace_resource_link">{{ 'workspace_resource'|trans({}, 'platform') }}</a>
         </li>
-        <li class="{% if 'claro_workspace_tools' == app.request.get('_route') %}active{% endif %}">
+        <li class="{% if app.request.get('_route') in activateTools %}active{% endif %}">
             <a href="{{ path('claro_workspace_tools', {'workspaceId': workspace.getId()}) }}" id="resource_manager_link">{{ 'workspace_tools'|trans({}, 'platform') }}</a>
         </li>
     </ul>
