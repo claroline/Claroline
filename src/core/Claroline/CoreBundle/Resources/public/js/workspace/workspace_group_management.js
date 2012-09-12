@@ -67,6 +67,7 @@
     });
 
     $('#reset-button').click(function(){
+        $('.modal-body').animate({scrollTop: 0}, 1000);
         lazyloading = true;
         nbIterationGroups = 0;
         lazyload(twigWorkspaceId, nbIterationGroups)

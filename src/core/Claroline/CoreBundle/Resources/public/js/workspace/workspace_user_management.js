@@ -66,6 +66,7 @@
     });
 
     $('#reset-button').click(function(){
+        $('.modal-body').animate({scrollTop: 0}, 1000);
         lazyloading = true;
         nbIterationUsers = 0
         $('.checkbox-user-name').remove();
@@ -132,7 +133,6 @@
 
     function lazyload(twigWorkspaceId, nbIterationUsers)
     {
-
         $('#user-loading').show();
         var route = Routing.generate('claro_workspace_users_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationUsers});
         ClaroUtils.sendRequest(
