@@ -1,7 +1,7 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
     var twigDeleteTranslation = document.getElementById('twig-attributes').getAttribute('data-translation.delete');
-
+    var lazyloading = false;
     var nbIterationGroups=0;
 
     $('#group-loading').hide();
@@ -10,6 +10,14 @@
         show: false,
         backdrop: false
     });
+
+    $('.modal-body').scroll(function(){
+        if  (($('.modal-body')[0].scrollHeight - ($('.modal-body').scrollTop() + $('.modal-body').height())) <= 100 && lazyloading == true){
+            lazyload(twigWorkspaceId, nbIterationGroups);
+            nbIterationGroups++;
+        }
+    });
+
 
     $('.link-delete-group').live('click', function(e){
         var route = Routing.generate('claro_workspace_delete_group', {'groupId': $(this).attr('data-group-id'), 'workspaceId': twigWorkspaceId});
@@ -32,7 +40,6 @@
             window.location.reload();
         }
     })
-
 
     $('#add-group-button').click(function(){
          $('#bootstrap-modal-group').modal('show');
@@ -59,24 +66,15 @@
         nbIterationGroups = 0;
     });
 
-    $('#lazy-load-group-button').click(function(){
-        $('#group-loading').show();
-        var route = Routing.generate('claro_workspace_groups_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationGroups})
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                if (nbIterationGroups == 0){
-                    $('.checkbox-group-name').remove();
-                    $('#group-table-checkboxes-body').empty();
-                }
-                nbIterationGroups++;
-                createGroupsChkBoxes(data);
-                $('#group-loading').hide();
-            }
-        );
+    $('#reset-button').click(function(){
+        lazyloading = true;
+        nbIterationGroups = 0;
+        lazyload(twigWorkspaceId, nbIterationGroups)
+        nbIterationGroups++;
     });
 
     $('#search-group-button').click(function(){
+        lazyloading = false;
         var search = document.getElementById('search-group-txt').value;
         if (search != '')  {
             $('#group-loading').show();
@@ -126,6 +124,27 @@
             $('#body-tab-group').append(row);
             i++;
         }
+    }
+
+    function lazyload(twigWorkspaceId, nbIterationGroups)
+    {
+        $('#group-loading').show();
+        var route = Routing.generate('claro_workspace_groups_paginated', {
+            'workspaceId': twigWorkspaceId,
+            'page': nbIterationGroups
+        })
+        ClaroUtils.sendRequest(
+            route,
+            function(data){
+                if (nbIterationGroups == 0){
+                    $('.checkbox-group-name').remove();
+                    $('#group-table-checkboxes-body').empty();
+                }
+                nbIterationGroups++;
+                createGroupsChkBoxes(data);
+                $('#group-loading').hide();
+            }
+            );
     }
 
 })()

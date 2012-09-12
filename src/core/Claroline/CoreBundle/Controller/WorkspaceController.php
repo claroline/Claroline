@@ -21,7 +21,7 @@ class WorkspaceController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
-    const NUMBER_GROUP_PER_ITERATION = 10;
+    const NUMBER_GROUP_PER_ITERATION = 25;
 
     /**
      * Renders the workspace list page with its claroline layout.
