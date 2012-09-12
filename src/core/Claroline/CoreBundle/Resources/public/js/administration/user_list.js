@@ -1,6 +1,6 @@
+//window.onload(function(){alert("loading...")});
 (function () {
-    window.scrollTo(0, 0);
-
+    $('html, body').animate({scrollTop: 0}, 1000);
     $('#loading').hide();
 
     var route = Routing.generate('claro_admin_paginated_user_list', {
