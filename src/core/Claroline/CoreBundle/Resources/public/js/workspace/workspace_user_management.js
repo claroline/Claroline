@@ -1,9 +1,16 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
     var twigDeleteTranslation = document.getElementById('twig-attributes').getAttribute('data-translation.delete');
+    var lazyloading = false;
 
     var nbIterationUsers=0;
     $('#user-loading').hide();
+    $('.modal-body').scroll(function(){
+        if  (($('.modal-body')[0].scrollHeight - ($('.modal-body').scrollTop() + $('.modal-body').height())) <= 100 && lazyloading == true){
+            lazyload(twigWorkspaceId, nbIterationUsers);
+            nbIterationUsers++;
+        }
+    });
 
     $('.link-delete-user').live('click', function(e){
         var route = Routing.generate('claro_workspace_delete_user', {'userId': $(this).attr('data-user-id'), 'workspaceId': twigWorkspaceId});
@@ -33,6 +40,7 @@
     })
 
     $('#add-user-button').click(function(){
+        window.scrollTo(0, document.getElementById('modal-body').offsetTop);
         $('#bootstrap-modal-user').modal('show');
     });
 
@@ -57,24 +65,17 @@
         nbIterationUsers = 0;
     });
 
-    $('#lazy-load-user-button').click(function(){
-        $('#user-loading').show();
-        var route = Routing.generate('claro_workspace_users_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationUsers});
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                if (nbIterationUsers == 0){
-                    $('.checkbox-user-name').remove();
-                    $('#user-table-checkboxes-body').empty();
-                }
-                nbIterationUsers++;
-                createUsersChkBoxes(data);
-                $('#user-loading').hide();
-            }
-        );
+    $('#reset-button').click(function(){
+        lazyloading = true;
+        nbIterationUsers = 0
+        $('.checkbox-user-name').remove();
+        $('#user-table-checkboxes-body').empty();
+        lazyload(twigWorkspaceId, nbIterationUsers);
+        nbIterationUsers++;
     });
 
     $('#search-user-button').click(function(){
+        lazyloading = false;
         var search = document.getElementById('search-user-txt').value;
         if (search !== ''){
             $('#user-loading').show();
@@ -127,5 +128,23 @@
             $('#body-tab-user').append(row);
             i++;
         }
+    }
+
+    function lazyload(twigWorkspaceId, nbIterationUsers)
+    {
+
+        $('#user-loading').show();
+        var route = Routing.generate('claro_workspace_users_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationUsers});
+        ClaroUtils.sendRequest(
+            route,
+            function(data){
+                if (nbIterationUsers == 0){
+                    $('.checkbox-user-name').remove();
+                    $('#user-table-checkboxes-body').empty();
+                }
+                createUsersChkBoxes(data);
+                $('#user-loading').hide();
+            }
+        );
     }
 })()

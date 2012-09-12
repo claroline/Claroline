@@ -56,7 +56,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3>{{ 'add_group'|trans({}, 'platform') }}</h3>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="modal-body">
             <div id="group-dialog" title="{{ 'list_groups'|trans({}, 'platform') }}">
                 <div id="group-search_div">
                     <input type="text" id="search-group-txt" value="" class="search-query"/>
@@ -74,11 +74,11 @@
                         </table>
                     </div>
                     <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="group-loading" class="loading"/><br/>
-                    <input type="button" id="lazy-load-group-button" class="btn btn-secondary" value="next"/>
                 </form>
             </div>
         </div>
         <div class="modal-footer">
+            <input type="button" id="reset-button" class="btn btn-secondary" value="reset"/>
             <a href="#" class="btn btn-primary" id="btn-save-groups">{{ 'save'|trans({}, 'platform') }}</a>
         </div>
     </div>

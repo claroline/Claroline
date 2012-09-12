@@ -19,8 +19,8 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
  */
 class AdministrationController extends Controller
 {
-    const USER_PER_PAGE = 16;
-    const GROUP_PER_PAGE = 16;
+    const USER_PER_PAGE = 40;
+    const GROUP_PER_PAGE = 40;
 
     /**
      * Displays the administration section index.
@@ -105,7 +105,7 @@ class AdministrationController extends Controller
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
-        
+
 //Doctrine throws an error itself because
 //"You cannot refresh a user from the EntityUserProvider that does not contain an identifier.
 //The user object has to be serialized with its own identifier mapped by Doctrine. (500 Internal Server Error)
@@ -149,14 +149,14 @@ class AdministrationController extends Controller
         return $response;
     }
 
-    /* Doesn't work yet due to a sql error from the repository
+    // Doesn't work yet due to a sql error from the repository
     public function paginatedUserOfGroupListAction($groupId, $page, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $page, self::USER_PER_PAGE);
 
         $content = $this->renderView(
-            "ClarolineCoreBundle:Administration:user_group_list.{$format}.twig", array('users' => $users));
+            "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
 
         $response = new Response($content);
         if ($format == 'json') {
@@ -164,7 +164,7 @@ class AdministrationController extends Controller
         }
 
         return $response;
-    }*/
+    }
 
     /**
      *
@@ -172,7 +172,7 @@ class AdministrationController extends Controller
     public function paginatedGroupListAction($page, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($page, self::USER_PER_PAGE);
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($page, self::GROUP_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));

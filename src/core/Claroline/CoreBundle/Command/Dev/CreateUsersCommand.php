@@ -30,7 +30,7 @@ class CreateUsersCommand extends ContainerAwareCommand
             "Alfred", "Paul", "Gabriel", "Anne", "Theophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
             "Jean-Kevin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Melanie", "Sophie",
             "Dominique", "Coralie", "Camille", "Claudia", "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Helene", "14M4M3G4Z0RD",
-            "Frank", "Melissa"
+            "Frank", "Melissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin"
             );
 
          $this->lastNames = array(
