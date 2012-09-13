@@ -1,7 +1,7 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
     var lazyloading = false;
-    var nbIterationUsers=0;
+    var nbIterationUsers = 1;
 
     $('#user-loading').hide();
     $('.modal-body').scroll(function(){
@@ -94,13 +94,13 @@
         $('#bootstrap-modal-user').modal('hide');
         $('.checkbox-user-name').remove();
         $('#user-table-checkboxes-body').empty();
-        nbIterationUsers = 0;
+        nbIterationUsers = 1;
     });
 
     $('#reset-button').click(function(){
         $('.modal-body').animate({scrollTop: 0}, 0);
         lazyloading = true;
-        nbIterationUsers = 0
+        nbIterationUsers = 1
         $('.checkbox-user-name').remove();
         $('#user-table-checkboxes-body').empty();
         lazyload(twigWorkspaceId, nbIterationUsers);
@@ -112,7 +112,7 @@
         var search = document.getElementById('search-user-txt').value;
         if (search !== ''){
             $('#user-loading').show();
-            nbIterationUsers = 0;
+            nbIterationUsers = 1;
             var route = Routing.generate('claro_workspace_search_unregistered_users', {'search': search, 'workspaceId': twigWorkspaceId})
             ClaroUtils.sendRequest(
                 route,
@@ -157,7 +157,7 @@
         ClaroUtils.sendRequest(
             route,
             function(data){
-                if (nbIterationUsers == 0){
+                if (nbIterationUsers == 1){
                     $('.checkbox-user-name').remove();
                     $('#user-table-checkboxes-body').empty();
                 }

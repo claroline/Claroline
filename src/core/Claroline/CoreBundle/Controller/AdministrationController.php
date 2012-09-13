@@ -136,7 +136,9 @@ class AdministrationController extends Controller
     public function paginatedUserListAction($page, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($page, self::USER_PER_PAGE);
+        $offset = --$page*self::USER_PER_PAGE;
+        $limit = $offset+self::USER_PER_PAGE;
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, $limit);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
@@ -153,7 +155,9 @@ class AdministrationController extends Controller
     public function paginatedUserOfGroupListAction($groupId, $page)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $page, self::USER_PER_PAGE);
+        $offset = --$page*self::USER_PER_PAGE;
+        $limit = $offset+self::USER_PER_PAGE;
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $offset, $limit);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -170,7 +174,9 @@ class AdministrationController extends Controller
     public function paginatedGroupListAction($page, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($page, self::GROUP_PER_PAGE);
+        $offset = --$page*self::GROUP_PER_PAGE;
+        $limit = $offset+self::GROUP_PER_PAGE;
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, $limit);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));

@@ -20,10 +20,8 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getLazyUnregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $numberIteration, $groupAmount)
+    public function getLazyUnregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
-        $offset = $numberIteration * $groupAmount;
-
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
             WHERE g NOT IN
@@ -37,7 +35,7 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
-        $query->setMaxResults($groupAmount);
+        $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
         return $query->getResult();
@@ -66,9 +64,8 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findPaginatedGroups($page, $limit)
+    public function findPaginatedGroups($offset, $limit)
     {
-        $offset = $limit * (--$page);
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'g')
             ->add('from', 'Claroline\CoreBundle\Entity\Group g')

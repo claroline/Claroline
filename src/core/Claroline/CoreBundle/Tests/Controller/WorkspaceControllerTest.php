@@ -111,7 +111,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadManyUsersData());
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/1/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
 
         $response = $this->client->getResponse()->getContent();
@@ -126,7 +126,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadManyGroupsData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/1/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
 
         $response = $this->client->getResponse()->getContent();

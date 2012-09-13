@@ -339,9 +339,9 @@ class WorkspaceController extends Controller
 
     /**
      * Renders a list of unregistered users for a workspace.
-     * if page = 0, it'll render users 1-25
-     * if page = 1, it'll render users 26-50
-     * if page = 2, it'll render users 51-75
+     * if page = 1, it'll render users 1-25
+     * if page = 2, it'll render users 26-50
+     * if page = 3, it'll render users 51-75
      * ...
      *
      * @param integer $workspaceId
@@ -353,16 +353,18 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $page, self::NUMBER_USER_PER_ITERATION);
+        $offset = --$page*self::NUMBER_USER_PER_ITERATION;
+        $limit = $offset+self::NUMBER_USER_PER_ITERATION;
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $offset, $limit);
 
         return $this->render("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
     }
 
     /**
      * Renders a list of unregistered groups for a workspace
-     * if page = 0, it'll render groups 1-10
-     * if page = 1, it'll render groups 11-20
-     * if page = 2, it'll render groups 21-30
+     * if page = 1, it'll render groups 1-10
+     * if page = 2, it'll render groups 11-20
+     * if page = 3, it'll render groups 21-30
      * ...
      *
      * @param integer $workspaceId
@@ -374,7 +376,9 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $page, self::NUMBER_GROUP_PER_ITERATION);
+        $offset = --$page*self::NUMBER_GROUP_PER_ITERATION;
+        $limit = $offset+self::NUMBER_GROUP_PER_ITERATION;
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $offset, $limit);
 
         return $this->render("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
     }
