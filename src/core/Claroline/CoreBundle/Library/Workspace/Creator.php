@@ -67,6 +67,8 @@ class Creator
         }
 
         $this->entityManager->flush();
+        $this->entityManager->detach($rootDir);
+        $this->entityManager->detach($root);
 
         return $workspace;
     }
