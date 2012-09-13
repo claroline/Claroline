@@ -97,13 +97,13 @@ class AdministrationController extends Controller
      */
     public function deleteUserAction($userId)
     {
-        if ($userId !== $this->get('security.context')->getToken()->getUser()->getId()) {
+        if ($userId != $this->get('security.context')->getToken()->getUser()->getId()) {
             $em = $this->getDoctrine()->getEntityManager();
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             $em->remove($user);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            return new Response('user removed', 204);
         }
 
 //Doctrine throws an error itself because
@@ -150,18 +150,16 @@ class AdministrationController extends Controller
     }
 
     // Doesn't work yet due to a sql error from the repository
-    public function paginatedUserOfGroupListAction($groupId, $page, $format)
+    public function paginatedUserOfGroupListAction($groupId, $page)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $page, self::USER_PER_PAGE);
 
         $content = $this->renderView(
-            "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
 
         $response = new Response($content);
-        if ($format == 'json') {
-            $response->headers->set('Content-Type', 'application/json');
-        }
+        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }

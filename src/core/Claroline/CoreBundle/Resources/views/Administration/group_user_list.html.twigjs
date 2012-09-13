@@ -1,0 +1,15 @@
+{% twig_js name="group_user_list" %}
+
+{% for user in users %}
+    <tr id="row-{{ user.id() }}" class="row_user">
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.lastname }}</td>
+        <td>{{ user.firstname }}</td>
+        <td>{{ user.mail }}</td>
+        <td>{{ user.administrativeCode() }}</td>
+        <td>
+            <a href="#" data-user-id="{{ user.id }}" class="link_delete">{{ 'delete'|trans({}, 'platform') }}</a>
+        </td>
+    </tr>
+{% endfor %}

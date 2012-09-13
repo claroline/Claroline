@@ -4,6 +4,76 @@ claro_admin_index:
     options:
       expose: true
 
+#RESTS ROUTE (OR CLOSE ENOUGH)
+claro_admin_paginated_group_user_list:
+   pattern: /group/{groupId}/users/{page}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserOfGroupList }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      groupId: ^(?=.*[1-9].*$)\d*$
+      page: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_delete_user_from_group:
+    pattern: /group/{groupId}/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUserFromGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      groupId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_paginated_group_list:
+   pattern: /groups/{page}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGroupList }
+   options:
+      expose: true
+   requirements:
+      page: ^(?=.*[1-9].*$)\d*$
+      method: GET
+
+claro_admin_delete_group:
+    pattern: /group/{groupId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      groupId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_delete_user:
+    pattern: /user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUser }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      userId: ^(?=.*[1-9].*$)\d*$
+
+
+claro_admin_group_settings_form:
+   pattern: /group/settings/form/{groupId}
+   defaults: { _controller: ClarolineCoreBundle:Administration:groupSettingsForm }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      groupId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_paginated_user_list:
+   pattern: /users/{page}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserList }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      page: ^(?=.*[1-9].*$)\d*$
+
+
+#SOON TO BE REST
+
 #users
 
 claro_admin_user_creation_form:
@@ -14,25 +84,9 @@ claro_admin_create_user:
     pattern: /user/create
     defaults: { _controller: ClarolineCoreBundle:Administration:createUser }
 
-claro_admin_delete_user:
-    pattern: /user/delete/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUser }
-
 claro_admin_user_list:
     pattern: /user/list
     defaults: { _controller: ClarolineCoreBundle:Administration:userList }
-
-claro_admin_paginated_user_list:
-   pattern: /user/paginated/list/{page}/{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserList }
-   options:
-      expose: true
-
-claro_admin_paginated_group_user_list:
-   pattern: /group/user/paginated/list/{groupId}/{page}/{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserOfGroupList }
-   options:
-      expose: true
 
 #groups
 
@@ -51,6 +105,8 @@ claro_admin_group_list:
 claro_admin_group_user_list:
     pattern: /group/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Administration:groupUserList }
+    requirements:
+      _method: GET
 
 claro_admin_user_list_addable_to_group:
     pattern: /group/add/{groupId}
@@ -60,28 +116,9 @@ claro_admin_add_user_to_group:
     pattern: /group/add/user/{groupId}/{userId}
     defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
 
-claro_admin_delete_user_from_group:
-    pattern: /group/delete/user/{groupId}/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUserFromGroup }
-
-claro_admin_delete_group:
-    pattern: /group/delete/{groupId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }
-
-claro_admin_group_settings_form:
-   pattern: /group/settings/form/{groupId}
-   defaults: { _controller: ClarolineCoreBundle:Administration:groupSettingsForm }
-
 claro_admin_update_group_settings:
    pattern: /group/settings/update/{groupId}
    defaults: { _controller: ClarolineCoreBundle:Administration:updateGroupSettings }
-
-claro_admin_paginated_group_list:
-   pattern: /group/paginated/list/{page}/{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGroupList }
-   options:
-      expose: true
-
 
 #platform
 

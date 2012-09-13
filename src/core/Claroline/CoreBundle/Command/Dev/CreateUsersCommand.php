@@ -25,7 +25,8 @@ class CreateUsersCommand extends ContainerAwareCommand
         $this->firstNames = array(
             "Mary", "Amanda", "James", "Patricia", "Michael", "Sarah", "Patrick", "Homer", "Bart", "Marge", "Lisa",
             "John", "Stan", "Stephane", "Emmanuel", "Nicolas", "Frederic", "Luke", "Luc", "Kenneth", "Stanley",
-            "Kyle", "Leopold", "Eric", "Matthieu", "Aurelie", "Elisabeth", "Louis", "Jerome", "Ned", "Ralph", "Charles Montgomery",
+            "Kyle", "Leopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica","Matthieu", "Aurelie", "Elisabeth",
+            "Louis", "Jerome", "Ned", "Ralph", "Charles Montgomery",
             "Waylon", "Carl", "Timothy", "Kirk", "Milhouse", "Todd", "Maude", "Benjamen", "ObiWan", "George", "Barack",
             "Alfred", "Paul", "Gabriel", "Anne", "Theophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
             "Jean-Kevin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Melanie", "Sophie",

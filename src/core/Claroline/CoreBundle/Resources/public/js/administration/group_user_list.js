@@ -3,13 +3,14 @@
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
 
-    var route = Routing.generate('claro_admin_paginated_user_list', {
+     var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
+    var route = Routing.generate('claro_admin_paginated_group_user_list', {
         'page' : 1,
-        'format': 'html'
+        'groupId': groupId
     });
 
     ClaroUtils.sendRequest(route, function(users){
-        $('#user-table-body').append($(users));
+        $('#user-table-body').append(Twig.render(group_user_list, {'users': users}));
     })
 
     var page = 2;
@@ -19,23 +20,25 @@
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false){
             loading = true;
             $('#loading').show();
-            var route = Routing.generate('claro_admin_paginated_user_list', {
+            var route = Routing.generate('claro_admin_paginated_group_user_list', {
                 'page' : page,
-                'format': 'html'
+                'groupId': groupId
             });
-            page++;
             ClaroUtils.sendRequest(route, function(users){
-                $('#user-table-body').append($(users));
+                page++;
+               $('#user-table-body').append(Twig.render(group_user_list, {'users': users}));
                 loading = false;
                 $('#loading').hide();
             })
         }
     });
 
-    $('.link-delete-user').live('click', function(e){
+    $('.link_delete').live('click', function(e){
         e.preventDefault();
-        var route = $(this).attr('href');
+        var userId = $(this).attr('data-user-id');
+        var route = Routing.generate('claro_admin_delete_user_from_group', {'groupId': groupId, 'userId': userId});
         var element = $(this).parent().parent();
+
         ClaroUtils.sendRequest(
             route,
             function(){
