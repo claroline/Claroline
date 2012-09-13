@@ -115,7 +115,6 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->setUsername($user->getFirstName() . $user->getLastName() . rand(0, 1000));
             $user->setPlainPassword('123');
             $user->addRole($role);
-            $em->persist($user);
             $config = new Configuration();
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
             $config->setWorkspaceName($user->getUsername());
@@ -126,10 +125,10 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->addRole($workspace->getManagerRole());
             $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);
-            $em->flush();
+            $em->persist($user);
             echo("--- user {$i} created \n");
-            $em->detach($user);
-//            $em->detach($workspace);
         }
+        $em->flush();
+        echo("final flush !\n");
     }
 }

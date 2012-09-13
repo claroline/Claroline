@@ -90,7 +90,5 @@ class GroupRepository extends EntityRepository
         $query->setMaxResults($limit);
 
         return $query->getResult();
-
-        return $query->getResult();
     }
 }
