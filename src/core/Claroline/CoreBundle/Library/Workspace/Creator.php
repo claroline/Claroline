@@ -60,7 +60,7 @@ class Creator
         $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
         $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
         $this->entityManager->persist($workspace);
-        
+
         if (null !== $manager) {
             $manager->addRole($workspace->getManagerRole());
             $this->rightManager->addRight($workspace, $manager, MaskBuilder::MASK_OWNER);
@@ -69,6 +69,8 @@ class Creator
         $this->entityManager->flush();
         $this->entityManager->detach($rootDir);
         $this->entityManager->detach($root);
+        //for some reason, it broke the test suite... and that's all.
+//        $this->entityManager->detach($workspace);
 
         return $workspace;
     }
