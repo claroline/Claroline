@@ -79,4 +79,21 @@ class GroupRepository extends EntityRepository
 
         return $q->getResult();
     }
+
+    public function findPaginatedGroupsOfWorkspace($workspaceId, $offset, $limit)
+    {
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId
+       ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+        $query->setFirstResult($offset);
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
+
+        return $query->getResult();
+    }
 }

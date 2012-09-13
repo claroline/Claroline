@@ -1,6 +1,13 @@
 {% extends 'ClarolineCoreBundle:Workspace:tools.html.twig' %}
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts
+       vars=["locale"]
+      "@ClarolineCoreBundle/Resources/views/Administration/group_list.html.twigjs"
+       filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_group_management.js') }}' type="text/javascript"></script>
 {% endblock %}
 
@@ -34,19 +41,8 @@
             <th>{{ 'name'|trans({}, 'platform') }}</th>
             <th></th>
         </thead>
-        <tbody id="body-tab-group">
-        {% for group in groups %}
-        <tr class="row-group">
-            <td align="center">{{ group.getName() }}</td>
-            <td>
-                <a href ="#"
-                   data-group-id="{{ group.getId() }}"
-                   id="link-delete-group-{{ group.getId() }}"
-                   class="link-delete-group">{{ 'delete'|trans({}, 'platform') }}
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
+        <tbody id="group-table-body">
+
         </tbody>
     </table>
 

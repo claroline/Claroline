@@ -117,17 +117,30 @@ class UserRepository extends EntityRepository
         return $q->getResult();
     }
 
-    //not working yet
-
     public function findPaginatedUsersOfGroup($groupId, $page, $limit)
     {
       $offset = $limit * (--$page);
 
         $dql = "
             SELECT u from Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g WHERE g.id = {$groupId}";
+            JOIN u.groups g WHERE g.id = :groupId";
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('groupId', $groupId);
+        $query->setFirstResult($offset);
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function findPaginatedUsersOfWorkspace($workspaceId, $offset, $limit)
+    {
+        $dql = "
+            SELECT u from Claroline\CoreBundle\Entity\User u
+            JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 

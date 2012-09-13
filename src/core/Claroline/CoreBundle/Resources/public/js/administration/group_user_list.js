@@ -10,7 +10,7 @@
     });
 
     ClaroUtils.sendRequest(route, function(users){
-        $('#user-table-body').append(Twig.render(group_user_list, {'users': users}));
+        $('#user-table-body').append(Twig.render(user_list, {'users': users}));
     })
 
     var page = 2;
@@ -26,14 +26,14 @@
             });
             ClaroUtils.sendRequest(route, function(users){
                 page++;
-               $('#user-table-body').append(Twig.render(group_user_list, {'users': users}));
+               $('#user-table-body').append(Twig.render(user_list, {'users': users}));
                 loading = false;
                 $('#loading').hide();
             })
         }
     });
 
-    $('.link_delete').live('click', function(e){
+    $('.link-delete-user').live('click', function(e){
         e.preventDefault();
         var userId = $(this).attr('data-user-id');
         var route = Routing.generate('claro_admin_delete_user_from_group', {'groupId': groupId, 'userId': userId});

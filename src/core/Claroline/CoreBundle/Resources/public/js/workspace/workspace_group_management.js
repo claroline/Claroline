@@ -1,6 +1,5 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
-    var twigDeleteTranslation = document.getElementById('twig-attributes').getAttribute('data-translation.delete');
     var lazyloading = false;
     var nbIterationGroups=0;
 
@@ -9,6 +8,37 @@
     $('#bootstrap-modal').modal({
         show: false,
         backdrop: false
+    });
+
+    var page = 1;
+
+    ClaroUtils.sendRequest(
+        Routing.generate('claro_workspace_registered_groups_paginated', {
+            'workspaceId':twigWorkspaceId,
+            'page':page
+        }),
+        function(groups){
+            page++;
+            var render = Twig.render(group_list, {'groups': groups});
+            $('#group-table-body').append(render);
+    });
+
+    $(window).scroll(function(){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && lazyloading === false){
+            lazyloading = true;
+            $('#loading').show();
+            var route = Routing.generate('claro_workspace_registered_groups_paginated', {
+                'workspaceId':twigWorkspaceId,
+                'page':page
+            })
+            ClaroUtils.sendRequest(route, function(groups){
+                page++;
+                $('#group-table-body').append(Twig.render(group_list, {
+                    'groups': groups
+                }));
+                lazyloading = false;
+            })
+        }
     });
 
     $('.modal-body').scroll(function(){
@@ -110,27 +140,16 @@
         }
     }
 
-    function createGroupCallBackLi(JSONString)
+    function createGroupCallBackLi(groups)
     {
-        JSONObject = eval(JSONString);
-
-        var i=0;
-        while (i<JSONObject.length)
-        {
-            var row = '<tr class="row-group">'
-            + '<td align="center">'+JSONObject[i].name+'</td>'
-            + '<td>'
-            + '<a href="#" data-group-id="'+JSONObject[i].id+'" id="link-delete-group-'+JSONObject[i].id+'" class="link-delete-group">'+twigDeleteTranslation+"</a>"
-            + '</td>'
-            $('#body-tab-group').append(row);
-            i++;
-        }
+        var render = Twig.render(group_list, {'groups': groups});
+        $('#group-table-body').append(render);
     }
 
     function lazyload(twigWorkspaceId, nbIterationGroups)
     {
         $('#group-loading').show();
-        var route = Routing.generate('claro_workspace_groups_paginated', {
+        var route = Routing.generate('claro_workspace_unregistered_groups_paginated', {
             'workspaceId': twigWorkspaceId,
             'page': nbIterationGroups
         })

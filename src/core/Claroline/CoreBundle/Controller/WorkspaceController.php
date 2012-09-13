@@ -349,7 +349,7 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function paginatedUserListAction($workspaceId, $page)
+    public function paginatedUnregisteredUsersAction($workspaceId, $page)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
@@ -366,17 +366,59 @@ class WorkspaceController extends Controller
      * ...
      *
      * @param integer $workspaceId
-     * @param integer page
+     * @param integer $page
      *
      * @return Response
      */
-    public function paginatedGroupListAction($workspaceId, $page)
+    public function paginatedUnregisteredGroupsAction($workspaceId, $page)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $page, self::NUMBER_GROUP_PER_ITERATION);
 
         return $this->render("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+    }
+
+    /**
+     * Renders a list of registered users for a workspace
+     *
+     * @param integer $workspaceId
+     * @param integer $page
+     *
+     * @return Response
+     */
+    public function paginatedUsersOfWorkspaceAction($workspaceId, $page)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $offset = --$page*self::NUMBER_USER_PER_ITERATION;
+        $limit = $offset+self::NUMBER_USER_PER_ITERATION;
+        $users = $em->getRepository('ClarolineCoreBundle:User')->findPaginatedUsersOfWorkspace($workspaceId, $offset, $limit);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Renders a list of registered groups for a workspace
+     *
+     * @param integer $workspaceId
+     * @param integer $page
+     *
+     * @return Response
+     */
+    public function paginatedGroupsOfWorkspaceAction($workspaceId, $page)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $offset = --$page*self::NUMBER_GROUP_PER_ITERATION;
+        $limit = $offset+self::NUMBER_GROUP_PER_ITERATION;
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findPaginatedGroupsOfWorkspace($workspaceId, $offset, $limit);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

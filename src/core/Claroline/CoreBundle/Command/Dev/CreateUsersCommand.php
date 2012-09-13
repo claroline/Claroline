@@ -31,12 +31,12 @@ class CreateUsersCommand extends ContainerAwareCommand
             "Alfred", "Paul", "Gabriel", "Anne", "Theophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
             "Jean-Kevin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Melanie", "Sophie",
             "Dominique", "Coralie", "Camille", "Claudia", "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Helene", "14M4M3G4Z0RD",
-            "Frank", "Melissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin"
+            "Frank", "Melissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne"
             );
 
          $this->lastNames = array(
              "Johnson", "Miller", "Brown", "Williams", "Davis", "Simpson", "Smith", "Doe", "Klein", "Godfraind", "Gervy", "Fervaille",
-             "Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick", "McLane", "Bourne", "Yates",
+             "Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick", "McLane", "Bourne", "Yates", "Marilyn",
              "McElroy", "Flanders", "Wiggum", "Burns", "Smithers", "Carlson", "LoveJoy", "Van Houten", "Gates", "Braconier", "Kenobi",
              "Lucas", "Clooney", "Harisson", "Obama", "Bush", "Black", "Hogan", "Anderson", "McKay", "Fields", "Bruel", "Kottick",
              "Dupond", "Leloux", "Miller", "Adams", "Dent", "Accroc", "Prefect", "Escort", "Sheridan", "William", "Willis", "Lee",
