@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class UserRepository extends EntityRepository
 {
+    //todo prepared statement here
     public function getUsersByUsernameList(array $usernames)
     {
         $nameList = array_map(
@@ -29,9 +30,11 @@ class UserRepository extends EntityRepository
     {
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = '{$workspace->getId()}'
+            JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :id
         ";
+
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId());
 
         return $query->getResult();
     }
@@ -47,11 +50,12 @@ class UserRepository extends EntityRepository
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.workspaceRoles wr
                 JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
+                WHERE w.id = :id
             )
         ";
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId());
         $query->setMaxResults($userAmount);
         $query->setFirstResult($offset);
 
@@ -64,33 +68,35 @@ class UserRepository extends EntityRepository
 
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE UPPER(u.lastName) LIKE '%" . $search . "%'
+            WHERE UPPER(u.lastName) LIKE :search
             AND u NOT IN
             (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.workspaceRoles wr
                 JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
+                WHERE w.id = :id
             )
-            OR UPPER(u.firstName) LIKE '%" . $search . "%'
+            OR UPPER(u.firstName) LIKE :search
             AND u NOT IN
             (
                 SELECT use FROM Claroline\CoreBundle\Entity\User use
                 JOIN use.workspaceRoles wro
                 JOIN wro.workspace wo
-                WHERE wo.id = '{$workspace->getId()}'
+                WHERE wo.id = :id
             )
-            OR UPPER(u.username) LIKE '%" . $search . "%'
+            OR UPPER(u.username) LIKE :search
             AND u NOT IN
             (
                 SELECT user FROM Claroline\CoreBundle\Entity\User user
                 JOIN user.workspaceRoles wrol
                 JOIN wrol.workspace wol
-                WHERE wol.id = '{$workspace->getId()}'
+                WHERE wol.id = :id
             )
         ";
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId());
+        $query->setParameter('search',"%{$search}%");
         $query->setMaxResults(200);
 
         return $query->getResult();

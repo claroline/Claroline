@@ -72,7 +72,7 @@ class CreateGroupsCommand extends ContainerAwareCommand
             $userNumber = rand(1, 100);
 
             if ($userNumber >= $maxUsersOffset) {
-                $userNumber = $maxUserOffset;
+                $userNumber = $maxUsersOffset;
             }
 
             $group->setName($this->getContainer()->get('claroline.resource.utilities')->generateGuid());
