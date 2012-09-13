@@ -18,7 +18,7 @@ class AjaxAuthenticationListenerTest extends FunctionalTestCase
     {
         $this->client->request(
             'GET',
-            "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0",
+            "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
