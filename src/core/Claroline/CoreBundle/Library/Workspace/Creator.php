@@ -32,14 +32,6 @@ class Creator
         $workspace->setType($config->getType());
         $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
-        $this->entityManager->flush();
-        $workspace->initBaseRoles();
-        $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
-        $workspace->getVisitorRole()->setResMask(MaskBuilder::MASK_VIEW);
-        $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
-        $workspace->getCollaboratorRole()->setResMask(MaskBuilder::MASK_VIEW);
-        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
-        $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
         $root = new ResourceInstance();
         $rootDir = new Directory();
         $root->setName($workspace->getCode().' - '.$workspace->getName());
@@ -60,7 +52,15 @@ class Creator
         $this->entityManager->persist($rootDir);
         $this->entityManager->persist($root);
         $this->entityManager->flush();
-
+        $workspace->initBaseRoles();
+        $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
+        $workspace->getVisitorRole()->setResMask(MaskBuilder::MASK_VIEW);
+        $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
+        $workspace->getCollaboratorRole()->setResMask(MaskBuilder::MASK_VIEW);
+        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
+        $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
+        $this->entityManager->persist($workspace);
+        
         if (null !== $manager) {
             $manager->addRole($workspace->getManagerRole());
             $this->rightManager->addRight($workspace, $manager, MaskBuilder::MASK_OWNER);
