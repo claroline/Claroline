@@ -40,9 +40,8 @@ class UserRepository extends EntityRepository
     }
 
     //doctrine doesn't have any DQL LIMIT clause.
-    public function getLazyUnregisteredUsersOfWorkspace(AbstractWorkspace $workspace, $numberIteration, $userAmount)
+    public function getLazyUnregisteredUsersOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
-        $offset = $numberIteration * $userAmount;
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             WHERE u NOT IN
@@ -56,7 +55,7 @@ class UserRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
-        $query->setMaxResults($userAmount);
+        $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
         return $query->getResult();
@@ -96,16 +95,15 @@ class UserRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
-        $query->setParameter('search',"%{$search}%");
+        $query->setParameter('search', "%{$search}%");
         $query->setMaxResults(200);
 
         return $query->getResult();
     }
 
 
-    public function findPaginatedUsers($page, $limit)
+    public function findPaginatedUsers($offset, $limit)
     {
-        $offset = $limit * (--$page);
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'u')
             ->add('from', 'Claroline\CoreBundle\Entity\User u')
@@ -117,10 +115,8 @@ class UserRepository extends EntityRepository
         return $q->getResult();
     }
 
-    public function findPaginatedUsersOfGroup($groupId, $page, $limit)
+    public function findPaginatedUsersOfGroup($groupId, $offset, $limit)
     {
-      $offset = $limit * (--$page);
-
         $dql = "
             SELECT u from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g WHERE g.id = :groupId";

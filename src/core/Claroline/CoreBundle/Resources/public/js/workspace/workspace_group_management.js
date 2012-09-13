@@ -1,7 +1,7 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
     var lazyloading = false;
-    var nbIterationGroups=0;
+    var nbIterationGroups = 1;
 
     $('#group-loading').hide();
 
@@ -93,13 +93,13 @@
         $('#bootstrap-modal-group').modal('hide');
         $('.checkbox-group-name').remove();
         $('#group-checkboxes').empty();
-        nbIterationGroups = 0;
+        nbIterationGroups = 1;
     });
 
     $('#reset-button').click(function(){
         $('.modal-body').animate({scrollTop: 0}, 0);
         lazyloading = true;
-        nbIterationGroups = 0;
+        nbIterationGroups = 1;
         lazyload(twigWorkspaceId, nbIterationGroups)
         nbIterationGroups++;
     });
@@ -109,7 +109,7 @@
         var search = document.getElementById('search-group-txt').value;
         if (search != '')  {
             $('#group-loading').show();
-            nbIterationGroups = 0;
+            nbIterationGroups = 1;
             var route = Routing.generate('claro_workspace_search_unregistered_groups',
             {'search': search, 'workspaceId': twigWorkspaceId});
             ClaroUtils.sendRequest(
@@ -156,7 +156,7 @@
         ClaroUtils.sendRequest(
             route,
             function(data){
-                if (nbIterationGroups == 0){
+                if (nbIterationGroups == 1){
                     $('.checkbox-group-name').remove();
                     $('#group-table-checkboxes-body').empty();
                 }
