@@ -43,7 +43,7 @@ claro_workspace_delete:
       expose: true
 
 claro_workspace_delete_user:
-    pattern: /{workspaceId}/user/{userId}/
+    pattern: /{workspaceId}/user/{userId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:removeUser, userId:'null' }
     options:
        expose: true
@@ -53,7 +53,7 @@ claro_workspace_delete_user:
       userId: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_delete_group:
-    pattern: /{workspaceId}/group/{groupId}/
+    pattern: /{workspaceId}/group/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:removeGroup }
     options:
       expose: true
@@ -62,9 +62,9 @@ claro_workspace_delete_group:
       workspaceId: ^(?=.*[1-9].*$)\d*$
       groupId: ^(?=.*[1-9].*$)\d*$
 
-claro_workspace_users_paginated:
-   pattern: /{workspaceId}/users/{page}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUserList }
+claro_workspace_unregistered_users_paginated:
+   pattern: /{workspaceId}/users/{page}/unregistered
+   defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUnregisteredUsers }
    options:
      expose: true
    requirements:
@@ -73,9 +73,9 @@ claro_workspace_users_paginated:
      #page 0-9
      page: ^(?=.*[0-9].*$)\d*$
 
-claro_workspace_groups_paginated:
-    pattern: /{workspaceId}/groups/{page}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedGroupList }
+claro_workspace_unregistered_groups_paginated:
+    pattern: /{workspaceId}/groups/{page}/unregistered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUnregisteredGroups }
     options:
         expose: true
     requirements:
@@ -83,6 +83,28 @@ claro_workspace_groups_paginated:
       workspaceId: ^(?=.*[1-9].*$)\d*$
       #page 0-9
       page: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_registered_users_paginated:
+    pattern: /{workspaceId}/users/{page}/registered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUsersOfWorkspace }
+    options:
+        expose: true
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      #page 0-9
+      page: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_registered_groups_paginated:
+    pattern: /{workspaceId}/groups/{page}/registered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedGroupsOfWorkspace }
+    options:
+        expose: true
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      #page 0-9
+      page: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_search_unregistered_users:
     pattern: /{workspaceId}/user/search/{search}

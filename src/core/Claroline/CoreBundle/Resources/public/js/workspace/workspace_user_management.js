@@ -1,9 +1,8 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
-    var twigDeleteTranslation = document.getElementById('twig-attributes').getAttribute('data-translation.delete');
     var lazyloading = false;
-
     var nbIterationUsers=0;
+
     $('#user-loading').hide();
     $('.modal-body').scroll(function(){
         if  (($('.modal-body')[0].scrollHeight - ($('.modal-body').scrollTop() + $('.modal-body').height())) <= 100 && lazyloading == true){
@@ -12,7 +11,40 @@
         }
     });
 
+    $(window).scroll(function(){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && lazyloading === false){
+            lazyloading = true;
+            $('#loading').show();
+            var route = Routing.generate('claro_workspace_registered_users_paginated', {
+                'workspaceId':twigWorkspaceId,
+                'page':page
+            })
+            ClaroUtils.sendRequest(route, function(users){
+                page++;
+                $('#user-table-body').append(Twig.render(user_list, {
+                    'users': users
+                }));
+                lazyloading = false;
+                $('#loading').hide();
+            })
+        }
+    });
+
+    var page = 1;
+
+    ClaroUtils.sendRequest(
+        Routing.generate('claro_workspace_registered_users_paginated', {
+            'workspaceId':twigWorkspaceId,
+            'page':page
+        }),
+        function(users){
+            page++;
+            var render = Twig.render(user_list, {'users': users});
+            $('#user-table-body').append(render);
+        });
+
     $('.link-delete-user').live('click', function(e){
+        e.preventDefault();
         var route = Routing.generate('claro_workspace_delete_user', {'userId': $(this).attr('data-user-id'), 'workspaceId': twigWorkspaceId});
         var element = $(this).parent().parent();
         ClaroUtils.sendRequest(
@@ -104,37 +136,24 @@
             var list = '<tr>'
             +'<td align="center"><input class="checkbox-user-name" id="checkbox-user-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-user-'+JSONObject[i].id+'"></input></td>'
             +'<td align="center">'+JSONObject[i].username+'</td>'
-            +'<td align="center">'+JSONObject[i].lastName+'</td>'
-            +'<td align="center">'+JSONObject[i].firstName+'</td>'
+            +'<td align="center">'+JSONObject[i].lastname+'</td>'
+            +'<td align="center">'+JSONObject[i].firstname+'</td>'
             +'</tr>';
             $('#user-table-checkboxes-body').append(list);
             i++;
         }
     }
 
-    function createUserCallback(JSONString)
+    function createUserCallback(users)
     {
-        JSONObject = eval(JSONString);
-        var i=0;
-        while (i<JSONObject.length)
-        {
-            var row = '<tr class="row-user">'
-            +'<td align="center">'+JSONObject[i].username+'</td>'
-            +'<td align="center">'+JSONObject[i].lastName+'</td>'
-            +'<td align="center">'+JSONObject[i].firstName+'</td>'
-            +'<td>'
-            +'<a data-user-id="'+JSONObject[i].id+'"href="#" id="link_delete_user_'+JSONObject[i].id+'" class="link-delete-user"> '+twigDeleteTranslation+'</a>'
-            +'</td>'
-            +'</tr>';
-            $('#body-tab-user').append(row);
-            i++;
-        }
+            var render = Twig.render(user_list, {'users': users});
+            $('#user-table-body').append(render);
     }
 
     function lazyload(twigWorkspaceId, nbIterationUsers)
     {
         $('#user-loading').show();
-        var route = Routing.generate('claro_workspace_users_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationUsers});
+        var route = Routing.generate('claro_workspace_unregistered_users_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationUsers});
         ClaroUtils.sendRequest(
             route,
             function(data){
