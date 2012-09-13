@@ -97,6 +97,16 @@ class CreateUsersCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $number = $input->getArgument('amount');
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
+
+        if ($input->getOption('admin')) {
+            $role = $roleRepo->findOneByName(PlatformRoles::ADMIN);
+        } elseif ($input->getOption('ws_creator')) {
+            $role = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
+        } else {
+            $role = $roleRepo->findOneByName(PlatformRoles::USER);
+        }
 
         for ($i=0; $i<$number; $i++) {
             $user = new User();
@@ -104,18 +114,7 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->setLastName($this->lastNames[rand(0, $this->maxLastNameOffset)]);
             $user->setUsername($user->getFirstName() . $user->getLastName() . rand(0, 1000));
             $user->setPlainPassword('123');
-            $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-            $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
-
-            if ($input->getOption('admin')) {
-                $role = $roleRepo->findOneByName(PlatformRoles::ADMIN);
-            } elseif ($input->getOption('ws_creator')) {
-                $role = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
-            } else {
-                $role = $roleRepo->findOneByName(PlatformRoles::USER);
-            }
             $user->addRole($role);
-
             $em->persist($user);
             $config = new Configuration();
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
@@ -128,8 +127,9 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);
             $em->flush();
-
             echo("--- user {$i} created \n");
+            $em->detach($user);
+//            $em->detach($workspace);
         }
     }
 }
