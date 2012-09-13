@@ -52,7 +52,6 @@ claro_admin_delete_user:
       _method: DELETE
       userId: ^(?=.*[1-9].*$)\d*$
 
-
 claro_admin_group_settings_form:
    pattern: /group/settings/form/{groupId}
    defaults: { _controller: ClarolineCoreBundle:Administration:groupSettingsForm }
@@ -71,36 +70,43 @@ claro_admin_paginated_user_list:
       _method: GET
       page: ^(?=.*[1-9].*$)\d*$
 
-
-#SOON TO BE REST
-
-#users
+claro_admin_user_list:
+    pattern: /users
+    defaults: { _controller: ClarolineCoreBundle:Administration:userList }
+    requirements:
+      _method: GET
 
 claro_admin_user_creation_form:
-    pattern: /user/create/form
+    pattern: /user/form
     defaults: { _controller: ClarolineCoreBundle:Administration:userCreationForm }
-
-claro_admin_create_user:
-    pattern: /user/create
-    defaults: { _controller: ClarolineCoreBundle:Administration:createUser }
-
-claro_admin_user_list:
-    pattern: /user/list
-    defaults: { _controller: ClarolineCoreBundle:Administration:userList }
-
-#groups
+    requirements:
+      _method: GET
 
 claro_admin_group_creation_form:
-    pattern: /group/create/form
+    pattern: /group/form
     defaults: { _controller: ClarolineCoreBundle:Administration:groupCreationForm }
-
-claro_admin_create_group:
-    pattern: /group/create
-    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
+    requirements:
+      _method: GET
 
 claro_admin_group_list:
-    pattern: /group/list
+    pattern: /groups
     defaults: { _controller: ClarolineCoreBundle:Administration:groupList }
+    requirements:
+      _method: GET
+
+claro_admin_create_user:
+    pattern: /user
+    defaults: { _controller: ClarolineCoreBundle:Administration:createUser }
+    requirements:
+      _method: POST
+
+claro_admin_create_group:
+    pattern: /group
+    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
+    requirements:
+      _method: POST
+
+#SOON TO BE REST
 
 claro_admin_group_user_list:
     pattern: /group/{groupId}
@@ -108,14 +114,17 @@ claro_admin_group_user_list:
     requirements:
       _method: GET
 
+#to be refactored
 claro_admin_user_list_addable_to_group:
     pattern: /group/add/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Administration:userListAddableToGroup }
 
+#same with PUT
 claro_admin_add_user_to_group:
     pattern: /group/add/user/{groupId}/{userId}
     defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
 
+#supposed to be put
 claro_admin_update_group_settings:
    pattern: /group/settings/update/{groupId}
    defaults: { _controller: ClarolineCoreBundle:Administration:updateGroupSettings }

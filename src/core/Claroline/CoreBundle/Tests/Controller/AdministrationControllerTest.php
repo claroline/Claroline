@@ -65,7 +65,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testUserCreationFormIsDisplayedWithErrors()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/admin/user/create');
+        $crawler = $this->client->request('POST', '/admin/user');
         $form = $crawler->filter('button[type=submit]')->form();
         $form['profile_form[firstName]'] = '';
         $crawler = $this->client->submit($form);
@@ -117,7 +117,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testGroupCreationFormIsDisplayedWithErrors()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/admin/group/create/form');
+        $crawler = $this->client->request('GET', '/admin/group/form');
         $form = $crawler->filter('button[type=submit]')->form();
         $this->client->submit($form);
         $this->assertEquals(1, count($crawler->filter('#group_form')));
