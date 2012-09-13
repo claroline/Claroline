@@ -66,7 +66,7 @@
     });
 
     $('#reset-button').click(function(){
-        $('.modal-body').animate({scrollTop: 0}, 1000);
+        $('.modal-body').animate({scrollTop: 0}, 0);
         lazyloading = true;
         nbIterationUsers = 0
         $('.checkbox-user-name').remove();

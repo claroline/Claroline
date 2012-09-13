@@ -124,7 +124,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
         $response = $this->client->getResponse()->getContent();
         $groups = json_decode($response);
-        $this->assertEquals(10, count($groups));
+        $this->assertEquals(13, count($groups));
     }
 
     //todo: fix a bug wich happens when the response return only 1 user
