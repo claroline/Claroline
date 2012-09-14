@@ -137,8 +137,7 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $offset = --$page*self::USER_PER_PAGE;
-        $limit = $offset+self::USER_PER_PAGE;
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, $limit);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
@@ -156,8 +155,7 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $offset = --$page*self::USER_PER_PAGE;
-        $limit = $offset+self::USER_PER_PAGE;
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $offset, $limit);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -175,8 +173,7 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $offset = --$page*self::GROUP_PER_PAGE;
-        $limit = $offset+self::GROUP_PER_PAGE;
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, $limit);
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, self::GROUP_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));

@@ -2,12 +2,14 @@
 
 {% for user in users %}
     <tr id="row-{{ user.id() }}" class="row_user">
-        <td>{{ user.id }}</td>
-        <td>{{ user.username }}</td>
+        <td>{{ user.administrativeCode }}</td>
         <td>{{ user.lastname }}</td>
         <td>{{ user.firstname }}</td>
         <td>{{ user.mail }}</td>
-        <td>{{ user.administrativeCode() }}</td>
+        <td>{{ user.roles }}</td>
+        <td>
+            <a href="#" data-user-id="{{ user.id }}" class="link-parameters-user">{{ 'parameters'|trans({}, 'platform') }} (todo)</a>
+        </td>
         <td>
             <a href="#" data-user-id="{{ user.id }}" class="link-delete-user">{{ 'delete'|trans({}, 'platform') }}</a>
         </td>

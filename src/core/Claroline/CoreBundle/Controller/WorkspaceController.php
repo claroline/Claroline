@@ -354,10 +354,13 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $offset = --$page*self::NUMBER_USER_PER_ITERATION;
-        $limit = $offset+self::NUMBER_USER_PER_ITERATION;
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $offset, $limit);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        return $response;
+
     }
 
     /**
@@ -377,10 +380,12 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $offset = --$page*self::NUMBER_GROUP_PER_ITERATION;
-        $limit = $offset+self::NUMBER_GROUP_PER_ITERATION;
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $offset, $limit);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        return $response;
     }
 
     /**
@@ -395,8 +400,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $offset = --$page*self::NUMBER_USER_PER_ITERATION;
-        $limit = $offset+self::NUMBER_USER_PER_ITERATION;
-        $users = $em->getRepository('ClarolineCoreBundle:User')->findPaginatedUsersOfWorkspace($workspaceId, $offset, $limit);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->findPaginatedUsersOfWorkspace($workspaceId, $offset, self::NUMBER_USER_PER_ITERATION);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -416,8 +420,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $offset = --$page*self::NUMBER_GROUP_PER_ITERATION;
-        $limit = $offset+self::NUMBER_GROUP_PER_ITERATION;
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findPaginatedGroupsOfWorkspace($workspaceId, $offset, $limit);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findPaginatedGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -435,13 +438,17 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function searchUnregisteredUsersAction($search, $workspaceId)
+    public function searchUnregisteredUsersAction($search, $workspaceId, $page)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace);
+        $offset = --$page*self::NUMBER_USER_PER_ITERATION;
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        return $response;
     }
 
     /**
@@ -501,6 +508,11 @@ class WorkspaceController extends Controller
              $users[] = $user;
              $user->addRole($workspace->getCollaboratorRole());
              $em->flush();
+        }
+
+        //small hack to get the current workspace as the only workspace role. Do not flush after this !
+        foreach ($users as $user){
+            $user->setWorkspaceRoleCollection($workspace->getCollaboratorRole());
         }
 
         $content = $this->renderView('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => $users));
@@ -584,8 +596,33 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        return $response;
+    }
+
+    /**
+     * Renders a list of registered users for a workspace.
+     * It'll search every users whose username, firstname or lastname match $search.
+     *
+     * @param string $search
+     * @param integer $workspaceId
+     * @param string $format
+     *
+     * @return Response
+     */
+    public function searchRegisteredUsersAction($search, $workspaceId, $page)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $offset = --$page*self::NUMBER_USER_PER_ITERATION;
+        $users = $em->getRepository('ClarolineCoreBundle:User')->searchPaginatedUsersOfWorkspace($workspaceId, $search, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

@@ -113,6 +113,8 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->setFirstName($this->firstNames[rand(0, $this->maxFirstNameOffset)]);
             $user->setLastName($this->lastNames[rand(0, $this->maxLastNameOffset)]);
             $user->setUsername($user->getFirstName() . $user->getLastName() . rand(0, 1000));
+            $user->setMail($user->getUsername().'@ucl.be');
+            $user->setAdministrativeCode('UCL-'.$user->getUsername());
             $user->setPlainPassword('123');
             $user->addRole($role);
             $config = new Configuration();
