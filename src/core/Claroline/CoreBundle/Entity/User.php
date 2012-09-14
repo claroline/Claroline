@@ -267,6 +267,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->workspaceRoles;
     }
 
+    //small hack, do not use this one (see WorkspaceController multiAddUserAction)
+    public function setWorkspaceRoleCollection($workspaceRoles)
+    {
+        $this->workspaceRoles->clear();
+        $this->workspaceRoles[] = $workspaceRoles;
+    }
+
     public function eraseCredentials()
     {
         $this->plainPassword = null;

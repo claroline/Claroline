@@ -61,7 +61,7 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getUnregisteredUsersOfWorkspaceFromGenericSearch($search, AbstractWorkspace $workspace)
+    public function getUnregisteredUsersOfWorkspaceFromGenericSearch($search, AbstractWorkspace $workspace, $offset, $limit)
     {
         $search = strtoupper($search);
 
@@ -94,9 +94,10 @@ class UserRepository extends EntityRepository
         ";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId());
-        $query->setParameter('search', "%{$search}%");
-        $query->setMaxResults(200);
+        $query->setParameter('id', $workspace->getId())
+              ->setParameter('search', "%{$search}%")
+              ->setFirstResult($offset)
+              ->setMaxResults($limit);
 
         return $query->getResult();
     }
@@ -132,13 +133,35 @@ class UserRepository extends EntityRepository
     public function findPaginatedUsersOfWorkspace($workspaceId, $offset, $limit)
     {
         $dql = "
-            SELECT u from Claroline\CoreBundle\Entity\User u
+            SELECT wr, u from Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function searchPaginatedUsersOfWorkspace($workspaceId, $search, $offset, $limit)
+    {
+        $dql = "
+            SELECT u, wrol FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.workspaceRoles wrol
+            JOIN wrol.workspace wol
+            WHERE wol.id = :workspaceId AND u IN (SELECT us FROM Claroline\CoreBundle\Entity\User us WHERE
+            UPPER(us.lastName) LIKE :search
+            OR UPPER(us.firstName) LIKE :search
+            OR UPPER(us.username) LIKE :search
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId)
+              ->setParameter('search', "%{$search}%")
+              ->setFirstResult($offset)
+              ->setMaxResults($limit);
 
         return $query->getResult();
     }

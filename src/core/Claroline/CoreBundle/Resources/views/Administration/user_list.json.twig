@@ -6,7 +6,8 @@
         "lastname": "{{ user.getLastName() }}",
         "firstname": "{{ user.getFirstName() }}",
         "administrativeCode": "{{ user.getAdministrativeCode() }}",
-        "mail": "{{ user.getMail() }}"
+        "mail": "{{ user.getMail() }}",
+        "roles": "{% for role in  user.getWorkspaceRoleCollection() %} {{role.getTranslationKey()}}{% if not loop.last %},{% endif %}{% endfor %}"
     }
     {% if not loop.last %},{% endif %}
     {% endfor %}

@@ -107,13 +107,22 @@ claro_workspace_registered_groups_paginated:
       page: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_search_unregistered_users:
-    pattern: /{workspaceId}/user/search/{search}
+    pattern: /{workspaceId}/user/search/{search}/unregistered/{page}
     defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredUsers }
     options:
       expose: TRUE
     requirements:
       _method: GET
-      workspaceId: ^(?=.*[0-9].*$)\d*$
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_search_registered_users:
+    pattern: /{workspaceId}/user/search/{search}/registered/{page}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:searchRegisteredUsers }
+    options:
+      expose: TRUE
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_search_unregistered_groups:
     pattern: /{workspaceId}/group/search/{search}

@@ -163,18 +163,31 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadManyUsersData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/search/doe", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/search/doe/unregistered/1", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $response = $this->client->getResponse()->getContent();
         $users = json_decode($response);
         $this->assertEquals(4, count($users));
 
         $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/search/firstName", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/search/firstName/unregistered/1", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $response = $this->client->getResponse()->getContent();
         $users = json_decode($response);
-        $this->assertEquals(30, count($users));
+        $this->assertEquals(25, count($users));
+    }
+
+        public function testSearchRegisteredUsers()
+    {
+        $this->loadFixture(new LoadManyUsersData());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request(
+            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/search/doe/registered/1", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+        $response = $this->client->getResponse()->getContent();
+        var_dump($response);
+        $users = json_decode($response);
+        $this->assertEquals(1, count($users));
     }
 
     public function testSearchUnregisteredGroupsByNameWithAjax()
