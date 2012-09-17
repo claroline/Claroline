@@ -116,6 +116,13 @@
         lazyloadSearchRegisteredUsers();
     });
 
+    $('#reset-background-user-button').click(function(){
+        $('#user-table-body').empty();
+        page = modeBackground = 1;
+        stopBackground = false;
+        lazyloadRegisteredUsers();
+    });
+
     function createUsersChkBoxes(JSONString)
     {
         var i=0;
