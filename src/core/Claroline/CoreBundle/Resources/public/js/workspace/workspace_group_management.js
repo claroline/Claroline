@@ -1,7 +1,7 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
     var lazyloading = false;
-    var nbIterationGroups = 1;
+    var offsetModalGroups = 0;
 
     $('#group-loading').hide();
 
@@ -10,15 +10,15 @@
         backdrop: false
     });
 
-    var page = 1;
+    var offsetBackgroundGroups = 0;
 
     ClaroUtils.sendRequest(
         Routing.generate('claro_workspace_registered_groups_paginated', {
             'workspaceId':twigWorkspaceId,
-            'page':page
+            'offset':offsetBackgroundGroups
         }),
         function(groups){
-            page++;
+            offsetBackgroundGroups += groups.length;
             var render = Twig.render(group_list, {'groups': groups});
             $('#group-table-body').append(render);
     });
@@ -29,10 +29,10 @@
             $('#loading').show();
             var route = Routing.generate('claro_workspace_registered_groups_paginated', {
                 'workspaceId':twigWorkspaceId,
-                'page':page
+                'offset':offsetBackgroundGroups
             })
             ClaroUtils.sendRequest(route, function(groups){
-                page++;
+                offsetBackgroundGroups += groups.length;
                 $('#group-table-body').append(Twig.render(group_list, {
                     'groups': groups
                 }));
@@ -43,8 +43,7 @@
 
     $('.modal-body').scroll(function(){
         if  (($('.modal-body')[0].scrollHeight - ($('.modal-body').scrollTop() + $('.modal-body').height())) <= 100 && lazyloading == true){
-            lazyload(twigWorkspaceId, nbIterationGroups);
-            nbIterationGroups++;
+            lazyload(twigWorkspaceId);
         }
     });
 
@@ -93,15 +92,14 @@
         $('#bootstrap-modal-group').modal('hide');
         $('.checkbox-group-name').remove();
         $('#group-checkboxes').empty();
-        nbIterationGroups = 1;
+        offsetModalGroups = 0;
     });
 
     $('#reset-button').click(function(){
         $('.modal-body').animate({scrollTop: 0}, 0);
         lazyloading = true;
-        nbIterationGroups = 1;
-        lazyload(twigWorkspaceId, nbIterationGroups)
-        nbIterationGroups++;
+        offsetModalGroups = 0;
+        lazyload(twigWorkspaceId)
     });
 
     $('#search-group-button').click(function(){
@@ -109,7 +107,7 @@
         var search = document.getElementById('search-group-txt').value;
         if (search != '')  {
             $('#group-loading').show();
-            nbIterationGroups = 1;
+            offsetModalGroups = 0;
             var route = Routing.generate('claro_workspace_search_unregistered_groups',
             {'search': search, 'workspaceId': twigWorkspaceId});
             ClaroUtils.sendRequest(
@@ -146,21 +144,21 @@
         $('#group-table-body').append(render);
     }
 
-    function lazyload(twigWorkspaceId, nbIterationGroups)
+    function lazyload(twigWorkspaceId)
     {
         $('#group-loading').show();
         var route = Routing.generate('claro_workspace_unregistered_groups_paginated', {
             'workspaceId': twigWorkspaceId,
-            'page': nbIterationGroups
+            'offset': offsetModalGroups
         })
         ClaroUtils.sendRequest(
             route,
             function(data){
-                if (nbIterationGroups == 1){
+                if (offsetModalGroups == 0){
                     $('.checkbox-group-name').remove();
                     $('#group-table-checkboxes-body').empty();
                 }
-                nbIterationGroups++;
+                offsetModalGroups+=data.length;
                 createGroupsChkBoxes(data);
                 $('#group-loading').hide();
             }

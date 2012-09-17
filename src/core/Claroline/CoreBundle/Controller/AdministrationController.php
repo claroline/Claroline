@@ -133,10 +133,9 @@ class AdministrationController extends Controller
     /**
      *
      */
-    public function paginatedUserListAction($page, $format)
+    public function paginatedUserListAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $offset = --$page*self::USER_PER_PAGE;
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
@@ -151,10 +150,9 @@ class AdministrationController extends Controller
     }
 
     // Doesn't work yet due to a sql error from the repository
-    public function paginatedUserOfGroupListAction($groupId, $page)
+    public function paginatedUserOfGroupListAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $offset = --$page*self::USER_PER_PAGE;
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
@@ -169,10 +167,9 @@ class AdministrationController extends Controller
     /**
      *
      */
-    public function paginatedGroupListAction($page, $format)
+    public function paginatedGroupListAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $offset = --$page*self::GROUP_PER_PAGE;
         $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, self::GROUP_PER_PAGE);
 
         $content = $this->renderView(
