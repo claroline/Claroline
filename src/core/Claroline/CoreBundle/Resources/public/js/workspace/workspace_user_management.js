@@ -1,12 +1,12 @@
 (function(){
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
-    var nbIterationUsers = 1;
+    var offsetModalUsers = 0;
     var modeModal = 0;
     var modeBackground = 0;
     var stopModal = false;
     var stopBackground = false;
     var loading = false;
-    var page = 1;
+    var offsetBackgroundUsers = 0;
 
     lazyloadRegisteredUsers();
 
@@ -47,6 +47,7 @@
             route,
             function(data){
                 element.remove();
+                offsetBackgroundUsers--;
             },
             undefined,
             'DELETE'
@@ -86,7 +87,7 @@
         $('#bootstrap-modal-user').modal('hide');
         $('.checkbox-user-name').remove();
         $('#user-table-checkboxes-body').empty();
-        nbIterationUsers = 1;
+        offsetModalUsers = 0;
     });
 
     $('#reset-modal-button').click(function(){
@@ -94,14 +95,15 @@
         modeModal = 0;
         stopModal = false;
         $('.modal-body').animate({scrollTop: 0}, 0);
-        nbIterationUsers = 1
+        offsetModalUsers = 0
         $('.checkbox-user-name').remove();
         $('#user-table-checkboxes-body').empty();
         lazyloadUnregisteredUsers();
     });
 
     $('#search-modal-user-button').click(function(){
-        nbIterationUsers = modeModal = 1;
+        offsetModalUsers = 0;
+        modeModal = 1;
         stopModal = false;
         $('.modal-body').animate({scrollTop: 0}, 0);
         $('.checkbox-user-name').remove();
@@ -111,14 +113,16 @@
 
     $('#search-background-user-button').click(function(){
         $('#user-table-body').empty();
-        page = modeBackground = 1;
+        offsetBackgroundUsers = 0;
+        modeBackground = 1;
         stopBackground = false;
         lazyloadSearchRegisteredUsers();
     });
 
     $('#reset-background-user-button').click(function(){
         $('#user-table-body').empty();
-        page = modeBackground = 1;
+        modeBackground = 1;
+        offsetBackgroundUsers = 0
         stopBackground = false;
         lazyloadRegisteredUsers();
     });
@@ -149,7 +153,7 @@
     {
         loading = true;
         $('#user-loading').show();
-        var route = Routing.generate('claro_workspace_unregistered_users_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationUsers});
+        var route = Routing.generate('claro_workspace_unregistered_users_paginated', {'workspaceId': twigWorkspaceId, 'offset': offsetModalUsers});
         ClaroUtils.sendRequest(
             route,
             function(data){
@@ -157,18 +161,18 @@
                 if(data.length == 0){
                     stopModal = true;
                 }
-                if (nbIterationUsers == 1){
+                if (offsetModalUsers == 0){
                     $('.checkbox-user-name').remove();
                     $('#user-table-checkboxes-body').empty();
                 }
                 createUsersChkBoxes(data);
                 $('#user-loading').hide();
+                offsetModalUsers+=data.length;
             },
             function(){
                 loading = false;
             }
         );
-        nbIterationUsers++;
     }
 
     function lazyloadRegisteredUsers()
@@ -177,13 +181,13 @@
         ClaroUtils.sendRequest(
             Routing.generate('claro_workspace_registered_users_paginated', {
                 'workspaceId':twigWorkspaceId,
-                'page':nbIterationUsers
+                'offset':offsetModalUsers
             }),
             function(users){
                 if(users.length == 0){
                     stopModal = true;
                 }
-                nbIterationUsers++;
+                offsetModalUsers+=users.length;
                 var render = Twig.render(user_list, {
                     'users': users
                 });
@@ -203,7 +207,7 @@
             var route = Routing.generate('claro_workspace_search_registered_users', {
                 'search': search,
                 'workspaceId': twigWorkspaceId,
-                'page': page
+                'offset': offsetBackgroundUsers
             })
             ClaroUtils.sendRequest(
                 route,
@@ -211,7 +215,7 @@
                     if(users.length == 0){
                         stopBackground = true;
                     }
-                    page++;
+                    offsetBackgroundUsers+=users.length;
                     var render = Twig.render(user_list, {
                         'users': users
                     });
@@ -234,7 +238,7 @@
             var route = Routing.generate('claro_workspace_search_unregistered_users', {
                 'search': search,
                 'workspaceId': twigWorkspaceId,
-                'page': nbIterationUsers
+                'offset': offsetModalUsers
             })
             ClaroUtils.sendRequest(
                 route,
@@ -242,13 +246,13 @@
                     if(users.length == 0){
                         stopBackground = true;
                     }
-                    if (nbIterationUsers == 1){
+                    if (offsetModalUsers == 0){
                         $('.checkbox-user-name').remove();
                         $('#user-table-checkboxes-body').empty();
                     }
                     createUsersChkBoxes(users);
                     $('#user-loading').hide()
-                    nbIterationUsers++;
+                    offsetModalUsers+=users.length;
                 },
                 function(){
                     loading = false;
@@ -263,13 +267,13 @@
         ClaroUtils.sendRequest(
             Routing.generate('claro_workspace_registered_users_paginated', {
                 'workspaceId':twigWorkspaceId,
-                'page':page
+                'offset':offsetBackgroundUsers
             }),
             function(users){
                 if(users.length == 0){
                     stopBackground = true;
                 }
-                page++;
+                offsetBackgroundUsers+=users.length;
                 var render = Twig.render(user_list, {
                     'users': users
                 });

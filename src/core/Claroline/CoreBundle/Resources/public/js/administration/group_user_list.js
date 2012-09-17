@@ -3,9 +3,10 @@
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
 
+
      var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
     var route = Routing.generate('claro_admin_paginated_group_user_list', {
-        'page' : 1,
+        'offset' : 0,
         'groupId': groupId
     });
 
@@ -13,7 +14,6 @@
         $('#user-table-body').append(Twig.render(user_list, {'users': users}));
     })
 
-    var page = 2;
     var loading = false;
 
     $(window).scroll(function(){
@@ -21,11 +21,10 @@
             loading = true;
             $('#loading').show();
             var route = Routing.generate('claro_admin_paginated_group_user_list', {
-                'page' : page,
+                'offset' : $('.row-user', $(users)),
                 'groupId': groupId
             });
             ClaroUtils.sendRequest(route, function(users){
-                page++;
                $('#user-table-body').append(Twig.render(user_list, {'users': users}));
                 loading = false;
                 $('#loading').hide();

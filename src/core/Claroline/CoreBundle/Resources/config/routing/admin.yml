@@ -6,14 +6,14 @@ claro_admin_index:
 
 #RESTS ROUTE (OR CLOSE ENOUGH)
 claro_admin_paginated_group_user_list:
-   pattern: /group/{groupId}/users/{page}
+   pattern: /group/{groupId}/users/{offset}
    defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserOfGroupList }
    options:
       expose: true
    requirements:
       _method: GET
       groupId: ^(?=.*[1-9].*$)\d*$
-      page: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
 
 claro_admin_delete_user_from_group:
     pattern: /group/{groupId}/user/{userId}
@@ -26,12 +26,12 @@ claro_admin_delete_user_from_group:
       userId: ^(?=.*[1-9].*$)\d*$
 
 claro_admin_paginated_group_list:
-   pattern: /groups/{page}.{format}
+   pattern: /groups/{offset}.{format}
    defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGroupList }
    options:
       expose: true
    requirements:
-      page: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
       method: GET
 
 claro_admin_delete_group:
@@ -62,13 +62,13 @@ claro_admin_group_settings_form:
       groupId: ^(?=.*[1-9].*$)\d*$
 
 claro_admin_paginated_user_list:
-   pattern: /users/{page}.{format}
+   pattern: /users/{offset}.{format}
    defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserList }
    options:
       expose: true
    requirements:
       _method: GET
-      page: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
 
 claro_admin_user_list:
     pattern: /users

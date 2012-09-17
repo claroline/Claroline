@@ -3,7 +3,7 @@
     $('#loading').hide();
 
     var route = Routing.generate('claro_admin_paginated_group_list', {
-        'page' : 1,
+        'offset' : 0,
         'format': 'html'
     });
 
@@ -11,7 +11,6 @@
         $('#group-table-body').append($(users));
     })
 
-    var page = 2;
     var loading = false;
 
     $(window).scroll(function(){
@@ -19,10 +18,9 @@
             loading = true;
             $('#loading').show();
             var route = Routing.generate('claro_admin_paginated_group_list', {
-                'page' : page,
+                'offset' : $('.row-group').length,
                 'format': 'html'
             });
-            page++;
             ClaroUtils.sendRequest(route, function(users){
                 $('#group-table-body').append($(users));
                 loading = false;
