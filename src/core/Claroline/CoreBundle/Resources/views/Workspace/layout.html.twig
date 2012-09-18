@@ -7,8 +7,8 @@
 {% block tabs %}
     {% set activateTools = [
         'claro_workspace_tools',
-        'claro_workspace_tools_user_management',
-        'claro_workspace_tools_group_management']
+        'claro_workspace_tools_users_management',
+        'claro_workspace_tools_groups_management']
     %}
     <ul class="nav nav-tabs">
         <li class="{% if 'claro_workspace_home' == app.request.get('_route') %}active{% endif %}">

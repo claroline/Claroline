@@ -1,18 +1,9 @@
-//window.onload(function(){alert("loading...")});
 (function () {
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
 
-    var route = Routing.generate('claro_admin_paginated_user_list', {
-        'offset' :0,
-        'format': 'html'
-    });
-
-    ClaroUtils.sendRequest(route, function(users){
-        $('#user-table-body').append($(users));
-    })
-
     var loading = false;
+    addContent();
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false){
@@ -43,4 +34,18 @@
             'DELETE'
         )
     });
+
+    function addContent(){
+        if($(window).height() >= $(document).height()){
+            var route = Routing.generate('claro_admin_paginated_user_list', {
+                'offset' : $('.row-user').length,
+                'format': 'html'
+            });
+
+            ClaroUtils.sendRequest(route, function(users){
+                $('#user-table-body').append($(users));
+                addContent();
+            })
+        }
+    }
 })();

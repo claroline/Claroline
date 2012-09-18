@@ -2,17 +2,8 @@
 (function () {
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
-
-
-     var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
-    var route = Routing.generate('claro_admin_paginated_group_user_list', {
-        'offset' : 0,
-        'groupId': groupId
-    });
-
-    ClaroUtils.sendRequest(route, function(users){
-        $('#user-table-body').append(Twig.render(user_list, {'users': users}));
-    })
+    var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
+    addContent();
 
     var loading = false;
 
@@ -21,7 +12,7 @@
             loading = true;
             $('#loading').show();
             var route = Routing.generate('claro_admin_paginated_group_user_list', {
-                'offset' : $('.row-user', $(users)),
+                'offset' : $('.row-user').length,
                 'groupId': groupId
             });
             ClaroUtils.sendRequest(route, function(users){
@@ -47,4 +38,18 @@
             'DELETE'
         )
     });
+
+    function addContent(){
+        if($(window).height() >= $(document).height()){
+            var route = Routing.generate('claro_admin_paginated_group_user_list', {
+                'offset' : $('.row-user').length,
+                'groupId': groupId
+            });
+
+            ClaroUtils.sendRequest(route, function(users){
+                $('#user-table-body').append(Twig.render(user_list, {'users': users}));
+                addContent();
+            })
+        }
+    }
 })();
