@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -292,9 +293,39 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $user = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($userId);
+        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
+        $role = $em->getRepository('ClarolineCoreBundle:User')->getRoleOfWorkspace($userId, $workspaceId);
+        $defaultData = array('role' => $role[0]);
+        $form = $this->createFormBuilder($defaultData)
+            ->add(
+            'role',
+            'entity',
+            array(
+                'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
+                'property' => 'translationKey',
+                'query_builder' => function(EntityRepository $er) use ($workspaceId){
+                    return $er->createQueryBuilder('wr')
+                        ->add('where', "wr.workspace = {$workspaceId}");
+                }
+                )
+            )
+            ->getForm();
+
+            if ($this->getRequest()->getMethod() == 'POST') {
+                $form->bind($this->getRequest());
+                $data = $form->getData();
+                $newRole = $data['role'];
+                $user->removeRole($role[0]);
+                $user->addRole($newRole);
+                $em->persist($user);
+                $em->flush();
+                $route = $this->get('router')->generate('claro_workspace_tools_users_management', array('workspaceId' => $workspaceId));
+
+                return new RedirectResponse($route);
+            }
+
         return $this->render('ClarolineCoreBundle:Workspace:tools\user_parameters.html.twig', array(
-            'workspace' => $workspace, 'user' => $user)
+            'workspace' => $workspace, 'user' => $user, 'form' => $form->createView() )
         );
     }
 
@@ -326,7 +357,7 @@ class WorkspaceController extends Controller
      *
      * @param integer $workspaceId
      *
-     * @return Response|RedirectResponse
+     * @return Response
      */
     public function removeUserAction($userId, $workspaceId)
     {
@@ -352,7 +383,7 @@ class WorkspaceController extends Controller
      * @param integer $groupId
      * @param integer $workspaceId
      *
-     * @return Response|RedirectResponse
+     * @return Response
      */
     public function removeGroupAction($groupId, $workspaceId)
     {

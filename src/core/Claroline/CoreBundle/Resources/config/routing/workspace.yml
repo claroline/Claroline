@@ -142,11 +142,21 @@ claro_workspace_tools_users_management:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$
 
-claro_workspace_tools_user_parameters:
+claro_workspace_tools_show_user_parameters:
     pattern: /{workspaceId}/tools/user/{userId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:userParameters }
     requirements:
       _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_tools_edit_user_parameters:
+    pattern: /{workspaceId}/tools/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:userParameters }
+    requirements:
+      _method: POST
       workspaceId: ^(?=.*[1-9].*$)\d*$
       userId: ^(?=.*[1-9].*$)\d*$
     options:
