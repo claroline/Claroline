@@ -11,7 +11,7 @@
             <button href="#" data-user-id="{{ user.id }}" class="button-parameters-user btn btn-secondary">{{ 'parameters'|trans({}, 'platform') }}</button>
         </td>
         <td>
-            <button href="#" data-user-id="{{ user.id }}" class="button-delete-user btn btn-secondary">{{ 'delete'|trans({}, 'platform') }}</button>
+            <input type="checkbox" value="{{ user.id }}" class="chk-delete-user" align="center"></input>
         </td>
     </tr>
 {% endfor %}

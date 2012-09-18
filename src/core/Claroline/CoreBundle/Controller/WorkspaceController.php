@@ -306,9 +306,7 @@ class WorkspaceController extends Controller
                 'query_builder' => function(EntityRepository $er) use ($workspaceId){
                     return $er->createQueryBuilder('wr')
                         ->add('where', "wr.workspace = {$workspaceId}");
-                }
-                )
-            )
+                }))
             ->getForm();
 
             if ($this->getRequest()->getMethod() == 'POST') {
@@ -372,6 +370,25 @@ class WorkspaceController extends Controller
 
         $em->flush();
 
+        return new Response("success", 204);
+    }
+
+    public function removeMultipleUsersAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $roles = $workspace->getWorkspaceRoles();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        foreach ($params as $userId) {
+            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+            foreach ($roles as $role) {
+                $user->removeRole($role);
+            }
+        }
+
+        $em->flush();
         return new Response("success", 204);
     }
 
