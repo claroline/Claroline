@@ -19,20 +19,6 @@
         }
     });
 
-    $('.button-delete-user').live('click', function(e){
-        e.preventDefault();
-        var route = Routing.generate('claro_workspace_delete_user', {'userId': $(this).attr('data-user-id'), 'workspaceId': twigWorkspaceId});
-        var element = $(this).parent().parent();
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                element.remove();
-            },
-            undefined,
-            'DELETE'
-            )
-    })
-
     $('.button-parameters-user').live('click', function(e){
         var route = Routing.generate(
             'claro_workspace_tools_show_user_parameters',
@@ -42,25 +28,48 @@
         window.location.href = route;
     })
 
-    $('#bootstrap-modal').modal({
-        show: false,
-        backdrop: false
-    });
-
-    $('#bootstrap-modal').on('hidden', function(){
-        if ($('#modal-login').find('form').attr('id') == 'login_form'){
-            window.location.reload();
-        }
-    })
-
-    $('#search-background-user-button').click(function(){
+    $('#search-user-button').click(function(){
         $('#user-table-body').empty();
         mode = 1;
         stopBackground = false;
         addContent(function(){lazyloadSearchRegisteredUsers()});
     });
 
-    $('#reset-background-user-button').click(function(){
+    $('#delete-user-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html('removing '+ $('.chk-delete-user:checked').length +' user(s)');
+    });
+
+    $('#modal-valid-button').click(function(){
+        var parameters = {};
+        var i = 0;
+        $('.chk-delete-user:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        });
+
+        parameters.workspaceId = twigWorkspaceId;
+        var route = Routing.generate('claro_workspace_delete_users', parameters);
+        ClaroUtils.sendRequest(
+            route,
+            function(){
+                $('.chk-delete-user:checked').each(function(index, element){
+                     $(element).parent().parent().remove();
+                });
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
+            },
+            undefined,
+            'DELETE'
+        );
+    });
+
+    $('#modal-cancel-button').click(function(){
+        $('#validation-box').modal('hide');
+        $('#validation-box-body').empty();
+    });
+
+    $('#reset-user-button').click(function(){
         $('#user-table-body').empty();
         mode = 1;
         stopBackground = false;
@@ -70,7 +79,7 @@
     function lazyloadSearchRegisteredUsers()
     {
         loading = true;
-        var search = document.getElementById('search-background-user-txt').value;
+        var search = document.getElementById('search-user-txt').value;
         if (search !== ''){
             var route = Routing.generate('claro_workspace_search_registered_users', {
                 'search': search,
