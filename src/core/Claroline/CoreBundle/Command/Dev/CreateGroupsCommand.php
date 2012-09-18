@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Entity\Group;
+
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
  */

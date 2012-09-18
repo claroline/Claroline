@@ -2,14 +2,7 @@
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
 
-    var route = Routing.generate('claro_admin_paginated_group_list', {
-        'offset' : 0,
-        'format': 'html'
-    });
-
-    ClaroUtils.sendRequest(route, function(users){
-        $('#group-table-body').append($(users));
-    })
+    addContent();
 
     var loading = false;
 
@@ -42,4 +35,18 @@
             'DELETE'
         )
     })
+
+    function addContent(){
+        if($(window).height() >= $(document).height()){
+            var route = Routing.generate('claro_admin_paginated_group_list', {
+                'offset' : $('.row-group').length,
+                'format': 'html'
+            });
+
+            ClaroUtils.sendRequest(route, function(groups){
+                $('#group-table-body').append($(groups));
+                addContent();
+            })
+        }
+    }
 })();

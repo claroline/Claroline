@@ -1,0 +1,28 @@
+{% extends 'ClarolineCoreBundle:Workspace:tools.html.twig' %}
+{% block javascripts %}
+{% endblock %}
+{% block tools %}
+   {% spaceless %}
+        <ul class="breadcrumb">
+            <li>
+                <a href="{{ path('claro_workspace_tools', {'workspaceId': workspace.getId()}) }}"
+                   id="resource_manager_link">
+                    <i class="icon-home"></i>
+                </a>
+            </li>
+            <span class="divider"> / </span>
+            <li>
+                <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
+                id="link_user_management">{{ 'user_management'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <span class="divider"> / </span>
+            <li>
+                <a href="#">
+                    {{ user.getName() }}
+                </a>
+            </li>
+        </ul>
+    {% endspaceless %}
+    user parameters
+{% endblock %}

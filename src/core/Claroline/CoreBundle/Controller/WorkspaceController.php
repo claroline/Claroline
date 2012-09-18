@@ -242,37 +242,70 @@ class WorkspaceController extends Controller
         }
 
         return $this->render('ClarolineCoreBundle:Workspace:tools.html.twig', array(
-                'workspace' => $workspace,
-                )
+            'workspace' => $workspace)
         );
     }
 
     /**
-     * Renders the user management page with its layout
+     * Renders the users management page with its layout
      *
      * @param integer $workspaceId
      *
      * @return Response
      */
-    public function userManagementAction($workspaceId)
+    public function usersManagementAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\user_management.html.twig', array(
-                'workspace' => $workspace, 'users' => $users)
+            'workspace' => $workspace, 'users' => $users)
         );
     }
 
     /**
-     * Renders the group management page with its layout
+     * Renders the unregistered user list layout for a workspace.
      *
      * @param integer $workspaceId
      *
      * @return Response
      */
-    public function groupManagementAction($workspaceId)
+    public function unregiseredUsersListAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_user_list_layout.html.twig', array(
+            'workspace' => $workspace)
+        );
+    }
+
+    /**
+     * Renders the user parameter page with its layout
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function userParametersAction($workspaceId, $userId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $user = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($userId);
+        return $this->render('ClarolineCoreBundle:Workspace:tools\user_parameters.html.twig', array(
+            'workspace' => $workspace, 'user' => $user)
+        );
+    }
+
+    /**
+     * Renders the groups management page with its layout
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function groupsManagementAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
@@ -489,6 +522,8 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
+    //todo: detach($user)
+    //todo: flush outsite the loop
     public function multiAddUserAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
