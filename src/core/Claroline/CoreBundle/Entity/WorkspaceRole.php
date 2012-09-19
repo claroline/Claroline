@@ -23,18 +23,6 @@ class WorkspaceRole extends Role
 
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\User",
-     *  inversedBy="workspaceRoles"
-     * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     * )
-     */
-    private $users;
-
-    /**
-     * @ORM\ManyToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\Group",
      *  inversedBy="workspaceRoles"
      * )
@@ -99,11 +87,6 @@ class WorkspaceRole extends Role
         }
 
         $this->workspace = $workspace;
-    }
-
-    public function getUsers()
-    {
-        return $this->users;
     }
 
     public function getGroups()

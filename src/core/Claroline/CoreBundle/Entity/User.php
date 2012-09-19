@@ -96,7 +96,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role"
+     *      targetEntity="Claroline\CoreBundle\Entity\Role",
+     *      inversedBy="users"
      * )
      * @ORM\JoinTable(name="claro_user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
