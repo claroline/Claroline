@@ -95,6 +95,18 @@ class Role implements RoleInterface
      */
     private $children;
 
+    /**
+     * @ORM\ManyToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\User",
+     *  inversedBy="workspaceRoles"
+     * )
+     * @ORM\JoinTable(name="claro_user_role",
+     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
+     */
+    private $users;
+
     public function getId()
     {
         return $this->id;
@@ -182,5 +194,10 @@ class Role implements RoleInterface
     protected function setReadOnly($value)
     {
         $this->isReadOnly = $value;
+    }
+
+    public function getUsers()
+    {
+        return $this->users;
     }
 }
