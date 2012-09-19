@@ -298,15 +298,14 @@ class WorkspaceController extends Controller
         $defaultData = array('role' => $role[0]);
         $form = $this->createFormBuilder($defaultData)
             ->add(
-            'role',
-            'entity',
-            array(
+                'role', 'entity', array(
                 'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
                 'property' => 'translationKey',
-                'query_builder' => function(EntityRepository $er) use ($workspaceId){
+                'query_builder' => function(EntityRepository $er) use ($workspaceId) {
                     return $er->createQueryBuilder('wr')
                         ->add('where', "wr.workspace = {$workspaceId}");
-                }))
+                }
+            ))
             ->getForm();
 
             if ($this->getRequest()->getMethod() == 'POST') {

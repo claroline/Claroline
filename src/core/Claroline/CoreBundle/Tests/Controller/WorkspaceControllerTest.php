@@ -177,7 +177,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(25, count($users));
     }
 
-        public function testSearchRegisteredUsers()
+    public function testSearchRegisteredUsers()
     {
         $this->loadFixture(new LoadManyUsersData());
         $this->logUser($this->getFixtureReference('user/admin'));
