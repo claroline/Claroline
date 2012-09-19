@@ -25,7 +25,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         parent::tearDown();
         $this->configHandler->eraseTestConfiguration();
     }
-/*
+
     public function testAdminCanSeeGroups()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
@@ -38,7 +38,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/1");
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
-    }*/
+    }
 
     public function testAdminCanCreateUser()
     {
@@ -61,7 +61,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/admin/users/0.html');
         $this->assertEquals(6, $crawler->filter('.row-user')->count());
     }
-/*
+
     public function testUserCreationFormIsDisplayedWithErrors()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -205,7 +205,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
         $this->assertEquals('Déconnexion', trim($crawler->filter("#link-logout")->text()));
     }
-*/
+
     private function getUser($username)
     {
         $user = $this->em
