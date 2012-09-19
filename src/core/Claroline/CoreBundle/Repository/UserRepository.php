@@ -7,6 +7,10 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class UserRepository extends EntityRepository
 {
+    const PLATEFORM_ROLE = 1;
+    const WORKSPACE_ROLE = 2;
+    const ALL_ROLES = 2;
+
     //todo prepared statement here
     public function getUsersByUsernameList(array $usernames)
     {
@@ -103,17 +107,22 @@ class UserRepository extends EntityRepository
     }
 
 
-    public function findPaginatedUsers($offset, $limit)
+    /**
+     * Current logged user will see all his roles
+     */
+    public function findPaginatedUsers($offset, $limit, $modeRole)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'u')
-            ->add('from', 'Claroline\CoreBundle\Entity\User u')
+        switch($modeRole){
+            case self::PLATEFORM_ROLE:
+                $dql = 'SELECT u, r from Claroline\CoreBundle\Entity\User u JOIN u.roles r
+                    WHERE r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole';
+                break;
+        }
+        $query = $this->_em->createQuery($dql)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        $q = $qb->getQuery();
-
-        return $q->getResult();
+        return $query->getResult();
     }
 
     public function findPaginatedUsersOfGroup($groupId, $offset, $limit)

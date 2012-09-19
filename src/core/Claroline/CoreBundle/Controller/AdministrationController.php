@@ -119,15 +119,8 @@ class AdministrationController extends Controller
      */
     public function userListAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $query = $em->createQuery('SELECT COUNT(u.id) FROM Claroline\CoreBundle\Entity\User u');
-        $count = $query->getSingleScalarResult();
-        $pages = ceil($count/self::USER_PER_PAGE);
-
         return $this->render(
-            'ClarolineCoreBundle:Administration:user_list_main.html.twig',
-            array('pages' => $pages)
-        );
+            'ClarolineCoreBundle:Administration:user_list_main.html.twig');
     }
 
     /**
@@ -136,7 +129,7 @@ class AdministrationController extends Controller
     public function paginatedUserListAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, self::USER_PER_PAGE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
