@@ -16,6 +16,66 @@ use Claroline\CoreBundle\Entity\Group;
  */
 class CreateGroupsCommand extends ContainerAwareCommand
 {
+    public function __construct()
+    {
+        parent ::__construct();
+
+        $this->basicGroupName = array(
+            "History",
+            "Linguistics",
+            "Literature",
+            "Performing arts",
+            "Philosophy",
+            "Religion",
+            "Visual arts",
+            "Anthropology",
+            "Archaeology",
+            "Area studies",
+            "Cultural and ethnic studies",
+            "Economics",
+            "Gender and sexuality",
+            "Geography",
+            "Political science",
+            "Psychology",
+            "Sociology",
+            "Space science",
+            "Earth sciences",
+            "Life sciences",
+            "Chemistry",
+            "Physics",
+            "Computer sciences",
+            "Logic",
+            "Mathematics",
+            "Statistics",
+            "Systems science",
+            "Agriculture",
+            "Architecture and Design",
+            "Business", "Education",
+            "Engineering",
+            "Environmental studies and Forestry",
+            "Family and consumer science",
+            "Health science",
+            "Human physical performance and recreation",
+            "Journalism, media studies and communication",
+            "Law",
+            "Library and museum studies",
+            "Military sciences",
+            "Public administration",
+            "Social work",
+            "Transportation"
+            );
+
+        $this->maxBasicGroupNameOffset = count($this->basicGroupName);
+        $this->maxBasicGroupNameOffset--;
+
+        $this->groupsYears = array(
+            "Bachelor 1", "Bachelor 2", "Bachelor 3", "Master 1", "Master 2", "Doctorate 1", "Doctorate 2"
+        );
+
+        $this->maxGroupsYearsOffset = count($this->groupsYears);
+        $this->maxGroupsYearsOffset--;
+    }
+
     protected function configure()
     {
         $this->setName('claroline:groups:create')
@@ -29,7 +89,6 @@ class CreateGroupsCommand extends ContainerAwareCommand
     {
         $params = array(
             'amount' => 'amount',
-
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -76,7 +135,7 @@ class CreateGroupsCommand extends ContainerAwareCommand
                 $userNumber = $maxUsersOffset;
             }
 
-            $group->setName($this->getContainer()->get('claroline.resource.utilities')->generateGuid());
+            $group->setName($this->createGroupName());
             $userAddedIds = array();
 
             for ($j=0; $j <= $userNumber; $j++) {
@@ -96,5 +155,12 @@ class CreateGroupsCommand extends ContainerAwareCommand
 
             echo("--- group {$i} created \n");
         }
+    }
+
+    private function createGroupName()
+    {
+        $name = "{$this->groupsYears[rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[rand(0, $this->maxBasicGroupNameOffset)]} - ".rand(0, 1000);
+
+        return $name;
     }
 }
