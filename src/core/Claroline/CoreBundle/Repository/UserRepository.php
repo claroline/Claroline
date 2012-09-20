@@ -30,15 +30,23 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getUsersOfWorkspace(AbstractWorkspace $workspace)
+    public function getUsersOfWorkspace(AbstractWorkspace $workspace, $role = null)
     {
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :id
         ";
 
+        if ($role != null) {
+            $dql.= "AND wr.id = :roleId";
+        }
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
+        
+        if ($role != null){
+            $query->setParameter('roleId', $role->getId());
+        }
 
         return $query->getResult();
     }
