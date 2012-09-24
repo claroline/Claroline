@@ -330,7 +330,7 @@ class WorkspaceController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $userIds = array($userId);
-                $this->checkRemoveUserIsValid($userIds, $workspace);
+                $this->checkRemoveManagerRoleIsValid($userIds, $workspace, 'User');
             }
 
             $user->removeRole($role[0]);
@@ -524,7 +524,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkIfAdmin($workspace);
         $userIds = array($user->getId());
-        $this->checkRemoveUserIsValid($userIds, $workspace);
+        $this->checkRemoveManagerRoleIsValid($userIds, $workspace, 'User');
         $roles = $workspace->getWorkspaceRoles();
 
         foreach ($roles as $role) {
@@ -553,7 +553,7 @@ class WorkspaceController extends Controller
         $roles = $workspace->getWorkspaceRoles();
         $params = $this->get('request')->query->all();
         unset($params['_']);
-        $this->checkRemoveUserIsValid($params, $workspace);
+        $this->checkRemoveManagerRoleIsValid($params, $workspace, 'User');
 
         foreach ($params as $userId) {
             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
@@ -594,9 +594,79 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * Renders the group parameter page with its layout and
+     * edit the group parameters for the selected workspace.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function groupParametersAction($workspaceId, $groupId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        //more~ only the workspace manager can do it maybe ?
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $role = $em->getRepository('ClarolineCoreBundle:Group')->getRoleOfWorkspace($groupId, $workspaceId);
+        $defaultData = array('role' => $role[0]);
+        $form = $this->createFormBuilder($defaultData)
+            ->add(
+                'role', 'entity', array(
+                'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
+                'property' => 'translationKey',
+                'query_builder' => function(EntityRepository $er) use ($workspaceId) {
+                    return $er->createQueryBuilder('wr')
+                        ->add('where', "wr.workspace = {$workspaceId}");
+                }
+            ))
+            ->getForm();
+
+        if ($this->getRequest()->getMethod() == 'POST') {
+            $form->bind($this->getRequest());
+            $data = $form->getData();
+            $newRole = $data['role'];
+
+            //verifications: his role cannot be changed
+            if ($newRole->getId() != $workspace->getManagerRole()->getId()){
+                $groupIds = array($group->getId());
+                $this->checkRemoveManagerRoleIsValid($groupIds, $workspace, 'Group');
+            }
+
+            $group->removeRole($role[0]);
+            $group->addRole($newRole);
+            $em->persist($group);
+            $em->flush();
+            $route = $this->get('router')->generate('claro_workspace_tools_groups_management', array('workspaceId' => $workspaceId));
+
+            return new RedirectResponse($route);
+        }
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\group_parameters.html.twig', array(
+                'workspace' => $workspace, 'group' => $group, 'form' => $form->createView())
+        );
+    }
+
+    /**
+     * Renders the unregistered group list layout for a workspace.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function unregiseredGroupsListAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_group_list_layout.html.twig', array(
+                'workspace' => $workspace)
+        );
+    }
+
+    /**
      * Removes a group from a workspace.
-     * if it was requested through ajax, it'll respond "success"
-     * otherwise it'll redirect to the user workspace list
      *
      * @param integer $groupId
      * @param integer $workspaceId
@@ -607,11 +677,45 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
         $roles = $workspace->getWorkspaceRoles();
+        $groupIds = array($group->getId());
+        $this->checkRemoveManagerRoleIsValid($groupIds, $workspace, 'Group');
 
         foreach ($roles as $role) {
             $group->removeRole($role);
+        }
+
+        $em->flush();
+
+        return new Response("success", 204);
+    }
+
+    /**
+     * Removes many groups from a workspace. ( ?0=1&1=2... )
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function removeMultipleGroupsAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        $roles = $workspace->getWorkspaceRoles();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+        $this->checkRemoveManagerRoleIsValid($params, $workspace, 'Group');
+
+        foreach ($params as $groupId) {
+            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+            if (null != $group) {
+                foreach ($roles as $role) {
+                    $group->removeRole($role);
+                }
+            }
         }
 
         $em->flush();
@@ -734,12 +838,35 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function searchUnregisteredGroupsAction($search, $workspaceId)
+    public function searchUnregisteredGroupsAction($search, $workspaceId, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->searchPaginatedUnregisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Renders a list of registered groups for a workspace.
+     * It'll search every groups whose name match $search.
+     *
+     * @param string $search
+     * @param integer $workspaceId
+     * @param string $format
+     *
+     * @return Response
+     */
+    public function searchRegisteredGroupsAction($search, $workspaceId, $offset)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->searchPaginatedRegisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -751,27 +878,43 @@ class WorkspaceController extends Controller
     /* PRIVATE METHODS */
     /*******************/
 
-    private function checkRemoveUserIsValid($userIds, $workspace)
+    private function checkRemoveManagerRoleIsValid($parameters, $workspace, $class)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $countManagers = 0;
-        //check if the user ids list is valid
-        foreach ($userIds as $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-            if (null !== $user) {
-                if ($workspace == $user->getPersonalWorkspace()) {
-                    throw new \LogicException("You can't remove the original manager from a personal workspace");
-                }
-                if ($user->hasRole($workspace->getManagerRole()->getName())) {
-                    $countManagers++;
+        $countRemovedManagers = 0;
+
+        if ('User' === $class) {
+            foreach ($parameters as $userId) {
+                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+
+                if (null !== $user) {
+                    if ($workspace == $user->getPersonalWorkspace()) {
+                        throw new \LogicException("You can't remove the original manager from a personal workspace");
+                    }
+                    if ($user->hasRole($workspace->getManagerRole()->getName())) {
+                        $countRemovedManagers++;
+                    }
                 }
             }
         }
 
-        $managers = $em->getRepository('Claroline\CoreBundle\Entity\User')->getUsersOfWorkspace($workspace, $workspace->getManagerRole());
+        if ('Group' === $class) {
+            foreach ($parameters as $groupId) {
+                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
-        if ($countManagers == count($managers)) {
-            throw new \LogicException("you can't remove every managers");
+                if (null !== $group){
+                    if ($group->hasRole($workspace->getManagerRole()->getName())) {
+                        $countRemovedManagers += count($group->getUsers());
+                    }
+                }
+            }
+        }
+
+        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')->getUsersOfWorkspace($workspace, $workspace->getManagerRole(), true);
+        $countUserManagers = count($userManagers);
+
+        if ($countRemovedManagers >= $countUserManagers) {
+            throw new \LogicException("You can't remove every managers(you're trying to remove {$countRemovedManagers} manager(s) out of {$countUserManagers})");
         }
     }
 

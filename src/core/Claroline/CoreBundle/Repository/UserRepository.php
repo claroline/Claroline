@@ -30,28 +30,43 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getUsersOfWorkspace(AbstractWorkspace $workspace, $role = null)
+    public function getUsersOfWorkspace(AbstractWorkspace $workspace, $role = null, $areGroupsIncluded = false)
     {
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :id
-        ";
+            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.workspaceRoles wr
+            JOIN wr.workspace w
+            WHERE w.id = {$workspace->getId()}";
 
-        if ($role != null) {
-            $dql.= "AND wr.id = :roleId";
-        }
+            if($role != null){
+                $dql .= " AND wr.id = {$role->getId()}";
+            }
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId());
-        
-        if ($role != null){
-            $query->setParameter('roleId', $role->getId());
+        $userResults = $query->getResult();
+
+        if ($areGroupsIncluded) {
+            $dql = "
+                SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.groups g
+                JOIN g.workspaceRoles wr
+                JOIN wr.workspace w WHERE w.id = {$workspace->getId()}";
+
+            if ($role != null) {
+                $dql.= " AND wr.id = {$role->getId()}";
+            }
+
+            $query = $this->_em->createQuery($dql);
+            $groupResults = $query->getResult();
         }
 
-        return $query->getResult();
+        if (isset($groupResults)){
+            return array_merge($userResults, $groupResults);
+        } else {
+            return $userResults;
+        }
     }
 
-    //doctrine doesn't have any DQL LIMIT clause.
     public function getLazyUnregisteredUsersOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "

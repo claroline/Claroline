@@ -71,7 +71,6 @@
 
     $('#search-button').click(function(){
         mode = 1;
-        mode = false;
         $('.modal-body').animate({
             scrollTop: 0
         }, 0);
@@ -105,8 +104,8 @@
         var i=0;
         while (i<JSONString.length)
         {
-            var list = '<tr>'
-            +'<td align="center"><input class="row-user checkbox-user-name" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>'
+            var list = '<tr class="row-user">'
+            +'<td align="center"><input class="checkbox-user-name" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>'
             +'<td align="center">'+JSONString[i].username+'</td>'
             +'<td align="center">'+JSONString[i].lastname+'</td>'
             +'<td align="center">'+JSONString[i].firstname+'</td>'

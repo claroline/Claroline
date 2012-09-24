@@ -225,42 +225,23 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * Returns the user's roles (including role's ancestors) as an array
      * of string values (needed for Symfony security checks). The roles
-     * owned by groups which the user belong to are also included.
+     * owned by groups which the user belong can also be included.
+     *
+     * @param boolean $areGroupsIncluded
      *
      * @return array[string]
      */
-    public function getRoles()
+    public function getRoles($areGroupsIncluded = true)
     {
-        $roleNames = array();
+        $roleNames = parent::getRoles();
 
-        foreach ($this->getOwnedRoles(true) as $role) {
-            $roleNames[] = $role->getName();
-        }
-
-        foreach ($this->getGroups() as $group) {
-            foreach ($group->getOwnedRoles(true) as $role) {
-                $roleNames[] = $role->getName();
+        if ($areGroupsIncluded){
+            foreach ($this->getGroups() as $group) {
+                $roleNames = array_unique(array_merge($roleNames, $group->getRoles()));
             }
         }
 
-        return array_unique($roleNames);
-    }
-
-    /**
-     * Checks if the user has a given role. This method will explore
-     * role hierarchies if necessary.
-     *
-     * @param string $roleName
-     *
-     * @return boolean
-     */
-    public function hasRole($roleName)
-    {
-        if (in_array($roleName, $this->getRoles())) {
-            return true;
-        }
-
-        return false;
+        return $roleNames;
     }
 
     public function getWorkspaceRoleCollection()

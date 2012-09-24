@@ -1,14 +1,14 @@
 {% twig_js name="group_list" %}
 
 {% for group in groups %}
-<tr class="row-group">
-    <td align="center">{{ group.name }}</td>
+<tr class="row-group" data-group-id={{ group.id }}>
     <td>
-        <a href ="#"
-            data-group-id="{{ group.getId() }}"
-            id="link-delete-group-{{ group.id }}"
-            class="link-delete-group">{{ 'delete'|trans({}, 'platform') }}
-        </a>
+        <input type="checkbox" class="chk-group" value="{{ group.id }}"></input>
+    </td>
+    <td align="center">{{ group.name }}</td>
+    <td align="center">{{ group.roles }}</td>
+    <td>
+        <button class="btn btn-secondary button-parameters-group">parameter</button>
     </td>
 </tr>
 {% endfor %}
