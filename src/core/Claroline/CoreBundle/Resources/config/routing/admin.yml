@@ -52,6 +52,14 @@ claro_admin_delete_group:
       _method: DELETE
       groupId: ^(?=.*[1-9].*$)\d*$
 
+claro_admin_multidelete_group:
+    pattern: /groups
+    defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+
 claro_admin_delete_user:
     pattern: /user/{userId}
     defaults: { _controller: ClarolineCoreBundle:Administration:deleteUser }

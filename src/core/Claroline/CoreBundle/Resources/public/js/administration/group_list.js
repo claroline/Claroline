@@ -34,18 +34,32 @@
         }
     });
 
-    $('.link-delete-group').live('click', function(e){
-        e.preventDefault();
-        var route = $(this).attr('href');
-        var element = $(this).parent().parent();
+    $('.delete-groups-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html('removing '+ $('.chk-group:checked').length +' group(s)');
+    });
+
+    $('#modal-valid-button').click(function(){
+        var parameters = {};
+        var i = 0;
+        $('.chk-group:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        });
+
+        var route = Routing.generate('claro_admin_multidelete_group', parameters);
         ClaroUtils.sendRequest(
             route,
             function(){
-                element.remove();
+                $('.chk-group:checked').each(function(index, element){
+                     $(element).parent().parent().remove();
+                });
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
             },
             undefined,
             'DELETE'
-        )
+        );
     });
 
     $('#search-group-button').click(function(){
