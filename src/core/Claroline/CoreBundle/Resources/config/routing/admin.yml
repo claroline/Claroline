@@ -43,6 +43,15 @@ claro_admin_paginated_search_group_list:
       offset: ^(?=.*[0-9].*$)\d*$
       method: GET
 
+claro_admin_paginated_search_user_list:
+   pattern: /users/search/{search}/{offset}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchPaginatedUsers }
+   options:
+      expose: true
+   requirements:
+      offset: ^(?=.*[0-9].*$)\d*$
+      method: GET
+
 claro_admin_delete_group:
     pattern: /group/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }

@@ -112,6 +112,11 @@ class AdministrationController extends Controller
 //throw new \Exception('A user cannot delete his own profile.');
     }
 
+    /**
+     * Removes many users from the platform.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function multiDeleteUserAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -140,7 +145,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * Returns the platform users.
      *
+     * @param $offset
+     * @param $format
+     *
+     * @return Response
      */
     public function paginatedUserListAction($offset, $format)
     {
@@ -151,6 +161,7 @@ class AdministrationController extends Controller
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
 
         $response = new Response($content);
+
         if  ($format == 'json') {
             $response->headers->set('Content-Type', 'application/json');
         }
@@ -158,6 +169,31 @@ class AdministrationController extends Controller
         return $response;
     }
 
+    /**
+     * Returns the platform users whose name, username or lastname matche $search.
+     *
+     * @param type $offset
+     * @param type $limit
+     * @param type $search
+     *
+     * @return Response
+     */
+    public function searchPaginatedUsersAction($offset, $search, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchPaginatedUsers($search, $offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
+
+        $response = new Response($content);
+
+        if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
     // Doesn't work yet due to a sql error from the repository
     public function paginatedUserOfGroupListAction($groupId, $offset)
     {
