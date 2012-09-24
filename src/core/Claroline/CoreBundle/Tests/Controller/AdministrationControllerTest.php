@@ -33,6 +33,20 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(3, $crawler->filter('.row-group')->count());
     }
 
+    public function testAdminCanSearchGroups()
+    {
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/groups/search/A/0.html');
+        $this->assertEquals(1, $crawler->filter('.row-group')->count());
+    }
+
+    public function testAdminCanSearchUsers()
+    {
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/users/search/john/0.html');
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
+    }
+
     public function testAdminCanSeeUsersFromGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
