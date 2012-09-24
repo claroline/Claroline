@@ -114,7 +114,7 @@ class WorkspaceControllerGroupManagementTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}",
-             array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
+            array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
         );
         $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
@@ -159,7 +159,7 @@ class WorkspaceControllerGroupManagementTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}",
-             array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
+            array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
         );
         $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
@@ -182,7 +182,7 @@ class WorkspaceControllerGroupManagementTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}",
-             array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
+            array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
         );
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')

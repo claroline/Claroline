@@ -21,8 +21,7 @@
             <a href="todo">todo</a>
         </td>
         <td>
-            <a data-group-id="{{ group.getId() }}"   href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}"
-               class="link-delete-group" id="link-delete-{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
+            <input type="checkbox" class="chk-group" value="{{ group.getId() }}"></input>
         </td>
     </tr>
 {% endfor %}

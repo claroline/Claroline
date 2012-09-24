@@ -357,6 +357,27 @@ class AdministrationController extends Controller
     }
 
     /**
+     * Deletes multiple groups.
+     *
+     *  @return Response
+     */
+    public function multiDeleteGroupAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        foreach ($params as $groupId) {
+            $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+            $em->remove($group);
+        }
+
+        $em->flush();
+
+        return new Response('group removed', 204);
+    }
+
+    /**
      * Displays an edition form for a group.
      *
      * @param integer $groupId
