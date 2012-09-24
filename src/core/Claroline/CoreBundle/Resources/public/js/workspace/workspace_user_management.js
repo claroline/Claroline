@@ -1,20 +1,37 @@
 (function(){
+    $('html, body').animate({
+        scrollTop: 0
+    }, 0);
+
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
-    var mode = 0; //0 = standard || 1 = search
-    var stopBackground = false;
     var loading = false;
-    var callBackLength = 1;
+    var stop = false;
+    var mode = 0; //0 = standard || 1 = search
 
-    addContent(function(){lazyloadRegisteredUsers()});
+    var standardRoute = function(){
+        return Routing.generate('claro_workspace_registered_users_paginated', {
+                'workspaceId':twigWorkspaceId,
+                'offset': $('.row-user').length
+            });
+    }
 
+    var searchRoute = function(){
+        return Routing.generate('claro_workspace_search_registered_users', {
+                'search': document.getElementById('search-user-txt').value,
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-user').length
+            });
+    }
+
+    lazyloadUsers(standardRoute);
     $('#user-loading').hide();
 
     $(window).scroll(function(){
-        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && stopBackground == false && loading == false){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
             if(mode == 0){
-                lazyloadRegisteredUsers();
-            }else{
-                lazyloadSearchRegisteredUsers();
+                lazyloadUsers(standardRoute);
+            } else {
+                lazyloadUsers(searchRoute);
             }
         }
     });
@@ -28,11 +45,17 @@
         window.location.href = route;
     })
 
-    $('#search-user-button').click(function(){
-        $('#user-table-body').empty();
-        mode = 1;
-        stopBackground = false;
-        addContent(function(){lazyloadSearchRegisteredUsers()});
+    $('#search-button').click(function(){
+        $('.checkbox-user-name').remove();
+        $('#user-table-checkboxes-body').empty();
+        stop = false;
+        if (document.getElementById('search-user-txt').value != ''){
+            mode = 1;
+            lazyloadUsers(searchRoute);
+        } else {
+            mode = 0;
+            lazyloadUsers(standardRoute);
+        }
     });
 
     $('#delete-user-button').click(function(){
@@ -69,72 +92,24 @@
         $('#validation-box-body').empty();
     });
 
-    $('#reset-user-button').click(function(){
-        $('#user-table-body').empty();
-        mode = 1;
-        stopBackground = false;
-        addContent(function(){lazyloadRegisteredUsers()});
-    });
-
-    function lazyloadSearchRegisteredUsers()
-    {
+    function lazyloadUsers(route) {
         loading = true;
-        var search = document.getElementById('search-user-txt').value;
-        if (search !== ''){
-            var route = Routing.generate('claro_workspace_search_registered_users', {
-                'search': search,
-                'workspaceId': twigWorkspaceId,
-                'offset': $('.row-user').length
-            })
-            ClaroUtils.sendRequest(
-                route,
-                function(users){
-                    if(users.length == 0){
-                        stopBackground = true;
-                    }
-
-                    callBackLength = users.length;
-                    var render = Twig.render(user_list, {
-                        'users': users
-                    });
-                    $('#user-table-body').append(render);
-                },
-                function(){
-                    loading = false;
-                }
-            );
-        }
-    }
-
-    function lazyloadRegisteredUsers()
-    {
-        loading = true;
+        $('#user-loading').show();
         ClaroUtils.sendRequest(
-            Routing.generate('claro_workspace_registered_users_paginated', {
-                'workspaceId':twigWorkspaceId,
-                'offset': $('.row-user').length
-            }),
+            route(),
             function(users){
-                if(users.length == 0){
-                    stopBackground = true;
+                $('#user-table-body').append(Twig.render(user_list, {'users': users}));
+                loading = false;
+                $('#user-loading').hide();
+                if(users.length == 0) {
+                    stop = true;
                 }
-
-                callBackLength = users.length;
-                var render = Twig.render(user_list, {
-                    'users': users
-                });
-                $('#user-table-body').append(render);
             },
             function(){
-                loading = false;
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadUsers(route)
+                }
             }
         );
-    }
-
-    function addContent(callBack){
-        callBack();
-        if($(window).height() >= $(document).height() && callBackLength != 0 && loading == false){
-            addContent(callBack);
-        }
     }
 })()
