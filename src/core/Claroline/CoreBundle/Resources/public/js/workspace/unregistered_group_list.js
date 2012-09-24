@@ -13,7 +13,7 @@
         return Routing.generate('claro_workspace_unregistered_groups_paginated', {
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-group').length
-            })
+            });
     }
 
     var searchRoute = function(){
@@ -21,7 +21,7 @@
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-group').length,
                 'search': document.getElementById('search-group-txt').value
-            })
+            });
     }
 
     lazyloadGroups(standardRoute);
@@ -95,6 +95,9 @@
                 createGroupsChkBoxes(groups);
                 loading = false;
                 $('#loading').hide();
+                if (groups.length == 0){
+                    stop = true;
+                }
             },
             function(){
                 if($(window).height() >= $(document).height() && stop == false){

@@ -1,82 +1,49 @@
 (function () {
+    $('html, body').animate({
+        scrollTop: 0
+    }, 0);
+
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
     var loading = false;
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
-    var callbackLength = 0;
 
-    addContent(function(){lazyloadUnregisteredUsers()});
-
-    $(window).scroll(function(){
-        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && stop == false && loading == false){
-            if(mode == 0){
-                lazyloadUnregisteredUsers();
-            }else{
-                lazyloadSearchUnregisteredUsers();
-            }
-        }
-    });
-
-    function lazyloadUnregisteredUsers()
-    {
-        loading = true;
-        $('#user-loading').show();
-        var route = Routing.generate('claro_workspace_unregistered_users_paginated', {'workspaceId': twigWorkspaceId, 'offset': $('.row-user').length});
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
-                if(data.length == 0){
-                    stop = true;
-                }
-                createUsersChkBoxes(data);
-                $('#user-loading').hide();
-            },
-            function(){
-                loading = false;
-            }
-        );
+    var standardRoute = function(){
+        return Routing.generate('claro_workspace_unregistered_users_paginated', {
+            'workspaceId': twigWorkspaceId,
+            'offset': $('.row-user').length
+        });
     }
 
-    function lazyloadSearchUnregisteredUsers()
-    {
-        loading = true;
-        var search = document.getElementById('search-modal-user-txt').value;
-        if (search !== ''){
-            var route = Routing.generate('claro_workspace_search_unregistered_users', {
-                'search': search,
+    var searchRoute = function(){
+        return Routing.generate('claro_workspace_search_unregistered_users', {
+                'search': document.getElementById('search-user-txt').value,
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
             })
-            ClaroUtils.sendRequest(
-                route,
-                function(users){
-                    if(users.length == 0){
-                        stop = true;
-                    }
-                    createUsersChkBoxes(users);
-                    $('#user-loading').hide()
-                },
-                function(){
-                    loading = false;
-                }
-            );
-        }
     }
 
-    $('#reset-button').click(function(){
-        $('.checkbox-user-name').remove();
-        $('#user-table-checkboxes-body').empty();
-        lazyloadUnregisteredUsers();
+    $(window).scroll(function(){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
+            if(mode == 0){
+                lazyloadUsers(standardRoute);
+            } else {
+                lazyloadUsers(searchRoute);
+            }
+        }
     });
 
     $('#search-button').click(function(){
-        mode = 1;
-        $('.modal-body').animate({
-            scrollTop: 0
-        }, 0);
         $('.checkbox-user-name').remove();
         $('#user-table-checkboxes-body').empty();
-        lazyloadSearchUnregisteredUsers();
+        stop = false;
+        if (document.getElementById('search-user-txt').value != ''){
+            mode = 1;
+            lazyloadUsers(searchRoute);
+        } else {
+            mode = 0;
+            lazyloadUsers(standardRoute);
+        }
     });
 
     $('#btn-save-users').on('click', function(event){
@@ -115,11 +82,24 @@
         }
     }
 
-    function addContent(callBack){
-        callBack();
-        if($(window).height() >= $(document).height() && callbackLength != 0 && loading == false){
-            addContent(callBack);
-        }
+    function lazyloadUsers(route) {
+        loading = true;
+        $('#user-loading').show();
+        ClaroUtils.sendRequest(
+            route(),
+            function(users){
+                createUsersChkBoxes(users);
+                loading = false;
+                $('#user-loading').hide();
+                if(users.length == 0) {
+                    stop = true;
+                }
+            },
+            function(){
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadGroups(route)
+                }
+            }
+        );
     }
-
 })();

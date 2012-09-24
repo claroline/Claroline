@@ -38,9 +38,8 @@
     </div>
     <div id="user-search-div">
         <p>
-        <input type="text" id="search-modal-user-txt" class="search-query" value="" />
+        <input type="text" id="search-user-txt" class="search-query" value="" />
         <input type="button" id="search-button" value ="search" class="btn btn-secondary"/>
-        <input type="button" id="reset-button" class="btn btn-secondary" value="reset"/>
         <a href="#" class="btn btn-primary" id="btn-save-users"> {{ 'add'|trans({}, 'platform') }}</a>
         <p/>
     </div>
@@ -59,7 +58,6 @@
         </div>
         <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="user-loading" class="loading"/><br/>
     </form>
-    <input type="button" id="reset-modal-button" class="btn btn-secondary" value="reset"/>
     <a href="#" class="btn btn-primary" id="btn-save-users"> {{ 'add'|trans({}, 'platform') }}</a>
     <br/>
 {% endblock %}

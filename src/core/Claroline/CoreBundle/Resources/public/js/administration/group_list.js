@@ -69,6 +69,9 @@
                 $('#group-table-body').append(groups);
                 loading = false;
                 $('#loading').hide();
+                if (groups.length == 0) {
+                    stop = true;
+                }
             },
             function(){
                 if($(window).height() >= $(document).height() && stop == false){
