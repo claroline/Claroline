@@ -62,6 +62,11 @@
         );
     });
 
+    $('#modal-cancel-button').click(function(){
+        $('#validation-box').modal('hide');
+        $('#validation-box-body').empty();
+    });
+
     $('#search-group-button').click(function(){
         $('#group-table-body').empty();
         stop = false;
