@@ -109,7 +109,23 @@ class AdministrationController extends Controller
 //Doctrine throws an error itself because
 //"You cannot refresh a user from the EntityUserProvider that does not contain an identifier.
 //The user object has to be serialized with its own identifier mapped by Doctrine. (500 Internal Server Error)
-//        throw new \Exception('A user cannot delete his own profile.');
+//throw new \Exception('A user cannot delete his own profile.');
+    }
+
+    public function multiDeleteUserAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        foreach ($params as $userId) {
+            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+            $em->remove($user);
+        }
+
+        $em->flush();
+
+        return new Response('user(s) removed', 204);
     }
 
     /**
@@ -353,7 +369,7 @@ class AdministrationController extends Controller
         $em->remove($group);
         $em->flush();
 
-        return new Response('group removed', 204);
+        return new Response('group(s) removed', 204);
     }
 
     /**
@@ -374,7 +390,7 @@ class AdministrationController extends Controller
 
         $em->flush();
 
-        return new Response('group removed', 204);
+        return new Response('groups removed', 204);
     }
 
     /**
