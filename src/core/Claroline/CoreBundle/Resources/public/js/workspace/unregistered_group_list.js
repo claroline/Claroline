@@ -8,14 +8,30 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
 
-    lazyloadGroups(getStandardRoute());
 
-   $(window).scroll(function(){
-        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && stop == false && loading == false){
+    var standardRoute = function(){
+        return Routing.generate('claro_workspace_unregistered_groups_paginated', {
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-group').length
+            })
+    }
+
+    var searchRoute = function(){
+        return Routing.generate('claro_workspace_search_unregistered_groups', {
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-group').length,
+                'search': document.getElementById('search-group-txt').value
+            })
+    }
+
+    lazyloadGroups(standardRoute);
+
+    $(window).scroll(function(){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
             if(mode == 0){
-                lazyloadGroups(getStandardRoute());
+                lazyloadGroups(standardRoute);
             } else {
-                lazyloadGroups(getSearchRoute());
+                lazyloadGroups(searchRoute);
             }
         }
     });
@@ -48,10 +64,10 @@
         stop = false;
         if (document.getElementById('search-group-txt').value != ''){
             mode = 1;
-            lazyloadGroups(getSearchRoute());
+            lazyloadGroups(searchRoute);
         } else {
             mode = 0;
-            lazyloadGroups(getStandardRoute());
+            lazyloadGroups(standardRoute);
         }
     });
 
@@ -72,33 +88,19 @@
 
     function lazyloadGroups(route){
         loading = true;
-        $('#group-loading').show();
+        $('#loading').show();
         ClaroUtils.sendRequest(
-            route,
+            route(),
             function(groups){
-                if (groups.length == 0){
-                    stop = true;
-                }
                 createGroupsChkBoxes(groups);
-                $('#group-loading').hide();
+                loading = false;
+                $('#loading').hide();
             },
             function(){
-                loading = false;ze
-            });
-    }
-
-    function getStandardRoute(){
-        return Routing.generate('claro_workspace_unregistered_groups_paginated', {
-                'workspaceId': twigWorkspaceId,
-                'offset': $('.row-group').length
-            })
-    }
-
-    function getSearchRoute(){
-        return Routing.generate('claro_admin_paginated_search_group_list', {
-                'format': 'html',
-                'offset': $('.row-group').length,
-                'search': document.getElementById('search-group-txt').value
-            })
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadGroups(route)
+                }
+            }
+        )
     }
 })();
