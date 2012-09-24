@@ -1,24 +1,36 @@
 (function () {
+
+    var loading = false;
+    var stop = false;
+    var mode = 0; //0 = standard || 1 = search
+
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
 
-    addContent();
+    var standardRoute = function(){
+        return Routing.generate('claro_admin_paginated_group_list', {
+            'format': 'html',
+            'offset': $('.row-group').length
+        })
+    }
 
-    var loading = false;
+    var searchRoute = function(){
+        return Routing.generate('claro_admin_paginated_search_group_list', {
+            'format': 'html',
+            'offset': $('.row-group').length,
+            'search': document.getElementById('search-group-txt').value
+        })
+    }
+
+    lazyloadGroups(standardRoute);
 
     $(window).scroll(function(){
-        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false){
-            loading = true;
-            $('#loading').show();
-            var route = Routing.generate('claro_admin_paginated_group_list', {
-                'offset' : $('.row-group').length,
-                'format': 'html'
-            });
-            ClaroUtils.sendRequest(route, function(users){
-                $('#group-table-body').append($(users));
-                loading = false;
-                $('#loading').hide();
-            })
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
+            if(mode == 0){
+                lazyloadGroups(standardRoute);
+            } else {
+                lazyloadGroups(searchRoute);
+            }
         }
     });
 
@@ -34,19 +46,35 @@
             undefined,
             'DELETE'
         )
-    })
+    });
 
-    function addContent(){
-        if($(window).height() >= $(document).height()){
-            var route = Routing.generate('claro_admin_paginated_group_list', {
-                'offset' : $('.row-group').length,
-                'format': 'html'
-            });
-
-            ClaroUtils.sendRequest(route, function(groups){
-                $('#group-table-body').append($(groups));
-                addContent();
-            })
+    $('#search-group-button').click(function(){
+        $('#group-table-body').empty();
+        stop = false;
+        if (document.getElementById('search-group-txt').value != ''){
+            mode = 1;
+            lazyloadGroups(searchRoute);
+        } else {
+            mode = 0;
+            lazyloadGroups(standardRoute);
         }
+    });
+
+    function lazyloadGroups(route){
+        loading = true;
+        $('#loading').show();
+        ClaroUtils.sendRequest(
+            route(),
+            function(groups){
+                $('#group-table-body').append(groups);
+                loading = false;
+                $('#loading').hide();
+            },
+            function(){
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadGroups(route)
+                }
+            }
+        )
     }
 })();

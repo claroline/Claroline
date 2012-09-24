@@ -83,7 +83,7 @@
                 $('#group-loading').hide();
             },
             function(){
-                loading = false;
+                loading = false;ze
             });
     }
 
@@ -95,8 +95,8 @@
     }
 
     function getSearchRoute(){
-        return Routing.generate('claro_workspace_search_unregistered_groups', {
-                'workspaceId': twigWorkspaceId,
+        return Routing.generate('claro_admin_paginated_search_group_list', {
+                'format': 'html',
                 'offset': $('.row-group').length,
                 'search': document.getElementById('search-group-txt').value
             })

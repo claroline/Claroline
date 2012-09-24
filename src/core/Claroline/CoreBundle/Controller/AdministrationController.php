@@ -158,18 +158,45 @@ class AdministrationController extends Controller
     }
 
     /**
+     * Returns the platform group list.
      *
+     * @param $offset the offset.
+     * @param $format the format.
+     *
+     * @return Response.
      */
     public function paginatedGroupListAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, self::GROUP_PER_PAGE);
-
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
-
         $response = new Response($content);
+
         if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
+
+    /*
+     * Returns the platform group list whose names match $search.
+     *
+     * @param $offset the $offset.
+     * @param $search the searched name.
+     *
+     * @return Response.
+     */
+    public function searchPaginatedGroupsAction($offset, $search, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->searchPaginatedGroups($search, $offset, self::GROUP_PER_PAGE);
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
+        $response = new Response($content);
+
+        if ($format == 'json') {
             $response->headers->set('Content-Type', 'application/json');
         }
 

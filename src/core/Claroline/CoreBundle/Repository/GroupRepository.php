@@ -55,7 +55,7 @@ class GroupRepository extends EntityRepository
 
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
-            WHERE UPPER(g.name) LIKE '%" . $search . "%'
+            WHERE UPPER(g.name) LIKE :search
             AND g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
@@ -67,6 +67,7 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
+            ->setParameter('search', "%{$search}%")
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -79,7 +80,7 @@ class GroupRepository extends EntityRepository
 
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
-            WHERE UPPER(g.name) LIKE '%" . $search . "%'
+            WHERE UPPER(g.name) LIKE :search
             AND g IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
@@ -91,6 +92,7 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
+            ->setParameter('search', "%{$search}%")
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -108,6 +110,23 @@ class GroupRepository extends EntityRepository
         $q = $qb->getQuery();
 
         return $q->getResult();
+    }
+
+    public function searchPaginatedGroups($search, $offset, $limit)
+    {
+        $search = strtoupper($search);
+
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            WHERE UPPER(g.name) LIKE :search
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+        $query->setFirstResult($offset);
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
     }
 
     public function findPaginatedGroupsOfWorkspace($workspaceId, $offset, $limit)
