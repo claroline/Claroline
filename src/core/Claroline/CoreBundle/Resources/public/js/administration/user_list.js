@@ -21,18 +21,37 @@
         }
     });
 
-    $('.link-delete-user').live('click', function(e){
-        e.preventDefault();
-        var route = $(this).attr('href');
-        var element = $(this).parent().parent();
+    $('.delete-users-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html('removing '+ $('.chk-user:checked').length +' user(s)');
+    });
+
+    $('#modal-valid-button').click(function(){
+        var parameters = {};
+        var i = 0;
+        $('.chk-user:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        });
+
+        var route = Routing.generate('claro_admin_multidelete_user', parameters);
         ClaroUtils.sendRequest(
             route,
             function(){
-                element.remove();
+                $('.chk-user:checked').each(function(index, element){
+                     $(element).parent().parent().remove();
+                });
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
             },
             undefined,
             'DELETE'
-        )
+        );
+    });
+
+    $('#modal-cancel-button').click(function(){
+        $('#validation-box').modal('hide');
+        $('#validation-box-body').empty();
     });
 
     function addContent(){

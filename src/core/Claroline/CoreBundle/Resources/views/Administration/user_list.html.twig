@@ -18,10 +18,7 @@
                 <td> - </td>
             {% else %}
                 <td>
-                    <a class="link-delete-user" id='link-delete-user-{{user.getId()}}'
-                        href="{{ path('claro_admin_delete_user', {'userId': user.getId()}) }}">
-                        {{ 'delete'|trans({}, 'platform') }}
-                    </a>
+                   <input type="checkbox" value="{{ user.id }}" class="chk-user" align="center"></input>
                 </td>
             {% endif %}
         {% endif %}
