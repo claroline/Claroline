@@ -110,4 +110,35 @@ abstract class AbstractRoleSubject
 
         return $roles;
     }
+
+    /**
+     * Checks if the subject has a given role. This method will explore
+     * role hierarchies if necessary.
+     *
+     * @param string $roleName
+     *
+     * @return boolean
+     */
+    public function hasRole($roleName)
+    {
+        if (in_array($roleName, $this->getRoles())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the subject roles as an array of sting values
+     */
+    public function getRoles()
+    {
+        $roleNames = array();
+
+        foreach ($this->getOwnedRoles(true) as $role) {
+            $roleNames[] = $role->getName();
+        }
+
+        return $roleNames;
+    }
 }

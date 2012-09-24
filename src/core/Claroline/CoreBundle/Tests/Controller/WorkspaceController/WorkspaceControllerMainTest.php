@@ -6,12 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadManyUsersData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadManyGroupsData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
-class WorkspaceControllerTest extends FunctionalTestCase
+class WorkspaceControllerMainTest extends FunctionalTestCase
 {
     protected function setUp()
     {
@@ -73,66 +69,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(6, $crawler->filter('.row-workspace')->count());
-    }
-
-    public function testDeleteGroupFromWorkspace()
-    {
-        $this->loadFixture(new LoadRoleData());
-        $this->loadFixture(new LoadManyUsersData());
-        $this->loadFixture(new LoadManyGroupsData());
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-        $this->client->request('DELETE', "workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/group/{$this->getFixtureReference('group/manyGroup1')->getId()}");
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(0, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
-    public function testLimitedGroupList()
-    {
-        $this->loadFixture(new LoadRoleData());
-        $this->loadFixture(new LoadManyUsersData());
-        $this->loadFixture(new LoadManyGroupsData());
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-
-        $response = $this->client->getResponse()->getContent();
-        $groups = json_decode($response);
-        $this->assertEquals(13, count($groups));
-    }
-
-    public function testPaginatedGroupsOfWorkspace()
-    {
-        $this->loadFixture(new LoadRoleData());
-        $this->loadFixture(new LoadGroupData);
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/group/{$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));;
-    }
-
-    public function testSearchUnregisteredGroupsByNameWithAjax()
-    {
-        $this->loadFixture(new LoadRoleData());
-        $this->loadFixture(new LoadGroupData());
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/group/search/a", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-
-        $response = $this->client->getResponse()->getContent();
-        $groups = json_decode($response);
-        $this->assertEquals(1, count($groups));
     }
 
     //111111111111111111111111111111111
@@ -205,7 +141,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/users/unregistered");
          $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
     }
 
     public function testUserCantAccessUnregisteredUserList()
@@ -245,58 +180,17 @@ class WorkspaceControllerTest extends FunctionalTestCase
          $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-
-    //66666666666666666666666666666666666
-    //++++++++++++++++++/
-    // TEST ADD GROUPS +/
-    //++++++++++++++++++/
-
-    public function testAddGroup()
+    public function testDisplayUnregisteredGroupList()
     {
-        $this->loadFixture(new LoadRoleData());
-        $this->loadFixture(new LoadGroupData);
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/group/{$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $response = $this->client->getResponse()->getContent();
-        $groups = json_decode($response);
-        $this->assertEquals(1, count($groups));
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));;
+         $this->logUser($this->getFixtureReference('user/user'));
+         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
+         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAddGroupIsProtected()
+    public function testUserCantAccessUnregisteredGroupList()
     {
-        $this->markTestSkipped('not implemented yet');
-    }
-
-    public function testMultiAddGroup()
-    {
-        $this->loadFixture(new LoadRoleData());
-        $this->loadFixture(new LoadGroupData);
-
-        $groupA = $this->getFixtureReference('group/group_a')->getId();
-        $groupB = $this->getFixtureReference('group/group_b')->getId();
-        $groupC = $this->getFixtureReference('group/group_c')->getId();
-
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?0={$groupA}&1={$groupB}&2={$groupC}"
-        );
-
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));;
-    }
-
-    public function testMultiAddGroupIsProtected()
-    {
-        $this->markTestSkipped('not implemented yet');
+         $this->logUser($this->getFixtureReference('user/user'));
+         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
+         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 }

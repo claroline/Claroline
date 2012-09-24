@@ -159,7 +159,7 @@ class CreateGroupsCommand extends ContainerAwareCommand
 
     private function createGroupName()
     {
-        $name = "{$this->groupsYears[rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[rand(0, $this->maxBasicGroupNameOffset)]} - ".rand(0, 1000);
+        $name = "{$this->groupsYears[mt_rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[mt_rand(0, $this->maxBasicGroupNameOffset)]} - ".mt_rand(0, 1000);
 
         return $name;
     }

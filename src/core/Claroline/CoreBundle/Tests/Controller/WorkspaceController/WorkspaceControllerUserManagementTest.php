@@ -4,9 +4,8 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadManyUsersData;
 
-class WorkspaceControllerTestUserManagement extends FunctionalTestCase
+class WorkspaceControllerUserManagementTest extends FunctionalTestCase
 {
-
     protected function setUp()
     {
         parent::setUp();
@@ -158,8 +157,7 @@ class WorkspaceControllerTestUserManagement extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request('PUT', "/workspaces/{$pwu->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
-        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
-        );
+        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId())));
         $crawler = $this->client->request('DELETE', "/workspaces/{$pwu->getId()}/users?0={$this->getFixtureReference('user/user')->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
@@ -177,8 +175,7 @@ class WorkspaceControllerTestUserManagement extends FunctionalTestCase
         $this->client->request('PUT', "/workspaces/{$pwu->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->client->request('GET', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $pwu->getManagerRole()->getId()))
-        );
+        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $pwu->getManagerRole()->getId())));
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->client->request(
             'GET', "/workspaces/{$pwu->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -186,7 +183,7 @@ class WorkspaceControllerTestUserManagement extends FunctionalTestCase
         $users = json_decode($this->client->getResponse()->getContent());
 
         foreach ($users as $user) {
-            $this->assertEquals(' Manager', $user->roles);
+            $this->assertEquals('Manager', $user->roles);
         }
     }
 

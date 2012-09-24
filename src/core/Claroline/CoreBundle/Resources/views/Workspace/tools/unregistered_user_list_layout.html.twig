@@ -37,12 +37,13 @@
          data-workspaceId="{{workspace.getId()}}">
     </div>
     <div id="user-search-div">
+        <p>
         <input type="text" id="search-modal-user-txt" class="search-query" value="" />
         <input type="button" id="search-button" value ="search" class="btn btn-secondary"/>
         <input type="button" id="reset-button" class="btn btn-secondary" value="reset"/>
         <a href="#" class="btn btn-primary" id="btn-save-users"> {{ 'add'|trans({}, 'platform') }}</a>
-        <br/>
-    </div><br/>
+        <p/>
+    </div>
     <form id="list-user-form" >
         <div id="user-checkboxes">
             <table id="user-table-checkboxes" class="table table-striped table-bordered table-condensed">

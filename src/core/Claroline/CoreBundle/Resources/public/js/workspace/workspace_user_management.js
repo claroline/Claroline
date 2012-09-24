@@ -21,7 +21,7 @@
 
     $('.button-parameters-user').live('click', function(e){
         var route = Routing.generate(
-            'claro_workspace_tools_show_user_parameters',
+            'claro_workspace_tools_show_group_parameters',
             {'userId': $(this).attr('data-user-id'), 'workspaceId': twigWorkspaceId}
         );
 
