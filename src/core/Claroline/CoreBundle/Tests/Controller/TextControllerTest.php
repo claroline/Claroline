@@ -25,14 +25,14 @@ class TextControllerTest extends FunctionalTestCase
     public function testAdd()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
+        $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
         $this->assertEquals('This is a text', $text->name);
     }
 
     public function testDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
+        $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
         $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->resource_id}");
         $node = $crawler->filter('#text_content');
         $this->assertTrue(strpos($node->text(), 'hello world') !== false);
@@ -41,7 +41,7 @@ class TextControllerTest extends FunctionalTestCase
     public function testEditByRefAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $text = $this->addText('This is a text', 'hello world', $this->pwr[0]->getId());
+        $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
         $textId = $text->{'resource_id'};
         $crawler = $this->client->request('GET', "/text/form/edit/{$textId}");
         $form = $crawler->filter('button[type=submit]')->form();
@@ -67,7 +67,7 @@ class TextControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request(
-            'POST', "/resource/create/text/{$this->pwr[0]->getId()}"
+            'POST', "/resource/create/text/{$this->pwr->getId()}"
         );
 
         $form = $crawler->filter('#text_form');

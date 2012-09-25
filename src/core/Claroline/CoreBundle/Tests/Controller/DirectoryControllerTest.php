@@ -46,10 +46,10 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
-        $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->addResource($rootDir, $this->pwr->getId(), 'directory');
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count(get_object_vars($dir)));
+        $this->assertEquals(1, count($dir));
     }
 
     public function testUserCanCreateSubResource()
@@ -57,16 +57,16 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
-        $dirRi = $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
+        $dirRi = $this->addResource($rootDir, $this->pwr->getId(), 'directory');
         $object = new File();
         $object->setName('file');
         $object->setShareType(1);
         $object->setSize(42);
         $object->setHashName('hashName');
         $this->addResource($object, $dirRi->getId(), 'file');
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count(get_object_vars($dir)));
+        $this->assertEquals(1, count($dir));
     }
 
     public function testUserCanRemoveDirectoryAndItsContent()
@@ -74,12 +74,12 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
-        $dirRi = $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
+        $dirRi = $this->addResource($rootDir, $this->pwr->getId(), 'directory');
         $object = new Directory();
         $object->setName('child_dir');
         $this->addResource($object, $dirRi->getId(), 'directory');
         $this->client->request('GET', "/resource/delete/{$dirRi->getId()}");
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($dir));
     }
