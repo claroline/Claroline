@@ -1,55 +1,63 @@
 //window.onload(function(){alert("loading...")});
 (function () {
-    $('html, body').animate({scrollTop: 0}, 0);
-    $('#loading').hide();
-    var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
-    addContent();
-
     var loading = false;
+    var stop = false;
+    var mode = 0; //0 = standard || 1 = search
+    var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
+
+    $('html, body').animate({
+        scrollTop: 0
+    }, 0);
+    $('#loading').hide();
+
+    var standardRoute = function(){
+        return Routing.generate('claro_admin_paginated_group_user_list', {
+            'offset' : $('.row-user').length,
+            'groupId': groupId
+        });
+    }
+
+    //fake one and wrong url.
+    var searchRoute = function(){
+        return Routing.generate('claro_admin_search_groupless_users', {
+            'offset' : $('.row-user').length,
+            'groupId': groupId,
+            'search':  document.getElementById('search-user-txt').value
+        })
+    }
+
+    lazyloadUsers(standardRoute);
 
     $(window).scroll(function(){
-        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false){
-            loading = true;
-            $('#loading').show();
-            var route = Routing.generate('claro_admin_paginated_group_user_list', {
-                'offset' : $('.row-user').length,
-                'groupId': groupId
-            });
-            ClaroUtils.sendRequest(route, function(users){
-               $('#user-table-body').append(Twig.render(user_list, {'users': users}));
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
+            if(mode == 0){
+                lazyloadUsers(standardRoute);
+            } else {
+                lazyloadUsers(searchRoute);
+            }
+        }
+    });
+
+    function lazyloadUsers(route){
+        loading = true;
+        $('#loading').show();
+        ClaroUtils.sendRequest(
+            route(),
+            function(users){
+                $('#user-table-body').append(Twig.render(user_list_short, {
+                    'users': users
+                }));
                 loading = false;
                 $('#loading').hide();
-            })
-        }
-    });
-
-    $('.link-delete-user').live('click', function(e){
-        e.preventDefault();
-        var userId = $(this).attr('data-user-id');
-        var route = Routing.generate('claro_admin_delete_user_from_group', {'groupId': groupId, 'userId': userId});
-        var element = $(this).parent().parent();
-
-        ClaroUtils.sendRequest(
-            route,
-            function(){
-                element.remove();
+                if (users.length == 0) {
+                    stop = true;
+                }
             },
-            undefined,
-            'DELETE'
+            function(){
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadUsers(route)
+                }
+            }
         )
-    });
-
-    function addContent(){
-        if($(window).height() >= $(document).height()){
-            var route = Routing.generate('claro_admin_paginated_group_user_list', {
-                'offset' : $('.row-user').length,
-                'groupId': groupId
-            });
-
-            ClaroUtils.sendRequest(route, function(users){
-                $('#user-table-body').append(Twig.render(user_list, {'users': users}));
-                addContent();
-            })
-        }
     }
 })();
