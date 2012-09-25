@@ -14,6 +14,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->loadGroupFixture();
+        var_dump('jemmpa les esclaliers');
         $this->configHandler = $this->client
             ->getContainer()
             ->get('claroline.config.platform_config_handler');

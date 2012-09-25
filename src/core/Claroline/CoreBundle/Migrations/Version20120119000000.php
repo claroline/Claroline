@@ -111,6 +111,9 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_group'), array('group_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+
+        //not working (yet)
+//        $table->addUniqueIndex(array('user_id', 'group_id'));
     }
 
     private function createWorkspaceTable(Schema $schema)
