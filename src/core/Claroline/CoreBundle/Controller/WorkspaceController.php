@@ -682,7 +682,7 @@ class WorkspaceController extends Controller
         $roles = $workspace->getWorkspaceRoles();
         $groupIds = array($group->getId());
         $this->checkRemoveManagerRoleIsValid($groupIds, $workspace, 'Group');
-
+        
         foreach ($roles as $role) {
             $group->removeRole($role);
         }
