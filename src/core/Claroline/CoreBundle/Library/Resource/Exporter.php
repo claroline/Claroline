@@ -55,13 +55,13 @@ class Exporter
      *
      * @return file
      */
-    public function multiExport($ids)
+    public function exportResourceInstances($ids, $logger = null)
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $instanceIds = $this->getClassicExportList($ids);
+        $instanceIds = $this->expandResourceInstanceIds($ids);
 
         if ($instanceIds == null) {
             throw new \LogicException("You must select some resources to export.");
@@ -78,10 +78,10 @@ class Exporter
                 $obj = $event->getItem();
 
                 if ($obj != null) {
-                    $archive->addFile($obj, $instance->getPath());
+                    $archive->addFile($obj, $instance->getPathForDisplay());
                 }
             } else {
-                $archive->addEmptyDir($instance->getName());
+                $archive->addEmptyDir($instance->getPathForDisplay());
             }
         }
 
@@ -91,14 +91,14 @@ class Exporter
     }
 
     /**
-     * Gets the list of the instances wich will be exported. The instanceIds array is given by the dynatree resource tree and
-     * contains the minimal amount of informations to retrieve every resource needed.
+     * Add the list of the instances under the given IDs (if they are directories)
+     * to the given list of instanceIds.
      *
-     * @param array $instanceIds
+     * @param array $instanceIds List of instances to retrieve.
      *
      * @return array $toAppend
      */
-    public function getClassicExportList($instanceIds)
+    public function expandResourceInstanceIds($instanceIds)
     {
         $repoIns = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $dirIds = array();
@@ -112,27 +112,15 @@ class Exporter
         $toAppend = array();
 
         foreach ($dirIds as $dirId) {
-            $found = false;
-            foreach ($resIds as $resId) {
-                $res = $repoIns->find($resId);
+            $directoryInstance = $repoIns->find($dirId);
+            $children = $repoIns->getChildren($directoryInstance, false);
 
-                if ($res->getRoot() == $dirId) {
-                    $found = true;
-                }
-            }
-
-            if (true != $found) {
-                $directoryInstance = $repoIns->find($dirId);
-                $children = $repoIns->children($directoryInstance, false);
-
-                foreach ($children as $child) {
-                    if ($child->getResource()->getResourceType()->getType() != 'directory') {
-                        $toAppend[] = $child->getId();
-                    }
+            foreach ($children as $child) {
+                if ($child->getResource()->getResourceType()->getType() != 'directory') {
+                    $toAppend[] = $child->getId();
                 }
             }
         }
-
 
         $merge = array_merge($toAppend, $resIds);
         $merge = array_merge($merge, $dirIds);
@@ -148,7 +136,7 @@ class Exporter
      */
     private function addDirectoryToArchive(ResourceInstance $resourceInstance, \ZipArchive $archive)
     {
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($resourceInstance, false);
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildren($resourceInstance, false);
         $archive->addEmptyDir($resourceInstance->getName());
 
         foreach ($children as $child) {
@@ -162,6 +150,9 @@ class Exporter
                     $path = $this->getRelativePath($resourceInstance, $child, '');
                     $archive->addFile($obj, $resourceInstance->getName().DIRECTORY_SEPARATOR.$path . $child->getName());
                 }
+            } else {
+                $path = $this->getRelativePath($resourceInstance, $child, '');
+                $archive->addEmptyDir($resourceInstance->getName().DIRECTORY_SEPARATOR.$path . $child->getName());
             }
         }
 

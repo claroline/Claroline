@@ -208,7 +208,7 @@ class Manager
            throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, false);
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildren($directoryInstance, false);
         foreach ($children as $child) {
             $rsrc = $child->getResource();
             if ($rsrc->getInstanceCount() === 1) {

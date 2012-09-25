@@ -10,12 +10,14 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
+ * @Gedmo\Tree(type="materializedPath")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceInstanceRepository")
  * @ORM\Table(name="claro_resource_instance")
  * @Gedmo\Tree(type="nested")
  */
 class ResourceInstance
 {
+    const PATH_SEPARATOR = '`';
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -24,10 +26,33 @@ class ResourceInstance
     protected $id;
 
     /**
+     * @Gedmo\TreePath(separator="`")
+     * @ORM\Column(name="path", type="string", length=3000, nullable=true)
+     */
+    protected $path;
+
+    /**
+     * @Gedmo\TreePathSource
      * @ORM\Column(type="string", length=255, name="name")
      * @Assert\NotBlank()
      */
     protected $name;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
+     *      inversedBy="children"
+     * )
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $parent;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    protected $lvl;
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -53,46 +78,11 @@ class ResourceInstance
     /**
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      inversedBy="resourceInstances",
-     *      fetch="EAGER"
+     *      inversedBy="resourceInstances"
      * )
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */
     protected $abstractResource;
-
-    /**
-     * @ORM\Column(name="lft", type="integer")
-     * @Gedmo\TreeLeft
-     */
-    protected $lft;
-
-    /**
-     * @ORM\Column(name="lvl", type="integer")
-     * @Gedmo\TreeLevel
-     */
-    protected $lvl;
-
-    /**
-     * @ORM\Column(name="rgt", type="integer")
-     * @Gedmo\TreeRight
-     */
-    protected $rgt;
-
-    /**
-     * @ORM\Column(name="root", type="integer", nullable=true)
-     * @Gedmo\TreeRoot
-     */
-    protected $root;
-
-    /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
-     *      inversedBy="children"
-     * )
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $parent;
 
     /**
      * @ORM\OneToMany(
@@ -111,6 +101,8 @@ class ResourceInstance
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
+
+
 
     /**
      * Returns the resource instance id.
@@ -263,26 +255,6 @@ class ResourceInstance
     }
 
     /**
-     * Returns the left value of the instance in the nested tree.
-     *
-     * @return integer
-     */
-    public function getLft()
-    {
-        return $this->lft;
-    }
-
-    /**
-     * Returns the right value of the instance in the nested tree.
-     *
-     * @return integer
-     */
-    public function getRgt()
-    {
-        return $this->rgt;
-    }
-
-    /**
      * Return the lvl value of the instance in the nested tree.
      *
      * @return integer
@@ -293,39 +265,38 @@ class ResourceInstance
     }
 
     /**
-     * Returns the root value of the instance in the nested tree.
-     *
-     * @return integer
+     * Returns the "raw" path of the instance
+     * (the path merge names and ids of all items).
+     * Eg.: "Root-1/subdir-2/file.txt-3/"
+     * @return string
      */
-    public function getRoot()
-    {
-        return $this->root;
+    public function getPath() {
+        return $this->path;
     }
 
     /**
-     * Returns the virtual pathname.
+     * Returns the path cleaned from its ids.
+     * Eg.: "Root/subdir/file.txt"
+     * @return
      */
-    public function getPath()
+    public function getPathForDisplay()
     {
-        $path='';
-
-        if (null != $this->getParent()) {
-            $path = $this->parent->getPath() . '/' . $this->getName();
-        } else {
-            $path = '/' . $this->getName();
-        }
-
-        return addslashes($path);
+        return self::convertPathForDisplay($this->path);
     }
 
     /**
      * Sets the resource name.
+     * @throw an exception if the name contains the path separator ('/').
      *
      * @param string $name
      */
     public function setName($name)
     {
-        $this->name = $name;
+        if ( strpos(self::PATH_SEPARATOR, $name) === false ) {
+            $this->name = $name;
+        } else {
+            throw new Exception("Invalid character ".self::PATH_SEPARATOR." in resource name.");
+        }
     }
 
     /**
@@ -337,4 +308,21 @@ class ResourceInstance
     {
         return $this->name;
     }
+
+
+    /**
+     * Convert a path for display: remove ids.
+     * @param type $path
+     * @return string
+     */
+    public static function convertPathForDisplay($path)
+    {
+        $pathForDisplay = preg_replace('(-\d+'.ResourceInstance::PATH_SEPARATOR.')','/', $path);
+        if ($pathForDisplay !== null && strlen($pathForDisplay)>0)
+            $pathForDisplay = substr_replace($pathForDisplay, "", -1);
+        return $pathForDisplay;
+    }
+
+
+
 }

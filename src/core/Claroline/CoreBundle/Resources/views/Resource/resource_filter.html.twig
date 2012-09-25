@@ -3,17 +3,17 @@
 <input class="field-res-name" style="width:125px"/>
 <select class="select-root" style="width:125px" multiple="multiple">
     {% for workspaceroot in workspaceroots %}
-        <option value={{ workspaceroot.id }}> {{ workspaceroot.name }} </option>
+        <option value="{{ workspaceroot.path }}"> {{ workspaceroot.name }} </option>
     {% endfor %}
 </select>
 <select class="select-type" style="width:125px" multiple="multiple">
     {% for resourceType in resourceTypes %}
-        <option value={{ resourceType.type }}> {{ resourceType.type }} </option>
+        <option value="{{ resourceType.type }}"> {{ resourceType.type }} </option>
     {% endfor %}
 </select>
 <select class="select-mime-type" style="width:125px" multiple="multiple">
     {% for resourceIcon in resourceIcons %}
-        <option value={{ resourceIcon.type }}> {{ resourceIcon.type }} </option>
+        <option value="{{ resourceIcon.type }}"> {{ resourceIcon.type }} </option>
     {% endfor %}
     </select>
 
