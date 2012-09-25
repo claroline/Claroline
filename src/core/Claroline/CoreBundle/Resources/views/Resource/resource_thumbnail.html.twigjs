@@ -27,8 +27,8 @@
                 <a class="link-navigate-instance" href="#">
             {% endif %}
             <img id="instance-img-{{ instance.id }}" class="instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
-                 {% if instance.path is defined %}
-                    title="{{ instance.path }}"
+                 {% if instance.pathfordisplay is defined %}
+                    title="{{ instance.pathfordisplay }}"
                  {% endif %}
              />
             {% if instance.type == "directory" %}

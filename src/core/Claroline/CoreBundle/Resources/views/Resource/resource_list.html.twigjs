@@ -8,15 +8,15 @@
             <a class="link-navigate-instance" href="#">
         {% endif %}
         <img height="30px" id="instance-img-{{ instance.id }}" class="instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
-                {% if instance.path is defined %}
-                title="{{ instance.path }}"
+                {% if instance.pathfordisplay is defined %}
+                title="{{ instance.pathfordisplay }}"
                 {% endif %}
             />
         {% if instance.type == "directory" %}
             </a>
         {% endif %}
         <label for="{{ instance.id }}">
-            <span class="res-name" title="{{ instance.path }}">{{ instance.name }}</span>
+            <span class="res-name" title="{{ instance.pathfordisplay }}">{{ instance.name }}</span>
         </label>
         <span class="resource-bar">
             <span class="dropdown" href="#"><i class="icon-caret-down"></i></span>
