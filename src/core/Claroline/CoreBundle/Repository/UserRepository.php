@@ -230,4 +230,59 @@ class UserRepository extends EntityRepository
 
        return $query->getResult();
     }
+
+    public function findUnregisteredUsersFromGroup($groupId, $offset, $limit)
+    {
+        $dql = "
+            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            WHERE u NOT IN (
+                SELECT us FROM Claroline\CoreBundle\Entity\User us
+                JOIN us.groups gs
+                WHERE gs.id = :groupId
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('groupId', $groupId)
+              ->setFirstResult($offset)
+              ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function searchUnregisteredUsersFromGroup($groupId, $search, $offset, $limit)
+    {
+        $search = strtoupper($search);
+
+        $dql = "
+            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            WHERE UPPER(u.lastName) LIKE :search
+            AND u NOT IN (
+                SELECT us FROM Claroline\CoreBundle\Entity\User us
+                JOIN us.groups gr
+                WHERE gr.id = :groupId
+            )
+            OR UPPER(u.firstName) LIKE :search
+            AND u NOT IN (
+                SELECT use FROM Claroline\CoreBundle\Entity\User use
+                JOIN use.groups gro
+                WHERE gro.id = :groupId
+            )
+            OR UPPER(u.lastName) LIKE :search
+            AND u NOT IN (
+                SELECT user FROM Claroline\CoreBundle\Entity\User user
+                JOIN user.groups grou
+                WHERE grou.id = :groupId
+            )";
+
+       $query = $this->_em->createQuery($dql);
+        $query->setParameter('groupId', $groupId)
+              ->setParameter('search', "%{$search}%")
+              ->setFirstResult($offset)
+              ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
 }
