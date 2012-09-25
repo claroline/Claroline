@@ -2,6 +2,11 @@
 [
 {% for group in groups %}
 {% set i = i+1 %}
-{"id": {{group.getId()}}, "name": "{{group.getName()}}"}{% if i < groups|length %}, {% endif %}
+{
+    "id": {{group.getId()}},
+    "name": "{{group.getName()}}",
+    "roles": "{% for role in  group.getWorkspaceRoleCollection() %}{{role.getTranslationKey()}}{% if not loop.last %} ,{% endif %}{% endfor %}"
+}
+{% if i < groups|length %}, {% endif %}
 {% endfor %}
 ]

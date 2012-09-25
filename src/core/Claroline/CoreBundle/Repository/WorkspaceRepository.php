@@ -13,10 +13,11 @@ class WorkspaceRepository extends EntityRepository
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.roles wr
             JOIN wr.users u
-            WHERE u.id = '{$user->getId()}'
+            WHERE u.id = :userId
             AND w.type != 0
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }
@@ -37,10 +38,11 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles wr JOIN wr.users u WHERE u.id = '{$user->getId()}'
+            JOIN w.roles wr JOIN wr.users u WHERE u.id = :userId
             ";
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }

@@ -1,131 +1,116 @@
 (function(){
+    $('html, body').animate({
+        scrollTop: 0
+    }, 0);
+
     var twigWorkspaceId = document.getElementById('twig-attributes').getAttribute('data-workspaceId');
-    var twigDeleteTranslation = document.getElementById('twig-attributes').getAttribute('data-translation.delete');
+    var loading = false;
+    var stop = false;
+    var mode = 0; //0 = standard || 1 = search
 
-    var nbIterationGroups=0;
+    var standardRoute = function(){
+        return Routing.generate('claro_workspace_registered_groups_paginated', {
+                    'workspaceId':twigWorkspaceId,
+                    'offset': $('.row-group').length
+                });
+    }
 
-    $('#group-loading').hide();
+    var searchRoute = function(){
+        return Routing.generate('claro_workspace_search_registered_groups', {
+                    'workspaceId':twigWorkspaceId,
+                    'offset': $('.row-group').length,
+                    'search': document.getElementById('search-group-txt').value
+                });
+    }
 
-    $('#bootstrap-modal').modal({
-        show: false,
-        backdrop: false
+    lazyloadGroups(standardRoute);
+
+    $(window).scroll(function(){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
+            if(mode == 0){
+                lazyloadGroups(standardRoute);
+            } else {
+                lazyloadGroups(searchRoute);
+            }
+        }
     });
 
-    $('.link-delete-group').live('click', function(e){
-        var route = Routing.generate('claro_workspace_delete_group', {'groupId': $(this).attr('data-group-id'), 'workspaceId': twigWorkspaceId});
-        var element = $(this).parent().parent();
+    $('#delete-group-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html('removing '+ $('.chk-group:checked').length +' group(s)');
+    });
+
+   $('#modal-valid-button').click(function(){
+        var parameters = {};
+        var i = 0;
+        $('.chk-group:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        });
+
+        parameters.workspaceId = twigWorkspaceId;
+        var route = Routing.generate('claro_workspace_delete_groups', parameters);
         ClaroUtils.sendRequest(
             route,
-            function(data){
-                element.remove();
+            function(){
+                $('.chk-group:checked').each(function(index, element){
+                     $(element).parent().parent().remove();
+                });
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
             },
             undefined,
             'DELETE'
-        )
-    })
-
-    $('#bootstrap-modal').on('hidden', function(){
-        /*$('#modal-login').empty();
-        $('#modal-body').show();*/
-        //the page must be reloaded or it'll break dynatree
-        if ($('#modal-login').find('form').attr('id') == 'login_form'){
-            window.location.reload();
-        }
-    })
-
-
-    $('#add-group-button').click(function(){
-         $('#bootstrap-modal-group').modal('show');
+        );
     });
 
-    $('#btn-save-groups').on('click', function(event){
-        var parameters = {};
-        var i = 0;
-        $('.checkbox-group-name:checked').each(function(index, element){
-            parameters[i] = element.value;
-            i++;
-        })
-        parameters.workspaceId = twigWorkspaceId;
-        var route = Routing.generate('claro_workspace_multiadd_group', parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(data){createGroupCallBackLi(data)},
-            undefined,
-            'PUT'
-        );
-        $('#bootstrap-modal-group').modal('hide');
+    $('#modal-cancel-button').click(function(){
+        $('#validation-box').modal('hide');
+        $('#validation-box-body').empty();
+    });
+
+    $('.search-group-button').click(function(){
         $('.checkbox-group-name').remove();
-        $('#group-checkboxes').empty();
-        nbIterationGroups = 0;
+        $('#group-table-body').empty();
+        stop = false;
+        if (document.getElementById('search-group-txt').value != ''){
+            mode = 1;
+            lazyloadGroups(searchRoute);
+        } else {
+            mode = 0;
+            lazyloadGroups(standardRoute);
+        }
     });
 
-    $('#lazy-load-group-button').click(function(){
-        $('#group-loading').show();
-        var route = Routing.generate('claro_workspace_groups_paginated', {'workspaceId': twigWorkspaceId, 'page': nbIterationGroups})
+    function lazyloadGroups(route){
+        loading = true;
+        $('#loading').show();
         ClaroUtils.sendRequest(
-            route,
-            function(data){
-                if (nbIterationGroups == 0){
-                    $('.checkbox-group-name').remove();
-                    $('#group-table-checkboxes-body').empty();
+            route(),
+            function(groups){
+                $('#group-table-body').append(Twig.render(group_list, {
+                    'groups': groups
+                }));
+                loading = false;
+                $('#loading').hide();
+                if(groups.lenght == 0){
+                    stop = true;
                 }
-                nbIterationGroups++;
-                createGroupsChkBoxes(data);
-                $('#group-loading').hide();
+            },
+            function(){
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadGroups(route)
+                }
             }
+        )
+    }
+
+    $('.button-parameters-group').live('click', function(e){
+        var route = Routing.generate(
+            'claro_workspace_tools_show_group_parameters',
+            {'groupId': $(this).parent().parent().attr('data-group-id'), 'workspaceId': twigWorkspaceId}
         );
-    });
 
-    $('#search-group-button').click(function(){
-        var search = document.getElementById('search-group-txt').value;
-        if (search != '')  {
-            $('#group-loading').show();
-            nbIterationGroups = 0;
-            var route = Routing.generate('claro_workspace_search_unregistered_groups',
-            {'search': search, 'workspaceId': twigWorkspaceId});
-            ClaroUtils.sendRequest(
-                route,
-                function(data){
-                    $('.checkbox-group-name').remove();
-                    $('#group-table-checkboxes-body').empty();
-                    createGroupsChkBoxes(data);
-                    $('#group-loading').hide();
-                }
-            );
-        }
-    });
-
-    function createGroupsChkBoxes(JSONString)
-    {
-        JSONObject = eval(JSONString);
-        //chkboxes creation
-        var i=0;
-        while (i<JSONObject.length)
-        {
-            var row = '<tr>'
-            +'<td align="center"><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
-            +'<td align="center">'+JSONObject[i].name+'</td>'
-            +'</tr>';
-            $('#group-table-checkboxes-body').append(row);
-            i++;
-        }
-    }
-
-    function createGroupCallBackLi(JSONString)
-    {
-        JSONObject = eval(JSONString);
-
-        var i=0;
-        while (i<JSONObject.length)
-        {
-            var row = '<tr class="row-group">'
-            + '<td align="center">'+JSONObject[i].name+'</td>'
-            + '<td>'
-            + '<a href="#" data-group-id="'+JSONObject[i].id+'" id="link-delete-group-'+JSONObject[i].id+'" class="link-delete-group">'+twigDeleteTranslation+"</a>"
-            + '</td>'
-            $('#body-tab-group').append(row);
-            i++;
-        }
-    }
-
+        window.location.href = route;
+    })
 })()

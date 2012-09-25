@@ -7,21 +7,29 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class GroupRepository extends EntityRepository
 {
-    public function getGroupsOfWorkspace(AbstractWorkspace $workspace)
+    public function getGroupsOfWorkspace(AbstractWorkspace $workspace, $role = null)
     {
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
-            JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = '{$workspace->getId()}'
+            JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :id
        ";
+
+        if ($role != null) {
+            $dql.= "AND wr.id = :roleId";
+        }
+
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId());
+
+        if ($role != null){
+            $query->setParameter('roleId', $role->getId());
+        }
 
         return $query->getResult();
     }
 
-    public function getLazyUnregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $numberIteration, $groupAmount)
+    public function getLazyUnregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
-        $offset = $numberIteration * $groupAmount;
-
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
             WHERE g NOT IN
@@ -29,42 +37,70 @@ class GroupRepository extends EntityRepository
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 JOIN gr.workspaceRoles wr
                 JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
+                WHERE w.id = :id
             )
        ";
 
         $query = $this->_em->createQuery($dql);
-        $query->setMaxResults($groupAmount);
+        $query->setParameter('id', $workspace->getId());
+        $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
         return $query->getResult();
     }
 
-    public function getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, AbstractWorkspace $workspace)
+    public function searchPaginatedUnregisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
     {
         $search = strtoupper($search);
 
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
-            WHERE UPPER(g.name) LIKE '%" . $search . "%'
+            WHERE UPPER(g.name) LIKE :search
             AND g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 JOIN gr.workspaceRoles wr
                 JOIN wr.workspace w
-                WHERE w.id = '{$workspace->getId()}'
+                WHERE w.id = :id
             )
         ";
 
         $query = $this->_em->createQuery($dql);
-        $query->setMaxResults(200);
+        $query->setParameter('id', $workspace->getId())
+            ->setParameter('search', "%{$search}%")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
 
         return $query->getResult();
     }
 
-    public function findPaginatedGroups($page, $limit)
+    public function searchPaginatedRegisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
     {
-        $offset = $limit * (--$page);
+        $search = strtoupper($search);
+
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            WHERE UPPER(g.name) LIKE :search
+            AND g IN
+            (
+                SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
+                JOIN gr.workspaceRoles wr
+                JOIN wr.workspace w
+                WHERE w.id = :id
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId())
+            ->setParameter('search', "%{$search}%")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function findPaginatedGroups($offset, $limit)
+    {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'g')
             ->add('from', 'Claroline\CoreBundle\Entity\Group g')
@@ -74,5 +110,54 @@ class GroupRepository extends EntityRepository
         $q = $qb->getQuery();
 
         return $q->getResult();
+    }
+
+    public function searchPaginatedGroups($search, $offset, $limit)
+    {
+        $search = strtoupper($search);
+
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            WHERE UPPER(g.name) LIKE :search
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+        $query->setFirstResult($offset);
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function findPaginatedGroupsOfWorkspace($workspaceId, $offset, $limit)
+    {
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId
+       ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+        $query->setFirstResult($offset);
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function getRoleOfWorkspace($groupId, $workspaceId)
+    {
+        $dql = "
+            SELECT wr FROM Claroline\CoreBundle\Entity\WorkspaceRole wr
+            JOIN wr.workspace ws
+            JOIN wr.groups g
+            WHERE ws.id = :workspaceId
+            AND g.id = :groupId
+       ";
+
+       $query = $this->_em->createQuery($dql);
+       $query->setParameter('workspaceId', $workspaceId);
+       $query->setParameter('groupId', $groupId);
+
+       return $query->getResult();
     }
 }

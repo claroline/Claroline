@@ -1,42 +1,27 @@
- <table class="table table-striped table-bordered table-condensed" id="group-table">
-        <thead>
-            <tr>
-                <th>{{ 'name'|trans({}, 'platform') }}</th>
-                <th>{{ 'role'|trans({}, 'platform') }}</th>
-                <th>{{ 'users'|trans({}, 'platform') }}</th>
-                <th>{{ 'resources'|trans({}, 'platform') }}</th>
-                <th>{{ 'settings'|trans({}, 'platform') }}</th>
-                <th>{{ 'move'|trans({}, 'platform') }}</th>
-                <th>{{ 'delete'|trans({}, 'platform') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for group in groups %}
-                <tr id="group-{{ group.getId() }}" class="row-group"/>
-                    <td>{{ group.getName() }}</td>
-                    <td>
-                        <div id="roleName">
-                            {% for role in group.getWorkspaceRoleCollection() %}
-                                {{ role.getName }}
-                            {% endfor %}
-                        </div>
-                    </td>
-                    <td>
-                        <a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link-show-{{ group.getId() }}">{{ 'show'|trans({}, 'platform') }}</a>
-                    </td>
-                    <td>
-                        <a href="todo">todo</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a>
-                    </td>
-                    <td>
-                        <a href="todo">todo</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('claro_admin_delete_group', {'groupId': group.getId()}) }}" class="link-delete" id="link-delete-{{ group.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-</table>
+{% for group in groups %}
+    <tr id="group-{{ group.getId() }}" class="row-group"/>
+        <td>{{ group.getName() }}</td>
+        <td>
+            <div id="roleName">
+                {% for role in group.getWorkspaceRoleCollection() %}
+                    {{ role.getName }}
+                {% endfor %}
+            </div>
+        </td>
+        <td>
+            <a href="{{ path('claro_admin_group_user_list', {'groupId': group.getId()}) }}" id="link-show-{{ group.getId() }}">{{ 'show'|trans({}, 'platform') }}</a>
+        </td>
+        <td>
+            <a href="todo">todo</a>
+        </td>
+        <td>
+            <a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a>
+        </td>
+        <td>
+            <a href="todo">todo</a>
+        </td>
+        <td>
+            <input type="checkbox" class="chk-group" value="{{ group.getId() }}"></input>
+        </td>
+    </tr>
+{% endfor %}
