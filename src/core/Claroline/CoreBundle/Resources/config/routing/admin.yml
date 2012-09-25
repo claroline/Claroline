@@ -140,6 +140,35 @@ claro_admin_create_group:
     requirements:
       _method: POST
 
+claro_admin_groupless_users:
+    pattern: /group/{groupId}/unregistered/users/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGrouplessUsers }
+    requirements:
+      _method: GET
+      offset: ^(?=.*[0-9].*$)\d*$
+      groupId: ^(?=.*[0-9].*$)\d*$
+    options:
+      expose: true
+
+claro_admin_search_groupless_users:
+    pattern: /group/{groupId}/unregistered/users/{offset}/search/{search}
+    defaults: { _controller: ClarolineCoreBundle:Administration:searchPaginatedGrouplessUsers }
+    requirements:
+      _method: GET
+      offset: ^(?=.*[0-9].*$)\d*$
+      groupId: ^(?=.*[0-9].*$)\d*$
+    options:
+      expose: true
+
+claro_admin_multiadd_user_to_group:
+     pattern: /group/{groupId}/users
+     defaults: { _controller: ClarolineCoreBundle:Administration:multiaddUserstoGroup }
+     requirements:
+       _method: PUT
+       groupId: ^(?=.*[0-9].*$)\d*$
+     options:
+       expose: true
+       
 #SOON TO BE REST
 
 claro_admin_group_user_list:
@@ -147,11 +176,12 @@ claro_admin_group_user_list:
     defaults: { _controller: ClarolineCoreBundle:Administration:groupUserList }
     requirements:
       _method: GET
+      offset: ^(?=.*[0-9].*$)\d*$
 
 #to be refactored
 claro_admin_user_list_addable_to_group:
     pattern: /group/add/{groupId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:userListAddableToGroup }
+    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroupLayout }
 
 #same with PUT
 claro_admin_add_user_to_group:
