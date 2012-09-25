@@ -2,22 +2,25 @@
     var loading = false;
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
+    var groupId = document.getElementById('twig-attributes').getAttribute('data-group-id');
 
-    $('html, body').animate({scrollTop: 0}, 0);
+    $('html, body').animate({
+        scrollTop: 0
+    }, 0);
     $('#loading').hide();
 
     var standardRoute = function(){
-        return Routing.generate('claro_admin_paginated_user_list', {
+        return Routing.generate('claro_admin_groupless_users', {
             'offset' : $('.row-user').length,
-            'format': 'html'
+            'groupId': groupId
         });
     }
 
     var searchRoute = function(){
-        return Routing.generate('claro_admin_paginated_search_user_list', {
-            'format': 'html',
-            'offset': $('.row-group').length,
-            'search': document.getElementById('search-user-txt').value
+        return Routing.generate('claro_admin_search_groupless_users', {
+            'offset' : $('.row-user').length,
+            'groupId': groupId,
+            'search':  document.getElementById('search-user-txt').value
         })
     }
 
@@ -34,6 +37,7 @@
     });
 
    $('#search-user-button').click(function(){
+        $('.checkbox-user-name').remove();
         $('#user-table-body').empty();
         stop = false;
         if (document.getElementById('search-user-txt').value != ''){
@@ -45,37 +49,24 @@
         }
     });
 
-    $('.delete-users-button').click(function(){
-        $('#validation-box').modal('show');
-        $('#validation-box-body').html('removing '+ $('.chk-user:checked').length +' user(s)');
-    });
-
-    $('#modal-valid-button').click(function(){
+    $('.add-users-button').on('click', function(event){
         var parameters = {};
         var i = 0;
         $('.chk-user:checked').each(function(index, element){
             parameters[i] = element.value;
             i++;
-        });
-
-        var route = Routing.generate('claro_admin_multidelete_user', parameters);
+        })
+        parameters.groupId = groupId;
+        var route = Routing.generate('claro_admin_multiadd_user_to_group', parameters);
         ClaroUtils.sendRequest(
             route,
-            function(){
-                $('.chk-user:checked').each(function(index, element){
-                     $(element).parent().parent().remove();
-                });
-                $('#validation-box').modal('hide');
-                $('#validation-box-body').empty();
-            },
+            function(users){alert(users.length+' users added to the group')},
             undefined,
-            'DELETE'
-        );
-    });
-
-    $('#modal-cancel-button').click(function(){
-        $('#validation-box').modal('hide');
-        $('#validation-box-body').empty();
+            'PUT'
+        )
+        $('.chk-user:checked').each(function(index, element){
+             $(element).parent().parent().remove();
+        })
     });
 
     function lazyloadUsers(route){
@@ -84,7 +75,9 @@
         ClaroUtils.sendRequest(
             route(),
             function(users){
-                $('#user-table-body').append(users);
+                $('#user-table-body').append(Twig.render(user_list_short, {
+                    'users': users
+                }));
                 loading = false;
                 $('#loading').hide();
                 if (users.length == 0) {
@@ -99,3 +92,4 @@
         )
     }
 })();
+

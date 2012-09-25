@@ -1,59 +1,102 @@
 (function () {
-    var activePagerItem = 1;
-    var pager = null;
 
-    renderGroups(1);
+    var loading = false;
+    var stop = false;
+    var mode = 0; //0 = standard || 1 = search
 
-    $('.link-delete').live('click', function(e){
-        e.preventDefault();
-        var route = $(this).attr('href');
-        var element = $(this).parent().parent();
-        ClaroUtils.sendRequest(route, function(data){
-            element.remove();
+    $('html, body').animate({scrollTop: 0}, 0);
+    $('#loading').hide();
+
+    var standardRoute = function(){
+        return Routing.generate('claro_admin_paginated_group_list', {
+            'format': 'html',
+            'offset': $('.row-group').length
         })
-    })
+    }
 
+    var searchRoute = function(){
+        return Routing.generate('claro_admin_paginated_search_group_list', {
+            'format': 'html',
+            'offset': $('.row-group').length,
+            'search': document.getElementById('search-group-txt').value
+        })
+    }
 
-    function renderGroups(activePagerItem) {
-        var route = Routing.generate('claro_admin_paginated_group_list', {
-            'page' : activePagerItem,
-            'format': 'html'
-        });
-        ClaroUtils.sendRequest(route, function(groups){
-            $('#group-table').remove();
-            $('#group-list-block').after(groups);
-            if(pager != null){
-                pager.remove();
+    lazyloadGroups(standardRoute);
+
+    $(window).scroll(function(){
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
+            if(mode == 0){
+                lazyloadGroups(standardRoute);
+            } else {
+                lazyloadGroups(searchRoute);
             }
+        }
+    });
 
-            pager = ClaroUtils.renderPager(document.getElementById('twig-attributes').getAttribute('data-pages'), activePagerItem, 'group', $('#group-table'));
-            setPagerActions();
+    $('.delete-groups-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html('removing '+ $('.chk-group:checked').length +' group(s)');
+    });
 
-        })
-    }
-
-    function setPagerActions() {
-        $('.group-paginator-item').on('click', function(e){
-            activePagerItem = e.target.innerHTML;
-            renderGroups(activePagerItem);
+    $('#modal-valid-button').click(function(){
+        var parameters = {};
+        var i = 0;
+        $('.chk-group:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
         });
 
-        $('.group-paginator-next-item').on('click', function(e){
-            activePagerItem++;
-            renderGroups(activePagerItem);
-        })
+        var route = Routing.generate('claro_admin_multidelete_group', parameters);
+        ClaroUtils.sendRequest(
+            route,
+            function(){
+                $('.chk-group:checked').each(function(index, element){
+                     $(element).parent().parent().remove();
+                });
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
+            },
+            undefined,
+            'DELETE'
+        );
+    });
 
-        $('.group-paginator-prev-item').on('click', function(e){
-            activePagerItem--;
-            renderGroups(activePagerItem);
-        })
-    }
+    $('#modal-cancel-button').click(function(){
+        $('#validation-box').modal('hide');
+        $('#validation-box-body').empty();
+    });
 
-    window.onresize = function(e) {
-        if(pager != null) {
-            pager.remove();
+    $('#search-group-button').click(function(){
+        $('#group-table-body').empty();
+        stop = false;
+        if (document.getElementById('search-group-txt').value != ''){
+            mode = 1;
+            lazyloadGroups(searchRoute);
+        } else {
+            mode = 0;
+            lazyloadGroups(standardRoute);
         }
-        pager = ClaroUtils.renderPager(document.getElementById('twig-attributes').getAttribute('data-pages'), activePagerItem, 'user', $('#user-table'), 20);
-        setPagerActions();
+    });
+
+    function lazyloadGroups(route){
+        loading = true;
+        $('#loading').show();
+        ClaroUtils.sendRequest(
+            route(),
+            function(groups){
+                $('#group-table-body').append(groups);
+                loading = false;
+                $('#loading').hide();
+                if (groups.length == 0) {
+                    stop = true;
+                }
+            },
+            function(){
+                if($(window).height() >= $(document).height() && stop == false){
+                    lazyloadGroups(route)
+                }
+            }
+        )
     }
 })();

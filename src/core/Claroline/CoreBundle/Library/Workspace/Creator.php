@@ -32,14 +32,6 @@ class Creator
         $workspace->setType($config->getType());
         $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
-        $this->entityManager->flush();
-        $workspace->initBaseRoles();
-        $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
-        $workspace->getVisitorRole()->setResMask(MaskBuilder::MASK_VIEW);
-        $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
-        $workspace->getCollaboratorRole()->setResMask(MaskBuilder::MASK_VIEW);
-        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
-        $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
         $root = new ResourceInstance();
         $rootDir = new Directory();
         $root->setName($workspace->getCode().' - '.$workspace->getName());
@@ -60,6 +52,14 @@ class Creator
         $this->entityManager->persist($rootDir);
         $this->entityManager->persist($root);
         $this->entityManager->flush();
+        $workspace->initBaseRoles();
+        $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
+        $workspace->getVisitorRole()->setResMask(MaskBuilder::MASK_VIEW);
+        $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
+        $workspace->getCollaboratorRole()->setResMask(MaskBuilder::MASK_VIEW);
+        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
+        $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
+        $this->entityManager->persist($workspace);
 
         if (null !== $manager) {
             $manager->addRole($workspace->getManagerRole());
@@ -67,6 +67,10 @@ class Creator
         }
 
         $this->entityManager->flush();
+        $this->entityManager->detach($rootDir);
+        $this->entityManager->detach($root);
+        //for some reason, it broke the test suite... and that's all.
+//        $this->entityManager->detach($workspace);
 
         return $workspace;
     }

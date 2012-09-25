@@ -1,4 +1,4 @@
-(function(){
+(function () {
     $('html, body').animate({
         scrollTop: 0
     }, 0);
@@ -9,22 +9,21 @@
     var mode = 0; //0 = standard || 1 = search
 
     var standardRoute = function(){
-        return Routing.generate('claro_workspace_registered_users_paginated', {
-                'workspaceId':twigWorkspaceId,
-                'offset': $('.row-user').length
-            });
+        return Routing.generate('claro_workspace_unregistered_users_paginated', {
+            'workspaceId': twigWorkspaceId,
+            'offset': $('.row-user').length
+        });
     }
 
     var searchRoute = function(){
-        return Routing.generate('claro_workspace_search_registered_users', {
+        return Routing.generate('claro_workspace_search_unregistered_users', {
                 'search': document.getElementById('search-user-txt').value,
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            });
+            })
     }
 
     lazyloadUsers(standardRoute);
-    $('#user-loading').hide();
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
@@ -35,15 +34,6 @@
             }
         }
     });
-
-    $('.button-parameters-user').live('click', function(e){
-        var route = Routing.generate(
-            'claro_workspace_tools_show_group_parameters',
-            {'userId': $(this).attr('data-user-id'), 'workspaceId': twigWorkspaceId}
-        );
-
-        window.location.href = route;
-    })
 
     $('#search-button').click(function(){
         $('.checkbox-user-name').remove();
@@ -58,39 +48,41 @@
         }
     });
 
-    $('#delete-user-button').click(function(){
-        $('#validation-box').modal('show');
-        $('#validation-box-body').html('removing '+ $('.chk-delete-user:checked').length +' user(s)');
-    });
-
-    $('#modal-valid-button').click(function(){
+    $('#btn-save-users').on('click', function(event){
         var parameters = {};
         var i = 0;
-        $('.chk-delete-user:checked').each(function(index, element){
+        $('.checkbox-user-name:checked').each(function(index, element){
             parameters[i] = element.value;
             i++;
-        });
-
+        })
         parameters.workspaceId = twigWorkspaceId;
-        var route = Routing.generate('claro_workspace_delete_users', parameters);
+        var route = Routing.generate('claro_workspace_multiadd_user', parameters);
         ClaroUtils.sendRequest(
             route,
-            function(){
-                $('.chk-delete-user:checked').each(function(index, element){
-                     $(element).parent().parent().remove();
-                });
-                $('#validation-box').modal('hide');
-                $('#validation-box-body').empty();
-            },
+            function(users){alert(users.length+' users added to the workspace')},
             undefined,
-            'DELETE'
-        );
+            'PUT'
+        )
+        $('.checkbox-user-name:checked').each(function(index, element){
+             $(element).parent().parent().remove();
+        })
     });
 
-    $('#modal-cancel-button').click(function(){
-        $('#validation-box').modal('hide');
-        $('#validation-box-body').empty();
-    });
+    function createUsersChkBoxes(JSONString)
+    {
+        var i=0;
+        while (i<JSONString.length)
+        {
+            var list = '<tr class="row-user">'
+            +'<td align="center"><input class="checkbox-user-name" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>'
+            +'<td align="center">'+JSONString[i].username+'</td>'
+            +'<td align="center">'+JSONString[i].lastname+'</td>'
+            +'<td align="center">'+JSONString[i].firstname+'</td>'
+            +'</tr>';
+            $('#user-table-checkboxes-body').append(list);
+            i++;
+        }
+    }
 
     function lazyloadUsers(route) {
         loading = true;
@@ -98,7 +90,7 @@
         ClaroUtils.sendRequest(
             route(),
             function(users){
-                $('#user-table-body').append(Twig.render(user_list, {'users': users}));
+                createUsersChkBoxes(users);
                 loading = false;
                 $('#user-loading').hide();
                 if(users.length == 0) {
@@ -112,4 +104,4 @@
             }
         );
     }
-})()
+})();

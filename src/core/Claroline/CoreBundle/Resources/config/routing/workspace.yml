@@ -43,7 +43,7 @@ claro_workspace_delete:
       expose: true
 
 claro_workspace_delete_user:
-    pattern: /{workspaceId}/user/{userId}/
+    pattern: /{workspaceId}/user/{userId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:removeUser, userId:'null' }
     options:
        expose: true
@@ -52,8 +52,17 @@ claro_workspace_delete_user:
       workspaceId: ^(?=.*[1-9].*$)\d*$
       userId: ^(?=.*[1-9].*$)\d*$
 
+claro_workspace_delete_users:
+    pattern: /{workspaceId}/users
+    defaults: { _controller: ClarolineCoreBundle:Workspace:removeMultipleUsers }
+    options:
+       expose: true
+    requirements:
+      _method: DELETE
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
 claro_workspace_delete_group:
-    pattern: /{workspaceId}/group/{groupId}/
+    pattern: /{workspaceId}/group/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Workspace:removeGroup }
     options:
       expose: true
@@ -62,39 +71,81 @@ claro_workspace_delete_group:
       workspaceId: ^(?=.*[1-9].*$)\d*$
       groupId: ^(?=.*[1-9].*$)\d*$
 
-claro_workspace_users_paginated:
-   pattern: /{workspaceId}/users/{page}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUserList }
+claro_workspace_delete_groups:
+    pattern: /{workspaceId}/groups
+    defaults: { _controller: ClarolineCoreBundle:Workspace:removeMultipleGroups }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_unregistered_users_paginated:
+   pattern: /{workspaceId}/users/{offset}/unregistered
+   defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUnregisteredUsers }
    options:
      expose: true
    requirements:
      _method: GET
      workspaceId: ^(?=.*[1-9].*$)\d*$
-     #page 0-9
-     page: ^(?=.*[0-9].*$)\d*$
+     #offset 0-9
+     offset: ^(?=.*[0-9].*$)\d*$
 
-claro_workspace_groups_paginated:
-    pattern: /{workspaceId}/groups/{page}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedGroupList }
+claro_workspace_unregistered_groups_paginated:
+    pattern: /{workspaceId}/groups/{offset}/unregistered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUnregisteredGroups }
     options:
         expose: true
     requirements:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$
-      #page 0-9
-      page: ^(?=.*[0-9].*$)\d*$
+      #offset 1-9
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_registered_users_paginated:
+    pattern: /{workspaceId}/users/{offset}/registered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedUsersOfWorkspace }
+    options:
+        expose: true
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      #offset 1-9
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_registered_groups_paginated:
+    pattern: /{workspaceId}/groups/{offset}/registered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:paginatedGroupsOfWorkspace }
+    options:
+        expose: true
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      #offset 1-9
+      offset: ^(?=.*[0-9].*$)\d*$
 
 claro_workspace_search_unregistered_users:
-    pattern: /{workspaceId}/user/search/{search}
+    pattern: /{workspaceId}/user/search/{search}/unregistered/{offset}
     defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredUsers }
     options:
       expose: TRUE
     requirements:
       _method: GET
-      workspaceId: ^(?=.*[0-9].*$)\d*$
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_search_registered_users:
+    pattern: /{workspaceId}/user/search/{search}/registered/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:searchRegisteredUsers }
+    options:
+      expose: TRUE
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
 
 claro_workspace_search_unregistered_groups:
-    pattern: /{workspaceId}/group/search/{search}
+    pattern: /{workspaceId}/group/search/{search}/unregistered/{offset}
     defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredGroups }
     options:
       expose: TRUE
@@ -102,16 +153,79 @@ claro_workspace_search_unregistered_groups:
       _method: GET
       workspaceId: ^(?=.*[0-9].*$)\d*$
 
-claro_workspace_tools_user_management:
+claro_workspace_search_registered_groups:
+    pattern: /{workspaceId}/group/search/{search}/registered/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:searchRegisteredGroups }
+    options:
+      expose: TRUE
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_tools_users_management:
     pattern: /{workspaceId}/tools/user_management
-    defaults: { _controller: ClarolineCoreBundle:Workspace:userManagement }
+    defaults: { _controller: ClarolineCoreBundle:Workspace:usersManagement }
     requirements:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$
 
-claro_workspace_tools_group_management:
+claro_workspace_tools_show_user_parameters:
+    pattern: /{workspaceId}/tools/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:userParameters }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_tools_edit_user_parameters:
+    pattern: /{workspaceId}/tools/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:userParameters }
+    requirements:
+      _method: POST
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_tools_show_group_parameters:
+    pattern: /{workspaceId}/tools/group/{groupId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:groupParameters }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      groupId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_tools_edit_group_parameters:
+    pattern: /{workspaceId}/tools/group/{groupId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:groupParameters }
+    requirements:
+      _method: POST
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      groupId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_unregistered_users_list:
+    pattern: /{workspaceId}/tools/users/unregistered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:unregiseredUsersList }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_unregistered_groups_list:
+    pattern: /{workspaceId}/tools/groups/unregistered
+    defaults: { _controller: ClarolineCoreBundle:Workspace:unregiseredGroupsList }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_tools_groups_management:
     pattern: /{workspaceId}/tools/group_management
-    defaults: { _controller: ClarolineCoreBundle:Workspace:groupManagement }
+    defaults: { _controller: ClarolineCoreBundle:Workspace:groupsManagement }
     requirements:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$

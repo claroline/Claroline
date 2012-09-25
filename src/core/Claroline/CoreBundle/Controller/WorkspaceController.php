@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -21,7 +22,7 @@ class WorkspaceController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
-    const NUMBER_GROUP_PER_ITERATION = 10;
+    const NUMBER_GROUP_PER_ITERATION = 25;
 
     /**
      * Renders the workspace list page with its claroline layout.
@@ -166,18 +167,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $authorization = false;
-
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            $this->get('security.context')->isGranted($role->getName());
-            {
-                $authorization = true;
-            }
-        }
-
-        if ($authorization === false) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->checkRegistration($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:home.html.twig', array(
             'workspace' => $workspace,
@@ -198,17 +188,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $authorization = false;
-
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            $this->get('security.context')->isGranted($role->getName()); {
-                $authorization = true;
-            }
-        }
-
-        if ($authorization === false) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->checkRegistration($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:resources.html.twig', array(
                 'workspace' => $workspace,
@@ -229,155 +209,167 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $authorization = false;
-
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            $this->get('security.context')->isGranted($role->getName()); {
-                $authorization = true;
-            }
-        }
-
-        if ($authorization === false) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->checkRegistration($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools.html.twig', array(
-                'workspace' => $workspace,
-                )
+            'workspace' => $workspace)
         );
     }
 
     /**
-     * Renders the user management page with its layout
+     * Returns the id of the current user workspace.
+     *
+     * @return Response
+     */
+    public function userWorkspaceIdAction()
+    {
+        $id = $this->get('security.context')->getToken()->getUser()->getPersonalWorkspace()->getId();
+
+        return new Response($id);
+    }
+
+    /**
+     *
+     * @param type $workspaceId
+     * @param type $format
+     */
+    public function rolesAction($workspaceId, $format)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $wsRoles = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId)->getWorkspaceRoles();
+
+        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
+    }
+
+    /**
+     * Renders the workspace properties page
+     */
+    public function propertiesAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles_properties.html.twig", array('workspace' => $workspace, 'masks' => SymfonySecurity::getResourcesMasks()));
+    }
+
+    /*******************/
+    /* USER MANAGEMENT */
+    /*******************/
+
+    /**
+     * Renders the users management page with its layout
      *
      * @param integer $workspaceId
      *
      * @return Response
      */
-    public function userManagementAction($workspaceId)
+    public function usersManagementAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
+        $this->checkRegistration($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\user_management.html.twig', array(
-                'workspace' => $workspace, 'users' => $users)
+            'workspace' => $workspace, 'users' => $users)
         );
     }
 
     /**
-     * Renders the group management page with its layout
+     * Renders the unregistered user list layout for a workspace.
      *
      * @param integer $workspaceId
      *
      * @return Response
      */
-    public function groupManagementAction($workspaceId)
+    public function unregiseredUsersListAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
+        $this->checkRegistration($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\group_management.html.twig', array(
-                'workspace' => $workspace, 'groups' => $groups)
+        return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_user_list_layout.html.twig', array(
+                'workspace' => $workspace)
         );
     }
 
     /**
-     * Removes a user from a workspace.
-     * if user id is null, the user will be the current logged user.
-     * if it was requested through ajax, it will respond "success".
-     * otherwise it'll redirect to the workspace list for a user.
-     *
-     * @param integer $userId
+     * Renders the user parameter page with its layout and
+     * edit the user parameters for the selected workspace.
      *
      * @param integer $workspaceId
-     *
-     * @return Response|RedirectResponse
-     */
-    public function removeUserAction($userId, $workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $roles = $workspace->getWorkspaceRoles();
-
-        foreach ($roles as $role) {
-            $user->removeRole($role);
-        }
-
-        $em->flush();
-
-        return new Response("success", 204);
-    }
-
-    /**
-     * Removes a group from a workspace.
-     * if it was requested through ajax, it'll respond "success"
-     * otherwise it'll redirect to the user workspace list
-     *
-     * @param integer $groupId
-     * @param integer $workspaceId
-     *
-     * @return Response|RedirectResponse
-     */
-    public function removeGroupAction($groupId, $workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $roles = $workspace->getWorkspaceRoles();
-
-        foreach ($roles as $role) {
-            $group->removeRole($role);
-        }
-
-        $em->flush();
-
-        return new Response("success", 204);
-    }
-
-    /**
-     * Renders a list of unregistered users for a workspace.
-     * if page = 0, it'll render users 1-25
-     * if page = 1, it'll render users 26-50
-     * if page = 2, it'll render users 51-75
-     * ...
-     *
-     * @param integer $workspaceId
-     * @param integer $page
      *
      * @return Response
      */
-    public function paginatedUserListAction($workspaceId, $page)
+    public function userParametersAction($workspaceId, $userId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $page, self::NUMBER_USER_PER_ITERATION);
+        $this->checkIfAdmin($workspace);
+        //more~ only the workspace manager can do it maybe ?
+        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
+        $role = $em->getRepository('ClarolineCoreBundle:User')->getRoleOfWorkspace($userId, $workspaceId);
+        $defaultData = array('role' => $role[0]);
+        $form = $this->createFormBuilder($defaultData)
+            ->add(
+                'role', 'entity', array(
+                'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
+                'property' => 'translationKey',
+                'query_builder' => function(EntityRepository $er) use ($workspaceId) {
+                    return $er->createQueryBuilder('wr')
+                        ->add('where', "wr.workspace = {$workspaceId}");
+                }
+            ))
+            ->getForm();
 
-        return $this->render("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        if ($this->getRequest()->getMethod() == 'POST') {
+            $form->bind($this->getRequest());
+            $data = $form->getData();
+            $newRole = $data['role'];
+
+            //verifications: his role cannot be changed
+            if ($newRole->getId() != $workspace->getManagerRole()->getId()){
+                $userIds = array($userId);
+                $this->checkRemoveManagerRoleIsValid($userIds, $workspace, 'User');
+            }
+
+            $user->removeRole($role[0]);
+            $user->addRole($newRole);
+            $em->persist($user);
+            $em->flush();
+            $route = $this->get('router')->generate('claro_workspace_tools_users_management', array('workspaceId' => $workspaceId));
+
+            return new RedirectResponse($route);
+        }
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\user_parameters.html.twig', array(
+                'workspace' => $workspace, 'user' => $user, 'form' => $form->createView())
+        );
     }
 
     /**
-     * Renders a list of unregistered groups for a workspace
-     * if page = 0, it'll render groups 1-10
-     * if page = 1, it'll render groups 11-20
-     * if page = 2, it'll render groups 21-30
-     * ...
+     * Renders a list of registered users for a workspace.
+     * It'll search every users whose username, firstname or lastname match $search.
      *
+     * @param string $search
      * @param integer $workspaceId
-     * @param integer page
+     * @param string $format
      *
      * @return Response
      */
-    public function paginatedGroupListAction($workspaceId, $page)
+    public function searchRegisteredUsersAction($search, $workspaceId, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $page, self::NUMBER_GROUP_PER_ITERATION);
+        $this->checkRegistration($workspace);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->searchPaginatedUsersOfWorkspace($workspaceId, $search, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        return $response;
     }
+
 
     /**
      * Renders a list of unregistered users for a workspace.
@@ -389,13 +381,17 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function searchUnregisteredUsersAction($search, $workspaceId)
+    public function searchUnregisteredUsersAction($search, $workspaceId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace);
+        $this->checkRegistration($workspace);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getUnregisteredUsersOfWorkspaceFromGenericSearch($search, $workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        return $response;
     }
 
     /**
@@ -404,22 +400,15 @@ class WorkspaceController extends Controller
      * if requested through ajax, it'll respond with a json object containing the user datas
      * otherwise it'll redirect to the workspace list.
      *
-     * @param integer $userId
      * @param integer $workspaceId
      *
      * @return RedirectResponse
      */
-    public function addUserAction($userId, $workspaceId)
+    public function addUserAction($workspaceId, $userId)
     {
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
-
-        if ('null' != $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-        } else {
-            $user = $this->get('security.context')->getToken()->getUser();
-        }
-
+        $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $user->addRole($workspace->getCollaboratorRole());
         $em->flush();
@@ -441,6 +430,8 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
+    //todo: detach($user)
+    //todo: flush outsite the loop
     public function multiAddUserAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
@@ -457,7 +448,321 @@ class WorkspaceController extends Controller
              $em->flush();
         }
 
+        //small hack to get the current workspace as the only workspace role. Do not flush after this !
+        foreach ($users as $user){
+            $user->setWorkspaceRoleCollection($workspace->getCollaboratorRole());
+        }
+
         $content = $this->renderView('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Renders a list of registered users for a workspace
+     *
+     * @param integer $workspaceId
+     * @param integer $page
+     *
+     * @return Response
+     */
+    public function paginatedUsersOfWorkspaceAction($workspaceId, $offset)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->findPaginatedUsersOfWorkspace($workspaceId, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Renders a list of unregistered users for a workspace.
+     * if page = 1, it'll render users 1-25
+     * if page = 2, it'll render users 26-50
+     * if page = 3, it'll render users 51-75
+     * ...
+     *
+     * @param integer $workspaceId
+     * @param integer $offset
+     *
+     * @return Response
+     */
+    public function paginatedUnregisteredUsersAction($workspaceId, $offset)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $users = $em->getRepository('ClarolineCoreBundle:User')->getLazyUnregisteredUsersOfWorkspace($workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Removes a user from a workspace.
+     * If it was requested through ajax, it will respond "success".
+     * otherwise it'll redirect to the workspace list for a user.
+     *
+     * @param integer $userId
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+
+    public function removeUserAction($userId, $workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        $userIds = array($user->getId());
+        $this->checkRemoveManagerRoleIsValid($userIds, $workspace, 'User');
+        $roles = $workspace->getWorkspaceRoles();
+
+        foreach ($roles as $role) {
+            $user->removeRole($role);
+        }
+
+        $em->flush();
+
+        return new Response("success", 204);
+    }
+
+    /**
+     * Removes many users from a workspace. ( ?0=1&1=2... )
+     * If it was requested through ajax, it will respond "success".
+     * otherwise it'll redirect to the workspace list for a user.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function removeMultipleUsersAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        $roles = $workspace->getWorkspaceRoles();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+        $this->checkRemoveManagerRoleIsValid($params, $workspace, 'User');
+
+        foreach ($params as $userId) {
+            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+            if (null != $user) {
+                foreach ($roles as $role) {
+                    $user->removeRole($role);
+                }
+            }
+        }
+
+        $em->flush();
+
+        return new Response("success", 204);
+    }
+
+    /********************/
+    /* GROUP MANAGEMENT */
+    /********************/
+
+    /**
+     * Renders the groups management page with its layout
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function groupsManagementAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getGroupsOfWorkspace($workspace);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\group_management.html.twig', array(
+                'workspace' => $workspace, 'groups' => $groups)
+        );
+    }
+
+    /**
+     * Renders the group parameter page with its layout and
+     * edit the group parameters for the selected workspace.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function groupParametersAction($workspaceId, $groupId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        //more~ only the workspace manager can do it maybe ?
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $role = $em->getRepository('ClarolineCoreBundle:Group')->getRoleOfWorkspace($groupId, $workspaceId);
+        $defaultData = array('role' => $role[0]);
+        $form = $this->createFormBuilder($defaultData)
+            ->add(
+                'role', 'entity', array(
+                'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
+                'property' => 'translationKey',
+                'query_builder' => function(EntityRepository $er) use ($workspaceId) {
+                    return $er->createQueryBuilder('wr')
+                        ->add('where', "wr.workspace = {$workspaceId}");
+                }
+            ))
+            ->getForm();
+
+        if ($this->getRequest()->getMethod() == 'POST') {
+            $form->bind($this->getRequest());
+            $data = $form->getData();
+            $newRole = $data['role'];
+
+            //verifications: his role cannot be changed
+            if ($newRole->getId() != $workspace->getManagerRole()->getId()){
+                $groupIds = array($group->getId());
+                $this->checkRemoveManagerRoleIsValid($groupIds, $workspace, 'Group');
+            }
+
+            $group->removeRole($role[0]);
+            $group->addRole($newRole);
+            $em->persist($group);
+            $em->flush();
+            $route = $this->get('router')->generate('claro_workspace_tools_groups_management', array('workspaceId' => $workspaceId));
+
+            return new RedirectResponse($route);
+        }
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\group_parameters.html.twig', array(
+                'workspace' => $workspace, 'group' => $group, 'form' => $form->createView())
+        );
+    }
+
+    /**
+     * Renders the unregistered group list layout for a workspace.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function unregiseredGroupsListAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_group_list_layout.html.twig', array(
+                'workspace' => $workspace)
+        );
+    }
+
+    /**
+     * Removes a group from a workspace.
+     *
+     * @param integer $groupId
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function removeGroupAction($groupId, $workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $roles = $workspace->getWorkspaceRoles();
+        $groupIds = array($group->getId());
+        $this->checkRemoveManagerRoleIsValid($groupIds, $workspace, 'Group');
+        
+        foreach ($roles as $role) {
+            $group->removeRole($role);
+        }
+
+        $em->flush();
+
+        return new Response("success", 204);
+    }
+
+    /**
+     * Removes many groups from a workspace. ( ?0=1&1=2... )
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function removeMultipleGroupsAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkIfAdmin($workspace);
+        $roles = $workspace->getWorkspaceRoles();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+        $this->checkRemoveManagerRoleIsValid($params, $workspace, 'Group');
+
+        foreach ($params as $groupId) {
+            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+            if (null != $group) {
+                foreach ($roles as $role) {
+                    $group->removeRole($role);
+                }
+            }
+        }
+
+        $em->flush();
+
+        return new Response("success", 204);
+    }
+
+    /**
+     * Renders a list of unregistered groups for a workspace
+     * if page = 1, it'll render groups 1-10
+     * if page = 2, it'll render groups 11-20
+     * if page = 3, it'll render groups 21-30
+     * ...
+     *
+     * @param integer $workspaceId
+     * @param integer $page
+     *
+     * @return Response
+     */
+    public function paginatedUnregisteredGroupsAction($workspaceId, $offset)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getLazyUnregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Renders a list of registered groups for a workspace
+     *
+     * @param integer $workspaceId
+     * @param integer $page
+     *
+     * @return Response
+     */
+    public function paginatedGroupsOfWorkspaceAction($workspaceId, $offset)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findPaginatedGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -533,48 +838,105 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function searchUnregisteredGroupsAction($search, $workspaceId)
+    public function searchUnregisteredGroupsAction($search, $workspaceId, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->getUnregisteredGroupsOfWorkspaceFromGenericSearch($search, $workspace);
+        $this->checkRegistration($workspace);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->searchPaginatedUnregisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        return $response;
     }
 
     /**
-     * Returns the id of the current user workspace.
+     * Renders a list of registered groups for a workspace.
+     * It'll search every groups whose name match $search.
+     *
+     * @param string $search
+     * @param integer $workspaceId
+     * @param string $format
      *
      * @return Response
      */
-    public function userWorkspaceIdAction()
-    {
-        $id = $this->get('security.context')->getToken()->getUser()->getPersonalWorkspace()->getId();
-
-        return new Response($id);
-    }
-
-    /**
-     *
-     * @param type $workspaceId
-     * @param type $format
-     */
-    public function rolesAction($workspaceId, $format)
+    public function searchRegisteredGroupsAction($search, $workspaceId, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $wsRoles = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId)->getWorkspaceRoles();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->searchPaginatedRegisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
+        return $response;
     }
 
-    /**
-     * Renders the workspace properties page
-     */
-    public function propertiesAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+    /*******************/
+    /* PRIVATE METHODS */
+    /*******************/
 
-        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles_properties.html.twig", array('workspace' => $workspace, 'masks' => SymfonySecurity::getResourcesMasks()));
+    private function checkRemoveManagerRoleIsValid($parameters, $workspace, $class)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $countRemovedManagers = 0;
+
+        if ('User' === $class) {
+            foreach ($parameters as $userId) {
+                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+
+                if (null !== $user) {
+                    if ($workspace == $user->getPersonalWorkspace()) {
+                        throw new \LogicException("You can't remove the original manager from a personal workspace");
+                    }
+                    if ($user->hasRole($workspace->getManagerRole()->getName())) {
+                        $countRemovedManagers++;
+                    }
+                }
+            }
+        }
+
+        if ('Group' === $class) {
+            foreach ($parameters as $groupId) {
+                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+
+                if (null !== $group){
+                    if ($group->hasRole($workspace->getManagerRole()->getName())) {
+                        $countRemovedManagers += count($group->getUsers());
+                    }
+                }
+            }
+        }
+
+        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')->getUsersOfWorkspace($workspace, $workspace->getManagerRole(), true);
+        $countUserManagers = count($userManagers);
+
+        if ($countRemovedManagers >= $countUserManagers) {
+            throw new \LogicException("You can't remove every managers(you're trying to remove {$countRemovedManagers} manager(s) out of {$countUserManagers})");
+        }
+    }
+
+    private function checkRegistration($workspace)
+    {
+        $authorization = false;
+
+        foreach ($workspace->getWorkspaceRoles() as $role) {
+            if ($this->get('security.context')->isGranted($role->getName())) {
+                $authorization = true;
+            }
+        }
+
+        if ($authorization === false) {
+            throw new AccessDeniedHttpException();
+        }
+    }
+
+    private function checkIfAdmin($workspace)
+    {
+        if (!$this->get('security.context')->isGranted($workspace->getManagerRole()->getName())) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

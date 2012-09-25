@@ -1,5 +1,18 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+       vars=["locale"]
+      "@ClarolineCoreBundle/Resources/views/Administration/user_list.html.twigjs"
+       filter="twig_js"
+    %}
+
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ asset('bundles/clarolinecore/js/administration/group_user_list.js') }}" type="text/javascript"></script>
+{% endblock %}
+
 {% block section_content %}
     <h3 class="sub-section-header">{{ 'group'|trans({}, 'platform') }} "{{ group.getName() }}" : {{ 'users'|trans({}, 'platform') }}</h3>
     <h6>
@@ -18,19 +31,9 @@
                 <th>{{ 'delete'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
-        <tbody>
-            {% for user in group.getUsers() %}
-                <tr id="{{ user.getId() }}" class="row_user">
-                    <td>{{ user.getId() }}</td>
-                    <td>{{ user.getUsername() }}</td>
-                    <td>{{ user.getLastName() }}</td>
-                    <td>{{ user.getFirstName() }}</td>
-                    <td>{{ user.getMail()}}</td>
-                    <td>{{ user.getAdministrativeCode() }}</td>
-                    <td>
-                        <a href="{{ path('claro_admin_delete_user_from_group', {'userId': user.getId(), 'groupId': group.getId()}) }}" id="link_delete_{{ user.getId() }}">{{ 'delete'|trans({}, 'platform') }}</a>
-                    </td>
-                </tr>
-            {% endfor %}
+        <tbody id="user-table-body">
+        </tbody>
     </table>
+    <div id="twig-attributes" data-group-id="{{ group.getId() }}">
+    </div>
 {% endblock %}
