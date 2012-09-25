@@ -129,13 +129,17 @@ class CreateGroupsCommand extends ContainerAwareCommand
         for ($i=0; $i < $number; $i++) {
 
             $group = new Group();
-            $userNumber = rand(1, 100);
 
-            if ($userNumber >= $maxUsersOffset) {
-                $userNumber = $maxUsersOffset;
+            $userNumber = rand(1, $maxUsersOffset);
+
+            if ($userNumber >= 100) {
+                $userNumber = 100;
             }
 
             $group->setName($this->createGroupName());
+
+                                    $em->persist($group);
+            $em->flush();
             $userAddedIds = array();
 
             for ($j=0; $j <= $userNumber; $j++) {
@@ -143,7 +147,8 @@ class CreateGroupsCommand extends ContainerAwareCommand
                 while(false == $created) {
                     $id = rand(0, $maxUsersOffset);
                     if (!array_key_exists($id, $userAddedIds)) {
-                        $userAddedIds[] = $id;
+                        $userAddedIds[$id] = $id;
+                        echo "add user {$id} to group {$group->getId()}\n";
                         $group->addUser($users[$id]);
                         $created = true;
                     }
