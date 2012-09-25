@@ -19,7 +19,7 @@ class TextControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getWSListableRootResource($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+            ->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
     }
 
     public function testAdd()
