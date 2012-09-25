@@ -96,10 +96,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $ids = $this->getRequestParameters();
 
-        $logger = $this->get('logger');
-        $logger->info("++++++ START");
         foreach ($ids as $id) {
-            $logger->info("++++++ ID=".$id);
             $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
                 ->find($id);
             $this->get('claroline.resource.manager')->delete($resourceInstance);
