@@ -181,6 +181,28 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function searchPaginatedUserOfGroups($search, $groupId, $offset, $limit)
+    {
+        $dql = "
+            SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            JOIN u.personnalWorkspace pw
+            JOIN u.workspaceRoles wr
+            WHERE g.id = :groupId
+            AND UPPER(u.username) LIKE :search
+            OR UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search
+            ORDER BY u.id";
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$search}%")
+            ->setParameter('groupId', $groupId)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
     public function findPaginatedUsersOfWorkspace($workspaceId, $offset, $limit)
     {
         $dql = "

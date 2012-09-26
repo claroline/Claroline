@@ -17,9 +17,8 @@
         });
     }
 
-    //fake one and wrong url.
     var searchRoute = function(){
-        return Routing.generate('claro_admin_search_groupless_users', {
+        return Routing.generate('claro_admin_paginated_search_group_user_list', {
             'offset' : $('.row-user').length,
             'groupId': groupId,
             'search':  document.getElementById('search-user-txt').value
@@ -37,6 +36,48 @@
             }
         }
     });
+
+    $('#search-user-button').click(function(){
+        $('#user-table-body').empty();
+        stop = false;
+        if (document.getElementById('search-user-txt').value != ''){
+            mode = 1;
+            lazyloadUsers(searchRoute);
+        } else {
+            mode = 0;
+            lazyloadUsers(standardRoute);
+        }
+    });
+
+    $('.delete-users-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html('removing '+ $('.chk-user:checked').length +' user(s)');
+    });
+
+    $('#modal-valid-button').click(function(){
+        var parameters = {};
+        var i = 0;
+        $('.chk-user:checked').each(function(index, element){
+            parameters[i] = element.value;
+            i++;
+        });
+        parameters.groupId = groupId;
+
+        var route = Routing.generate('claro_admin_multidelete_user_from_group', parameters);
+        ClaroUtils.sendRequest(
+            route,
+            function(){
+                $('.chk-user:checked').each(function(index, element){
+                     $(element).parent().parent().remove();
+                });
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
+            },
+            undefined,
+            'DELETE'
+        );
+    });
+
 
     function lazyloadUsers(route){
         loading = true;

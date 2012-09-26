@@ -220,6 +220,30 @@ class AdministrationController extends Controller
     }
 
     /**
+     * Returns the group users whose name or username or lastname matche $search.
+     *
+     * @param integer $groupId
+     * @param integer $offset
+     * @param string $search
+     *
+     * @return Response
+     */
+    // Doesn't work yet due to a sql error from the repository
+    public function paginatedSearchUserOfGroupListAction($groupId, $offset, $search)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchPaginatedUserOfGroups($search, $groupId, $offset, self::USER_PER_PAGE);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * Returns the platform group list.
      *
      * @param $offset the offset.
@@ -462,12 +486,12 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Deletes an user from a group and redirects to the group list.
+     * Removes an user from a group.
      *
      * @param integer $groupId
      * @param integer $userId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response
      */
     public function deleteUserFromGroupAction($groupId, $userId)
     {
@@ -476,6 +500,31 @@ class AdministrationController extends Controller
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $group->removeUser($user);
         $em->persist($group);
+        $em->flush();
+
+        return new Response('user removed', 204);
+    }
+
+    /**
+     * Removes users from a group.
+     *
+     * @param integer $groupId
+     *
+     * @return Response
+     */
+    public function multiDeleteUserFromGroupAction($groupId)
+    {
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+        $em = $this->getDoctrine()->getEntityManager();
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+
+        foreach ($params as $userId){
+            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+            $group->removeUser($user);
+            $em->persist($group);
+        }
+
         $em->flush();
 
         return new Response('user removed', 204);
