@@ -20,6 +20,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     //      to get "ar" information.
     //      That's also the reason why we do not use
     //      the "MaterializedPathRepository->getChildren" method.
+
     const SELECT_FOR_ENTITIES = "
             ri, ar ";
 
@@ -53,12 +54,11 @@ class ResourceInstanceRepository extends MaterializedPathRepository
             JOIN ar.creator reu
             JOIN ar.icon ic ";
 
-    /** FROM DQL part to join all needed entities. Warning: need to bind :u_id to userid.*/
+    /** FROM DQL part to join all needed entities. Warning: need to bind :u_id to userid. */
     const WHERECONDITION_USER_WORKSPACE = "
             ri.workspace IN
             ( SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
                 JOIN aw.roles r JOIN r.users u WHERE u.id = :u_id ) ";
-
 
     /**
      * Returns the root instance of the workspace
@@ -76,7 +76,6 @@ class ResourceInstanceRepository extends MaterializedPathRepository
         return $query->getOneOrNullResult();
     }
 
-
     /**
      * Returns all instances owned by the user.
      * @param User $user Owner of the resources.
@@ -88,9 +87,9 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      */
     public function listResourceInstancesForUser(User $user, $asArray = false, $offset = null, $numrows = null, ResourceType $resourceType = null)
     {
-        $dql = "SELECT ".($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                ." FROM ".self::FROM_INSTANCES
-                ." WHERE ".self::WHERECONDITION_USER_WORKSPACE;
+        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+                . " FROM " . self::FROM_INSTANCES
+                . " WHERE " . self::WHERECONDITION_USER_WORKSPACE;
         if ($resourceType === null) {
             $dql.="AND rt.type != 'directory'";
         } else {
@@ -99,13 +98,13 @@ class ResourceInstanceRepository extends MaterializedPathRepository
         $dql .= " ORDER BY ri.path ";
 
         $query = $this->_em->createQuery($dql);
-        if ($resourceType !== null)
+        if ($resourceType !== null) {
             $query->setParameter('rt_type', $resourceType->getType());
+        }
         $query->setParameter('u_id', $user->getId());
 
         return $this->executeQuery($query, $asArray, $offset, $numrows);
     }
-
 
     /**
      * Returns all instances under parent. Returns a list of entities or an array if requested.
@@ -116,19 +115,18 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      */
     public function listChildrenResourceInstances(ResourceInstance $parent, ResourceType $resourceType, $asArray = false)
     {
-        $dql = "SELECT ".($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                ." FROM ".self::FROM_INSTANCES
-                ." WHERE rt.type = :rt_type
+        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+                . " FROM " . self::FROM_INSTANCES
+                . " WHERE rt.type = :rt_type
                     AND (ri.path LIKE :pathlike AND ri.path <> :path)";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('rt_type', $resourceType->getType());
-        $query->setParameter('pathlike', $parent->getPath().'%');
+        $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 
         return $this->executeQuery($query, $asArray);
     }
-
 
     /**
      * Returns all direct instances under parent. Returns a list of entities or an array if requested.
@@ -140,22 +138,21 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      */
     public function listDirectChildrenResourceInstances($parentId, $resourceTypeId = 0, $asArray = false, $isListable = true)
     {
-        $dql = "SELECT ".($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                ." FROM ".self::FROM_INSTANCES
-                ." WHERE rt.isListable = :rt_islistable
+        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+                . " FROM " . self::FROM_INSTANCES
+                . " WHERE rt.isListable = :rt_islistable
             AND ri.parent = :ri_parentid";
-        if ($resourceTypeId != 0)
+        if ($resourceTypeId != 0) {
             $dql .= " AND rt.id = :rt_id";
-
+        }
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ri_parentid', $parentId);
         $query->setParameter('rt_islistable', $isListable);
-        if ($resourceTypeId != 0)
+        if ($resourceTypeId != 0) {
             $query->setParameter('rt_id', $resourceTypeId);
-
+        }
         return $this->executeQuery($query, $asArray);
     }
-
 
     /**
      * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
@@ -165,18 +162,17 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      */
     public function listRootsForUser(User $user, $asArray = false)
     {
-        $dql = "SELECT ".($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                ." FROM ".self::FROM_INSTANCES
-                ." WHERE ri.parent IS NULL"
-                ." AND ".self::WHERECONDITION_USER_WORKSPACE
-                ." ORDER BY ri.path";
+        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+                . " FROM " . self::FROM_INSTANCES
+                . " WHERE ri.parent IS NULL"
+                . " AND " . self::WHERECONDITION_USER_WORKSPACE
+                . " ORDER BY ri.path";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('u_id', $user->getId());
 
         return $this->executeQuery($query, $asArray);
     }
-
 
     /**
      * Returns the number of non directory instances for a user.
@@ -190,8 +186,8 @@ class ResourceInstanceRepository extends MaterializedPathRepository
                     JOIN ri.abstractResource ar
                     JOIN ar.resourceType rt
                 WHERE rt.type != :rt_type"
-                ." AND ".self::WHERECONDITION_USER_WORKSPACE
-                ." ORDER BY ri.path";
+                . " AND " . self::WHERECONDITION_USER_WORKSPACE
+                . " ORDER BY ri.path";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('rt_type', 'directory');
@@ -199,7 +195,6 @@ class ResourceInstanceRepository extends MaterializedPathRepository
 
         return $query->getSingleScalarResult();
     }
-
 
     /**
      * Returns an array of all ancestors of a resourceInstance
@@ -210,16 +205,14 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     public function listAncestors(ResourceInstance $instance)
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
-        $parts = preg_split("/-(\d+)".ResourceInstance::PATH_SEPARATOR."/", $instance->getPath(),
-                            -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $parts = preg_split("/-(\d+)" . ResourceInstance::PATH_SEPARATOR . "/", $instance->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         for ($i = 0; $i < count($parts); $i+=2) {
-                $result["name"] = $parts[$i];
-                $result["id"] = $parts[$i+1];
-                $results[] = $result;
+            $result["name"] = $parts[$i];
+            $result["id"] = $parts[$i + 1];
+            $results[] = $result;
         }
         return $results;
     }
-
 
     /**
      * Returns all instances owned by the user and filtered with given criterias.
@@ -230,13 +223,13 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      */
     public function listResourceInstancesForUserWithFilter($criterias, User $user, $asArray = false)
     {
-        $dql = "SELECT ".($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                ." FROM ".self::FROM_INSTANCES
-                ." WHERE rt.isListable=1"
-                ." AND ".self::WHERECONDITION_USER_WORKSPACE;
+        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+                . " FROM " . self::FROM_INSTANCES
+                . " WHERE rt.isListable=1"
+                . " AND " . self::WHERECONDITION_USER_WORKSPACE;
 
         foreach ($criterias as $key => $value) {
-            $methodName = 'build'.ucfirst($key).'Filter';
+            $methodName = 'build' . ucfirst($key) . 'Filter';
             $dql .= $this->$methodName($key, $value);
         }
         $dql .= " ORDER BY ri.path";
@@ -256,12 +249,12 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     public function countResourceInstancesForUserWithFilter($criterias, User $user)
     {
         $dql = "SELECT count(ri.id)"
-                ." FROM ".self::FROM_INSTANCES
-                ." WHERE rt.isListable=1"
-                ." AND ".self::WHERECONDITION_USER_WORKSPACE;
+                . " FROM " . self::FROM_INSTANCES
+                . " WHERE rt.isListable=1"
+                . " AND " . self::WHERECONDITION_USER_WORKSPACE;
 
         foreach ($criterias as $key => $value) {
-            $methodName = 'build'.ucfirst($key).'Filter';
+            $methodName = 'build' . ucfirst($key) . 'Filter';
             $dql .= $this->$methodName($key, $value);
         }
 
@@ -270,7 +263,6 @@ class ResourceInstanceRepository extends MaterializedPathRepository
 
         return $query->getSingleScalarResult();
     }
-
 
     /**
      * Build the Dql part of the filter about Types.
@@ -292,12 +284,12 @@ class ResourceInstanceRepository extends MaterializedPathRepository
                 $dqlPart .= " OR rt.type = :{$key}{$i}";
             }
         }
-        if (strlen($dqlPart) > 0)
+        if (strlen($dqlPart) > 0) {
             $dqlPart .= ")";
+        }
 
         return $dqlPart;
     }
-
 
     /**
      * Build the Dql part of the filter about Root.
@@ -319,85 +311,82 @@ class ResourceInstanceRepository extends MaterializedPathRepository
                 $dqlPart.= " OR ri.path like :{$key}{$i}";
             }
         }
-        if (strlen($dqlPart) > 0)
+        if (strlen($dqlPart) > 0) {
             $dqlPart .= ')';
+        }
 
         return $dqlPart;
     }
 
-
-   /**
-    * Build the Dql part of the filter about Mime types.
-    * @param string $key The name of the filter (eg. "types", "dateTo"...).
-    * @param array $criteria Array of values to filter on.
-    * @return string
-    */
-   public function buildMimeTypesFilter($key, $criteria)
-   {
+    /**
+     * Build the Dql part of the filter about Mime types.
+     * @param string $key The name of the filter (eg. "types", "dateTo"...).
+     * @param array $criteria Array of values to filter on.
+     * @return string
+     */
+    public function buildMimeTypesFilter($key, $criteria)
+    {
         $dqlPart = "";
         $isFirst = true;
         $keys = array_keys($criteria);
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.=  "AND (ic.type LIKE :{$key}{$i}";
+                $dqlPart.= "AND (ic.type LIKE :{$key}{$i}";
                 $isFirst = false;
             } else {
                 $dqlPart.= " OR  ic.type LIKE :{$key}{$i}";
             }
         }
-        if (strlen($dqlPart) > 0)
+        if (strlen($dqlPart) > 0) {
             $dqlPart .= ')';
-
+        }
+        
         return $dqlPart;
-   }
+    }
 
+    /**
+     * Build the Dql part of the filter about FromDate.
+     * @param string $key The name of the filter (eg. "types", "dateTo"...).
+     * @param array $criteria Array of values to filter on.
+     * @return string
+     */
+    public function buildDateFromFilter($key, $criteria)
+    {
+        return " AND ri.created >= :{$key}";
+    }
 
-   /**
-    * Build the Dql part of the filter about FromDate.
-    * @param string $key The name of the filter (eg. "types", "dateTo"...).
-    * @param array $criteria Array of values to filter on.
-    * @return string
-    */
-   public function buildDateFromFilter($key, $criteria)
-   {
-       return " AND ri.created >= :{$key}";
-   }
+    /**
+     * Build the Dql part of the filter about ToDate.
+     * @param string $key The name of the filter (eg. "types", "dateTo"...).
+     * @param array $criteria Array of values to filter on.
+     * @return string
+     */
+    public function buildDateToFilter($key, $criteria)
+    {
+        return " AND ri.created <= :{$key}";
+    }
 
+    /**
+     * Build the Dql part of the filter about Name.
+     * @param string $key The name of the filter (eg. "types", "dateTo"...).
+     * @param array $criteria Array of values to filter on.
+     * @return string
+     */
+    public function buildNameFilter($key, $criteria)
+    {
+        return " AND ri.name LIKE :{$key}";
+    }
 
-   /**
-    * Build the Dql part of the filter about ToDate.
-    * @param string $key The name of the filter (eg. "types", "dateTo"...).
-    * @param array $criteria Array of values to filter on.
-    * @return string
-    */
-   public function buildDateToFilter($key, $criteria)
-   {
-       return " AND ri.created <= :{$key}";
-   }
-
-
-   /**
-    * Build the Dql part of the filter about Name.
-    * @param string $key The name of the filter (eg. "types", "dateTo"...).
-    * @param array $criteria Array of values to filter on.
-    * @return string
-    */
-   public function buildNameFilter($key, $criteria)
-   {
-      return " AND ri.name LIKE :{$key}";
-   }
-
-
-   /**
-    * Bind all values to the DQL filter.
-    * @param Query $query to bind with values.
-    * @param Array $criterias Array of criterias to apply.
-    * @param User $user Owner of the resources.
-    * @return string
-    */
-   private function bindFilter($query, $criterias, $user)
-   {
+    /**
+     * Bind all values to the DQL filter.
+     * @param Query $query to bind with values.
+     * @param Array $criterias Array of criterias to apply.
+     * @param User $user Owner of the resources.
+     * @return string
+     */
+    private function bindFilter($query, $criterias, $user)
+    {
         // List of filter fields that have multiple values.
         $multipleValues = array('roots' => '', 'types' => '', 'mimeTypes' => '');
         // List of filter fields that must be used with "LIKE" query (%xx%).
@@ -406,43 +395,41 @@ class ResourceInstanceRepository extends MaterializedPathRepository
         $rootLikeValue = array('roots' => '');
 
         foreach ($criterias as $key => $value) {
-            if(array_key_exists($key, $multipleValues)) {
+            if (array_key_exists($key, $multipleValues)) {
                 $this->bindArray($query, $key, $value, array_key_exists($key, $likeValue), array_key_exists($key, $rootLikeValue));
             } else {
-                 if(!array_key_exists($key, $likeValue)) {
+                if (!array_key_exists($key, $likeValue)) {
                     $query->setParameter($key, $value);
-                 } else {
-                    $query->setParameter($key, "%".$value."%");
-                 }
+                } else {
+                    $query->setParameter($key, "%" . $value . "%");
+                }
             }
         }
 
         $query->setParameter('u_id', $user->getId());
-   }
+    }
 
-
-   /**
-    * Bind all values to the DQL filter.
-    * @param Query $query to bind with values.
-    * @param string $key The name of the filter (eg. "types", "dateTo"...).
-    * @param array $values Array of values to filter on.
-    * @param boolean $isLike If true, will bind with a %val%" value.
-    * @param boolean $isRootLike If true, will bind with a val%" value.
-    * @return string
-    */
-   private function bindArray($query, $key, $values, $isLike = false, $isRootLike = false)
+    /**
+     * Bind all values to the DQL filter.
+     * @param Query $query to bind with values.
+     * @param string $key The name of the filter (eg. "types", "dateTo"...).
+     * @param array $values Array of values to filter on.
+     * @param boolean $isLike If true, will bind with a %val%" value.
+     * @param boolean $isRootLike If true, will bind with a val%" value.
+     * @return string
+     */
+    private function bindArray($query, $key, $values, $isLike = false, $isRootLike = false)
     {
         foreach ($values as $i => $value) {
-            if($isRootLike === true) {
-                $query->setParameter("{$key}{$i}", $value."%");
-            } else if($isLike === true) {
-                $query->setParameter("{$key}{$i}", "%".$value."%");
+            if ($isRootLike === true) {
+                $query->setParameter("{$key}{$i}", $value . "%");
+            } else if ($isLike === true) {
+                $query->setParameter("{$key}{$i}", "%" . $value . "%");
             } else {
                 $query->setParameter("{$key}{$i}", $value);
             }
         }
     }
-
 
     /**
      * Execute a DQL query and may return a list of entities or a list of arrays.
@@ -453,7 +440,8 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      * @param int ResourceType $resourceType Resource type to filter on.
      * @return array of arrays or array of entities
      */
-    private function executeQuery($query, $asArray, $offset = null, $numrows = null) {
+    private function executeQuery($query, $asArray, $offset = null, $numrows = null)
+    {
         $query->setFirstResult($offset);
         $query->setMaxResults($numrows);
 
@@ -468,4 +456,5 @@ class ResourceInstanceRepository extends MaterializedPathRepository
         }
         return $res;
     }
+
 }
