@@ -256,7 +256,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
-
+        echo file_put_contents($this->client->getContainer()->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR."sfTest.zip", $this->client->getResponse()->getContent());
         //the archive content should be tested
     }
 
