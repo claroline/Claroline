@@ -123,12 +123,7 @@ class IconCreatorTest extends FixtureTestCase
         $name = $file->getIcon()->getLargeIcon();
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_text.png', $name);
     }
-
-    public function testFileGetBasicMimeThumbnail()
-    {
-        $this->markTestSkipped('tested with the unknown video mime');
-    }
-
+    
     public function testFileGetUnknownMimeThumbnail()
     {
         $file = new File();
