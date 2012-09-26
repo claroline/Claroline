@@ -606,7 +606,6 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkIfAdmin($workspace);
-        //more~ only the workspace manager can do it maybe ?
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
         $role = $em->getRepository('ClarolineCoreBundle:Group')->getRoleOfWorkspace($groupId, $workspaceId);
         $defaultData = array('role' => $role[0]);
@@ -682,7 +681,7 @@ class WorkspaceController extends Controller
         $roles = $workspace->getWorkspaceRoles();
         $groupIds = array($group->getId());
         $this->checkRemoveManagerRoleIsValid($groupIds, $workspace, 'Group');
-        
+
         foreach ($roles as $role) {
             $group->removeRole($role);
         }

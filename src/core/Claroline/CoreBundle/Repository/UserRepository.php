@@ -9,7 +9,7 @@ class UserRepository extends EntityRepository
 {
     const PLATEFORM_ROLE = 1;
     const WORKSPACE_ROLE = 2;
-    const ALL_ROLES = 2;
+    const ALL_ROLES = 3;
 
     //todo prepared statement here
     public function getUsersByUsernameList(array $usernames)
@@ -167,8 +167,11 @@ class UserRepository extends EntityRepository
     public function findPaginatedUsersOfGroup($groupId, $offset, $limit)
     {
         $dql = "
-            SELECT u from Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g WHERE g.id = :groupId";
+            SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            JOIN u.personnalWorkspace pw
+            JOIN u.workspaceRoles wr
+            WHERE g.id = :groupId ORDER BY u.id";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $groupId);
@@ -234,13 +237,14 @@ class UserRepository extends EntityRepository
     public function findUnregisteredUsersFromGroup($groupId, $offset, $limit)
     {
         $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g
+            SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.personnalWorkspace ws
+            JOIN u.workspaceRoles wrs
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.groups gs
                 WHERE gs.id = :groupId
-            )
+            ) ORDER BY u.id
         ";
 
         $query = $this->_em->createQuery($dql);
