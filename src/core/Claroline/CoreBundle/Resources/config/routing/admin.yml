@@ -188,6 +188,16 @@ claro_admin_multiadd_user_to_group:
      options:
        expose: true
 
+claro_admin_add_user_to_group:
+    pattern: /group/{groupId}/add/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
+    requirements:
+       _method: PUT
+       groupId: ^(?=.*[0-9].*$)\d*$
+       userId: ^(?=.*[0-9].*$)\d*$
+    options:
+       expose: true
+
 #SOON TO BE REST
 
 claro_admin_group_user_list:
@@ -195,17 +205,17 @@ claro_admin_group_user_list:
     defaults: { _controller: ClarolineCoreBundle:Administration:groupUserList }
     requirements:
       _method: GET
-      offset: ^(?=.*[0-9].*$)\d*$
+      groupId: ^(?=.*[0-9].*$)\d*$
 
 #to be refactored
 claro_admin_user_list_addable_to_group:
     pattern: /group/add/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroupLayout }
-
-#same with PUT
-claro_admin_add_user_to_group:
-    pattern: /group/add/user/{groupId}/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
+    requirements:
+      _method: get
+      groupId: ^(?=.*[0-9].*$)\d*$
+    options:
+       expose: true
 
 #supposed to be put
 claro_admin_update_group_settings:
