@@ -41,7 +41,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         parent::tearDown();
 
-        $this->cleanDirectory($this->upDir);
+        //$this->cleanDirectory($this->upDir);
     }
 
     public function testDirectoryCreationFormCanBeDisplayed()
@@ -256,8 +256,23 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
-        echo file_put_contents($this->client->getContainer()->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR."sfTest.zip", $this->client->getResponse()->getContent());
-        //the archive content should be tested
+        $filename = $this->client->getContainer()->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR."testMultiExportClassic.zip";
+        file_put_contents($filename, $this->client->getResponse()->getContent());
+        // Check the archive content
+        $zip = new \ZipArchive();
+        $zip->open($filename);
+        $neededFiles = array(
+                "wsA - Workspace_A/rootDir/",
+                "wsA - Workspace_A/theLoneFile.txt",
+                "wsA - Workspace_A/rootDir/secondfile",
+                "wsA - Workspace_A/rootDir/firstfile",
+                "wsA - Workspace_A/rootDir/childDir/thirdFile");
+        $foundFiles = array();
+        for( $i = 0; $i < $zip->numFiles; $i++ ){
+            $stat = $zip->statIndex( $i );
+            array_push($foundFiles, $stat['name']);
+        }
+        $this->assertEquals(0, count(array_diff($neededFiles, $foundFiles)));
     }
 
     public function testMultiExportThrowsAnExceptionWithoutParameters()
