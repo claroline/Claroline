@@ -149,15 +149,61 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanAddUserToGroup()
     {
-        $this->markTestSkipped('not refactored yet');
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
-        $link = $crawler->filter('#link_add_user_to_group')->link();
-        $crawler = $this->client->click($link);
-        $link = $crawler->filter("#link_add_user_{$this->getFixtureReference('user/admin')->getId()}")->link();
-        $this->client->click($link);
-        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/1");
+        $this->client->request(
+            'PUT',
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/add/user/{$this->getFixtureReference('user/admin')->getId()}"
+        );
+
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+       $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testAdminCanMultiAddUserToGroup()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request(
+            'PUT',
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?0={$this->getFixtureReference('user/admin')->getId()}"
+        );
+
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+       $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testPaginatedGrouplessUsersAction()
+    {
+         $this->logUser($this->getFixtureReference('user/admin'));
+         $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/unregistered/users/0");
+         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testSearchPaginatedGrouplessUsersAction()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/unregistered/users/0/search/doe");
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testSearchPaginatedUserOfGroups()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/search/doe/users/0");
+        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testAddUserToGroupLayoutAction()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/group/add/{$this->getFixtureReference('group/group_a')->getId()}");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testUserGroupListLayout()
+    {
+       $this->logUser($this->getFixtureReference('user/admin'));
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
+       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminCanRemoveUserFromGroup()
