@@ -172,9 +172,9 @@ class AdministrationController extends Controller
     /**
      * Returns the platform users whose name, username or lastname matche $search.
      *
-     * @param type $offset
-     * @param type $limit
-     * @param type $search
+     * @param integer $offset
+     * @param string $format
+     * @param string $search
      *
      * @return Response
      */
@@ -195,6 +195,14 @@ class AdministrationController extends Controller
         return $response;
     }
 
+    /**
+     * Returns the group users.
+     *
+     * @param integer $groupId
+     * @param string $offset
+     *
+     * @return Response
+     */
     // Doesn't work yet due to a sql error from the repository
     public function paginatedUserOfGroupListAction($groupId, $offset)
     {
@@ -204,6 +212,7 @@ class AdministrationController extends Controller
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
 
+//        $response = new Response("<html><body>".$content."</html></body>");
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -430,18 +439,26 @@ class AdministrationController extends Controller
         $params = $this->get('request')->query->all();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         unset($params['_']);
+        $users = array();
 
         foreach ($params as $userId) {
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             if($user !== null){
                 $group->addUser($user);
+                $users[] = $user;
             }
         }
 
         $em->persist($group);
         $em->flush();
 
-        return new Response('success', 204);
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

@@ -4,7 +4,7 @@
     {{ parent() }}
     {% javascripts
        vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/Administration/user_list.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/Administration/user_list_short.html.twigjs"
        filter="twig_js"
     %}
 
@@ -26,9 +26,7 @@
                 <th>{{ 'username'|trans({}, 'platform') }}</th>
                 <th>{{ 'last_name'|trans({}, 'platform') }}</th>
                 <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                <th>{{ 'mail'|trans({}, 'platform') }}</th>
-                <th>{{ 'administrative_code'|trans({}, 'platform') }}</th>
-                <th>{{ 'delete'|trans({}, 'platform') }}</th>
+                <th></th>
             </tr>
         </thead>
         <tbody id="user-table-body">
