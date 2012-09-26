@@ -15,6 +15,16 @@ claro_admin_paginated_group_user_list:
       groupId: ^(?=.*[1-9].*$)\d*$
       offset: ^(?=.*[0-9].*$)\d*$
 
+claro_admin_paginated_search_group_user_list:
+   pattern: /group/{groupId}/search/{search}/users/{offset}
+   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedSearchUserOfGroupList }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      groupId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
+
 claro_admin_delete_user_from_group:
     pattern: /group/{groupId}/user/{userId}
     defaults: { _controller: ClarolineCoreBundle:Administration:deleteUserFromGroup }
@@ -24,6 +34,15 @@ claro_admin_delete_user_from_group:
       _method: DELETE
       groupId: ^(?=.*[1-9].*$)\d*$
       userId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_multidelete_user_from_group:
+    pattern: /group/{groupId}/users
+    defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteUserFromGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      groupId: ^(?=.*[1-9].*$)\d*$
 
 claro_admin_paginated_group_list:
    pattern: /groups/{offset}.{format}
@@ -168,7 +187,7 @@ claro_admin_multiadd_user_to_group:
        groupId: ^(?=.*[0-9].*$)\d*$
      options:
        expose: true
-       
+
 #SOON TO BE REST
 
 claro_admin_group_user_list:
