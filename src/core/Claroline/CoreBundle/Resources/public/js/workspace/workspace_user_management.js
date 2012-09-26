@@ -45,9 +45,10 @@
         window.location.href = route;
     })
 
-    $('#search-button').click(function(){
-        $('.checkbox-user-name').remove();
-        $('#user-table-checkboxes-body').empty();
+    $('#search-user-button').click(function(){
+        alert('click');
+        $('.chk-delete-user').remove();
+        $('#user-table-body').empty();
         stop = false;
         if (document.getElementById('search-user-txt').value != ''){
             mode = 1;
