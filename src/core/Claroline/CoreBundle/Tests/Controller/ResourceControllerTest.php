@@ -41,7 +41,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         parent::tearDown();
 
-        //$this->cleanDirectory($this->upDir);
+        $this->cleanDirectory($this->upDir);
     }
 
     public function testDirectoryCreationFormCanBeDisplayed()
@@ -268,8 +268,8 @@ class ResourceControllerTest extends FunctionalTestCase
                 "wsA - Workspace_A/rootDir/firstfile",
                 "wsA - Workspace_A/rootDir/childDir/thirdFile");
         $foundFiles = array();
-        for( $i = 0; $i < $zip->numFiles; $i++ ){
-            $stat = $zip->statIndex( $i );
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $stat = $zip->statIndex($i);
             array_push($foundFiles, $stat['name']);
         }
         $this->assertEquals(0, count(array_diff($neededFiles, $foundFiles)));
