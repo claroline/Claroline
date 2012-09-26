@@ -14,7 +14,6 @@ class AdministrationControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->loadGroupFixture();
-        var_dump('jemmpa les esclaliers');
         $this->configHandler = $this->client
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
@@ -51,7 +50,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanSeeUsersFromGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('GET', "admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/1");
+        $this->client->request('GET', "admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
     }
 
@@ -165,7 +164,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/1");
+        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 

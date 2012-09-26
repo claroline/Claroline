@@ -113,7 +113,7 @@ class Version20120119000000 extends BundleMigration
         );
 
         //not working (yet)
-//        $table->addUniqueIndex(array('user_id', 'group_id'));
+        $table->addUniqueIndex(array('user_id', 'group_id'));
     }
 
     private function createWorkspaceTable(Schema $schema)
