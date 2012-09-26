@@ -17,7 +17,9 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class ResourceInstance
 {
+
     const PATH_SEPARATOR = '`';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -101,8 +103,6 @@ class ResourceInstance
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
-
-
 
     /**
      * Returns the resource instance id.
@@ -270,7 +270,8 @@ class ResourceInstance
      * Eg.: "Root-1/subdir-2/file.txt-3/"
      * @return string
      */
-    public function getPath() {
+    public function getPath()
+    {
         return $this->path;
     }
 
@@ -292,10 +293,10 @@ class ResourceInstance
      */
     public function setName($name)
     {
-        if ( strpos(self::PATH_SEPARATOR, $name) === false ) {
+        if (strpos(self::PATH_SEPARATOR, $name) === false) {
             $this->name = $name;
         } else {
-            throw new Exception("Invalid character ".self::PATH_SEPARATOR." in resource name.");
+            throw new Exception("Invalid character " . self::PATH_SEPARATOR . " in resource name.");
         }
     }
 
@@ -309,7 +310,6 @@ class ResourceInstance
         return $this->name;
     }
 
-
     /**
      * Convert a path for display: remove ids.
      * @param type $path
@@ -317,12 +317,11 @@ class ResourceInstance
      */
     public static function convertPathForDisplay($path)
     {
-        $pathForDisplay = preg_replace('(-\d+'.ResourceInstance::PATH_SEPARATOR.')','/', $path);
-        if ($pathForDisplay !== null && strlen($pathForDisplay)>0)
+        $pathForDisplay = preg_replace('(-\d+' . ResourceInstance::PATH_SEPARATOR . ')', '/', $path);
+        if ($pathForDisplay !== null && strlen($pathForDisplay) > 0) {
             $pathForDisplay = substr_replace($pathForDisplay, "", -1);
+        }
         return $pathForDisplay;
     }
-
-
 
 }
