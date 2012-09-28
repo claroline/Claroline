@@ -17,7 +17,7 @@ claro_admin_paginated_group_user_list:
 
 claro_admin_paginated_search_group_user_list:
    pattern: /group/{groupId}/search/{search}/users/{offset}
-   defaults: { _controller: ClarolineCoreBundle:Administration:searchUsersOfGroupList }
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchUsersOfGroup }
    options:
       expose: true
    requirements:
