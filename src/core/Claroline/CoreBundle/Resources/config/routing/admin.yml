@@ -7,7 +7,7 @@ claro_admin_index:
 #RESTS ROUTE (OR CLOSE ENOUGH)
 claro_admin_paginated_group_user_list:
    pattern: /group/{groupId}/users/{offset}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserOfGroupList }
+   defaults: { _controller: ClarolineCoreBundle:Administration:usersOfGroup }
    options:
       expose: true
    requirements:
@@ -17,7 +17,7 @@ claro_admin_paginated_group_user_list:
 
 claro_admin_paginated_search_group_user_list:
    pattern: /group/{groupId}/search/{search}/users/{offset}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedSearchUserOfGroupList }
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchUsersOfGroupList }
    options:
       expose: true
    requirements:
@@ -46,7 +46,7 @@ claro_admin_multidelete_user_from_group:
 
 claro_admin_paginated_group_list:
    pattern: /groups/{offset}.{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGroupList }
+   defaults: { _controller: ClarolineCoreBundle:Administration:groups }
    options:
       expose: true
    requirements:
@@ -55,7 +55,7 @@ claro_admin_paginated_group_list:
 
 claro_admin_paginated_search_group_list:
    pattern: /groups/search/{search}/{offset}.{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:searchPaginatedGroups }
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchGroups }
    options:
       expose: true
    requirements:
@@ -64,7 +64,7 @@ claro_admin_paginated_search_group_list:
 
 claro_admin_paginated_search_user_list:
    pattern: /users/search/{search}/{offset}.{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:searchPaginatedUsers }
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchUsers }
    options:
       expose: true
    requirements:
@@ -116,7 +116,7 @@ claro_admin_group_settings_form:
 
 claro_admin_paginated_user_list:
    pattern: /users/{offset}.{format}
-   defaults: { _controller: ClarolineCoreBundle:Administration:paginatedUserList }
+   defaults: { _controller: ClarolineCoreBundle:Administration:users }
    options:
       expose: true
    requirements:
@@ -161,7 +161,7 @@ claro_admin_create_group:
 
 claro_admin_groupless_users:
     pattern: /group/{groupId}/unregistered/users/{offset}
-    defaults: { _controller: ClarolineCoreBundle:Administration:paginatedGrouplessUsers }
+    defaults: { _controller: ClarolineCoreBundle:Administration:grouplessUsers }
     requirements:
       _method: GET
       offset: ^(?=.*[0-9].*$)\d*$
@@ -171,7 +171,7 @@ claro_admin_groupless_users:
 
 claro_admin_search_groupless_users:
     pattern: /group/{groupId}/unregistered/users/{offset}/search/{search}
-    defaults: { _controller: ClarolineCoreBundle:Administration:searchPaginatedGrouplessUsers }
+    defaults: { _controller: ClarolineCoreBundle:Administration:searchGrouplessUsers }
     requirements:
       _method: GET
       offset: ^(?=.*[0-9].*$)\d*$
