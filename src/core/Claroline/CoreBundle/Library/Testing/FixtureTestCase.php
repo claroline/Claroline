@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
-use Claroline\CoreBundle\DataFixtures\LoadResourceImagesData;
-use Claroline\CoreBundle\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
@@ -29,8 +27,6 @@ abstract class FixtureTestCase extends TransactionalTestCase
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->referenceRepo = new ReferenceRepository($this->em);
-        $this->loadFixture(new LoadPlatformRolesData());
-        $this->loadFixture(new LoadResourceImagesData());
     }
 
     protected function loadPlatformRolesFixture()
@@ -45,7 +41,7 @@ abstract class FixtureTestCase extends TransactionalTestCase
 
     protected function loadUserFixture()
     {
-//        $this->loadFixture(new LoadPlatformRolesData());
+        $this->loadFixture(new LoadPlatformRolesData());
         $this->loadFixture(new LoadUserData());
     }
 
