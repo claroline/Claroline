@@ -6,19 +6,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
-use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\File;
 
-class ResourceControllerTest extends FunctionalTestCase
-{
+class ResourceControllerTest extends FunctionalTestCase {
+
     private $resourceInstanceRepository;
     private $upDir;
     private $pwr;
     private $userRoot;
 
-    public function setUp()
-    {
+    public function setUp() {
         parent::setUp();
         $this->loadFixture(new LoadResourceTypeData());
         $this->loadUserFixture();
@@ -29,44 +25,37 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->copyPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}copy.txt";
         $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->resourceInstanceRepository = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+                ->client
+                ->getContainer()
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $this->pwr = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->userRoot = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('workspace/ws_a'));
     }
 
-    public function tearDown()
-    {
+    public function tearDown() {
         parent::tearDown();
-
         $this->cleanDirectory($this->upDir);
     }
 
-    public function testDirectoryCreationFormCanBeDisplayed()
-    {
+    public function testDirectoryCreationFormCanBeDisplayed() {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', 'resource/form/directory');
         $form = $crawler->filter('#directory_form');
         $this->assertEquals(count($form), 1);
     }
 
-    public function testDirectoryFormErrorsAreDisplayed()
-    {
+    public function testDirectoryFormErrorsAreDisplayed() {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request(
-            'POST',
-            "/resource/create/directory/{$this->pwr->getId()}",
-            array('directory_form' => array('name' => null, 'shareType' => 1))
+                'POST', "/resource/create/directory/{$this->pwr->getId()}", array('directory_form' => array('name' => null, 'shareType' => 1))
         );
 
         $form = $crawler->filter('#directory_form');
         $this->assertEquals(count($form), 1);
     }
 
-    public function testPropertiesFormCanBeDisplayed()
-    {
+    public function testPropertiesFormCanBeDisplayed() {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
         $crawler = $this->client->request('GET', "/resource/form/properties/{$dir->resource_id}");
@@ -74,51 +63,43 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(count($form), 1);
     }
 
-    public function testPropertiesFormErrorsAreDisplayed()
-    {
+    public function testPropertiesFormErrorsAreDisplayed() {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
         $crawler = $this->client->request(
-            'POST',
-            "/resource/update/properties/{$dir->id}",
-            array('resource_options_form' => array('name' => '', 'shareType' => 1))
+                'POST', "/resource/update/properties/{$dir->id}", array('resource_options_form' => array('name' => '', 'shareType' => 1))
         );
 
         $form = $crawler->filter('#resource_options_form');
         $this->assertEquals(count($form), 1);
     }
 
-    public function testMoveResource()
-    {
+    public function testMoveResource() {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
         $res = $this->createDirectory($dir->id, 'childDir');
         $this->client->request(
-            'GET',
-            "/resource/move/{$res->id}/{$this->pwr->getId()}"
+                'GET', "/resource/move/{$res->id}/{$this->pwr->getId()}"
         );
         $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
     }
 
-    public function testMultiMove()
-    {
+    public function testMultiMove() {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot->getId());
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $theContainer = $this->createDirectory($this->userRoot->getId(), 'container');
         $this->client->request(
-            'GET', "/resource/multimove/{$theContainer->id}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+                'GET', "/resource/multimove/{$theContainer->id}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
         );
         $this->client->request('GET', "/resource/children/{$theContainer->id}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
     }
 
-
-    public function testResourceCanBeAddedToWorkspaceByRef()
-    {
+    public function testResourceCanBeAddedToWorkspaceByRef() {
         $this->logUser($this->getFixtureReference('user/user'));
         $rootRi = $this->createTree($this->userRoot->getId());
         $this->client->request('GET', "/resource/workspace/add/{$rootRi[0]->id}/{$this->pwr->getId()}");
@@ -137,35 +118,30 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(count($file), 2);
     }
 
-    public function testMultiAdd()
-    {
+    public function testMultiAdd() {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot->getId());
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $this->client->request(
-            'GET', "/resource/workspace/multi/add/{$this->userRoot->getId()}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+                'GET', "/resource/workspace/multi/add/{$this->userRoot->getId()}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
         );
         $this->client->request('GET', "/resource/children/{$this->userRoot->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(4, count($jsonResponse));
     }
 
-    public function testResourcePropertiesCanBeEdited()
-    {
+    public function testResourcePropertiesCanBeEdited() {
         $this->markTestSkipped('Irrelevant since the name was moved from abstractResource to ResourceInstance');
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
-            'POST',
-            "/resource/update/properties/{$this->pwr->getId()}",
-            array('resource_options_form' => array('name' => "EDITED", 'shareType' => 1))
+                'POST', "/resource/update/properties/{$this->pwr->getId()}", array('resource_options_form' => array('name' => "EDITED", 'shareType' => 1))
         );
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals("EDITED", $jsonResponse[0]->title);
         $this->assertEquals(1, $jsonResponse[0]->shareType);
     }
 
-    public function testDirectoryDownload()
-    {
+    public function testDirectoryDownload() {
         $this->logUser($this->getFixtureReference('user/user'));
         //with an empty dir
         $this->client->request('GET', "/resource/export/{$this->userRoot->getId()}");
@@ -179,16 +155,14 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
     }
 
-    public function testRootsAction()
-    {
+    public function testRootsAction() {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "/resource/roots");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(3, count($jsonResponse));
     }
 
-    public function testRootAction()
-    {
+    public function testRootAction() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/resource/root/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -196,39 +170,35 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($jsonResponse[0]->workspace_id, $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
     }
 
-    public function testResourceTypesAction()
-    {
+    public function testResourceTypesAction() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5, count($jsonResponse));
     }
 
-    public function testResourceListAction()
-    {
+    public function testResourceListAction() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createTree($this->userRoot->getId());
         $fileId = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'file'))
-            ->getId();
+                ->getContainer()
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                ->findOneBy(array('type' => 'file'))
+                ->getId();
         $this->client->request('GET', "/resource/list/{$fileId}/{$this->userRoot->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
     }
 
-    public function testMenusAction()
-    {
+    public function testMenusAction() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/menus');
         $jsonResponse = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(5, count($jsonResponse));
     }
 
-    public function testGetEveryInstancesIdsFromMultiExportArray()
-    {
+    public function testGetEveryInstancesIdsFromMultiExportArray() {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot->getId());
         $toExport = $this->client->getContainer()->get('claroline.resource.exporter')->expandResourceInstanceIds((array) $this->userRoot->getId());
@@ -243,8 +213,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(5, count($toExport));
     }
 
-    public function testMultiExportClassic()
-    {
+    public function testMultiExportClassic() {
         $this->logUser($this->getFixtureReference('user/user'));
         //with an empty dir
         $this->client->request('GET', "/resource/multiexport?0={$this->userRoot->getId()}");
@@ -256,17 +225,17 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
-        $filename = $this->client->getContainer()->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR."testMultiExportClassic.zip";
+        $filename = $this->client->getContainer()->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . "testMultiExportClassic.zip";
         file_put_contents($filename, $this->client->getResponse()->getContent());
         // Check the archive content
         $zip = new \ZipArchive();
         $zip->open($filename);
         $neededFiles = array(
-                "wsA - Workspace_A/rootDir/",
-                "wsA - Workspace_A/theLoneFile.txt",
-                "wsA - Workspace_A/rootDir/secondfile",
-                "wsA - Workspace_A/rootDir/firstfile",
-                "wsA - Workspace_A/rootDir/childDir/thirdFile");
+            "wsA - Workspace_A/rootDir/",
+            "wsA - Workspace_A/theLoneFile.txt",
+            "wsA - Workspace_A/rootDir/secondfile",
+            "wsA - Workspace_A/rootDir/firstfile",
+            "wsA - Workspace_A/rootDir/childDir/thirdFile");
         $foundFiles = array();
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $stat = $zip->statIndex($i);
@@ -275,24 +244,21 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(0, count(array_diff($neededFiles, $foundFiles)));
     }
 
-    public function testMultiExportThrowsAnExceptionWithoutParameters()
-    {
+    public function testMultiExportThrowsAnExceptionWithoutParameters() {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/resource/multiexport");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("You must select some resources to export.")')));
     }
 
-    public function testCustomActionThrowExceptionOnUknownAction()
-    {
+    public function testCustomActionThrowExceptionOnUknownAction() {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "resource/custom/directory/thisactiondoesntexists/{$this->pwr->getResource()->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("didn\'t bring back any response")')));
     }
 
-    public function testFilters()
-    {
+    public function testFilters() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createBigTree($this->userRoot->getId());
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -339,8 +305,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testParents()
-    {
+    public function testParents() {
         $this->logUser($this->getFixtureReference('user/user'));
         $firstDir = $this->createDirectory($this->userRoot->getId(), 'firstDir');
         $file = $this->uploadFile($firstDir->id, 'file');
@@ -348,8 +313,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testEveryUserInstances()
-    {
+    public function testEveryUserInstances() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createBigTree($this->pwr->getId());
         $this->client->request('GET', '/resource/user/instances/all');
@@ -357,16 +321,14 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count($jsonResponse));
     }
 
-    public function testFlatPagination()
-    {
+    public function testFlatPagination() {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createBigTree($this->pwr->getId());
         $this->client->request('POST', "/resource/instance/flat/1");
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testMultiDelete()
-    {
+    public function testMultiDelete() {
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->pwr->getId());
         $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
@@ -374,24 +336,21 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
         $this->client->request(
-            'GET',
-            "/resource/multidelete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+                'GET', "/resource/multidelete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
         );
         $crawler = $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($jsonResponse));
     }
 
-    public function testDeleteRootThrowsAnException()
-    {
+    public function testDeleteRootThrowsAnException() {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/resource/delete/{$this->userRoot->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
     }
 
-    public function testDeleteUserRemovesHisPersonnalDataTree()
-    {
+    public function testDeleteUserRemovesHisPersonnalDataTree() {
         $this->markTestSkipped("Can't make it work.");
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot->getId());
@@ -404,31 +363,27 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($tbg, null);
     }
 
-    public function testResourceFilterIsRendered()
-    {
+    public function testResourceFilterIsRendered() {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/resource/filter/renders');
         $this->assertEquals(1, count($crawler->filter('.active-filters')));
     }
 
     /*
-    public function testCountInstances()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createBigTree($this->pwr->getId());
-        $this->client->request('GET', '/resource/count/instances');
-        var_dump( $this->client->getResponse()->getContent());
-        $this->assertEquals('3', $this->client->getResponse()->getContent());
-    }
-*/
-    private function uploadFile($parentId, $name, $shareType = 1)
-    {
+      public function testCountInstances()
+      {
+      $this->logUser($this->getFixtureReference('user/user'));
+      $this->createBigTree($this->pwr->getId());
+      $this->client->request('GET', '/resource/count/instances');
+      var_dump( $this->client->getResponse()->getContent());
+      $this->assertEquals('3', $this->client->getResponse()->getContent());
+      }
+     */
+
+    private function uploadFile($parentId, $name, $shareType = 1) {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
         $this->client->request(
-            'POST',
-            "/resource/create/file/{$parentId}",
-            array('file_form' => array('shareType' => $shareType)),
-            array('file_form' => array('name' => $file))
+                'POST', "/resource/create/file/{$parentId}", array('file_form' => array('shareType' => $shareType)), array('file_form' => array('name' => $file))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
@@ -436,24 +391,18 @@ class ResourceControllerTest extends FunctionalTestCase
         return $obj[0];
     }
 
-    public function createDirectory($parentId, $name, $shareType = 1)
-    {
+    public function createDirectory($parentId, $name, $shareType = 1) {
         $this->client->request(
-            'POST',
-            "/resource/create/directory/{$parentId}",
-            array('directory_form' => array('name' => $name, 'shareType' => $shareType))
+                'POST', "/resource/create/directory/{$parentId}", array('directory_form' => array('name' => $name, 'shareType' => $shareType))
         );
         $obj = json_decode($this->client->getResponse()->getContent());
 
         return $obj[0];
     }
 
-    public function createForum($parentId, $name, $shareType = 1)
-    {
+    public function createForum($parentId, $name, $shareType = 1) {
         $this->client->request(
-            'POST',
-            "/resource/create/forum/{$parentId}",
-            array('forum_form' => array('name' => $name, 'shareType' => $shareType))
+                'POST', "/resource/create/forum/{$parentId}", array('forum_form' => array('name' => $name, 'shareType' => $shareType))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
@@ -462,10 +411,9 @@ class ResourceControllerTest extends FunctionalTestCase
     }
 
     //DIR
-        //private child
-        //public child
-    private function createTree($parentId)
-    {
+    //private child
+    //public child
+    private function createTree($parentId) {
         $arrCreated = array();
         $arrCreated[] = $rootDir = $this->createDirectory($parentId, 'rootDir');
         $arrCreated[] = $this->uploadFile($rootDir->id, 'firstfile');
@@ -475,12 +423,11 @@ class ResourceControllerTest extends FunctionalTestCase
     }
 
     //DIR
-        //private child
-        //public child
-        //private dir
-            //private child
-    private function createBigTree($parentId)
-    {
+    //private child
+    //public child
+    //private dir
+    //private child
+    private function createBigTree($parentId) {
         $arrCreated = array();
         $arrCreated[] = $rootDir = $this->createDirectory($parentId, 'rootDir');
         $arrCreated[] = $this->uploadFile($rootDir->id, 'firstfile');
@@ -491,8 +438,7 @@ class ResourceControllerTest extends FunctionalTestCase
         return $arrCreated;
     }
 
-    private function getUploadedFiles()
-    {
+    private function getUploadedFiles() {
         $iterator = new \DirectoryIterator($this->upDir);
         $uploadedFiles = array();
 
@@ -505,14 +451,13 @@ class ResourceControllerTest extends FunctionalTestCase
         return $uploadedFiles;
     }
 
-    private function cleanDirectory($dir)
-    {
+    private function cleanDirectory($dir) {
         $iterator = new \DirectoryIterator($dir);
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                && $file->getFilename() !== 'originalFile.txt'
-                && $file->getFilename() !== 'originalZip.zip'
+                    && $file->getFilename() !== 'originalFile.txt'
+                    && $file->getFilename() !== 'originalZip.zip'
             ) {
                 chmod($file->getPathname(), 0777);
                 unlink($file->getPathname());
