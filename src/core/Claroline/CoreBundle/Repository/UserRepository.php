@@ -38,9 +38,9 @@ class UserRepository extends EntityRepository
             JOIN wr.workspace w
             WHERE w.id = {$workspace->getId()}";
 
-            if($role != null){
-                $dql .= " AND wr.id = {$role->getId()}";
-            }
+        if ($role != null) {
+            $dql .= " AND wr.id = {$role->getId()}";
+        }
 
         $query = $this->_em->createQuery($dql);
         $userResults = $query->getResult();
@@ -60,17 +60,62 @@ class UserRepository extends EntityRepository
             $groupResults = $query->getResult();
         }
 
-        if (isset($groupResults)){
+        if (isset($groupResults)) {
             return array_merge($userResults, $groupResults);
         } else {
             return $userResults;
         }
     }
 
-    public function getLazyUnregisteredUsersOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
+    public function searchUnregisteredUsersOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
+    {
+        $search = strtoupper($search);
+
+        $dql = "
+            SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.personnalWorkspace ws
+            JOIN u.workspaceRoles wrs
+            WHERE UPPER(u.lastName) LIKE :search
+            AND u NOT IN
+            (
+            SELECT us FROM Claroline\CoreBundle\Entity\User us
+            JOIN us.workspaceRoles wr
+            JOIN wr.workspace w
+            WHERE w.id = :id
+            )
+            OR UPPER(u.firstName) LIKE :search
+            AND u NOT IN
+            (
+            SELECT use FROM Claroline\CoreBundle\Entity\User use
+            JOIN use.workspaceRoles wro
+            JOIN wro.workspace wo
+            WHERE wo.id = :id
+            )
+            OR UPPER(u.username) LIKE :search
+            AND u NOT IN
+            (
+            SELECT user FROM Claroline\CoreBundle\Entity\User user
+            JOIN user.workspaceRoles wrol
+            JOIN wrol.workspace wol
+            WHERE wol.id = :id
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId())
+            ->setParameter('search', "%{$search}%")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function unregisteredUsersOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.personnalWorkspace ws
+            JOIN u.workspaceRoles wrs
             WHERE u NOT IN
             (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
@@ -87,48 +132,6 @@ class UserRepository extends EntityRepository
 
         return $query->getResult();
     }
-
-    public function getUnregisteredUsersOfWorkspaceFromGenericSearch($search, AbstractWorkspace $workspace, $offset, $limit)
-    {
-        $search = strtoupper($search);
-
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE UPPER(u.lastName) LIKE :search
-            AND u NOT IN
-            (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.workspaceRoles wr
-                JOIN wr.workspace w
-                WHERE w.id = :id
-            )
-            OR UPPER(u.firstName) LIKE :search
-            AND u NOT IN
-            (
-                SELECT use FROM Claroline\CoreBundle\Entity\User use
-                JOIN use.workspaceRoles wro
-                JOIN wro.workspace wo
-                WHERE wo.id = :id
-            )
-            OR UPPER(u.username) LIKE :search
-            AND u NOT IN
-            (
-                SELECT user FROM Claroline\CoreBundle\Entity\User user
-                JOIN user.workspaceRoles wrol
-                JOIN wrol.workspace wol
-                WHERE wol.id = :id
-            )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId())
-              ->setParameter('search', "%{$search}%")
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
-
-        return $query->getResult();
-    }
-
 
     /**
      * Current logged user will see all his roles
@@ -203,11 +206,14 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findPaginatedUsersOfWorkspace($workspaceId, $offset, $limit)
+    public function registeredUsersOfWorkspace($workspaceId, $offset, $limit)
     {
         $dql = "
-            SELECT wr, u from Claroline\CoreBundle\Entity\User u
-            JOIN u.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId";
+            SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
+            JOIN u.workspaceRoles wr
+            JOIN wr.workspace w
+            JOIN u.personnalWorkspace ws
+            WHERE w.id = :workspaceId";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
@@ -217,11 +223,12 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function searchPaginatedUsersOfWorkspace($workspaceId, $search, $offset, $limit)
+    public function searchRegisteredUsersOfWorkspace($workspaceId, $search, $offset, $limit)
     {
         $dql = "
-            SELECT u, wrol FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, wrol, ws FROM Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wrol
+            JOIN u.personnalWorkspace ws
             JOIN wrol.workspace wol
             WHERE wol.id = :workspaceId AND u IN (SELECT us FROM Claroline\CoreBundle\Entity\User us WHERE
             UPPER(us.lastName) LIKE :search
@@ -256,7 +263,6 @@ class UserRepository extends EntityRepository
        return $query->getResult();
     }
 
-    //doctrine optimized
     public function findUnregisteredUsersFromGroup($groupId, $offset, $limit)
     {
         $dql = "
