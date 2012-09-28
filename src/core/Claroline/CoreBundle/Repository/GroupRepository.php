@@ -99,7 +99,7 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findPaginatedGroups($offset, $limit)
+    public function groups($offset, $limit)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'g')
@@ -112,7 +112,7 @@ class GroupRepository extends EntityRepository
         return $q->getResult();
     }
 
-    public function searchPaginatedGroups($search, $offset, $limit)
+    public function searchGroups($search, $offset, $limit)
     {
         $search = strtoupper($search);
 

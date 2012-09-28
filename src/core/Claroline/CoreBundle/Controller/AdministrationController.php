@@ -155,7 +155,7 @@ class AdministrationController extends Controller
     public function usersAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->users($offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
@@ -181,7 +181,7 @@ class AdministrationController extends Controller
     public function searchUsersAction($offset, $search, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchPaginatedUsers($search, $offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUsers($search, $offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
@@ -207,7 +207,7 @@ class AdministrationController extends Controller
     public function usersOfGroupAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->usersOfGroup($groupId, $offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -232,7 +232,7 @@ class AdministrationController extends Controller
     public function searchUsersOfGroupAction($groupId, $offset, $search)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchPaginatedUserOfGroups($search, $groupId, $offset, self::USER_PER_PAGE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUsersOfGroup($search, $groupId, $offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -254,7 +254,7 @@ class AdministrationController extends Controller
     public function groupsAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, self::GROUP_PER_PAGE);
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->groups($offset, self::GROUP_PER_PAGE);
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
         $response = new Response($content);
@@ -277,7 +277,7 @@ class AdministrationController extends Controller
     public function searchGroupsAction($offset, $search, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->searchPaginatedGroups($search, $offset, self::GROUP_PER_PAGE);
+        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->searchGroups($search, $offset, self::GROUP_PER_PAGE);
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
         $response = new Response($content);
@@ -395,7 +395,7 @@ class AdministrationController extends Controller
     public function grouplessUsersAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findUnregisteredUsersFromGroup($groupId, $offset, self::USER_PER_PAGE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->unregisteredUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -419,7 +419,7 @@ class AdministrationController extends Controller
     public function searchGrouplessUsersAction($groupId, $search, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUnregisteredUsersFromGroup($groupId, $search, $offset, self::USER_PER_PAGE);
+        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUnregisteredUsersOfGroup($groupId, $search, $offset, self::USER_PER_PAGE);
 
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
