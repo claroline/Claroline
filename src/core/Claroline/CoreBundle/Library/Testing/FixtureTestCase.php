@@ -2,21 +2,23 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
+use Claroline\CoreBundle\DataFixtures\LoadResourceImagesData;
+use Claroline\CoreBundle\DataFixtures\LoadResourceTypeData;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
-use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 abstract class FixtureTestCase extends TransactionalTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
+    /** @var EntityManager */
     protected $em;
 
     /** @var ReferenceRepository */
@@ -27,6 +29,8 @@ abstract class FixtureTestCase extends TransactionalTestCase
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->referenceRepo = new ReferenceRepository($this->em);
+        $this->loadFixture(new LoadPlatformRolesData());
+        $this->loadFixture(new LoadResourceImagesData());
     }
 
     protected function loadPlatformRolesFixture()
@@ -41,7 +45,7 @@ abstract class FixtureTestCase extends TransactionalTestCase
 
     protected function loadUserFixture()
     {
-        $this->loadFixture(new LoadPlatformRolesData());
+//        $this->loadFixture(new LoadPlatformRolesData());
         $this->loadFixture(new LoadUserData());
     }
 
@@ -74,7 +78,7 @@ abstract class FixtureTestCase extends TransactionalTestCase
         return $this->referenceRepo->getReference($name);
     }
 
-    /** @return Doctrine\ORM\EntityManager */
+    /** @return EntityManager */
     protected function getEntityManager()
     {
         return $this->em;
