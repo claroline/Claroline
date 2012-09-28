@@ -62,7 +62,7 @@ claro_workspace_delete_groups:
 
 claro_workspace_unregistered_groups_paginated:
     pattern: /{workspaceId}/groups/{offset}/unregistered
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:paginatedUnregisteredGroups }
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:unregisteredGroups }
     options:
         expose: true
     requirements:
@@ -73,7 +73,7 @@ claro_workspace_unregistered_groups_paginated:
 
 claro_workspace_registered_groups_paginated:
     pattern: /{workspaceId}/groups/{offset}/registered
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:paginatedGroupsOfWorkspace }
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:registeredGroups }
     options:
         expose: true
     requirements:

@@ -28,7 +28,7 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getLazyUnregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
+    public function unregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
@@ -49,7 +49,7 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function searchPaginatedUnregisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
+    public function searchUnregisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
     {
         $search = strtoupper($search);
 
@@ -74,7 +74,7 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function searchPaginatedRegisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
+    public function searchRegisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
     {
         $search = strtoupper($search);
 
@@ -129,7 +129,7 @@ class GroupRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findPaginatedGroupsOfWorkspace($workspaceId, $offset, $limit)
+    public function registeredGroupsOfWorkspace($workspaceId, $offset, $limit)
     {
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
