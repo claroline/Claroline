@@ -257,7 +257,6 @@ class WorkspaceUserController extends Controller
      */
     public function unregisteredUsersAction($workspaceId, $offset)
     {
-        $this->markTestSkipped('FAILED');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
