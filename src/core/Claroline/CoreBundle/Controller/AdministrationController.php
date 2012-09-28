@@ -152,7 +152,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function paginatedUserListAction($offset, $format)
+    public function usersAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsers($offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
@@ -178,7 +178,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function searchPaginatedUsersAction($offset, $search, $format)
+    public function searchUsersAction($offset, $search, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchPaginatedUsers($search, $offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
@@ -204,7 +204,7 @@ class AdministrationController extends Controller
      * @return Response
      */
     // Doesn't work yet due to a sql error from the repository
-    public function paginatedUserOfGroupListAction($groupId, $offset)
+    public function usersOfGroupAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findPaginatedUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
@@ -229,7 +229,7 @@ class AdministrationController extends Controller
      * @return Response
      */
     // Doesn't work yet due to a sql error from the repository
-    public function paginatedSearchUserOfGroupListAction($groupId, $offset, $search)
+    public function searchUsersOfGroupAction($groupId, $offset, $search)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchPaginatedUserOfGroups($search, $groupId, $offset, self::USER_PER_PAGE);
@@ -251,7 +251,7 @@ class AdministrationController extends Controller
      *
      * @return Response.
      */
-    public function paginatedGroupListAction($offset, $format)
+    public function groupsAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findPaginatedGroups($offset, self::GROUP_PER_PAGE);
@@ -274,7 +274,7 @@ class AdministrationController extends Controller
      *
      * @return Response.
      */
-    public function searchPaginatedGroupsAction($offset, $search, $format)
+    public function searchGroupsAction($offset, $search, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->searchPaginatedGroups($search, $offset, self::GROUP_PER_PAGE);
@@ -392,7 +392,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function paginatedGrouplessUsersAction($groupId, $offset)
+    public function grouplessUsersAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findUnregisteredUsersFromGroup($groupId, $offset, self::USER_PER_PAGE);
@@ -416,7 +416,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function searchPaginatedGrouplessUsersAction($groupId, $search, $offset)
+    public function searchGrouplessUsersAction($groupId, $search, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUnregisteredUsersFromGroup($groupId, $search, $offset, self::USER_PER_PAGE);
