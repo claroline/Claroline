@@ -46,7 +46,6 @@
     })
 
     $('#search-user-button').click(function(){
-        alert('click');
         $('.chk-delete-user').remove();
         $('#user-table-body').empty();
         stop = false;

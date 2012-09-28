@@ -18,7 +18,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     //++++++++++++++++++/
     //+ TEST ADD USERS +/
     //++++++++++++++++++/
-
+/*
     public function testAddUser()
     {
         $this->logUser($this->getFixtureReference('user/ws_creator'));
@@ -222,11 +222,26 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     //++++++++++++++++++/
     // TEST USER LISTS +/
     //++++++++++++++++++/
-
-    public function testLimitedUserList()
+*/
+    public function testUnregisteredUserList()
     {
         $this->loadFixture(new LoadManyUsersData());
         $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $users = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User')->findAll();
+        var_dump(count($users));
+        $countpwr = 0;
+        $countRole = 0;
+        foreach ($users as $user){
+            if($user->getPersonalWorkspace() != null){
+                $countpwr++;
+            }
+
+            if(count($user->getRoles()) > 0){
+                $countRole++;
+            }
+        }
+        var_dump($countpwr);
+        var_dump($countRole);
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
@@ -234,9 +249,9 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $response = $this->client->getResponse()->getContent();
         $users = json_decode($response);
         $this->assertEquals(25, count($users));
-    }
+    }/*
 
-    public function testLimitedUserListIsProtected()
+    public function testUnregisteredUserListIsProtected()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
@@ -245,7 +260,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testPaginatedUsersOfWorkspace()
+    public function testRegisteredUsersOfWorkspace()
     {
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
@@ -254,7 +269,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testPaginatedUsersOfWorkspaceIsProtected()
+    public function testRegisteredUsersOfWorkspaceIsProtected()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
@@ -310,5 +325,5 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/search/doe/registered/0", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
+    }*/
 }
