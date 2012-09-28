@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadManyUsersData;
 
-class WorkspaceControllerUserManagementTest extends FunctionalTestCase
+class WorkspaceUserControllerTest extends FunctionalTestCase
 {
     protected function setUp()
     {

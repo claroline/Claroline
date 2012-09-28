@@ -25,6 +25,14 @@ claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
     prefix: workspaces
 
+claro_workspace_user:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_user.yml"
+    prefix: workspaces
+
+claro_workspace_group:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_group.yml"
+    prefix: workspaces
+
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
     prefix: admin

@@ -2,9 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\DomCrawler\Crawler;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class WorkspaceControllerMainTest extends FunctionalTestCase
