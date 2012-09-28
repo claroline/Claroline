@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadManyGroupsData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
-class WorkspaceControllerGroupManagementTest extends FunctionalTestCase
+class WorkspaceGroupControllerTest extends FunctionalTestCase
 {
 
     protected function setUp()
@@ -19,7 +19,7 @@ class WorkspaceControllerGroupManagementTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    //66666666666666666666666666666666666
+    //1111111111111111111
     //++++++++++++++++++/
     // TEST ADD GROUPS +/
     //++++++++++++++++++/

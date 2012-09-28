@@ -1,0 +1,112 @@
+claro_workspace_add_user:
+   pattern: /{workspaceId}/user/{userId}
+   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:addUser }
+   options:
+      expose: true
+   requirements:
+      _method: PUT
+      userId: ^(?=.*[1-9].*$)\d*$
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_multiadd_user:
+   pattern: /{workspaceId}/add/user
+   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:multiAddUser }
+   options:
+      expose: true
+   requirements:
+      _method: PUT
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_unregistered_users_list:
+    pattern: /{workspaceId}/tools/users/unregistered
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:unregiseredUsersList }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_tools_users_management:
+    pattern: /{workspaceId}/tools/user_management
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:usersManagement }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_tools_show_user_parameters:
+    pattern: /{workspaceId}/tools/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:userParameters }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_tools_edit_user_parameters:
+    pattern: /{workspaceId}/tools/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:userParameters }
+    requirements:
+      _method: POST
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: TRUE
+
+claro_workspace_search_unregistered_users:
+    pattern: /{workspaceId}/user/search/{search}/unregistered/{offset}
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:searchUnregisteredUsers }
+    options:
+      expose: TRUE
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_search_registered_users:
+    pattern: /{workspaceId}/user/search/{search}/registered/{offset}
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:searchRegisteredUsers }
+    options:
+      expose: TRUE
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_registered_users_paginated:
+    pattern: /{workspaceId}/users/{offset}/registered
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:paginatedUsersOfWorkspace }
+    options:
+        expose: true
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[0-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_unregistered_users_paginated:
+   pattern: /{workspaceId}/users/{offset}/unregistered
+   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:paginatedUnregisteredUsers }
+   options:
+     expose: true
+   requirements:
+     _method: GET
+     workspaceId: ^(?=.*[1-9].*$)\d*$
+     #offset 0-9
+     offset: ^(?=.*[0-9].*$)\d*$
+
+claro_workspace_delete_user:
+    pattern: /{workspaceId}/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:removeUser, userId:'null' }
+    options:
+       expose: true
+    requirements:
+      _method: DELETE
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_delete_users:
+    pattern: /{workspaceId}/users
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:removeMultipleUsers }
+    options:
+       expose: true
+    requirements:
+      _method: DELETE
+      workspaceId: ^(?=.*[1-9].*$)\d*$
