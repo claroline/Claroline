@@ -136,7 +136,7 @@ class UserRepository extends EntityRepository
     /**
      * Current logged user will see all his roles
      */
-    public function findPaginatedUsers($offset, $limit, $modeRole)
+    public function users($offset, $limit, $modeRole)
     {
         switch($modeRole){
             case self::PLATEFORM_ROLE:
@@ -151,7 +151,7 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function searchPaginatedUsers($search, $offset, $limit)
+    public function searchUsers($search, $offset, $limit)
     {
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
@@ -167,7 +167,7 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findPaginatedUsersOfGroup($groupId, $offset, $limit)
+    public function usersOfGroup($groupId, $offset, $limit)
     {
         $dql = "
             SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
@@ -184,7 +184,7 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function searchPaginatedUserOfGroups($search, $groupId, $offset, $limit)
+    public function searchUsersOfGroup($search, $groupId, $offset, $limit)
     {
         $dql = "
             SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
@@ -263,7 +263,7 @@ class UserRepository extends EntityRepository
        return $query->getResult();
     }
 
-    public function findUnregisteredUsersFromGroup($groupId, $offset, $limit)
+    public function unregisteredUsersOfGroup($groupId, $offset, $limit)
     {
         $dql = "
             SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
@@ -284,7 +284,7 @@ class UserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function searchUnregisteredUsersFromGroup($groupId, $search, $offset, $limit)
+    public function searchUnregisteredUsersOfGroup($groupId, $search, $offset, $limit)
     {
         $search = strtoupper($search);
 
