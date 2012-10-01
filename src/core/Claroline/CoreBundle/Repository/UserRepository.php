@@ -154,14 +154,17 @@ class UserRepository extends EntityRepository
         $query = $this->_em->createQuery($dql)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
+        $paginator = new Paginator($query, true);
 
-        return $query->getResult();
+        return $paginator;
     }
 
     public function searchUsers($search, $offset, $limit)
     {
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r
+            JOIN u.personalWorkspace pws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search";
@@ -171,7 +174,9 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function usersOfGroup($groupId, $offset, $limit)
@@ -188,7 +193,9 @@ class UserRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function searchUsersOfGroup($search, $groupId, $offset, $limit)
@@ -210,7 +217,9 @@ class UserRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function registeredUsersOfWorkspace($workspaceId, $offset, $limit)
@@ -292,7 +301,9 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function searchUnregisteredUsersOfGroup($groupId, $search, $offset, $limit)
@@ -323,11 +334,13 @@ class UserRepository extends EntityRepository
             )";
 
        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $groupId)
+       $query->setParameter('groupId', $groupId)
               ->setParameter('search', "%{$search}%")
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 }
