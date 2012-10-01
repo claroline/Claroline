@@ -160,7 +160,7 @@ class AdministrationController extends Controller
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
 
-        $response = new Response($content);
+        $response = new Response("<body>$content</body>");
 
         if  ($format == 'json') {
             $response->headers->set('Content-Type', 'application/json');

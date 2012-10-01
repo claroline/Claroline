@@ -74,7 +74,7 @@ class UserRepository extends EntityRepository
 
         $dql = "
             SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE UPPER(u.lastName) LIKE :search
             AND u NOT IN
@@ -117,7 +117,7 @@ class UserRepository extends EntityRepository
     {
         $dql = "
             SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE u NOT IN
             (
@@ -145,7 +145,9 @@ class UserRepository extends EntityRepository
     {
         switch($modeRole){
             case self::PLATEFORM_ROLE:
-                $dql = 'SELECT u, r from Claroline\CoreBundle\Entity\User u JOIN u.roles r
+                $dql = 'SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
+                    JOIN u.roles r
+                    JOIN u.personalWorkspace pws
                     WHERE r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole';
                 break;
         }
@@ -177,7 +179,7 @@ class UserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
-            JOIN u.personnalWorkspace pw
+            JOIN u.personalWorkspace pw
             JOIN u.workspaceRoles wr
             WHERE g.id = :groupId ORDER BY u.id";
 
@@ -194,7 +196,7 @@ class UserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
-            JOIN u.personnalWorkspace pw
+            JOIN u.personalWorkspace pw
             JOIN u.workspaceRoles wr
             WHERE g.id = :groupId
             AND (UPPER(u.username) LIKE :search
@@ -217,7 +219,7 @@ class UserRepository extends EntityRepository
             SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wr
             JOIN wr.workspace w
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             WHERE w.id = :workspaceId";
 
         $query = $this->_em->createQuery($dql);
@@ -235,7 +237,7 @@ class UserRepository extends EntityRepository
         $dql = "
             SELECT u, wrol, ws FROM Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wrol
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN wrol.workspace wol
             WHERE wol.id = :workspaceId AND u IN (SELECT us FROM Claroline\CoreBundle\Entity\User us WHERE
             UPPER(us.lastName) LIKE :search
@@ -276,7 +278,7 @@ class UserRepository extends EntityRepository
     {
         $dql = "
             SELECT DISTINCT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
@@ -299,7 +301,7 @@ class UserRepository extends EntityRepository
 
         $dql = "
             SELECT DISTINCT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE UPPER(u.lastName) LIKE :search
             AND u NOT IN (
