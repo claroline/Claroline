@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 
 class GroupRepository extends EntityRepository
 {
@@ -31,7 +33,10 @@ class GroupRepository extends EntityRepository
     public function unregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "
-            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
+            LEFT JOIN g.roles r
+            LEFT JOIN g.workspaceRoles gwr
+
             WHERE g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
@@ -39,14 +44,17 @@ class GroupRepository extends EntityRepository
                 JOIN wr.workspace w
                 WHERE w.id = :id
             )
+
+            ORDER BY g.id
        ";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
         $query->setMaxResults($limit);
         $query->setFirstResult($offset);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
 
-        return $query->getResult();
+        return $paginator;
     }
 
     public function searchUnregisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
@@ -54,7 +62,10 @@ class GroupRepository extends EntityRepository
         $search = strtoupper($search);
 
         $dql = "
-            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
+            LEFT JOIN g.roles r
+            LEFT JOIN g.workspaceRoles gwr
+
             WHERE UPPER(g.name) LIKE :search
             AND g NOT IN
             (
@@ -63,6 +74,8 @@ class GroupRepository extends EntityRepository
                 JOIN wr.workspace w
                 WHERE w.id = :id
             )
+
+            ORDER BY g.id
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -71,7 +84,9 @@ class GroupRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     public function searchRegisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
@@ -79,7 +94,9 @@ class GroupRepository extends EntityRepository
         $search = strtoupper($search);
 
         $dql = "
-            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
+            LEFT JOIN g.roles r
+            LEFT JOIN g.workspaceRoles gwr
             WHERE UPPER(g.name) LIKE :search
             AND g IN
             (
@@ -88,6 +105,8 @@ class GroupRepository extends EntityRepository
                 JOIN wr.workspace w
                 WHERE w.id = :id
             )
+
+        ORDER BY g.id
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -96,7 +115,10 @@ class GroupRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $query->getResult();
+        $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     public function groups($offset, $limit)
@@ -132,7 +154,9 @@ class GroupRepository extends EntityRepository
     public function registeredGroupsOfWorkspace($workspaceId, $offset, $limit)
     {
         $dql = "
-            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, wr, r
+            FROM Claroline\CoreBundle\Entity\Group g
+            LEFT JOIN g.roles r
             JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId
        ";
 
@@ -141,7 +165,9 @@ class GroupRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     public function getRoleOfWorkspace($groupId, $workspaceId)

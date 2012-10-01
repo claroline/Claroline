@@ -99,7 +99,7 @@ class WorkspaceGroupController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_group_list_layout.html.twig', array(
+       return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_group_list_layout.html.twig', array(
                 'workspace' => $workspace)
         );
     }
@@ -179,7 +179,8 @@ class WorkspaceGroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->unregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')->unregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -200,7 +201,8 @@ class WorkspaceGroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->registeredGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')->registeredGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -282,7 +284,8 @@ class WorkspaceGroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->searchUnregisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')->searchUnregisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -305,7 +308,8 @@ class WorkspaceGroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->searchRegisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')->searchRegisteredGroupsOfWorkspace($search, $workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+        $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView("ClarolineCoreBundle:Workspace:group.json.twig", array('groups' => $groups));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -360,6 +364,17 @@ class WorkspaceGroupController extends Controller
         if (!$this->get('security.context')->isGranted($workspace->getManagerRole()->getName())) {
             throw new AccessDeniedHttpException();
         }
+    }
+
+    private function paginatorToArray($paginator){
+
+        $items = array();
+
+        foreach($paginator as $item){
+            $items[] = $item;
+        }
+
+        return $items;
     }
 }
 

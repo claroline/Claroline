@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserRepository extends EntityRepository
 {
@@ -107,7 +108,9 @@ class UserRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     public function unregisteredUsersOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
@@ -130,7 +133,9 @@ class UserRepository extends EntityRepository
         $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     /**
@@ -220,7 +225,9 @@ class UserRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     public function searchRegisteredUsersOfWorkspace($workspaceId, $search, $offset, $limit)
@@ -243,7 +250,9 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 
     public function getRoleOfWorkspace($userId, $workspaceId)
@@ -266,7 +275,7 @@ class UserRepository extends EntityRepository
     public function unregisteredUsersOfGroup($groupId, $offset, $limit)
     {
         $dql = "
-            SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
+            SELECT DISTINCT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
             JOIN u.personnalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE u NOT IN (

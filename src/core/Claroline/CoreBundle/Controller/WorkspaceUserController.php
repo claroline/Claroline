@@ -29,12 +29,9 @@ class WorkspaceUserController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($workspace);
         $this->checkRegistration($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\user_management.html.twig', array(
-            'workspace' => $workspace, 'users' => $users)
-        );
+        return $this->render('ClarolineCoreBundle:Workspace:tools\user_management.html.twig', array('workspace' => $workspace));
     }
 
     /**
@@ -68,7 +65,6 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkIfAdmin($workspace);
-        //more~ only the workspace manager can do it maybe ?
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $role = $em->getRepository('ClarolineCoreBundle:User')->getRoleOfWorkspace($userId, $workspaceId);
         $defaultData = array('role' => $role[0]);
@@ -124,7 +120,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->searchRegisteredUsersOfWorkspace($workspaceId, $search, $offset, self::NUMBER_USER_PER_ITERATION);
+        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->searchRegisteredUsersOfWorkspace($workspaceId, $search, $offset, self::NUMBER_USER_PER_ITERATION);
+        $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -148,7 +145,8 @@ class WorkspaceUserController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->searchUnregisteredUsersOfWorkspace($search, $workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->searchUnregisteredUsersOfWorkspace($search, $workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -235,7 +233,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->registeredUsersOfWorkspace($workspaceId, $offset, self::NUMBER_USER_PER_ITERATION);
+        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->registeredUsersOfWorkspace($workspaceId, $offset, self::NUMBER_USER_PER_ITERATION);
+        $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -260,7 +259,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $users = $em->getRepository('ClarolineCoreBundle:User')->unregisteredUsersOfWorkspace($workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->unregisteredUsersOfWorkspace($workspace, $offset, self::NUMBER_USER_PER_ITERATION);
+        $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -382,6 +382,17 @@ class WorkspaceUserController extends Controller
         if (!$this->get('security.context')->isGranted($workspace->getManagerRole()->getName())) {
             throw new AccessDeniedHttpException();
         }
+    }
+
+    private function paginatorToArray($paginator){
+
+        $items = array();
+
+        foreach($paginator as $item){
+            $items[] = $item;
+        }
+
+        return $items;
     }
 }
 

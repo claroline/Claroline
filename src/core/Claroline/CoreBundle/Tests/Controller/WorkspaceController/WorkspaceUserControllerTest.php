@@ -225,24 +225,9 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testUnregisteredUserList()
     {
-        $this->markTestSkipped('FAILED');
         $this->loadFixture(new LoadManyUsersData());
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $users = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User')->findAll();
-        var_dump(count($users));
-        $countpwr = 0;
-        $countRole = 0;
-        foreach ($users as $user){
-            if($user->getPersonalWorkspace() != null){
-                $countpwr++;
-            }
-
-            if(count($user->getRoles()) > 0){
-                $countRole++;
-            }
-        }
-        var_dump($countpwr);
-        var_dump($countRole);
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
