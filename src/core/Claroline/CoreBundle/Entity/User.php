@@ -231,7 +231,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *
      * @return array[string]
      */
-    public function getRoles($areGroupsIncluded = false)
+    public function getRoles($areGroupsIncluded = true)
     {
         $roleNames = parent::getRoles();
 
