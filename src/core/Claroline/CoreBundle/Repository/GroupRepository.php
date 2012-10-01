@@ -52,7 +52,7 @@ class GroupRepository extends EntityRepository
         $query->setParameter('id', $workspace->getId());
         $query->setMaxResults($limit);
         $query->setFirstResult($offset);
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -84,7 +84,7 @@ class GroupRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -116,7 +116,7 @@ class GroupRepository extends EntityRepository
             ->setMaxResults($limit);
 
         $query->getResult();
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -165,7 +165,7 @@ class GroupRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }

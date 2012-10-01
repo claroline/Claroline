@@ -101,7 +101,7 @@ class WorkspaceGroupController extends Controller
 
        return $this->render('ClarolineCoreBundle:Workspace:tools\unregistered_group_list_layout.html.twig', array(
                 'workspace' => $workspace)
-        );
+       );
     }
 
     /**
@@ -366,7 +366,8 @@ class WorkspaceGroupController extends Controller
         }
     }
 
-    private function paginatorToArray($paginator){
+    private function paginatorToArray($paginator)
+    {
 
         $items = array();
 
