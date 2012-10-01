@@ -108,7 +108,7 @@ class UserRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -133,7 +133,7 @@ class UserRepository extends EntityRepository
         $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -225,7 +225,7 @@ class UserRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -250,7 +250,7 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
