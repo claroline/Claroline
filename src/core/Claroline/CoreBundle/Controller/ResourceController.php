@@ -50,9 +50,7 @@ class ResourceController extends Controller
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
             if($resourceType === 'file') {
-                $files = $this->container->get('request')->files->all();
-                $file = $files["file_form"]["name"];
-                $mimeType = $file->getClientMimeType();
+                $mimeType = $resource->getMimeType();
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType, true, $mimeType);
             } else {
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType);
@@ -249,7 +247,7 @@ class ResourceController extends Controller
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
-                "Event '{$eventName}' didn't bring back any response."
+                "Custom event '{$eventName}' didn't return any Response."
             );
         }
 
