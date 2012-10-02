@@ -109,4 +109,6 @@ class FileListener extends ContainerAware
         $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
         $event->stopPropagation();
     }
+
+    
 }

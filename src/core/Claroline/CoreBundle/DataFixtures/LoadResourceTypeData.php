@@ -49,7 +49,7 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $customActions = array(
             array('open', false),
             null,
-            null
+            array('open', false)
         );
 
         $i=0;

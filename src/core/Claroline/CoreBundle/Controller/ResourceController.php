@@ -457,13 +457,18 @@ class ResourceController extends Controller
         $resourceTypes = $repo->findBy(array('isListable' => 1));
         $pluginResourceTypes = $repo->findListablePluginResourceTypes();
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:resource_menus.json.twig',
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:menus.json.twig',
             array(
                 'resourceTypes' => $resourceTypes,
                 'pluginResourceTypes' => $pluginResourceTypes
             )
         );
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

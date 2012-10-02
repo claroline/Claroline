@@ -1,0 +1,31 @@
+{
+{% for resourceType in resourceTypes %}
+    "{{resourceType.getType()}}": {
+        "delete": {
+            "name": "delete",
+            "route": "{{ path('claro_resource_delete', {'instanceId': '_instanceId'}) }}",
+            "async": true
+        },
+        "properties": {
+            "name": "properties",
+            "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
+            "async": true
+        }
+        {% if resourceType.isDownloadable == true %}
+        ,"download": {
+            "name": "download",
+            "route": "{{ path('claro_resource_export', {'instanceId': '_instanceId'}) }}",
+            "async": false
+        }
+        {% endif %}
+        {% for customAction in resourceType.getCustomActions() %}
+        , "{{ customAction.getAction() }}": {
+            "name": "{{ customAction.getAction() }}",
+            "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getType(), 'action': customAction.getAction(), 'resourceId': '_resourceId'}) }}",
+            "async": {{ customAction.isAsync() }}
+        }
+        {% endfor %}
+    }
+{% if loop.last != true %},{% endif %}
+{% endfor %}
+}
