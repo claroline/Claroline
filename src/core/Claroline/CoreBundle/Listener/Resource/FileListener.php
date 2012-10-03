@@ -127,7 +127,7 @@ class FileListener extends ContainerAware
             $baseType = 'video'; //test
             $fallBackPlayEventName = 'open_file_'.$baseType;
             $this->container->get('event_dispatcher')->dispatch($fallBackPlayEventName, $fallBackPlayEvent);
-             if ($playEvent->getResponse() instanceof Response){
+            if ($playEvent->getResponse() instanceof Response){
                 $response = $playEvent->getResponse();
             } else {
                 $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
@@ -136,7 +136,7 @@ class FileListener extends ContainerAware
                 $response->setContent($file);
                 $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
                 $response->headers->set('Content-Type', 'application/force-download');
-                $response->headers->set('Content-Disposition', 'attachment; filename=file.' .pathinfo($item, PATHINFO_EXTENSION) );
+                $response->headers->set('Content-Disposition', 'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION));
                 $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
                 $response->headers->set('Connection', 'close');
             }
