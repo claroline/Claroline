@@ -1,9 +1,22 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block sectionHeader %}
-<div class="row-fluid">
-    <div class="span12">
-        <h2 class="section-header">{{ workspace.getCode() ~' - '~ workspace.getName() }}</h2>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span7">
+            <h2 class="section-header">{{ workspace.getCode() ~' - '~ workspace.getName() }}</h2>
+            <div>
+                {% for user in workspace.getManagerRole().getUsers() %}
+                    {{user.getLastName()}} {{user.getFirstName}}
+                    {% if loop.last != true %}, {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="span5 workspace-top-toolbox">
+            <br>
+            <input id="generic-search-field" type="text" width="100px" class="search-query"/>
+            <button class="btn btn-primary">Resource Picker</button>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -11,9 +24,12 @@
 {% block content %}
 <div class="container-fluid">
     <div class=row-fluid">
-        <div class="span1">
+        <div class="span1 workspace-left-toolbox">
             <div class="wrapper">
-                <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}" id="workspace_home_link">{{ 'workspace_welcome'|trans({}, 'platform') }}</a>
+                <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}"
+                   id="workspace_home_link">
+                   <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/home.png')}}" />
+                </a>
             </div>
             <div class="wrapper">
                 <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}"
