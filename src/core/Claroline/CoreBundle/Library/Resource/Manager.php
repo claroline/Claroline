@@ -60,7 +60,6 @@ class Manager
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
         $user = $this->sc->getToken()->getUser();
-
         if (null !== $resource) {
             $ri = new ResourceInstance();
             $ri->setCreator($user);
@@ -72,6 +71,7 @@ class Manager
             $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
             $ri->setName($resource->getName());
+            var_dump($resource->getName());
             $rename = $this->ut->getUniqueName($ri, $dir);
             $ri->setName($rename);
             $this->em->persist($ri);

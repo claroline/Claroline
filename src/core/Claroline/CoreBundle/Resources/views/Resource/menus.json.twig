@@ -21,7 +21,7 @@
         {% for customAction in resourceType.getCustomActions() %}
         , "{{ customAction.getAction() }}": {
             "name": "{{ customAction.getAction() }}",
-            "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getType(), 'action': customAction.getAction(), 'resourceId': '_resourceId'}) }}",
+            "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getType(), 'action': customAction.getAction(), 'instanceId': '_instanceId' }) }}",
             "async": {{ customAction.isAsync() }}
         }
         {% endfor %}

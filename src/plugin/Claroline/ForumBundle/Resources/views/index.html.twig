@@ -1,12 +1,7 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 {% block content %}
 FORUM INDEX
 <br/>
-<a href="{{path('claro_forum_form_subject_creation', {'forumId': forum.getId()})}}"> créer un sujet </a>
+<a href="{{path('claro_forum_form_subject_creation', {'forumInstanceId': forumInstance.getId()})}}"> créer un sujet </a>
 <br/>
-List des sujets:<br/>
-{% for subject in forum.getSubjects() %}
-<a href="{{path('claro_forum_show_message', {'subjectId': subject.getId()})}}">{{subject.getTitle()}}
-</br>
-{% endfor %}
 {% endblock %}
