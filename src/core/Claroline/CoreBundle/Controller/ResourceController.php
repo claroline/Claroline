@@ -239,10 +239,10 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function customAction($resourceType, $action, $resourceId)
+    public function customAction($resourceType, $action, $instanceId)
     {
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName($action, $resourceType);
-        $event = new CustomActionResourceEvent($resourceId);
+        $event = new CustomActionResourceEvent($instanceId);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {

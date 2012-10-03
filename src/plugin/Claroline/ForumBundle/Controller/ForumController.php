@@ -2,26 +2,24 @@
 
 namespace Claroline\ForumBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\ForumBundle\Form\SubjectType;
-use Claroline\ForumBundle\Form\MessageType;
-use Claroline\ForumBundle\Form\ForumType;
-use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Form\MessageType;
+use Claroline\ForumBundle\Form\SubjectType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ForumController
  */
 class ForumController extends Controller
 {
-    public function OpenAction($forumId)
+    public function OpenAction($instanceId)
     {
-        $forum = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->find($forumId);
+        $instance = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $content = $this->render(
-            'ClarolineForumBundle::index.html.twig', array('forum' => $forum)
+            'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace())
         );
 
         $response = new Response($content);
@@ -29,18 +27,18 @@ class ForumController extends Controller
         return $response;
     }
 
-    public function forumSubjectCreationFormAction($forumId)
+    public function forumSubjectCreationFormAction($forumInstanceId)
     {
         $formSubject = $this->get('form.factory')->create(new SubjectType());
 
         $content = $this->render(
-            'ClarolineForumBundle::subject_form.html.twig', array('form' => $formSubject->createView(), 'forumId' => $forumId)
+            'ClarolineForumBundle::subject_form.html.twig', array('form' => $formSubject->createView(), 'forumInstanceId' => $forumInstanceId)
         );
 
         return new Response($content);
     }
 
-    public function createSubjectAction($forumId)
+    public function createSubjectAction($forumInstanceId)
     {
         $form = $this->get('form.factory')->create(new SubjectType());
         $form->bindRequest($this->get('request'));
@@ -48,24 +46,25 @@ class ForumController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $title = $form['title']->getData();
         $content = $form['content']->getData();
-        $subjectType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'Subject'));
-        $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'Message'));
-        $forum = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->find($forumId);
+        $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
         $message = new Message();
         $subject = new Subject();
-        $message->setResourceType($messageType);
-        $subject->setResourceType($subjectType);
         $subject->setTitle($title);
         $subject->setCreator($user);
         $message->setContent($content);
-        $subject->setForum($forum);
-        $message->setSubject($subject);
         $message->setCreator($user);
+        $subject->setForum($forumInstance->getResource());
+        $message->setSubject($subject);
+        $message->setName('testmsg');
+        $subject->setName('testsub');
         $em->persist($message);
         $em->persist($subject);
         $em->flush();
+        $creator = $this->get('claroline.resource.manager');
+        $subjectInstance = $creator->create($subject, $forumInstanceId, 'Subject');
+        $creator->create($message, $subjectInstance->getId(), 'Message');
 
-        return new RedirectResponse($this->generateUrl('claro_forum_open', array('forumId' => $forumId)));
+        return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
     }
 
     public function showMessagesAction($subjectId)
