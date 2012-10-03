@@ -193,26 +193,6 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Renders the tools page with its layout.
-     *
-     * @param integer $workspaceId
-     *
-     * @return Response
-     *
-     * @throws AccessDeniedHttpException
-     */
-    public function toolsAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
-
-        return $this->render('ClarolineCoreBundle:Workspace:tools.html.twig', array(
-            'workspace' => $workspace)
-        );
-    }
-
-    /**
      * Returns the id of the current user workspace.
      *
      * @return Response

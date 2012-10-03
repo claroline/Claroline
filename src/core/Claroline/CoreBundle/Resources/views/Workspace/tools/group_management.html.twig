@@ -11,16 +11,9 @@
     <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_group_management.js') }}' type="text/javascript"></script>
 {% endblock %}
 
-{% block tools %}
+{% block section_content %}
    {% spaceless %}
         <ul class="breadcrumb">
-            <li>
-                <a href="{{ path('claro_workspace_tools', {'workspaceId': workspace.getId()}) }}"
-                   id="resource_manager_link">
-                    <i class="icon-home"></i>
-                </a>
-            </li>
-            <span class="divider"> / </span>
             <li>
                 <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
                 id="link_group_management">{{ 'group_management'|trans({}, 'platform') }}

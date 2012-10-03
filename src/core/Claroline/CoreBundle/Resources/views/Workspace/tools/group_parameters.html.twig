@@ -1,16 +1,9 @@
 {% extends 'ClarolineCoreBundle:Workspace:tools.html.twig' %}
 {% block javascripts %}
 {% endblock %}
-{% block tools %}
+{% block section_content %}
    {% spaceless %}
         <ul class="breadcrumb">
-            <li>
-                <a href="{{ path('claro_workspace_tools', {'workspaceId': workspace.getId()}) }}"
-                   id="resource_manager_link">
-                    <i class="icon-home"></i>
-                </a>
-            </li>
-            <span class="divider"> / </span>
             <li>
                 <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
                 id="link_group_management">{{ 'group_management'|trans({}, 'platform') }}

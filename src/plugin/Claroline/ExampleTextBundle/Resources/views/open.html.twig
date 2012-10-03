@@ -1,5 +1,7 @@
 {# to keep the workspace layout, extends this template #}
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-{% block content %}
-{{text.getText}}
+{% block section_content %}
+{{instance.getName()}}
+<br>
+{{instance.getResource().getText()}}
 {% endblock %}
