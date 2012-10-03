@@ -103,21 +103,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
          $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDisplayTools()
-    {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
-    }
-
-    public function testUserCantAccessUnregisteredTools()
-    {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testDisplayUserManagement()
     {
          $this->logUser($this->getFixtureReference('user/user'));
