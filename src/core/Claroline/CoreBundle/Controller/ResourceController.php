@@ -268,9 +268,6 @@ class ResourceController extends Controller
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $item = $this->get('claroline.resource.exporter')->export($resourceInstance);
         $nameDownload = pathinfo(strtolower(str_replace(' ', '_', $resourceInstance->getName())), PATHINFO_FILENAME).'.'.pathinfo($item, PATHINFO_EXTENSION);
-        if ($resourceInstance->getResourceType()->getType() == 'directory') {
-            $nameDownload.='.zip';
-        }
         $file = file_get_contents($item);
         $response = new Response();
         $response->setContent($file);

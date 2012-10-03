@@ -71,7 +71,6 @@ class Manager
             $ri->setWorkspace($dir->getWorkspace());
             $ri->setResource($resource);
             $ri->setName($resource->getName());
-            var_dump($resource->getName());
             $rename = $this->ut->getUniqueName($ri, $dir);
             $ri->setName($rename);
             $this->em->persist($ri);

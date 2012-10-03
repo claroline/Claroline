@@ -1,7 +1,11 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block sectionHeader %}
-    {{ macros.sectionHeader(workspace.getCode() ~' - '~ workspace.getName()) }}
+<div class="row-fluid">
+    <div class="span12">
+        <h2 class="section-header">{{ workspace.getCode() ~' - '~ workspace.getName() }}</h2>
+    </div>
+</div>
 {% endblock %}
 
 {% block tabs %}
