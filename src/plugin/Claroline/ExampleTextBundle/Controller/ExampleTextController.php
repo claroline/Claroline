@@ -17,7 +17,6 @@ class ExampleTextController extends Controller
         //if you only have the workspace id => $em->getRepository('Claroline\CoreBundle\Workspace\AbstractWorkspace')->find(...);
         $workspace = $instance->getWorkspace();
 
-
         //get the text.
         return $this->render('ClarolineExampleTextBundle::open.html.twig', array('text' => $resource, 'workspace' => $workspace));
     }
