@@ -113,22 +113,23 @@ class FileListener extends ContainerAware
 
     public function onOpen(CustomActionResourceEvent $event)
     {
-        $file = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\File')->find($event->getResourceId());
+        $instance =  $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($event->getInstanceId());
+        $file = $instance->getResource();
         $mimeType = $file->getMimeType();
-        $playEvent = new PlayFileEvent($file);
-        $eventName = strtolower(str_replace('/', '_', 'open_file_'.$mimeType));
+        $playEvent = new PlayFileEvent($instance);
+        $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
         $this->container->get('event_dispatcher')->dispatch($eventName, $playEvent);
 
         if ($playEvent->getResponse() instanceof Response){
             $response = $playEvent->getResponse();
         } else {
-            $fallBackPlayEvent = new PlayEvent($file);
-            //basic mime;
-            $baseType = 'video'; //test
-            $fallBackPlayEventName = 'open_file_'.$baseType;
+            $fallBackPlayEvent = new PlayFileEvent($instance);
+            $mimeElements = explode('/', $mimeType);
+            $baseType = strtolower($mimeElements[0]);
+            $fallBackPlayEventName = 'play_file_'.$baseType;
             $this->container->get('event_dispatcher')->dispatch($fallBackPlayEventName, $fallBackPlayEvent);
-            if ($playEvent->getResponse() instanceof Response){
-                $response = $playEvent->getResponse();
+            if ($fallBackPlayEvent->getResponse() instanceof Response){
+                $response = $fallBackPlayEvent->getResponse();
             } else {
                 $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
                 $file = file_get_contents($item);
@@ -153,6 +154,12 @@ class FileListener extends ContainerAware
 
     public function onOpenVideo(PlayFileEvent $event)
     {
-
+        $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$event->getInstance()->getResource()->getHashName();
+        $content = $this->container->get('templating')
+            ->render('ClarolineCoreBundle:Resource:player\video.html.twig',
+                array('workspace' => $event->getInstance()->getWorkspace(), 'path' => $path, 'video' => $event->getInstance()->getResource()));
+        $response = new Response($content);
+        $event->setResponse($response);
+        $event->stopPropagation();
     }
 }
