@@ -21,7 +21,7 @@ class AggregatorWorkspace extends AbstractWorkspace
      *     inverseJoinColumns={@ORM\JoinColumn(name="workspace_id", referencedColumnName="id")}
      * )
      */
-    private $workspaces;
+    protected $workspaces;
 
     public function __construct()
     {

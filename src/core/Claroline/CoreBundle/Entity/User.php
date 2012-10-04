@@ -124,7 +124,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *      mappedBy="user"
      * )
      */
-    private $resourceInstances;
+    protected $resourceInstances;
 
     /**
      * @ORM\OneToMany(
@@ -132,13 +132,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *      mappedBy="user"
      * )
      */
-    private $abstractResources;
+    protected $abstractResources;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
-    private $personnalWorkspace;
+    protected $personnalWorkspace;
 
     public function __construct()
     {

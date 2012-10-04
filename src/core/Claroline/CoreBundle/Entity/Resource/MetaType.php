@@ -16,7 +16,7 @@ class MetaType
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=50)

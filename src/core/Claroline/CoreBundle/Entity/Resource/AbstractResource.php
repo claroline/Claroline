@@ -31,58 +31,58 @@ abstract class AbstractResource
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource", cascade={"persist", "remove"})
      */
-    private $resourceInstances;
+    protected $resourceInstances;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
-    private $license;
+    protected $license;
 
     /**
      * @ORM\Column(type="integer", name="share_type")
      */
-    private $shareType;
+    protected $shareType;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $created;
+    protected $created;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    private $updated;
+    protected $updated;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
-    private $resourceType;
+    protected $resourceType;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $creator;
+    protected $creator;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", inversedBy="abstractResources", cascade={"persist"})
      * @ORM\JoinColumn(name="icon_id", referencedColumnName="id")
      */
-    private $icon;
+    protected $icon;
 
     /**
      * @Assert\NotBlank()
      */
-    private $name;
+    protected $name;
 
     const PRIVATE_RESOURCE = 0;
     const PUBLIC_RESOURCE = 1;

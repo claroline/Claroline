@@ -18,12 +18,12 @@ class ResourceType
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
+    protected $type;
 
     /**
      * @ORM\OneToMany(
@@ -32,7 +32,7 @@ class ResourceType
      *      cascade={"persist"}
      * )
      */
-    private $abstractResources;
+    protected $abstractResources;
 
     /**
      * @ORM\OneToMany(
@@ -41,33 +41,33 @@ class ResourceType
      *      cascade={"persist"}
      * )
      */
-    private $customActions;
+    protected $customActions;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $class;
+    protected $class;
 
     /**
      * @ORM\Column(type="boolean", name="is_navigable")
      */
-    private $isNavigable;
+    protected $isNavigable;
 
     /**
      * @ORM\Column(type="boolean", name="is_listable")
      */
-    private $isListable;
+    protected $isListable;
 
     /**
      * @ORM\Column(type="boolean", name="is_downloadable")
      */
-    private $isDownloadable;
+    protected $isDownloadable;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
      */
-    private $plugin;
+    protected $plugin;
 
     /**
      * @ORM\ManyToMany(

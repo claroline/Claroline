@@ -19,7 +19,7 @@ class WorkspaceRole extends Role
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
-    private $workspace;
+    protected $workspace;
 
     /**
      * @ORM\ManyToMany(
@@ -31,13 +31,13 @@ class WorkspaceRole extends Role
      *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
      * )
      */
-    private $groups;
+    protected $groups;
 
 
     /**
      * @ORM\Column(name="res_mask", type="integer")
      */
-    private $resMask;
+    protected $resMask;
 
     public function __construct()
     {

@@ -15,12 +15,12 @@ class File extends AbstractResource
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $size;
+    protected $size;
 
     /**
      * @ORM\Column(type="string", length=36, name="hash_name")
      */
-    private $hashName;
+    protected $hashName;
 
     /**
      * Returns the file size.
