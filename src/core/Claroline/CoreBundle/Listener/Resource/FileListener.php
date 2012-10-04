@@ -146,20 +146,4 @@ class FileListener extends ContainerAware
         $event->setResponse($response);
         $event->stopPropagation();
     }
-
-    public function onOpenPdf(PlayFileEvent $event)
-    {
-
-    }
-
-    public function onOpenVideo(PlayFileEvent $event)
-    {
-        $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$event->getInstance()->getResource()->getHashName();
-        $content = $this->container->get('templating')
-            ->render('ClarolineCoreBundle:Resource:player\video.html.twig',
-                array('workspace' => $event->getInstance()->getWorkspace(), 'path' => $path, 'video' => $event->getInstance()->getResource()));
-        $response = new Response($content);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
 }
