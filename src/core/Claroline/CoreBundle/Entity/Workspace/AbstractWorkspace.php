@@ -28,24 +28,24 @@ abstract class AbstractWorkspace
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      */
-    private $code;
+    protected $code;
 
     /**
      * @ORM\Column(type="integer", length=255)
      */
-    private $type;
+    protected $type;
 
     /**
      * @ORM\Column(name="is_public", type="boolean")
@@ -59,17 +59,17 @@ abstract class AbstractWorkspace
      *  cascade={"persist"}
      * )
      */
-    private $roles;
+    protected $roles;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="workspace")
      */
-    private $resourcesInstance;
+    protected $resourcesInstance;
 
-    private static $visitorPrefix = 'ROLE_WS_VISITOR';
-    private static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
-    private static $managerPrefix = 'ROLE_WS_MANAGER';
-    private static $customPrefix = 'ROLE_WS_CUSTOM';
+    protected static $visitorPrefix = 'ROLE_WS_VISITOR';
+    protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
+    protected static $managerPrefix = 'ROLE_WS_MANAGER';
+    protected static $customPrefix = 'ROLE_WS_CUSTOM';
 
     const USER_REPOSITORY = 0;
     const STANDARD = 1;
