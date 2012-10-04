@@ -1,9 +1,7 @@
-{# to keep the workspace layout, extends this template #}
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block section_content %}
-{{ path }}<br>
-<video controls src="{{ path }}" >
+<video controls preload=none
+    <source src="{{ path ('claro_stream_video', {'videoId': video.getId()})}}"/>
 </video>
-
 {% endblock %}

@@ -51,8 +51,6 @@ services:
             - { name: kernel.event_listener, event: copy_file, method: onCopy }
             - { name: kernel.event_listener, event: export_file, method: onExport }
             - { name: kernel.event_listener, event: open_file, method: onOpen }
-            - { name: kernel.event_listener, event: play_file_video, method: onOpenVideo }
-
 
     claroline.listener.text_listener:
         class: Claroline\CoreBundle\Listener\Resource\TextListener
