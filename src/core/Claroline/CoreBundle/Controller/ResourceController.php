@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
@@ -268,13 +269,17 @@ class ResourceController extends Controller
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $item = $this->get('claroline.resource.exporter')->export($resourceInstance);
         $nameDownload = pathinfo(strtolower(str_replace(' ', '_', $resourceInstance->getName())), PATHINFO_FILENAME).'.'.pathinfo($item, PATHINFO_EXTENSION);
-        $file = file_get_contents($item);
-        $response = new Response();
-        $response->setContent($file);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(function() use($item){
+            readfile($item);
+        });
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $nameDownload);
         $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
+        $response->headers->set('Content-Length', filesize($item));
         $response->headers->set('Connection', 'close');
 
         return $response;
