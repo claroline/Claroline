@@ -1,12 +1,44 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-{% block content %}
-SUBJECT: {{ subject.getTitle() }}
-{% for message in subject.getMessages() %}
-<br/>
-user : {{ subject.getCreator().getUsername() }}
-<br/>
-{{ message.getContent() }}
-<br/>
-<a href='{{path('claro_forum_add_message', {'subjectId':subject.getId()})}}'>ajouter un message</a>
-{% endfor %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% block section_content %}
+<h2> {{ 'forum'|trans({}, 'forum') }}:
+    <a href="{{ path('claro_forum_open', {'instanceId':subjectInstance.getParent().getId() }) }}">
+        {{ subjectInstance.getParent().getName() }}
+    </a>
+</h2>
+<h3> {{ 'subject'|trans({}, 'forum') }}: {{ subjectInstance.getResource().getTitle() }} </h3>
+
+<table class="table table-striped table-bordered table-condensed">
+    <thead>
+        <tr>
+            <th>{{ 'subject/author'|trans({}, 'forum') }}</th>
+            <th>{{ 'responses'|trans({}, 'forum') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for message in subjectInstance.getResource().getMessages() %}
+           <tr>
+                <td>
+                   <div>
+                       <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
+                   </div>
+                   <div>
+                       {{ message.getCreator().getUsername() }}<br/>
+                       {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
+                   </div>
+                </td>
+                <td>{{ message.getContent()|raw }}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ligula quam, iaculis ut molestie quis, facilisis et neque. Phasellus egestas lacinia odio, at posuere sapien condimentum sit amet. Curabitur eget justo in ligula scelerisque laoreet eu ut erat. Aenean rutrum, neque eu scelerisque vestibulum, nulla elit fermentum mauris, ac adipiscing odio eros sit amet lectus. Proin vitae purus id turpis ullamcorper interdum. Pellentesque ullamcorper porta augue, eu mattis orci venenatis eget. Aliquam at mauris eros. Phasellus pretium ante a nisl semper non blandit diam malesuada. Sed et enim nunc. Nam dignissim euismod sem, id posuere velit molestie eu. Sed auctor risus vitae diam vulputate hendrerit. Duis purus nunc, viverra id iaculis auctor, facilisis eu tellus. In tempus vulputate diam, sit amet placerat turpis viverra quis. Cras aliquet sollicitudin libero, sit amet pharetra nibh blandit in.
+
+                Donec mattis dapibus dolor vel egestas. Curabitur eleifend posuere adipiscing. Nullam consequat tincidunt lorem, ut pulvinar nunc rutrum et. Mauris pretium justo sit amet libero fermentum vel rutrum ipsum bibendum. Maecenas a quam quis dolor euismod varius ut ac risus. Sed molestie pretium odio a aliquet. Vivamus tempor consectetur est, sed venenatis velit feugiat sit amet. Aenean turpis erat, viverra placerat hendrerit sit amet, gravida et magna. Suspendisse ultrices adipiscing diam eget fringilla. Morbi posuere, lacus ac viverra feugiat, turpis quam tempor massa, ut commodo ipsum nibh ac mauris.
+                </td>
+           </tr>
+
+        {% endfor %}
+     </tbody>
+</table>
+
+<a href='{{path('claro_forum_message_form', {'subjectInstanceId':subjectInstance.getId()})}}'
+    <button class="btn btn-primary"> {{ 'new_message'|trans({}, 'forum') }} </button>
+</a>
+
 {% endblock %}
