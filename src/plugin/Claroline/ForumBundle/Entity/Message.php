@@ -43,5 +43,4 @@ class Message extends AbstractResource
     {
         $this->subject = $subject;
     }
-
 }

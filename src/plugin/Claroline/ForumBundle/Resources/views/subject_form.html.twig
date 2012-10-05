@@ -1,5 +1,16 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-{% block content %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{#
+{% block javascripts %}
+<script src="{{asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}" type="text/javascript"></script>
+<script type="text/javascript">
+tinyMCE.init({
+    // General options
+    mode : "textareas"
+});
+</script>
+{% endblock %}
+#}
+{% block section_content %}
 <form action="{{path('claro_forum_create_subject', {'forumInstanceId':forumInstanceId})}}" method="post" {{ form_enctype(form) }} id="subject_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
