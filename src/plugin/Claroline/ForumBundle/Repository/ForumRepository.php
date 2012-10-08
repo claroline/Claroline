@@ -9,7 +9,7 @@ class ForumRepository extends EntityRepository
 {
       const SELECT_SUBJECT = "
             ri.id as instanceId,
-            COUNT(m.id) AS count_messages,
+            COUNT(m_count.id) AS count_messages,
             MAX(m.created) AS last_message_created,
             s.id as subjectId,
             s.created as subject_created,
@@ -32,6 +32,7 @@ class ForumRepository extends EntityRepository
         SELECT ".self::SELECT_SUBJECT."
         FROM  Claroline\ForumBundle\Entity\Subject s
         JOIN s.messages m
+        LEFT JOIN s.messages m_count
         JOIN s.resourceInstances ri
         JOIN s.creator subjectCreator
         JOIN ri.parent pri
