@@ -54,11 +54,8 @@ class Creator
         $this->entityManager->flush();
         $workspace->initBaseRoles();
         $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
-        $workspace->getVisitorRole()->setResMask(MaskBuilder::MASK_VIEW);
         $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
-        $workspace->getCollaboratorRole()->setResMask(MaskBuilder::MASK_VIEW);
         $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
-        $workspace->getManagerRole()->setResMask(MaskBuilder::MASK_OWNER);
         $this->entityManager->persist($workspace);
 
         if (null !== $manager) {
