@@ -3,7 +3,7 @@
 namespace Claroline\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\ForumBundle\Entity\Subject;
 
@@ -15,6 +15,7 @@ class Message extends AbstractResource
 {
     /**
      * @ORM\Column(type="string", name="content")
+     * @Assert\NotBlank()
      */
     protected $content;
 
