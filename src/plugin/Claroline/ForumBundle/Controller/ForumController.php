@@ -19,7 +19,6 @@ class ForumController extends Controller
     {
         $instance = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $subjects = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->getSubjects($instance);
-        $users = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->getLastUser($instance);
 
         $content = $this->render(
             'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'subjects' => $subjects)

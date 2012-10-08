@@ -62,30 +62,4 @@ class ForumRepository extends EntityRepository
 
         return $query->getArrayResult();
     }
-
-    public function getLastUser($forumInstance)
-    {
-        $dql ="
-                        SELECT lcu.firstName FROM Claroline\ForumBundle\Entity\Message m2
-                JOIN m2.subject s2
-                JOIN m2.creator lcu
-                JOIN s2.forum f2
-                JOIN f2.resourceInstances ri2
-                WHERE NOT EXISTS
-                (
-                    SELECT m3 FROM Claroline\ForumBundle\Entity\Message m3
-                    JOIN m3.subject s3
-                    WHERE s2.id = s3.id
-                    AND m2.created < m3.created
-                )
-                and ri2.id = :instanceId";
-
-                    $query = $this->_em->createQuery($dql);
-        $query->setParameter('instanceId', $forumInstance->getId());
-
-        return $query->getArrayResult();
-
-    }
-
-
 }
