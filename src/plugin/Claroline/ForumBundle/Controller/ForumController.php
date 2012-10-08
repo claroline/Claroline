@@ -41,34 +41,44 @@ class ForumController extends Controller
         return new Response($content);
     }
 
+    /*
+     * The form submission is working but I had to do some weird things to make it works.
+     */
+
     public function createSubjectAction($forumInstanceId)
     {
-        $form = $this->get('form.factory')->create(new SubjectType());
+        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
         $form->bindRequest($this->get('request'));
         $em = $this->getDoctrine()->getEntityManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $title = $form['title']->getData();
-        $content = $form['content']->getData();
         $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
-        $message = new Message();
-        $subject = new Subject();
-        $subject->setTitle($title);
-        $subject->setCreator($user);
-        $message->setContent($content);
-        $message->setCreator($user);
-        $subject->setForum($forumInstance->getResource());
-        $message->setSubject($subject);
-        $message->setName($title.'-'. date('m/d/Y h:i:m'));
-        $subject->setName($title);
-        $em->persist($message);
-        $em->persist($subject);
-        $em->flush();
-        $creator = $this->get('claroline.resource.manager');
-        //instantiation of the new resources
-        $subjectInstance = $creator->create($subject, $forumInstanceId, 'Subject');
-        $creator->create($message, $subjectInstance->getId(), 'Message');
 
-        return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
+        if ($form->isValid()) {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $subject = $form->getData();
+            $dataMessage = $subject->getMessages();
+            $message = new Message();
+            $message->setContent($dataMessage['content']);
+            $subject->setCreator($user);
+            $message->setCreator($user);
+            $subject->setForum($forumInstance->getResource());
+            $message->setName($subject->getTitle() . '-' . date('m/d/Y h:i:m'));
+            $subject->setName($subject->getTitle());
+            $subject->resetMessages();
+            $message->setSubject($subject);
+            $em->persist($message);
+            $em->persist($subject);
+            $em->flush();
+            $creator = $this->get('claroline.resource.manager');
+            //instantiation of the new resources
+            $subjectInstance = $creator->create($subject, $forumInstanceId, 'Subject');
+            $creator->create($message, $subjectInstance->getId(), 'Message');
+
+            return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
+        } else {
+            return $this->render(
+                    'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
+            );
+        }
     }
 
     public function showMessagesAction($subjectInstanceId)
@@ -95,26 +105,31 @@ class ForumController extends Controller
 
     public function createMessageAction($subjectInstanceId)
     {
-        $form = $this->get('form.factory')->create(new MessageType());
+        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->bindRequest($this->get('request'));
         $em = $this->getDoctrine()->getEntityManager();
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
-        $subject = $subjectInstance->getResource();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'Message'));
-        $message = new Message();
-        $content = $form['content']->getData();
-        $message->setSubject($subject);
-        $message->setCreator($user);
-        $message->setResourceType($messageType);
-        $message->setContent($content);
-        $creator = $this->get('claroline.resource.manager');
-        $title = $subjectInstance->getParent()->getName();
-        $message->setName($title.'-'. date('m/d/Y h:i:m'));
-        $em->persist($message);
-        $creator->create($message, $subjectInstance->getId(), 'Message');
-        $em->flush();
 
-        return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
+        if ($form->isValid()) {
+            $message = $form->getData();
+            $subject = $subjectInstance->getResource();
+            $user = $this->get('security.context')->getToken()->getUser();
+            $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'Message'));
+            $message->setSubject($subject);
+            $message->setCreator($user);
+            $message->setResourceType($messageType);
+            $creator = $this->get('claroline.resource.manager');
+            $title = $subjectInstance->getParent()->getName();
+            $message->setName($title . '-' . date('m/d/Y h:i:m'));
+            $em->persist($message);
+            $creator->create($message, $subjectInstance->getId(), 'Message');
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
+        } else {
+            return $this->render(
+                    'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            );
+        }
     }
 }

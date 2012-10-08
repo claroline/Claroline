@@ -1,6 +1,7 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-{#
+
 {% block javascripts %}
+{{ parent() }}
 <script src="{{asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
 tinyMCE.init({
@@ -9,9 +10,9 @@ tinyMCE.init({
 });
 </script>
 {% endblock %}
-#}
+
 {% block section_content %}
-<form action="{{path('claro_forum_create_subject', {'forumInstanceId':forumInstanceId})}}" method="post" {{ form_enctype(form) }} id="subject_form">
+<form novalidate="novalidate" action="{{path('claro_forum_create_subject', {'forumInstanceId':forumInstanceId})}}" method="post" {{ form_enctype(form) }} id="subject_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
    <input type="submit" />
