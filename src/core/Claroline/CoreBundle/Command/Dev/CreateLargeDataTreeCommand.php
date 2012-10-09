@@ -11,9 +11,11 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
-class CreateLargeDataTreeCommand extends ContainerAwareCommand {
+class CreateLargeDataTreeCommand extends ContainerAwareCommand
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->directoryCount = 0;
         $this->fileCount = 0;
@@ -47,9 +49,10 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         $this->fileNamesOffset--;
     }
 
-    protected function configure() {
+    protected function configure()
+    {
         $this->setName('claroline:datatree:create')
-                ->setDescription('Creates a new data tree of resource instances. For better perfs, launch with --env=prod.');
+            ->setDescription('Creates a new data tree of resource instances. For better perfs, launch with --env=prod.');
         $this->setDefinition(array(
             new InputArgument('username', InputArgument::REQUIRED, 'The user creating the tree'),
             new InputArgument('depth', InputArgument::REQUIRED, 'The number of level'),
@@ -58,7 +61,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         ));
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output) {
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
         $params = array(
             'username' => 'username',
             'depth' => 'depth',
@@ -69,46 +73,48 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                        $argument, $this->askArgument($output, $argumentName)
+                    $argument, $this->askArgument($output, $argumentName)
                 );
             }
         }
     }
 
-    protected function askArgument(OutputInterface $output, $argumentName) {
+    protected function askArgument(OutputInterface $output, $argumentName)
+    {
         $argument = $this->getHelper('dialog')->askAndValidate(
-                $output, "Enter the {$argumentName}: ", function($argument) {
-                    if (empty($argument)) {
-                        throw new \Exception('This argument is required');
-                    }
-
-                    return $argument;
+            $output, "Enter the {$argumentName}: ", function($argument) {
+                if (empty($argument)) {
+                    throw new \Exception('This argument is required');
                 }
+
+                return $argument;
+            }
         );
 
         return $argument;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $username = $input->getArgument('username');
         $maxDepth = $input->getArgument('depth');
         $directoryCount = $input->getArgument('directory_count');
         $fileCount = $input->getArgument('file_count');
 
-        $numTot = (( 1 - pow($directoryCount,$maxDepth+1) ) / (1 - $directoryCount) ) - 1;
-        $output->writeln("Number of directories that will be generated: ".$numTot);
-        $output->writeln("Number of files that will be generated: ".$numTot*$fileCount);
+        $numTot = (( 1 - pow($directoryCount, $maxDepth + 1) ) / (1 - $directoryCount) ) - 1;
+        $output->writeln("Number of directories that will be generated: " . $numTot);
+        $output->writeln("Number of files that will be generated: " . $numTot * $fileCount);
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         $this->user = $em->getRepository('Claroline\CoreBundle\Entity\User')->findOneBy(array('username' => $username));
         $this->workspace = $this->user->getPersonalWorkspace();
         $this->userRootDirectory = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-                ->findOneBy(array('parent' => null, 'workspace' => $this->user->getPersonalWorkspace()->getId()));
+            ->findOneBy(array('parent' => null, 'workspace' => $this->user->getPersonalWorkspace()->getId()));
         $this->dirType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-                ->findOneBy(array('type' => 'directory'));
+            ->findOneBy(array('type' => 'directory'));
         $this->fileType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-                ->findOneBy(array('type' => 'file'));
+            ->findOneBy(array('type' => 'file'));
 
         $this->generateItems($em, $maxDepth, 0, $directoryCount, $fileCount, $this->userRootDirectory);
         $em->flush();
@@ -117,7 +123,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         $output->writeln("\n===> NUMBER OF FILES CREATED: " . $this->filesCount);
     }
 
-    private function generateItems($em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent) {
+    private function generateItems($em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent)
+    {
         $curDepth++;
 
         $dirToBeDetached = array();
@@ -131,7 +138,6 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
                 $fi = $this->addFile($em, $curDepth, $this->fileNames[rand(0, $this->fileNamesOffset)], $ri);
                 $filesToBeDetached[] = $fi;
                 $this->filesCount++;
-
             }
             echo "\n Depth: " . $curDepth . " => Flushing... (files: " . $this->filesCount . ", directories: " . $this->directoryCount . ")";
             $em->flush();
@@ -165,7 +171,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         echo " [UOW size: " . $em->getUnitOfWork()->size() . "]";
     }
 
-    private function addDirectory($em, $depth, $name, $parent) {
+    private function addDirectory($em, $depth, $name, $parent)
+    {
         $dir = new Directory();
         $dir->setResourceType($this->dirType);
         $dir->setCreator($this->user);
@@ -183,7 +190,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         return $ri;
     }
 
-    private function addFile($em, $depth, $name, $parent) {
+    private function addFile($em, $depth, $name, $parent)
+    {
         $file = tempnam($this->getContainer()->getParameter('claroline.files.directory'), 'tmpfile');
         $hash = pathinfo($file, PATHINFO_FILENAME);
         $file = new File();
@@ -205,7 +213,8 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         return $ri;
     }
 
-    private function getMimeType($name) {
+    private function getMimeType($name)
+    {
         $ext = pathinfo($name, PATHINFO_EXTENSION);
 
         $mimeTypes = array();

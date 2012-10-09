@@ -22,11 +22,12 @@ class ForumRepository extends EntityRepository
 
       /**
        * Deep magic goes here.
+       * Gets a subject with some of its last messages datas.
        *
        * @param ResourceInstance $forumInstance
        * @return type
        */
-    public function getSubjects($forumInstance)
+    public function getSubjects($forumInstance, $offset, $limit)
     {
         $dql = "
         SELECT ".self::SELECT_SUBJECT."
@@ -59,7 +60,14 @@ class ForumRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('instanceId', $forumInstance->getId());
+        $query->setMaxResults($limit);
+        $query->setFirstResult($offset);
 
         return $query->getArrayResult();
+    }
+
+    public function getMessages($subjectInstance, $offset, $limit)
+    {
+
     }
 }

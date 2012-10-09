@@ -16,9 +16,11 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
  */
-class CreateUsersCommand extends ContainerAwareCommand {
+class CreateUsersCommand extends ContainerAwareCommand
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->firstNames = array(
@@ -48,21 +50,23 @@ class CreateUsersCommand extends ContainerAwareCommand {
         $this->maxLastNameOffset--;
     }
 
-    protected function configure() {
+    protected function configure()
+    {
         $this->setName('claroline:users:create')
-                ->setDescription('Creates a lot of users.');
+            ->setDescription('Creates a lot of users.');
         $this->setDefinition(array(
             new InputArgument('amount', InputArgument::REQUIRED, 'The number of users created'),
         ));
         $this->addOption(
-                'ws_creator', 'wsc', InputOption::VALUE_NONE, "When set to true, created users will have the workspace creator role"
+            'ws_creator', 'wsc', InputOption::VALUE_NONE, "When set to true, created users will have the workspace creator role"
         );
         $this->addOption(
-                'admin', 'a', InputOption::VALUE_NONE, "When set to true, created users will have the admin role"
+            'admin', 'a', InputOption::VALUE_NONE, "When set to true, created users will have the admin role"
         );
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output) {
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
         $params = array(
             'amount' => 'the number of users'
         );
@@ -70,27 +74,29 @@ class CreateUsersCommand extends ContainerAwareCommand {
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                        $argument, $this->askArgument($output, $argumentName)
+                    $argument, $this->askArgument($output, $argumentName)
                 );
             }
         }
     }
 
-    protected function askArgument(OutputInterface $output, $argumentName) {
+    protected function askArgument(OutputInterface $output, $argumentName)
+    {
         $argument = $this->getHelper('dialog')->askAndValidate(
-                $output, "Enter the {$argumentName}: ", function($argument) {
-                    if (empty($argument)) {
-                        throw new \Exception('This argument is required');
-                    }
-
-                    return $argument;
+            $output, "Enter the {$argumentName}: ", function($argument) {
+                if (empty($argument)) {
+                    throw new \Exception('This argument is required');
                 }
+
+                return $argument;
+            }
         );
 
         return $argument;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $number = $input->getArgument('amount');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
@@ -135,7 +141,8 @@ class CreateUsersCommand extends ContainerAwareCommand {
         echo "Done\n";
     }
 
-    protected function loadRole(InputInterface $input) {
+    protected function loadRole(InputInterface $input)
+    {
         if ($input->getOption('admin')) {
             return $roleRepo->findOneByName(PlatformRoles::ADMIN);
         } elseif ($input->getOption('ws_creator')) {

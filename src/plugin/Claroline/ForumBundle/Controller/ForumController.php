@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ForumController extends Controller
 {
+
     public function OpenAction($instanceId)
     {
         $instance = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
@@ -75,7 +76,7 @@ class ForumController extends Controller
             return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
         } else {
             return $this->render(
-                    'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
+                'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
             );
         }
     }
@@ -98,7 +99,7 @@ class ForumController extends Controller
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' =>  $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
         );
     }
 
@@ -127,7 +128,7 @@ class ForumController extends Controller
             return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
         } else {
             return $this->render(
-                    'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+                'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
             );
         }
     }
