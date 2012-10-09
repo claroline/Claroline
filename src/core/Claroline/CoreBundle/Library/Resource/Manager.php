@@ -160,6 +160,8 @@ class Manager
         }
 
         $this->em->persist($instanceCopy);
+
+        return $instanceCopy;
     }
 
     private function createCopy(ResourceInstance $resourceInstance)

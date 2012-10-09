@@ -1,4 +1,38 @@
 (function () {
+/*
+    $('.resource-manager .filter-btn').popover({
+        'content': $('.resource-manager .filters').html(),
+        'trigger': 'click'
+    });
+    $('.resource-manager .filter-btn').click(function () {
+        $(this).popover('toggle');
+    });
+*/
+/*
+    $('.resource-manager .filter-btn').toggle(
+        function () {
+            $('.resource-manager .filters').css('display', 'block');
+        },
+        function () {
+            $('.resource-manager .filters').css('display', 'none');
+        }
+    );
+*/
+/*
+    $('.datepicker')
+        .click(function () {
+            $(this).datepicker('show');
+        })
+        .keydown(function (e) {
+            e.preventDefault();
+            $(this).datepicker('show');
+        })
+        .on('changeDate', function() {
+            $(this).datepicker('hide');
+        });
+
+*/
+    /*
     var resourceGetter = new ClaroResourceGetter.getter(resource_thumbnail_template, resource_list_template);
     var resourceFilter = new ClaroFilter.filter($('#div-filter'));
 
@@ -18,5 +52,5 @@
         resourceFilter
     );
 
-    var builder = interfaceBuilder.getBuilder();
+    var builder = interfaceBuilder.getBuilder();*/
 })();

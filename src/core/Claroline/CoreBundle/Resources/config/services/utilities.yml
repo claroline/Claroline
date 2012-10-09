@@ -1,0 +1,6 @@
+services:
+
+    claroline.utilities.entity_converter:
+        class: Claroline\CoreBundle\Library\Utilities\EntityConverter
+        arguments:
+            - "@doctrine.orm.entity_manager"

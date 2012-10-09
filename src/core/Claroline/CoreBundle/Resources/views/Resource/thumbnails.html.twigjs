@@ -1,0 +1,23 @@
+{% twig_js name="resource_thumbnails_template" %}
+
+<div class="res-thumb-list">
+    {% for instance in instances %}
+        <span data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block" style="display:inline-block; width:180px; text-align: center; vertical-align: top;" >
+            <div class="wrapper">
+                <input class="chk-instance" type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
+                <img id="instance-img-{{ instance.id }}" class="instance-img" src="{{ webRoot }}/{{ instance.large_icon}}"
+                     {% if instance.path is defined %}
+                        title="{{ instance.path }}"
+                     {% endif %}
+                />
+            </div>
+            <div class="wrapper">
+                <span class="res-name">{{ instance.name }}</span>
+            </div>
+            <div class="resource-bar">
+                <div class="dropdown" href="#">menu</div>
+            </div>
+            <br/>
+        </span>
+    {% endfor %}
+</div>

@@ -1,0 +1,36 @@
+{% twig_js name="resource_actions_template" %}
+
+{% if isPickerMode == false %}
+    <div class="create-resource input-prepend pull-left">
+        {% if resourceTypes|length > 0 %}
+            <button class="create btn">Créer :</button>
+            <select class="input-medium">
+                {% for resourceType in resourceTypes %}
+                    <option value="{{ resourceType }}">{{ resourceType }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+        <button class="open-picker btn">Ajouter...</button>
+    </div>
+    <div class="btn-group pull-left">
+        <button class="cut on-checked-thumbnails btn" disabled="disabled" rel="tooltip" title="{{ 'cut'|trans({}, 'platform') }}">
+            <i class="icon-cut"></i>
+        </button>
+        <button class="copy on-checked-thumbnails btn" disabled="disabled rel="tooltip" title="{{ 'copy'|trans({}, 'platform') }}">
+            <i class="icon-copy"></i>
+        </button>
+        <button class="paste btn" disabled="disabled rel="tooltip" title="{{ 'paste'|trans({}, 'platform') }}">
+            <i class="icon-paste"></i>
+        </button>
+        <button class="delete on-checked-thumbnails btn" disabled="disabled rel="tooltip" title="{{ 'delete'|trans({}, 'platform') }}">
+            <i class="icon-remove-sign"></i>
+        </button>
+        <button class="download on-checked-thumbnails btn" disabled="disabled rel="tooltip" title="{{ 'download'|trans({}, 'platform') }}">
+            <i class="icon-download-alt"></i>
+        </button>
+    </div>
+{% else %}
+    <button class="add btn" disabled="disabled">Ajouter</button>
+{% endif %}
+
+<button class="filter btn pull-left">Rechercher...</button>
