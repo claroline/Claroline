@@ -384,8 +384,8 @@ class WorkspaceUserController extends Controller
         }
     }
 
-    private function paginatorToArray($paginator){
-
+    private function paginatorToArray($paginator)
+    {
         $items = array();
 
         foreach($paginator as $item){

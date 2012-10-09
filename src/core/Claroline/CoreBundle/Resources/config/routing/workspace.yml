@@ -14,13 +14,6 @@ claro_workspace_resources:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$
 
-claro_workspace_tools:
-    pattern: /{workspaceId}/tools
-    defaults: { _controller: ClarolineCoreBundle:Workspace:tools }
-    requirements:
-      _method: GET
-      workspaceId: ^(?=.*[1-9].*$)\d*$
-
 claro_workspace_list:
     pattern: /
     defaults: { _controller: ClarolineCoreBundle:Workspace:list }

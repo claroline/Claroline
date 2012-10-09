@@ -74,7 +74,7 @@ class UserRepository extends EntityRepository
 
         $dql = "
             SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE UPPER(u.lastName) LIKE :search
             AND u NOT IN
@@ -108,7 +108,7 @@ class UserRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -117,7 +117,7 @@ class UserRepository extends EntityRepository
     {
         $dql = "
             SELECT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE u NOT IN
             (
@@ -133,7 +133,7 @@ class UserRepository extends EntityRepository
         $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -145,21 +145,26 @@ class UserRepository extends EntityRepository
     {
         switch($modeRole){
             case self::PLATEFORM_ROLE:
-                $dql = 'SELECT u, r from Claroline\CoreBundle\Entity\User u JOIN u.roles r
+                $dql = 'SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
+                    JOIN u.roles r
+                    JOIN u.personalWorkspace pws
                     WHERE r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole';
                 break;
         }
         $query = $this->_em->createQuery($dql)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
+        $paginator = new Paginator($query, true);
 
-        return $query->getResult();
+        return $paginator;
     }
 
     public function searchUsers($search, $offset, $limit)
     {
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r
+            JOIN u.personalWorkspace pws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search";
@@ -169,7 +174,9 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function usersOfGroup($groupId, $offset, $limit)
@@ -177,7 +184,7 @@ class UserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
-            JOIN u.personnalWorkspace pw
+            JOIN u.personalWorkspace pw
             JOIN u.workspaceRoles wr
             WHERE g.id = :groupId ORDER BY u.id";
 
@@ -186,7 +193,9 @@ class UserRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function searchUsersOfGroup($search, $groupId, $offset, $limit)
@@ -194,7 +203,7 @@ class UserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u, g, pw, wr from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
-            JOIN u.personnalWorkspace pw
+            JOIN u.personalWorkspace pw
             JOIN u.workspaceRoles wr
             WHERE g.id = :groupId
             AND (UPPER(u.username) LIKE :search
@@ -208,7 +217,9 @@ class UserRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function registeredUsersOfWorkspace($workspaceId, $offset, $limit)
@@ -217,7 +228,7 @@ class UserRepository extends EntityRepository
             SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wr
             JOIN wr.workspace w
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             WHERE w.id = :workspaceId";
 
         $query = $this->_em->createQuery($dql);
@@ -225,7 +236,7 @@ class UserRepository extends EntityRepository
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -235,7 +246,7 @@ class UserRepository extends EntityRepository
         $dql = "
             SELECT u, wrol, ws FROM Claroline\CoreBundle\Entity\User u
             JOIN u.workspaceRoles wrol
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN wrol.workspace wol
             WHERE wol.id = :workspaceId AND u IN (SELECT us FROM Claroline\CoreBundle\Entity\User us WHERE
             UPPER(us.lastName) LIKE :search
@@ -250,7 +261,7 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, true);
 
         return $paginator;
     }
@@ -276,7 +287,7 @@ class UserRepository extends EntityRepository
     {
         $dql = "
             SELECT DISTINCT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
@@ -290,7 +301,9 @@ class UserRepository extends EntityRepository
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 
     public function searchUnregisteredUsersOfGroup($groupId, $search, $offset, $limit)
@@ -299,7 +312,7 @@ class UserRepository extends EntityRepository
 
         $dql = "
             SELECT DISTINCT u, ws, wrs FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personnalWorkspace ws
+            JOIN u.personalWorkspace ws
             JOIN u.workspaceRoles wrs
             WHERE UPPER(u.lastName) LIKE :search
             AND u NOT IN (
@@ -321,11 +334,13 @@ class UserRepository extends EntityRepository
             )";
 
        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $groupId)
+       $query->setParameter('groupId', $groupId)
               ->setParameter('search', "%{$search}%")
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
     }
 }

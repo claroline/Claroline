@@ -1,0 +1,22 @@
+This tutorial aims to explain how to define a new resource.
+
+1) First you must create a migration file to add your tables in the existing database in the Migrations folder.
+
+2) Define your doctrine entities in the Entity folder.
+
+The following part assume you want your entities to be managable by the claroline resource manager.
+At least one entity should be manageable.
+
+3.1) Make your entities extends AbstractResource. It's the 1st step if you want them to appears in the resource manager.
+
+3.2) In order to define a new resource type, you must set the resource definition in the Resources/config/resources.yml file.
+This file will be parsed by the plugin installator and will create a new resource type with its icons.
+
+3.3) The resource manager will trigger some events.
+Create the yml file wich will define the methods catching these events in Resources/config/services/listeners.yml
+
+3.4) Define your listeners in the Listener folder.
+
+4) Write the extension class in your DependencyInjection folder.
+
+5) Don't forget to add the bundle class.

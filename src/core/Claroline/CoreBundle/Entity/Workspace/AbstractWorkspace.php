@@ -126,9 +126,9 @@ abstract class AbstractWorkspace
             }
         }
 
-        $this->doAddBaseRole(self::$visitorPrefix);
-        $this->doAddBaseRole(self::$collaboratorPrefix);
-        $this->doAddBaseRole(self::$managerPrefix);
+        $visitorRole = $this->doAddBaseRole(self::$visitorPrefix);
+        $collaboratorRole = $this->doAddBaseRole(self::$collaboratorPrefix, $visitorRole);
+        $this->doAddBaseRole(self::$managerPrefix, $collaboratorRole);
     }
 
     public function getVisitorRole()
@@ -244,12 +244,15 @@ abstract class AbstractWorkspace
         }
     }
 
-    private function doAddBaseRole($prefix)
+    private function doAddBaseRole($prefix, $parent = null)
     {
         $baseRole = new WorkspaceRole();
         $baseRole->setWorkspace($this);
         $baseRole->setName("{$prefix}_{$this->getId()}");
+        $baseRole->setParent($parent);
         $this->roles->add($baseRole);
+
+        return $baseRole;
     }
 
     private function doGetBaseRole($prefix)

@@ -1,0 +1,24 @@
+services:
+  claroline.listener.exampletext_listener:
+    class: Claroline\ExampleTextBundle\Listener\ExampleTextListener
+    calls:
+      - [setContainer, ["@service_container"]]
+    #event definition
+    #these are the events fired by the resource manager:
+      # create_form_myresourcetype
+      # create_myresourcetype
+      # delete_myresourcetype
+      # export_myresourcetype
+      # copy_myresourcetype
+      # mycustomaction_myresourcetype
+      #
+      # In this case, my resource type is "exampletext".
+      # mycustomaction is the custom action names you defined earlier.
+    tags:
+      - { name: kernel.event_listener, event: create_form_exampletext, method: onCreateForm }
+      - { name: kernel.event_listener, event: create_exampletext, method: onCreate }
+      - { name: kernel.event_listener, event: open_exampletext, method: onOpen }
+      - { name: kernel.event_listener, event: export_exampletext, method: onExport }
+      - { name: kernel.event_listener, event: delete_exampletext, method: onDelete }
+      - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
+      #... more to come.

@@ -3,6 +3,7 @@
 namespace Claroline\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\ForumBundle\Entity\Message;
@@ -22,6 +23,7 @@ class Subject extends AbstractResource
 
     /**
      * @ORM\Column(type="string", name="title")
+     * @Assert\NotBlank()
      */
     protected $title;
 
@@ -60,13 +62,20 @@ class Subject extends AbstractResource
         return $this->messages;
     }
 
-    public function addMessages(Message $message)
+    public function addMessage(Message $message)
     {
         $this->subjects->add($message);
     }
 
-    public function removeSubjects(Message $message)
+    public function removeMessage(Message $message)
     {
         $this->subjects->removeElement($message);
     }
+
+    public function resetMessages()
+    {
+        $this->messages = new ArrayCollection();
+    }
+
+
 }

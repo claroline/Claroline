@@ -164,8 +164,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
-        // todo : remove this field
-        $table->addColumn('res_mask', 'integer', array('notnull' => false));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
@@ -285,6 +283,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
+        $table->addColumn('mime_type', 'string', array('length' => 100));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array('onDelete' => 'CASCADE')
