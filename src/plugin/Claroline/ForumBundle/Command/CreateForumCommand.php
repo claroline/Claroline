@@ -94,14 +94,22 @@ class CreateForumCommand extends ContainerAwareCommand
             echo "subject $title created\n";
             $subjectInstance = $creator->create($subject, $forumInstance->getId(), 'Subject', true, null, $user);
 
-            for ($j = 0; $j < $messagesAmount; $j++) {
+            $entityToBeDetached = array();
+            for ($j=0; $j<$messagesAmount; $j++){
+
                 $sender = $collaborators[rand(0, $maxOffset)];
                 $message = new Message();
-                $message->setName('tmp');
+                $message->setName('tmp-'.microtime());
                 $message->setCreator($sender);
                 $message->setContent($this->generateLipsum(150, true));
                 $message->setSubject($subject);
-                $creator->create($message, $subjectInstance->getId(), 'Message', true, null, $sender);
+                $inst = $creator->create($message, $subjectInstance->getId(), 'Message', true, null, $sender);
+                $entityToBeDetached[] = $message;
+                $entityToBeDetached[] = $inst;
+            }
+            $em->flush();
+            foreach ($entityToBeDetached as $msg) {
+                $em->detach($msg);
             }
         }
 

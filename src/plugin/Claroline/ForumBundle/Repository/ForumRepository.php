@@ -33,7 +33,7 @@ class ForumRepository extends EntityRepository
         SELECT ".self::SELECT_SUBJECT."
         FROM  Claroline\ForumBundle\Entity\Subject s
         JOIN s.messages m
-        LEFT JOIN s.messages m_count
+        JOIN s.messages m_count
         JOIN s.resourceInstances ri
         JOIN s.creator subjectCreator
         JOIN ri.parent pri
@@ -49,7 +49,7 @@ class ForumRepository extends EntityRepository
                     SELECT m3 FROM Claroline\ForumBundle\Entity\Message m3
                     JOIN m3.subject s3
                     WHERE s2.id = s3.id
-                    AND m2.created < m3.created
+                    AND m2.id < m3.id
                 )
                 and ri2.id = :instanceId
                 and m2.id = m.id
