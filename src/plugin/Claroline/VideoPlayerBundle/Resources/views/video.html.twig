@@ -1,0 +1,7 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block section_content %}
+<video controls preload=none
+    <source src="{{ path ('claro_stream_video', {'videoId': video.getId()})}}"/>
+</video>
+{% endblock %}

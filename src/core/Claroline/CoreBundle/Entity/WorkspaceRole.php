@@ -34,16 +34,10 @@ class WorkspaceRole extends Role
     protected $groups;
 
 
-    /**
-     * @ORM\Column(name="res_mask", type="integer")
-     */
-    protected $resMask;
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->resMask = 0;
     }
 
     /**
@@ -92,59 +86,5 @@ class WorkspaceRole extends Role
     public function getGroups()
     {
         return $this->groups;
-    }
-
-    /**
-     * Gets the resource mask
-     *
-     * @return integer
-     */
-    public function getResMask()
-    {
-        return $this->resMask;
-    }
-
-    /**
-     * Sets the resource mask
-     *
-     * @param integer $resMask
-     */
-    public function setResMask($resMask)
-    {
-        $this->resMask = $resMask;
-    }
-
-    /**
-     * Adds a permission
-     *
-     * @param integer $mask
-     */
-    public function addResourceMask($mask)
-    {
-        $builder = new MaskBuilder($this->getResMask());
-        $builder->add($mask);
-        $resMask = $builder->get();
-        $this->resMask = $resMask;
-    }
-
-    /**
-     * Removes a permission
-     *
-     * @param integer $mask
-     */
-    public function removeResourceMask($mask)
-    {
-        $builder = new MaskBuilder($this->getResMask());
-        $builder->remove($mask);
-        $resMask = $builder->get();
-        $this->resMask = $resMask;
-    }
-
-    /**
-     * Returns the permission array
-     */
-    public function getPermissions()
-    {
-        return SymfonySecurity::getArrayPermissions($this->getResMask());
     }
 }

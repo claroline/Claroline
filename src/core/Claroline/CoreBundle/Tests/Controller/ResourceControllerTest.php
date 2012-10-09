@@ -190,7 +190,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(5, count($jsonResponse));
+        $this->assertEquals(8, count($jsonResponse));
     }
 
     public function testResourceListAction()
@@ -213,7 +213,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/menus');
         $jsonResponse = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(5, count($jsonResponse));
+        $this->assertEquals(8, count($jsonResponse));
     }
 
     public function testGetEveryInstancesIdsFromMultiExportArray()
@@ -277,7 +277,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "resource/custom/directory/thisactiondoesntexists/{$this->pwr->getResource()->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, count($crawler->filter('html:contains("didn\'t bring back any response")')));
+        $this->assertEquals(1, count($crawler->filter('html:contains("return any Response")')));
     }
 
     public function testFilters()

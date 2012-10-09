@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
@@ -50,9 +51,7 @@ class ResourceController extends Controller
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
             if($resourceType === 'file') {
-                $files = $this->container->get('request')->files->all();
-                $file = $files["file_form"]["name"];
-                $mimeType = $file->getClientMimeType();
+                $mimeType = $resource->getMimeType();
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType, true, $mimeType);
             } else {
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType);
@@ -241,15 +240,15 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function customAction($resourceType, $action, $resourceId)
+    public function customAction($resourceType, $action, $instanceId)
     {
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName($action, $resourceType);
-        $event = new CustomActionResourceEvent($resourceId);
+        $event = new CustomActionResourceEvent($instanceId);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
-                "Event '{$eventName}' didn't bring back any response."
+                "Custom event '{$eventName}' didn't return any Response."
             );
         }
 
@@ -269,17 +268,18 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $item = $this->get('claroline.resource.exporter')->export($resourceInstance);
-        $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getName()));
-        if ($resourceInstance->getResourceType()->getType() == 'directory') {
-            $nameDownload.='.zip';
-        }
-        $file = file_get_contents($item);
-        $response = new Response();
-        $response->setContent($file);
+        $nameDownload = pathinfo(strtolower(str_replace(' ', '_', $resourceInstance->getName())), PATHINFO_FILENAME).'.'.pathinfo($item, PATHINFO_EXTENSION);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(function() use($item){
+            readfile($item);
+        });
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $nameDownload);
         $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
+        $response->headers->set('Content-Length', filesize($item));
         $response->headers->set('Connection', 'close');
 
         return $response;
@@ -457,13 +457,18 @@ class ResourceController extends Controller
         $resourceTypes = $repo->findBy(array('isListable' => 1));
         $pluginResourceTypes = $repo->findListablePluginResourceTypes();
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:resource_menus.json.twig',
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:menus.json.twig',
             array(
                 'resourceTypes' => $resourceTypes,
                 'pluginResourceTypes' => $pluginResourceTypes
             )
         );
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

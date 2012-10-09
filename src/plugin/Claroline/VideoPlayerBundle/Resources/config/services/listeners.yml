@@ -1,0 +1,7 @@
+services:
+  claroline.listener.video_player_listener:
+    class: Claroline\VideoPlayerBundle\Listener\VideoPlayerListener
+    calls:
+        - [setContainer, ["@service_container"]]
+    tags:
+        - { name: kernel.event_listener, event: play_file_video, method: onOpenVideo }

@@ -140,6 +140,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $personnalWorkspace;
 
+
     public function __construct()
     {
         parent::__construct();
@@ -372,12 +373,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function setPersonnalWorkspace($workspace)
     {
-        $this->personnalWorkspace = $workspace;
+        $this->personalWorkspace = $workspace;
     }
 
     public function getPersonalWorkspace()
     {
-        return $this->personnalWorkspace;
+        return $this->personalWorkspace;
     }
 
     public function getAbstractResources()

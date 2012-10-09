@@ -134,7 +134,7 @@ class IconCreator
      *
      * @param AbstractResource $resource
      * @param string $name (required if it's a file)
-     * @param
+     * @param isFixture (for testing purpose)
      */
     public function setResourceIcon(AbstractResource $resource, $mimeType = null, $isFixture = false)
     {

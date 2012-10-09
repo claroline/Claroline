@@ -57,10 +57,7 @@
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
             function(data) {
-                builder.menu = JSON.parse(data);
-                for (var menu in builder.menu) {
-                    delete builder.menu[menu].items['new'];
-                }
+                builder.menu = data
             },
             function() {
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
@@ -313,7 +310,7 @@
         var html = '<a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">'+name+'</a>'
         html += '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">';
 
-        for (var i in builder.menu[type]['items']) {
+        for (var i in builder.menu[type]) {
             html += '<li><a tabindex="-1" href="#">'+i+'</a></li>';
         }
 
@@ -339,13 +336,9 @@
     //@params items is the menu object used.
     function findMenuObject(items, parameters, menuItem, construct)
     {
-        for (var property in items.items) {
+        for (var property in items) {
             if (property == menuItem) {
-                executeMenuActions(items.items[property], parameters, construct);
-            } else {
-                if (items.items[property].hasOwnProperty('items')) {
-                    findMenuObject(items.items[property], parameters, menuItem, construct);
-                }
+                executeMenuActions(items[property], parameters, construct);
             }
         }
     };

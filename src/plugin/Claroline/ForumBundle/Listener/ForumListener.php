@@ -55,7 +55,7 @@ class ForumListener extends ContainerAware
 
     public function onOpen(CustomActionResourceEvent $event)
     {
-        $route = $this->container->get('router')->generate('claro_forum_open', array('forumId' => $event->getResourceId()));
+        $route = $this->container->get('router')->generate('claro_forum_open', array('instanceId' => $event->getInstanceId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
