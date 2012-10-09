@@ -34,7 +34,7 @@ class FileControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getWSListableRootResource($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function tearDown()
@@ -46,9 +46,9 @@ class FileControllerTest extends FunctionalTestCase
     public function testUpload()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
-        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->uploadFile($this->pwr->getId(), 'text.txt');
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $dir = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(1, count($dir));
         $this->assertEquals(1, count($this->getUploadedFiles()));
     }
@@ -56,7 +56,7 @@ class FileControllerTest extends FunctionalTestCase
     public function testDownload()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $node = $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
+        $node = $this->uploadFile($this->pwr->getId(), 'text.txt');
         $this->client->request('GET', "/resource/export/{$node->id}");
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=text.txt'));
@@ -65,9 +65,9 @@ class FileControllerTest extends FunctionalTestCase
     public function testDelete()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $node = $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
+        $node = $this->uploadFile($this->pwr->getId(), 'text.txt');
         $this->client->request('GET', "/resource/delete/{$node->id}");
-        $this->client->request('POST', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->client->request('POST', "/resource/children/{$this->pwr->getId()}");
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($file));
         $this->assertEquals(0, count($this->getUploadedFiles()));
@@ -86,7 +86,7 @@ class FileControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request(
             'POST',
-            "/resource/create/file/{$this->pwr[0]->getId()}",
+            "/resource/create/file/{$this->pwr->getId()}",
             array('file_form' => array()),
             array('file_form' => array('name' => null))
         );
@@ -98,7 +98,7 @@ class FileControllerTest extends FunctionalTestCase
     public function testCopy()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $stdFile = $this->uploadFile($this->pwr[0]->getId(), 'text.txt');
+        $stdFile = $this->uploadFile($this->pwr->getId(), 'text.txt');
         $file =  $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')

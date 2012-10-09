@@ -5,18 +5,12 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 
 class ResourceController extends Controller
 {
@@ -57,9 +51,7 @@ class ResourceController extends Controller
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
             if($resourceType === 'file') {
-                $files = $this->container->get('request')->files->all();
-                $file = $files["file_form"]["name"];
-                $mimeType = $file->getClientMimeType();
+                $mimeType = $resource->getMimeType();
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType, true, $mimeType);
             } else {
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType);
@@ -102,6 +94,7 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $ids = $this->getRequestParameters();
+
         foreach ($ids as $id) {
             $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
                 ->find($id);
@@ -247,15 +240,15 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function customAction($resourceType, $action, $resourceId)
+    public function customAction($resourceType, $action, $instanceId)
     {
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName($action, $resourceType);
-        $event = new CustomActionResourceEvent($resourceId);
+        $event = new CustomActionResourceEvent($instanceId);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
-                "Event '{$eventName}' didn't bring back any response."
+                "Custom event '{$eventName}' didn't return any Response."
             );
         }
 
@@ -275,17 +268,18 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $item = $this->get('claroline.resource.exporter')->export($resourceInstance);
-        $nameDownload = strtolower(str_replace(' ', '_', $resourceInstance->getName()));
-        if ($resourceInstance->getResourceType()->getType() == 'directory') {
-            $nameDownload.='.zip';
-        }
-        $file = file_get_contents($item);
-        $response = new Response();
-        $response->setContent($file);
+        $nameDownload = pathinfo(strtolower(str_replace(' ', '_', $resourceInstance->getName())), PATHINFO_FILENAME).'.'.pathinfo($item, PATHINFO_EXTENSION);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(function() use($item){
+            readfile($item);
+        });
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $nameDownload);
         $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
+        $response->headers->set('Content-Length', filesize($item));
         $response->headers->set('Connection', 'close');
 
         return $response;
@@ -299,7 +293,7 @@ class ResourceController extends Controller
     public function multiExportAction()
     {
         $ids = $this->getRequestParameters();
-        $file = $this->get('claroline.resource.exporter')->multiExport($ids);
+        $file = $this->get('claroline.resource.exporter')->exportResourceInstances($ids);
         $response = new Response();
         $response->setContent($file);
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
@@ -321,8 +315,8 @@ class ResourceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
-        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getRoots($user);
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->listRootsForUser($user, true);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -359,10 +353,10 @@ class ResourceController extends Controller
         if ($instanceId == 0) {
             return $this->rootsAction();
         }
-        
+
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $results = $repo->listDirectChildrenResourceInstances($instanceId, $resourceTypeId, true);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -386,9 +380,9 @@ class ResourceController extends Controller
         } else {
             $repo = $parents = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
             $instance = $repo->find($instanceId);
-            $parents = $repo->parents($instance);
-            $jsonParents = $this->get('claroline.resource.converter')->arrayToJson($parents);
-            $response->setContent($jsonParents);
+            $parents = $repo->listAncestors($instance);
+            $jsonParents = json_encode($parents);
+            $response->setContent(json_encode($parents));
         }
 
         return $response;
@@ -404,9 +398,9 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getInstanceList($user);
+            ->listResourceInstancesForUser($user, true);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -423,7 +417,7 @@ class ResourceController extends Controller
     public function resourceTypesAction()
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findNavigableResourceTypeWithoutDirectory();
+        $resourceTypes = $repo->findNavigableResourceType(true);
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
@@ -446,8 +440,8 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
-        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildrenInstanceList($root, $resourceType);
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->listChildrenResourceInstances($root, $resourceType, true);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -467,13 +461,18 @@ class ResourceController extends Controller
         $resourceTypes = $repo->findBy(array('isListable' => 1));
         $pluginResourceTypes = $repo->findListablePluginResourceTypes();
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:resource_menus.json.twig',
+        $content = $this->renderView(
+            'ClarolineCoreBundle:Resource:menus.json.twig',
             array(
                 'resourceTypes' => $resourceTypes,
                 'pluginResourceTypes' => $pluginResourceTypes
             )
         );
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
@@ -538,14 +537,18 @@ class ResourceController extends Controller
 
         $roots = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getRoots($user);
+            ->listRootsForUser($user, true);
 
         $resourceTypes = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findNavigableResourceTypeWithoutDirectory();
+            ->findNavigableResourceType();
+
+        $resourceIcons = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->findBy(array('iconType' => 3));
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes)
+            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes, 'resourceIcons' => $resourceIcons)
         );
     }
 
@@ -560,9 +563,9 @@ class ResourceController extends Controller
         $compiledArray = $this->get('claroline.resource.searcher')->createSearchArray($this->container->get('request')->query->all());
         $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->filter($compiledArray, $user);
+            ->listResourceInstancesForUserWithFilter($compiledArray, $user, true);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -579,7 +582,7 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $count = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->countInstancesForUser($user);
+            ->countResourceInstancesForUser($user);
         $pages = ceil($count/self::THUMB_PER_PAGE);
 
         return new Response($pages);
@@ -590,9 +593,9 @@ class ResourceController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getInstanceList($user, $page, self::THUMB_PER_PAGE);
+            ->listResourceInstancesForUser($user, true, ($page-1)*self::THUMB_PER_PAGE, self::THUMB_PER_PAGE);
 
-        $content = $this->get('claroline.resource.converter')->arrayToJson($results);
+        $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 

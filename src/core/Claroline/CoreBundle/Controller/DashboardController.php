@@ -45,19 +45,10 @@ class DashboardController extends Controller
      */
     public function resourceManagerAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $roots = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getRoots($user);
-        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+        $resourceTypes = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findBy(array('isListable' => 1));
 
-        return $this->render(
-            'ClarolineCoreBundle:Dashboard:resources.html.twig',
-            array(
-                'workspaceRoots' => $roots,
-                'resourceTypes' => $resourceTypes
-            )
-        );
+        return $this->render('ClarolineCoreBundle:Dashboard:resources.html.twig', array('resourceTypes' => $resourceTypes));
     }
 }

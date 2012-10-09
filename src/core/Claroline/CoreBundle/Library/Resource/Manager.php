@@ -56,10 +56,13 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null)
+    public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null, $user = null)
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
-        $user = $this->sc->getToken()->getUser();
+
+        if($user == null){
+            $user = $this->sc->getToken()->getUser();
+        }
 
         if (null !== $resource) {
             $ri = new ResourceInstance();
@@ -210,7 +213,7 @@ class Manager
            throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->children($directoryInstance, false);
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildren($directoryInstance, false);
         foreach ($children as $child) {
             $rsrc = $child->getResource();
             if ($rsrc->getInstanceCount() === 1) {

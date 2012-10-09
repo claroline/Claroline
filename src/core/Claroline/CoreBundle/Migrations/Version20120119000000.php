@@ -111,6 +111,9 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_group'), array('group_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+
+        //not working (yet)
+        $table->addUniqueIndex(array('user_id', 'group_id'));
     }
 
     private function createWorkspaceTable(Schema $schema)
@@ -161,8 +164,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
-        // todo : remove this field
-        $table->addColumn('res_mask', 'integer', array('notnull' => false));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
@@ -282,6 +283,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
+        $table->addColumn('mime_type', 'string', array('length' => 100));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array('onDelete' => 'CASCADE')
@@ -320,17 +322,15 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_instance');
         $this->addId($table);
+        $table->addColumn('path', 'string', array('length' => 1000, 'notnull' => false));
+        $table->addColumn('name', 'string');
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addColumn('lvl', 'integer', array('notnull' => false));
         $table->addColumn('resource_id', 'integer');
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('user_id', 'integer', array('notnull' => true));
-        $table->addColumn('name', 'string');
         $table->addColumn('created', 'datetime');
         $table->addColumn('updated', 'datetime');
-        $table->addColumn('lft', 'integer', array('notnull' => true));
-        $table->addColumn('rgt', 'integer', array('notnull' => true));
-        $table->addColumn('lvl', 'integer', array('notnull' => true));
-        $table->addColumn('root', 'integer', array('notnull' => false));
-        $table->addColumn('parent_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
@@ -341,6 +341,8 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+
+        $table->addIndex(array('path'));
     }
 
     private function createLicenseTable(Schema $schema)

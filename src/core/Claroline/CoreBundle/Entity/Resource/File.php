@@ -15,12 +15,17 @@ class File extends AbstractResource
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $size;
+    protected $size;
 
     /**
      * @ORM\Column(type="string", length=36, name="hash_name")
      */
-    private $hashName;
+    protected $hashName;
+
+    /**
+     * @ORM\Column(type="string", name="mime_type")
+     */
+    private $mimeType;
 
     /**
      * Returns the file size.
@@ -93,5 +98,15 @@ class File extends AbstractResource
     public function setHashName($hashName)
     {
         $this->hashName = $hashName;
+    }
+
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
     }
 }

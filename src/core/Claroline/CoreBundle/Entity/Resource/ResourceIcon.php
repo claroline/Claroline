@@ -17,22 +17,22 @@ class ResourceIcon
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", name="large_icon")
      */
-    private $largeIcon;
+    protected $largeIcon;
 
     /**
      * @ORM\Column(type="string", name="small_icon")
      */
 
-    private $smallIcon;
+    protected $smallIcon;
     /**
      * @ORM\Column(type="string", name="type")
      */
-    private $type;
+    protected $type;
 
     /**
      * @ORM\OneToMany(
@@ -41,13 +41,13 @@ class ResourceIcon
      *      cascade={"persist"}
      * )
      */
-    private $abstractResources;
+    protected $abstractResources;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\IconType")
      * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id")
      */
-    private $iconType;
+    protected $iconType;
 
 
 

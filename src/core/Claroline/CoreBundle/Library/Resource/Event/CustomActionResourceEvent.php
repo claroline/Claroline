@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CustomActionResourceEvent extends Event
 {
-    private $resourceId;
+    private $instanceId;
     private $response;
 
     /**
@@ -18,9 +18,9 @@ class CustomActionResourceEvent extends Event
      *
      * @param integer $resourceId
      */
-    public function __construct($resourceId)
+    public function __construct($instanceId)
     {
-        $this->resourceId = $resourceId;
+        $this->instanceId = $instanceId;
     }
 
     /**
@@ -28,9 +28,9 @@ class CustomActionResourceEvent extends Event
      *
      * @return integer
      */
-    public function getResourceId()
+    public function getInstanceId()
     {
-        return $this->resourceId;
+        return $this->instanceId;
     }
 
     /**

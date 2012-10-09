@@ -14,7 +14,7 @@ class Link extends AbstractResource
     /**
      * @ORM\Column(type="string")
      */
-    private $url;
+    protected $url;
 
     /**
      * Returns the link url.

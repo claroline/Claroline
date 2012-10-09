@@ -60,11 +60,8 @@ class EntityConverter
         $preparedInstance->id = $instance->getId();
         $preparedInstance->name = $instance->getName();
         $preparedInstance->created = $instance->getCreationDate()->format('d-m-Y H:i:s');
-        $preparedInstance->updated = $instance->getModificationDate()->format('d-m-Y H:i:s');;
-        $preparedInstance->lft = $instance->getLft();
+        $preparedInstance->updated = $instance->getModificationDate()->format('d-m-Y H:i:s');
         $preparedInstance->lvl = $instance->getLvl();
-        $preparedInstance->rgt = $instance->getRgt();
-        $preparedInstance->root = $instance->getRoot();
         $preparedInstance->parent_id = $instance->getParent() != null ? $instance->getParent()->getId() : null;
         $preparedInstance->workspace_id = $instance->getWorkspace()->getId();
         $preparedInstance->resource_id = $instance->getResource()->getId();
@@ -77,16 +74,8 @@ class EntityConverter
         $preparedInstance->is_navigable = $instance->getResourceType()->getNavigable();
         $preparedInstance->small_icon = $instance->getResource()->getIcon()->getSmallIcon();
         $preparedInstance->large_icon = $instance->getResource()->getIcon()->getLargeIcon();
-
-        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $nodes = $repo->getPath($instance);
-        $path = '';
-
-        foreach ($nodes as $node) {
-            $path .= "{$node->getName()} /";
-        }
-
-        $preparedInstance->path = $path;
+        $preparedInstance->path = $instance->getPath();
+        $preparedInstance->path_for_display = $instance->getPathForDisplay();
 
         return $preparedInstance;
     }

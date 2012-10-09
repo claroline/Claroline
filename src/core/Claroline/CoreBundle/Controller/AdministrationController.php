@@ -19,6 +19,9 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
  */
 class AdministrationController extends Controller
 {
+    const USER_PER_PAGE = 40;
+    const GROUP_PER_PAGE = 40;
+
     /**
      * Displays the administration section index.
      *
@@ -70,7 +73,7 @@ class AdministrationController extends Controller
             $workspace = $wsCreator->createWorkspace($config, $user);
             $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
             $user->addRole($workspace->getManagerRole());
-            $user->setPersonnalWorkspace($workspace);
+            $user->setPersonalWorkspace($workspace);
             $em->persist($workspace);
             $em->flush();
 
@@ -94,16 +97,40 @@ class AdministrationController extends Controller
      */
     public function deleteUserAction($userId)
     {
-        if ($userId !== $this->get('security.context')->getToken()->getUser()->getId()) {
+        if ($userId != $this->get('security.context')->getToken()->getUser()->getId()) {
             $em = $this->getDoctrine()->getEntityManager();
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             $em->remove($user);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            return new Response('user removed', 204);
         }
 
-        throw new \Exception('An user cannot delete his own profile.');
+    //Doctrine throws an error itself because
+    //"You cannot refresh a user from the EntityUserProvider that does not contain an identifier.
+    //The user object has to be serialized with its own identifier mapped by Doctrine. (500 Internal Server Error)
+    //throw new \Exception('A user cannot delete his own profile.');
+    }
+
+    /**
+     * Removes many users from the platform.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function multiDeleteUserAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        foreach ($params as $userId) {
+            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+            $em->remove($user);
+        }
+
+        $em->flush();
+
+        return new Response('user(s) removed', 204);
     }
 
     /**
@@ -113,13 +140,157 @@ class AdministrationController extends Controller
      */
     public function userListAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findAll();
-
         return $this->render(
-            'ClarolineCoreBundle:Administration:user_list.html.twig',
-            array('users' => $users)
-        );
+            'ClarolineCoreBundle:Administration:user_list_main.html.twig');
+    }
+
+    /**
+     * Returns the platform users.
+     *
+     * @param $offset
+     * @param $format
+     *
+     * @return Response
+     */
+    public function usersAction($offset, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->users($offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
+        $users = $this->paginatorToArray($paginatorUsers);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
+
+        $response = new Response($content);
+
+        if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
+
+    /**
+     * Returns the platform users whose name, username or lastname matche $search.
+     *
+     * @param integer $offset
+     * @param string $format
+     * @param string $search
+     *
+     * @return Response
+     */
+    public function searchUsersAction($offset, $search, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUsers($search, $offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
+        $users = $this->paginatorToArray($paginatorUsers);
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.{$format}.twig", array('users' => $users));
+
+        $response = new Response($content);
+
+        if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
+
+    /**
+     * Returns the group users.
+     *
+     * @param integer $groupId
+     * @param string $offset
+     *
+     * @return Response
+     */
+    // Doesn't work yet due to a sql error from the repository
+    public function usersOfGroupAction($groupId, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->usersOfGroup($groupId, $offset, self::USER_PER_PAGE);
+        $users = $this->paginatorToArray($paginatorUsers);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns the group users whose name or username or lastname matche $search.
+     *
+     * @param integer $groupId
+     * @param integer $offset
+     * @param string $search
+     *
+     * @return Response
+     */
+    // Doesn't work yet due to a sql error from the repository
+    public function searchUsersOfGroupAction($groupId, $offset, $search)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUsersOfGroup($search, $groupId, $offset, self::USER_PER_PAGE);
+        $users = $this->paginatorToArray($paginatorUsers);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns the platform group list.
+     *
+     * @param $offset the offset.
+     * @param $format the format.
+     *
+     * @return Response.
+     */
+    public function groupsAction($offset, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorGroups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->groups($offset, self::GROUP_PER_PAGE);
+        $groups = $this->paginatorToArray($paginatorGroups);
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
+        $response = new Response($content);
+
+        if  ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
+    }
+
+    /*
+     * Returns the platform group list whose names match $search.
+     *
+     * @param $offset the $offset.
+     * @param $search the searched name.
+     *
+     * @return Response.
+     */
+    public function searchGroupsAction($offset, $search, $format)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorGroups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->searchGroups($search, $offset, self::GROUP_PER_PAGE);
+        $groups = $this->paginatorToArray($paginatorGroups);
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:group_list.{$format}.twig", array('groups' => $groups));
+        $response = new Response($content);
+
+        if ($format == 'json') {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+
+        return $response;
     }
 
     /**
@@ -171,11 +342,13 @@ class AdministrationController extends Controller
     public function groupListAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $groups = $em->getRepository('Claroline\CoreBundle\Entity\Group')->findAll();
+        $query = $em->createQuery('SELECT COUNT(g.id) FROM Claroline\CoreBundle\Entity\Group g');
+        $count = $query->getSingleScalarResult();
+        $pages = ceil($count/self::USER_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:group_list.html.twig',
-            array('groups' => $groups)
+            'ClarolineCoreBundle:Administration:group_list_main.html.twig',
+            array('pages' => $pages)
         );
     }
 
@@ -192,7 +365,7 @@ class AdministrationController extends Controller
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:group_user_list.html.twig',
+            'ClarolineCoreBundle:Administration:group_user_list_main.html.twig',
             array('group' => $group)
         );
     }
@@ -204,16 +377,63 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userListAddableToGroupAction($groupId)
+    public function addUserToGroupLayoutAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')->findAll();
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:user_list_addable_to_group.html.twig',
-            array('group' => $group, 'users' => $users)
+            'ClarolineCoreBundle:Administration:add_user_to_group_main.html.twig',
+            array('group' => $group)
         );
+    }
+
+    /**
+     * Returns a list of users not registered to the Group $group.
+     *
+     * @param integer $group
+     * @param integer $offset
+     *
+     * @return Response
+     */
+    public function grouplessUsersAction($groupId, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->unregisteredUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
+        $users = $this->paginatorToArray($paginatorUsers);
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Returns a list of users not registered to the Group $group whose username, firstname or lastname
+     * matche $search.
+     *
+     * @param integer search
+     * @param integer $group
+     * @param integer $offset
+     *
+     * @return Response
+     */
+    public function searchGrouplessUsersAction($groupId, $search, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUnregisteredUsersOfGroup($groupId, $search, $offset, self::USER_PER_PAGE);
+        $users = $this->paginatorToArray($paginatorUsers);
+        
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
@@ -237,12 +457,47 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Deletes an user from a group and redirects to the group list.
+     * Adds multiple user to a group.
+     *
+     * @param integer $groupId
+     *
+     * @return Response
+     */
+    public function multiaddUserstoGroupAction($groupId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $params = $this->get('request')->query->all();
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+        unset($params['_']);
+        $users = array();
+
+        foreach ($params as $userId) {
+            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+            if($user !== null){
+                $group->addUser($user);
+                $users[] = $user;
+            }
+        }
+
+        $em->persist($group);
+        $em->flush();
+
+        $content = $this->renderView(
+            "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Removes an user from a group.
      *
      * @param integer $groupId
      * @param integer $userId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response
      */
     public function deleteUserFromGroupAction($groupId, $userId)
     {
@@ -253,7 +508,32 @@ class AdministrationController extends Controller
         $em->persist($group);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('claro_admin_group_list'));
+        return new Response('user removed', 204);
+    }
+
+    /**
+     * Removes users from a group.
+     *
+     * @param integer $groupId
+     *
+     * @return Response
+     */
+    public function multiDeleteUserFromGroupAction($groupId)
+    {
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+        $em = $this->getDoctrine()->getEntityManager();
+        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+
+        foreach ($params as $userId){
+            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+            $group->removeUser($user);
+            $em->persist($group);
+        }
+
+        $em->flush();
+
+        return new Response('user removed', 204);
     }
 
     /**
@@ -270,7 +550,28 @@ class AdministrationController extends Controller
         $em->remove($group);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('claro_admin_group_list'));
+        return new Response('group(s) removed', 204);
+    }
+
+    /**
+     * Deletes multiple groups.
+     *
+     *  @return Response
+     */
+    public function multiDeleteGroupAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $params = $this->get('request')->query->all();
+        unset($params['_']);
+
+        foreach ($params as $groupId) {
+            $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+            $em->remove($group);
+        }
+
+        $em->flush();
+
+        return new Response('groups removed', 204);
     }
 
     /**
@@ -354,13 +655,20 @@ class AdministrationController extends Controller
             $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
             $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
             $configHandler->setParameter('theme', $form['theme']->getData());
-
-            return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
-            array('form_settings' => $form->createView())
-        );
+        //this form can't be invalid
+        return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
+    }
+
+    private function paginatorToArray($paginator)
+    {
+        $items = array();
+
+        foreach($paginator as $item){
+            $items[] = $item;
+        }
+
+        return $items;
     }
 }

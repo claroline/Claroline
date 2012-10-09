@@ -1,0 +1,3 @@
+claro_stream_video:
+   pattern: /stream/video/{videoId}
+   defaults: { _controller: ClarolineVideoPlayerBundle:VideoPlayer:stream }

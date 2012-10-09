@@ -2,24 +2,26 @@
 
 <div class="res-icon-list">
 {% for instance in instances %}
-    <span data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block" style="display:block; vertical-align: top;" >
-            <input class="chk-instance" type="checkbox" value="{{ instance.id }}" style="vertical-align: top;"/>
-            {% if instance.type == "directory" %}
-                <a class="link-navigate-instance" href="#">
-            {% endif %}
-            <img id="instance-img-{{ instance.id }}" class="instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
-                 {% if instance.path is defined %}
-                    title="{{ instance.path }}"
-                 {% endif %}
-             />
-            {% if instance.type == "directory" %}
-                </a>
-            {% endif %}
-            {{ instance.name }}
+    <div data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block" >
+        <input class="chk-instance" type="checkbox" id="{{ instance.id }}" value="{{ instance.id }}"/>
+        {% if instance.type == "directory" %}
+            <a class="link-navigate-instance" href="#">
+        {% endif %}
+        <img height="30px" id="instance-img-{{ instance.id }}" class="instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
+                {% if instance.pathfordisplay is defined %}
+                title="{{ instance.pathfordisplay }}"
+                {% endif %}
+            />
+        {% if instance.type == "directory" %}
+            </a>
+        {% endif %}
+        <label for="{{ instance.id }}">
+            <span class="res-name" title="{{ instance.pathfordisplay }}">{{ instance.name }}</span>
+        </label>
         <span class="resource-bar">
-            <div class="dropdown" href="#" style="display:inline;">menu</div>
+            <span class="dropdown" href="#"><i class="icon-caret-down"></i></span>
         </span>
-        <br/>
-    </span>
+    </div>
 {% endfor %}
 </div>
+

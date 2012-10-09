@@ -23,12 +23,12 @@
     <span data-id="{{ instance.id }}" data-type="{{ instance.type }}" data-resource_id="{{ instance.resource_id }}" class="res-block">
         <div class="wrapper">
             <input class="chk-instance" type="checkbox" id="{{ instance.id }}" value="{{ instance.id }}"/>
-            {% if instance.type == "directory" %}
+            {% if instance.is_navigable == true %}
                 <a class="link-navigate-instance" href="#">
             {% endif %}
             <img id="instance-img-{{ instance.id }}" class="instance-img" src="{{webRoot}}/{{ instance.large_icon}}"
-                 {% if instance.path is defined %}
-                    title="{{ instance.path }}"
+                 {% if instance.pathfordisplay is defined %}
+                    title="{{ instance.pathfordisplay }}"
                  {% endif %}
              />
             {% if instance.type == "directory" %}

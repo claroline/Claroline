@@ -10,6 +10,7 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('content', 'textarea');
+        $builder->add('name', 'hidden', array('data' => 'tmp'));
     }
 
     public function getName()

@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MetaType;
+use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
 /**
  * Resource types data fixture.
@@ -45,6 +46,14 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true)
         );
 
+        $customActions = array(
+            array('open', false),
+            null,
+            array('open', false)
+        );
+
+        $i=0;
+
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
             $type->setType($attributes[0]);
@@ -54,7 +63,17 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->setDownloadable($attributes[4]);
             $type->addMetaType($documentMetatype);
             $manager->persist($type);
+
+            if ($customActions[$i] !== null) {
+                $actions = new ResourceTypeCustomAction();
+                $actions->setAction($customActions[$i][0]);
+                $actions->setAsync($customActions[$i][1]);
+                $actions->setResourceType($type);
+                $manager->persist($actions);
+            }
+
             $this->addReference("resource_type/{$attributes[0]}", $type);
+            $i++;
         }
 
         $manager->flush();

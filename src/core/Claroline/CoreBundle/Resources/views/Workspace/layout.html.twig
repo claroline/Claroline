@@ -1,25 +1,86 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block content %}
-    <div class="span3">
-        <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-                <li>
-                    <a href="{{ path('claro_ws_list_user_workspaces', {'userId': app.user.id, 'format':'page'})}}" id="link_owned_WS">{{ 'my_workspaces'|trans({}, 'platform') }}</a>
-                </li>
-                <li>
-                    <a href="{{ path('claro_ws_list') }}" id="link_all_WS">{{ 'list_workspaces'|trans({}, 'platform') }}</a>
-                </li>
-                {% if is_granted('ROLE_WS_CREATOR') %}
-                <li>
-                    <a href="{{ path('claro_ws_show_creation_form') }}" id="link_create_WS_form">{{ 'create_workspace'|trans({}, 'platform') }}</a>
-                </li>
-                {% endif %}
-            </ul>
+{% block sectionHeader %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span7">
+            <h2 class="section-header">{{ workspace.getCode() ~' - '~ workspace.getName() }}</h2>
+            <div>
+                users manager:
+                {% for user in workspace.getManagerRole().getUsers() %}
+                    {{user.getLastName()}} {{user.getFirstName}}
+                    {% if loop.last != true %}, {% endif %}
+                {% endfor %}
+            </div>
+            <div>
+                groups manager:
+                {% for group in workspace.getManagerRole().getGroups() %}
+                    {{ group.getName() }}
+                    {% if loop.last != true %}, {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="span5 workspace-top-toolbox">
+            <br>
+            <input id="generic-search-field" type="text" width="100px" class="search-query"/>
+            <button class="btn btn-primary">Resource Picker</button>
         </div>
     </div>
-    <div class="span9">
-        {{ macros.flashBox() }}
-        {% block section_content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class=row-fluid">
+        <div class="span1 workspace-left-toolbox">
+            <div class="wrapper">
+                <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}"
+                   id="workspace_home_link">
+                   <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/home.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}"
+                   id="workspace_resource_link">
+                   <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/resource.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
+                id="link_user_management">
+                    <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
+                id="link_group_management">
+                    <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/users.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="#">
+                    <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="#">
+                    <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/comment.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="#">
+                    <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/process.png')}}" />
+                </a>
+            </div>
+            <div class="wrapper">
+                <a href="#">
+                    <img height="50px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
+                </a>
+            </div>
+        </div>
+        <div class="span11">
+             {% block section_content %}{% endblock %}
+        </div>
     </div>
+</div>
 {% endblock %}

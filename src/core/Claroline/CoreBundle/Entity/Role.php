@@ -30,7 +30,7 @@ class Role implements RoleInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=50)
@@ -41,36 +41,36 @@ class Role implements RoleInterface
     /**
      * @ORM\Column(name="translation_key", type="string", length=255)
      */
-    private $translationKey;
+    protected $translationKey;
 
     /**
      * @ORM\Column(name="is_read_only", type="boolean")
      */
-    private $isReadOnly = false;
+    protected $isReadOnly = false;
 
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
-    private $lft;
+    protected $lft;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $lvl;
+    protected $lvl;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
-    private $rgt;
+    protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    private $root;
+    protected $root;
 
     /**
      * @Gedmo\TreeParent
@@ -84,7 +84,7 @@ class Role implements RoleInterface
      *      onDelete="SET NULL"
      * )
      */
-    private $parent;
+    protected $parent;
 
     /**
      * @ORM\OneToMany(
@@ -93,7 +93,19 @@ class Role implements RoleInterface
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
-    private $children;
+    protected $children;
+
+    /**
+     * @ORM\ManyToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\User",
+     *  inversedBy="workspaceRoles"
+     * )
+     * @ORM\JoinTable(name="claro_user_role",
+     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
+     */
+    protected $users;
 
     public function getId()
     {
@@ -182,5 +194,10 @@ class Role implements RoleInterface
     protected function setReadOnly($value)
     {
         $this->isReadOnly = $value;
+    }
+
+    public function getUsers()
+    {
+        return $this->users;
     }
 }
