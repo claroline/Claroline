@@ -356,9 +356,10 @@ class ResourceController extends Controller
      */
     public function childrenAction($instanceId, $resourceTypeId)
     {
-        if($instanceId == 0) {
+        if ($instanceId == 0) {
             return $this->rootsAction();
         }
+        
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->getChildrenNodes($instanceId, $resourceTypeId);
         $content = $this->get('claroline.resource.converter')->arrayToJson($results);
@@ -377,15 +378,18 @@ class ResourceController extends Controller
      */
     public function parentsAction($instanceId)
     {
-        if (0 == $instanceId) {
-            return new Response('[]');
-        }
-        $repo = $parents = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $instance = $repo->find($instanceId);
-        $parents = $repo->parents($instance);
-        $jsonParents = $this->get('claroline.resource.converter')->arrayToJson($parents);
-        $response = new Response($jsonParents);
+        $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+
+        if (0 == $instanceId) {
+            $response->setContent('[]');
+        } else {
+            $repo = $parents = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+            $instance = $repo->find($instanceId);
+            $parents = $repo->parents($instance);
+            $jsonParents = $this->get('claroline.resource.converter')->arrayToJson($parents);
+            $response->setContent($jsonParents);
+        }
 
         return $response;
     }
@@ -503,16 +507,22 @@ class ResourceController extends Controller
         $ids = $this->getRequestParameters();
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        $converter = $this->get('claroline.utilities.entity_converter');
+        $newNodes = array();
 
         foreach ($ids as $id) {
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
             if ($resource != null) {
-                $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
+                $newNode = $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
                 $em->flush();
+                $newNodes[] = $converter->toStdClass($newNode);
             }
         }
 
-        return new Response('success', 200);
+        $response = new Response(json_encode($newNodes));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

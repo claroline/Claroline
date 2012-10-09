@@ -1,0 +1,29 @@
+{% twig_js name="resource_filters_template" %}
+
+{% if workspaceDirectories|length > 0 %}
+    <select class="select-root" multiple="multiple">
+        {% for workspaceDirectory in workspaceDirectories %}
+            <option value={{ workspaceDirectory.id }}> {{ workspaceDirectory.name }} </option>
+        {% endfor %}
+    </select>
+{% endif %}
+
+{% if resourceTypes|length > 0 %}
+    <select class="select-type" multiple="multiple">
+        {% for resourceType in resourceTypes %}
+            <option value={{ resourceType }}> {{ resourceType }} </option>
+        {% endfor %}
+    </select>
+{% endif %}
+
+<input type="text"
+    class="datepicker date-from input-small"
+    data-date="2012-01-01"
+    data-date-format="yyyy-mm-dd"/>
+<input type="text"
+    class="datepicker date-to input-small"
+    data-date="2013-01-01"
+    data-date-format="yyyy-mm-dd"/>
+
+<button class="filter-button">filter</button>
+<button class="reset-button">reset</button>
