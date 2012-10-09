@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class TransactionalTestCase extends WebTestCase
 {
-    /** @var Claroline\CoreBundle\Testing\TransactionalTestClient */
+    /** @var Claroline\CoreBundle\Library\Testing\TransactionalTestClient */
     protected $client;
 
     protected function setUp()
