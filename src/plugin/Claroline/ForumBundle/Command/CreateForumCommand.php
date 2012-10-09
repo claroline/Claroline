@@ -82,7 +82,7 @@ class CreateForumCommand extends ContainerAwareCommand
         echo "forum {$forumInstance->getName()} created\n";
 
         for ($i=0; $i < $subjectsAmount; $i++){
-            $title = $this->generateLipsum(5, 1);
+            $title = $this->generateLipsum(5);
             $user = $collaborators[rand(0, $maxOffset)];
             $subject = new Subject();
             $subject->setName($title);
@@ -98,7 +98,7 @@ class CreateForumCommand extends ContainerAwareCommand
                 $message = new Message();
                 $message->setName('tmp');
                 $message->setCreator($sender);
-                $message->setContent($this->generateLipsum(150, 1));
+                $message->setContent($this->generateLipsum(150, true));
                 $message->setSubject($subject);
                 $creator->create($message, $subjectInstance->getId(), 'Message', true, null, $sender);
             }
@@ -128,14 +128,49 @@ class CreateForumCommand extends ContainerAwareCommand
         return $lipsum;
     }
 
-    private function generateLipsum($nbWords, $nbParagraph, $isWrapped = false)
+    /**
+     * if nbwords = 0, then it's somewhat random (from 5 to 500)
+     *
+     * @param integer $nbWords
+     * @param boolean $isFullText
+     *
+     * @return string
+     */
+    private function generateLipsum($nbWords = 0, $isFullText = false)
     {
         $words = $this->getArrayLipsum();
         $content = '';
+        $endPhrase = array('?', '!', '.', '...');
+        $loopBeforeEnd = 0;
+
+        if($nbWords == 0){
+            $nbWords = rand(5, 500);
+        }
 
         for ($i=0; $i<$nbWords; $i++){
-            $content.= "{$words[array_rand($words)]} ";
+
+            if ($loopBeforeEnd == 0){
+                $loopBeforeEnd = rand(3, 15);
+            }
+
+            $loopBeforeEnd --;
+
+            if ($isFullText && $loopBeforeEnd == 0){
+                $content.="{$endPhrase[array_rand($endPhrase)]} ". ucfirst($words[array_rand($words)]);
+            } else {
+
+                if ($content != '') {
+                    $content .= ' ';
+                }
+
+                $content.= "{$words[array_rand($words)]}";
+            }
+
             $i++;
+        }
+
+        if ($isFullText){
+            $content = ucfirst($content).'.';
         }
 
         return $content;
