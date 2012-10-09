@@ -66,7 +66,7 @@ class LoadManyUsersData extends AbstractFixture implements ContainerAwareInterfa
         $ws = $wsCreatorService->createWorkspace($this->config, $user);
         $ws->setType(AbstractWorkspace::USER_REPOSITORY);
         $user->addRole($ws->getManagerRole());
-        $user->setPersonnalWorkspace($ws);
+        $user->setPersonalWorkspace($ws);
         $manager->persist($ws);
 
         $this->addReference("user/manyUser{$number}", $user);

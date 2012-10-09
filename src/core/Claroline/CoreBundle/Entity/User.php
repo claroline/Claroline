@@ -138,7 +138,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
-    protected $personnalWorkspace;
+    protected $personalWorkspace;
 
 
     public function __construct()
@@ -371,7 +371,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $resourcesInstance->setUser($this);
     }
 
-    public function setPersonnalWorkspace($workspace)
+    public function setPersonalWorkspace($workspace)
     {
         $this->personalWorkspace = $workspace;
     }
