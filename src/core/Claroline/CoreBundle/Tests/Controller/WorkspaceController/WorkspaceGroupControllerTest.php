@@ -191,7 +191,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $groups = json_decode($this->client->getResponse()->getContent());
 
         foreach ($groups as $group) {
-            $this->assertEquals('Manager', $group->roles);
+            $this->assertContains('Manager', $group->roles);
         }
     }
 

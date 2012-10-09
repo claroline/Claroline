@@ -27,7 +27,7 @@ class AbstractRoleSubjectTest extends FixtureTestCase
     public function testgetOwnedRolesCanIncludeAncestorRolesInTheList()
     {
         $admin = $this->getFixtureReference('user/admin');
-        $this->assertEquals(4, count($admin->getOwnedRoles(true)));
+        $this->assertEquals(6, count($admin->getOwnedRoles(true)));
 
         $groupB = $this->getFixtureReference('group/group_b');
         $this->assertEquals(2, count($groupB->getOwnedRoles(true)));
@@ -67,8 +67,8 @@ class AbstractRoleSubjectTest extends FixtureTestCase
         $wsCreatorRole = $this->getFixtureReference('role/ws_creator');
         $user->removeRole($wsCreatorRole);
         $userRoles = $user->getOwnedRoles(true);
-        $this->assertEquals(3, count($userRoles));
-        $this->assertEquals(PlatformRoles::USER, $userRoles[2]->getName());
+        $this->assertEquals(7, count($userRoles));
+        $this->assertEquals(PlatformRoles::USER, $userRoles[6]->getName());
 
         $groupB = $this->getFixtureReference('group/group_b');
         $roleD = $this->getFixtureReference('role/role_d');
@@ -83,7 +83,7 @@ class AbstractRoleSubjectTest extends FixtureTestCase
         $admin = $this->getFixtureReference('user/admin');
         $userRole = $this->getFixtureReference('role/user');
         $admin->removeRole($userRole);
-        $this->assertEquals(1, count($admin->getOwnedRoles(true)));
+        $this->assertEquals(3, count($admin->getOwnedRoles(true)));
 
         $groupC = $this->getFixtureReference('group/group_c');
         $roleE = $this->getFixtureReference('role/role_e');
