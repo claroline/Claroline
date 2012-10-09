@@ -14,9 +14,11 @@ use Claroline\CoreBundle\Entity\Group;
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
  */
-class CreateGroupsCommand extends ContainerAwareCommand {
+class CreateGroupsCommand extends ContainerAwareCommand
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent ::__construct();
 
         $this->basicGroupName = array(
@@ -75,15 +77,17 @@ class CreateGroupsCommand extends ContainerAwareCommand {
         $this->maxGroupsYearsOffset--;
     }
 
-    protected function configure() {
+    protected function configure()
+    {
         $this->setName('claroline:groups:create')
-                ->setDescription('Creates some groups with the current registerd users and roles');
+            ->setDescription('Creates some groups with the current registerd users and roles');
         $this->setDefinition(array(
             new InputArgument('amount', InputArgument::REQUIRED, 'The number of groups'),
         ));
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output) {
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
         $params = array(
             'amount' => 'amount',
         );
@@ -91,34 +95,36 @@ class CreateGroupsCommand extends ContainerAwareCommand {
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                        $argument, $this->askArgument($output, $argumentName)
+                    $argument, $this->askArgument($output, $argumentName)
                 );
             }
         }
     }
 
-    protected function askArgument(OutputInterface $output, $argumentName) {
+    protected function askArgument(OutputInterface $output, $argumentName)
+    {
         $argument = $this->getHelper('dialog')->askAndValidate(
-                $output, "Enter the {$argumentName}: ", function($argument) {
-                    if (empty($argument)) {
-                        throw new \Exception('This argument is required');
-                    }
-
-                    return $argument;
+            $output, "Enter the {$argumentName}: ", function($argument) {
+                if (empty($argument)) {
+                    throw new \Exception('This argument is required');
                 }
+
+                return $argument;
+            }
         );
 
         return $argument;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $number = $input->getArgument('amount');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         // Load a list of users, 100 of them is enough
         $users = $em->getRepository('ClarolineCoreBundle:User')->findBy(array(), null, 100);
         $roles = $em->getRepository('ClarolineCoreBundle:Role');
-        $maxUsersOffset = count($users)-1;
-        $maxRolesOffset = count($roles)-1;
+        $maxUsersOffset = count($users) - 1;
+        $maxRolesOffset = count($roles) - 1;
 
         for ($i = 0; $i < $number; $i++) {
             // Create group
@@ -126,7 +132,7 @@ class CreateGroupsCommand extends ContainerAwareCommand {
             $group->setName($this->createGroupName());
             $em->persist($group);
             $em->flush();
-            echo " Group ".($i+1)." created, id=".$group->getId()." name='".$group->getName()."'";
+            echo " Group " . ($i + 1) . " created, id=" . $group->getId() . " name='" . $group->getName() . "'";
 
             // Add users to group
             $userNumber = rand(1, $maxUsersOffset);
@@ -144,7 +150,7 @@ class CreateGroupsCommand extends ContainerAwareCommand {
                     }
                 }
             }
-            echo "  -> Added ".$userNumber." users in it\n";
+            echo "  -> Added " . $userNumber . " users in it\n";
             $em->persist($group);
             $em->flush();
             // Clear EntityManager (EM) after each group to free memory and speed the EM process.
@@ -152,7 +158,8 @@ class CreateGroupsCommand extends ContainerAwareCommand {
         }
     }
 
-    private function createGroupName() {
+    private function createGroupName()
+    {
         $name = "{$this->groupsYears[mt_rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[mt_rand(0, $this->maxBasicGroupNameOffset)]} - " . mt_rand(0, 1000);
 
         return $name;

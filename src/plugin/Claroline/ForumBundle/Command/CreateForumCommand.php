@@ -12,6 +12,7 @@ use Claroline\ForumBundle\Entity\Message;
 
 class CreateForumCommand extends ContainerAwareCommand
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -24,8 +25,8 @@ class CreateForumCommand extends ContainerAwareCommand
         $this->setDefinition(array(
             new InputArgument('username', InputArgument::REQUIRED, 'The username'),
             new InputArgument('name', InputArgument::REQUIRED, 'The forum name'),
-            new InputArgument('subjectsAmount', InputArgument::REQUIRED, 'The number of subjects' ),
-            new InputArgument('messagesAmount', InputArgument::REQUIRED, 'The number of messages' ),
+            new InputArgument('subjectsAmount', InputArgument::REQUIRED, 'The number of subjects'),
+            new InputArgument('messagesAmount', InputArgument::REQUIRED, 'The number of messages'),
         ));
     }
 
@@ -70,7 +71,7 @@ class CreateForumCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $input->getArgument('username')));
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->findOneBy(array ('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
+            ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
         $maxOffset = count($collaborators);
         $maxOffset--;
@@ -81,7 +82,7 @@ class CreateForumCommand extends ContainerAwareCommand
         $forumInstance = $creator->create($forum, $root->getId(), 'Forum', true, null, $user);
         echo "forum {$forumInstance->getName()} created\n";
 
-        for ($i=0; $i < $subjectsAmount; $i++){
+        for ($i = 0; $i < $subjectsAmount; $i++) {
             $title = $this->generateLipsum(5);
             $user = $collaborators[rand(0, $maxOffset)];
             $subject = new Subject();
@@ -93,7 +94,7 @@ class CreateForumCommand extends ContainerAwareCommand
             echo "subject $title created\n";
             $subjectInstance = $creator->create($subject, $forumInstance->getId(), 'Subject', true, null, $user);
 
-            for ($j=0; $j<$messagesAmount; $j++){
+            for ($j = 0; $j < $messagesAmount; $j++) {
                 $sender = $collaborators[rand(0, $maxOffset)];
                 $message = new Message();
                 $message->setName('tmp');
@@ -143,20 +144,20 @@ class CreateForumCommand extends ContainerAwareCommand
         $endPhrase = array('?', '!', '.', '...');
         $loopBeforeEnd = 0;
 
-        if($nbWords == 0){
+        if ($nbWords == 0) {
             $nbWords = rand(5, 500);
         }
 
-        for ($i=0; $i<$nbWords; $i++){
+        for ($i = 0; $i < $nbWords; $i++) {
 
-            if ($loopBeforeEnd == 0){
+            if ($loopBeforeEnd == 0) {
                 $loopBeforeEnd = rand(3, 15);
             }
 
-            $loopBeforeEnd --;
+            $loopBeforeEnd--;
 
-            if ($isFullText && $loopBeforeEnd == 0){
-                $content.="{$endPhrase[array_rand($endPhrase)]} ". ucfirst($words[array_rand($words)]);
+            if ($isFullText && $loopBeforeEnd == 0) {
+                $content.="{$endPhrase[array_rand($endPhrase)]} " . ucfirst($words[array_rand($words)]);
             } else {
 
                 if ($content != '') {
@@ -169,8 +170,8 @@ class CreateForumCommand extends ContainerAwareCommand
             $i++;
         }
 
-        if ($isFullText){
-            $content = ucfirst($content).'.';
+        if ($isFullText) {
+            $content = ucfirst($content) . '.';
         }
 
         return $content;
