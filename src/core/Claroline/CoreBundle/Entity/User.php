@@ -96,7 +96,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role"
+     *      targetEntity="Claroline\CoreBundle\Entity\Role",
+     *      inversedBy="users"
      * )
      * @ORM\JoinTable(name="claro_user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -123,7 +124,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *      mappedBy="user"
      * )
      */
-    private $resourceInstances;
+    protected $resourceInstances;
 
     /**
      * @ORM\OneToMany(
@@ -131,13 +132,14 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *      mappedBy="user"
      * )
      */
-    private $abstractResources;
+    protected $abstractResources;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
-    private $personnalWorkspace;
+    protected $personalWorkspace;
+
 
     public function __construct()
     {
@@ -224,47 +226,35 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * Returns the user's roles (including role's ancestors) as an array
      * of string values (needed for Symfony security checks). The roles
-     * owned by groups which the user belong to are also included.
+     * owned by groups which the user belong can also be included.
+     *
+     * @param boolean $areGroupsIncluded
      *
      * @return array[string]
      */
-    public function getRoles()
+    public function getRoles($areGroupsIncluded = true)
     {
-        $roleNames = array();
+        $roleNames = parent::getRoles();
 
-        foreach ($this->getOwnedRoles(true) as $role) {
-            $roleNames[] = $role->getName();
-        }
-
-        foreach ($this->getGroups() as $group) {
-            foreach ($group->getOwnedRoles(true) as $role) {
-                $roleNames[] = $role->getName();
+        if ($areGroupsIncluded){
+            foreach ($this->getGroups() as $group) {
+                $roleNames = array_unique(array_merge($roleNames, $group->getRoles()));
             }
         }
 
-        return array_unique($roleNames);
-    }
-
-    /**
-     * Checks if the user has a given role. This method will explore
-     * role hierarchies if necessary.
-     *
-     * @param string $roleName
-     *
-     * @return boolean
-     */
-    public function hasRole($roleName)
-    {
-        if (in_array($roleName, $this->getRoles())) {
-            return true;
-        }
-
-        return false;
+        return $roleNames;
     }
 
     public function getWorkspaceRoleCollection()
     {
         return $this->workspaceRoles;
+    }
+
+    //small hack, do not use this one (see WorkspaceController multiAddUserAction)
+    public function setWorkspaceRoleCollection($workspaceRoles)
+    {
+        $this->workspaceRoles->clear();
+        $this->workspaceRoles[] = $workspaceRoles;
     }
 
     public function eraseCredentials()
@@ -381,14 +371,14 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $resourcesInstance->setUser($this);
     }
 
-    public function setPersonnalWorkspace($workspace)
+    public function setPersonalWorkspace($workspace)
     {
-        $this->personnalWorkspace = $workspace;
+        $this->personalWorkspace = $workspace;
     }
 
     public function getPersonalWorkspace()
     {
-        return $this->personnalWorkspace;
+        return $this->personalWorkspace;
     }
 
     public function getAbstractResources()

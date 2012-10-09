@@ -39,11 +39,13 @@
         construct.pasteIds = {};
         construct.cpd = null;
         construct.activePagerItem = 1;
+        construct.pager = null;
+        construct.nbPage = 0;
         //sets the resource filter callbacks
         resourceFilter.setCallBackToFilter(function(data){
             construct.div.empty();
             var templates = resourceGetter.getTemplates();
-            var html = Twig.render(templates.listTemplate, {'instances':data});
+            var html = Twig.render(templates.listTemplate, {'instances':data,'webRoot':resourceGetter.getWebRoot()});
             construct.div.append(html);
             setMenu(construct);
         });
@@ -55,10 +57,7 @@
         ClaroUtils.sendRequest(
             Routing.generate('claro_resource_menus'),
             function(data) {
-                builder.menu = JSON.parse(data);
-                for (var menu in builder.menu) {
-                    delete builder.menu[menu].items['new'];
-                }
+                builder.menu = data
             },
             function() {
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
@@ -69,11 +68,16 @@
         });
 
         $('.breadcrumb-link', div).live('click', function(e){
-            navigate($(this).parents('.res-block', div).attr('data-id'), construct);
+            navigate($(this).attr('data-id'), construct);
         });
 
         window.onresize = function(e) {
             resizeBreadcrumb(construct);
+            if (construct.pager !== null){
+                construct.pager.remove();
+            }
+            construct.pager = ClaroUtils.renderPager(construct.nbPages, construct.activePagerItem, 'instance', construct.div);
+            setPagerActions(construct);
         }
 
         submitButton.on('click', function(e){
@@ -170,27 +174,12 @@
                 var route = Routing.generate('claro_resource_count_instances');
                 ClaroUtils.sendRequest(route,
                     function(count){
+                        construct.nbPages = count;
                         construct.div.empty();
-                        var paginator = buildPaginator(count);
-                        div.append(paginator);
                         rendersFlatPaginatedThumbnails(construct);
-
-                        $('.instance-paginator-item').on('click', function(e){
-                            construct.activePagerItem = e.target.innerHTML;
-                            rendersFlatPaginatedThumbnails(construct);
-                        });
-
-                        $('.instance-paginator-next-item').on('click', function(e){
-                            construct.activePagerItem++;
-                            rendersFlatPaginatedThumbnails(construct);
-                        })
-
-                        $('.instance-paginator-prev-item').on('click', function(e){
-                            construct.activePagerItem--;
-                            rendersFlatPaginatedThumbnails(construct);
-                        })
                     });
             } else {
+                construct.pager.remove();
                 resourceGetter.getRoots(function(data){appendThumbnails(data, construct)});
             }
         })
@@ -201,6 +190,23 @@
                 return construct;
             }
         }
+    }
+
+    function setPagerActions(construct){
+        $('.instance-paginator-item').on('click', function(e){
+            construct.activePagerItem = e.target.innerHTML;
+            rendersFlatPaginatedThumbnails(construct);
+        });
+
+        $('.instance-paginator-next-item').on('click', function(e){
+            construct.activePagerItem++;
+            rendersFlatPaginatedThumbnails(construct);
+        })
+
+        $('.instance-paginator-prev-item').on('click', function(e){
+            construct.activePagerItem--;
+            rendersFlatPaginatedThumbnails(construct);
+        })
     }
 
     function navigate(id, construct) {
@@ -216,7 +222,11 @@
     }
 
     function rendersFlatPaginatedThumbnails(construct) {
-        activePage(construct.activePagerItem);
+        if (construct.pager !== null){
+            construct.pager.remove();
+        }
+        construct.pager = ClaroUtils.renderPager(construct.nbPages, construct.activePagerItem, 'instance', construct.div);
+        setPagerActions(construct);
         construct.resourceGetter.getFlatPaginatedThumbnails(construct.activePagerItem, function(data){
             $('.res-block').remove();
             construct.div.prepend(data);
@@ -225,29 +235,6 @@
                 formatResName($(this), 2, 20)
             });
         })
-    }
-
-    function activePage(item)
-    {
-        $('.instance-paginator-item').each(function(index, element){
-            element.parentElement.className = '';
-        })
-
-        var searched = $('li[data-page="'+item+'"]');
-        searched.first().addClass('active');
-    }
-
-    function buildPaginator(nbPage)
-    {
-        var paginator = '';
-        paginator += '<div id="instances-paginator" class="pagination"><ul><li><a class="instance-paginator-prev-item" href="#">Prev</a></li>'
-        for (var i = 0; i < nbPage;) {
-            i++;
-            paginator += '<li data-page="'+i+'"><a class="instance-paginator-item" href="#">'+i+'</a></li>';
-        }
-        paginator += '<li><a href="#" class="instance-paginator-next-item">Next</a></li></ul></div>';
-
-        return paginator;
     }
 
     function getSelectedItems(construct)
@@ -323,7 +310,7 @@
         var html = '<a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">'+name+'</a>'
         html += '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">';
 
-        for (var i in builder.menu[type]['items']) {
+        for (var i in builder.menu[type]) {
             html += '<li><a tabindex="-1" href="#">'+i+'</a></li>';
         }
 
@@ -349,13 +336,9 @@
     //@params items is the menu object used.
     function findMenuObject(items, parameters, menuItem, construct)
     {
-        for (var property in items.items) {
+        for (var property in items) {
             if (property == menuItem) {
-                executeMenuActions(items.items[property], parameters, construct);
-            } else {
-                if (items.items[property].hasOwnProperty('items')) {
-                    findMenuObject(items.items[property], parameters, menuItem, construct);
-                }
+                executeMenuActions(items[property], parameters, construct);
             }
         }
     };

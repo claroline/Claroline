@@ -38,11 +38,11 @@ class LoadManyGroupsData extends AbstractFixture implements ContainerAwareInterf
         $this->roles[5] = $this->getReference('role/role_e');
         $this->roles[6] = $this->getReference('role/role_f');
 
-        for ($i = 0; $i < 125; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $this->users[$i] = $this->getReference("user/manyUser{$i}");
         }
 
-        for ($i = 1; $i < 21; $i++) {
+        for ($i = 1; $i < 15; $i++) {
             $arrUsers = $this->genArrayUsers($i);
             $arrRoles = $this->genArrayRole(1);
             $this->createGroup($i, $arrRoles, $arrUsers, $manager);

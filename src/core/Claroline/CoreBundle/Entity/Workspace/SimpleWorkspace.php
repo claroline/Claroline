@@ -19,25 +19,25 @@ class SimpleWorkspace extends AbstractWorkspace
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
-    private $lft;
+    protected $lft;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $lvl;
+    protected $lvl;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
-    private $rgt;
+    protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    private $root;
+    protected $root;
 
     /**
      * @Gedmo\TreeParent
@@ -51,7 +51,7 @@ class SimpleWorkspace extends AbstractWorkspace
      *      onDelete="SET NULL"
      * )
      */
-    private $parent;
+    protected $parent;
 
     /**
      * @ORM\OneToMany(
@@ -60,7 +60,7 @@ class SimpleWorkspace extends AbstractWorkspace
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
-    private $children;
+    protected $children;
 
     public function __construct()
     {

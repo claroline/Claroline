@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
@@ -104,7 +103,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $workspace = $wsCreator->createWorkspace($config, $user);
         $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
         $user->addRole($workspace->getManagerRole());
-        $user->setPersonnalWorkspace($workspace);
+        $user->setPersonalWorkspace($workspace);
         $em->persist($workspace);
         $em->flush();
     }

@@ -32,7 +32,7 @@ class DirectoryControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->getWSListableRootResource($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function tearDown()
@@ -46,8 +46,8 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
-        $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->addResource($rootDir, $this->pwr->getId(), 'directory');
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($dir));
     }
@@ -57,14 +57,15 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
-        $dirRi = $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
+        $dirRi = $this->addResource($rootDir, $this->pwr->getId(), 'directory');
         $object = new File();
-        $object->setName('file');
+        $object->setName('file.txt');
         $object->setShareType(1);
         $object->setSize(42);
+        $object->setMimeType('Mime/Type');
         $object->setHashName('hashName');
         $this->addResource($object, $dirRi->getId(), 'file');
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($dir));
     }
@@ -74,12 +75,12 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
-        $dirRi = $this->addResource($rootDir, $this->pwr[0]->getId(), 'directory');
+        $dirRi = $this->addResource($rootDir, $this->pwr->getId(), 'directory');
         $object = new Directory();
         $object->setName('child_dir');
         $this->addResource($object, $dirRi->getId(), 'directory');
         $this->client->request('GET', "/resource/delete/{$dirRi->getId()}");
-        $this->client->request('GET', "/resource/children/{$this->pwr[0]->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($dir));
     }

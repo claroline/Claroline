@@ -12,6 +12,9 @@
         var webRoot = Routing.generate('claro_admin_index')+"/../../..";
 
         return {
+            getWebRoot: function() {
+                return webRoot;
+            },
             getTemplates: function() {
                 return templates;
             },

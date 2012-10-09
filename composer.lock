@@ -4,8 +4,8 @@
         {
             "package": "claroline/front-end-bundle",
             "version": "dev-master",
-            "source-reference": "c471fa4ba33f5126bc8cf14ef24b39a3d2c3db55",
-            "commit-date": "1346050852"
+            "source-reference": "54323600b9141daf388fa39672f660ea1a32d3ae",
+            "commit-date": "1347364002"
         },
         {
             "package": "doctrine/common",

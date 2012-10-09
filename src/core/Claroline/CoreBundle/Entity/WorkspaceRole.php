@@ -19,19 +19,7 @@ class WorkspaceRole extends Role
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
-    private $workspace;
-
-    /**
-     * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\User",
-     *  inversedBy="workspaceRoles"
-     * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     * )
-     */
-    private $users;
+    protected $workspace;
 
     /**
      * @ORM\ManyToMany(
@@ -43,19 +31,13 @@ class WorkspaceRole extends Role
      *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
      * )
      */
-    private $groups;
+    protected $groups;
 
-
-    /**
-     * @ORM\Column(name="res_mask", type="integer")
-     */
-    private $resMask;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->resMask = 0;
     }
 
     /**
@@ -101,67 +83,8 @@ class WorkspaceRole extends Role
         $this->workspace = $workspace;
     }
 
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
     public function getGroups()
     {
         return $this->groups;
-    }
-
-    /**
-     * Gets the resource mask
-     *
-     * @return integer
-     */
-    public function getResMask()
-    {
-        return $this->resMask;
-    }
-
-    /**
-     * Sets the resource mask
-     *
-     * @param integer $resMask
-     */
-    public function setResMask($resMask)
-    {
-        $this->resMask = $resMask;
-    }
-
-    /**
-     * Adds a permission
-     *
-     * @param integer $mask
-     */
-    public function addResourceMask($mask)
-    {
-        $builder = new MaskBuilder($this->getResMask());
-        $builder->add($mask);
-        $resMask = $builder->get();
-        $this->resMask = $resMask;
-    }
-
-    /**
-     * Removes a permission
-     *
-     * @param integer $mask
-     */
-    public function removeResourceMask($mask)
-    {
-        $builder = new MaskBuilder($this->getResMask());
-        $builder->remove($mask);
-        $resMask = $builder->get();
-        $this->resMask = $resMask;
-    }
-
-    /**
-     * Returns the permission array
-     */
-    public function getPermissions()
-    {
-        return SymfonySecurity::getArrayPermissions($this->getResMask());
     }
 }

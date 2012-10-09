@@ -15,23 +15,23 @@ class ResourceTypeCustomAction
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $action;
+    protected $action;
 
     /**
      * @ORM\Column(type="string", length=255, name="async")
      */
-    private $isAsync;
+    protected $isAsync;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="customActions", cascade={"persist"})
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
-    private $resourceType;
+    protected $resourceType;
 
     public function getId()
     {

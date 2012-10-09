@@ -29,26 +29,35 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanSeeGroups()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_administration')->link();
-        $crawler = $this->client->click($link);
-        $link = $crawler->filter('#link_group_list')->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(3, $crawler->filter('.row_group')->count());
+        $crawler = $this->client->request('GET', '/admin/groups/0.html');
+        $this->assertEquals(3, $crawler->filter('.row-group')->count());
+    }
+
+    public function testAdminCanSearchGroups()
+    {
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/groups/search/A/0.html');
+        $this->assertEquals(1, $crawler->filter('.row-group')->count());
+    }
+
+    public function testAdminCanSearchUsers()
+    {
+        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/users/search/john/0.html');
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testAdminCanSeeUsersFromGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/admin/group/list');
-        $link = $crawler->filter("#link_show_{$this->getFixtureReference('group/group_a')->getId()}")->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(2, $crawler->filter('.row_user')->count());
+        $this->client->request('GET', "admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testAdminCanCreateUser()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_administration')->link();
+        $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_add_user')->link();
         $crawler = $this->client->click($link);
@@ -59,86 +68,172 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['profile_form[plainPassword][first]'] = 'abc';
         $form['profile_form[plainPassword][second]'] = 'abc';
         $form['profile_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
-        $this->assertEquals(6, $crawler->filter('.row_user')->count());
+        $crawler = $this->client->request('GET', '/admin/users/0.html');
+        $this->assertEquals(6, $crawler->filter('.row-user')->count());
+    }
+
+    public function testUserCreationFormIsDisplayedWithErrors()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('POST', '/admin/user');
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['profile_form[firstName]'] = '';
+        $crawler = $this->client->submit($form);
+        $this->assertEquals(1, count($crawler->filter('#profile_form')));
     }
 
     public function testAdminCanDeleteUser()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_administration')->link();
-        $crawler = $this->client->request('GET', 'admin/user/list');
-        $this->assertEquals(5, $crawler->filter('.row_user')->count());
-        $link = $crawler->filter('.link_delete')->eq(0)->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(4, $crawler->filter('.row_user')->count());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/users/0.html');
+        $this->assertEquals(5, $crawler->filter('.row-user')->count());
+        $this->client->request('DELETE', "/admin/user/{$this->getFixtureReference('user/user')->getId()}");
+        $crawler = $this->client->request('GET', '/admin/users/0.html');
+        $this->assertEquals(4, $crawler->filter('.row-user')->count());
+    }
+
+    public function testmultiDeleteUsers()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/users/0.html');
+        $this->assertEquals(5, $crawler->filter('.row-user')->count());
+        $this->client->request('DELETE', "/admin/users?0={$this->getFixtureReference('user/user')->getId()}");
+        $crawler = $this->client->request('GET', '/admin/users/0.html');
+        $this->assertEquals(4, $crawler->filter('.row-user')->count());
     }
 
     public function testAdminCannotDeleteHimself()
     {
         $admin = $this->getFixtureReference('user/admin');
         $crawler = $this->logUser($admin);
-        $crawler = $this->client->request('GET', 'admin/user/list');
-        $this->assertEquals(5, $crawler->filter('.row_user')->count());
-        $this->assertEquals(0, count($crawler->filter('.link_delete')->eq(4)));
-        $this->client->request('GET', "/admin/user/delete/{$admin->getId()}");
+        $crawler = $this->client->request('GET', '/admin/users/0.html');
+        $this->assertEquals(5, $crawler->filter('.row-user')->count());
+        $this->assertEquals(0, count($crawler->filter('.link-delete-user')->eq(4)));
+        $this->client->request('DELETE', "/admin/user/{$admin->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testUserCannotDeleteHimself()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('DELETE', "/admin/user/{$this->getFixtureReference('user/user')->getId()}");
+        $this->assertEquals($this->client->getResponse()->getStatusCode(), 403);
     }
 
     public function testAdminCanCreateGroups()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $link = $crawler->filter('#link_administration')->link();
+        $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_group_create_form')->link();
         $crawler = $this->client->click($link);
         $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[name]'] = 'Group D';
         $this->client->submit($form);
-        $crawler = $this->client->request('GET', '/admin/group/list');
-        $this->assertEquals(4, $crawler->filter('.row_group')->count());
+        $crawler = $this->client->request('GET', '/admin/groups/0.html');
+        $this->assertEquals(4, $crawler->filter('.row-group')->count());
+    }
+
+    public function testGroupCreationFormIsDisplayedWithErrors()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/group/form');
+        $form = $crawler->filter('button[type=submit]')->form();
+        $this->client->submit($form);
+        $this->assertEquals(1, count($crawler->filter('#group_form')));
     }
 
     public function testAdminCanAddUserToGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
-        $link = $crawler->filter('#link_add_user_to_group')->link();
-        $crawler = $this->client->click($link);
-        $link = $crawler->filter("#link_add_user_{$this->getFixtureReference('user/admin')->getId()}")->link();
-        $this->client->click($link);
-        $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
-        $this->assertEquals(3, $crawler->filter('.row_user')->count());
+        $this->client->request(
+            'PUT',
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/add/user/{$this->getFixtureReference('user/admin')->getId()}"
+        );
+
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+       $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testAdminCanMultiAddUserToGroup()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request(
+            'PUT',
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?0={$this->getFixtureReference('user/admin')->getId()}"
+        );
+
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+       $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testPaginatedGrouplessUsersAction()
+    {
+         $this->logUser($this->getFixtureReference('user/admin'));
+         $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/unregistered/users/0");
+         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testSearchPaginatedGrouplessUsersAction()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/unregistered/users/0/search/doe");
+        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testSearchPaginatedUserOfGroups()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/search/doe/users/0");
+        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
+    public function testAddUserToGroupLayoutAction()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/admin/group/add/{$this->getFixtureReference('group/group_a')->getId()}");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testUserGroupListLayout()
+    {
+       $this->logUser($this->getFixtureReference('user/admin'));
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
+       $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminCanRemoveUserFromGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
-        $link = $crawler->filter("#link_delete_{$this->getFixtureReference('user/user')->getId()}")->link();
-        $this->client->click($link);
-        $crawler = $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
-        $this->assertEquals(1, $crawler->filter('.row_user')->count());
+        $this->client->request('DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
+        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testAdminCanDeleteGroup()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/admin/group/list');
-        $link = $crawler->filter("#link_delete_{$this->getFixtureReference('group/group_a')->getId()}")->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(2, $crawler->filter('.row_group')->count());
+        $this->client->request('DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
+        $crawler = $this->client->request('GET', '/admin/groups/0.html');
+        $this->assertEquals(2, $crawler->filter('.row-group')->count());
+    }
+
+    public function testMultiDeleteGroups()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('DELETE', "/admin/groups?0={$this->getFixtureReference('group/group_a')->getId()}");
+        $crawler = $this->client->request('GET', '/admin/groups/0.html');
+        $this->assertEquals(2, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanEditGroupSettings()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/admin/group/list');
-        $link = $crawler->filter("#link_settings_{$this->getFixtureReference('group/group_a')->getId()}")->link();
-        $crawler = $this->client->click($link);
+        $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
         $selected = $crawler->filterXpath("//select/option[. = 'ROLE_A']")->attr('selected');
         $this->assertEquals("selected", $selected);
         $form = $crawler->filter('button[type=submit]')->form();
@@ -149,11 +244,21 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals("selected", $selected);
     }
 
+    public function testGroupSettingsFormWithErrorsIsRendered()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['group_form[name]'] = '';
+        $crawler = $this->client->submit($form);
+        $this->assertEquals(1, count($crawler->filter('#group_form')));
+    }
+
     public function testEditSelfRegistrationParameter()
     {
         $this->configHandler->setParameter('allow_self_registration', false);
         $crawler = $this->client->request('GET', '/');
-        $this->assertEquals(0, $crawler->filter("#link_registration")->count());
+        $this->assertEquals(0, $crawler->filter("#link-registration")->count());
 
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
@@ -163,21 +268,21 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['platform_parameters_form[selfRegistration]'] = true;
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/logout');
-        $this->assertEquals(1, $crawler->filter("#link_registration")->count());
+        $this->assertEquals(1, $crawler->filter("#link-registration")->count());
     }
 
     public function testEditLanguageParameter()
     {
         $this->configHandler->setParameter('locale_language', 'en');
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
-        $this->assertEquals('Logout', trim($crawler->filter("#link_logout")->text()));
+        $this->assertEquals('Logout', trim($crawler->filter("#link-logout")->text()));
 
         $crawler = $this->client->request('GET', '/admin/platform/settings/form');
         $form = $crawler->filter('button[type=submit]')->form();
         $form['platform_parameters_form[localLanguage]'] = 'fr';
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals('Déconnexion', trim($crawler->filter("#link_logout")->text()));
+        $this->assertEquals('Déconnexion', trim($crawler->filter("#link-logout")->text()));
     }
 
     private function getUser($username)

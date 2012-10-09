@@ -67,8 +67,8 @@ class TextListener extends ContainerAware
 
     public function onOpen(CustomActionResourceEvent $event)
     {
-        $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($event->getResourceId());
-        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $event->getResourceId()));
+        $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($event->getInstanceId());
+        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $event->getInstanceId()));
         $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();

@@ -18,45 +18,45 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{{ path('claro_profile_form') }}" id="link_account">
+                        <a href="{{ path('claro_profile_form') }}" id="link-account">
                         {{ 'my_account'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="{{path('claro_ws_show', {'workspaceId': personalWs.getId()})}}" id="link_my_workspace">
+                        <a href="{{path('claro_workspace_home', {'workspaceId': personalWs.getId()})}}" id="link-my-workspace">
                         {{ 'my_workspace'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
-                        <a href="my_agenda" id="link_agenda">
+                        <a href="my_agenda" id="link-agenda">
                         {{ 'my_agenda'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
-                        <a href="my_resources" id="link_my_resources">
+                        <a href="my_resources" id="link-my-resources">
                         {{ 'my_resources'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
-                        <a href="my_contacts" id="link_my_contacts">
+                        <a href="my_contacts" id="link-my-contacts">
                         {{ 'my_contacts'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="my_notes" id="link_my_notes">
+                        <a href="my_notes" id="link-my-notes">
                         {{ 'my_notes'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
-                        <a href="my_portfolio" id="link_portfolio">
+                        <a href="my_portfolio" id="link-portfolio">
                         {{ 'my_portfolio'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="{{ path('claro_security_logout') }}" id="link_logout">
+                        <a href="{{ path('claro_security_logout') }}" id="link-logout">
                         {{ 'logout'|trans({}, 'platform') }}
                         </a>
                     </li>
@@ -70,15 +70,26 @@
                 <ul class="dropdown-menu">
                     {% for workspace in workspaces %}
                         <li>
-                            <a href="{{path('claro_ws_show', {'workspaceId': workspace.getId()})}}" id="link_workspace_{{ workspace.getId() }}">
+                            <a href="{{path('claro_workspace_home', {'workspaceId': workspace.getId()})}}" id="link-workspace-{{ workspace.getId() }}">
                             {{workspace.getCode()}} - {{ workspace.getName() }}
                             </a>
                         </li>
                     {% endfor %}
                     <li class="divider"></li>
                     <li>
-                        <a href="{{ path('claro_ws_list') }}" id="link_all_workspaces">
-                                {{ 'all_workspaces'|trans({}, 'platform') }}
+                        <a href="{{ path('claro_workspace_by_user', {'userId': app.user.id }) }}" id="link-my-workspaces">
+                                {{ 'my_workspaces'|trans({}, 'platform') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('claro_workspace_list') }}" id="link-search-workspaces">
+                                {{ 'find_workspaces'|trans({}, 'platform') }}
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="{{ path('claro_workspace_creation_form') }}"
+                           id="link-create-ws-form">{{ 'create_workspace'|trans({}, 'platform') }}
                         </a>
                     </li>
                 </ul>
@@ -90,11 +101,11 @@
                 <div class="nav-collapse">
                     <ul class="nav pull-right">
                     {% if register_target is not null %}
-                        <li><a id="link_registration" href="{{ path(register_target) }}">
+                        <li><a id="link-registration" href="{{ path(register_target) }}">
                             {{ 'register'|trans({}, 'platform') }}
                         </a></li>
                     {% endif %}
-                    <li><a href="{{ path(login_target) }}" id="link_login">
+                    <li><a href="{{ path(login_target) }}" id="link-login">
                         {{ 'login'|trans({}, 'platform') }}
                     </a></li>
                 </div>
@@ -105,13 +116,13 @@
                 <div class="nav-collapse">
                 <ul class="nav">
                     <li>
-                        <a href="{{ path('claro_dashboard_index') }}" id="link_dashboard">
+                        <a href="{{ path('claro_dashboard_index') }}" id="link-dashboard">
                         {{ 'dashboard'|trans({}, 'platform') }}
                         </a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li>
-                            <a href="{{ path('claro_admin_index') }}" id="link_administration">
+                            <a href="{{ path('claro_admin_index') }}" id="link-administration">
                             {{ 'administration'|trans({}, 'platform') }}
                             </a>
                         </li>

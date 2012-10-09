@@ -89,7 +89,7 @@ class IconCreatorTest extends FixtureTestCase
             $this->assertEquals(1, count($thumbs));
         } else {
             $name = $file->getIcon()->getLargeIcon();
-            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_file.png', $name);
+            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.png', $name);
         }
     }
 
@@ -111,7 +111,7 @@ class IconCreatorTest extends FixtureTestCase
         $file = $this->iconCreator->setResourceIcon($file, 'image/ThatOneDoesntExists');
         $name = $file->getIcon()->getLargeIcon();
         //no res_image yet
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_file.png', $name);
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.png', $name);
     }
 
     public function testFileGetCompleteMimeThumbnail()
@@ -123,12 +123,7 @@ class IconCreatorTest extends FixtureTestCase
         $name = $file->getIcon()->getLargeIcon();
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_text.png', $name);
     }
-
-    public function testFileGetBasicMimeThumbnail()
-    {
-        $this->markTestSkipped('tested with the unknown video mime');
-    }
-
+    
     public function testFileGetUnknownMimeThumbnail()
     {
         $file = new File();

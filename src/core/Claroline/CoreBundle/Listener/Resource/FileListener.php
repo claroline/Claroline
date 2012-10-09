@@ -2,18 +2,17 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Resource\ResourceEvent;
-use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Library\Resource\MimeTypes;
+use Claroline\CoreBundle\Form\FileType;
+use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\PlayFileEvent;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Response;
 
 class FileListener extends ContainerAware
 {
@@ -43,11 +42,13 @@ class FileListener extends ContainerAware
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
+            $mimeType = $tmpFile->getClientMimeType();
             $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
             $tmpFile->move($this->container->getParameter('claroline.files.directory'), $hashName);
             $file->setSize($size);
             $file->setName($fileName);
             $file->setHashName($hashName);
+            $file->setMimeType($mimeType);
             $event->setResource($file);
             $event->stopPropagation();
             return;
@@ -106,6 +107,42 @@ class FileListener extends ContainerAware
             ->find($event->getResourceId());
         $hash = $file->getHashName();
         $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
+        $event->stopPropagation();
+    }
+
+    public function onOpen(CustomActionResourceEvent $event)
+    {
+        $instance =  $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($event->getInstanceId());
+        $file = $instance->getResource();
+        $mimeType = $file->getMimeType();
+        $playEvent = new PlayFileEvent($instance);
+        $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
+        $this->container->get('event_dispatcher')->dispatch($eventName, $playEvent);
+
+        if ($playEvent->getResponse() instanceof Response){
+            $response = $playEvent->getResponse();
+        } else {
+            $fallBackPlayEvent = new PlayFileEvent($instance);
+            $mimeElements = explode('/', $mimeType);
+            $baseType = strtolower($mimeElements[0]);
+            $fallBackPlayEventName = 'play_file_'.$baseType;
+            $this->container->get('event_dispatcher')->dispatch($fallBackPlayEventName, $fallBackPlayEvent);
+            if ($fallBackPlayEvent->getResponse() instanceof Response){
+                $response = $fallBackPlayEvent->getResponse();
+            } else {
+                $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
+                $file = file_get_contents($item);
+                $response = new Response();
+                $response->setContent($file);
+                $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+                $response->headers->set('Content-Type', 'application/force-download');
+                $response->headers->set('Content-Disposition', 'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION));
+                $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
+                $response->headers->set('Connection', 'close');
+            }
+        }
+
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

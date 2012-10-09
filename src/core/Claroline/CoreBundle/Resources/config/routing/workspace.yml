@@ -1,87 +1,61 @@
-claro_ws_show_creation_form:
+# REST ROUTES (OR CLOSE ENOUGH)
+
+claro_workspace_home:
+    pattern: /{workspaceId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:home }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_resources:
+    pattern: /resource/{workspaceId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:resources }
+    requirements:
+      _method: GET
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_list:
+    pattern: /
+    defaults: { _controller: ClarolineCoreBundle:Workspace:list }
+    requirements:
+      _method: GET
+
+claro_workspace_create:
+    pattern: /
+    defaults: { _controller: ClarolineCoreBundle:Workspace:create }
+    requirements:
+      _method: POST
+
+claro_workspace_delete:
+    pattern: /{workspaceId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:delete }
+    requirements:
+      _method: DELETE
+      workspaceId: ^(?=.*[1-9].*$)\d*$
+    options:
+      expose: true
+
+claro_workspace_by_user:
+    pattern: /user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Workspace:listWorkspacesByUser }
+    options:
+      expose: true
+    requirements:
+      _method: GET
+      userId: ^(?=.*[1-9].*$)\d*$
+
+claro_workspace_creation_form:
     pattern: /new/form
     defaults: { _controller: ClarolineCoreBundle:Workspace:creationForm }
+    requirements:
+      _method: GET
+
+#OTHERS (maybe they should be removed)
 
 claro_ws_roles_list:
     pattern: /{workspaceId}/roles.{format}
     defaults: { _controller: ClarolineCoreBundle:Workspace:roles }
     options:
-      expose: true
-
-claro_ws_create:
-    pattern: /new/create
-    defaults: { _controller: ClarolineCoreBundle:Workspace:create }
-    requirements:
-        _method: POST
-
-claro_ws_delete:
-    pattern: /delete/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:delete }
-
-claro_ws_list_user_workspaces:
-    pattern: /{userId}/list.{format}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:listWorkspacesByUser, userId:'null' }
-    options:
-      expose: true
-
-claro_ws_list:
-    pattern: /list
-    defaults: { _controller: ClarolineCoreBundle:Workspace:list }
-
-claro_ws_show:
-    pattern: /show/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:show }
-
-claro_ws_users_ws:
-    pattern: /show/list/user/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:listUserByWs }
-
-claro_ws_remove_user:
-    pattern: /delete/user/{userId}/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:removeUser, userId:'null' }
-    options:
-       expose: true
-
-claro_ws_remove_group:
-    pattern: /delete/group/{groupId}/{workspaceId}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:removeGroup }
-    options:
-      expose: true
-
-claro_ws_users_limited_list:
-   pattern: /user/{workspaceId}/{nbIteration}/limited-list.{format}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:limitedUserList }
-   options:
-       expose: true
-
-claro_ws_add_user:
-   pattern: /add/user/{userId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:addUser, userId:'null' }
-   options:
-      expose: true
-
-claro_ws_groups_limited_list:
-    pattern: /group/{workspaceId}/{nbIteration}/limited-list.{format}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:limitedGroupList }
-    options:
-        expose: true
-
-claro_ws_search_unregistered_users_by_names:
-    pattern: /search/user/{search}/{workspaceId}/list.{format}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredUsersByNames }
-    options:
-         expose: TRUE
-
-claro_ws_search_unregistered_groups_by_name:
-    pattern: /search/group/{search}/{workspaceId}/list.{format}
-    defaults: { _controller: ClarolineCoreBundle:Workspace:searchUnregisteredGroupsByName }
-    options:
-         expose: TRUE
-
-claro_ws_add_group:
-   pattern: /add/group/{groupId}/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:addGroup }
-   options:
       expose: true
 
 claro_ws_user_workspace_id:

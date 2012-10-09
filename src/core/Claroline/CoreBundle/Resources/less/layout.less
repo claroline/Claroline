@@ -1,9 +1,10 @@
+/*
 ///////////////////////////////////////////////////////////////////////////////////
 // This less file contains only global layout rules (mainly for navbar, grid and //
 // footer positionning). It is included at the end of "bootstrap.less.pre". Keep //
 // it short and design-neutral.                                                  //
 ///////////////////////////////////////////////////////////////////////////////////
-
+*/
 html, body {
     height: 100%;
     margin: 0;
@@ -16,12 +17,11 @@ html, body {
 
 #grid {
     overflow: auto;
-    // Reserves a space for the footer
-    padding-bottom: @navbarHeight;
+    padding-bottom: @navbarHeight; /* Reserves a space for the footer */
 }
 
 @media (min-width: 768px) {
-    // Ensures the navbar doesn't hide the top content (only necessary on large screens)
+    /* Ensures the navbar doesn't hide the top content (only necessary on large screens)*/
     #grid {
         padding-top: @navbarHeight;
     }
@@ -31,13 +31,12 @@ footer {
     width: 100%;
     position: relative;
     height: @navbarHeight;
-    // Puts the footer in the grid with a negative margin
-    margin: -@navbarHeight 0 0 0;
+    margin: -@navbarHeight 0 0 0; /* Puts the footer in the grid with a negative margin */
 }
 
 @media (max-width: 767px) {
-    // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
-    // (makes the footer fill the whole screen width).
+    /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
+       // (makes the footer fill the whole screen width). */
     footer {
         margin-left: -20px;
         margin-right: -20px;
@@ -46,8 +45,9 @@ footer {
     }
 }
 
+/***********/
 /* WIDGETS */
-
+/***********/
 .widget {
     margin-bottom: 22px;
 }
@@ -127,4 +127,91 @@ footer {
 
 .resource-thumbnail img[data-type=directory]:hover {
     cursor: pointer;
+}
+
+/*****************/
+/* RESOURCES MGR */
+/*****************/
+
+/* filter list */
+.res-icon-list {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.res-icon-list .res-block {
+    vertical-align: top;
+    margin-top:5px
+}
+
+.res-icon-list .res-block label {
+    display: inline;
+}
+
+.res-icon-list .icon-caret-down {
+    color:lighten(@textColor,50%);
+    font-size: 20px;
+    text-decoration: none;
+}
+.res-icon-list .icon-caret-down:hover {
+    color:@textColor;
+}
+
+
+/* thumbnails list */
+.res-thumb-list {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.res-thumb-list .res-block {
+    display:inline-block;
+    width:180px;
+    text-align: center;
+    vertical-align: top;
+    margin: 15px;
+}
+
+.res-thumb-list .chk-instance {
+     vertical-align: top;
+}
+
+.res-thumb-list .res-block label {
+    display: inline;
+}
+
+.res-thumb-list .icon-caret-down {
+    color:lighten(@textColor,50%);
+    font-size: 20px;
+    text-decoration: none;
+    margin-left: 5px;
+}
+.res-thumb-list .icon-caret-down:hover {
+    color:@textColor;
+}
+
+/**************/
+/* WORKSPACES */
+/**************/
+
+.workspace-tool-list {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.workspace-tool-list .tool-block {
+    display:inline-block;
+    width:180px;
+    text-align: center;
+    vertical-align: top;
+    margin: 15px;
+}
+
+.workspace-left-toolbox {
+    border-style:solid;
+    border-width:1px;
+}
+
+.workspace-top-toolbox {
+    vertical-align:middle;
 }

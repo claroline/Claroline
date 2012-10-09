@@ -20,6 +20,16 @@ dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Ressources
 
+# tabs workspace
+workspace_welcome: Accueil
+workspace_resource: Ressources
+workspace_tools: Outils
+workspace_administration: Administration
+
+# workspace tools
+user_management: Gestion des utilisateurs
+group_management: Gestion des groupes
+
 # administration links
 add_user: Ajouter un utilisateur
 list_users: Lister les utilisateurs
@@ -36,6 +46,7 @@ register: Inscription
 create_workspace: Ajouter un espace d'activités
 my_workspaces: Mes espaces d'activités
 list_workspaces: Tous les espaces d'activités
+find_workspaces: Trouver un espace d'activité
 
 #########
 # FORMS #
@@ -148,6 +159,7 @@ move : Déplacer
 settings: Paramètres
 register: Inscription
 unregister: Désinscription
+save: sauvegarder
 
 # resource type
 directory: Répertoire

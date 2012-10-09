@@ -1,0 +1,70 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block section_content %}
+    {% block tools %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_workspace_tools', {'workspaceId': workspace.getId()}) }}"
+                id="resource_manager_link">
+                <i class="icon-home"></i>
+            </a>
+        </li>
+    </ul>
+    <div class="workspace-tool-list">
+        <span class="tool-block">
+            <div class="wrapper">
+                <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
+                id="link_user_management">
+                    <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
+                </a>
+            </div>
+            <span class="tool-name">{{ 'user_management'|trans({}, 'platform') }}</span>
+        </span>
+        <span class="tool-block">
+            <div class="wrapper">
+                <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
+                id="link_group_management">
+                    <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/users.png')}}" />
+                </a>
+            </div>
+            <span class="tool-name">{{ 'group_management'|trans({}, 'platform') }}</span>
+        </span>
+        <span class="tool-block">
+            <div class="wrapper">
+                <a href="#">
+                    <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png')}}" />
+                </a>
+            </div>
+            <span class="tool-name">{{ 'chart_pie'|trans({}, 'platform') }}</span>
+        </span>
+        <span class="tool-block">
+            <div class="wrapper">
+                    <a href="#">
+                        <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/comment.png')}}" />
+                    </a>
+            </div>
+            <span class="tool-name">{{ 'comments'|trans({}, 'platform') }}</span>
+        </span>
+        <span class="tool-block">
+            <div class="wrapper">
+                <a href="#">
+                    <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/process.png')}}" />
+                </a>
+            </div>
+            <span class="tool-name">{{ 'process'|trans({}, 'platform') }}</span>
+        </span>
+        <span class="tool-block">
+            <div class="wrapper">
+                <a href="#">
+                    <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
+                </a>
+            </div>
+            <span class="tool-name">{{ 'calendar'|trans({}, 'platform') }}</span>
+        </span>
+    </div>
+    {% endblock %}
+{% endblock %}

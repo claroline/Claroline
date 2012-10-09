@@ -33,9 +33,3 @@
     <script src="{{ asset('bundles/clarolinecore/js/dashboard/resource_manager.js') }}" type="text/javascript"></script>
 
 {% endblock %}
-
-{% block content %}
-    <div class="resource-manager span12">
-        {% include 'ClarolineCoreBundle:Resource:manager.html.twig' with {'workspaceRoots': workspaceRoots, 'resourceTypes': resourceTypes} %}
-    </div>
-{% endblock %}

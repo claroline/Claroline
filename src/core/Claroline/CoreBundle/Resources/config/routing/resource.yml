@@ -59,7 +59,7 @@ claro_resource_multimove:
         expose: true
 
 claro_resource_custom:
-    pattern: /custom/{resourceType}/{action}/{resourceId}
+    pattern: /custom/{resourceType}/{action}/{instanceId}
     defaults: { _controller: ClarolineCoreBundle:Resource:custom }
     options:
         expose: true

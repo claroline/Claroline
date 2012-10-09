@@ -22,10 +22,8 @@ class Converter
         $instanceArray['name'] = $instance->getName();
         $instanceArray['created'] = $instance->getCreationDate()->format('d-m-Y H:i:s');
         $instanceArray['updated'] = $instance->getModificationDate()->format('d-m-Y H:i:s');;
-        $instanceArray['lft'] = $instance->getLft();
+        $instanceArray['path'] = $instance->getPath();
         $instanceArray['lvl'] = $instance->getLvl();
-        $instanceArray['rgt'] = $instance->getRgt();
-        $instanceArray['root'] = $instance->getRoot();
         ($instance->getParent() != null) ? $instanceArray['parent_id'] = $instance->getParent()->getId() : $instanceArray['parent_id'] = null;
         $instanceArray['workspace_id'] = $instance->getWorkspace()->getId();
         $instanceArray['resource_id'] = $instance->getResource()->getId();
@@ -38,55 +36,18 @@ class Converter
         $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
         $instanceArray['small_icon'] = $instance->getResource()->getIcon()->getSmallIcon();
         $instanceArray['large_icon'] = $instance->getResource()->getIcon()->getLargeIcon();
-        // null or use doctrine to retrieve the path
-        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $nodes = $repo->getPath($instance);
-        $path = '';
-        foreach ($nodes as $node) {
-            $path.="{$node->getName()} /";
-        }
-        $instanceArray['path'] = $path;
+        $instanceArray['path'] = $instance->getPath();
+        $instanceArray['path_for_display'] = $instance->getPathForDisplay();
         $array = array();
         $array[0] = $instanceArray;
 
         return $array;
     }
 
-    /**
-     * Converts a resource array to a json array.
-     *
-     * @param array $results
-     * @param string $wrapName
-     *
-     * @return string
-     */
-    public function arrayToJson($results, $wrapName = false)
-    {
-        ($wrapName != false ) ? $json = '"'.$wrapName.'" :[' : $json = "[";
-        $i = 0;
-
-        foreach ($results as $resource){
-            $stringitem ='';
-            ($i != 0) ? $stringitem.="," : $i++;
-            $stringitem.= '{';
-            $keys = array_keys($resource);
-            $j = 0;
-            foreach ($keys as $key) {
-                ($j != 0) ? $stringitem.=",": $j++;
-                $stringitem.= '"' . $key . '": "' . $resource[$key] . '"';
-            }
-            $json.=$stringitem.'}';
-        }
-
-        $json.="]";
-
-        return $json;
-    }
-
     public function instanceToJson(ResourceInstance $instance)
     {
         $phpArray = $this->instanceToArray($instance);
-        $json = $this->arrayToJson($phpArray);
+        $json = json_encode($phpArray);
 
         return $json;
     }

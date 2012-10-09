@@ -4,62 +4,220 @@ claro_admin_index:
     options:
       expose: true
 
-#users
+#RESTS ROUTE (OR CLOSE ENOUGH)
+claro_admin_paginated_group_user_list:
+   pattern: /group/{groupId}/users/{offset}
+   defaults: { _controller: ClarolineCoreBundle:Administration:usersOfGroup }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      groupId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
 
-claro_admin_user_creation_form:
-    pattern: /user/create/form
-    defaults: { _controller: ClarolineCoreBundle:Administration:userCreationForm }
-
-claro_admin_create_user:
-    pattern: /user/create
-    defaults: { _controller: ClarolineCoreBundle:Administration:createUser }
-
-claro_admin_delete_user:
-    pattern: /user/delete/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUser }
-
-claro_admin_user_list:
-    pattern: /user/list
-    defaults: { _controller: ClarolineCoreBundle:Administration:userList }
-
-#groups
-
-claro_admin_group_creation_form:
-    pattern: /group/create/form
-    defaults: { _controller: ClarolineCoreBundle:Administration:groupCreationForm }
-
-claro_admin_create_group:
-    pattern: /group/create
-    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
-
-claro_admin_group_list:
-    pattern: /group/list
-    defaults: { _controller: ClarolineCoreBundle:Administration:groupList }
-
-claro_admin_group_user_list:
-    pattern: /group/{groupId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:groupUserList }
-
-claro_admin_user_list_addable_to_group:
-    pattern: /group/add/{groupId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:userListAddableToGroup }
-
-claro_admin_add_user_to_group:
-    pattern: /group/add/user/{groupId}/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
+claro_admin_paginated_search_group_user_list:
+   pattern: /group/{groupId}/search/{search}/users/{offset}
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchUsersOfGroup }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      groupId: ^(?=.*[1-9].*$)\d*$
+      offset: ^(?=.*[0-9].*$)\d*$
 
 claro_admin_delete_user_from_group:
-    pattern: /group/delete/user/{groupId}/{userId}
+    pattern: /group/{groupId}/user/{userId}
     defaults: { _controller: ClarolineCoreBundle:Administration:deleteUserFromGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      groupId: ^(?=.*[1-9].*$)\d*$
+      userId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_multidelete_user_from_group:
+    pattern: /group/{groupId}/users
+    defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteUserFromGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      groupId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_paginated_group_list:
+   pattern: /groups/{offset}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:groups }
+   options:
+      expose: true
+   requirements:
+      offset: ^(?=.*[0-9].*$)\d*$
+      method: GET
+
+claro_admin_paginated_search_group_list:
+   pattern: /groups/search/{search}/{offset}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchGroups }
+   options:
+      expose: true
+   requirements:
+      offset: ^(?=.*[0-9].*$)\d*$
+      method: GET
+
+claro_admin_paginated_search_user_list:
+   pattern: /users/search/{search}/{offset}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:searchUsers }
+   options:
+      expose: true
+   requirements:
+      offset: ^(?=.*[0-9].*$)\d*$
+      method: GET
 
 claro_admin_delete_group:
-    pattern: /group/delete/{groupId}
+    pattern: /group/{groupId}
     defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      groupId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_multidelete_group:
+    pattern: /groups
+    defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteGroup }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+
+claro_admin_delete_user:
+    pattern: /user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUser }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
+      userId: ^(?=.*[1-9].*$)\d*$
+
+claro_admin_multidelete_user:
+    pattern: /users
+    defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteUser }
+    options:
+      expose: true
+    requirements:
+      _method: DELETE
 
 claro_admin_group_settings_form:
    pattern: /group/settings/form/{groupId}
    defaults: { _controller: ClarolineCoreBundle:Administration:groupSettingsForm }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      groupId: ^(?=.*[1-9].*$)\d*$
 
+claro_admin_paginated_user_list:
+   pattern: /users/{offset}.{format}
+   defaults: { _controller: ClarolineCoreBundle:Administration:users }
+   options:
+      expose: true
+   requirements:
+      _method: GET
+      offset: ^(?=.*[0-9].*$)\d*$
+
+claro_admin_user_list:
+    pattern: /users
+    defaults: { _controller: ClarolineCoreBundle:Administration:userList }
+    requirements:
+      _method: GET
+
+claro_admin_user_creation_form:
+    pattern: /user/form
+    defaults: { _controller: ClarolineCoreBundle:Administration:userCreationForm }
+    requirements:
+      _method: GET
+
+claro_admin_group_creation_form:
+    pattern: /group/form
+    defaults: { _controller: ClarolineCoreBundle:Administration:groupCreationForm }
+    requirements:
+      _method: GET
+
+claro_admin_group_list:
+    pattern: /groups
+    defaults: { _controller: ClarolineCoreBundle:Administration:groupList }
+    requirements:
+      _method: GET
+
+claro_admin_create_user:
+    pattern: /user
+    defaults: { _controller: ClarolineCoreBundle:Administration:createUser }
+    requirements:
+      _method: POST
+
+claro_admin_create_group:
+    pattern: /group
+    defaults: { _controller: ClarolineCoreBundle:Administration:createGroup }
+    requirements:
+      _method: POST
+
+claro_admin_groupless_users:
+    pattern: /group/{groupId}/unregistered/users/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Administration:grouplessUsers }
+    requirements:
+      _method: GET
+      offset: ^(?=.*[0-9].*$)\d*$
+      groupId: ^(?=.*[0-9].*$)\d*$
+    options:
+      expose: true
+
+claro_admin_search_groupless_users:
+    pattern: /group/{groupId}/unregistered/users/{offset}/search/{search}
+    defaults: { _controller: ClarolineCoreBundle:Administration:searchGrouplessUsers }
+    requirements:
+      _method: GET
+      offset: ^(?=.*[0-9].*$)\d*$
+      groupId: ^(?=.*[0-9].*$)\d*$
+    options:
+      expose: true
+
+claro_admin_multiadd_user_to_group:
+     pattern: /group/{groupId}/users
+     defaults: { _controller: ClarolineCoreBundle:Administration:multiaddUserstoGroup }
+     requirements:
+       _method: PUT
+       groupId: ^(?=.*[0-9].*$)\d*$
+     options:
+       expose: true
+
+claro_admin_add_user_to_group:
+    pattern: /group/{groupId}/add/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
+    requirements:
+       _method: PUT
+       groupId: ^(?=.*[0-9].*$)\d*$
+       userId: ^(?=.*[0-9].*$)\d*$
+    options:
+       expose: true
+
+#SOON TO BE REST
+
+claro_admin_group_user_list:
+    pattern: /group/{groupId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:groupUserList }
+    requirements:
+      _method: GET
+      groupId: ^(?=.*[0-9].*$)\d*$
+
+#to be refactored
+claro_admin_user_list_addable_to_group:
+    pattern: /group/add/{groupId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroupLayout }
+    requirements:
+      _method: get
+      groupId: ^(?=.*[0-9].*$)\d*$
+    options:
+       expose: true
+
+#supposed to be put
 claro_admin_update_group_settings:
    pattern: /group/settings/update/{groupId}
    defaults: { _controller: ClarolineCoreBundle:Administration:updateGroupSettings }

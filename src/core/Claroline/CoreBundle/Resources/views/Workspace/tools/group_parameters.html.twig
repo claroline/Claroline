@@ -1,0 +1,34 @@
+{% extends 'ClarolineCoreBundle:Workspace:tools.html.twig' %}
+{% block javascripts %}
+{% endblock %}
+{% block section_content %}
+   {% spaceless %}
+        <ul class="breadcrumb">
+            <li>
+                <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
+                id="link_group_management">{{ 'group_management'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <span class="divider"> / </span>
+            <li>
+                <a href="#">
+                    {{ group.getName() }}
+                </a>
+            </li>
+        </ul>
+    {% endspaceless %}
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal" action="{{path('claro_workspace_tools_edit_group_parameters',{'workspaceId':workspace.getId(), 'groupId':group.getId()})}}" method="post" {{ form_enctype(form) }} id="user-parameters">
+        <fieldset>
+            <legend>{{ 'group_parameter'|trans({}, 'platform') }} :</legend>
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_admin_group_list') }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

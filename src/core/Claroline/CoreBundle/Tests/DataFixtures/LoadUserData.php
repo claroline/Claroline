@@ -54,7 +54,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryOne = $wsCreatorService->createWorkspace($config, $user);
         $repositoryOne->setType(AbstractWorkspace::USER_REPOSITORY);
         $user->addRole($repositoryOne->getManagerRole());
-        $user->setPersonnalWorkspace($repositoryOne);
+        $user->setPersonalWorkspace($repositoryOne);
 
         $secondUser = new User();
         $secondUser->setFirstName('Bob');
@@ -66,7 +66,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryTwo = $wsCreatorService->createWorkspace($config, $secondUser);
         $repositoryTwo->setType(AbstractWorkspace::USER_REPOSITORY);
         $secondUser->addRole($repositoryTwo->getManagerRole());
-        $secondUser->setPersonnalWorkspace($repositoryTwo);
+        $secondUser->setPersonalWorkspace($repositoryTwo);
 
         $thirdUser = new User();
         $thirdUser->setFirstName('Bill');
@@ -78,7 +78,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryThree = $wsCreatorService->createWorkspace($config, $thirdUser);
         $repositoryThree->setType(AbstractWorkspace::USER_REPOSITORY);
         $thirdUser->addRole($repositoryThree->getManagerRole());
-        $thirdUser->setPersonnalWorkspace($repositoryThree);
+        $thirdUser->setPersonalWorkspace($repositoryThree);
 
         $wsCreator = new User();
         $wsCreator->setFirstName('Henry');
@@ -90,7 +90,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryFour = $wsCreatorService->createWorkspace($config, $wsCreator);
         $repositoryFour->setType(AbstractWorkspace::USER_REPOSITORY);
         $wsCreator->addRole($repositoryFour->getManagerRole());
-        $wsCreator->setPersonnalWorkspace($repositoryFour);
+        $wsCreator->setPersonalWorkspace($repositoryFour);
 
         $admin = new User();
         $admin->setFirstName('John');
@@ -102,7 +102,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $repositoryFive = $wsCreatorService->createWorkspace($config, $wsCreator);
         $repositoryFive->setType(AbstractWorkspace::USER_REPOSITORY);
         $admin->addRole($repositoryFive->getManagerRole());
-        $admin->setPersonnalWorkspace($repositoryFive);
+        $admin->setPersonalWorkspace($repositoryFive);
 
         $manager->persist($user);
         $manager->persist($secondUser);

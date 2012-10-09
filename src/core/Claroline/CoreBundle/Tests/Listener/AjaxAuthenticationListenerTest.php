@@ -17,8 +17,8 @@ class AjaxAuthenticationListenerTest extends FunctionalTestCase
     public function testAjaxAuthenticationListenerExceptionThrowsError()
     {
         $this->client->request(
-            'POST',
-            "/workspace/user/{$this->getFixtureReference('workspace/ws_a')->getId()}/1/limited-list.json",
+            'GET',
+            "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
