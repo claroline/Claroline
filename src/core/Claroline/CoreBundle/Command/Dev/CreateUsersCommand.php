@@ -16,31 +16,30 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
  */
-class CreateUsersCommand extends ContainerAwareCommand
-{
-    public function __construct()
-    {
+class CreateUsersCommand extends ContainerAwareCommand {
+
+    public function __construct() {
         parent::__construct();
 
         $this->firstNames = array(
             "Mary", "Amanda", "James", "Patricia", "Michael", "Sarah", "Patrick", "Homer", "Bart", "Marge", "Lisa",
             "John", "Stan", "Stephane", "Emmanuel", "Nicolas", "Frederic", "Luke", "Luc", "Kenneth", "Stanley",
-            "Kyle", "Leopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica","Matthieu", "Aurelie", "Elisabeth",
+            "Kyle", "Leopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica", "Matthieu", "Aurelie", "Elisabeth",
             "Louis", "Jerome", "Ned", "Ralph", "Charles Montgomery",
             "Waylon", "Carl", "Timothy", "Kirk", "Milhouse", "Todd", "Maude", "Benjamen", "ObiWan", "George", "Barack",
             "Alfred", "Paul", "Gabriel", "Anne", "Theophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
             "Jean-Kevin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Melanie", "Sophie",
             "Dominique", "Coralie", "Camille", "Claudia", "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Helene", "14M4M3G4Z0RD",
             "Frank", "Melissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne"
-            );
+        );
 
-         $this->lastNames = array(
-             "Johnson", "Miller", "Brown", "Williams", "Davis", "Simpson", "Smith", "Doe", "Klein", "Godfraind", "Gervy", "Fervaille",
-             "Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick", "McLane", "Bourne", "Yates", "Marilyn",
-             "McElroy", "Flanders", "Wiggum", "Burns", "Smithers", "Carlson", "LoveJoy", "Van Houten", "Gates", "Braconier", "Kenobi",
-             "Lucas", "Clooney", "Harisson", "Obama", "Bush", "Black", "Hogan", "Anderson", "McKay", "Fields", "Bruel", "Kottick",
-             "Dupond", "Leloux", "Miller", "Adams", "Dent", "Accroc", "Prefect", "Escort", "Sheridan", "William", "Willis", "Lee",
-             "Devos", "Tatcher", "Gilbert", "Casilli", "Wilson", "Cantor", "Descartes", "Carlyle", "Ford", "Tortelloni", "Pizza"
+        $this->lastNames = array(
+            "Johnson", "Miller", "Brown", "Williams", "Davis", "Simpson", "Smith", "Doe", "Klein", "Godfraind", "Gervy", "Fervaille",
+            "Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick", "McLane", "Bourne", "Yates", "Marilyn",
+            "McElroy", "Flanders", "Wiggum", "Burns", "Smithers", "Carlson", "LoveJoy", "Van Houten", "Gates", "Braconier", "Kenobi",
+            "Lucas", "Clooney", "Harisson", "Obama", "Bush", "Black", "Hogan", "Anderson", "McKay", "Fields", "Bruel", "Kottick",
+            "Dupond", "Leloux", "Miller", "Adams", "Dent", "Accroc", "Prefect", "Escort", "Sheridan", "William", "Willis", "Lee",
+            "Devos", "Tatcher", "Gilbert", "Casilli", "Wilson", "Cantor", "Descartes", "Carlyle", "Ford", "Tortelloni", "Pizza"
         );
 
         $this->maxFirstNameOffset = count($this->firstNames);
@@ -49,23 +48,21 @@ class CreateUsersCommand extends ContainerAwareCommand
         $this->maxLastNameOffset--;
     }
 
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName('claroline:users:create')
-            ->setDescription('Creates a lot of users.');
+                ->setDescription('Creates a lot of users.');
         $this->setDefinition(array(
             new InputArgument('amount', InputArgument::REQUIRED, 'The number of users created'),
         ));
         $this->addOption(
-            'ws_creator', 'wsc', InputOption::VALUE_NONE, "When set to true, created users will have the workspace creator role"
+                'ws_creator', 'wsc', InputOption::VALUE_NONE, "When set to true, created users will have the workspace creator role"
         );
         $this->addOption(
-            'admin', 'a', InputOption::VALUE_NONE, "When set to true, created users will have the admin role"
+                'admin', 'a', InputOption::VALUE_NONE, "When set to true, created users will have the admin role"
         );
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
+    protected function interact(InputInterface $input, OutputInterface $output) {
         $params = array(
             'amount' => 'the number of users'
         );
@@ -73,29 +70,27 @@ class CreateUsersCommand extends ContainerAwareCommand
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
+                        $argument, $this->askArgument($output, $argumentName)
                 );
             }
         }
     }
 
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
+    protected function askArgument(OutputInterface $output, $argumentName) {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
+                $output, "Enter the {$argumentName}: ", function($argument) {
+                    if (empty($argument)) {
+                        throw new \Exception('This argument is required');
+                    }
 
-                return $argument;
-            }
+                    return $argument;
+                }
         );
 
         return $argument;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $number = $input->getArgument('amount');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
@@ -108,13 +103,13 @@ class CreateUsersCommand extends ContainerAwareCommand
             $role = $roleRepo->findOneByName(PlatformRoles::USER);
         }
 
-        for ($i=0; $i<$number; $i++) {
+        for ($i = 0; $i < $number; $i++) {
             $user = new User();
             $user->setFirstName($this->firstNames[mt_rand(0, $this->maxFirstNameOffset)]);
             $user->setLastName($this->lastNames[mt_rand(0, $this->maxLastNameOffset)]);
             $user->setUsername($user->getFirstName() . $user->getLastName() . rand(0, 1000));
-            $user->setMail($user->getUsername().'@ucl.be');
-            $user->setAdministrativeCode('UCL-'.$user->getUsername());
+            $user->setMail($user->getUsername() . '@ucl.be');
+            $user->setAdministrativeCode('UCL-' . $user->getUsername());
             $user->setPlainPassword('123');
             $user->addRole($role);
             $config = new Configuration();
@@ -128,9 +123,26 @@ class CreateUsersCommand extends ContainerAwareCommand
             $user->setPersonnalWorkspace($workspace);
             $em->persist($workspace);
             $em->persist($user);
-            echo("--- user {$i} created \n");
+            if ($i > 0 && $i % 10 === 0) {
+                $em->flush();
+                $em->clear();
+                $role = $em->merge($role);
+                echo " {$i} users created \n";
+            }
         }
         $em->flush();
-        echo("final flush !\n");
+        echo " {$i} users created \n";
+        echo "Done\n";
     }
+
+    protected function loadRole(InputInterface $input) {
+        if ($input->getOption('admin')) {
+            return $roleRepo->findOneByName(PlatformRoles::ADMIN);
+        } elseif ($input->getOption('ws_creator')) {
+            return $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
+        } else {
+            return $roleRepo->findOneByName(PlatformRoles::USER);
+        }
+    }
+
 }

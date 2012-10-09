@@ -14,10 +14,9 @@ use Claroline\CoreBundle\Entity\Group;
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
  */
-class CreateGroupsCommand extends ContainerAwareCommand
-{
-    public function __construct()
-    {
+class CreateGroupsCommand extends ContainerAwareCommand {
+
+    public function __construct() {
         parent ::__construct();
 
         $this->basicGroupName = array(
@@ -63,7 +62,7 @@ class CreateGroupsCommand extends ContainerAwareCommand
             "Public administration",
             "Social work",
             "Transportation"
-            );
+        );
 
         $this->maxBasicGroupNameOffset = count($this->basicGroupName);
         $this->maxBasicGroupNameOffset--;
@@ -76,17 +75,15 @@ class CreateGroupsCommand extends ContainerAwareCommand
         $this->maxGroupsYearsOffset--;
     }
 
-    protected function configure()
-    {
+    protected function configure() {
         $this->setName('claroline:groups:create')
-            ->setDescription('Creates some groups with the current registerd users and roles');
+                ->setDescription('Creates some groups with the current registerd users and roles');
         $this->setDefinition(array(
             new InputArgument('amount', InputArgument::REQUIRED, 'The number of groups'),
         ));
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
+    protected function interact(InputInterface $input, OutputInterface $output) {
         $params = array(
             'amount' => 'amount',
         );
@@ -94,78 +91,71 @@ class CreateGroupsCommand extends ContainerAwareCommand
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
+                        $argument, $this->askArgument($output, $argumentName)
                 );
             }
         }
     }
 
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
+    protected function askArgument(OutputInterface $output, $argumentName) {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
+                $output, "Enter the {$argumentName}: ", function($argument) {
+                    if (empty($argument)) {
+                        throw new \Exception('This argument is required');
+                    }
 
-                return $argument;
-            }
+                    return $argument;
+                }
         );
 
         return $argument;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $number = $input->getArgument('amount');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
+        // Load a list of users, 100 of them is enough
+        $users = $em->getRepository('ClarolineCoreBundle:User')->findBy(array(), null, 100);
         $roles = $em->getRepository('ClarolineCoreBundle:Role');
-        $maxUsersOffset = count($users);
-        $maxUsersOffset--;
-        $maxRolesOffset = count($roles);
-        $maxRolesOffset--;
+        $maxUsersOffset = count($users)-1;
+        $maxRolesOffset = count($roles)-1;
 
-        for ($i=0; $i < $number; $i++) {
-
+        for ($i = 0; $i < $number; $i++) {
+            // Create group
             $group = new Group();
-
-            $userNumber = rand(1, $maxUsersOffset);
-
-            if ($userNumber >= 100) {
-                $userNumber = 100;
-            }
-
             $group->setName($this->createGroupName());
-
-                                    $em->persist($group);
+            $em->persist($group);
             $em->flush();
-            $userAddedIds = array();
+            echo " Group ".($i+1)." created, id=".$group->getId()." name='".$group->getName()."'";
 
-            for ($j=0; $j <= $userNumber; $j++) {
+            // Add users to group
+            $userNumber = rand(1, $maxUsersOffset);
+            $userAddedIds = array();
+            for ($j = 0; $j <= $userNumber; $j++) {
                 $created = false;
-                while(false == $created) {
-                    $id = rand(0, $maxUsersOffset);
-                    if (!array_key_exists($id, $userAddedIds)) {
-                        $userAddedIds[$id] = $id;
-                        echo "add user {$id} to group {$group->getId()}\n";
-                        $group->addUser($users[$id]);
+                while (false === $created) {
+                    $pos = rand(0, $maxUsersOffset);
+                    // Add random id in array if not already in it.
+                    if (!array_key_exists($pos, $userAddedIds)) {
+                        $userAddedIds[$pos] = $pos;
+                        //echo "add user {$id} to group {$group->getId()}\n";
+                        $group->addUser($users[$pos]);
                         $created = true;
                     }
                 }
             }
-
+            echo "  -> Added ".$userNumber." users in it\n";
             $em->persist($group);
             $em->flush();
-
-            echo("--- group {$i} created \n");
+            // Clear EntityManager (EM) after each group to free memory and speed the EM process.
+            $em->clear();
         }
     }
 
-    private function createGroupName()
-    {
-        $name = "{$this->groupsYears[mt_rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[mt_rand(0, $this->maxBasicGroupNameOffset)]} - ".mt_rand(0, 1000);
+    private function createGroupName() {
+        $name = "{$this->groupsYears[mt_rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[mt_rand(0, $this->maxBasicGroupNameOffset)]} - " . mt_rand(0, 1000);
 
         return $name;
     }
+
 }
