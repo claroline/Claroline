@@ -343,6 +343,7 @@ class Version20120119000000 extends BundleMigration
         );
 
         $table->addIndex(array('path'));
+        $table->addUniqueIndex(array('parent_id', 'name'));
     }
 
     private function createLicenseTable(Schema $schema)
