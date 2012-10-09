@@ -72,7 +72,7 @@ class WorkspaceGroupController extends Controller
                 $this->checkRemoveManagerRoleIsValid($groupIds, $workspace);
             }
 
-            $group->removeRole($role[0]);
+            $group->removeRole($role[0], false);
             $group->addRole($newRole);
             $em->persist($group);
             $em->flush();
