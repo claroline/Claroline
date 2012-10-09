@@ -183,7 +183,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $users = json_decode($this->client->getResponse()->getContent());
 
         foreach ($users as $user) {
-            $this->assertEquals('Manager', $user->roles);
+            $this->assertContains('Manager', $user->roles);
         }
     }
 

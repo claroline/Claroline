@@ -91,7 +91,7 @@ class WorkspaceUserController extends Controller
                 $this->checkRemoveManagerRoleIsValid($userIds, $workspace);
             }
 
-            $user->removeRole($role[0]);
+            $user->removeRole($role[0], false);
             $user->addRole($newRole);
             $em->persist($user);
             $em->flush();
