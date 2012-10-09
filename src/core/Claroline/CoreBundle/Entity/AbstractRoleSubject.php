@@ -38,8 +38,9 @@ abstract class AbstractRoleSubject
      * remove ROLE_B and ROLE_C, but not ROLE_A).
      *
      * @param Role $role
+     * @param bool $keepParent
      */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role, $keepParent = true)
     {
         foreach ($this->roles as $storedRole) {
             if ($role === $storedRole) {
@@ -47,8 +48,10 @@ abstract class AbstractRoleSubject
                 $this->roles->removeElement($storedRole);
 
                 // but keep parent role, if any
-                if (null !== $parentRole = $storedRole->getParent()) {
-                    $this->roles->add($parentRole);
+                if($keepParent){
+                    if (null !== $parentRole = $storedRole->getParent()) {
+                        $this->roles->add($parentRole);
+                    }
                 }
 
                 return;
@@ -61,8 +64,10 @@ abstract class AbstractRoleSubject
                         $this->roles->removeElement($storedRole);
 
                         // but keep parent role, if any
-                        if (null !== $ancestorRole = $parentRole->getParent()) {
-                            $this->roles->add($ancestorRole);
+                        if($keepParent){
+                            if (null !== $ancestorRole = $parentRole->getParent()) {
+                                $this->roles->add($ancestorRole);
+                            }
                         }
                     }
 
