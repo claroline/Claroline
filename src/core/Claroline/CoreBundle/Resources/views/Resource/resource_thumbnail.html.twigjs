@@ -31,7 +31,7 @@
                     title="{{ instance.pathfordisplay }}"
                  {% endif %}
              />
-            {% if instance.type == "directory" %}
+            {% if instance.is_navigable == true %}
                 </a>
             {% endif %}
         </div>

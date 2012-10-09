@@ -123,12 +123,12 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         $dirToBeDetached = array();
         for ($j = 0; $j < $directoryCount; $j++) {
 
-            $ri = $this->addDirectory($em, $curDepth, $this->dirNames[rand(0, $this->dirNamesOffset)], $parent);
+            $ri = $this->addDirectory($em, $curDepth, microtime()."-".$this->dirNames[rand(0, $this->dirNamesOffset)], $parent);
             $dirToBeDetached[] = $ri;
             $this->directoryCount++;
             $filesToBeDetached = array();
             for ($k = 0; $k < $fileCount; $k++) {
-                $fi = $this->addFile($em, $curDepth, $this->fileNames[rand(0, $this->fileNamesOffset)], $ri);
+                $fi = $this->addFile($em, $curDepth, microtime()."-".$this->fileNames[rand(0, $this->fileNamesOffset)], $ri);
                 $filesToBeDetached[] = $fi;
                 $this->filesCount++;
 
@@ -191,6 +191,7 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand {
         $file->setCreator($this->user);
         $file->setHashName($hash);
         $file->setSize(0);
+        $file->setMimeType("plain/text");
         $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, $this->getMimeType($name), true);
         $ri = new ResourceInstance();
         $ri->setCreator($this->user);
