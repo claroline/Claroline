@@ -85,10 +85,11 @@ class ForumController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subjectInstance);
         $workspace = $subjectInstance->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::messages.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace)
+            'ClarolineForumBundle::messages.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace, 'messages' => $messages)
         );
     }
 

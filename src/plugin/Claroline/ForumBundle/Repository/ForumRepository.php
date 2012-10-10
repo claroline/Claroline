@@ -27,7 +27,7 @@ class ForumRepository extends EntityRepository
        * @param ResourceInstance $forumInstance
        * @return type
        */
-    public function getSubjects($forumInstance, $offset, $limit)
+    public function getSubjects($forumInstance, $offset = null, $limit = null)
     {
         $dql = "
         SELECT ".self::SELECT_SUBJECT."
