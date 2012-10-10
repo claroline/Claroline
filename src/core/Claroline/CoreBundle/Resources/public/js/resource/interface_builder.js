@@ -282,7 +282,7 @@
                     if (i > 0)
                         newText[curLine] = newText[curLine].substr(0,i);
                     curText = curText.substr(newText[curLine].length, curText.length);
-                    newText[curLine] = newText[curLine]+"<br>";
+                    newText[curLine] = newText[curLine]+"<br/>";
                 }
                 curLine++;
             }
