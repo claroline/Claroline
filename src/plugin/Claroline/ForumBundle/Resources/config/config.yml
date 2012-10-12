@@ -1,5 +1,8 @@
 plugin:
   has_options: true
+  plugin_translation_name_key: forum
+  plugin_translation_domain: forum
+  icon: res_forum.png
 
   resources:
     - class: Claroline\ForumBundle\Entity\Forum

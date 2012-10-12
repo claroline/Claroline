@@ -30,8 +30,24 @@ class Configuration implements ConfigurationInterface
 
     private function addGeneralSection($pluginSection)
     {
+        $plugin = $this->plugin;
+        $pluginFqcn = get_class($plugin);
+        $imgFolder = $plugin->getImgFolder();
+
+        $ds = DIRECTORY_SEPARATOR;
+
         $pluginSection
-            ->booleanNode('has_options')->defaultFalse()->end()
+            ->booleanNode('has_options')->end()
+            ->scalarNode('plugin_translation_name_key')->isRequired()->end()
+            ->scalarNode('plugin_translation_domain')->isRequired()->end()
+            ->scalarNode('icon')
+                ->validate()
+                    ->ifTrue(function($v) use ($plugin){
+                        return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isIconValid', array($v, $plugin));
+                    })
+                    ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
+                ->end()
+            ->end()
         ->end();
     }
 
@@ -128,6 +144,7 @@ class Configuration implements ConfigurationInterface
 
             return true;
         }
+
         return false;
     }
 
@@ -140,6 +157,20 @@ class Configuration implements ConfigurationInterface
         if (file_exists($expectedImgLocation)) {
             return true;
         }
+
+        return false;
+    }
+
+    public static function isIconValid($v, $plugin)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder = $plugin->getImgFolder();
+        $expectedImgLocation = $imgFolder.$ds.$v;
+
+        if (file_exists($expectedImgLocation)){
+            return true;
+        }
+
         return false;
     }
 }

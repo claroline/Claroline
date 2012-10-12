@@ -2,6 +2,4 @@ plugin:
   has_options: true
   plugin_translation_name_key: exemple
   plugin_translation_domain: exemple
-
-  resources:
-    - is_visible: true
+  icon: icon.gif

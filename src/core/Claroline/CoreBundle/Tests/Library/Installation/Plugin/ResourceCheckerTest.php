@@ -75,4 +75,12 @@ class ResourceCheckerTest extends WebTestCase
         $this->assertTrue($errors[0] instanceof ValidationError);
         $this->assertContains('this file was not found', $errors[0]->getMessage());
     }
+
+    public function testCheckerReturnsAnErrorOnUnexpectedIcon()
+    {
+        $pluginFqcn = 'Invalid\UnexpectedIcon\InvalidUnexpectedIcon';
+        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $this->assertTrue($errors[0] instanceof ValidationError);
+        $this->assertContains('this file was not found', $errors[0]->getMessage());
+    }
 }

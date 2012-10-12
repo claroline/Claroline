@@ -52,12 +52,8 @@ services:
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
         arguments:
-            - base: "@claroline.plugin.base_checker"
-              routing: "@claroline.plugin.routing_checker"
-              resource: "@claroline.plugin.config_checker"
-
-    claroline.plugin.base_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\BaseChecker
+              - routing: "@claroline.plugin.routing_checker"
+                config: "@claroline.plugin.config_checker"
 
     claroline.plugin.routing_checker:
         class: Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker

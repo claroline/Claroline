@@ -198,6 +198,12 @@ claro_admin_add_user_to_group:
     options:
        expose: true
 
+claro_admin_plugins:
+    pattern: /plugins
+    defaults: { _controller: ClarolineCoreBundle:Administration:pluginList }
+    requirements:
+      _method: GET
+
 #SOON TO BE REST
 
 claro_admin_group_user_list:

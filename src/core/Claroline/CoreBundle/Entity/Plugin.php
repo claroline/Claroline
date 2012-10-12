@@ -60,6 +60,20 @@ class Plugin
      */
     protected $hasOptions;
 
+    /**
+     * @ORM\Column(name="icon", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
+     */
+    protected $icon;
+
+    /**
+     * @ORM\Column(name="translation_domain", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(255)
+     */
+    protected $translationDomain;
+
     public function getId()
     {
         return $this->bundleFQCN;
@@ -128,5 +142,25 @@ class Plugin
     public function hasOptions()
     {
         return $this->hasOptions;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setTranslationDomain($translationDomain)
+    {
+        $this->translationDomain = $translationDomain;
+    }
+
+    public function getTranslationDomain()
+    {
+        return $this->translationDomain;
     }
 }

@@ -42,7 +42,7 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
-        $this->assertEquals($plugin->getNameTranslationKey(), $pluginEntity->getNameTranslationKey());
+        $this->assertEquals('plugin', $pluginEntity->getNameTranslationKey());
         $this->assertEquals($plugin->getDescriptionTranslationKey(), $pluginEntity->getDescriptionTranslationKey());
     }
 
@@ -166,6 +166,20 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertEquals(1, count($customAction));
         $customName = $customAction[0]->getAction();
         $this->assertEquals('open', $customName);
+    }
+
+    public function testPluginIconIsPersisted()
+    {
+        $pluginFqcn = 'Valid\WithIcon\ValidWithIcon';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->dbWriter->insert($plugin);
+
+        $dql = "
+            SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
+            WHERE p.bundleName LIKE '%Icon'";
+
+        $pluginEntity = $this->em->createQuery($dql)->getResult();
+        $this->assertContains('icon.gif', $pluginEntity[0]->getIcon());
     }
 
     public function pluginProvider()

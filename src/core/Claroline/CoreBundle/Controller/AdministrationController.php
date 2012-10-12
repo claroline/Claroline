@@ -426,7 +426,7 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUnregisteredUsersOfGroup($groupId, $search, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
-        
+
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
 
@@ -659,6 +659,20 @@ class AdministrationController extends Controller
 
         //this form can't be invalid
         return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
+    }
+
+    /**
+     * Display the plugin list
+     *
+     * @return Response
+     */
+    public function pluginListAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $plugins = $em->getRepository('ClarolineCoreBundle:Plugin')->findAll();
+
+        return $this->render('ClarolineCoreBundle:Administration:plugins.html.twig',
+            array('plugins' => $plugins));
     }
 
     private function paginatorToArray($paginator)

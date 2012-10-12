@@ -63,6 +63,7 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $plugin->setNameTranslationKey('test');
         $plugin->setDescriptionTranslationKey('test');
         $plugin->setHasOptions(true);
+        $plugin->setIcon('fakeicon');
 
         $firstType = new ResourceType();
         $firstType->setType('Type x');
