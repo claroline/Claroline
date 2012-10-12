@@ -36,6 +36,7 @@ list_users: List users
 create_group: Create group
 list_groups: List groups
 platform_parameters: Platform parameters
+platform_plugins: Platform plugins
 
 # registration
 login: Login

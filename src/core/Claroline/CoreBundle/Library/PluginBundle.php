@@ -10,7 +10,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 abstract class PluginBundle extends Bundle
 {
     private $processedConfiguration;
-    
+    private $nameTranslationKey;
+
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
@@ -23,11 +24,6 @@ abstract class PluginBundle extends Bundle
         $namespaceParts = explode('\\', $this->getNamespace());
 
         return $namespaceParts[1];
-    }
-
-    public function getNameTranslationKey()
-    {
-        return 'No available translated name';
     }
 
     public function getDescriptionTranslationKey()
@@ -100,4 +96,15 @@ abstract class PluginBundle extends Bundle
     {
         return $this->processedConfiguration;
     }
+
+    public function setNameTranslationKey($nameTranslationKey)
+    {
+        $this->nameTranslationKey = $nameTranslationKey;
+    }
+
+    public function getNameTranslationKey()
+    {
+        return $this->nameTranslationKey;
+    }
+
 }

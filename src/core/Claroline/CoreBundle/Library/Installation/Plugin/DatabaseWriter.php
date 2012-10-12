@@ -61,6 +61,18 @@ class DatabaseWriter
         $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
         $pluginEntity->setHasOptions($processedConfiguration['has_options']);
+        $pluginEntity->setNameTranslationKey($processedConfiguration['plugin_translation_name_key']);
+        $pluginEntity->setTranslationDomain($processedConfiguration['plugin_translation_name_key']);
+
+        if(isset($processedConfiguration['icon'])){
+            $pluginEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$processedConfiguration['icon']}");
+        } else {
+            $defaultIcon = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+            $pluginEntity->setIcon($defaultIcon->getLargeIcon());
+        }
+
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($processedConfiguration, $pluginEntity, $plugin);
         $this->em->flush();

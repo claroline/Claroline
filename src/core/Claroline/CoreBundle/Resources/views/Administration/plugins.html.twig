@@ -1,0 +1,7 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+{% for plugin in plugins %}
+   <p> {{ plugin.getNameTranslationKey()|trans({}, plugin.getTranslationDomain()) }} </p>
+{% endfor %}
+{% endblock %}
