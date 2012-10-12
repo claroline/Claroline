@@ -31,7 +31,7 @@ class ResourceTest extends FixtureTestCase
         $this->assertLessThanOrEqual(2, $interval->s);
     }
 
-    public function testModificationDateIsUpdatedWhenUpdatingAnExistentResource()
+    public function S_testModificationDateIsUpdatedWhenUpdatingAnExistentResource()
     {
         $this->markTestSkipped('irrelevant for now');
         $resource = new Directory();

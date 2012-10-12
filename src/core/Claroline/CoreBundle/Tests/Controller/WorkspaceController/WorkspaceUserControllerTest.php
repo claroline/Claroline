@@ -34,7 +34,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testAddUserIsProtected()
+    public function S_testAddUserIsProtected()
     {
         $this->markTestSkipped('not yet implemented');
     }
@@ -58,7 +58,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(4, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testMultiAddUserIsProtected()
+    public function S_testMultiAddUserIsProtected()
     {
         $this->markTestSkipped('not yet implemented');
     }

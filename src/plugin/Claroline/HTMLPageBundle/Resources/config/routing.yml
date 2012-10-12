@@ -1,3 +1,0 @@
-claro_html_page_default_click:
-    pattern: /show/{id}
-    defaults: { _controller: ClarolineHTMLPageBundle:HTMLPage:show }

@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 abstract class PluginBundle extends Bundle
 {
+    private $processedConfiguration;
+    
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
@@ -60,10 +62,10 @@ abstract class PluginBundle extends Bundle
         return $prefix;
     }
 
-    public function getCustomResourcesFile()
+    public function getConfigFile()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'resources.yml';
+        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'config.yml';
 
         if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
@@ -87,5 +89,15 @@ abstract class PluginBundle extends Bundle
     public function getAssetsFolder()
     {
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
+    }
+
+    public function setProcessedConfiguration($processedConfiguration)
+    {
+        $this->processedConfiguration = $processedConfiguration;
+    }
+
+    public function getProcessedConfiguration()
+    {
+        return $this->processedConfiguration;
     }
 }

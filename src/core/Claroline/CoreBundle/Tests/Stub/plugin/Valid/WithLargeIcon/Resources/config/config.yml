@@ -1,0 +1,10 @@
+plugin:
+  has_options: true
+
+  resources:
+    - class: Valid\WithLargeIcon\Entity\ResourceX
+      name: ResourceX
+      is_visible: true
+      is_browsable: true
+      is_downloadable: true
+      large_icon: validwithlargeicon.gif
