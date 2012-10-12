@@ -41,7 +41,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));;
     }
 
-    public function testAddGroupIsProtected()
+    public function S_testAddGroupIsProtected()
     {
         $this->markTestSkipped('not implemented yet');
     }
@@ -68,7 +68,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));;
     }
 
-    public function testMultiAddGroupIsProtected()
+    public function S_testMultiAddGroupIsProtected()
     {
         $this->markTestSkipped('not implemented yet');
     }

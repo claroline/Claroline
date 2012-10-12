@@ -55,6 +55,11 @@ class Plugin
      */
     protected $descriptionTranslationKey;
 
+    /**
+     * @ORM\Column(name="has_options")
+     */
+    protected $hasOptions;
+
     public function getId()
     {
         return $this->bundleFQCN;
@@ -113,5 +118,15 @@ class Plugin
     public function setDescriptionTranslationKey($key)
     {
         $this->descriptionTranslationKey = $key;
+    }
+
+    public function setHasOptions($hasOptions)
+    {
+        $this->hasOptions = $hasOptions;
+    }
+
+    public function hasOptions()
+    {
+        return $this->hasOptions;
     }
 }

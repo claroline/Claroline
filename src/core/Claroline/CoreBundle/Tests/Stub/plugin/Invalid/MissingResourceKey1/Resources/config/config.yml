@@ -1,0 +1,5 @@
+plugin:
+  has_options: true
+
+  resources:
+    - is_visible: true

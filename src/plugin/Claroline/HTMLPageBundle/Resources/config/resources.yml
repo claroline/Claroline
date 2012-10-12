@@ -1,8 +1,0 @@
-HTMLElement:
-    extends: File
-    listable: true
-    navigable: false
-    actions:
-      open:
-        async: false
-    downloadable: true

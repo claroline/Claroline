@@ -141,7 +141,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(4, count($jsonResponse));
     }
 
-    public function testResourcePropertiesCanBeEdited()
+    public function S_testResourcePropertiesCanBeEdited()
     {
         $this->markTestSkipped('Irrelevant since the name was moved from abstractResource to ResourceInstance');
         $this->logUser($this->getFixtureReference('user/user'));
@@ -190,7 +190,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(8, count($jsonResponse));
+        $this->assertEquals(7, count($jsonResponse));
     }
 
     public function testResourceListAction()
@@ -213,7 +213,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/menus');
         $jsonResponse = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(8, count($jsonResponse));
+        $this->assertEquals(7, count($jsonResponse));
     }
 
     public function testGetEveryInstancesIdsFromMultiExportArray()
@@ -378,7 +378,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
     }
 
-    public function testDeleteUserRemovesHisPersonnalDataTree()
+    public function S_testDeleteUserRemovesHisPersonnalDataTree()
     {
         $this->markTestSkipped("Can't make it work.");
         $this->logUser($this->getFixtureReference('user/user'));

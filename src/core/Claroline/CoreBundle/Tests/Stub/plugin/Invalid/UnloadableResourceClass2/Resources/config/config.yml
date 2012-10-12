@@ -1,0 +1,10 @@
+plugin:
+  has_options: true
+
+  resources:
+
+    - class: Invalid\UnloadableResourceClass2\Entity\ResourceX
+      is_visible: true
+      is_downloadable: true
+      is_browsable: true
+      name: ResourceX

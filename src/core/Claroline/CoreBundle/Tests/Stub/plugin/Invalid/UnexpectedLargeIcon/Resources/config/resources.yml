@@ -1,6 +1,0 @@
-ResourceX:
-  class: Invalid\UnexpectedLargeIcon\Entity\ResourceX
-  listable: true
-  navigable: false
-  downloadable: true
-  large_icon: icn.gif
