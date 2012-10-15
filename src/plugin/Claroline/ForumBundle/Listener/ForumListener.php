@@ -5,13 +5,12 @@ namespace Claroline\ForumBundle\Listener;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Library\Resource\Event\ResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\ForumOptions;
 use Claroline\ForumBundle\Form\ForumType;
 
 class ForumListener extends ContainerAware
@@ -63,7 +62,10 @@ class ForumListener extends ContainerAware
 
     public function onAdministrate(PluginOptionsEvent $event)
     {
-        $response = new Response('adminstrate me!');
+        $forumOptions = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineForumBundle:ForumOptions')->find(1);
+        $response = new Response('adminstrate me!'." ".$forumOptions->getId());
+
+
         $event->setResponse($response);
         $event->stopPropagation();
     }

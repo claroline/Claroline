@@ -12,7 +12,7 @@ class Version20120119000000 extends BundleMigration
         $this->createForumTable($schema);
         $this->createForumSubjectTable($schema);
         $this->createForumMessageTable($schema);
-        $this->createForumParametersTable($schema);
+        $this->createForumOptionsTable($schema);
     }
 
     public function down(Schema $schema)
@@ -20,6 +20,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_forum_message');
         $schema->dropTable('claro_forum_subject');
         $schema->dropTable('claro_forum');
+        $schema->dropTable('claro_forum_options');
     }
 
     private function createForumTable(Schema $schema)
@@ -63,11 +64,13 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_forum_subject'), array('forum_subject_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
-/*
-    private function createForumParametersTable(Schema $schema)
+
+    private function createForumOptionsTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_forum_parameters');
+        $table = $schema->createTable('claro_forum_options');
+        
         $this->addId($table);
-        $table->addColumn('')
-    }*/
+        $table->addColumn('subjects', 'integer');
+        $table->addColumn('messages', 'integer');
+    }
 }
