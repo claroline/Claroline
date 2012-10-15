@@ -22,4 +22,8 @@ claro_forum_create_message:
    pattern: /create/message/{subjectInstanceId}
    defaults: { _controller: ClarolineForumBundle:Forum:createMessage }
 
+claro_forum_edit_options:
+   pattern: /opions/edit
+   defaults: { _controller: ClarolineForumBundle:Forum:editForumOptions }
+
 
