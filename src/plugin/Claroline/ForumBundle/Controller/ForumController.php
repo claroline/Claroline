@@ -4,8 +4,10 @@ namespace Claroline\ForumBundle\Controller;
 
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\ForumOptions;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
+use Claroline\ForumBundle\Form\ForumOptionsType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -133,4 +135,29 @@ class ForumController extends Controller
             );
         }
     }
+
+    public function editForumOptionsAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1);
+        $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions);
+        $form->bindRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $forumOptions = $form->getData();
+
+            $em->persist($forumOptions);
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
+        } else {
+
+            return $this->render(
+                    'ClarolineForumBundle::plugin_options_form.html.twig', array(
+                    'form' => $form->createView()
+                    )
+            );
+        }
+    }
+
 }

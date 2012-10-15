@@ -40,5 +40,8 @@ system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
 system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
 
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
+system("php app/console claroline:user:create --admin bob bob bob bob");
+system("sudo chmod -R 0777 app/cache");
+system("sudo chmod -R 0777 app/logs");
 
 require_once __DIR__.'/delete_files';
