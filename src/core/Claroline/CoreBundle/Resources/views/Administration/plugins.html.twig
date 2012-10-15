@@ -2,6 +2,16 @@
 
 {% block section_content %}
 {% for plugin in plugins %}
-   <p> {{ plugin.getNameTranslationKey()|trans({}, plugin.getTranslationDomain()) }} </p>
+    <span>
+        <div class="wrapper">
+            <img src="{{asset(plugin.getIcon())}}"
+
+             />
+        </div>
+        <span class="res-name">{{ plugin.getNameTranslationKey() | trans({}, plugin.getTranslationDomain()) }}</span>
+        {% if plugin.hasOptions() %}
+            <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getTranslationDomain()})}}">options</a>
+        {% endif %}
+    </span>
 {% endfor %}
 {% endblock %}
