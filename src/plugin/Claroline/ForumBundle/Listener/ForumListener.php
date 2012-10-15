@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumType;
 
@@ -57,6 +58,13 @@ class ForumListener extends ContainerAware
     {
         $route = $this->container->get('router')->generate('claro_forum_open', array('instanceId' => $event->getInstanceId()));
         $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    public function onAdministrate(PluginOptionsEvent $event)
+    {
+        $response = new Response('adminstrate me!');
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

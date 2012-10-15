@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -673,6 +674,21 @@ class AdministrationController extends Controller
 
         return $this->render('ClarolineCoreBundle:Administration:plugins.html.twig',
             array('plugins' => $plugins));
+    }
+
+    public function pluginParametersAction($domain)
+    {
+        $event = new PluginOptionsEvent();
+        $eventName = "plugin_options_{$domain}";
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (!$event->getResponse() instanceof Response) {
+            throw new \Exception(
+                "Custom event '{$eventName}' didn't return any Response."
+            );
+        }
+
+        return $event->getResponse();
     }
 
     private function paginatorToArray($paginator)
