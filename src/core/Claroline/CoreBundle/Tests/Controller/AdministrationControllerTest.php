@@ -299,12 +299,8 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->dbWriter->insert($plugin);
         //register event
         $this->client->request('GET', '/admin/plugins');
-        $ed = $container->get('event_dispatcher');
-        $ds = DIRECTORY_SEPARATOR;
         $this->client->request('GET', '/admin/plugin/plugin/options');
         $this->assertContains('plugin_options_plugin', $this->client->getResponse()->getContent());
-        //assertion
-
     }
 
     private function getUser($username)
