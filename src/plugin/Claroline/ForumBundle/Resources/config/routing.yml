@@ -10,6 +10,12 @@ claro_forum_show_message:
    pattern: /subject/message/{subjectInstanceId}
    defaults: { _controller: ClarolineForumBundle:Forum:showMessages }
 
+claro_forum_messages:
+   pattern: /subject/{subjectInstanceId}/offset/{offset}
+   defaults: { _controller: ClarolineForumBundle:Forum:messages }
+   options:
+      expose: true
+      
 claro_forum_open:
    pattern: /open/{instanceId}
    defaults: { _controller: ClarolineForumBundle:Forum:open }

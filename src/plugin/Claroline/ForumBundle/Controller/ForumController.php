@@ -86,12 +86,15 @@ class ForumController extends Controller
     public function showMessagesAction($subjectInstanceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
+
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
-        $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subjectInstance);
+        $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForInstance($subjectInstance);
+        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getMessages();
+        $nbPages = ceil($countMessages/$limit);
         $workspace = $subjectInstance->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::messages.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace, 'messages' => $messages)
+            'ClarolineForumBundle::messages_table.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace, 'limit' => $limit, 'nbPages' => $nbPages)
         );
     }
 
@@ -104,6 +107,19 @@ class ForumController extends Controller
         return $this->render(
             'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
         );
+    }
+
+    public function messagesAction($subjectInstanceId, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getMessages();
+        $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subjectInstance, $offset, $limit);
+
+        return $this->render(
+            'ClarolineForumBundle::messages.html.twig', array('messages' => $messages)
+        );
+
     }
 
     public function createMessageAction($subjectInstanceId)

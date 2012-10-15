@@ -70,6 +70,7 @@ class CreateForumCommand extends ContainerAwareCommand
         $messagesAmount = $input->getArgument('messagesAmount');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $input->getArgument('username')));
+        var_dump($user->getId());
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
