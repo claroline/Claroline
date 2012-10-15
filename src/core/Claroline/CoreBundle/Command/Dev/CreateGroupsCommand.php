@@ -124,7 +124,7 @@ class CreateGroupsCommand extends ContainerAwareCommand
         $users = $em->getRepository('ClarolineCoreBundle:User')->findBy(array(), null, 100);
         $roles = $em->getRepository('ClarolineCoreBundle:Role');
         $maxUsersOffset = count($users) - 1;
-        $maxRolesOffset = count($roles) - 1;
+//        $maxRolesOffset = count($roles) - 1;
 
         for ($i = 0; $i < $number; $i++) {
             // Create group

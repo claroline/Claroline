@@ -75,13 +75,15 @@ class PluginInstallFixturesCommand extends ContainerAwareCommand
 
     public function isEmptyDir($folder)
     {
-        if (!is_dir($folder))
+        if (!is_dir($folder)){
             return false; // not a dir
+        }
 
         $files = opendir($folder);
         while ($file = readdir($files)) {
-            if ($file != '.' && $file != '..')
+            if ($file != '.' && $file != '..'){
                 return true; // not empty
+            }
         }
     }
 }
