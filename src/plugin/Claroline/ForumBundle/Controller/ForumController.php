@@ -20,16 +20,29 @@ class ForumController extends Controller
 
     public function OpenAction($instanceId)
     {
-        $instance = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $subjects = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->getSubjects($instance);
+        $em = $this->getDoctrine()->getEntityManager();
+        $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getSubjects();
+        $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsFormForumInstance($instance);
+        $nbPages = ceil($countSubjects/$limit);
 
         $content = $this->render(
-            'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'subjects' => $subjects)
+            'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'limit' => $limit, 'nbPages' => $nbPages)
         );
 
         $response = new Response($content);
 
         return $response;
+    }
+
+    public function subjectsAction($forumInstanceId, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
+        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getSubjects();
+        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($forumInstance, $offset, $limit);
+
+        return $this->render('ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects));
     }
 
     public function forumSubjectCreationFormAction($forumInstanceId)
@@ -88,7 +101,7 @@ class ForumController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
-        $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForInstance($subjectInstance);
+        $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForSubjectInstance($subjectInstance);
         $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getMessages();
         $nbPages = ceil($countMessages/$limit);
         $workspace = $subjectInstance->getWorkspace();

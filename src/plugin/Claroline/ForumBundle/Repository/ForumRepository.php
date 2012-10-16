@@ -83,7 +83,7 @@ class ForumRepository extends EntityRepository
         return $query->getResults();
     }
 
-    public function countMessagesForInstance($subjectInstance)
+    public function countMessagesForSubjectInstance($subjectInstance)
     {
         $dql = "
             SELECT Count(m) FROM Claroline\ForumBundle\Entity\Message m
@@ -95,6 +95,19 @@ class ForumRepository extends EntityRepository
         $query->setParameter('instanceId', $subjectInstance->getId());
 
         return $query->getSingleScalarResult();
+    }
 
+    public function countSubjectsFormForumInstance($forumInstance)
+    {
+        $dql = "
+            SELECT COUNT(s) FROM Claroline\ForumBundle\Entity\Subject s
+            JOIN s.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $forumInstance->getId());
+
+        return $query->getSingleScalarResult();
     }
 }
