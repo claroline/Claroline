@@ -9,4 +9,7 @@ use Claroline\CoreBundle\Library\PluginBundle;
  */
 class ClarolineForumBundle extends PluginBundle
 {
+    public function getRoutingPrefix(){
+        return 'forum';
+    }
 }
