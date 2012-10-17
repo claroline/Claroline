@@ -27,6 +27,7 @@ class LoadForumData extends AbstractFixture implements ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         $user = $this->getReference('user/user');
+        var_dump($user->getId());
         $root = $this
             ->container
             ->get('doctrine.orm.entity_manager')
@@ -36,10 +37,12 @@ class LoadForumData extends AbstractFixture implements ContainerAwareInterface
 
         $forum = new Forum();
         $forum->setName('testing forum');
+        $forum->setCreator($user);
         $manager->persist($forum);
         $manager->flush();
-        $forumInstance = $creator->create($forum, $root->getId(), 'Forum', true, null, $user);
-        $this->addReference('forum/forumInstance', $forumInstance);
+//        $manager->persist($user->getPersonalWorkspace());
+//        $forumInstance = $creator->create($forum, $root->getId(), 'Forum', true, null, $user);
+//        $this->addReference('forum/forumInstance', $forumInstance);
 
     }
 }
