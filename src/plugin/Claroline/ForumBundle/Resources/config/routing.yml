@@ -10,6 +10,18 @@ claro_forum_show_message:
    pattern: /subject/message/{subjectInstanceId}
    defaults: { _controller: ClarolineForumBundle:Forum:showMessages }
 
+claro_forum_messages:
+   pattern: /subject/{subjectInstanceId}/offset/{offset}
+   defaults: { _controller: ClarolineForumBundle:Forum:messages }
+   options:
+      expose: true
+
+claro_forum_subjects:
+   pattern: /forum/{forumInstanceId}/offset/{offset}
+   defaults: { _controller: ClarolineForumBundle:Forum:subjects }
+   options:
+      expose: true
+
 claro_forum_open:
    pattern: /open/{instanceId}
    defaults: { _controller: ClarolineForumBundle:Forum:open }
@@ -21,5 +33,9 @@ claro_forum_message_form:
 claro_forum_create_message:
    pattern: /create/message/{subjectInstanceId}
    defaults: { _controller: ClarolineForumBundle:Forum:createMessage }
+
+claro_forum_edit_options:
+   pattern: /opions/edit
+   defaults: { _controller: ClarolineForumBundle:Forum:editForumOptions }
 
 

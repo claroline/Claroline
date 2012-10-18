@@ -10,26 +10,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class License
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+   /**
+    * @ORM\Id
+    * @ORM\Column(type="integer")
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
     protected $id;
 
-    /**
-     * @ORM\Column(name="name", type="string")
-     */
+   /**
+    * @ORM\Column(name="name", type="string")
+    */
     protected $name;
 
-    /**
-     * @ORM\Column(name="acronym", type="string")
-     */
+   /**
+    * @ORM\Column(name="acronym", type="string")
+    */
     protected $acronym;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="license", cascade={"persist"})
-     */
+   /**
+    * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="license", cascade={"persist"})
+    */
     protected $abstractResources;
 
     public function getId()

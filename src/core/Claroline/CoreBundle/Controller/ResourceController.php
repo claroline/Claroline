@@ -294,8 +294,12 @@ class ResourceController extends Controller
     {
         $ids = $this->getRequestParameters();
         $file = $this->get('claroline.resource.exporter')->exportResourceInstances($ids);
-        $response = new Response();
-        $response->setContent($file);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(function() use($file){
+            readfile($file);
+        });
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=archive');

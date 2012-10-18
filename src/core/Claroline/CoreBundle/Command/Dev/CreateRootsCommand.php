@@ -6,28 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceRootsData;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 class CreateRootsCommand extends ContainerAwareCommand
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->workspaceNames = array(
-            'biology',
-            'chemistry',
-            'mathematic',
-            'physic',
-            'geography',
-            'sociology',
-            'informatic'
-        );
-
-        $this->workspaceNamesOffset = count($this->workspaceNames);
-        $this->workspaceNamesOffset--;
-
-    }
     protected function configure()
     {
         $this->setName('claroline:roots:create')
@@ -73,16 +56,11 @@ class CreateRootsCommand extends ContainerAwareCommand
     {
         $username = $input->getArgument('username');
         $amount = $input->getArgument('count');
+        $fixture = new LoadResourceRootsData($username, $amount);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->findOneBy(array('username'=> $username));
-
-        for ($i = 0; $i < $amount; $i++) {
-            $config = new Configuration();
-            $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $config->setWorkspaceName($this->workspaceNames[rand(0, $this->workspaceNamesOffset)]);
-            $config->setWorkspaceCode('CODE');
-            $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
-            $wsCreator->createWorkspace($config, $user);
-        }
+        $referenceRepo = new ReferenceRepository($em);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->getContainer());
+        $fixture->load($em);
     }
 }

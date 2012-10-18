@@ -204,6 +204,12 @@ claro_admin_plugins:
     requirements:
       _method: GET
 
+claro_admin_plugin_options:
+    pattern: /plugin/{domain}/options
+    defaults: { _controller: ClarolineCoreBundle:Administration:pluginParameters }
+    requirements:
+      _method: GET
+
 #SOON TO BE REST
 
 claro_admin_group_user_list:
