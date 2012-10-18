@@ -11,12 +11,6 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 class CreateForumCommand extends ContainerAwareCommand
 {
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $this->setName('claroline:forum:create')

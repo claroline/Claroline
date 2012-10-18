@@ -34,20 +34,24 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
     {
         $i = 0;
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        var_dump($this->username);
-        $workspace = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username))->getPersonalWorkspace();
+        $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
+        $workspace = $user->getPersonalWorkspace();
         $collaboratorRole = $workspace->getCollaboratorRole();
+        $this->log('role '.$collaboratorRole->getRole());
 
         if ($this->class == 'group') {
             $entities = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
         } elseif ($this->class == 'user') {
             $entities = $em->getRepository('ClarolineCoreBundle:User')->findAll();
-        } else {
+        } elseif ($this->class == null){
             $this->log("cleaning...");
             $this->clean($collaboratorRole, $manager);
             $this->log("done");
-            return;
+            $entities = null;
+//            return;
         }
+
+        $this->log("entities :". count($entities));
 
         $maxLoops = count($entities);
 
@@ -55,13 +59,17 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
            $maxLoops = $this->nbUsers;
         }
 
+        $this->log("max loops: $maxLoops");
+
         while ($i < $maxLoops)
         {
             $this->addToWorkspace($entities, $collaboratorRole, $manager);
             $i++;
         }
 
-        $em->flush();
+        $manager->flush();
+
+       $this->log(count($user->getPersonalWorkspace()->getCollaboratorRole()->getUsers())." collaborators added to user {$user->getUsername()}");
     }
 
     //may cause infinite loop due to the lack of optimization.
@@ -77,11 +85,13 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
             $this->addToWorkspace($entities, $collaboratorRole, $om);
         } else {
             $entity->addRole($collaboratorRole);
-            $this->log("entity whose id is {$entity->getId()} added");
-            unset($entities[$offset]);
-            $entities = array_values($entities);
+            $this->log(var_dump($entity->getRoles()));
+            $this->log("entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
+            $om->persist($entity);
+//            unset($entities[$offset]);
+//            $entities = array_values($entities);
+            $this->log(count($collaboratorRole->getUsers())." collaborators added ");
         }
-        $om->persist($entity);
     }
 
     private function clean($collaboratorRole, $om)

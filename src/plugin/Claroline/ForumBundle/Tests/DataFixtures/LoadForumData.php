@@ -5,12 +5,12 @@ namespace Claroline\ForumBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Claroline\CoreBundle\DataFixtures\LoggableFixture;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 
-class LoadForumData extends AbstractFixture implements ContainerAwareInterface
+class LoadForumData extends LoggableFixture implements ContainerAwareInterface
 {
     /** @var ContainerInterface $container */
     private $container;
@@ -19,8 +19,6 @@ class LoadForumData extends AbstractFixture implements ContainerAwareInterface
     private $forumName;
     private $nbMessages;
     private $nbSubjects;
-
-    private $logger;
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -48,6 +46,7 @@ class LoadForumData extends AbstractFixture implements ContainerAwareInterface
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
         $maxOffset = count($collaborators);
+        $this->log("collaborators found: ".count($collaborators));
         $maxOffset--;
         $forum = new Forum();
         $forum->setName($this->forumName);
@@ -88,6 +87,8 @@ class LoadForumData extends AbstractFixture implements ContainerAwareInterface
         }
 
         $manager->flush();
+
+        $this->addReference("forum_instance/forum", $forumInstance);
     }
 
     private function getArrayLipsum()
@@ -157,18 +158,5 @@ class LoadForumData extends AbstractFixture implements ContainerAwareInterface
         }
 
         return $content;
-    }
-
-    public function setLogger(\Closure $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if (null !== $this->logger)
-        {
-            call_user_func_array($this->logger, array($message));
-        }
     }
 }

@@ -29,7 +29,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
         return $this->container;
     }
 
-    public function __construct($nbUsers, $role)
+    public function __construct($nbUsers, $role = null)
     {
         $this->role = $role;
         $this->nbUsers = $nbUsers;
@@ -66,6 +66,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
         $role = $this->loadRole($this->role);
 
         for ($i = 0; $i < $this->nbUsers; $i++) {
+
             $user = new User();
             $user->setFirstName($this->firstNames[mt_rand(0, $this->maxFirstNameOffset)]);
             $user->setLastName($this->lastNames[mt_rand(0, $this->maxLastNameOffset)]);
@@ -83,17 +84,13 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
             $user->addRole($workspace->getManagerRole());
             $user->setPersonalWorkspace($workspace);
-            $manager->persist($workspace);
             $manager->persist($user);
-            if ($i > 0 && $i % 10 === 0) {
-                $manager->flush();
-                $manager->clear();
-                $role = $manager->merge($role);
-                $this->log(" {$i} users created");
-            }
+            $manager->persist($workspace);
+            $this->log(" {$i} users created");
         }
+
         $manager->flush();
-        $this->log(" {$i} users created");
+        $this->log("{$i} users created");
         $this->log("Done");
     }
 
