@@ -406,17 +406,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('.active-filters')));
     }
 
-    /*
-      public function testCountInstances()
-      {
-      $this->logUser($this->getFixtureReference('user/user'));
-      $this->createBigTree($this->pwr->getId());
-      $this->client->request('GET', '/resource/count/instances');
-      var_dump( $this->client->getResponse()->getContent());
-      $this->assertEquals('3', $this->client->getResponse()->getContent());
-      }
-     */
-
     private function uploadFile($parentId, $name, $shareType = 1)
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
