@@ -22,7 +22,8 @@ class ForumController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getSubjects();
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getSubjects();
         $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsFormForumInstance($instance);
         $nbPages = ceil($countSubjects/$limit);
 
@@ -39,7 +40,8 @@ class ForumController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
-        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getSubjects();
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getSubjects();
         $subjects = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($forumInstance, $offset, $limit);
 
         return $this->render('ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects));
@@ -102,7 +104,8 @@ class ForumController extends Controller
 
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
         $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForSubjectInstance($subjectInstance);
-        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getMessages();
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getMessages();
         $nbPages = ceil($countMessages/$limit);
         $workspace = $subjectInstance->getWorkspace();
 
@@ -126,7 +129,8 @@ class ForumController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
-        $limit = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1)->getMessages();
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getMessages();
         $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subjectInstance, $offset, $limit);
 
         return $this->render(
@@ -168,13 +172,12 @@ class ForumController extends Controller
     public function editForumOptionsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->find(1);
-        $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions);
+        $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions[0]);
         $form->bindRequest($this->get('request'));
 
         if ($form->isValid()) {
             $forumOptions = $form->getData();
-
             $em->persist($forumOptions);
             $em->flush();
 

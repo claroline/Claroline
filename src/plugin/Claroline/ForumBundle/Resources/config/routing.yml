@@ -17,7 +17,7 @@ claro_forum_messages:
       expose: true
 
 claro_forum_subjects:
-   pattern: /forum/{forumInstanceId}/offset/{offset}
+   pattern: /{forumInstanceId}/offset/{offset}
    defaults: { _controller: ClarolineForumBundle:Forum:subjects }
    options:
       expose: true
@@ -35,7 +35,7 @@ claro_forum_create_message:
    defaults: { _controller: ClarolineForumBundle:Forum:createMessage }
 
 claro_forum_edit_options:
-   pattern: /opions/edit
+   pattern: /options/edit
    defaults: { _controller: ClarolineForumBundle:Forum:editForumOptions }
 
 
