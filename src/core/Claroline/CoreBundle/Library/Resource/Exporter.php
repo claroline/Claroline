@@ -61,7 +61,9 @@ class Exporter
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
+        $currentDir = $repo->find($ids[0])->getParent();
         $instanceIds = $this->expandResourceInstanceIds($ids);
+
 
         if ($instanceIds == null) {
             throw new \LogicException("You must select some resources to export.");
@@ -78,10 +80,10 @@ class Exporter
                 $obj = $event->getItem();
 
                 if ($obj != null) {
-                    $archive->addFile($obj, $instance->getPathForDisplay());
+                    $archive->addFile($obj, $this->getRelativePath($currentDir, $instance).$instance->getName());
                 }
             } else {
-                $archive->addEmptyDir($instance->getPathForDisplay());
+                $archive->addEmptyDir($this->getRelativePath($currentDir, $instance));
             }
         }
 
@@ -168,7 +170,7 @@ class Exporter
      *
      * @return string
      */
-    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path)
+    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path = '')
     {
         if ($root != $resourceInstance->getParent()) {
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
