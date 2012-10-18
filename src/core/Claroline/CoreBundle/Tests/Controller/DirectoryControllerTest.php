@@ -2,14 +2,11 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile as SfFile;
-use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadDirectoryData;
-use Claroline\CoreBundle\Tests\DataFixtures\Additional\LoadFileData;
-use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
+use DirectoryIterator;
 
 class DirectoryControllerTest extends FunctionalTestCase
 {
@@ -87,7 +84,7 @@ class DirectoryControllerTest extends FunctionalTestCase
 
     private function cleanDirectory($dir)
     {
-        $iterator = new \DirectoryIterator($dir);
+        $iterator = new DirectoryIterator($dir);
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getFilename() !== 'placeholder'

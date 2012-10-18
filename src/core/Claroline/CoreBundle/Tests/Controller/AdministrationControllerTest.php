@@ -285,6 +285,24 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals('Déconnexion', trim($crawler->filter("#link-logout")->text()));
     }
 
+    public function testPluginParametersActionThrowsEvent()
+    {
+        //plugin installation
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $container = $this->client->getContainer();
+        $this->dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $this->loader = $container->get('claroline.plugin.loader');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $this->loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $pluginFqcn = 'Valid\Simple\ValidSimple';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->dbWriter->insert($plugin);
+        //register event
+        $this->client->request('GET', '/admin/plugins');
+        $this->client->request('GET', '/admin/plugin/plugin/options');
+        $this->assertContains('plugin_options_plugin', $this->client->getResponse()->getContent());
+    }
+
     private function getUser($username)
     {
         $user = $this->em

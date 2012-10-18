@@ -68,6 +68,46 @@ class ForumRepository extends EntityRepository
 
     public function getMessages($subjectInstance, $offset, $limit)
     {
+        $dql = "
+            SELECT m FROM Claroline\ForumBundle\Entity\Messages m
+            JOIN m.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId
+            ";
 
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $subjectInstance->getId());
+        $query->setMaxResults($limit);
+        $query->setFirstResult($offset);
+
+        return $query->getResults();
+    }
+
+    public function countMessagesForSubjectInstance($subjectInstance)
+    {
+        $dql = "
+            SELECT Count(m) FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $subjectInstance->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function countSubjectsFormForumInstance($forumInstance)
+    {
+        $dql = "
+            SELECT COUNT(s) FROM Claroline\ForumBundle\Entity\Subject s
+            JOIN s.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $forumInstance->getId());
+
+        return $query->getSingleScalarResult();
     }
 }

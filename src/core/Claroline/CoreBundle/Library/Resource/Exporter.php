@@ -87,7 +87,7 @@ class Exporter
 
         $archive->close();
 
-        return file_get_contents($pathArch);
+        return $pathArch;
     }
 
     /**
