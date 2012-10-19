@@ -53,7 +53,6 @@ class ForumControllerTest extends FunctionalTestCase
         $this->loadFixture($ffix);
 
         $this->logUser($this->getFixtureReference('user/user'));
-            var_dump($this->client->getResponse()->getContent());
         $crawler = $this->client->request('GET', "/forum/{$this->getFixtureReference('forum_instance/forum')->getId()}/offset/0");
         $link = $crawler->filter('.link-subject')->first()->link();
         $crawler = $this->client->click($link);
