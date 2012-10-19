@@ -94,7 +94,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}",
             array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
         );
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
+        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?0={$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?0={$this->getFixtureReference('group/manyGroup1')->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
