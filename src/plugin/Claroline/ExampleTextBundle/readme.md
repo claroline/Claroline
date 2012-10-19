@@ -87,7 +87,7 @@ This class will be executed by the plateform when installing your plugin. It mus
 
 Define your Doctrine entities in the Entity folder.
 
-If your identity is a resource that must be recognized by the platform and manageable in the resource manager then you must extend the *Claroline\CoreBundle\Entity\Resource\AbstractResource* class.
+If your entity is a resource that must be recognized by the platform and manageable in the resource manager then you must extend the *Claroline\CoreBundle\Entity\Resource\AbstractResource* class.
 
     /**
     * @ORM\Entity
