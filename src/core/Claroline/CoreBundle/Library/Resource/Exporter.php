@@ -61,13 +61,14 @@ class Exporter
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $currentDir = $repo->find($ids[0])->getParent();
         $instanceIds = $this->expandResourceInstanceIds($ids);
 
 
         if ($instanceIds == null) {
             throw new \LogicException("You must select some resources to export.");
         }
+
+        $currentDir = $repo->find($ids[0])->getParent();
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
