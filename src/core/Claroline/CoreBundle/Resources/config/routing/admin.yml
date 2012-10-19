@@ -25,16 +25,6 @@ claro_admin_paginated_search_group_user_list:
       groupId: ^(?=.*[1-9].*$)\d*$
       offset: ^(?=.*[0-9].*$)\d*$
 
-claro_admin_delete_user_from_group:
-    pattern: /group/{groupId}/user/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUserFromGroup }
-    options:
-      expose: true
-    requirements:
-      _method: DELETE
-      groupId: ^(?=.*[1-9].*$)\d*$
-      userId: ^(?=.*[1-9].*$)\d*$
-
 claro_admin_multidelete_user_from_group:
     pattern: /group/{groupId}/users
     defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteUserFromGroup }
@@ -71,15 +61,6 @@ claro_admin_paginated_search_user_list:
       offset: ^(?=.*[0-9].*$)\d*$
       method: GET
 
-claro_admin_delete_group:
-    pattern: /group/{groupId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteGroup }
-    options:
-      expose: true
-    requirements:
-      _method: DELETE
-      groupId: ^(?=.*[1-9].*$)\d*$
-
 claro_admin_multidelete_group:
     pattern: /groups
     defaults: { _controller: ClarolineCoreBundle:Administration:multiDeleteGroup }
@@ -87,15 +68,6 @@ claro_admin_multidelete_group:
       expose: true
     requirements:
       _method: DELETE
-
-claro_admin_delete_user:
-    pattern: /user/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:deleteUser }
-    options:
-      expose: true
-    requirements:
-      _method: DELETE
-      userId: ^(?=.*[1-9].*$)\d*$
 
 claro_admin_multidelete_user:
     pattern: /users
@@ -186,16 +158,6 @@ claro_admin_multiadd_user_to_group:
        _method: PUT
        groupId: ^(?=.*[0-9].*$)\d*$
      options:
-       expose: true
-
-claro_admin_add_user_to_group:
-    pattern: /group/{groupId}/add/user/{userId}
-    defaults: { _controller: ClarolineCoreBundle:Administration:addUserToGroup }
-    requirements:
-       _method: PUT
-       groupId: ^(?=.*[0-9].*$)\d*$
-       userId: ^(?=.*[0-9].*$)\d*$
-    options:
        expose: true
 
 claro_admin_plugins:

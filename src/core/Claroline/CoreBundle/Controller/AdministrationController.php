@@ -88,32 +88,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Deletes an user from the platform.
-     *
-     * @param integer $userId
-     *
-     * @throws Exception if the user to be deleted is the current logged user
-     *
-     * @return type
-     */
-    public function deleteUserAction($userId)
-    {
-        if ($userId != $this->get('security.context')->getToken()->getUser()->getId()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-            $em->remove($user);
-            $em->flush();
-
-            return new Response('user removed', 204);
-        }
-
-    //Doctrine throws an error itself because
-    //"You cannot refresh a user from the EntityUserProvider that does not contain an identifier.
-    //The user object has to be serialized with its own identifier mapped by Doctrine. (500 Internal Server Error)
-    //throw new \Exception('A user cannot delete his own profile.');
-    }
-
-    /**
      * Removes many users from the platform.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -438,26 +412,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Adds an user to a group and redirects to the group list.
-     *
-     * @param integer $groupId
-     * @param integer $userId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function addUserToGroupAction($groupId, $userId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $group->addUser($user);
-        $em->persist($group);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('claro_admin_group_list'));
-    }
-
-    /**
      * Adds multiple user to a group.
      *
      * @param integer $groupId
@@ -493,26 +447,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Removes an user from a group.
-     *
-     * @param integer $groupId
-     * @param integer $userId
-     *
-     * @return Response
-     */
-    public function deleteUserFromGroupAction($groupId, $userId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $group->removeUser($user);
-        $em->persist($group);
-        $em->flush();
-
-        return new Response('user removed', 204);
-    }
-
-    /**
      * Removes users from a group.
      *
      * @param integer $groupId
@@ -535,23 +469,6 @@ class AdministrationController extends Controller
         $em->flush();
 
         return new Response('user removed', 204);
-    }
-
-    /**
-     * Deletes a group and redirects to the group list.
-     *
-     * @param integer $groupId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteGroupAction($groupId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $em->remove($group);
-        $em->flush();
-
-        return new Response('group(s) removed', 204);
     }
 
     /**
