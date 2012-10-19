@@ -85,7 +85,6 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
             $this->addToWorkspace($entities, $collaboratorRole, $om);
         } else {
             $entity->addRole($collaboratorRole);
-            $this->log(var_dump($entity->getRoles()));
             $this->log("entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
             $om->persist($entity);
 //            unset($entities[$offset]);
