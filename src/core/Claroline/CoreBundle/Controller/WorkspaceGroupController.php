@@ -105,33 +105,6 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Removes a group from a workspace.
-     *
-     * @param integer $groupId
-     * @param integer $workspaceId
-     *
-     * @return Response
-     */
-    public function removeGroupAction($groupId, $workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkIfAdmin($workspace);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $roles = $workspace->getWorkspaceRoles();
-        $groupIds = array($group->getId());
-        $this->checkRemoveManagerRoleIsValid($groupIds, $workspace);
-
-        foreach ($roles as $role) {
-            $group->removeRole($role);
-        }
-
-        $em->flush();
-
-        return new Response("success", 204);
-    }
-
-    /**
      * Removes many groups from a workspace. ( ?0=1&1=2... )
      *
      * @param integer $workspaceId
@@ -209,35 +182,6 @@ class WorkspaceGroupController extends Controller
 
         return $response;
     }
-
-    /**
-     * Adds a group to a workspace
-     * if requested through ajax, it'll respond with a json object containing the group datas
-     * otherwise it'll redirect to the workspace list.
-     *
-     * @param integer $groupId
-     * @param integer $workspaceId
-     *
-     * @return RedirectResponse
-     */
-    public function addGroupAction($groupId, $workspaceId)
-    {
-        $request = $this->get('request');
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $group->addRole($workspace->getCollaboratorRole());
-        $em->flush();
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Workspace:group.json.twig', array('groups' => array($group), 'workspace' => $workspace));
-        }
-
-        $route = $this->get('router')->generate('claro_workspace_list');
-
-        return new RedirectResponse($route);
-    }
-
     /**
      * Adds many groups to a workspace.
      * It should be used with ajax and a list of grouppIds as parameter.
