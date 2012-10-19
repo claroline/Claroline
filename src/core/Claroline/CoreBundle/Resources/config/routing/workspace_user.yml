@@ -1,13 +1,3 @@
-claro_workspace_add_user:
-   pattern: /{workspaceId}/user/{userId}
-   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:addUser }
-   options:
-      expose: true
-   requirements:
-      _method: PUT
-      userId: ^(?=.*[1-9].*$)\d*$
-      workspaceId: ^(?=.*[1-9].*$)\d*$
-
 claro_workspace_multiadd_user:
    pattern: /{workspaceId}/add/user
    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:multiAddUser }
@@ -91,16 +81,6 @@ claro_workspace_unregistered_users_paginated:
      workspaceId: ^(?=.*[1-9].*$)\d*$
      #offset 0-9
      offset: ^(?=.*[0-9].*$)\d*$
-
-claro_workspace_delete_user:
-    pattern: /{workspaceId}/user/{userId}
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:removeUser, userId:'null' }
-    options:
-       expose: true
-    requirements:
-      _method: DELETE
-      workspaceId: ^(?=.*[1-9].*$)\d*$
-      userId: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_delete_users:
     pattern: /{workspaceId}/users

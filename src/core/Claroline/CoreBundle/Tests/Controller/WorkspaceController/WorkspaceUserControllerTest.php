@@ -19,26 +19,6 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     //+ TEST ADD USERS +/
     //++++++++++++++++++/
 
-    public function testAddUser()
-    {
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $response = $this->client->getResponse()->getContent();
-        $user = json_decode($response);
-        $this->assertEquals(1, count($user));
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
-    public function S_testAddUserIsProtected()
-    {
-        $this->markTestSkipped('not yet implemented');
-    }
-
     public function testMultiAddUser()
     {
         $userId = $this->getFixtureReference('user/user')->getId();
@@ -67,63 +47,11 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     //+++++++++++++++++++++++/
     //+ TEST REMOVING USERS +/
     //+++++++++++++++++++++++/
-    public function testDeleteUserFromWorkspace()
-    {
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $this->client->request('PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-
-        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        $this->client->request(
-            'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
-    //only admins can delete
-    public function testDeleteUserFromWorkspaceIsProtected()
-    {
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $this->client->request('PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testCantRemoveLastManager()
-    {
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        //adds user/user in the workspace
-        $this->client->request('PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        //sets user/user as a manager
-        $this->client->request('POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
-        );
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        $crawler = $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
-//        var_dump($this->client->getResponse()->getContent());
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
-    }
-
-    public function testCantRemoveManagerPersonnal()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $this->client->request('PUT', "/workspaces/{$pwu->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
-        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
-        );
-        $crawler = $this->client->request('DELETE', "/workspaces/{$pwu->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, count($crawler->filter('html:contains("original manager")')));
-    }
 
     public function testMultiDeleteUserFromWorkspace()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
+        $this->client->request('PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/user?0={$this->getFixtureReference('user/user')->getId()}");
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
@@ -156,7 +84,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $this->client->request('PUT', "/workspaces/{$pwu->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
+        $this->client->request('PUT', "/workspaces/{$pwu->getId()}/add/user?0={$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId())));
         $crawler = $this->client->request('DELETE', "/workspaces/{$pwu->getId()}/users?0={$this->getFixtureReference('user/user')->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
@@ -172,7 +100,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $this->client->request('PUT', "/workspaces/{$pwu->getId()}/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
+        $this->client->request('PUT', "/workspaces/{$pwu->getId()}/add/user?0={$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->client->request('GET', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $pwu->getManagerRole()->getId())));
