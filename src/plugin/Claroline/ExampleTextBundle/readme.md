@@ -194,7 +194,7 @@ Where *resourcetypename* is the name of your resource in lowercase (e.g. "exampl
 
 This event is fired by the plugin managemement page:
 
-* plugin_options_*mydomain*
+* *plugin*_*options*_*mydomain*
 
 Where *mydomain* is the domain you specified in your config file.
 
@@ -306,7 +306,7 @@ resource manager interface.
 While the ResourceManager can instantiate your root resource, it's unaware of the others. You'll have to do that manually.
 
 If your resource is "browsable" (defined in your config file), this step will be mandatory at some point.
-Hopefully, this is very easy to.
+Hopefully, this is very easy to do:
 
 At first, get the claroline.resource.manager service.
 
@@ -334,9 +334,9 @@ Where:
 * $returnInstance:
 *true|false: will return the new instance if set to true, if not it will return the resource itself.*
 * $mimeType:
-*if the resource is a file, the mileType is usefull to display the correct icon*.
+*if the resource is a file, the mimeType is usefull to display the correct icon*.
 * $user:
-*mainly used for testing purpose. This is resource creator. If set to null, the default user will be the current one*.
+*mainly used for testing purpose. This is the resource creator. If set to null, the default user will be the current one*.
 
 Most listeners are working with resourceInsanceIds.
 If you want to retrieve the resource linked to this instance, get the ResourceInstanceRepository:
@@ -382,14 +382,14 @@ The most usefull services for plugin developpement should be:
 ### Javascripts
 
 ClaroTools and Jquery are included by default.
-You can add you scripts in the javascripts blocks
+You can add your scripts in the javascripts block.
 
     {% block javascripts %}
         {{ parent() }}
         <script src="{{ asset('bundles/mybundle/js/myjs.js') }}" type="text/javascript"></script>
     {% endblock %}
 
-the ClaroUtils namespace contains some usefull methods for javascript development.
+The ClaroUtils namespace contains some usefull methods for javascript development.
 The ClaroUtils file is located in the CoreBundle/Resources/public/js/claro_utils.js
 
 #### ajax request

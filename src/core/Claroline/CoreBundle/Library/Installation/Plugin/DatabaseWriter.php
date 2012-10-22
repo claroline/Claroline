@@ -189,8 +189,13 @@ class DatabaseWriter
         $resourceType->setListable($resource['is_visible']);
         $resourceType->setNavigable($resource['is_browsable']);
         $resourceType->setDownloadable($resource['is_downloadable']);
-        $resourceType->setClass($resource['class']);
         $resourceType->setPlugin($pluginEntity);
+        $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array ('class' => $resource['class']));
+        if(null == $resourceClass){
+            $resourceType->setClass($resource['class']);
+        } else {
+            $resourceType->setParent($resourceClass);
+        }
         $this->em->persist($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
