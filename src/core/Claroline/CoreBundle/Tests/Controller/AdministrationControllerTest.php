@@ -148,6 +148,20 @@ class AdministrationControllerTest extends FunctionalTestCase
        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
+    public function testAdminCanMultiDeleteUsersFromGroup()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request(
+            'PUT', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userId[]={$this->getFixtureReference('user/admin')->getId()}"
+        );
+
+        $this->client->request(
+            'DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userId[]={$this->getFixtureReference('user/admin')->getId()}"
+        );
+       $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+       $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+    }
+
     public function testPaginatedGrouplessUsersAction()
     {
          $this->logUser($this->getFixtureReference('user/admin'));
