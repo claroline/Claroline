@@ -422,10 +422,9 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        unset($params['_']);
         $users = array();
 
-        foreach ($params as $userId) {
+        foreach ($params['userId'] as $userId) {
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             if($user !== null){
                 $group->addUser($user);

@@ -142,9 +142,8 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'PUT',
-            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?0={$this->getFixtureReference('user/admin')->getId()}"
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userId[]={$this->getFixtureReference('user/admin')->getId()}"
         );
-
        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
