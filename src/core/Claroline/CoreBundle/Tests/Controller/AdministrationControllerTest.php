@@ -187,7 +187,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testMultiDeleteGroups()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('DELETE', "/admin/groups?0={$this->getFixtureReference('group/group_a')->getId()}");
+        $this->client->request('DELETE', "/admin/groups?id[]={$this->getFixtureReference('group/group_a')->getId()}");
         $crawler = $this->client->request('GET', '/admin/groups/0.html');
         $this->assertEquals(2, $crawler->filter('.row-group')->count());
     }
