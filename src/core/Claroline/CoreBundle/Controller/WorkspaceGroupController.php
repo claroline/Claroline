@@ -69,7 +69,8 @@ class WorkspaceGroupController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $groupIds = array($group->getId());
-                $this->checkRemoveManagerRoleIsValid($groupIds, $workspace);
+                $parameters['groupId'] = $groupIds;
+                $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
             $group->removeRole($role[0], false);
