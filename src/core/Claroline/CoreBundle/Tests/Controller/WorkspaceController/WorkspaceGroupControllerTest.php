@@ -128,6 +128,26 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         }
     }
 
+    public function testLastGroupManagerCantBeEdited()
+    {
+        $this->loadFixture(new LoadRoleData());
+        $this->loadFixture(new LoadManyUsersData());
+        $this->loadFixture(new LoadManyGroupsData());
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request(
+            'POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
+        );
+        $this->client->request(
+            'DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?userId[]={$this->getFixtureReference('user/ws_creator')->getId()}"
+        );
+            var_dump($this->client->getResponse()->getContent());
+        $crawler = $this->client->request(
+            'POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId()))
+        );
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
+    }
+
     //4444444444444444444
     //+++++++++++++++++++/
     //+ TEST GROUP LIST +/

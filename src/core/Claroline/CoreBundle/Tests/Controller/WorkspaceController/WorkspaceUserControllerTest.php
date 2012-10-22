@@ -132,7 +132,6 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getVisitorRole()->getId()))
         );
-//        var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
     }
