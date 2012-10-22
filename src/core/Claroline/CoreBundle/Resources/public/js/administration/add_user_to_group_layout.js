@@ -52,12 +52,14 @@
     $('.add-users-button').on('click', function(event){
         var parameters = {};
         var i = 0;
+        var array = new Array();
         $('.chk-user:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         })
-        parameters.groupId = groupId;
-        var route = Routing.generate('claro_admin_multiadd_user_to_group', parameters);
+        parameters.userId = array;
+        var route = Routing.generate('claro_admin_multiadd_user_to_group', {'groupId': groupId});
+        route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(users){alert(users.length+' users added to the group')},
