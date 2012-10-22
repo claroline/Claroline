@@ -65,14 +65,15 @@
 
     $('#modal-valid-button').click(function(){
         var parameters = {};
+        var array = new Array();
         var i = 0;
         $('.chk-delete-user:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         });
-
-        parameters.workspaceId = twigWorkspaceId;
-        var route = Routing.generate('claro_workspace_delete_users', parameters);
+        parameters.userId = array;
+        var route = Routing.generate('claro_workspace_delete_users', {'workspaceId': twigWorkspaceId});
+        route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(){
