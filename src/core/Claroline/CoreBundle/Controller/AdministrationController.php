@@ -454,11 +454,10 @@ class AdministrationController extends Controller
     public function multiDeleteUserFromGroupAction($groupId)
     {
         $params = $this->get('request')->query->all();
-        unset($params['_']);
         $em = $this->getDoctrine()->getEntityManager();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
-        foreach ($params as $userId){
+        foreach ($params['userId'] as $userId){
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             $group->removeUser($user);
             $em->persist($group);
