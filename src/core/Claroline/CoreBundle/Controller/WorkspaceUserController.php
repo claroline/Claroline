@@ -167,13 +167,12 @@ class WorkspaceUserController extends Controller
     public function multiAddUserAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
-        unset($params['_']);
 
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = array();
 
-        foreach ($params as $userId) {
+        foreach ($params['userId'] as $userId) {
              $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
              $users[] = $user;
              $user->addRole($workspace->getCollaboratorRole());

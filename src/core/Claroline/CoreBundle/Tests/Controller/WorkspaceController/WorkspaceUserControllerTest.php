@@ -27,7 +27,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/user?0={$userId}&1={$secondUserId}&2={$thirdUserId}"
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/user?userId[]={$userId}&userId[]={$secondUserId}&userId[]={$thirdUserId}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
