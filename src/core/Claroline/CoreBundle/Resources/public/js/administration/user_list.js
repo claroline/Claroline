@@ -51,14 +51,18 @@
     });
 
     $('#modal-valid-button').click(function(){
-        var parameters = {};
+        var parameters = {
+        }
         var i = 0;
+        var array = new Array()
         $('.chk-user:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         });
+        parameters.id = array;
 
-        var route = Routing.generate('claro_admin_multidelete_user', parameters);
+        var route = Routing.generate('claro_admin_multidelete_user');
+        route+= '?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(){
