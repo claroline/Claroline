@@ -88,7 +88,8 @@ class WorkspaceUserController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $userIds = array($userId);
-                $this->checkRemoveManagerRoleIsValid($userIds, $workspace);
+                $parameters['userId'] = $userIds;
+                $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
             $user->removeRole($role[0], false);
