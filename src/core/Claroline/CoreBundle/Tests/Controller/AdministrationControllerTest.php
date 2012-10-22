@@ -91,7 +91,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/users/0.html');
         $this->assertEquals(5, $crawler->filter('.row-user')->count());
-        $this->client->request('DELETE', "/admin/users?0={$this->getFixtureReference('user/user')->getId()}");
+        $this->client->request('DELETE', "/admin/users?id[]={$this->getFixtureReference('user/user')->getId()}");
         $crawler = $this->client->request('GET', '/admin/users/0.html');
         $this->assertEquals(4, $crawler->filter('.row-user')->count());
     }
