@@ -118,10 +118,9 @@ class WorkspaceGroupController extends Controller
         $this->checkIfAdmin($workspace);
         $roles = $workspace->getWorkspaceRoles();
         $params = $this->get('request')->query->all();
-        unset($params['_']);
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        foreach ($params as $groupId) {
+        foreach ($params['groupId'] as $groupId) {
             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
             if (null != $group) {
                 foreach ($roles as $role) {
@@ -269,8 +268,7 @@ class WorkspaceGroupController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
-
-        foreach ($parameters as $groupId) {
+        foreach ($parameters['groupId'] as $groupId) {
             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
             if (null !== $group){
