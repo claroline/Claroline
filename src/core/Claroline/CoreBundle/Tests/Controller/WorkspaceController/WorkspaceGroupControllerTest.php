@@ -35,7 +35,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?0={$groupA}&1={$groupB}&2={$groupC}"
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupId[]={$groupA}&groupId[]={$groupB}&groupId[]={$groupC}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -163,7 +163,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadGroupData);
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?0={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupId[]={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -209,7 +209,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadGroupData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?0={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupId[]={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/group/search/group/registered/0", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')

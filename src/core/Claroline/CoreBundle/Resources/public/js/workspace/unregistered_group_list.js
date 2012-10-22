@@ -38,13 +38,15 @@
 
     $('.btn-save-groups').on('click', function(event){
         var parameters = {};
+        var array = new Array();
         var i = 0;
         $('.checkbox-group-name:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         })
-        parameters.workspaceId = twigWorkspaceId;
-        var route = Routing.generate('claro_workspace_multiadd_group', parameters);
+        parameters.groupId = array;
+        var route = Routing.generate('claro_workspace_multiadd_group', {'workspaceId': twigWorkspaceId});
+        route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(groups){

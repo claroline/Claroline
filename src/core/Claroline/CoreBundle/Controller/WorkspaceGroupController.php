@@ -192,13 +192,11 @@ class WorkspaceGroupController extends Controller
     public function multiAddGroupAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
-        unset($params['_']);
-
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = array();
 
-        foreach ($params as $groupId) {
+        foreach ($params['groupId'] as $groupId) {
              $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
              $groups[] = $group;
              $group->addRole($workspace->getCollaboratorRole());
