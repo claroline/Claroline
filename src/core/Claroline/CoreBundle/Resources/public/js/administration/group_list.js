@@ -42,12 +42,14 @@
     $('#modal-valid-button').click(function(){
         var parameters = {};
         var i = 0;
+        var array = new Array();
         $('.chk-group:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         });
-
-        var route = Routing.generate('claro_admin_multidelete_group', parameters);
+        parameters.id = array;
+        var route = Routing.generate('claro_admin_multidelete_group');
+        route+= '?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(){

@@ -479,9 +479,8 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
-        unset($params['_']);
 
-        foreach ($params as $groupId) {
+        foreach ($params['id'] as $groupId) {
             $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
             $em->remove($group);
         }
