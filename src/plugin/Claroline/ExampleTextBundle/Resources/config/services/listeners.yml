@@ -14,6 +14,9 @@ services:
       #
       # In this case, my resource type is "exampletext".
       # mycustomaction is the custom action names you defined earlier.
+    #this event is fired by the platform plugin manager:
+      # plugin_options_mydomain
+      # in this case mydomain is the domain you specified in the config.yml file.
     tags:
       - { name: kernel.event_listener, event: create_form_exampletext, method: onCreateForm }
       - { name: kernel.event_listener, event: create_exampletext, method: onCreate }
@@ -21,4 +24,5 @@ services:
       - { name: kernel.event_listener, event: export_exampletext, method: onExport }
       - { name: kernel.event_listener, event: delete_exampletext, method: onDelete }
       - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
+      - { name: kernel.event_listener, event: plugin_options_example, method: onAdministrate }
       #... more to come.

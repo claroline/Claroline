@@ -29,7 +29,7 @@
     }
 
 
-    utils.sendRequest = function (route, successHandler, completeHandler, method, data) {
+    utils.sendRequest = function (route, successHandler, completeHandler, method) {
         var url = '';
         if (method == undefined){
             method = 'GET';

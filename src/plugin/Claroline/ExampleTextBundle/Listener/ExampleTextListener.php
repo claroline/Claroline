@@ -12,6 +12,7 @@ use Claroline\ExampleTextBundle\Entity\ExampleText;
 use Claroline\ExampleTextBundle\Form\ExampleTextType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 
 class ExampleTextListener extends ContainerAware
 {
@@ -118,5 +119,14 @@ class ExampleTextListener extends ContainerAware
         $route = $this->container->get('router')->generate('claro_exampletext_open', array('exampleTextInstanceId' => $event->getInstanceId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
+    }
+
+    //This function is fired once the platform admins wants to edit your plugin options.
+    //You can set theses options the way you want (database, config file, ...)
+    //This event expect a response (usually containing a form)
+    //Once the form is submitted, your function updating the options should redirect to the route 'claro_admin_plugins'
+    public function onAdministrate(PluginOptionsEvent $event)
+    {
+        //you can use this function to display a form
     }
 }

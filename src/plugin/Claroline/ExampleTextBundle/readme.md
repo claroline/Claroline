@@ -179,6 +179,7 @@ You declare in this file all events that you want to catch.
           - { name: kernel.event_listener, event: export_exampletext, method: onExport }
           - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
           - { name: kernel.event_listener, event: open_exampletext, method: onOpen }
+          - { name: kernel.event_listener, event: plugin_options_example, method: onAdministrate }
 
 Here is the list of events fired by the resource manager:
 
@@ -190,6 +191,12 @@ Here is the list of events fired by the resource manager:
 * *customaction*_*resourcetypename*
 
 Where *resourcetypename* is the name of your resource in lowercase (e.g. "exampletext") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
+
+This event is fired by the plugin managemement page:
+
+* plugin_options_*mydomain*
+
+Where *mydomain* is the domain you specified in your config file.
 
 ### Listener implementation class
 
@@ -211,7 +218,45 @@ Define your listener class in the *Listener* folder.
       ...
     }
 
-++ ????? Explications méthodes (avec explication de base pour Forms dans createForm)
+#### Forms
+
+Please find the Symfony documentation here: http://symfony.com/doc/2.0/book/forms.html
+
+##### Resources creation
+
+Resources forms are a little be more complicated.
+
+You can use the 'ClarolineCoreBundle:Resource:resource_form.html.twig' as  default form for your resource.
+
+
+        ...
+        //the form you defined with the symfony2 form component
+        $form = $this->container
+            ->get('form.factory')
+            ->create(new ExampleTextType, new ExampleText());
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:resource_form.html.twig', array(
+            'form' => $form->createView(),
+            //you must add the attribute resourceType to the twig File.
+            The Resource Manager need
+            to know wich kind of resource is going to be added.
+            'resourceType' => 'ExampleText'
+            )
+        );
+        ...
+
+**Warning**: don't forget the 'resourceType' attribute. Its value must be the 'name' field you defined in your config.yml file
+
+If you want to write your own twig file, your form action must be:
+
+    action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentInstanceId':'_instanceId'}) }}"
+
+where resourceType is the 'name' field you defined in your config.yml file and _instanceId is a placeholder used
+by the javascript manager.
+
+#### Resources edition
+
+Not implemented yet.
 
 ## Extension class
 
@@ -221,7 +266,139 @@ Write the extension class in your DependencyInjection folder.
 
 Don't forget to add the bundle class.
 
-### ?? Controlers
+## Controllers
+
+On some events your listeners are supposed to send a response.
+These responses can contain links wich will redirects to your controllers.
+
+## Resources
+
+Each resource must be instanciated to be displayed by the resource manager.
+You can consider every class extending AbstractResource as a way to stock
+your resources datas.
+This AbstractResource class has 2 very important relations.
+
+### ResourceType
+
+This entity job is to stock important attributes wich will differ depending on
+the ResourceType.
+Theses attributes are:
+
+* isNavigable;
+* isListable;
+* isDownloadable;
+
+These attributes are defined in the resource section in your config file.
+
+It also has relations to the customaction and the plugin tables.
+
+### ResourceInstance
+
+You can consider each ResourceInstance as a link to a resource. Many ResourceInstances
+can link to the same resource (copy by reference).
+Instances are created once the resource form is submitted.
+
+These ResourceInstances contains the whole resource tree structure and are displayed by the resource manager interface.
+In some cases you may want to define many resources with one acting as a container (like a folder) for the others in the
+resource manager interface.
 
 
+While the ResourceManager can instantiate your root resource, it's unaware of the others. You'll have to do that manually.
 
+If your resource is "browsable" (defined in your config file), this step will be mandatory at some point.
+Hopefully, this is very easy to.
+
+At first, get the claroline.resource.manager service.
+
+     $creator = $this->get('claroline.resource.manager');
+
+Then you must use the create() method.
+
+Here is the method's signature:
+
+     create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null, $user = null)
+
+Where:
+
+**mandatory :**
+
+* $resource:
+*the AbstractResource subclass you wrote*
+* $parentInstanceId:
+*the parent instance (container)*
+* $resourceType:
+*the name field defined in your config file
+
+**optional :**
+
+* $returnInstance:
+*true|false: will return the new instance if set to true, if not it will return the resource itself.*
+* $mimeType:
+*if the resource is a file, the mileType is usefull to display the correct icon*.
+* $user:
+*mainly used for testing purpose. This is resource creator. If set to null, the default user will be the current one*.
+
+Most listeners are working with resourceInsanceIds.
+If you want to retrieve the resource linked to this instance, get the ResourceInstanceRepository:
+
+    $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceInsanceId);
+
+Where $em is the EntityManager.
+You can get the resource from there:
+
+    $resource = $instance->getResource();
+
+
+### Keeping the context
+
+ResourceInstance has a mandatory relation to the AbstractWorkspace table.
+The Workspace indicate the context in wich your instance was placed.
+
+You can find the workspace using
+
+    $workspace = $resourceInstance->getWorkspace();
+
+Then your response must extends the workspace layout.
+
+    {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+This layout requires the **workspace** parameter. Its value must be the $workspace
+you got from the instance.
+
+## The platform
+
+### Services
+
+You obviously have access to the platform services in your plugins.
+You can find the list of services in the CoreBundle/Resources/services folder.
+
+The most usefull services for plugin developpement should be:
+
+* claroline.resource.manager
+* claroline.workspace.creator
+
+### Url redirections
+
+### Javascripts
+
+ClaroTools and Jquery are included by default.
+You can add you scripts in the javascripts blocks
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('bundles/mybundle/js/myjs.js') }}" type="text/javascript"></script>
+    {% endblock %}
+
+the ClaroUtils namespace contains some usefull methods for javascript development.
+The ClaroUtils file is located in the CoreBundle/Resources/public/js/claro_utils.js
+
+#### ajax request
+
+sendRequest(...) is based on the jquery.ajax() function. It'll handle the platform errors and will display
+the connexion form if no user is logged on when the request is sent.
+
+#### others
+
+### Dev tools
+
+None so far.
