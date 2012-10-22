@@ -175,7 +175,7 @@ class DatabaseWriter
     {
         foreach ($actions as $action) {
             $rtca = new ResourceTypeCustomAction();
-            $rtca->setAsync($action['is_action_in_new_page']);
+            $rtca->setAsync(!$action['is_action_in_new_page']);
             $rtca->setAction($action['name']);
             $rtca->setResourceType($resourceType);
             $this->em->persist($rtca);
