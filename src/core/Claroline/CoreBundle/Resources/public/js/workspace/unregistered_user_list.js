@@ -51,12 +51,14 @@
     $('#btn-save-users').on('click', function(event){
         var parameters = {};
         var i = 0;
+        var array = new Array();
         $('.checkbox-user-name:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         })
-        parameters.workspaceId = twigWorkspaceId;
-        var route = Routing.generate('claro_workspace_multiadd_user', parameters);
+        parameters.userId = array;
+        var route = Routing.generate('claro_workspace_multiadd_user', {'workspaceId': twigWorkspaceId});
+        route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(users){alert(users.length+' users added to the workspace')},
