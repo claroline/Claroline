@@ -4,7 +4,6 @@ namespace Claroline\ForumBundle\Controller;
 
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Entity\ForumOptions;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
@@ -185,9 +184,9 @@ class ForumController extends Controller
         } else {
 
             return $this->render(
-                    'ClarolineForumBundle::plugin_options_form.html.twig', array(
-                    'form' => $form->createView()
-                    )
+                'ClarolineForumBundle::plugin_options_form.html.twig', array(
+                'form' => $form->createView()
+                )
             );
         }
     }

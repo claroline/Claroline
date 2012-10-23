@@ -513,9 +513,9 @@ This example will show you the main files of a basic HTML5 video player.
 
 *Claroline\VideoPlayerBundle\Resources\config\routing.yml*
 
-   claro_stream_video:
-   pattern: /stream/video/{videoId}
-   defaults: { _controller: ClarolineVideoPlayerBundle:VideoPlayer:stream }
+    claro_stream_video:
+    pattern: /stream/video/{videoId}
+    defaults: { _controller: ClarolineVideoPlayerBundle:VideoPlayer:stream }
 
 **What you should not forget**
 
