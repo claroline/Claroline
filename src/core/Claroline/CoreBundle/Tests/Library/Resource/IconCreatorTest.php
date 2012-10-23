@@ -20,7 +20,6 @@ class IconCreatorTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadResourceTypeData());
         $ds = DIRECTORY_SEPARATOR;
         if( extension_loaded('gd') && extension_loaded('ffmpeg')){
             $this->areLoaded = true;

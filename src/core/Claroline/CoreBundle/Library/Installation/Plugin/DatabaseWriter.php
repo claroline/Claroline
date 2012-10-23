@@ -191,11 +191,13 @@ class DatabaseWriter
         $resourceType->setDownloadable($resource['is_downloadable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array ('class' => $resource['class']));
+
         if(null == $resourceClass){
             $resourceType->setClass($resource['class']);
         } else {
             $resourceType->setParent($resourceClass);
         }
+        
         $this->em->persist($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
