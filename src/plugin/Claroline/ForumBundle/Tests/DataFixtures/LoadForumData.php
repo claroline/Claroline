@@ -30,7 +30,8 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         return $this->container;
     }
 
-    public function __construct($forumName, $username, $nbMessages, $nbSubjects){
+    public function __construct($forumName, $username, $nbMessages, $nbSubjects)
+    {
         $this->forumName = $forumName;
         $this->username = $username;
         $this->nbMessages = $nbMessages;
@@ -68,7 +69,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subjectInstance = $creator->create($subject, $forumInstance->getId(), 'Subject', true, null, $user);
 
             $entityToBeDetached = array();
-            for ($j=0; $j<$this->nbMessages ; $j++){
+            for ($j=0; $j<$this->nbMessages; $j++){
 
                 $sender = $collaborators[rand(0, $maxOffset)];
                 $message = new Message();
