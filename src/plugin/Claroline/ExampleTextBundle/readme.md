@@ -238,9 +238,9 @@ You can use the 'ClarolineCoreBundle:Resource:resource_form.html.twig' as  defau
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:resource_form.html.twig', array(
             'form' => $form->createView(),
-            //you must add the attribute resourceType to the twig File.
+            /*you must add the attribute resourceType to the twig File.
             The Resource Manager need
-            to know wich kind of resource is going to be added.
+            to know wich kind of resource is going to be added.*/
             'resourceType' => 'ExampleText'
             )
         );
@@ -255,27 +255,48 @@ If you want to write your own twig file, your form action must be:
 where resourceType is the 'name' field you defined in your config.yml file and _instanceId is a placeholder used
 by the javascript manager.
 
-###### Using an existing form.
+###### Using existing forms & validations.
 
 This may be usefull if the *class* field you defined in your config file is an existing resource.
-Let's assume you're using the Claroline\CoreBundle\Resource\File class
+Let's assume you're using the Claroline\CoreBundle\Resource\File class.
+Your listener should extends the Claroline FileListener.
 
-#### Resources edition
 
-Not implemented yet.
+    namespace MyVender\MyBundle\Listener;
 
-## Extension class
+    use Claroline\CoreBundle\Listener\Resource\FileListener;
 
-Write the extension class in your DependencyInjection folder.
+    class MyListener extends FileListener {
+     ...
+    }
 
-## Bundle class
+Then you must override the creationForm method. If you don't know wich method
+to override, you can check wich method is called on the create_form_xxx event
+in the config files.
 
-Don't forget to add the bundle class.
+    use Claroline\CoreBundle\Form\FileType;
+    use Claroline\CoreBundle\Entity\Resource\File;
+    use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
+    use Claroline\CoreBundle\Listener\Resource\FileListener;
+    ...
 
-## Controllers
+    public function onCreateForm(CreateFormResourceEvent $event)
+    {
+        $form = $this->container->get('form.factory')->create(new FileType, new File());
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            array(
+                'form' => $form->createView(),
+                'resourceType' => 'MyResource'
+            )
+        );
+        $event->setResponseContent($content);
+        $event->stopPropagation();
+    }
 
-On some events your listeners are supposed to send a response.
-These responses can contain links wich will redirects to your controllers.
+This function will create a File whose ResourceType is MyResource.
+Because you extended the FileListener, you don't have to implement
+the create_xxx event.
 
 ## Resources
 
@@ -370,6 +391,150 @@ Then your response must extends the workspace layout.
 
 This layout requires the **workspace** parameter. Its value must be the $workspace
 you got from the instance.
+
+### Removing a Resource Plugin
+
+Plugins can be managed with theses commands:
+
+    claroline:plugin:install VendorName BundleName
+    claroline:plugin:uninstall VendorName BundleName
+
+If you're removing a plugin whose resource class is defined by the claroline platform,
+Resources having the type managed by the plugin will stay under their 'super type'.
+Otherwise, they'll be removed.
+
+### Opening/Editing a resource
+
+There is no predefined event for these actions.
+If you want to implement them, you must create some custom actions (see plugin configuration file).
+
+### File players
+
+File is a basic resource type defined by the platform. Theses resources a different from
+the others as their expected behavior is different depending on their mime type.
+
+The Claroline platform consider each mime this way: baseMime/extension.
+
+eg: video/mp4 where video is the base and mp4 is the extension.
+
+Each time a user is trying to open a file, the platform will fire some events.
+First it'll dispatch the most specific one:
+
+    play_file_basetype_extension
+
+If no response was given to the the event, it'll try the more generic one:
+
+    play_file_basetype
+
+Finally, it'll ask for the resource download.
+
+#### Players implementation
+
+In order to catch the event, your plugin must define a listener in your config (as explained above;
+the only change is the event name).
+
+This example will show you the main files of a basic HTML5 video player.
+
+**The listener config file**
+
+*Claroline\VideoPlayer\Resources\config\services\listener.yml*
+
+    services:
+        claroline.listener.video_player_listener:
+            class: Claroline\VideoPlayerBundle\Listener\VideoPlayerListener
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: kernel.event_listener, event: play_file_video, method: onOpenVideo }
+
+**The listener class**
+
+*Claroline\VideoPlayerBundle\Listener\VideoPlayerListener.php*
+
+    namespace Claroline\VideoPlayerBundle\Listener;
+
+    use Claroline\CoreBundle\Library\Resource\Event\PlayFileEvent;
+    use Symfony\Component\DependencyInjection\ContainerAware;
+    use Symfony\Component\HttpFoundation\Response;
+
+    class VideoPlayerListener extends ContainerAware
+    {
+        public function onOpenVideo(PlayFileEvent $event)
+        {
+            $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$event->getInstance()->getResource()->getHashName();
+            $content = $this->container->get('templating')
+                ->render('ClarolineVideoPlayerBundle::video.html.twig',
+                    array('workspace' => $event->getInstance()->getWorkspace(), 'path' => $path, 'video' => $event->getInstance()->getResource()));
+            $response = new Response($content);
+            $event->setResponse($response);
+            $event->stopPropagation();
+        }
+    }
+
+**The template twig file**
+
+*Claroline\VideoPlayerBundle\Resources\view\video.html.twig*
+
+    {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+    {% block section_content %}
+    <video controls preload=none
+        <source src="{{ path ('claro_stream_video', {'videoId': video.getId()})}}"/>
+    </video>
+    {% endblock %}
+
+**The controller**
+
+*Claroline\VideoPlayerBundle\Controller\VideoPlayerController.php*
+
+    namespace Claroline\VideoPlayerBundle\Controller;
+
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Symfony\Component\HttpFoundation\StreamedResponse;
+
+    class VideoPlayerController extends Controller
+    {
+        public function streamAction($videoId)
+        {
+            $video = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\File')->find($videoId);
+
+            $response = new StreamedResponse();
+            $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$video->getHashName();
+            $response->setCallBack(function() use($path){
+                readfile($path);
+            });
+            $response->headers->set('Content-Type', $video->getMimeType());
+
+            return $response;
+        }
+    }
+
+**The routing file**
+
+*Claroline\VideoPlayerBundle\Resources\config\routing.yml*
+
+   claro_stream_video:
+   pattern: /stream/video/{videoId}
+   defaults: { _controller: ClarolineVideoPlayerBundle:VideoPlayer:stream }
+
+**What you should not forget**
+
+* the config file
+* the extension class
+* the bundle class
+
+## Extension class
+
+Write the extension class in your DependencyInjection folder.
+
+## Bundle class
+
+Don't forget to add the bundle class.
+
+## Controllers
+
+On some events your listeners are supposed to send a response.
+These responses can contain links wich will redirects to your controllers.
 
 ## The platform
 
