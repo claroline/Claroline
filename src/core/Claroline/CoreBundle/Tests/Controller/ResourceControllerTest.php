@@ -17,7 +17,6 @@ class ResourceControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadResourceTypeData());
         $this->loadUserFixture();
         $this->loadFixture(new LoadWorkspaceData());
         $this->client->followRedirects();
@@ -192,7 +191,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/types');
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(7, count($jsonResponse));
+        $this->assertEquals(8, count($jsonResponse));
     }
 
     public function testResourceListAction()
@@ -215,7 +214,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/resource/menus');
         $jsonResponse = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(7, count($jsonResponse));
+        $this->assertEquals(8, count($jsonResponse));
     }
 
     public function testGetEveryInstancesIdsFromMultiExportArray()

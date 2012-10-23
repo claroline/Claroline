@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use DirectoryIterator;
 
 class DirectoryControllerTest extends FunctionalTestCase
@@ -20,7 +19,6 @@ class DirectoryControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->loadUserFixture();
-        $this->loadFixture(new LoadResourceTypeData());
         $this->client->followRedirects();
         $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
         $this->cleanDirectory($this->upDir);

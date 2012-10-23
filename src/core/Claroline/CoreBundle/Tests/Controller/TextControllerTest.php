@@ -12,7 +12,6 @@ class TextControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->loadUserFixture();
-        $this->loadFixture(new LoadResourceTypeData());
         $this->client->followRedirects();
         $this->pwr = $this
             ->client

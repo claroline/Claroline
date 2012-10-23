@@ -130,8 +130,9 @@ This file will be parsed by the plugin installator to install your plugin and cr
         # You can define as many resource types as you want in this file.
         resources:
             # "class" is the entity of your resource. This may be the entity of a existing
-            # resource of the platform if you want to extend it,
-            # e.g. Claroline\CoreBundle\Entity\Resource\File.
+            # resource of the platform. This entity defines how the resource is stocked.
+            # It may be usefull is your resource is a zip file with a particular structure.
+            # In this case you can extend *Claroline\CoreBundle\Entity\Resource\File*.
           - class: Claroline\ExampleTextBundle\Entity\ExampleText
             # Your resource type name
             name: ExampleText
@@ -253,6 +254,11 @@ If you want to write your own twig file, your form action must be:
 
 where resourceType is the 'name' field you defined in your config.yml file and _instanceId is a placeholder used
 by the javascript manager.
+
+###### Using an existing form.
+
+This may be usefull if the *class* field you defined in your config file is an existing resource.
+Let's assume you're using the Claroline\CoreBundle\Resource\File class
 
 #### Resources edition
 
