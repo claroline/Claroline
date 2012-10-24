@@ -33,6 +33,7 @@ class Version20120119000000 extends BundleMigration
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
+        $this->createResourceLoggerTable($schema);
     }
 
     public function down(Schema $schema)
@@ -63,6 +64,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_meta_type');
         $schema->dropTable('claro_meta_type_resource_type');
         $schema->dropTable('claro_resource_type_custom_action');
+        $schema->dropTable('claro_resource_logger');
     }
 
     private function createUserTable(Schema $schema)
@@ -347,6 +349,7 @@ class Version20120119000000 extends BundleMigration
 
         $table->addIndex(array('path'));
         $table->addUniqueIndex(array('parent_id', 'name'));
+        $this->storeTable($table);
     }
 
     private function createLicenseTable(Schema $schema)
@@ -437,6 +440,31 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_icon_type');
         $this->addId($table);
         $table->addColumn('icon_type', 'text');
+
+        $this->storeTable($table);
+    }
+
+    private function createResourceLoggerTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_logger');
+        $this->addId($table);
+        $table->addColumn('instance_id', 'integer', array('notnull' => false));
+        $table->addColumn('path', 'string');
+        $table->addColumn('resource_type_id', 'integer');
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('creator_id', 'integer', array('notnull' => false));
+        $table->addColumn('updator_id', 'integer', array('notnull' => false));
+        $table->addColumn('url', 'string', array('notnull' => false));
+        $table->addColumn('action', 'string');
+        $table->addColumn('log_descr', 'string', array('notnull' => false));
+        $table->addColumn('date_log', 'datetime');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'), array('creator_id'), array('id')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'), array('updator_id'), array('id')
+        );
 
         $this->storeTable($table);
     }

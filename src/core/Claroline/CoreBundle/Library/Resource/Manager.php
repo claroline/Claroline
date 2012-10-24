@@ -6,13 +6,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
-use Claroline\CoreBundle\Entity\Resource\IconType;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 class Manager
 {
@@ -83,6 +80,12 @@ class Manager
             $resource = $this->ic->setResourceIcon($resource, $mimeType);
             $this->em->flush();
 
+            $event = new ResourceLoggerEvent(
+                $ri,
+                ResourceLoggerEvent::CREATE_ACTION
+            );
+            $this->ed->dispatch('log_resource', $event);
+
             return $returnInstance ? $ri : $resource;
         }
 
@@ -103,6 +106,11 @@ class Manager
         $child->setName($rename);
         try {
             $this->em->flush();
+            $event = new ResourceLoggerEvent(
+                $child,
+                ResourceLoggerEvent::MOVE_ACTION
+            );
+            $this->ed->dispatch('log_resource', $event);
         } catch (UnexpectedValueException $e) {
             throw new \UnexpectedValueException("You cannot move a directory into itself");
         }
@@ -129,8 +137,15 @@ class Manager
         }
 
         $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
+        $rc = $this->createReference($resourceInstance->getResource());
+        $rc->setWorkspace($resourceInstance->getWorkspace());
         $this->em->remove($resourceInstance);
         $this->em->flush();
+        $event = new ResourceLoggerEvent(
+            $rc,
+            ResourceLoggerEvent::DELETE_ACTION
+        );
+        $this->ed->dispatch('log_resource', $event);
     }
 
     /**
@@ -161,6 +176,12 @@ class Manager
                 $this->addToDirectoryByReference($child, $instanceCopy);
             }
         }
+
+        $logevent = new ResourceLoggerEvent(
+                $resourceInstance,
+                ResourceLoggerEvent::COPY_ACTION
+        );
+        $this->ed->dispatch('log_resource', $logevent);
 
         $this->em->persist($instanceCopy);
     }

@@ -4,13 +4,11 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Resource\ResourceEvent;
 use Claroline\CoreBundle\Form\TextType;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 
 class TextListener extends ContainerAware
@@ -67,7 +65,7 @@ class TextListener extends ContainerAware
 
     public function onOpen(CustomActionResourceEvent $event)
     {
-        $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($event->getInstanceId());
+        $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($event->getInstanceId())->getResource();
         $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $event->getInstanceId()));
         $response = new Response($content);
         $event->setResponse($response);

@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 class ResourceController extends Controller
 {
@@ -251,6 +252,13 @@ class ResourceController extends Controller
                 "Custom event '{$eventName}' didn't return any Response."
             );
         }
+        
+        $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $logevent = new ResourceLoggerEvent(
+            $ri,
+            ResourceLoggerEvent::CUSTOM_ACTION.'_'.$action
+        );
+        $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
         return $event->getResponse();
     }

@@ -54,6 +54,20 @@
                     tincidunt suscipit eros.
                 </div> <!-- .widget-content -->
             </section> <!-- /widget -->
+
+            <section class="widget" id="w-events">
+                <div class="widget-header">
+                    <span class="icon-calendar"></span>
+                    <h3>Events</h3>
+                    <div class="widget-commands">
+                        <a href="" onClick="$('#w-events-content').toggle('fast'); return false;"><span class="icon-minus"></span></a>
+                        <a href="" onClick="$('#w-events').hide('fast',function () { $('#w-events').remove(); } ); return false;"><span class="icon-remove"></span></a>
+                    </div>
+                </div> <!-- .widget-header -->
+                <div class="widget-content" id="w-events-content">
+                    {% render "ClarolineCoreBundle:Dashboard:resourceLogs" %}
+                </div> <!-- .widget-content -->
+            </section> <!-- /widget -->
         </div> <!-- /span -->
     </div>
 </div>
