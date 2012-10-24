@@ -4,8 +4,7 @@ plugin:
   plugin_translation_domain: exemple
 
   widgets:
-    - name: exemple1
-    - name: exemple2
+    - name: exemple
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText

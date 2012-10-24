@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
 
 /**
  * Controller of the user's dashboard.
@@ -56,5 +57,20 @@ class DashboardController extends Controller
         $logs = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLogger')->getLastLogs($this->get('security.context')->getToken()->getUser());
         return $this->render('ClarolineCoreBundle:Dashboard:widgets\resource_events.html.twig', array('logs' => $logs));
+    }
+
+    public function widgetsAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget')->findAll();
+
+        foreach ($widgets as $widget){
+            $eventName = strtolower("widget_{$widget->getName()}_dashboard");
+            $event = new DisplayWidgetEvent();
+            $this->get('event_dispatcher')->dispatch($eventName, $event);
+            $responsesString[$widget->getName()] = $event->getContent();
+        }
+
+        return $this->render('ClarolineCoreBundle:Dashboard:widgets\plugins.html.twig', array('widgets' => $responsesString));
     }
 }
