@@ -34,6 +34,7 @@ class Version20120119000000 extends BundleMigration
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
         $this->createResourceLoggerTable($schema);
+        $this->createWidgetTable($schema);
     }
 
     public function down(Schema $schema)
@@ -65,6 +66,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_meta_type_resource_type');
         $schema->dropTable('claro_resource_type_custom_action');
         $schema->dropTable('claro_resource_logger');
+        $schema->dropTable('claro_widget');
     }
 
     private function createUserTable(Schema $schema)
@@ -467,5 +469,19 @@ class Version20120119000000 extends BundleMigration
         );
 
         $this->storeTable($table);
+    }
+
+    private function createWidgetTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_widget');
+        $this->addId($table);
+        $table->addColumn('name', 'string');
+        $table->addColumn('plugin_id', 'integer');
+        $table->addUniqueIndex(array('name'));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_plugin'), array('plugin_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+
     }
 }

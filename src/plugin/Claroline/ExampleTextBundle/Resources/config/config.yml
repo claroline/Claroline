@@ -3,6 +3,10 @@ plugin:
   plugin_translation_name_key: exemple
   plugin_translation_domain: exemple
 
+  widgets:
+    - name: exemple1
+    - name: exemple2
+
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText
       name: ExampleText
@@ -13,3 +17,4 @@ plugin:
       actions:
         - name: open
           is_action_in_new_page: true
+

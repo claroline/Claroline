@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Widget;
 
 /**
  * This class is used to save/delete a plugin an its possible dependencies (like
@@ -141,6 +142,10 @@ class DatabaseWriter
         foreach ($processedConfiguration['resources'] as $resource) {
             $this->persistResourceTypes($resource, $pluginEntity, $plugin);
         }
+
+        foreach ($processedConfiguration['widgets'] as $widget){
+            $this->persistWidget($widget, $pluginEntity);
+        }
     }
 
     private function persistIcons($resource, $resourceType, $plugin)
@@ -197,11 +202,20 @@ class DatabaseWriter
         } else {
             $resourceType->setParent($resourceClass);
         }
-        
+
         $this->em->persist($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
 
         return $resourceType;
+    }
+
+    private function persistWidget($widget, $pluginEntity)
+    {
+        $widgetEntity = new Widget();
+        $widgetEntity->setName($widget['name']);
+        $widgetEntity->setPlugin($pluginEntity);
+
+        $this->em->persist($widgetEntity);
     }
 }
