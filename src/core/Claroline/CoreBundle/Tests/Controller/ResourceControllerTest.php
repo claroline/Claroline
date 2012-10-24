@@ -405,6 +405,69 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('.active-filters')));
     }
 
+    public function testCustomActionLogsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->userRoot->getId(), 'txt.txt');
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->client->request('GET', "/resource/custom/file/open/{$file->id}");
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->assertEquals(1, count($postEvents)-count($preEvents));
+    }
+
+    public function testCreateActionLogsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $file = $this->uploadFile($this->userRoot->getId(), 'txt.txt');
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->assertEquals(1, count($postEvents) - count($preEvents));
+    }
+
+    public function testMultiDeleteActionLogsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->pwr->getId());
+        $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
+        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->client->request(
+            'GET', "/resource/multidelete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+        );
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->assertEquals(2, count($postEvents) - count($preEvents));
+    }
+
+    public function testMultiMoveLogsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
+        $theContainer = $this->createDirectory($this->userRoot->getId(), 'container');
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->client->request(
+            'GET', "/resource/multimove/{$theContainer->id}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+        );
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->assertEquals(2, count($postEvents) - count($preEvents));
+    }
+
+    public function testMultiExportLogsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $theBigTree = $this->createBigTree($this->userRoot->getId());
+        $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        ob_start();
+        $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
+        ob_clean();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->assertEquals(4, count($postEvents) - count($preEvents));
+    }
+
+
     private function uploadFile($parentId, $name, $shareType = 1)
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
@@ -496,5 +559,4 @@ class ResourceControllerTest extends FunctionalTestCase
             }
         }
     }
-
 }

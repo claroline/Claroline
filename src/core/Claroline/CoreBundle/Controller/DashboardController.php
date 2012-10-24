@@ -55,7 +55,6 @@ class DashboardController extends Controller
     {
         $logs = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLogger')->getLastLogs($this->get('security.context')->getToken()->getUser());
-
         return $this->render('ClarolineCoreBundle:Dashboard:widgets\resource_events.html.twig', array('logs' => $logs));
     }
 }
