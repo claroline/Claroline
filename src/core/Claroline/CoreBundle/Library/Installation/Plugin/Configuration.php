@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('config');
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);
+        $this->addWidgetSection($pluginSection);
         $this->addResourceSection($pluginSection);
 
         return $treeBuilder;
@@ -110,6 +111,19 @@ class Configuration implements ConfigurationInterface
                  ->end()
             ->end()
         ->end()->end();
+    }
+
+    private function addWidgetSection($pluginSection)
+    {
+        $pluginSection
+            ->arrayNode('widgets')
+                ->prototype('array')
+                    ->children()
+                       ->scalarNode('name')->isRequired()->end()
+                    ->end()
+                ->end()
+            ->end()
+       ->end()->end();
     }
 
     public static function isResourceLocationValid($v)
