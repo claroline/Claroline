@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
 
 /**
  * This controller is able to:
@@ -226,6 +227,22 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         return $this->render("ClarolineCoreBundle:Workspace:workspace_roles_properties.html.twig", array('workspace' => $workspace, 'masks' => SymfonySecurity::getResourcesMasks()));
+    }
+
+    public function widgetsAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget')->findAll();
+
+        foreach ($widgets as $widget){
+            $eventName = strtolower("widget_{$widget->getName()}_workspace");
+            $event = new DisplayWidgetEvent($workspace);
+            $this->get('event_dispatcher')->dispatch($eventName, $event);
+            $responsesString[$widget->getName()] = $event->getContent();
+        }
+
+        return $this->render('ClarolineCoreBundle:Dashboard:widgets\plugins.html.twig', array('widgets' => $responsesString));
     }
 
     /*******************/

@@ -26,3 +26,12 @@ services:
       - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
       - { name: kernel.event_listener, event: plugin_options_example, method: onAdministrate }
       #... more to come.
+
+
+  claroline.listener.exampletext_widget:
+    class: Claroline\ExampleTextBundle\Listener\WidgetListener
+    calls:
+      - [setContainer, ["@service_container"]]
+    tags:
+      - { name: kernel.event_listener, event: widget_exemple_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple_workspace, method: onDisplay }
