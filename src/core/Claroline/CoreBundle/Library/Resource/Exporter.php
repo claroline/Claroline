@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 class Exporter
 {
@@ -17,12 +18,15 @@ class Exporter
     private $ed;
     /* @var Utilities */
     private $ut;
+    /* @var SecurityContext */
+    private $sc;
 
-    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut)
+    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, $sc)
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->ut = $ut;
+        $this->sc = $sc;
     }
 
     /**
@@ -46,6 +50,12 @@ class Exporter
             $this->addDirectoryToArchive($resourceInstance, $archive);
             $archive->close();
         }
+
+        $event = new ResourceLoggerEvent(
+            $resourceInstance,
+            ResourceLoggerEvent::EXPORT_ACTION
+        );
+        $this->ed->dispatch('log_resource', $event);
 
         return $item;
     }
@@ -81,7 +91,13 @@ class Exporter
                 $obj = $event->getItem();
 
                 if ($obj != null) {
-                    $archive->addFile($obj, $this->getRelativePath($currentDir, $instance).$instance->getName());
+                    $archive->addFile($obj, $this->getRelativePath($currentDir, $instance) . $instance->getName());
+
+                    $event = new ResourceLoggerEvent(
+                            $instanceId,
+                            ResourceLoggerEvent::EXPORT_ACTION
+                    );
+                    $this->ed->dispatch('log_resource', $event);
                 }
             } else {
                 $archive->addEmptyDir($this->getRelativePath($currentDir, $instance));

@@ -42,7 +42,9 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
     {
         $creator = $this->getContainer()->get('claroline.resource.manager');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        var_dump($this->username);
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
+        var_dump($user->getUsername());
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
@@ -82,9 +84,9 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $entityToBeDetached[] = $inst;
             }
             $manager->flush();
-            foreach ($entityToBeDetached as $msg) {
-                $manager->detach($msg);
-            }
+//            foreach ($entityToBeDetached as $msg) {
+//                $manager->detach($msg);
+//            }
         }
 
         $manager->flush();
