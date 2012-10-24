@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ResourceLoggerRepository extends EntityRepository
 {
@@ -12,7 +13,6 @@ class ResourceLoggerRepository extends EntityRepository
             SELECT rl FROM Claroline\CoreBundle\Entity\Logger\ResourceLogger rl
             JOIN rl.workspace ws
             JOIN ws.roles r
-            JOIN r.users u
             WHERE rl.workspace IN (
                 SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
                 JOIN w.roles wr
@@ -25,7 +25,9 @@ class ResourceLoggerRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setMaxResults(10);
 
-        return $query->getResult();
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
 
     }
 }

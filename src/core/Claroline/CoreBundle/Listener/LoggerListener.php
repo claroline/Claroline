@@ -11,7 +11,6 @@ class LoggerListener extends ContainerAware
     public function onLogResource(ResourceLoggerEvent $event)
     {
         $rs = new ResourceLogger();
-
         if ($event->getAction() !== ResourceLoggerEvent::DELETE_ACTION){
             $rs->setInstance($event->getInstance());
         }

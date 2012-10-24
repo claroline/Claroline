@@ -252,7 +252,7 @@ class ResourceController extends Controller
                 "Custom event '{$eventName}' didn't return any Response."
             );
         }
-        
+
         $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $logevent = new ResourceLoggerEvent(
             $ri,
