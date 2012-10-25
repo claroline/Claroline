@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +29,13 @@ class Widget
      */
     protected $name;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetAdminOption")
+     * @ORM\JoinColumn(name="admin_workspace_option_id", referencedColumnName="id")
+     */
+    protected $workspaceOption;
+
     public function getId()
     {
         return $this->id;
@@ -52,5 +59,15 @@ class Widget
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getWorkspaceOption()
+    {
+        return $this->workspaceOption;
+    }
+
+    public function setWorkspaceOption($option)
+    {
+        $this->workspaceOption = $option;
     }
 }

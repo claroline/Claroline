@@ -34,7 +34,10 @@ class Version20120119000000 extends BundleMigration
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
         $this->createResourceLoggerTable($schema);
+        $this->createWidgeDisplaytOptions($schema);
         $this->createWidgetTable($schema);
+        $this->createWidgetWorkspaceConfigTable($schema);
+
     }
 
     public function down(Schema $schema)
@@ -66,7 +69,9 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_meta_type_resource_type');
         $schema->dropTable('claro_resource_type_custom_action');
         $schema->dropTable('claro_resource_logger');
+        $schema->dropTable('claro_widget_display_options');
         $schema->dropTable('claro_widget');
+        $schema->dropTable('claro_widget_workspace_config');
     }
 
     private function createUserTable(Schema $schema)
@@ -478,10 +483,45 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string');
         $table->addColumn('plugin_id', 'integer');
         $table->addUniqueIndex(array('name'));
+        $table->addColumn('admin_workspace_option_id', 'integer');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'), array('plugin_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_widget_display_options'), array('admin_workspace_option_id'), array('id')
+        );
 
+         $this->storeTable($table);
     }
+
+    private function createWidgeDisplaytOptions(Schema $schema)
+    {
+        $table = $schema->createTable('claro_widget_display_options');
+        $this->addId($table);
+        $table->addColumn('name', 'string');
+
+        $this->storeTable($table);
+    }
+
+    private function createWidgetWorkspaceConfigTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_widget_workspace_config');
+        $this->addId($table);
+        $table->addColumn('widget_display_option_id', 'integer');
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('widget_id', 'integer');
+
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_widget'), array('widget_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_widget_display_options'), array('widget_display_option_id'), array('id')
+        );
+
+        }
 }

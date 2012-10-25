@@ -166,6 +166,12 @@ claro_admin_plugins:
     requirements:
       _method: GET
 
+claro_admin_widgets:
+    pattern: /widgets
+    defaults: { _controller: ClarolineCoreBundle:Administration:widgetList }
+    requirements:
+      _method: GET
+
 claro_admin_plugin_options:
     pattern: /plugin/{domain}/options
     defaults: { _controller: ClarolineCoreBundle:Administration:pluginParameters }
