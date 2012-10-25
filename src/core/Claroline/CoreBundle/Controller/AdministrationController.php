@@ -604,6 +604,16 @@ class AdministrationController extends Controller
         return $event->getResponse();
     }
 
+    public function widgetListAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
+
+        return $this->render('ClarolineCoreBundle:Administration:widgets.html.twig',
+            array('widgets' => $widgets));
+    }
+
+
     private function paginatorToArray($paginator)
     {
         $items = array();

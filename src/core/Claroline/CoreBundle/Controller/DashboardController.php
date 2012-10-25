@@ -71,7 +71,7 @@ class DashboardController extends Controller
     public function widgetsAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget')->findAll();
+        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
 
         foreach ($widgets as $widget){
             $eventName = strtolower("widget_{$widget->getName()}_dashboard");
