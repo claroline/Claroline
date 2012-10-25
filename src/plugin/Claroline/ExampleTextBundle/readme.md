@@ -126,6 +126,12 @@ This file will be parsed by the plugin installator to install your plugin and cr
         # (domain.language.yml, e.g. example.fr.yml)
         plugin_translation_domain: example
 
+        # Widgets declared by your plugin.
+        widgets:
+        # Each widget requires a name.
+         - name: exemple
+         - name: theAnswerToLifeUniverseAndEverything
+
         # Properties of resources managed by your plugin
         # You can define as many resource types as you want in this file.
         resources:
@@ -522,6 +528,54 @@ This example will show you the main files of a basic HTML5 video player.
 * the config file
 * the extension class
 * the bundle class
+
+## Widgets
+
+Widgets can be displayed at 2 differents key pages:
+
+* Dashboard home
+* Workspace home
+
+Every time a user is loading one of these page, the list of registered widgets will be loaded.
+Every time the platform wants to display a widget, the event is fired
+
+    widget_*widgetName*_*workspace|dashbloard*
+
+Where
+
+* widget is a prefix
+* widgetName is the name of your widget defined in the config file.
+* the last word is either workspace or dashboard depending on where the widget is displayed
+
+### Catching the event
+
+Define a listener in your listeners.yml file
+
+    myvendor.listener.mybundle_widget:
+      class: ...
+      tags:
+        - { name: kernel.event_listener, event: widget_widgetname_dashboard, method: onDisplay }
+
+## Listener implementation
+
+Simply set a string in the $event->setContent() method.
+
+    use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+    ...
+    function onDisplay(DisplayWidgetEvent $event)
+    {
+        $event->setContent('someContent');
+    }
+
+
+### Keeping the context
+
+You can retrieve the workspace using
+    $event->getWorkspace();
+
+## Notification & tracking
+
+No implementation yet.
 
 ## Extension class
 

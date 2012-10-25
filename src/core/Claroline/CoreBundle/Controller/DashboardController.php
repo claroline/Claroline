@@ -52,6 +52,11 @@ class DashboardController extends Controller
         return $this->render('ClarolineCoreBundle:Dashboard:resources.html.twig', array('resourceTypes' => $resourceTypes));
     }
 
+    /**
+     * Display a log widget
+     * //todo create a database widget and use wigetsAction instead
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function resourceLogsAction()
     {
         $logs = $this->get('doctrine.orm.entity_manager')
@@ -59,6 +64,10 @@ class DashboardController extends Controller
         return $this->render('ClarolineCoreBundle:Dashboard:widgets\resource_events.html.twig', array('logs' => $logs));
     }
 
+    /**
+     * Display registered widgets
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function widgetsAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
