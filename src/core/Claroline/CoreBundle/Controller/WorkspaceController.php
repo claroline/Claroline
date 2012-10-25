@@ -229,6 +229,10 @@ class WorkspaceController extends Controller
         return $this->render("ClarolineCoreBundle:Workspace:workspace_roles_properties.html.twig", array('workspace' => $workspace, 'masks' => SymfonySecurity::getResourcesMasks()));
     }
 
+    /**
+     * Display registered widgets
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function widgetsAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
