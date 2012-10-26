@@ -5,6 +5,9 @@ plugin:
 
   widgets:
     - name: exemple
+    - name: exemple2
+    - name: exemple3
+    - name: exemple4
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText

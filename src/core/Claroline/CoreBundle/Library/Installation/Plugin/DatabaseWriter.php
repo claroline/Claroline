@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 
 /**
  * This class is used to save/delete a plugin an its possible dependencies (like
@@ -215,8 +216,10 @@ class DatabaseWriter
         $widgetEntity = new Widget();
         $widgetEntity->setName($widget['name']);
         $widgetEntity->setPlugin($pluginEntity);
-        $widgetOption = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetAdminOption')->find(3);
-        $widgetEntity->setWorkspaceOption($widgetOption);
         $this->em->persist($widgetEntity);
+        //new default config entry
+        $widgetConfig = new DisplayConfig();
+        $widgetConfig->setWidget($widgetEntity);
+        $widgetConfig->setAdminLock(true);
     }
 }
