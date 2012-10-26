@@ -1,8 +1,6 @@
 plugin:
   has_options: true
-  plugin_translation_name_key: site
-  plugin_translation_domain: site
-
+  
   resources:
     - class: Claroline\CoreBundle\Entity\Resource\File
       name: Site

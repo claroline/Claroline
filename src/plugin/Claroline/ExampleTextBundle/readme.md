@@ -120,11 +120,6 @@ This file will be parsed by the plugin installator to install your plugin and cr
     plugin:
         # Set this to "true" if your plugin must have an entry in the plugins configuration page.
         has_options: true
-        # Translation key that will be used to display the name of your plugin
-        plugin_translation_name_key: example
-        # Translation domain of your plugin. Will allow to load your transation file
-        # (domain.language.yml, e.g. example.fr.yml)
-        plugin_translation_domain: example
 
         # Widgets declared by your plugin.
         widgets:
@@ -589,6 +584,8 @@ Don't forget to add the bundle class.
 
 On some events your listeners are supposed to send a response.
 These responses can contain links wich will redirects to your controllers.
+
+### Translations
 
 ## The platform
 

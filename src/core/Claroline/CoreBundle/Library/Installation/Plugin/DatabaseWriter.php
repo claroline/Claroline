@@ -60,11 +60,8 @@ class DatabaseWriter
         $pluginEntity->setBundleFQCN(get_class($plugin));
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
-        $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
         $pluginEntity->setHasOptions($processedConfiguration['has_options']);
-        $pluginEntity->setNameTranslationKey($processedConfiguration['plugin_translation_name_key']);
-        $pluginEntity->setTranslationDomain($processedConfiguration['plugin_translation_name_key']);
 
         if(isset($processedConfiguration['icon'])){
             $pluginEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$processedConfiguration['icon']}");

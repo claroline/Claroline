@@ -39,8 +39,6 @@ class Configuration implements ConfigurationInterface
 
         $pluginSection
             ->booleanNode('has_options')->end()
-            ->scalarNode('plugin_translation_name_key')->isRequired()->end()
-            ->scalarNode('plugin_translation_domain')->isRequired()->end()
             ->scalarNode('icon')
                 ->validate()
                     ->ifTrue(function($v) use ($plugin){
