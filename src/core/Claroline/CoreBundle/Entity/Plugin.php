@@ -42,13 +42,6 @@ class Plugin
     protected $bundleName;
 
     /**
-     * @ORM\Column(name="name_translation_key", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(255)
-     */
-    protected $nameTranslationKey;
-
-    /**
      * @ORM\Column(name="description", type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\MaxLength(255)
@@ -66,13 +59,6 @@ class Plugin
      * @Assert\MaxLength(255)
      */
     protected $icon;
-
-    /**
-     * @ORM\Column(name="translation_domain", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(255)
-     */
-    protected $translationDomain;
 
     public function getId()
     {
@@ -114,16 +100,6 @@ class Plugin
         $this->bundleName = $name;
     }
 
-    public function getNameTranslationKey()
-    {
-        return $this->nameTranslationKey;
-    }
-
-    public function setNameTranslationKey($key)
-    {
-        return $this->nameTranslationKey = $key;
-    }
-
     public function getDescriptionTranslationKey()
     {
         return $this->descriptionTranslationKey;
@@ -152,15 +128,5 @@ class Plugin
     public function getIcon()
     {
         return $this->icon;
-    }
-
-    public function setTranslationDomain($translationDomain)
-    {
-        $this->translationDomain = $translationDomain;
-    }
-
-    public function getTranslationDomain()
-    {
-        return $this->translationDomain;
     }
 }

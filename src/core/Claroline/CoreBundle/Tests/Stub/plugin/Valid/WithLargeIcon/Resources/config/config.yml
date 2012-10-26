@@ -1,8 +1,6 @@
 plugin:
   has_options: true
-  plugin_translation_name_key: plugin
-  plugin_translation_domain: plugin
-
+  
   resources:
     - class: Valid\WithLargeIcon\Entity\ResourceX
       name: ResourceX

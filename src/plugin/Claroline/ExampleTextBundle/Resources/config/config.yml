@@ -1,13 +1,11 @@
 plugin:
   has_options: true
-  plugin_translation_name_key: exemple
-  plugin_translation_domain: exemple
 
   widgets:
-    - name: exemple
-    - name: exemple2
-    - name: exemple3
-    - name: exemple4
+    - name: myWidget1
+    - name: myWidget2
+    - name: myWidget3
+    - name: myWidget4
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText

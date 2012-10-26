@@ -237,7 +237,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget')->findAll();
+        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
 
         foreach ($widgets as $widget){
             $eventName = strtolower("widget_{$widget->getName()}_workspace");

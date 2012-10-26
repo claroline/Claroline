@@ -42,7 +42,6 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
-        $this->assertEquals('plugin', $pluginEntity->getNameTranslationKey());
         $this->assertEquals($plugin->getDescriptionTranslationKey(), $pluginEntity->getDescriptionTranslationKey());
     }
 

@@ -278,8 +278,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('bundle_fqcn', 'string', array('length' => 255));
         $table->addColumn('vendor_name', 'string', array('length' => 50));
         $table->addColumn('short_name', 'string', array('length' => 50));
-        $table->addColumn('name_translation_key', 'string', array('length' => 255));
-        $table->addColumn('translation_domain', 'string', array('length' => 255));
         $table->addColumn('description', 'string', array('length' => 255));
         $table->addColumn('has_options', 'boolean');
         $table->addColumn('icon', 'string', array('length' => 255));
