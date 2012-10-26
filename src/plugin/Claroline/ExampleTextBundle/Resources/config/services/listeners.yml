@@ -35,3 +35,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: widget_exemple_dashboard, method: onDisplay }
       - { name: kernel.event_listener, event: widget_exemple_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple1_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple1_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple2_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple2_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple3_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple3_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple4_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_exemple4_workspace, method: onDisplay }

@@ -23,18 +23,11 @@ class Widget
      */
     protected $plugin;
 
-
     /**
      * @ORM\Column(type="string")
      */
     protected $name;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetAdminOption")
-     * @ORM\JoinColumn(name="admin_workspace_option_id", referencedColumnName="id")
-     */
-    protected $workspaceOption;
 
     public function getId()
     {
@@ -59,15 +52,5 @@ class Widget
     public function getName()
     {
         return $this->name;
-    }
-
-    public function getWorkspaceOption()
-    {
-        return $this->workspaceOption;
-    }
-
-    public function setWorkspaceOption($option)
-    {
-        $this->workspaceOption = $option;
     }
 }
