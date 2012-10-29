@@ -178,8 +178,8 @@ class Manager
         }
 
         $logevent = new ResourceLoggerEvent(
-                $resourceInstance,
-                ResourceLoggerEvent::COPY_ACTION
+            $resourceInstance,
+            ResourceLoggerEvent::COPY_ACTION
         );
         $this->ed->dispatch('log_resource', $logevent);
 

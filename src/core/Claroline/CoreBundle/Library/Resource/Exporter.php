@@ -94,8 +94,8 @@ class Exporter
                     $archive->addFile($obj, $this->getRelativePath($currentDir, $instance) . $instance->getName());
 
                     $event = new ResourceLoggerEvent(
-                            $instance,
-                            ResourceLoggerEvent::EXPORT_ACTION
+                        $instance,
+                        ResourceLoggerEvent::EXPORT_ACTION
                     );
                     $this->ed->dispatch('log_resource', $event);
                 }
