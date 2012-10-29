@@ -131,12 +131,15 @@ resource: Resource
 resources: Resources
 resource_manager: Resource manager
 owner: Owner
+path: Path
 open: Open
-download: download
-copy: copy
-cut: cut
-paste: paste
-close : close
+download: Download
+copy: Copy
+cut: Cut
+paste: Paste
+close : Close
+rename: Rename
+manage_rights: Manage rights
 
 # workspace
 workspace: Workspace
@@ -152,16 +155,25 @@ files: Fichiers
 # common
 name: Name
 id: Id
+type: Type
+type_s: Type(s)
 add: Add
+create: Create
+search: Search
 delete: Delete
 show: Show
 move : Move
 settings: Settings
 register: Register
 unregister: Unregister
-save: save
+save: Save
+from: From
+to: To
+results: results
 
 # resource type
 directory: Directory
 file: File
 
+#msg
+no_search_results: Your search hasn't returned any result.

@@ -109,15 +109,51 @@ footer {
     zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
+.resource-manager .actions .btn,
+.resource-manager .actions select {
+    height: 30px;
+    margin: 0;
+}
+
 .resource-manager .resources,
 .resource-manager .filters {
-    margin-top: 16px;
+    margin: 16px 0 0;
+}
+
+.resource-manager .filters {
+    width: 280px;
+    padding-top: 18px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.resource-manager .filters .form-actions {
+    margin-bottom: 0;
+}
+
+.resource-manager .filters .control-group label {
+    width: 70px;
+}
+.resource-manager .filters .controls {
+    margin-left: 76px;
+}
+
+.resource-manager .filters .control-group select[multiple=multiple] {
+    width: 160px;
+}
+
+.resource-manager .filters .form-actions {
+    width: 248px;
+    margin: 0;
+    padding: 16px;
+    text-align: center;
 }
 
 .resource-thumbnail {
     display: inline-block;
-    width: 180px;
-    text-align: center;
+    width: 130px;
+    height: 140px;
+    margin: 10px 18px;
     vertical-align: top;
 }
 
@@ -125,8 +161,30 @@ footer {
     vertical-align: top;
 }
 
-.resource-thumbnail img[data-type=directory]:hover {
+.resource-thumbnail .name {
+    display: block;
+    text-align: center;
+}
+
+.resource-thumbnail img:hover,
+.resource-thumbnail .dropdown-toggle:hover {
     cursor: pointer;
+}
+
+.resource-thumbnail .dropdown-toggle {
+    color: #000;
+}
+
+.resource-manager .results {
+    padding-left: 20px;
+}
+
+.resource-manager .results table {
+    margin-top: 20px;
+}
+
+.resource-manager .results .checkbox-column {
+    width: 18px;
 }
 
 /*****************/

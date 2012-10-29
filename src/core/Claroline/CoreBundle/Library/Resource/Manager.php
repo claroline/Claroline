@@ -103,6 +103,8 @@ class Manager
         $child->setName($rename);
         try {
             $this->em->flush();
+
+            return $child;
         } catch (UnexpectedValueException $e) {
             throw new \UnexpectedValueException("You cannot move a directory into itself");
         }

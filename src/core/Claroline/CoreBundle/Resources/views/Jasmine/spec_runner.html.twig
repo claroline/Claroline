@@ -33,8 +33,7 @@
             "@ClarolineCoreBundle/Resources/views/Resource/actions.html.twigjs"
             "@ClarolineCoreBundle/Resources/views/Resource/filters.html.twigjs"
             "@ClarolineCoreBundle/Resources/views/Resource/thumbnail.html.twigjs"
-            "@ClarolineCoreBundle/Resources/views/Resource/thumbnails.html.twigjs"
-            "@ClarolineCoreBundle/Resources/views/Resource/resource_list.html.twigjs"
+            "@ClarolineCoreBundle/Resources/views/Resource/results.html.twigjs"
             "@ClarolineCoreBundle/Resources/views/modal.html.twigjs"
             filter="twig_js"
         %}
@@ -42,11 +41,13 @@
         {% endjavascripts %}
 
         <!-- source files -->
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tests/fake_server.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/resource_manager.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/server.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
 
         <!-- spec files -->
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tests/resource/resource_manager_test.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tests/utilities_test.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tests/resource/manager_test.js') }}"></script>
 
         <script type="text/javascript">
             (function() {
