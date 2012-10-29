@@ -18,11 +18,11 @@ class ResourceTypeRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findListablePluginResourceTypes()
+    public function findVisiblePluginResourceType()
     {
         $dql = "
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.plugin IS NOT NULL AND rt.isListable = 1
+            WHERE rt.plugin IS NOT NULL AND rt.isVisible = 1
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -40,11 +40,11 @@ class ResourceTypeRepository extends EntityRepository
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function findNavigableResourceType($isDirectoryIncluded = true)
+    public function findBrowsableResourceType($isDirectoryIncluded = true)
     {
         $dql = "
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.isListable = true";
+            WHERE rt.isBrowsable = true";
         if (!$isDirectoryIncluded) {
             $dql.="and rt.type != 'directory'";
         }

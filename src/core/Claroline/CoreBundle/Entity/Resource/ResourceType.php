@@ -49,19 +49,14 @@ class ResourceType
     protected $class;
 
     /**
-     * @ORM\Column(type="boolean", name="is_navigable")
+     * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $isNavigable;
+    protected $isVisible;
 
     /**
-     * @ORM\Column(type="boolean", name="is_listable")
+     * @ORM\Column(type="boolean", name="is_browsable")
      */
-    protected $isListable;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_downloadable")
-     */
-    protected $isDownloadable;
+    protected $isBrowsable;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
@@ -150,24 +145,24 @@ class ResourceType
         return $this->resourceInstances;
     }
 
-    public function setNavigable($isNavigable)
+    public function setBrowsable($isBrowsable)
     {
-        $this->isNavigable = $isNavigable;
+        $this->isBrowsable = $isBrowsable;
     }
 
-    public function getNavigable()
+    public function getBrowsable()
     {
-        return $this->isNavigable;
+        return $this->isBrowsable;
     }
 
-    public function setListable($isListable)
+    public function setVisible($isVisible)
     {
-        $this->isListable = $isListable;
+        $this->isVisible = $isVisible;
     }
 
-    public function getListable()
+    public function isVisible()
     {
-        return $this->isListable;
+        return $this->isVisible;
     }
 
     public function setPlugin(Plugin $plugin)
@@ -238,15 +233,5 @@ class ResourceType
     public function addAbstractResource($abstractResource)
     {
         $this->abstractResource->add($abstractResource);
-    }
-
-    public function setDownloadable($downloadable)
-    {
-        $this->isDownloadable = $downloadable;
-    }
-
-    public function isDownloadable()
-    {
-        return $this->isDownloadable;
     }
 }

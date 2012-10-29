@@ -6,8 +6,7 @@ plugin:
     - class: Claroline\ForumBundle\Entity\Forum
       name: claroline_forum
       is_visible: true
-      is_browsable: true
-      is_downloadable: true
+      is_browsable: false
       large_icon: res_forum.png
       actions:
         - name: open
@@ -15,15 +14,13 @@ plugin:
 
     - class: Claroline\ForumBundle\Entity\Subject
       name: claroline_subject
-      is_visible: true
-      is_browsable: true
-      is_downloadable: false
+      is_visible: false
+      is_browsable: false
 
     - class: Claroline\ForumBundle\Entity\Message
       name: claroline_message
-      is_visible: true
-      is_browsable: true
-      is_downloadable: false
+      is_visible: false
+      is_browsable: false
 
 
 

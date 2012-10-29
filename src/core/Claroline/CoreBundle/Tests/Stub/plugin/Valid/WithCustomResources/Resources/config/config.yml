@@ -6,10 +6,8 @@ plugin:
       name: ResourceA
       is_visible: true
       is_browsable: true
-      is_downloadable: true
 
     - class: Valid\WithCustomResources\Entity\ResourceB
       name: ResourceB
       is_visible: true
       is_browsable: true
-      is_downloadable: true

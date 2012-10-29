@@ -6,4 +6,3 @@ plugin:
       name: FileExtended
       is_visible: true
       is_browsable: true
-      is_downloadable: true

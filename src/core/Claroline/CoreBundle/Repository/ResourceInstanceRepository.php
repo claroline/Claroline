@@ -41,7 +41,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
             reu.username as resource_creator_username,
             rt.id as resource_type_id,
             rt.type as type,
-            rt.isNavigable as is_navigable,
+            rt.isBrowsable as is_browsable,
             ic.smallIcon as small_icon,
             ic.largeIcon as large_icon ";
 
@@ -133,21 +133,21 @@ class ResourceInstanceRepository extends MaterializedPathRepository
      * @param int $parentId Parent ID of children that we request.
      * @param int $resourceTypeId ResourceType ID to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
-     * @param boolean $isListable if true, returns only resources that are listable.
+     * @param boolean $isVisible if true, returns only resources that are visible.
      * @return an array of arrays or entities
      */
-    public function listDirectChildrenResourceInstances($parentId, $resourceTypeId = 0, $asArray = false, $isListable = true)
+    public function listDirectChildrenResourceInstances($parentId, $resourceTypeId = 0, $asArray = false, $isVisible = true)
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
                 . " FROM " . self::FROM_INSTANCES
-                . " WHERE rt.isListable = :rt_islistable
+                . " WHERE rt.isVisible = :rt_isvisible
             AND ri.parent = :ri_parentid";
         if ($resourceTypeId != 0) {
             $dql .= " AND rt.id = :rt_id";
         }
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ri_parentid', $parentId);
-        $query->setParameter('rt_islistable', $isListable);
+        $query->setParameter('rt_isvisible', $isVisible);
         if ($resourceTypeId != 0) {
             $query->setParameter('rt_id', $resourceTypeId);
         }
@@ -225,7 +225,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
                 . " FROM " . self::FROM_INSTANCES
-                . " WHERE rt.isListable=1"
+                . " WHERE rt.isVisible=1"
                 . " AND " . self::WHERECONDITION_USER_WORKSPACE;
 
         foreach ($criterias as $key => $value) {
@@ -250,7 +250,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     {
         $dql = "SELECT count(ri.id)"
                 . " FROM " . self::FROM_INSTANCES
-                . " WHERE rt.isListable=1"
+                . " WHERE rt.isVisible=1"
                 . " AND " . self::WHERECONDITION_USER_WORKSPACE;
 
         foreach ($criterias as $key => $value) {
@@ -341,7 +341,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
         if (strlen($dqlPart) > 0) {
             $dqlPart .= ')';
         }
-        
+
         return $dqlPart;
     }
 

@@ -141,8 +141,6 @@ This file will be parsed by the plugin installator to install your plugin and cr
             is_visible: true
             # Is it possible to navigate within your resource (does it have sub-resources ?)
             is_browsable: true
-            # Is it possible to download it ?
-            is_downloadable: true
             # Icons for your resource.
             # They must be stored in the Resource/public/images/icons/large and small folders
             large_icon: res_text.png

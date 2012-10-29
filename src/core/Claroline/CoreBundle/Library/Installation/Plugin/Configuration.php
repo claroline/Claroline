@@ -81,7 +81,6 @@ class Configuration implements ConfigurationInterface
                             ->end()
                        ->booleanNode('is_visible')->isRequired()->end()
                        ->booleanNode('is_browsable')->isRequired()->end()
-                       ->booleanNode('is_downloadable')->isRequired()->end()
                        ->scalarNode('large_icon')
                            ->validate()
                                 ->ifTrue(function($v) use ($plugin) {
