@@ -275,13 +275,11 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_plugin');
 
         $this->addId($table);
-        $table->addColumn('bundle_fqcn', 'string', array('length' => 255));
         $table->addColumn('vendor_name', 'string', array('length' => 50));
         $table->addColumn('short_name', 'string', array('length' => 50));
-        $table->addColumn('description', 'string', array('length' => 255));
         $table->addColumn('has_options', 'boolean');
         $table->addColumn('icon', 'string', array('length' => 255));
-
+        $table->addUniqueIndex(array('vendor_name', 'short_name'));
         $this->storeTable($table);
     }
 

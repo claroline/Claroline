@@ -18,7 +18,7 @@ class SiteListener extends FileListener
             'ClarolineCoreBundle:Resource:resource_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'Site'
+                'resourceType' => 'claroline_site'
             )
         );
         $event->setResponseContent($content);

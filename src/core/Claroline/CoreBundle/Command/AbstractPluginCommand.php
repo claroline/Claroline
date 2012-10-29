@@ -23,7 +23,6 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function installPlugin($fqcn, OutputInterface $output)
     {
         $installer = $this->getContainer()->get('claroline.plugin.installer');
-
         if (!$installer->isInstalled($fqcn)) {
             $output->writeln("Installing plugin '{$fqcn}'...");
             $installer->install($fqcn);

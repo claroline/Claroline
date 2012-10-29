@@ -592,7 +592,7 @@ class AdministrationController extends Controller
     public function pluginParametersAction($domain)
     {
         $event = new PluginOptionsEvent();
-        $eventName = "plugin_options_{$domain}";
+        $eventName = strtolower("plugin_options_{$domain}");
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {

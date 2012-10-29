@@ -2,14 +2,14 @@ plugin:
   has_options: true
 
   widgets:
-    - name: myWidget1
-    - name: myWidget2
-    - name: myWidget3
-    - name: myWidget4
+    - name: claroline_mywidget1
+    - name: claroline_mywidget2
+    - name: claroline_mywidget3
+    - name: claroline_mywidget4
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText
-      name: ExampleText
+      name: claroline_exampletext
       is_visible: true
       is_browsable: true
       is_downloadable: true

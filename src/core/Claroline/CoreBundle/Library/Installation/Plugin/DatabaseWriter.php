@@ -57,10 +57,8 @@ class DatabaseWriter
 
         $processedConfiguration = $plugin->getProcessedConfiguration();
         $pluginEntity = new Plugin();
-        $pluginEntity->setBundleFQCN(get_class($plugin));
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
-        $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
         $pluginEntity->setHasOptions($processedConfiguration['has_options']);
 
         if(isset($processedConfiguration['icon'])){
@@ -130,9 +128,11 @@ class DatabaseWriter
 
     private function getPluginEntity($pluginFqcn)
     {
-        return $this->em
+        $entity = $this->em
             ->getRepository('Claroline\CoreBundle\Entity\Plugin')
             ->findOneByBundleFQCN($pluginFqcn);
+
+        return $entity;
     }
 
     private function persistConfiguration($processedConfiguration, $pluginEntity, $plugin)

@@ -2,7 +2,8 @@
     {% for resourceType in resourceTypes %}
     {
         "id": "{{ resourceType.getId() }}",
-        "type": "{{ resourceType.getType() }}"
+        "type": "{{ resourceType.getType() }}",
+        "translation": "{{ resourceType.getType()|trans({}, 'resource')}}"
     }
     {% if not loop.last %},{% endif %}
     {% endfor %}

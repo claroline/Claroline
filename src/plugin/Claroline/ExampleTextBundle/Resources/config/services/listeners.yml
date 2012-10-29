@@ -18,13 +18,13 @@ services:
       # plugin_options_mydomain
       # in this case mydomain is the domain you specified in the config.yml file.
     tags:
-      - { name: kernel.event_listener, event: create_form_exampletext, method: onCreateForm }
-      - { name: kernel.event_listener, event: create_exampletext, method: onCreate }
-      - { name: kernel.event_listener, event: open_exampletext, method: onOpen }
-      - { name: kernel.event_listener, event: export_exampletext, method: onExport }
-      - { name: kernel.event_listener, event: delete_exampletext, method: onDelete }
-      - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
-      - { name: kernel.event_listener, event: plugin_options_example, method: onAdministrate }
+      - { name: kernel.event_listener, event: create_form_claroline_exampletext, method: onCreateForm }
+      - { name: kernel.event_listener, event: create_claroline_exampletext, method: onCreate }
+      - { name: kernel.event_listener, event: open_claroline_exampletext, method: onOpen }
+      - { name: kernel.event_listener, event: export_claroline_exampletext, method: onExport }
+      - { name: kernel.event_listener, event: delete_claroline_exampletext, method: onDelete }
+      - { name: kernel.event_listener, event: copy_claroline_exampletext, method: onCopy }
+      - { name: kernel.event_listener, event: plugin_options_clarolineexampletest, method: onAdministrate }
       #... more to come.
 
 
@@ -33,13 +33,13 @@ services:
     calls:
       - [setContainer, ["@service_container"]]
     tags:
-      - { name: kernel.event_listener, event: widget_mywidget1_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget1_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget2_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget2_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget3_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget3_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget4_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget4_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget5_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_mywidget5_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget1_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget1_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget2_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget2_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget3_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget3_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget4_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget4_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget5_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget5_workspace, method: onDisplay }

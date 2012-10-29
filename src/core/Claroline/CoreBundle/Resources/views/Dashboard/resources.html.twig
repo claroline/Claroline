@@ -42,7 +42,7 @@
             <div id="dr-div-form"></div>
             <select id="dr-select-creation" style="width:150px">
             {% for resourceType in resourceTypes %}
-                <option value = {{ resourceType.type }}> {{ resourceType.type }} </option>
+                <option value = {{ resourceType.type }}> {{ resourceType.type|trans({}, 'resource') }} </option>
             {% endfor %}
             </select>
             <button id="dr-submit-select">new</button>

@@ -273,6 +273,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
         //register event
+
         $this->client->request('GET', '/admin/plugins');
         $this->client->request('GET', '/admin/plugin/plugin/options');
         $this->assertContains('plugin_options_plugin', $this->client->getResponse()->getContent());

@@ -61,7 +61,11 @@ class ResourceController extends Controller
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent($this->get('claroline.resource.converter')->instanceToJson($instance));
         } else {
-            $response->setContent($event->getErrorFormContent());
+            if($event->getErrorFormContent() != null){
+                $response->setContent($event->getErrorFormContent());
+            } else {
+                throw new \Exception('creation failed');
+            }
         }
 
         return $response;

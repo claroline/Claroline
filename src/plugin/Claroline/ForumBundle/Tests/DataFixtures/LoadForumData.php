@@ -42,9 +42,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
     {
         $creator = $this->getContainer()->get('claroline.resource.manager');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        var_dump($this->username);
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
-        var_dump($user->getUsername());
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
@@ -55,7 +53,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $forum->setName($this->forumName);
         $manager->persist($forum);
         $manager->flush();
-        $forumInstance = $creator->create($forum, $root->getId(), 'Forum', true, null, $user);
+        $forumInstance = $creator->create($forum, $root->getId(), 'claroline_forum', true, null, $user);
         $this->log("forum {$forumInstance->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
@@ -68,7 +66,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject->setForum($forumInstance->getResource());
             $manager->persist($subject);
             $this->log("subject $title created");
-            $subjectInstance = $creator->create($subject, $forumInstance->getId(), 'Subject', true, null, $user);
+            $subjectInstance = $creator->create($subject, $forumInstance->getId(), 'claroline_subject', true, null, $user);
 
             $entityToBeDetached = array();
             for ($j=0; $j<$this->nbMessages; $j++){
@@ -79,7 +77,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $message->setCreator($sender);
                 $message->setContent($this->generateLipsum(150, true));
                 $message->setSubject($subject);
-                $inst = $creator->create($message, $subjectInstance->getId(), 'Message', true, null, $sender);
+                $inst = $creator->create($message, $subjectInstance->getId(), 'claroline_message', true, null, $sender);
                 $entityToBeDetached[] = $message;
                 $entityToBeDetached[] = $inst;
             }
