@@ -22,17 +22,18 @@ class ForumRepository extends EntityRepository
 
       /**
        * Deep magic goes here.
+       * Gets a subject with some of its last messages datas.
        *
        * @param ResourceInstance $forumInstance
        * @return type
        */
-    public function getSubjects($forumInstance)
+    public function getSubjects($forumInstance, $offset = null, $limit = null)
     {
         $dql = "
         SELECT ".self::SELECT_SUBJECT."
         FROM  Claroline\ForumBundle\Entity\Subject s
         JOIN s.messages m
-        LEFT JOIN s.messages m_count
+        JOIN s.messages m_count
         JOIN s.resourceInstances ri
         JOIN s.creator subjectCreator
         JOIN ri.parent pri
@@ -48,7 +49,7 @@ class ForumRepository extends EntityRepository
                     SELECT m3 FROM Claroline\ForumBundle\Entity\Message m3
                     JOIN m3.subject s3
                     WHERE s2.id = s3.id
-                    AND m2.created < m3.created
+                    AND m2.id < m3.id
                 )
                 and ri2.id = :instanceId
                 and m2.id = m.id
@@ -59,7 +60,54 @@ class ForumRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('instanceId', $forumInstance->getId());
+        $query->setMaxResults($limit);
+        $query->setFirstResult($offset);
 
         return $query->getArrayResult();
+    }
+
+    public function getMessages($subjectInstance, $offset, $limit)
+    {
+        $dql = "
+            SELECT m FROM Claroline\ForumBundle\Entity\Messages m
+            JOIN m.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $subjectInstance->getId());
+        $query->setMaxResults($limit);
+        $query->setFirstResult($offset);
+
+        return $query->getResults();
+    }
+
+    public function countMessagesForSubjectInstance($subjectInstance)
+    {
+        $dql = "
+            SELECT Count(m) FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $subjectInstance->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function countSubjectsFormForumInstance($forumInstance)
+    {
+        $dql = "
+            SELECT COUNT(s) FROM Claroline\ForumBundle\Entity\Subject s
+            JOIN s.resourceInstances ri
+            JOIN ri.parent pri
+            WHERE pri.id = :instanceId";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('instanceId', $forumInstance->getId());
+
+        return $query->getSingleScalarResult();
     }
 }

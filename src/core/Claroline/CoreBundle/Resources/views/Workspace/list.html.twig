@@ -32,12 +32,12 @@
                         {% if app.user.hasRole(role.getName())==true %}
                             {% set bool = 'true' %}
                         {% endif %}
-                    {% endfor %}
+                    {% endfor %}{#
                     {% if bool == 'true' %}
                         <a href="{{path('claro_workspace_delete_user', {'workspaceId': workspace.getId(), 'userId': app.user.id})}}" class="link-unregistration" id="link-unregistration-{{workspace.getId()}}"> | {{ 'unregister'|trans({}, 'platform') }} </a>
                     {% else %}
                         <a href="{{path('claro_workspace_add_user', {'workspaceId': workspace.getId(), 'userId': app.user.id})}}" class="link-registration" id="link-registration-{{workspace.getId()}}"> | {{ 'register'|trans({}, 'platform') }}</a>
-                    {% endif %}
+                    {% endif %}#}
             </li>
             {% endfor %}
         </ul>

@@ -1,0 +1,11 @@
+services:
+    claroline.listener.site_listener:
+        class: Claroline\SiteBundle\Listener\SiteListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: open_site, method: onOpen }
+            - { name: kernel.event_listener, event: create_form_site, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_site, method: onCreate }
+            - { name: kernel.event_listener, event: delete_site, method: onDelete }
+            - { name: kernel.event_listener, event: copy_site, method: onCopy }

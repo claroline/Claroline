@@ -1,6 +1,0 @@
-resource_x:
-    # this class doesnt exist
-    extends: Foo\Bar\Entity\ResourceX
-    listable: true
-    navigable: true
-    downloadable: true

@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 /**
@@ -107,6 +108,11 @@ class Role implements RoleInterface
      */
     protected $users;
 
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -199,5 +205,13 @@ class Role implements RoleInterface
     public function getUsers()
     {
         return $this->users;
+    }
+
+    public function addUser($user)
+    {
+        $this->users->add($user);
+        if($user->hasRole($this)){
+            $user->addRole($this);
+        }
     }
 }

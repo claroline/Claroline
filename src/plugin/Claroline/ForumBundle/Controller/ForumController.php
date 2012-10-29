@@ -6,6 +6,7 @@ use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
+use Claroline\ForumBundle\Form\ForumOptionsType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,18 +16,34 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ForumController extends Controller
 {
+
     public function OpenAction($instanceId)
     {
-        $instance = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $subjects = $this->getDoctrine()->getEntityManager()->getRepository('Claroline\ForumBundle\Entity\Forum')->getSubjects($instance);
+        $em = $this->getDoctrine()->getEntityManager();
+        $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getSubjects();
+        $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsFormForumInstance($instance);
+        $nbPages = ceil($countSubjects/$limit);
 
         $content = $this->render(
-            'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'subjects' => $subjects)
+            'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'limit' => $limit, 'nbPages' => $nbPages)
         );
 
         $response = new Response($content);
 
         return $response;
+    }
+
+    public function subjectsAction($forumInstanceId, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getSubjects();
+        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($forumInstance, $offset, $limit);
+
+        return $this->render('ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects));
     }
 
     public function forumSubjectCreationFormAction($forumInstanceId)
@@ -75,7 +92,7 @@ class ForumController extends Controller
             return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
         } else {
             return $this->render(
-                    'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
+                'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
             );
         }
     }
@@ -83,11 +100,16 @@ class ForumController extends Controller
     public function showMessagesAction($subjectInstanceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
+
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForSubjectInstance($subjectInstance);
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getMessages();
+        $nbPages = ceil($countMessages/$limit);
         $workspace = $subjectInstance->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::messages.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace)
+            'ClarolineForumBundle::messages_table.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace, 'limit' => $limit, 'nbPages' => $nbPages)
         );
     }
 
@@ -98,8 +120,22 @@ class ForumController extends Controller
         $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' =>  $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
         );
+    }
+
+    public function messagesAction($subjectInstanceId, $offset)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $limit = $limits[0]->getMessages();
+        $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subjectInstance, $offset, $limit);
+
+        return $this->render(
+            'ClarolineForumBundle::messages.html.twig', array('messages' => $messages)
+        );
+
     }
 
     public function createMessageAction($subjectInstanceId)
@@ -127,8 +163,32 @@ class ForumController extends Controller
             return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
         } else {
             return $this->render(
-                    'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+                'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
             );
         }
     }
+
+    public function editForumOptionsAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions[0]);
+        $form->bindRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $forumOptions = $form->getData();
+            $em->persist($forumOptions);
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
+        } else {
+
+            return $this->render(
+                'ClarolineForumBundle::plugin_options_form.html.twig', array(
+                'form' => $form->createView()
+                )
+            );
+        }
+    }
+
 }

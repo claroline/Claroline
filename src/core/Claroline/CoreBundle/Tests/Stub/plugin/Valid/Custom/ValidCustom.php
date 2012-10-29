@@ -24,11 +24,6 @@ class ValidCustom extends PluginBundle
         return 'custom_routing_prefix';
     }
 
-    public function getNameTranslationKey()
-    {
-        return 'Custom name translation key';
-    }
-
     public function getDescriptionTranslationKey()
     {
         return 'Custom description translation key';

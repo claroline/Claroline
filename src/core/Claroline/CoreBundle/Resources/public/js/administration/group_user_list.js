@@ -56,14 +56,15 @@
 
     $('#modal-valid-button').click(function(){
         var parameters = {};
+        var array = new Array()
         var i = 0;
         $('.chk-user:checked').each(function(index, element){
-            parameters[i] = element.value;
+            array[i] = element.value;
             i++;
         });
-        parameters.groupId = groupId;
-
-        var route = Routing.generate('claro_admin_multidelete_user_from_group', parameters);
+        parameters.userId = array;
+        var route = Routing.generate('claro_admin_multidelete_user_from_group', {'groupId': groupId});
+        route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
             function(){

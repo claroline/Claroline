@@ -69,7 +69,8 @@ class WorkspaceGroupController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $groupIds = array($group->getId());
-                $this->checkRemoveManagerRoleIsValid($groupIds, $workspace);
+                $parameters['groupId'] = $groupIds;
+                $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
             $group->removeRole($role[0], false);
@@ -105,33 +106,6 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Removes a group from a workspace.
-     *
-     * @param integer $groupId
-     * @param integer $workspaceId
-     *
-     * @return Response
-     */
-    public function removeGroupAction($groupId, $workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkIfAdmin($workspace);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $roles = $workspace->getWorkspaceRoles();
-        $groupIds = array($group->getId());
-        $this->checkRemoveManagerRoleIsValid($groupIds, $workspace);
-
-        foreach ($roles as $role) {
-            $group->removeRole($role);
-        }
-
-        $em->flush();
-
-        return new Response("success", 204);
-    }
-
-    /**
      * Removes many groups from a workspace. ( ?0=1&1=2... )
      *
      * @param integer $workspaceId
@@ -145,10 +119,9 @@ class WorkspaceGroupController extends Controller
         $this->checkIfAdmin($workspace);
         $roles = $workspace->getWorkspaceRoles();
         $params = $this->get('request')->query->all();
-        unset($params['_']);
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        foreach ($params as $groupId) {
+        foreach ($params['groupId'] as $groupId) {
             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
             if (null != $group) {
                 foreach ($roles as $role) {
@@ -209,35 +182,6 @@ class WorkspaceGroupController extends Controller
 
         return $response;
     }
-
-    /**
-     * Adds a group to a workspace
-     * if requested through ajax, it'll respond with a json object containing the group datas
-     * otherwise it'll redirect to the workspace list.
-     *
-     * @param integer $groupId
-     * @param integer $workspaceId
-     *
-     * @return RedirectResponse
-     */
-    public function addGroupAction($groupId, $workspaceId)
-    {
-        $request = $this->get('request');
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $group->addRole($workspace->getCollaboratorRole());
-        $em->flush();
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Workspace:group.json.twig', array('groups' => array($group), 'workspace' => $workspace));
-        }
-
-        $route = $this->get('router')->generate('claro_workspace_list');
-
-        return new RedirectResponse($route);
-    }
-
     /**
      * Adds many groups to a workspace.
      * It should be used with ajax and a list of grouppIds as parameter.
@@ -249,13 +193,11 @@ class WorkspaceGroupController extends Controller
     public function multiAddGroupAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
-        unset($params['_']);
-
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = array();
 
-        foreach ($params as $groupId) {
+        foreach ($params['groupId'] as $groupId) {
              $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
              $groups[] = $group;
              $group->addRole($workspace->getCollaboratorRole());
@@ -325,8 +267,7 @@ class WorkspaceGroupController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
-
-        foreach ($parameters as $groupId) {
+        foreach ($parameters['groupId'] as $groupId) {
             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
             if (null !== $group){

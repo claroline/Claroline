@@ -10,6 +10,7 @@ use Claroline\ForumBundle\Entity\Subject;
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_forum_message")
+ * @ORM\Entity(repositoryClass="Claroline\ForumBundle\Repository\MessageRepository")
  */
 class Message extends AbstractResource
 {

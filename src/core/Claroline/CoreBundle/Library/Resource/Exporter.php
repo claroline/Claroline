@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 class Exporter
 {
@@ -17,12 +18,15 @@ class Exporter
     private $ed;
     /* @var Utilities */
     private $ut;
+    /* @var SecurityContext */
+    private $sc;
 
-    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut)
+    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, $sc)
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->ut = $ut;
+        $this->sc = $sc;
     }
 
     /**
@@ -47,6 +51,12 @@ class Exporter
             $archive->close();
         }
 
+        $event = new ResourceLoggerEvent(
+            $resourceInstance,
+            ResourceLoggerEvent::EXPORT_ACTION
+        );
+        $this->ed->dispatch('log_resource', $event);
+
         return $item;
     }
 
@@ -63,9 +73,12 @@ class Exporter
         $archive->open($pathArch, \ZipArchive::CREATE);
         $instanceIds = $this->expandResourceInstanceIds($ids);
 
+
         if ($instanceIds == null) {
             throw new \LogicException("You must select some resources to export.");
         }
+
+        $currentDir = $repo->find($ids[0])->getParent();
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
@@ -78,16 +91,22 @@ class Exporter
                 $obj = $event->getItem();
 
                 if ($obj != null) {
-                    $archive->addFile($obj, $instance->getPathForDisplay());
+                    $archive->addFile($obj, $this->getRelativePath($currentDir, $instance) . $instance->getName());
+
+                    $event = new ResourceLoggerEvent(
+                            $instance,
+                            ResourceLoggerEvent::EXPORT_ACTION
+                    );
+                    $this->ed->dispatch('log_resource', $event);
                 }
             } else {
-                $archive->addEmptyDir($instance->getPathForDisplay());
+                $archive->addEmptyDir($this->getRelativePath($currentDir, $instance));
             }
         }
 
         $archive->close();
 
-        return file_get_contents($pathArch);
+        return $pathArch;
     }
 
     /**
@@ -168,7 +187,7 @@ class Exporter
      *
      * @return string
      */
-    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path)
+    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path = '')
     {
         if ($root != $resourceInstance->getParent()) {
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;

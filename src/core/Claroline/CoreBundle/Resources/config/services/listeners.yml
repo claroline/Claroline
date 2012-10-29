@@ -60,3 +60,10 @@ services:
             - { name: kernel.event_listener, event: create_form_text, method: onCreateForm }
             - { name: kernel.event_listener, event: create_text, method: onCreate }
             - { name: kernel.event_listener, event: open_text, method: onOpen }
+
+    claroline.listener.logger:
+        class: Claroline\CoreBundle\Listener\LoggerListener
+        calls:
+           - [setContainer, ["@service_container"]]
+        tags:
+           - { name: kernel.event_listener, event: log_resource, method: onLogResource }

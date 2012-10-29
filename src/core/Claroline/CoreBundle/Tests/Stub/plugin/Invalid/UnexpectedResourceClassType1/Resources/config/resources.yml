@@ -1,6 +1,0 @@
-ResourceX:
-    # resource definition requires either a 'class' or an 'extends' attribute
-    class: Invalid\UnexpectedResourceClassType1\Entity\ResourceX
-    listable: true
-    navigable: true
-    downloadable: true

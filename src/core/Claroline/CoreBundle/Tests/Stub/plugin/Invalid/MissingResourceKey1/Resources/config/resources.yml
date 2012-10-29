@@ -1,3 +1,0 @@
-ResourceX:
-    class: Invalid\MissingResourceKey\Entity\FooEntity
-    # other keys (listable, navigable, etc.) are missing

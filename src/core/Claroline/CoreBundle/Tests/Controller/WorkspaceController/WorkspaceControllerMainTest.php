@@ -20,6 +20,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
+
     }
 
     public function testAdminCanSeeHisWs()
@@ -78,7 +79,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/user'));
          $crawler = $this->client->request('GET', "/workspaces/resource/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
          $this->assertEquals(1, count($crawler->filter('html:contains("Resource manager")')));
-
     }
 
     public function testUserCantAccessUnregisteredResource()
@@ -108,7 +108,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/user_management");
          $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
     }
 
     public function testUserCantAccessUnregisteredUserManagement()
@@ -152,7 +151,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/group_management");
          $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
     }
 
     public function testUserCantAccessUnregisteredGroupManagement()

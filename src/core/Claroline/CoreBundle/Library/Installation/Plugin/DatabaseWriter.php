@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use \RuntimeException;
-use Symfony\Component\Validator\Validator as SymfonyValidator;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
@@ -12,6 +11,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 
 /**
  * This class is used to save/delete a plugin an its possible dependencies (like
@@ -29,10 +29,9 @@ class DatabaseWriter
      * @param SymfonyValidator  $validator
      * @param EntityManager     $em
      * @param Yaml              $yamlParser
-     * @param string            $imgPath
      */
     public function __construct(
-        SymfonyValidator $validator,
+        Validator $validator,
         EntityManager $em,
         Yaml $yamlParser
     )
@@ -49,26 +48,34 @@ class DatabaseWriter
      */
     public function insert(PluginBundle $plugin)
     {
+        $errors = $this->validator->validate($plugin);
+
+        if(0!= count($errors)){
+            return $errors;
+        }
+
+        $processedConfiguration = $plugin->getProcessedConfiguration();
         $pluginEntity = new Plugin();
         $pluginEntity->setBundleFQCN(get_class($plugin));
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
         $pluginEntity->setNameTranslationKey($plugin->getNameTranslationKey());
         $pluginEntity->setDescriptionTranslationKey($plugin->getDescriptionTranslationKey());
+        $pluginEntity->setHasOptions($processedConfiguration['has_options']);
+        $pluginEntity->setNameTranslationKey($processedConfiguration['plugin_translation_name_key']);
+        $pluginEntity->setTranslationDomain($processedConfiguration['plugin_translation_name_key']);
 
-        $errors = $this->validator->validate($pluginEntity);
-
-        if (count($errors) > 0) {
-            $pluginFqcn = get_class($plugin);
-
-            throw new RuntimeException(
-                "The plugin entity for '{$pluginFqcn}' cannot be validated. "
-                . "Validation errors : {$errors->__toString()}."
-            );
+        if(isset($processedConfiguration['icon'])){
+            $pluginEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$processedConfiguration['icon']}");
+        } else {
+            $defaultIcon = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+            $pluginEntity->setIcon($defaultIcon->getLargeIcon());
         }
 
         $this->em->persist($pluginEntity);
-        $this->persistCustomResourceTypes($plugin, $pluginEntity);
+        $this->persistConfiguration($processedConfiguration, $pluginEntity, $plugin);
         $this->em->flush();
     }
 
@@ -130,22 +137,18 @@ class DatabaseWriter
             ->findOneByBundleFQCN($pluginFqcn);
     }
 
-    private function persistCustomResourceTypes(PluginBundle $plugin, Plugin $pluginEntity)
+    private function persistConfiguration($processedConfiguration, $pluginEntity, $plugin)
     {
-        $resourceFile = $plugin->getCustomResourcesFile();
+        foreach ($processedConfiguration['resources'] as $resource) {
+            $this->persistResourceTypes($resource, $pluginEntity, $plugin);
+        }
 
-        if (is_string($resourceFile) && file_exists($resourceFile)) {
-            $resources = (array) $this->yamlParser->parse($resourceFile);
-
-            foreach ($resources as $name => $properties) {
-                $resourceType = $this->persistResourceType($properties, $name, $pluginEntity, $plugin);
-                $this->persistCustomAction($properties, $resourceType);
-                $this->persistIcons($properties, $plugin, $resourceType);
-            }
+        foreach ($processedConfiguration['widgets'] as $widget){
+            $this->persistWidget($widget, $pluginEntity);
         }
     }
 
-    private function persistIcons($properties, $plugin, $resourceType)
+    private function persistIcons($resource, $resourceType, $plugin)
     {
         $resourceIcon = new ResourceIcon();
 
@@ -158,14 +161,14 @@ class DatabaseWriter
         $resourceIcon->setIconType($defaultIconType);
         $resourceIcon->setType($resourceType->getType());
 
-        if (isset($properties['small_icon'])) {
-            $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$properties['small_icon']}");
+        if (isset($resource['small_icon'])) {
+            $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$resource['small_icon']}");
         } else {
             $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
         }
 
-        if (isset($properties['large_icon'])) {
-            $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$properties['large_icon']}");
+        if (isset($resource['large_icon'])) {
+            $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$resource['large_icon']}");
         } else {
             $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
         }
@@ -173,42 +176,47 @@ class DatabaseWriter
         $this->em->persist($resourceIcon);
     }
 
-    private function persistCustomAction($properties, $resourceType)
+    private function persistCustomAction($actions, $resourceType)
     {
-        if (isset($properties['actions'])) {
-            $actions = $properties['actions'];
-
-            foreach ($actions as $key => $action) {
-                $rtca = new ResourceTypeCustomAction();
-                $rtca->setAsync($action['async']);
-                $rtca->setAction($key);
-                $rtca->setResourceType($resourceType);
-                $this->em->persist($rtca);
-            }
+        foreach ($actions as $action) {
+            $rtca = new ResourceTypeCustomAction();
+            $rtca->setAsync(!$action['is_action_in_new_page']);
+            $rtca->setAction($action['name']);
+            $rtca->setResourceType($resourceType);
+            $this->em->persist($rtca);
         }
     }
 
-    private function persistResourceType($properties, $name, $pluginEntity, $plugin)
+    private function persistResourceTypes($resource, $pluginEntity, $plugin)
     {
         $resourceType = new ResourceType();
-
-        if (isset($properties['class'])) {
-            $resourceType->setClass($properties['class']);
-        }
-        if (isset($properties['extends'])) {
-            $resourceExtended = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-                ->findOneBy(array('type' => $properties['extends']));
-            $resourceType->setParent($resourceExtended);
-        }
-
-        $resourceType->setType($name);
-        $resourceType->setListable($properties['listable']);
-        $resourceType->setNavigable($properties['navigable']);
-        $resourceType->setDownloadable($properties['downloadable']);
+        $resourceType->setType($resource['name']);
+        $resourceType->setListable($resource['is_visible']);
+        $resourceType->setNavigable($resource['is_browsable']);
+        $resourceType->setDownloadable($resource['is_downloadable']);
         $resourceType->setPlugin($pluginEntity);
+        $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array ('class' => $resource['class']));
+
+        if(null == $resourceClass){
+            $resourceType->setClass($resource['class']);
+        } else {
+            $resourceType->setParent($resourceClass);
+        }
+
         $this->em->persist($resourceType);
+        $this->persistCustomAction($resource['actions'], $resourceType);
+        $this->persistIcons($resource, $resourceType, $plugin);
 
         return $resourceType;
+    }
+
+    private function persistWidget($widget, $pluginEntity)
+    {
+        $widgetEntity = new Widget();
+        $widgetEntity->setName($widget['name']);
+        $widgetEntity->setPlugin($pluginEntity);
+        $widgetOption = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetAdminOption')->find(3);
+        $widgetEntity->setWorkspaceOption($widgetOption);
+        $this->em->persist($widgetEntity);
     }
 }

@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 abstract class PluginBundle extends Bundle
 {
+    private $processedConfiguration;
+    private $nameTranslationKey;
+
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
@@ -21,11 +24,6 @@ abstract class PluginBundle extends Bundle
         $namespaceParts = explode('\\', $this->getNamespace());
 
         return $namespaceParts[1];
-    }
-
-    public function getNameTranslationKey()
-    {
-        return 'No available translated name';
     }
 
     public function getDescriptionTranslationKey()
@@ -60,10 +58,10 @@ abstract class PluginBundle extends Bundle
         return $prefix;
     }
 
-    public function getCustomResourcesFile()
+    public function getConfigFile()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'resources.yml';
+        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'config.yml';
 
         if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
@@ -88,4 +86,25 @@ abstract class PluginBundle extends Bundle
     {
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
     }
+
+    public function setProcessedConfiguration($processedConfiguration)
+    {
+        $this->processedConfiguration = $processedConfiguration;
+    }
+
+    public function getProcessedConfiguration()
+    {
+        return $this->processedConfiguration;
+    }
+
+    public function setNameTranslationKey($nameTranslationKey)
+    {
+        $this->nameTranslationKey = $nameTranslationKey;
+    }
+
+    public function getNameTranslationKey()
+    {
+        return $this->nameTranslationKey;
+    }
+
 }

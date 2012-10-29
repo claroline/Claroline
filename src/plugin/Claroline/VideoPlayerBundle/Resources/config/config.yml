@@ -1,0 +1,4 @@
+plugin:
+  has_options: false
+  plugin_translation_name_key: claroline_video_player
+  plugin_translation_domain: claroline_video_player

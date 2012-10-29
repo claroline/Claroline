@@ -20,7 +20,6 @@ class IconCreatorTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadResourceTypeData());
         $ds = DIRECTORY_SEPARATOR;
         if( extension_loaded('gd') && extension_loaded('ffmpeg')){
             $this->areLoaded = true;
@@ -65,6 +64,7 @@ class IconCreatorTest extends FixtureTestCase
 
     public function testCreateVideoThumbnail()
     {
+        ob_start(null);
         $file = new File();
         $file->setResourceType($this->fileType);
         $file->setHashName('video.mp4');
@@ -76,10 +76,12 @@ class IconCreatorTest extends FixtureTestCase
             $name = $file->getIcon()->getLargeIcon();
             $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_video.png', $name);
         }
+        ob_clean();
     }
 
     public function testCreateImageThumbnail()
     {
+        ob_start(null);
         $file = new File();
         $file->setResourceType($this->fileType);
         $file->setHashName('image.jpg');
@@ -91,6 +93,7 @@ class IconCreatorTest extends FixtureTestCase
             $name = $file->getIcon()->getLargeIcon();
             $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.png', $name);
         }
+        ob_start(null);
     }
 
     public function testUnknownVideoMimeThumbnail()
@@ -123,7 +126,7 @@ class IconCreatorTest extends FixtureTestCase
         $name = $file->getIcon()->getLargeIcon();
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_text.png', $name);
     }
-    
+
     public function testFileGetUnknownMimeThumbnail()
     {
         $file = new File();
