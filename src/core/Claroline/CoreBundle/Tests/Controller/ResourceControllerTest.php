@@ -419,7 +419,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
-        $file = $this->uploadFile($this->userRoot->getId(), 'txt.txt');
+        $this->uploadFile($this->userRoot->getId(), 'txt.txt');
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
@@ -429,7 +429,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->pwr->getId());
         $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
-        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
