@@ -147,7 +147,7 @@ This file will be parsed by the plugin installator to install your plugin and cr
             small_icon: res_text.png
             # Which are the actions we can fire from the resource manager.
             # Note that the resource manager will set some defaults actions
-            #  (parameters, delete and download if you set the "downloadable" parameter to true).
+            #  (parameters, delete and download).
             actions:
                 # The name of the action is the translation key that will be used to display
                 #  the action in the list of available actions for your resource.
@@ -200,6 +200,11 @@ This event is fired by the plugin managemement page:
 
 Where the shortbundle name is your bundle name without 'Bundle'.
 
+#### note concerning the download
+
+If your plugin don't catch the download event, a placeholder will be set in the archive.
+The export event is fired for resource whose is_visible field is set to true.
+
 ### Listener implementation class
 
 Define your listener class in the *Listener* folder.
@@ -242,7 +247,7 @@ You can use the 'ClarolineCoreBundle:Resource:resource_form.html.twig' as  defau
             /*you must add the attribute resourceType to the twig File.
             The Resource Manager need
             to know wich kind of resource is going to be added.*/
-            'resourceType' => 'ExampleText'
+            'resourceType' => 'claroline_exampletext'
             )
         );
         ...
@@ -356,9 +361,8 @@ This entity job is to stock important attributes wich will differ depending on
 the ResourceType.
 Theses attributes are:
 
-* isNavigable;
-* isListable;
-* isDownloadable;
+* isBrowsable;
+* isVisible;
 
 These attributes are defined in the resource section in your config file.
 
