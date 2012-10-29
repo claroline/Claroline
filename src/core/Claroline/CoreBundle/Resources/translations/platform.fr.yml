@@ -37,6 +37,7 @@ create_group: Créer un groupe
 list_groups: Lister les groupes
 platform_parameters: Paramètres de la plateforme
 platform_plugins: Plugins de la plateforme
+platform_widgets: Widgets de la plateforme
 
 # registration
 login: Connexion
