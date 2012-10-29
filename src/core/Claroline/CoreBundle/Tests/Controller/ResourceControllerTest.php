@@ -152,21 +152,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, $jsonResponse[0]->shareType);
     }
 
-    public function testDirectoryDownload()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        //with an empty dir
-        $this->client->request('GET', "/resource/export/{$this->userRoot->getId()}");
-        $headers = $this->client->getResponse()->headers;
-        $name = strtolower(str_replace(' ', '_', $this->userRoot->getName() . '.zip'));
-        $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
-        $this->createBigTree($this->userRoot->getId());
-        //with a full dir
-        $this->client->request('GET', "/resource/export/{$this->userRoot->getId()}");
-        $headers = $this->client->getResponse()->headers;
-        $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
-    }
-
     public function testRootsAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
