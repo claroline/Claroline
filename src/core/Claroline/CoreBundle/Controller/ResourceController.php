@@ -45,7 +45,7 @@ class ResourceController extends Controller
     public function createAction($resourceType, $parentInstanceId)
     {
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create', $resourceType);
-        $event = new CreateResourceEvent();
+        $event = new CreateResourceEvent($resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         $response = new Response();
 
