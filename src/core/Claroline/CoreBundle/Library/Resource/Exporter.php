@@ -30,42 +30,11 @@ class Exporter
     }
 
     /**
-     * Exports a resourc instance.
-     *
-     * @param ResourceInstance $resourceInstance
-     *
-     * @return file $item
-     */
-    public function export(ResourceInstance $resourceInstance)
-    {
-        if ('directory' != $resourceInstance->getResource()->getResourceType()->getType()) {
-            $eventName = $this->ut->normalizeEventName('export', $resourceInstance->getResource()->getResourceType()->getType());
-            $event = new ExportResourceEvent($resourceInstance->getResource()->getId());
-            $this->ed->dispatch($eventName, $event);
-            $item = $event->getItem();
-        } else {
-            $archive = new \ZipArchive();
-            $item = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
-            $archive->open($item, \ZipArchive::CREATE);
-            $this->addDirectoryToArchive($resourceInstance, $archive);
-            $archive->close();
-        }
-
-        $event = new ResourceLoggerEvent(
-            $resourceInstance,
-            ResourceLoggerEvent::EXPORT_ACTION
-        );
-        $this->ed->dispatch('log_resource', $event);
-
-        return $item;
-    }
-
-    /**
      * Returns an archive with the required content.
      *
      * @return file
      */
-    public function exportResourceInstances($ids, $logger = null)
+    public function exportResourceInstances($ids)
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance');
         $archive = new \ZipArchive();
@@ -73,11 +42,9 @@ class Exporter
         $archive->open($pathArch, \ZipArchive::CREATE);
         $instanceIds = $this->expandResourceInstanceIds($ids);
 
-
         if ($instanceIds == null) {
             throw new \LogicException("You must select some resources to export.");
         }
-
         $currentDir = $repo->find($ids[0])->getParent();
 
         foreach ($instanceIds as $instanceId) {
@@ -92,20 +59,21 @@ class Exporter
 
                 if ($obj != null) {
                     $archive->addFile($obj, $this->getRelativePath($currentDir, $instance) . $instance->getName());
-
-                    $event = new ResourceLoggerEvent(
-                        $instance,
-                        ResourceLoggerEvent::EXPORT_ACTION
-                    );
-                    $this->ed->dispatch('log_resource', $event);
+                } else {
+                     $archive->addFromString($this->getRelativePath($currentDir, $instance) . $instance->getName(), '');
                 }
             } else {
-                $archive->addEmptyDir($this->getRelativePath($currentDir, $instance));
+                $archive->addEmptyDir($this->getRelativePath($currentDir, $instance). $instance->getName());
             }
+            $event = new ResourceLoggerEvent(
+                    $instance,
+                    ResourceLoggerEvent::EXPORT_ACTION
+            );
+            $this->ed->dispatch('log_resource', $event);
         }
 
         $archive->close();
-
+//        throw new \Exception('coucou');
         return $pathArch;
     }
 
@@ -135,7 +103,7 @@ class Exporter
             $children = $repoIns->getChildren($directoryInstance, false);
 
             foreach ($children as $child) {
-                if ($child->getResource()->getResourceType()->getType() != 'directory') {
+                if ($child->getResource()->getResourceType()->getType() != 'directory' && $child->getResource()->getResourceType()->isVisible()) {
                     $toAppend[] = $child->getId();
                 }
             }
@@ -148,37 +116,6 @@ class Exporter
     }
 
     /**
-     * Adds a directory in a zip archive.
-     *
-     * @param ResourceInstance $resourceInstance
-     * @param ZipArchive $archive
-     */
-    private function addDirectoryToArchive(ResourceInstance $resourceInstance, \ZipArchive $archive)
-    {
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildren($resourceInstance, false);
-        $archive->addEmptyDir($resourceInstance->getName());
-
-        foreach ($children as $child) {
-            if ($child->getResource()->getResourceType()->getType() != 'directory') {
-                $eventName = $this->ut->normalizeEventName('export', $child->getResource()->getResourceType()->getType());
-                $event = new ExportResourceEvent($child->getResource()->getId());
-                $this->ed->dispatch($eventName, $event);
-                $obj = $event->getItem();
-
-                if ($obj != null) {
-                    $path = $this->getRelativePath($resourceInstance, $child, '');
-                    $archive->addFile($obj, $resourceInstance->getName().DIRECTORY_SEPARATOR.$path . $child->getName());
-                }
-            } else {
-                $path = $this->getRelativePath($resourceInstance, $child, '');
-                $archive->addEmptyDir($resourceInstance->getName().DIRECTORY_SEPARATOR.$path . $child->getName());
-            }
-        }
-
-        $archive->addEmptyDir($resourceInstance->getResource()->getName());
-    }
-
-    /**
      * Gets the relative path between 2 instances (not optimized yet).
      *
      * @param ResourceInstance $root
@@ -187,7 +124,7 @@ class Exporter
      *
      * @return string
      */
-    private function getRelativePath(ResourceInstance $root, ResourceInstance $resourceInstance, $path = '')
+    private function getRelativePath($root, ResourceInstance $resourceInstance, $path = '')
     {
         if ($root != $resourceInstance->getParent()) {
             $path = $resourceInstance->getParent()->getName() . DIRECTORY_SEPARATOR . $path;

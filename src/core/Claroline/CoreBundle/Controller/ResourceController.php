@@ -268,36 +268,6 @@ class ResourceController extends Controller
     }
 
     /**
-     * Download a resource. If it's a directory, its content will be downloaded in an archive.
-     * If their are many directories, their id will be sent as as post request. It'll fire an export event.
-     *
-     * @param integer $instanceId
-     *
-     * @return Response
-     */
-    public function exportAction($instanceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $item = $this->get('claroline.resource.exporter')->export($resourceInstance);
-        $nameDownload = pathinfo(strtolower(str_replace(' ', '_', $resourceInstance->getName())), PATHINFO_FILENAME).'.'.pathinfo($item, PATHINFO_EXTENSION);
-        $response = new StreamedResponse();
-
-        $response->setCallBack(function() use($item){
-            readfile($item);
-        });
-
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $nameDownload);
-        $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
-        $response->headers->set('Content-Length', filesize($item));
-        $response->headers->set('Connection', 'close');
-
-        return $response;
-    }
-
-    /**
      * This function takes an array of parameters. Theses parameters are the ids of the instances which are going to be downloaded.
      *
      * @return \Symfony\Component\HttpFoundation\Response
