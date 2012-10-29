@@ -6,5 +6,4 @@ plugin:
       class: Invalid\UnexpectedLargeIcon\Entity\ResourceX
       is_visible: true
       is_browsable: false
-      is_downloadable: true
       large_icon: icn.gif

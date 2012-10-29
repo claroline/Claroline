@@ -47,7 +47,7 @@ class DashboardController extends Controller
     {
         $resourceTypes = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findBy(array('isListable' => 1));
+            ->findBy(array('isVisible' => 1));
 
         return $this->render('ClarolineCoreBundle:Dashboard:resources.html.twig', array('resourceTypes' => $resourceTypes));
     }

@@ -6,5 +6,4 @@ plugin:
       name: ResourceX
       is_visible: true
       is_browsable: true
-      is_downloadable: true
       small_icon: validwithsmallicon.gif

@@ -51,7 +51,6 @@ class CreateResourceEvent extends Event
 
     /**
      * Returns the form content with validation errors
-     *
      * @return string
      */
     public function getErrorFormContent()

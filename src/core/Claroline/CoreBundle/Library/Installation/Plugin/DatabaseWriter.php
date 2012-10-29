@@ -189,9 +189,8 @@ class DatabaseWriter
     {
         $resourceType = new ResourceType();
         $resourceType->setType($resource['name']);
-        $resourceType->setListable($resource['is_visible']);
-        $resourceType->setNavigable($resource['is_browsable']);
-        $resourceType->setDownloadable($resource['is_downloadable']);
+        $resourceType->setVisible($resource['is_visible']);
+        $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array ('class' => $resource['class']));
 

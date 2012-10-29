@@ -11,13 +11,6 @@
             "route": "{{ path('claro_resource_properties_form', {'resourceId': '_resourceId'})}}",
             "async": true
         }
-        {% if resourceType.isDownloadable == true %}
-        ,"download": {
-            "name": "download",
-            "route": "{{ path('claro_resource_export', {'instanceId': '_instanceId'}) }}",
-            "async": false
-        }
-        {% endif %}
         {% for customAction in resourceType.getCustomActions() %}
         , "{{ customAction.getAction() }}": {
             "name": "{{ customAction.getAction() }}",

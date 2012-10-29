@@ -12,7 +12,6 @@ plugin:
       name: claroline_exampletext
       is_visible: true
       is_browsable: true
-      is_downloadable: true
       large_icon: res_text.png
       actions:
         - name: open

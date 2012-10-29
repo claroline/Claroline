@@ -33,7 +33,7 @@ class Converter
         $instanceArray['resource_creator_username'] = $instance->getResource()->getCreator()->getUsername();
         $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
         $instanceArray['type'] = $instance->getResource()->getResourceType()->getType();
-        $instanceArray['is_navigable'] = $instance->getResourceType()->getNavigable();
+        $instanceArray['is_browsable'] = $instance->getResourceType()->getBrowsable();
         $instanceArray['small_icon'] = $instance->getResource()->getIcon()->getSmallIcon();
         $instanceArray['large_icon'] = $instance->getResource()->getIcon()->getLargeIcon();
         $instanceArray['path'] = $instance->getPath();

@@ -422,14 +422,14 @@ class ResourceController extends Controller
     /**
      * Returns a json representation of the resource types.
      * It doesn't include the directory.
-     * Ony listable types are included.
+     * Ony visible types are included.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function resourceTypesAction()
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findNavigableResourceType(true);
+        $resourceTypes = $repo->findBy(array('isVisible' => 1));
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:resource_types.json.twig',
@@ -470,14 +470,12 @@ class ResourceController extends Controller
         $repo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findBy(array('isListable' => 1));
-        $pluginResourceTypes = $repo->findListablePluginResourceTypes();
+        $resourceTypes = $repo->findBy(array('isVisible' => 1));
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Resource:menus.json.twig',
             array(
                 'resourceTypes' => $resourceTypes,
-                'pluginResourceTypes' => $pluginResourceTypes
             )
         );
 
@@ -547,7 +545,7 @@ class ResourceController extends Controller
 
         $resourceTypes = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findNavigableResourceType();
+            ->findBy(array('isVisible' => 1));
 
         $resourceIcons = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
