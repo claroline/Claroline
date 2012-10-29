@@ -7,9 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PluginRepository")
  * @ORM\Table(name="claro_plugin")
- * @UniqueEntity("bundleFQCN")
  */
 class Plugin
 {
@@ -19,13 +18,6 @@ class Plugin
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(name="bundle_fqcn", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(255)
-     */
-    protected $bundleFQCN;
 
     /**
      * @ORM\Column(name="vendor_name", type="string", length=50)
@@ -42,13 +34,6 @@ class Plugin
     protected $bundleName;
 
     /**
-     * @ORM\Column(name="description", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(255)
-     */
-    protected $descriptionTranslationKey;
-
-    /**
      * @ORM\Column(name="has_options")
      */
     protected $hasOptions;
@@ -62,7 +47,7 @@ class Plugin
 
     public function getId()
     {
-        return $this->bundleFQCN;
+        return $this->id;
     }
 
     public function getGeneratedId()
@@ -72,12 +57,12 @@ class Plugin
 
     public function getBundleFQCN()
     {
-        return $this->bundleFQCN;
+        return "{$this->getVendorName()}\\{$this->getBundleName()}\\{$this->getVendorName()}{$this->getBundleName()}";
     }
 
-    public function setBundleFQCN($fqcn)
+    public function getShortName()
     {
-        $this->bundleFQCN = $fqcn;
+       return $this->getVendorName() . str_replace('Bundle', '', $this->getBundleName());
     }
 
     public function getVendorName()
@@ -98,16 +83,6 @@ class Plugin
     public function setBundleName($name)
     {
         $this->bundleName = $name;
-    }
-
-    public function getDescriptionTranslationKey()
-    {
-        return $this->descriptionTranslationKey;
-    }
-
-    public function setDescriptionTranslationKey($key)
-    {
-        $this->descriptionTranslationKey = $key;
     }
 
     public function setHasOptions($hasOptions)

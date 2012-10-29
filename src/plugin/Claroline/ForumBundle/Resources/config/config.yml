@@ -4,7 +4,7 @@ plugin:
 
   resources:
     - class: Claroline\ForumBundle\Entity\Forum
-      name: Forum
+      name: claroline_forum
       is_visible: true
       is_browsable: true
       is_downloadable: true
@@ -14,13 +14,13 @@ plugin:
           is_action_in_new_page: true
 
     - class: Claroline\ForumBundle\Entity\Subject
-      name: Subject
+      name: claroline_subject
       is_visible: true
       is_browsable: true
       is_downloadable: false
 
     - class: Claroline\ForumBundle\Entity\Message
-      name: Message
+      name: claroline_message
       is_visible: true
       is_browsable: true
       is_downloadable: false

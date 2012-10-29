@@ -8,9 +8,9 @@
 
              />
         </div>
-        <span class="res-name">{{ plugin.getNameTranslationKey() | trans({}, plugin.getTranslationDomain()) }}</span>
+        <span class="res-name">{{  plugin.getShortName()|lower|trans({}, 'plugin_description') }}</span>
         {% if plugin.hasOptions() %}
-            <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getTranslationDomain()})}}">options</a>
+            <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()})}}">options</a>
         {% endif %}
     </span>
 {% endfor %}

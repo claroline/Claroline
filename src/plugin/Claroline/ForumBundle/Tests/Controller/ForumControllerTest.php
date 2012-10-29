@@ -26,11 +26,11 @@ class ForumControllerTest extends FunctionalTestCase
     {
         parent::tearDown();
     }
-/*
+
     public function testSubjects()
     {
         $this->loadFixture(new LoadOptionsData());
-        $this->loadFixture(new LoadForumData('test', 'user', 0, 0));
+        $this->loadFixture(new LoadForumData('test', 'user', 0, 0));/*
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/forum/form/subject/{$this->getFixtureReference('forum_instance/forum')->getId()}");
         $this->assertEquals(1, count($crawler->filter('#subject_forum_form')));
@@ -39,8 +39,8 @@ class ForumControllerTest extends FunctionalTestCase
         $form['subject_forum_form[messages][content]'] = 'content';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/forum/{$this->getFixtureReference('forum_instance/forum')->getId()}/offset/0");
-        $this->assertEquals(1, count($crawler->filter('.row-subject')));
-    }*/
+        $this->assertEquals(1, count($crawler->filter('.row-subject')));*/
+    }
 
     public function testMessages()
     {
@@ -52,7 +52,7 @@ class ForumControllerTest extends FunctionalTestCase
 //        $ffix->setLogger(function($log){echo $log."\n";});
         $this->loadFixture($ffix);
 
-        $this->logUser($this->getFixtureReference('user/user'));/*
+        $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/forum/{$this->getFixtureReference('forum_instance/forum')->getId()}/offset/0");
         $link = $crawler->filter('.link-subject')->first()->link();
         $crawler = $this->client->click($link);
@@ -73,7 +73,7 @@ class ForumControllerTest extends FunctionalTestCase
         $form['message_forum_form[content]'] = 'content';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/offset/0");
-        $this->assertEquals(3, count($crawler->filter('.row-message')));*/
+        $this->assertEquals(3, count($crawler->filter('.row-message')));
 
     }
 }

@@ -61,8 +61,8 @@ class ResourceExtenderTest extends FunctionalTestCase
         $conn = $this->em->getConnection();
 
         // Insert a fake extension plugin
-        $sql = "INSERT INTO claro_plugin (bundle_fqcn, vendor_name, short_name, description)"
-            . " VALUES ('TestTest', '', 'Test', 'test')";
+        $sql = "INSERT INTO claro_plugin ( vendor_name, short_name)"
+            . " VALUES ( 'test', 'Test')";
         $conn->exec($sql);
         $pluginId = $conn->lastInsertId();
 

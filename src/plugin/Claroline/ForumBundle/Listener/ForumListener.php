@@ -22,7 +22,7 @@ class ForumListener extends ContainerAware
             'ClarolineCoreBundle:Resource:resource_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'forum'
+                'resourceType' => 'claroline_forum'
             )
         );
         $event->setResponseContent($content);
@@ -46,7 +46,7 @@ class ForumListener extends ContainerAware
             'ClarolineCoreBundle:Resource:resource_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'forum'
+                'resourceType' => 'claroline_forum'
             )
         );
         $event->setErrorFormContent($content);

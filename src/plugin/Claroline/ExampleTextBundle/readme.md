@@ -124,8 +124,8 @@ This file will be parsed by the plugin installator to install your plugin and cr
         # Widgets declared by your plugin.
         widgets:
         # Each widget requires a name.
-         - name: exemple
-         - name: theAnswerToLifeUniverseAndEverything
+         - name: claroline_exemple
+         - name: claroline_theanswertolifeuniverseandeverything
 
         # Properties of resources managed by your plugin
         # You can define as many resource types as you want in this file.
@@ -136,7 +136,7 @@ This file will be parsed by the plugin installator to install your plugin and cr
             # In this case you can extend *Claroline\CoreBundle\Entity\Resource\File*.
           - class: Claroline\ExampleTextBundle\Entity\ExampleText
             # Your resource type name
-            name: ExampleText
+            name: claroline_exampletext
             # Is it visible in the resource manager ?
             is_visible: true
             # Is it possible to navigate within your resource (does it have sub-resources ?)
@@ -157,6 +157,8 @@ This file will be parsed by the plugin installator to install your plugin and cr
               - name: open
                 is_action_in_new_page: true
 
+**/!\ it's a good practice to prefix your resources and widgets names to avoid possible conflicts with other plugins **
+
 ## Listener
 
 The resource manager will trigger some events (Open, Delete...) on your resources. Your plugin must implements a listener to catch events that concern its resources and must apply appropriate action.
@@ -175,15 +177,15 @@ You declare in this file all events that you want to catch.
         calls:
           - [setContainer, ["@service_container"]]
         tags:
-          - { name: kernel.event_listener, event: create_form_exampletext, method: onCreateForm }
-          - { name: kernel.event_listener, event: create_exampletext, method: onCreate }
-          - { name: kernel.event_listener, event: delete_exampletext, method: onDelete }
-          - { name: kernel.event_listener, event: export_exampletext, method: onExport }
-          - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
-          - { name: kernel.event_listener, event: open_exampletext, method: onOpen }
-          - { name: kernel.event_listener, event: plugin_options_example, method: onAdministrate }
+          - { name: kernel.event_listener, event: create_form_claroline_exampletext, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_claroline_exampletext, method: onCreate }
+          - { name: kernel.event_listener, event: delete_claroline_exampletext, method: onDelete }
+          - { name: kernel.event_listener, event: export_claroline_exampletext, method: onExport }
+          - { name: kernel.event_listener, event: copy_claroline_exampletext, method: onCopy }
+          - { name: kernel.event_listener, event: open_claroline_exampletext, method: onOpen }
+          - { name: kernel.event_listener, event: plugin_options_clarolineexampletext, method: onAdministrate }
 
-Here is the list of events fired by the resource manager:
+Here is the list of events fired by the resource manager (lower case is forced here):
 
 * create_form_*resourcetypename*
 * create_*resourcetypename*
@@ -196,9 +198,9 @@ Where *resourcetypename* is the name of your resource in lowercase (e.g. "exampl
 
 This event is fired by the plugin managemement page:
 
-* *plugin*_*options*_*mydomain*
+* *plugin*_*options*_*myvendormyshortbundlename*
 
-Where *mydomain* is the domain you specified in your config file.
+Where the shortbundle name is your bundle name without 'Bundle'.
 
 ### Listener implementation class
 
@@ -256,7 +258,7 @@ If you want to write your own twig file, your form action must be:
 where resourceType is the 'name' field you defined in your config.yml file and _instanceId is a placeholder used
 by the javascript manager.
 
-###### Using existing forms & validations.
+###### Using existing forms & validations
 
 This may be usefull if the *class* field you defined in your config file is an existing resource.
 Let's assume you're using the Claroline\CoreBundle\Resource\File class.
@@ -288,7 +290,7 @@ in the config files.
             'ClarolineCoreBundle:Resource:resource_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'MyResource'
+                'resourceType' => 'myresourcetype'
             )
         );
         $event->setResponseContent($content);
@@ -298,6 +300,50 @@ in the config files.
 This function will create a File whose ResourceType is MyResource.
 Because you extended the FileListener, you don't have to implement
 the create_xxx event.
+
+## Translations
+
+Each plugin require several translations domains:
+
+* plugin_description
+* resource
+* widget
+
+We use lower case for every translation keys.
+
+### plugin_description
+
+Create the *plugin_description* file in your Resources/translations folder.
+
+    plugin_description.en.yml
+
+Here is the translation key used to translate your plugin name:
+
+    myvendorbundleshortname : this is a translation
+
+eg:
+
+    clarolineexampletext: exemple
+
+### resource
+
+Create the *resource* file in your Resources/translations folder.
+
+This is were you can translate the resource types you defined in your config file.
+They'll be displayed at the resource creation.
+
+/!\ everything must be lower case here
+
+    exampletext: example
+
+### widget
+
+Create the *widget* file in your Resources/translations folder.
+You can translate your widget names here.
+
+    mywidgetname: mytranslation
+
+Where mywidgetname is the name you defined in your config file.
 
 ## Resources
 
@@ -584,8 +630,6 @@ Don't forget to add the bundle class.
 
 On some events your listeners are supposed to send a response.
 These responses can contain links wich will redirects to your controllers.
-
-### Translations
 
 ## The platform
 

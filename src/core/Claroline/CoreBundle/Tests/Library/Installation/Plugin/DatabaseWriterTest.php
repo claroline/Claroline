@@ -35,14 +35,12 @@ class DatabaseWriterTest extends TransactionalTestCase
     {
         $plugin = $this->loader->load($fqcn);
         $this->dbWriter->insert($plugin);
-
         $pluginEntity = $this->em
             ->getRepository('Claroline\CoreBundle\Entity\Plugin')
             ->findOneByBundleFQCN($fqcn);
 
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
-        $this->assertEquals($plugin->getDescriptionTranslationKey(), $pluginEntity->getDescriptionTranslationKey());
     }
 
     public function testInsertThenDeleteAPluginLeavesDatabaseUnchanged()
@@ -60,7 +58,7 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testInsertThrowsAnExceptionIfPluginEntityIsNotValid()
     {
-        $this->setExpectedException('Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException');
+        $this->setExpectedException('Doctrine\DBAL\DBALException');
 
         $plugin = $this->loader->load('Valid\Simple\ValidSimple');
         $this->dbWriter->insert($plugin);

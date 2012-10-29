@@ -243,7 +243,7 @@ class WorkspaceController extends Controller
             $eventName = strtolower("widget_{$widget->getName()}_workspace");
             $event = new DisplayWidgetEvent($workspace);
             $this->get('event_dispatcher')->dispatch($eventName, $event);
-            $responsesString[$widget->getName()] = $event->getContent();
+            $responsesString[strtolower($widget->getName())] = $event->getContent();
         }
 
         return $this->render('ClarolineCoreBundle:Dashboard:widgets\plugins.html.twig', array('widgets' => $responsesString));

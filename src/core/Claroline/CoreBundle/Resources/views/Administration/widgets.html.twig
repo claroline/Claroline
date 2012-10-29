@@ -13,7 +13,7 @@
 <tbody id="widget-table-body">
     {% for widget in widgets %}
     <tr>
-        <th>{{ widget.getName() }}</th>
+        <th>{{ widget.getName()|lower|trans({}, 'widget') }}</th>
     </tr>
     {% endfor %}
 </tbody>
