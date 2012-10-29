@@ -19,7 +19,7 @@ function emptyDir($directory)
             unlink($item->getPathname());
         }
         if ($item->isDir() && !$item->isDot() && $item->getFilename() != "tmp" && $item->getFilename() != "thumbs") {
-            $emptyDir($item->getPathname());
+            emptyDir($item->getPathname());
             rmdir($item->getPathname());
         }
     }

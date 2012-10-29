@@ -1,8 +1,41 @@
 {% twig_js name="resource_thumbnail_template" %}
 
-<div class="img-box">
+<div>
     <input type="checkbox" value="{{ resource.id }}"/>
-    <img src="{{ webRoot }}/{{ resource.large_icon }}" data-id="{{ resource.id }}" data-type="{{ resource.type }}"/>
+    <img src="{{ webRoot }}/{{ resource.large_icon }}"
+         data-id="{{ resource.id }}"
+         data-type="{{ resource.type }}"
+         data-type-id="{{ resource.resource_type_id }}"/>
 </div>
-<div class="name">{{ resource.name }}</div>
-<div class="dropdown" href="#">menu</div>
+<div class="dropdown" rel="tooltip" title="{{ resource.name }}">
+    <a class="dropdown-toggle name" role="button" data-toggle="dropdown" href="#">
+        {{ resource.displayableName|raw }}
+        <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li>
+            <a class="resource-menu-action" data-action="rename-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                {{ 'rename'|trans({}, 'platform') }}
+            </a>
+            <a class="resource-menu-action" data-action="download" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                {{ 'download'|trans({}, 'platform') }}
+            </a>
+            <a class="resource-menu-action" data-action="delete" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                {{ 'delete'|trans({}, 'platform') }}
+            </a>
+            <a class="resource-menu-action" data-action="manage-rights" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                {{ 'manage_rights'|trans({}, 'platform') }}
+            </a>
+        </li>
+        {% if customActions|length > 0 %}
+        <li class="divider"></li>
+            {% for customAction, attributes in customActions %}
+                <li>
+                    <a class="resource-menu-action" data-action="{{ customAction }}" data-is-custom="yes" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        {{ attributes.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>
