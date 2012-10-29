@@ -1,0 +1,12 @@
+plugin:
+  has_options: true
+  plugin_translation_name_key: exemple
+  plugin_translation_domain: exemple
+
+  resources:
+    - name: ResourceX
+      class: Invalid\UnexpectedSmallIcon\Entity\ResourceX
+      is_visible: true
+      is_browsable: false
+      is_downloadable: true
+      small_icon: icn.gif

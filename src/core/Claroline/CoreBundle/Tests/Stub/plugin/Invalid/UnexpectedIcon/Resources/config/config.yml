@@ -1,0 +1,5 @@
+plugin:
+  has_options: true
+  plugin_translation_name_key: exemple
+  plugin_translation_domain: exemple
+  icon: icon.gif

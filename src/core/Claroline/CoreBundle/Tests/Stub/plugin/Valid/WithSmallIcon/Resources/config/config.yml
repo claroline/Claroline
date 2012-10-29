@@ -1,0 +1,12 @@
+plugin:
+  has_options: true
+  plugin_translation_name_key: plugin
+  plugin_translation_domain: plugin
+
+  resources:
+    - class: Valid\WithSmallIcon\Entity\ResourceX
+      name: ResourceX
+      is_visible: true
+      is_browsable: true
+      is_downloadable: true
+      small_icon: validwithsmallicon.gif

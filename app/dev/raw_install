@@ -39,4 +39,6 @@ system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
 system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
 system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
 
+system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
+
 require_once __DIR__.'/delete_files';

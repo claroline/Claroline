@@ -15,6 +15,6 @@ class MessageType extends AbstractType
 
     public function getName()
     {
-        return 'message_form';
+        return 'message_forum_form';
     }
 }

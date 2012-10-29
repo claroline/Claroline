@@ -7,6 +7,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Claroline\CoreBundle\Tests\DataFixtures\Special\LoadEntitiesInWorkspace;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 class WorkspaceManagementCommand extends ContainerAwareCommand
 {
@@ -64,75 +66,22 @@ class WorkspaceManagementCommand extends ContainerAwareCommand
     //this is not optimized
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $i = 0;
+        if ($input->getOption('user')) {
+            $class = 'user';
+        } elseif ($input->getOption('group')) {
+            $class = 'group';
+        }
+
+        $nbUsers = $input->getArgument('count');
+        $username = $input->getArgument('username');
+        $fixture = new LoadEntitiesInWorkspace($nbUsers, $class, $username);
+        $fixture->setLogger(function ($message) use ($output){
+            $output->writeln($message);
+        });
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $input->getArgument('username')))->getPersonalWorkspace();
-        $collaboratorRole = $workspace->getCollaboratorRole();
-
-        if ($input->getOption('group')) {
-            $entities = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-        } elseif ($input->getOption('user')) {
-            $entities = $em->getRepository('ClarolineCoreBundle:User')->findAll();
-        } else {
-            echo "cleaning...\n";
-            $this->clean($collaboratorRole);
-            echo "done\n";
-            return;
-        }
-
-        $maxLoops = count($entities);
-
-        if($maxLoops > $input->getArgument('count')){
-           $maxLoops = $input->getArgument('count');
-        }
-
-        while ($i < $maxLoops)
-        {
-            $this->addToWorkspace($entities, $collaboratorRole);
-            $i++;
-        }
-
-        $em->flush();
-    }
-
-    //may cause infinite loop due to the lack of optimization.
-    private function addToWorkspace($entities, $collaboratorRole)
-    {
-        $maxOffset = count($entities);
-        $maxOffset--;
-        $offset = rand(0, $maxOffset);
-        $entity = $entities[$offset];
-
-        if($entity->hasRole($collaboratorRole->getRole())){
-            echo "I strongly recommand to ctrl+c if you see this a lot\n";
-            $this->addToWorkspace($entities, $collaboratorRole);
-        } else {
-            $entity->addRole($collaboratorRole);
-            echo "entity whose id is {$entity->getId()} added\n";
-            unset($entities[$offset]);
-            $entities = array_values($entities);
-        }
-        $this->getContainer()->get('doctrine.orm.entity_manager')->persist($entity);
-    }
-
-    private function clean($collaboratorRole)
-    {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
-
-        foreach($users as $user){
-            $user->removeRole($collaboratorRole);
-            $em->persist($user);
-        }
-
-        $em->flush();
-        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-
-        foreach($groups as $group){
-            $group->removeRole($collaboratorRole);
-            $em->persist($group);
-        }
-
-        $em->flush();
+        $referenceRepo = new ReferenceRepository($em);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->getContainer());
+        $fixture->load($em);
     }
 }

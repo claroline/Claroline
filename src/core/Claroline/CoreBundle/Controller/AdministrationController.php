@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -87,32 +88,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Deletes an user from the platform.
-     *
-     * @param integer $userId
-     *
-     * @throws Exception if the user to be deleted is the current logged user
-     *
-     * @return type
-     */
-    public function deleteUserAction($userId)
-    {
-        if ($userId != $this->get('security.context')->getToken()->getUser()->getId()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-            $em->remove($user);
-            $em->flush();
-
-            return new Response('user removed', 204);
-        }
-
-    //Doctrine throws an error itself because
-    //"You cannot refresh a user from the EntityUserProvider that does not contain an identifier.
-    //The user object has to be serialized with its own identifier mapped by Doctrine. (500 Internal Server Error)
-    //throw new \Exception('A user cannot delete his own profile.');
-    }
-
-    /**
      * Removes many users from the platform.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -121,9 +96,8 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
-        unset($params['_']);
 
-        foreach ($params as $userId) {
+        foreach ($params['id'] as $userId) {
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             $em->remove($user);
         }
@@ -426,7 +400,7 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUnregisteredUsersOfGroup($groupId, $search, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
-        
+
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
 
@@ -434,26 +408,6 @@ class AdministrationController extends Controller
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
-    }
-
-    /**
-     * Adds an user to a group and redirects to the group list.
-     *
-     * @param integer $groupId
-     * @param integer $userId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function addUserToGroupAction($groupId, $userId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $group->addUser($user);
-        $em->persist($group);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('claro_admin_group_list'));
     }
 
     /**
@@ -468,10 +422,9 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        unset($params['_']);
         $users = array();
 
-        foreach ($params as $userId) {
+        foreach ($params['userId'] as $userId) {
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             if($user !== null){
                 $group->addUser($user);
@@ -492,26 +445,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Removes an user from a group.
-     *
-     * @param integer $groupId
-     * @param integer $userId
-     *
-     * @return Response
-     */
-    public function deleteUserFromGroupAction($groupId, $userId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $group->removeUser($user);
-        $em->persist($group);
-        $em->flush();
-
-        return new Response('user removed', 204);
-    }
-
-    /**
      * Removes users from a group.
      *
      * @param integer $groupId
@@ -521,11 +454,10 @@ class AdministrationController extends Controller
     public function multiDeleteUserFromGroupAction($groupId)
     {
         $params = $this->get('request')->query->all();
-        unset($params['_']);
         $em = $this->getDoctrine()->getEntityManager();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
-        foreach ($params as $userId){
+        foreach ($params['userId'] as $userId){
             $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
             $group->removeUser($user);
             $em->persist($group);
@@ -537,23 +469,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * Deletes a group and redirects to the group list.
-     *
-     * @param integer $groupId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteGroupAction($groupId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-        $em->remove($group);
-        $em->flush();
-
-        return new Response('group(s) removed', 204);
-    }
-
-    /**
      * Deletes multiple groups.
      *
      *  @return Response
@@ -562,9 +477,8 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
-        unset($params['_']);
 
-        foreach ($params as $groupId) {
+        foreach ($params['id'] as $groupId) {
             $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
             $em->remove($group);
         }
@@ -660,6 +574,45 @@ class AdministrationController extends Controller
         //this form can't be invalid
         return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
     }
+
+    /**
+     * Display the plugin list
+     *
+     * @return Response
+     */
+    public function pluginListAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $plugins = $em->getRepository('ClarolineCoreBundle:Plugin')->findAll();
+
+        return $this->render('ClarolineCoreBundle:Administration:plugins.html.twig',
+            array('plugins' => $plugins));
+    }
+
+    public function pluginParametersAction($domain)
+    {
+        $event = new PluginOptionsEvent();
+        $eventName = "plugin_options_{$domain}";
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (!$event->getResponse() instanceof Response) {
+            throw new \Exception(
+                "Custom event '{$eventName}' didn't return any Response."
+            );
+        }
+
+        return $event->getResponse();
+    }
+
+    public function widgetListAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
+
+        return $this->render('ClarolineCoreBundle:Administration:widgets.html.twig',
+            array('widgets' => $widgets));
+    }
+
 
     private function paginatorToArray($paginator)
     {

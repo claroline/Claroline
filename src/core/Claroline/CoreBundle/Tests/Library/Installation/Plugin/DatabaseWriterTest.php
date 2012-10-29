@@ -30,6 +30,7 @@ class DatabaseWriterTest extends TransactionalTestCase
     /**
      * @dataProvider pluginProvider
      */
+
     public function testWriterCorrectlyPersistsPluginProperties($fqcn)
     {
         $plugin = $this->loader->load($fqcn);
@@ -41,7 +42,7 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
-        $this->assertEquals($plugin->getNameTranslationKey(), $pluginEntity->getNameTranslationKey());
+        $this->assertEquals('plugin', $pluginEntity->getNameTranslationKey());
         $this->assertEquals($plugin->getDescriptionTranslationKey(), $pluginEntity->getDescriptionTranslationKey());
     }
 
@@ -60,7 +61,7 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testInsertThrowsAnExceptionIfPluginEntityIsNotValid()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->setExpectedException('Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException');
 
         $plugin = $this->loader->load('Valid\Simple\ValidSimple');
         $this->dbWriter->insert($plugin);
@@ -81,6 +82,10 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testCustomResourceTypesArePersisted()
     {
+        $ds = DIRECTORY_SEPARATOR;
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomResources{$ds}Entity{$ds}ResourceA.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomResources{$ds}Entity{$ds}ResourceB.php";
+
         $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
         $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
@@ -99,6 +104,9 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testLargeIconsArePersisted()
     {
+        $ds = DIRECTORY_SEPARATOR;
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithLargeIcon{$ds}Entity{$ds}ResourceX.php";
+
         $pluginFqcn = 'Valid\WithLargeIcon\ValidWithLargeIcon';
         $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
@@ -115,6 +123,9 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testSmallIconsArePersisted()
     {
+        $ds = DIRECTORY_SEPARATOR;
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithSmallIcon{$ds}Entity{$ds}ResourceX.php";
+
         $pluginFqcn = 'Valid\WithSmallIcon\ValidWithSmallIcon';
         $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
@@ -131,6 +142,9 @@ class DatabaseWriterTest extends TransactionalTestCase
 
     public function testCustomActionsArePersited()
     {
+        $ds = DIRECTORY_SEPARATOR;
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomActions{$ds}Entity{$ds}ResourceX.php";
+
         $pluginFqcn = 'Valid\WithCustomActions\ValidWithCustomActions';
         $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
@@ -152,6 +166,20 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertEquals(1, count($customAction));
         $customName = $customAction[0]->getAction();
         $this->assertEquals('open', $customName);
+    }
+
+    public function testPluginIconIsPersisted()
+    {
+        $pluginFqcn = 'Valid\WithIcon\ValidWithIcon';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->dbWriter->insert($plugin);
+
+        $dql = "
+            SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
+            WHERE p.bundleName LIKE '%Icon'";
+
+        $pluginEntity = $this->em->createQuery($dql)->getResult();
+        $this->assertContains('icon.gif', $pluginEntity[0]->getIcon());
     }
 
     public function pluginProvider()

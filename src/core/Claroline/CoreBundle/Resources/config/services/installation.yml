@@ -52,12 +52,8 @@ services:
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
         arguments:
-            - base: "@claroline.plugin.base_checker"
-              routing: "@claroline.plugin.routing_checker"
-              resource: "@claroline.plugin.resource_checker"
-
-    claroline.plugin.base_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\BaseChecker
+              - routing: "@claroline.plugin.routing_checker"
+                config: "@claroline.plugin.config_checker"
 
     claroline.plugin.routing_checker:
         class: Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker
@@ -66,8 +62,8 @@ services:
             - "@symfony.yaml"
             - "%kernel.root_dir%/config/local/plugin/routing.yml"
 
-    claroline.plugin.resource_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\ResourceChecker
+    claroline.plugin.config_checker:
+        class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigChecker
         arguments:
             - "@symfony.yaml"
 
@@ -93,7 +89,7 @@ services:
     claroline.plugin.recorder_database_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter
         arguments:
-            - "@validator"
+            - "@claroline.plugin.validator"
             - "@doctrine.orm.entity_manager"
             - "@symfony.yaml"
 

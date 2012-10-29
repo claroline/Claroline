@@ -35,9 +35,6 @@ class InstallerTest extends WebTestCase
             ->method('load')
             ->with(get_class($this->mockedPlugin))
             ->will($this->returnValue($this->mockedPlugin));
-        $this->mockedValidator->expects($this->once())
-            ->method('validate')
-            ->with($this->mockedPlugin);
         $this->mockedMigrator->expects($this->once())
             ->method('install')
             ->with($this->mockedPlugin);

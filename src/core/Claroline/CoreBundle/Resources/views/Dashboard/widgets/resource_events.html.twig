@@ -1,0 +1,5 @@
+{% for log in logs %}
+<p>
+    action {{ log.getAction() }} done on {{ log.getPath() }} by {{ log.getUpdator().getUsername() }}
+</p>
+{% endfor %}

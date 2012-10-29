@@ -50,6 +50,12 @@ claro_workspace_creation_form:
     requirements:
       _method: GET
 
+claro_workspace_widgets:
+    pattern: /{workspaceId}/widgets
+    defaults: { _controller: ClarolineCoreBundle:Workspace:widgets }
+    requirements:
+      _method: GET
+
 #OTHERS (maybe they should be removed)
 
 claro_ws_roles_list:

@@ -10,6 +10,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
+use Claroline\CoreBundle\Entity\WorkspaceRole;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
@@ -245,6 +247,14 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $roleNames;
     }
 
+    public function addRole(Role $role)
+    {
+        parent::addRole($role);
+        if ($role instanceof WorkspaceRole){
+            $role->addUser($this);
+        }
+    }
+
     public function getWorkspaceRoleCollection()
     {
         return $this->workspaceRoles;
@@ -365,10 +375,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->resourceInstances;
     }
 
-    public function addResourceInstance(ResourceInstance $resourcesInstance)
+    public function addResourceInstance(ResourceInstance $resourceInstance)
     {
-        $this->resourcesInstance[] = $resourcesInstance;
-        $resourcesInstance->setUser($this);
+         $resourceInstance->setCreator($this);
+        $this->resourceInstances->add($resourceInstance);
+
     }
 
     public function setPersonalWorkspace($workspace)

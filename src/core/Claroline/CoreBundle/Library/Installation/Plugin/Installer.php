@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use \RuntimeException;
 use \LogicException;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Doctrine\ORM\EntityManager;
 
 /**
  * This class is used to perform the (un-)installation of a plugin. It uses
@@ -94,10 +93,9 @@ class Installer
     {
         $this->checkRegistrationStatus($pluginFqcn, false);
         $plugin = $this->loader->load($pluginFqcn);
-        $errors = $this->validator->validate($plugin);
+        $errors = $this->migrator->install($plugin);
 
         if (0 === count($errors)) {
-            $this->migrator->install($plugin);
             $this->recorder->register($plugin);
             $this->kernel->shutdown();
             $this->kernel->boot();

@@ -88,7 +88,8 @@ class WorkspaceUserController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $userIds = array($userId);
-                $this->checkRemoveManagerRoleIsValid($userIds, $workspace);
+                $parameters['userId'] = $userIds;
+                $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
             $user->removeRole($role[0], false);
@@ -155,34 +156,6 @@ class WorkspaceUserController extends Controller
     }
 
     /**
-     * Adds a user to a workspace
-     * if $userId = 'null', the user will be the current logged user
-     * if requested through ajax, it'll respond with a json object containing the user datas
-     * otherwise it'll redirect to the workspace list.
-     *
-     * @param integer $workspaceId
-     *
-     * @return RedirectResponse
-     */
-    public function addUserAction($workspaceId, $userId)
-    {
-        $request = $this->get('request');
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $user->addRole($workspace->getCollaboratorRole());
-        $em->flush();
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => array($user)));
-        }
-
-        $route = $this->get('router')->generate('claro_workspace_list');
-
-        return new RedirectResponse($route);
-    }
-
-    /**
      * Adds many users to a workspace.
      * It should be used with ajax and a list of userIds as parameter.
      *
@@ -195,13 +168,12 @@ class WorkspaceUserController extends Controller
     public function multiAddUserAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
-        unset($params['_']);
 
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = array();
 
-        foreach ($params as $userId) {
+        foreach ($params['userId'] as $userId) {
              $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
              $users[] = $user;
              $user->addRole($workspace->getCollaboratorRole());
@@ -269,36 +241,6 @@ class WorkspaceUserController extends Controller
     }
 
     /**
-     * Removes a user from a workspace.
-     * If it was requested through ajax, it will respond "success".
-     * otherwise it'll redirect to the workspace list for a user.
-     *
-     * @param integer $userId
-     * @param integer $workspaceId
-     *
-     * @return Response
-     */
-
-    public function removeUserAction($userId, $workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkIfAdmin($workspace);
-        $userIds = array($user->getId());
-        $this->checkRemoveManagerRoleIsValid($userIds, $workspace);
-        $roles = $workspace->getWorkspaceRoles();
-
-        foreach ($roles as $role) {
-            $user->removeRole($role);
-        }
-
-        $em->flush();
-
-        return new Response("success", 204);
-    }
-
-    /**
      * Removes many users from a workspace. ( ?0=1&1=2... )
      * If it was requested through ajax, it will respond "success".
      * otherwise it'll redirect to the workspace list for a user.
@@ -314,10 +256,9 @@ class WorkspaceUserController extends Controller
         $this->checkIfAdmin($workspace);
         $roles = $workspace->getWorkspaceRoles();
         $params = $this->get('request')->query->all();
-        unset($params['_']);
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        foreach ($params as $userId) {
+        foreach ($params['userId'] as $userId) {
             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
             if (null != $user) {
                 foreach ($roles as $role) {
@@ -340,7 +281,7 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
 
-        foreach ($parameters as $userId) {
+        foreach ($parameters['userId'] as $userId) {
             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
 
             if (null !== $user) {

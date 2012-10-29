@@ -22,7 +22,6 @@ class FileControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadResourceTypeData());
         $this->loadUserFixture();
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;

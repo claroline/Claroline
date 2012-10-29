@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 class ResourceController extends Controller
 {
@@ -313,6 +314,13 @@ class ResourceController extends Controller
             );
         }
 
+        $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $logevent = new ResourceLoggerEvent(
+            $ri,
+            ResourceLoggerEvent::CUSTOM_ACTION.'_'.$action
+        );
+        $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+
         return $event->getResponse();
     }
 
@@ -355,8 +363,12 @@ class ResourceController extends Controller
     {
         $ids = $this->container->get('request')->query->get('ids', array());
         $file = $this->get('claroline.resource.exporter')->exportResourceInstances($ids);
-        $response = new Response();
-        $response->setContent($file);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(function() use($file){
+            readfile($file);
+        });
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=archive');

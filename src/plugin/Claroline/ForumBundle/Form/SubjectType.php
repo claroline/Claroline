@@ -19,7 +19,7 @@ class SubjectType extends AbstractType
 
     public function getName()
     {
-        return 'subject_form';
+        return 'subject_forum_form';
     }
 
 
