@@ -490,8 +490,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('user_id', 'integer', array('notnull' => false));
         $table->addColumn('widget_id', 'integer');
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
-        $table->addColumn('is_admin_locked', 'boolean', array('notnull' => false));
-        $table->addColumn('is_ws_locked', 'boolean', array('notnull' => false));
+        $table->addColumn('is_locked', 'boolean', array('notnull' => false));
         $table->addColumn('is_visible', 'boolean');
         $table->addColumn('lft', 'integer', array('notnull' => true));
         $table->addColumn('rgt', 'integer', array('notnull' => true));

@@ -213,9 +213,12 @@ class DatabaseWriter
         $widgetEntity->setName($widget['name']);
         $widgetEntity->setPlugin($pluginEntity);
         $this->em->persist($widgetEntity);
-        //new default config entry
         $widgetConfig = new DisplayConfig();
         $widgetConfig->setWidget($widgetEntity);
-        $widgetConfig->setAdminLock(true);
+        $widgetConfig->setLock(true);
+        $widgetConfig->setVisible(true);
+        $widgetConfig->setParent(null);
+        $this->em->persist($widgetConfig);
+        $this->em->flush();
     }
 }

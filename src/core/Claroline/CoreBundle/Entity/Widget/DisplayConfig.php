@@ -6,8 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DisplayConfigRepository")
  * @ORM\Table(name="claro_widget_dispay")
+ * @Gedmo\Tree(type="nested")
  */
 class DisplayConfig
 {
@@ -85,14 +86,19 @@ class DisplayConfig
     protected $widget;
 
     /**
-     * @ORM\Column(type="boolean", name="is_admin_locked")
+     * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $isAdminlocked;
+    protected $isLocked;
 
     /**
-     * @ORM\Column(type="boolean", name="is_ws_locked")
+     * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $isWsLocked;
+    protected $isVisible;
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function setWidget($widget)
     {
@@ -104,24 +110,58 @@ class DisplayConfig
         return $this->widget;
     }
 
-    public function isWsLocked()
+    public function setLock($bool)
     {
-        return $this->isWsLocked;
+        $this->isLocked = $bool;
     }
 
-    public function setWsLock($bool)
+    public function isLocked()
     {
-        $this->isWsLocked = $bool;
+        return $this->isLocked;
     }
 
-    public function setAdminLock($bool)
+    public function invertLock()
     {
-        $this->isAdminlocked = $bool;
+        ($this->isLocked == true) ? $this->isLocked = false: $this->isLocked = true;
     }
 
-    public function isAdminLocked()
+    public function isVisible()
     {
-        return $this->isAdminLocked;
+        return $this->isVisible;
     }
 
+    public function setVisible($bool)
+    {
+        $this->isVisible = $bool;
+    }
+
+    public function invertVisible()
+    {
+        ($this->isVisible == true) ? $this->isVisible = false: $this->isVisible = true;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace($workspace)
+    {
+        $this->workspace = $workspace;
+    }
 }

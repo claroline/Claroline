@@ -178,6 +178,22 @@ claro_admin_plugin_options:
     requirements:
       _method: GET
 
+claro_admin_invert_widgetconfig_lock:
+    pattern: /plugin/lock/{displayConfigId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:invertLockWidget }
+    requirements:
+      _method: POST
+    options:
+      expose: true
+
+claro_admin_invert_widgetconfig_visible:
+    pattern: /plugin/visible/{displayConfigId}
+    defaults: { _controller: ClarolineCoreBundle:Administration:invertVisibleWidget }
+    requirements:
+      _method: POST
+    options:
+      expose: true
+
 #SOON TO BE REST
 
 claro_admin_group_user_list:
