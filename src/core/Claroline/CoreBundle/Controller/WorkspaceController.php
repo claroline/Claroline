@@ -277,6 +277,7 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
+    //todo: dql request to find the relevant widgets
     public function widgetsPropertiesAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -347,11 +348,6 @@ class WorkspaceController extends Controller
         $em->flush();
 
         return new Response('success');
-    }
-
-    public function invertLockWidgetAction($workspaceId, $displayConfigId)
-    {
-
     }
 
     /*******************/
