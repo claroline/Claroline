@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 
 /**
  * This controller is able to:
@@ -206,9 +207,8 @@ class WorkspaceController extends Controller
     }
 
     /**
-     *
-     * @param type $workspaceId
-     * @param type $format
+     * @param integer $workspaceId
+     * @param string $format
      */
     public function rolesAction($workspaceId, $format)
     {
@@ -218,35 +218,140 @@ class WorkspaceController extends Controller
         return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
     }
 
-    /**
-     * Renders the workspace properties page
-     */
-    public function propertiesAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-
-        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles_properties.html.twig", array('workspace' => $workspace, 'masks' => SymfonySecurity::getResourcesMasks()));
-    }
+    //todo dql for this
 
     /**
      * Display registered widgets
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function widgetsAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
+        $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
+        $adminConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null)));
 
-        foreach ($widgets as $widget){
-            $eventName = strtolower("widget_{$widget->getName()}_workspace");
-            $event = new DisplayWidgetEvent($workspace);
-            $this->get('event_dispatcher')->dispatch($eventName, $event);
-            $responsesString[strtolower($widget->getName())] = $event->getContent();
+        foreach ($workspaceConfigs as $workspaceConfig){
+            if(!$workspaceConfig->getParent()->isLocked()){
+                unset($adminConfigs[$workspaceConfig->getParent()->getId()]);
+            } else {
+                unset($workspaceConfigs[$workspaceConfig->getId()]);
+            }
+
+        }
+
+        $configs = array_merge($workspaceConfigs, $adminConfigs);
+
+        foreach ($configs as $config){
+            if($config->isVisible()){
+                $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
+                $event = new DisplayWidgetEvent($workspace);
+                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+            }
         }
 
         return $this->render('ClarolineCoreBundle:Dashboard:widgets\plugins.html.twig', array('widgets' => $responsesString));
+    }
+
+    /**
+     * Renders the workspace properties page
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function propertiesAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\properties.html.twig', array('workspace' => $workspace));
+    }
+
+    /**
+     * Renders the workspace widget properties page.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function widgetsPropertiesAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
+        $adminConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null)));
+
+        foreach ($workspaceConfigs as $workspaceConfig){
+            if(!$workspaceConfig->getParent()->isLocked()){
+                unset($adminConfigs[$workspaceConfig->getParent()->getId()]);
+            } else {
+                unset($workspaceConfigs[$workspaceConfig->getId()]);
+            }
+
+        }
+
+        $childConfigs = array();
+
+        foreach ($adminConfigs as $adminConfig){
+            $childConfig = new DisplayConfig();
+            $childConfig->setParent($adminConfig);
+            $childConfig->setVisible($adminConfig->isVisible());
+            $childConfig->setWidget($adminConfig->getWidget());
+            $childConfigs[] = $childConfig;
+        }
+
+        $configs = array_merge($workspaceConfigs, $childConfigs);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
+            array('workspace' => $workspace, 'configs' => $configs)
+        );
+    }
+
+    /**
+     * If the option doens't exist in the database yet, it's created here.
+     *
+     * @param integer $workspaceId
+     * @param integer $widgetId
+     * @param integer $displayConfigId (the displayConfig defined by the administrator)
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function invertVisibleWidgetAction($workspaceId, $widgetId, $displayConfigId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
+
+        $displayConfig = $em
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('workspace' => $workspace, 'widget' => $widget));
+
+        if ($displayConfig == null){
+            $displayConfig = new DisplayConfig();
+            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->find($displayConfigId);
+            $displayConfig->setParent($baseConfig);
+            $displayConfig->setWidget($widget);
+            $displayConfig->setWorkspace($workspace);
+            $displayConfig->setVisible($baseConfig->isVisible());
+            $displayConfig->setLock(true);
+            $displayConfig->invertVisible();
+        } else {
+            $displayConfig->invertVisible();
+        }
+
+        $em->persist($displayConfig);
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    public function invertLockWidgetAction($workspaceId, $displayConfigId)
+    {
+
     }
 
     /*******************/
@@ -266,5 +371,15 @@ class WorkspaceController extends Controller
         if ($authorization === false) {
             throw new AccessDeniedHttpException();
         }
+    }
+
+    private function setEntitiesArrayKeysAsIds($array)
+    {
+        $tmpArray = array();
+        foreach ($array as $item){
+            $tmpArray[$item->getId()] = $item;
+        }
+
+        return $tmpArray;
     }
 }

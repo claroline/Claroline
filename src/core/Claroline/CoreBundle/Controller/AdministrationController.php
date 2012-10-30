@@ -589,6 +589,13 @@ class AdministrationController extends Controller
             array('plugins' => $plugins));
     }
 
+    /**
+     * Redirects to the plugin mangagement page.
+     *
+     * @param strung $domain
+     * @return Response
+     * @throws \Exception
+     */
     public function pluginParametersAction($domain)
     {
         $event = new PluginOptionsEvent();
@@ -604,15 +611,51 @@ class AdministrationController extends Controller
         return $event->getResponse();
     }
 
+    /**
+     *  Display the list of widget options for the administrator
+     *
+     * @return Response
+     */
     public function widgetListAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null));
 
         return $this->render('ClarolineCoreBundle:Administration:widgets.html.twig',
-            array('widgets' => $widgets));
+            array('configs' => $configs));
     }
 
+    /**
+     * Set true|false to the widget displayConfig isLockedByAdmin option
+     *
+     * @param integer $displayConfigId
+     */
+    public function invertLockWidgetAction($displayConfigId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $config = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->find($displayConfigId);
+        $config->invertLock();
+        $em->persist($config);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+     /**
+     *  Set true|false to the widget displayConfig isVisible option
+     *
+     * @param integer $displayConfigId
+     */
+    public function invertVisibleWidgetAction($displayConfigId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $config = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->find($displayConfigId);
+        $config->invertVisible();
+        $em->persist($config);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
 
     private function paginatorToArray($paginator)
     {

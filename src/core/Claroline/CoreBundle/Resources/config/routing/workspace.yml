@@ -56,6 +56,26 @@ claro_workspace_widgets:
     requirements:
       _method: GET
 
+claro_workspace_properties:
+    pattern: /{workspaceId}/properties
+    defaults: { _controller: ClarolineCoreBundle:Workspace:properties }
+    requirements:
+      _method: GET
+
+claro_workspace_widget_properties:
+  pattern: /{workspaceId}/properties/widget
+  defaults: { _controller: ClarolineCoreBundle:Workspace:widgetsProperties }
+  requirements:
+    _method: GET
+
+claro_workspace_widget_invertvisible:
+  pattern: /{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible
+  defaults: { _controller: ClarolineCoreBundle:Workspace:invertVisibleWidget }
+  requirements:
+    _method: POST
+  options:
+    expose: true
+
 #OTHERS (maybe they should be removed)
 
 claro_ws_roles_list:
@@ -69,9 +89,3 @@ claro_ws_user_workspace_id:
    defaults: { _controller: ClarolineCoreBundle:Workspace:userWorkspaceId }
    options:
        expose: true
-
-claro_ws_properties:
-   pattern: /properties/{workspaceId}
-   defaults: { _controller: ClarolineCoreBundle:Workspace:properties }
-   options:
-      expose: true
