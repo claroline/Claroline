@@ -446,7 +446,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
         ob_clean();
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
-        $this->assertEquals(4, count($postEvents) - count($preEvents));
+        $this->assertEquals(5, count($postEvents) - count($preEvents));
     }
 
 
