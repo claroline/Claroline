@@ -3,7 +3,9 @@ plugin:
 
   widgets:
     - name: claroline_mywidget1
+      is_configurable: true
     - name: claroline_mywidget2
+      is_configurable: false
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText

@@ -261,7 +261,17 @@ class WorkspaceController extends Controller
         return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties_display_options.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
+    }
 
+    public function configurationWidgetsAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array('isConfigurable' => true));
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_configuration_list.html.twig',
+            array('workspace' => $workspace, 'widgets' => $widgets)
+        );
     }
 
 

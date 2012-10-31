@@ -211,6 +211,7 @@ class DatabaseWriter
     {
         $widgetEntity = new Widget();
         $widgetEntity->setName($widget['name']);
+        $widgetEntity->setConfigurable($widget['is_configurable']);
         $widgetEntity->setPlugin($pluginEntity);
         $this->em->persist($widgetEntity);
         $widgetConfig = new DisplayConfig();

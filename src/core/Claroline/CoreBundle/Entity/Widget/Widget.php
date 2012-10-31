@@ -28,6 +28,10 @@ class Widget
      */
     protected $name;
 
+    /**
+     * @ORM\Column(type="boolean", name="is_configurable")
+     */
+    protected $isConfigurable;
 
     public function getId()
     {
@@ -52,5 +56,15 @@ class Widget
     public function getName()
     {
         return $this->name;
+    }
+
+    public function isConfigurable()
+    {
+        return $this->isConfigurable;
+    }
+
+    public function setConfigurable($bool)
+    {
+        $this->isConfigurable = $bool;
     }
 }
