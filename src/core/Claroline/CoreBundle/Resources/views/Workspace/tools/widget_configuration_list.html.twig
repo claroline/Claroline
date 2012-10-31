@@ -1,0 +1,22 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">{{ 'settings'|trans({}, 'platform') }}</a>
+        </li>
+        <span class="divider"> / </span>
+        <li>
+            <a href="{{ path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }} </a>
+        </li>
+        <span class="divider"> / </span>
+        <li>
+            <a href="#">{{ 'widget_settings'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+
+    <div class="wrapper">
+        {% for widget in widgets %}
+            {{ widget.getName() }}
+        {% endfor %}
+    </div>
+{% endblock %}

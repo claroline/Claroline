@@ -117,6 +117,7 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->children()
                        ->scalarNode('name')->isRequired()->end()
+                       ->booleanNode('is_configurable')->isRequired()->end()
                     ->end()
                 ->end()
             ->end()

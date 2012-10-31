@@ -1,24 +1,16 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block javascripts %}
-    {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/widget_properties.js') }}' type="text/javascript"></script>
-{% endblock %}
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}"
-               id="link_workspace_properties">{{ 'settings'|trans({}, 'platform') }}
-            </a>
+            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">{{ 'settings'|trans({}, 'platform') }}</a>
         </li>
          <span class="divider"> / </span>
         <li>
-            <a href="#"
-               id="link_workspace_widget_properties">{{ 'widgets'|trans({}, 'platform') }}
-            </a>
+            <a href="#">{{ 'widgets'|trans({}, 'platform') }}</a>
         </li>
     </ul>
     <div class="wrapper">
-        <a href="{{path('claro_workspace_widget_properties_display', {'workspaceId': workspace.getId()})}}">{{ 'display_options'|trans({}, 'platform') }}</a><br>
-        <a href="#">{{ 'widget_settings'|trans({}, 'platform') }}</a>
+        <a href="{{ path('claro_workspace_widget_properties_display', {'workspaceId': workspace.getId()}) }}">{{ 'display_options'|trans({}, 'platform') }}</a><br>
+        <a href="{{ path('claro_workspace_widgets_configuration', {'workspaceId': workspace.getId()}) }}">{{ 'widget_settings'|trans({}, 'platform') }}</a>
     </div>
 {% endblock %}

@@ -6,21 +6,15 @@
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}"
-               id="link_workspace_properties">{{ 'settings'|trans({}, 'platform') }}
-            </a>
+            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">{{ 'settings'|trans({}, 'platform') }}</a>
         </li>
         <span class="divider"> / </span>
         <li>
-            <a href="{{ path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()}) }}"
-               id="link_workspace_widget_properties">{{ 'widgets'|trans({}, 'platform') }}
-            </a>
+            <a href="{{ path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
         </li>
         <span class="divider"> / </span>
          <li>
-            <a href="#"
-               id="link_workspace_widget_display_properties">{{ 'display_options'|trans({}, 'platform') }}
-            </a>
+            <a href="#">{{ 'display_options'|trans({}, 'platform') }}</a>
         </li>
     </ul>
 <table id="widget-table"  class="table table-striped table-bordered table-condensed">
