@@ -120,12 +120,19 @@ This file will be parsed by the plugin installator to install your plugin and cr
     plugin:
         # Set this to "true" if your plugin must have an entry in the plugins configuration page.
         has_options: true
+        # You can set an icon for your plugin. The icon must be in your public/images/icons folder.
+        icon: icon.png
 
         # Widgets declared by your plugin.
         widgets:
         # Each widget requires a name.
          - name: claroline_exemple
+        # Set this to true if the widget is configurable
+           is_configurable: true
+        # You can set an icon for your widget. The icon must be in your public/images/icons folder.
+           icon: something.jpeg
          - name: claroline_theanswertolifeuniverseandeverything
+           is_configurable: false
 
         # Properties of resources managed by your plugin
         # You can define as many resource types as you want in this file.
