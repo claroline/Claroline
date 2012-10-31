@@ -4,8 +4,6 @@ plugin:
   widgets:
     - name: claroline_mywidget1
     - name: claroline_mywidget2
-    - name: claroline_mywidget3
-    - name: claroline_mywidget4
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText

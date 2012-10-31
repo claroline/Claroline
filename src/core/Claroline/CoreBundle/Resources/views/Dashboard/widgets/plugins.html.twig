@@ -1,5 +1,5 @@
 {% for key, value in widgets %}
-<section class="widget" id="w-{{ key }}">
+<section class="widget" id="{{ "w-" ~ key }}">
     <div class="widget-header">
         <span class="icon-calendar"></span>
         <h3>{{ key|trans({}, 'widget') }}</h3>
@@ -12,5 +12,5 @@
     <div class="widget-content" id="{{ "w-" ~ key ~ "-content" }}">
         {{ value }}
     </div> <!-- .widget-content -->
-<section> <!-- /widget -->
+</section> <!-- /widget -->
 {% endfor %}

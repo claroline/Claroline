@@ -37,9 +37,3 @@ services:
       - { name: kernel.event_listener, event: widget_claroline_mywidget1_workspace, method: onDisplay }
       - { name: kernel.event_listener, event: widget_claroline_mywidget2_dashboard, method: onDisplay }
       - { name: kernel.event_listener, event: widget_claroline_mywidget2_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget3_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget3_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget4_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget4_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget5_dashboard, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget5_workspace, method: onDisplay }
