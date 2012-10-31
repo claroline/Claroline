@@ -142,7 +142,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['widgets'] as $widget){
-            $this->persistWidget($widget, $pluginEntity);
+            $this->persistWidget($widget, $pluginEntity, $plugin);
         }
     }
 
@@ -207,12 +207,22 @@ class DatabaseWriter
         return $resourceType;
     }
 
-    private function persistWidget($widget, $pluginEntity)
+    private function persistWidget($widget, $pluginEntity, $plugin)
     {
         $widgetEntity = new Widget();
         $widgetEntity->setName($widget['name']);
         $widgetEntity->setConfigurable($widget['is_configurable']);
         $widgetEntity->setPlugin($pluginEntity);
+
+        if(isset($widget['icon'])){
+            $widgetEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$widget['icon']}");
+        } else {
+            $defaultIcon = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+            $widgetEntity->setIcon($defaultIcon->getLargeIcon());
+        }
+        
         $this->em->persist($widgetEntity);
         $widgetConfig = new DisplayConfig();
         $widgetConfig->setWidget($widgetEntity);
