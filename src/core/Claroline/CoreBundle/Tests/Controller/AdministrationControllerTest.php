@@ -9,6 +9,21 @@ class AdministrationControllerTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
     private $configHandler;
 
+    public static function setUpBeforeClass()
+    {
+        $client = self::createClient();
+        $container = $client->getContainer();
+        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $pluginFqcn = 'Valid\Simple\ValidSimple';
+        $plugin = $loader->load($pluginFqcn);
+        $dbWriter->insert($plugin);
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $plugin = $loader->load($pluginFqcn);
+        $dbWriter->insert($plugin);
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -24,6 +39,22 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         parent::tearDown();
         $this->configHandler->eraseTestConfiguration();
+    }
+
+    public static function tearDownAfterClass()
+    {
+        $client = self::createClient();
+        $container = $client->getContainer();
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $pluginFqcn = 'Valid\Simple\ValidSimple';
+        $plugin = $loader->load($pluginFqcn);
+        $container->get('claroline.plugin.recorder')->unregister($plugin);
+        $container->get('claroline.plugin.migrator')->remove($plugin);
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $plugin = $loader->load($pluginFqcn);
+        $container->get('claroline.plugin.recorder')->unregister($plugin);
+        $container->get('claroline.plugin.migrator')->remove($plugin);
     }
 
     public function testAdminCanSeeGroups()
@@ -262,21 +293,46 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testPluginParametersActionThrowsEvent()
     {
-        //plugin installation
         $this->logUser($this->getFixtureReference('user/admin'));
-        $container = $this->client->getContainer();
-        $this->dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $this->loader = $container->get('claroline.plugin.loader');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $this->loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
-        $pluginFqcn = 'Valid\Simple\ValidSimple';
-        $plugin = $this->loader->load($pluginFqcn);
-        $this->dbWriter->insert($plugin);
-        //register event
-
         $this->client->request('GET', '/admin/plugins');
         $this->client->request('GET', '/admin/plugin/plugin/options');
         $this->assertContains('plugin_options_plugin', $this->client->getResponse()->getContent());
+    }
+
+    public function testAdminCanSeeWidgetParameters()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->client->request('GET', '/admin/widgets');
+        //exampletext has 4 widgets
+        $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
+    }
+
+    public function testAdminCanSetWidgetVisibleOption()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true));
+        //exampletext has 4 widgets
+        $this->assertGreaterThan(3, count($configs));
+        $this->client->request('POST', "/admin/plugin/visible/{$configs[0]->getId()}");
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true));
+        $this->assertGreaterThan(2, count($configs));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => false));
+        $this->assertGreaterThan(0, count($configs));
+    }
+
+    public function testAdminCanSetWidgetLockOption()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true));
+        //exampletext has 4 widgets
+        $this->assertGreaterThan(3, count($configs));
+        $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true));
+        $this->assertGreaterThan(2, count($configs));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => false));
+        $this->assertGreaterThan(0, count($configs));
     }
 
     private function getUser($username)
