@@ -5,7 +5,7 @@ namespace Claroline\ForumBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\DataFixtures\LoggableFixture;
+use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures\Special;
 
-use Claroline\CoreBundle\DataFixtures\LoggableFixture;
+use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
