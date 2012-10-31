@@ -167,3 +167,9 @@ save: sauvegarder
 directory: Répertoire
 file: Fichier
 
+# widgets
+display_options: options d'affichage
+widget_settings: paramètres des widgets
+visible: visible
+lock: verrouiller
+

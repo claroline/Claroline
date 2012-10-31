@@ -167,3 +167,9 @@ save: save
 directory: Directory
 file: File
 
+# widgets
+display_options: display options
+widget_settings: widget settings
+visible: visible
+lock: lock
+
