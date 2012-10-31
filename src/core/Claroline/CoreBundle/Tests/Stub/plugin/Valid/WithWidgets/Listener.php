@@ -7,8 +7,8 @@ use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
 class Listener
 {
    function onDisplay(DisplayWidgetEvent $event)
-    {
-        $event->setContent('someContent');
-    }
+   {
+       $event->setContent('someContent');
+   }
 
 }

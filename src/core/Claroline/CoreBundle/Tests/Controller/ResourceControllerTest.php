@@ -169,13 +169,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($jsonResponse[0]->workspace_id, $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
     }
 
-    public function testResourceTypesAction()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('GET', '/resource/types');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-    }
-
     public function testResourceListAction()
     {
         $this->logUser($this->getFixtureReference('user/user'));
