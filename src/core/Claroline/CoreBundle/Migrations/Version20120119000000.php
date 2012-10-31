@@ -505,7 +505,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id')
         );
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_widget'), array('widget_id'), array('id')
+            $this->getStoredTable('claro_widget'), array('widget_id'), array('id'), array('onDelete' => 'CASCADE')
         );
     }
 }

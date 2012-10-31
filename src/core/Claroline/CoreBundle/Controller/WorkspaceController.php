@@ -194,30 +194,6 @@ class WorkspaceController extends Controller
         );
     }
 
-    /**
-     * Returns the id of the current user workspace.
-     *
-     * @return Response
-     */
-    public function userWorkspaceIdAction()
-    {
-        $id = $this->get('security.context')->getToken()->getUser()->getPersonalWorkspace()->getId();
-
-        return new Response($id);
-    }
-
-    /**
-     * @param integer $workspaceId
-     * @param string $format
-     */
-    public function rolesAction($workspaceId, $format)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $wsRoles = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId)->getWorkspaceRoles();
-
-        return $this->render("ClarolineCoreBundle:Workspace:workspace_roles.{$format}.twig", array('roles' => $wsRoles));
-    }
-
     //todo dql for this
 
     /**
