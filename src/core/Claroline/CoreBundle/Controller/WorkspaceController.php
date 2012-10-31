@@ -227,21 +227,9 @@ class WorkspaceController extends Controller
      */
     public function widgetsAction($workspaceId)
     {
+        $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
-        $adminConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null)));
-
-        foreach ($workspaceConfigs as $workspaceConfig){
-            if(!$workspaceConfig->getParent()->isLocked()){
-                unset($adminConfigs[$workspaceConfig->getParent()->getId()]);
-            } else {
-                unset($workspaceConfigs[$workspaceConfig->getId()]);
-            }
-
-        }
-
-        $configs = array_merge($workspaceConfigs, $adminConfigs);
 
         foreach ($configs as $config){
             if($config->isVisible()){
@@ -282,30 +270,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-
-        $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
-        $adminConfigs = $this->setEntitiesArrayKeysAsIds($em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null)));
-
-        foreach ($workspaceConfigs as $workspaceConfig){
-            if(!$workspaceConfig->getParent()->isLocked()){
-                unset($adminConfigs[$workspaceConfig->getParent()->getId()]);
-            } else {
-                unset($workspaceConfigs[$workspaceConfig->getId()]);
-            }
-
-        }
-
-        $childConfigs = array();
-
-        foreach ($adminConfigs as $adminConfig){
-            $childConfig = new DisplayConfig();
-            $childConfig->setParent($adminConfig);
-            $childConfig->setVisible($adminConfig->isVisible());
-            $childConfig->setWidget($adminConfig->getWidget());
-            $childConfigs[] = $childConfig;
-        }
-
-        $configs = array_merge($workspaceConfigs, $childConfigs);
+        $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
@@ -367,15 +332,5 @@ class WorkspaceController extends Controller
         if ($authorization === false) {
             throw new AccessDeniedHttpException();
         }
-    }
-
-    private function setEntitiesArrayKeysAsIds($array)
-    {
-        $tmpArray = array();
-        foreach ($array as $item){
-            $tmpArray[$item->getId()] = $item;
-        }
-
-        return $tmpArray;
     }
 }
