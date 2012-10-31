@@ -246,12 +246,25 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
-            array('workspace' => $workspace, 'configs' => $configs)
+            array('workspace' => $workspace)
         );
     }
+
+    public function widgetDisplayPropertiesAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties_display_options.html.twig',
+            array('workspace' => $workspace, 'configs' => $configs)
+        );
+
+    }
+
+
 
     /**
      * If the option doens't exist in the database yet, it's created here.

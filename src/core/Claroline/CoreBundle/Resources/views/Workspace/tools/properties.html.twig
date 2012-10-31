@@ -1,7 +1,15 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block section_content %}
-
+   {% spaceless %}
+        <ul class="breadcrumb">
+            <li>
+                <a href="#"
+                id="link_workspace_properties">{{ 'properties'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
+    {% endspaceless %}
     <a href="{{path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()})}}">widgets</a>
 
 {% endblock %}

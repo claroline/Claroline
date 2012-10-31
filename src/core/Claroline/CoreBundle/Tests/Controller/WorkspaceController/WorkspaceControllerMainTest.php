@@ -200,7 +200,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     public function testManagerCanSeeWidgetProperties()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/widget");
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/widget/display");
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
     }
 
