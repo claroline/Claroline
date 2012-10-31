@@ -112,12 +112,25 @@ class Configuration implements ConfigurationInterface
 
     private function addWidgetSection($pluginSection)
     {
+        $plugin = $this->plugin;
+        $pluginFqcn = get_class($plugin);
+        $imgFolder = $plugin->getImgFolder();
+
+        $ds = DIRECTORY_SEPARATOR;
         $pluginSection
             ->arrayNode('widgets')
                 ->prototype('array')
                     ->children()
                        ->scalarNode('name')->isRequired()->end()
                        ->booleanNode('is_configurable')->isRequired()->end()
+                       ->scalarNode('icon')
+                           ->validate()
+                           ->ifTrue(function($v) use ($plugin){
+                               return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isIconValid', array($v, $plugin));
+                           })
+                           ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
+                           ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end()

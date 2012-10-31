@@ -16,7 +16,14 @@
 
     <div class="wrapper">
         {% for widget in widgets %}
-            {{ widget.getName() }}
-        {% endfor %}
+        <span>
+            <div class="wrapper">
+                <img src="{{asset(widget.getIcon())}}"
+                     />
+            </div>
+            <span class="res-name">{{  widget.getName()|lower|trans({}, 'widget') }}</span>
+            <a href="#">{{ 'configure'|trans({}, 'platform') }}</a>
+        </span>
+    {% endfor %}
     </div>
 {% endblock %}

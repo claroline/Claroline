@@ -475,6 +475,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string');
         $table->addColumn('plugin_id', 'integer');
         $table->addColumn('is_configurable', 'boolean');
+        $table->addColumn('icon', 'string', array('length' => 255));
         $table->addUniqueIndex(array('name'));
 
         $table->addForeignKeyConstraint(

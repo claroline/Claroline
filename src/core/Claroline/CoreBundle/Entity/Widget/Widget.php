@@ -33,6 +33,11 @@ class Widget
      */
     protected $isConfigurable;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $icon;
+
     public function getId()
     {
         return $this->id;
@@ -66,5 +71,15 @@ class Widget
     public function setConfigurable($bool)
     {
         $this->isConfigurable = $bool;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
     }
 }
