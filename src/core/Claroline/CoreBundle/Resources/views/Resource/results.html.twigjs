@@ -15,8 +15,12 @@
             <tbody>
             {% for resource in resources %}
                 {% if resource.parent_id is not null %}
-                    <tr id="{{ resource.id }}">
-                        <td class="checkbox-column"><input type="checkbox" value="{{ resource.id }}"/></td>
+                    <tr id="{{ resource.id }}" class="resource">
+                        <td class="checkbox-column">
+                            <input type="checkbox"
+                                value="{{ resource.id }}"
+                                data-resource-name="{{ resource.name }}"/>
+                        </td>
                         <td><a href="#" class="resource-link" data-id="{{ resource.id }}" data-type="{{ resource.type }}">{{ resource.name }}</a></td>
                         <td>
                             {% for resourceType, attributes in resourceTypes %}

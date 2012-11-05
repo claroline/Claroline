@@ -1,10 +1,9 @@
-/*
 ///////////////////////////////////////////////////////////////////////////////////
 // This less file contains only global layout rules (mainly for navbar, grid and //
 // footer positionning). It is included at the end of "bootstrap.less.pre". Keep //
 // it short and design-neutral.                                                  //
 ///////////////////////////////////////////////////////////////////////////////////
-*/
+
 html, body {
     height: 100%;
     margin: 0;
@@ -109,15 +108,19 @@ footer {
     zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
+/*****************/
+/* RESOURCES MGR */
+/*****************/
+
 .resource-manager .actions .btn,
 .resource-manager .actions select {
     height: 30px;
     margin: 0;
 }
 
-.resource-manager .resources,
-.resource-manager .filters {
-    margin: 16px 0 0;
+.resource-manager .filters,
+.resource-manager .resources {
+    margin: 16px 0 80px 0 !important;
 }
 
 .resource-manager .filters {
@@ -143,7 +146,6 @@ footer {
 }
 
 .resource-manager .filters .form-actions {
-    width: 248px;
     margin: 0;
     padding: 16px;
     text-align: center;
@@ -185,67 +187,6 @@ footer {
 
 .resource-manager .results .checkbox-column {
     width: 18px;
-}
-
-/*****************/
-/* RESOURCES MGR */
-/*****************/
-
-/* filter list */
-.res-icon-list {
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
-
-.res-icon-list .res-block {
-    vertical-align: top;
-    margin-top:5px
-}
-
-.res-icon-list .res-block label {
-    display: inline;
-}
-
-.res-icon-list .icon-caret-down {
-    color:lighten(@textColor,50%);
-    font-size: 20px;
-    text-decoration: none;
-}
-.res-icon-list .icon-caret-down:hover {
-    color:@textColor;
-}
-
-
-/* thumbnails list */
-.res-thumb-list {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.res-thumb-list .res-block {
-    display:inline-block;
-    width:180px;
-    text-align: center;
-    vertical-align: top;
-    margin: 15px;
-}
-
-.res-thumb-list .chk-instance {
-     vertical-align: top;
-}
-
-.res-thumb-list .res-block label {
-    display: inline;
-}
-
-.res-thumb-list .icon-caret-down {
-    color:lighten(@textColor,50%);
-    font-size: 20px;
-    text-decoration: none;
-    margin-left: 5px;
-}
-.res-thumb-list .icon-caret-down:hover {
-    color:@textColor;
 }
 
 /**************/

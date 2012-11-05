@@ -1,6 +1,6 @@
 (function () {
     this.Claroline = this.Claroline || {};
-    this.Claroline.Utilities = utilities = {};
+    var utilities = this.Claroline.Utilities = {};
 
     /**
      * Truncates a text and/or splits it into multiple lines if its length is greater

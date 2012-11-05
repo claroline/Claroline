@@ -10,14 +10,12 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
- * @Gedmo\Tree(type="materializedPath")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceInstanceRepository")
  * @ORM\Table(name="claro_resource_instance")
- * @Gedmo\Tree(type="nested")
+ * @Gedmo\Tree(type="materializedPath")
  */
 class ResourceInstance
 {
-
     const PATH_SEPARATOR = '`';
 
     /**
@@ -41,12 +39,22 @@ class ResourceInstance
     protected $name;
 
     /**
+     * Note : Fetch "eager" option is required because on name update, in order to build
+     * the new path, the materialized path extension uses the reflection api to retrieve
+     * the instance's parents paths, but the parents are proxies and their "path" property
+     * is empty until it is lazy-loaded via the dedicated getter...
+     * (see Gedmo\Tree\Strategy\AbstractMaterializedPath, line 283 :
+     *  '$pathProp->getValue($parent)' returns null).
+     *
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
-     *      inversedBy="children"
+     *      inversedBy="children",
+     *      fetch="EAGER"
      * )
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     * })
      */
     protected $parent;
 
@@ -255,7 +263,7 @@ class ResourceInstance
     }
 
     /**
-     * Return the lvl value of the instance in the nested tree.
+     * Return the lvl value of the instance in the tree.
      *
      * @return integer
      */
@@ -287,17 +295,17 @@ class ResourceInstance
 
     /**
      * Sets the resource name.
-     * @throw an exception if the name contains the path separator ('/').
      *
      * @param string $name
+     * @throws an exception if the name contains the path separator ('/').
      */
     public function setName($name)
     {
-        if (strpos(self::PATH_SEPARATOR, $name) === false) {
-            $this->name = $name;
-        } else {
-            throw new Exception("Invalid character " . self::PATH_SEPARATOR . " in resource name.");
+        if (strpos(self::PATH_SEPARATOR, $name) !== false) {
+            throw new \InvalidArgumentException('Invalid character "' . self::PATH_SEPARATOR . '" in resource name.');
         }
+
+        $this->name = $name;
     }
 
     /**
@@ -323,5 +331,4 @@ class ResourceInstance
         }
         return $pathForDisplay;
     }
-
 }

@@ -2,38 +2,12 @@
     this.Claroline = this.Claroline || {};
     var manager = this.Claroline.ResourceManager = {};
 
-// TO BE REMOVED ///////////////////////////////////////////////////////////////
-    manager.Models = {
-        Resource: Backbone.Model.extend({})
-    };
-
-    manager.Collections = {
-        Directory: Backbone.Collection.extend({
-            model: manager.Models.Resource,
-            initialize: function (resources, id, baseUrl) {
-                if (!id) {
-                    throw new Error('Directory must have an id');
-                }
-
-                if (!baseUrl) {
-                    throw new Error('Directory must have a base url');
-                }
-
-                this.id = id;
-                this.baseUrl = baseUrl;
-            },
-            url: function () {
-                return this.baseUrl + '/' + this.id;
-            }
-        })
-    };
-////////////////////////////////////////////////////////////////////////////////
-
     manager.Views = {
         Master: Backbone.View.extend({
             initialize: function (parameters, dispatcher) {
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
+                this.currentDirectory = {id: parameters.directoryId};
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager modal hide';
@@ -51,9 +25,10 @@
                 };
             },
             render: function (resources, path, isSearchMode) {
+                this.currentDirectory = _.last(path);
                 this.subViews.breadcrumbs.render(path);
-                this.subViews.actions.render(_.last(path), isSearchMode);
-                this.subViews.resources.render(resources, isSearchMode);
+                this.subViews.actions.render(this.currentDirectory, isSearchMode);
+                this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
                 this.subViews.areAppended || this.wrapper.append(
                     this.subViews.breadcrumbs.el,
                     this.subViews.actions.el,
@@ -69,7 +44,6 @@
                     event.preventDefault();
                     this.dispatcher.trigger('breadcrumb-click', {
                         resourceId: event.currentTarget.getAttribute('data-resource-id'),
-                        route: event.currentTarget.getAttribute('data-route'),
                         isPickerMode: this.parameters.isPickerMode
                     });
                 }
@@ -88,33 +62,36 @@
             className: 'actions clearfix',
             events: {
                 'click button.create': function () {
-                    this.dispatcher.trigger('creation-form', {
-                        resourceType: this.$('.create-resource select').val(),
-                        directoryId: this.currentDirectory.id
+                    this.dispatcher.trigger('display-form', {
+                        type: 'create',
+                        resource: {
+                            type: this.$('.create-resource select').val(),
+                            id: this.currentDirectory.id
+                        }
                     });
                 },
                 'click button.delete': function () {
-                    this.dispatcher.trigger('delete', {ids: this.checkedResources.ids});
-                    this.checkedResources.ids = [];
+                    this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
+                    this.checkedResources.resources = {};
                 },
                 'click button.download': function () {
-                    this.dispatcher.trigger('download', {ids: this.checkedResources.ids});
+                    this.dispatcher.trigger('download', {ids: _.keys(this.checkedResources.resources)});
                 },
                 'click button.copy': function () {
-                    this.checkedResources.ids.length > 0 && this.setPasteBinState(true, false);
+                    _.size(this.checkedResources.resources) > 0 && this.setPasteBinState(true, false);
                 },
                 'click button.cut': function () {
-                    this.checkedResources.ids.length > 0 && this.setPasteBinState(true, true);
+                    _.size(this.checkedResources.resources) > 0 && this.setPasteBinState(true, true);
                 },
                 'click button.paste': function () {
                     this.dispatcher.trigger('paste', {
-                        ids: this.checkedResources.ids,
+                        ids:  _.keys(this.checkedResources.resources),
                         isCutMode: this.isCutMode,
                         directoryId: this.currentDirectory.id
                     });
                 },
                 'click button.open-picker': function () {
-                    this.dispatcher.trigger('open-picker');
+                    this.dispatcher.trigger('picker', {action: 'open'});
                 },
                 'click button.search-panel': function () {
                     if (!this.filters) {
@@ -124,6 +101,16 @@
                     }
 
                     this.filters.toggle();
+                },
+                'click button.add': function () {
+                    this.parameters.isPickerOnly ?
+                        this.parameters.pickerCallback(this.checkedResources.resources) :
+                        this.dispatcher.trigger('paste', {
+                            ids: _.keys(this.checkedResources.resources),
+                            directoryId: this.targetDirectoryId,
+                            isCutMode: false
+                        });
+                    this.dispatcher.trigger('picker', {action: 'close'});
                 }
             },
             initialize: function (parameters, dispatcher) {
@@ -131,8 +118,9 @@
                 this.dispatcher = dispatcher;
                 this.isSearchMode = false;
                 this.currentDirectory = {id: parameters.directoryId};
+                this.targetDirectoryId = this.currentDirectory.id; // destination directory for picker "add" action
                 this.checkedResources = { // selection of resources checked by the user
-                    ids: [],
+                    resources: {},
                     directoryId: parameters.directoryId,
                     isSearchMode: false
                 };
@@ -142,16 +130,16 @@
                         this.isReadyToPaste && this.setPasteBinState(false, false); // cancel any previous paste bin state
 
                         if (this.checkedResources.directoryId != this.currentDirectory.id // cancel any previous selection made in another directory
-                            || (this.checkedResources.isSearchMode && !this.isSearchMode)) { // or in a previous search results list
+                            || (this.checkedResources.isSearchMode && !this.isSearchMode) // or in a previous search results list
+                            || (this.parameters.isPickerMode && !this.parameters.isPickerMultiSelectAllowed && event.isChecked)) { // or in this directory if we're in picker 'mono-select' mode
                             this.checkedResources.directoryId = this.currentDirectory.id;
-                            this.checkedResources.ids = [];
+                            this.checkedResources.resources = {};
                             this.setPasteBinState(false, false);
                         }
 
-                        var idIndex = this.checkedResources.ids.indexOf(event.resourceId);
-                        idIndex == -1 ? // add the resource to the selection or remove it if already present
-                            this.checkedResources.ids.push(event.resourceId) :
-                            this.checkedResources.ids.splice(idIndex, 1);
+                        this.checkedResources.resources.hasOwnProperty(event.resourceId) ? // add the resource to the selection or remove it if already present
+                            delete this.checkedResources.resources[event.resourceId] :
+                            (this.checkedResources.resources[event.resource.id] = event.resource.name);
                         this.checkedResources.directoryId = this.currentDirectory.id;
                         this.checkedResources.isSearchMode = this.isSearchMode;
                         this.setActionsEnabledState(event.isPickerMode);
@@ -162,16 +150,17 @@
                 return isEnabled ? jqButton.removeAttr('disabled') : jqButton.attr('disabled', 'disabled');
             },
             setActionsEnabledState: function (isPickerMode) {
+                var isSelectionNotEmpty = _.size(this.checkedResources.resources) > 0;
                 isPickerMode // enable picker "add" button on non-root directories if selection is not empty
-                    && this.currentDirectory.id != 0
-                    && this.setButtonEnabledState(this.$('button.add'), this.checkedResources.ids.length > 0);
+                    && (this.currentDirectory.id != 0 || this.isSearchMode)
+                    && this.setButtonEnabledState(this.$('button.add'), isSelectionNotEmpty);
                 !isPickerMode // enable main actions if selection is not empty
-                    && this.setButtonEnabledState(this.$('button.download'), this.checkedResources.ids.length > 0)
+                    && this.setButtonEnabledState(this.$('button.download'), isSelectionNotEmpty)
                     && (this.currentDirectory.id != 0 // following actions are only available on non-root directories
                         || this.isSearchMode) // and roots are not displayed in search mode
-                    && this.setButtonEnabledState(this.$('button.cut'), this.checkedResources.ids.length > 0)
-                    && this.setButtonEnabledState(this.$('button.copy'), this.checkedResources.ids.length > 0)
-                    && this.setButtonEnabledState(this.$('button.delete'), this.checkedResources.ids.length > 0);
+                    && this.setButtonEnabledState(this.$('button.cut'), isSelectionNotEmpty)
+                    && this.setButtonEnabledState(this.$('button.copy'), isSelectionNotEmpty)
+                    && this.setButtonEnabledState(this.$('button.delete'), isSelectionNotEmpty);
             },
             setPasteBinState: function (isReadyToPaste, isCutMode) {
                 this.isReadyToPaste = isReadyToPaste;
@@ -181,7 +170,7 @@
             render: function (directory, isSearchMode) {
                 this.currentDirectory = directory;
                 isSearchMode && !this.isSearchMode
-                    && (this.checkedResources.ids = [])
+                    && (this.checkedResources.resources = {})
                     && (this.checkedResources.isSearchMode = true);
                 this.isSearchMode = isSearchMode;
                 this.filters && (this.filters.currentDirectory = directory);
@@ -240,32 +229,36 @@
                 });
             },
             render: function () {
-                !this.parameters.isPickerMode && this.$el.addClass('span4');
+                !this.parameters.isPickerMode && this.$el.addClass('span3');
                 $(this.el).html(Twig.render(resource_filters_template, this.parameters));
             }
         }),
         Thumbnail: Backbone.View.extend({
-            className: 'resource-thumbnail',
+            className: 'resource-thumbnail resource',
             events: {
                 'click .resource-menu-action': function (event) {
                     event.preventDefault();
-                    var actionType = event.currentTarget.getAttribute('data-action');
+                    var action = event.currentTarget.getAttribute('data-action');
+                    var actionType = event.currentTarget.getAttribute('data-action-type');
                     var resourceId = event.currentTarget.getAttribute('data-id');
-                    event.currentTarget.getAttribute('data-is-custom') == 'no' ?
-                        this.dispatcher.trigger(actionType, {ids: [resourceId]}) :
-                        this.dispatcher.trigger('custom', {action: actionType, id: [resourceId]});
+                    actionType == 'display-form' ?
+                        this.dispatcher.trigger('display-form', {type: action, resource : {id: resourceId}}) :
+                        event.currentTarget.getAttribute('data-is-custom') == 'no' ?
+                            this.dispatcher.trigger(action, {ids: [resourceId]}) :
+                            this.dispatcher.trigger('custom', {'action': action, id: [resourceId]});
                 }
             },
             initialize: function (parameters, dispatcher) {
                  this.parameters = parameters;
                  this.dispatcher = dispatcher;
             },
-            render: function (resource) {
+            render: function (resource, isSelectionAllowed, hasMenu) {
                 this.el.id = resource.id;
                 resource.displayableName = Claroline.Utilities.formatText(resource.name, 20, 2);
                 $(this.el).html(Twig.render(resource_thumbnail_template, {
                     'resource': resource,
-                    'isDownloadable': this.parameters.resourceTypes[resource.type].isDownloadable,
+                    'isSelectionAllowed': isSelectionAllowed,
+                    'hasMenu': hasMenu,
                     'customActions': this.parameters.resourceTypes[resource.type].customActions || {},
                     'webRoot': this.parameters.appPath + '/..'
                 }));
@@ -282,22 +275,22 @@
             initialize: function (parameters, dispatcher) {
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
+                this.directoryId = parameters.directoryId;
                 !this.parameters.isPickerMode && this.$el.addClass('span12');
                 this.dispatcher.on('filter-view-change', function (event) {
                     if (!this.parameters.isPickerMode) {
                         event.isVisible ?
-                            this.$el.removeClass('span12') && this.$el.addClass('span8') :
-                            this.$el.removeClass('span8') && this.$el.addClass('span12');
+                            this.$el.removeClass('span12') && this.$el.addClass('span9') :
+                            this.$el.removeClass('span9') && this.$el.addClass('span12');
                     }
                 }, this);
             },
             addThumbnails: function (resources, successHandler) {
-                for (var i = 0; i < resources.length; ++i) {
+                _.each(resources, function (resource) {
                     var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
-                    thumbnail.render(resources[i]);
+                    thumbnail.render(resource, this.directoryId != 0 && !this.parameters.isPickerMode, true);
                     this.$el.append(thumbnail.$el);
-                }
-
+                }, this);
                 successHandler && successHandler();
             },
             removeResources: function (resourceIds) {
@@ -305,6 +298,11 @@
                 for (var i = 0; i < resourceIds.length; ++i) {
                     this.$('#' + resourceIds[i]).remove();
                 }
+            },
+            renameThumbnail: function (resourceId, newName, successHandler) {
+                newName = Claroline.Utilities.formatText(newName, 20, 2);
+                this.$('#' + resourceId + ' .resource-name').html(newName);
+                successHandler && successHandler();
             },
             dispatchClick: function (event) {
                 event.preventDefault();
@@ -315,13 +313,23 @@
                 });
             },
             dispatchCheck: function (event) {
+                this.parameters.isPickerMode
+                    && !this.parameters.isPickerMultiSelectAllowed
+                    && event.currentTarget.checked
+                    && _.each(this.$('input[type=checkbox]'), function (checkbox) {
+                        checkbox !== event.currentTarget && (checkbox.checked = false);
+                    });
                 this.dispatcher.trigger('resource-check-status', {
-                    resourceId: event.currentTarget.getAttribute('value'),
+                    resource: {
+                        id: event.currentTarget.getAttribute('value'),
+                        name: event.currentTarget.getAttribute('data-resource-name')
+                    },
                     isChecked: event.currentTarget.checked,
                     isPickerMode: this.parameters.isPickerMode
                 });
             },
-            render: function (resources, isSearchMode) {
+            render: function (resources, isSearchMode, directoryId) {
+                this.directoryId = directoryId;
                 this.$el.empty();
                 isSearchMode ?
                     $(this.el).html(Twig.render(resource_results_template, {
@@ -330,7 +338,11 @@
                     })) :
                     _.each(resources, function (resource) {
                         var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
-                        thumbnail.render(resource);
+                        thumbnail.render(
+                            resource,
+                            directoryId != 0 || !this.parameters.isPickerMode,
+                            directoryId != 0 && !this.parameters.isPickerMode
+                        );
                         $(this.el).append(thumbnail.$el);
                     }, this);
             }
@@ -341,38 +353,7 @@
                 'submit form': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[0];
-                    this.dispatcher.trigger('create', {
-                       action: form.getAttribute('action'),
-                       data: new FormData(form),
-                       parentId: this.targetResourceId
-                    });
-                }
-            },
-            initialize: function (dispatcher) {
-                this.dispatcher = dispatcher;
-                this.on('close', this.close, this);
-            },
-            close: function () {
-                $(this.el).modal('hide');
-            },
-            render: function (form, targetResourceId) {
-                this.targetResourceId = targetResourceId;
-                form = form.replace('_instanceId', targetResourceId);
-                $(this.el).html(Twig.render(modal_template, {
-                    'body': form
-                })).modal();
-            }
-        }),
-
-
-
-        RenameForm: Backbone.View.extend({
-            className: 'resource-form modal hide',
-            events: {
-                'submit form': function (event) {
-                    event.preventDefault();
-                    var form = $(this.el).find('form')[0];
-                    this.dispatcher.trigger('rename', {
+                    this.dispatcher.trigger(this.eventOnSubmit, {
                        action: form.getAttribute('action'),
                        data: new FormData(form),
                        resourceId: this.targetResourceId
@@ -381,27 +362,29 @@
             },
             initialize: function (dispatcher) {
                 this.dispatcher = dispatcher;
+                this.targetResourceId = null;
+                this.eventOnSubmit = '';
                 this.on('close', this.close, this);
             },
             close: function () {
                 $(this.el).modal('hide');
             },
-            render: function (form, targetResourceId) {
+            render: function (form, targetResourceId, eventOnSubmit) {
                 this.targetResourceId = targetResourceId;
+                this.eventOnSubmit = eventOnSubmit;
                 form = form.replace('_instanceId', targetResourceId);
                 $(this.el).html(Twig.render(modal_template, {
                     'body': form
                 })).modal();
             }
         })
-
-
-
     };
 
     manager.Router = Backbone.Router.extend({
-        initialize: function (displayResourcesCallback) {
-            this.route(/^$/, 'default', displayResourcesCallback);
+        initialize: function (defaultDirectoryId, displayResourcesCallback) {
+            this.route(/^$/, 'default', function() {
+                displayResourcesCallback(defaultDirectoryId, 'main');
+            });
             this.route(/^resources\/(\d+)(\?.*)?$/, 'display', function (directoryId, queryString) {
                 if (queryString) {
                     var searchParameters = {};
@@ -422,13 +405,15 @@
     });
 
     manager.Controller = {
-        views: {},
         events: {
-            'open-picker': function () {
-                this.openPicker();
+            'picker': function (event) {
+                this.picker(event.action);
             },
             'create': function (event) {
-                this.create(event.action, event.data, event.parentId);
+                this.create(event.action, event.data, event.resourceId);
+            },
+            'display-form': function (event) {
+                this.displayForm(event.type, event.resource);
             },
             'creation-form': function (event) {
                 this.displayCreationForm(event.resourceType, event.directoryId);
@@ -439,18 +424,11 @@
             'download': function (event) {
                 this.download(event.ids);
             },
-
-
             'rename': function (event) {
                 this.rename(event.action, event.data, event.resourceId);
             },
             'rename-form': function (event) {
                 this.displayRenameForm(event.ids[0]);
-            },
-
-
-            'manage-rights': function (event) {
-                this.manageRights(event.ids[0]);
             },
             'custom': function (event) {
                 this.custom(event.action, event.id);
@@ -461,7 +439,7 @@
             'breadcrumb-click': function (event) {
                 event.isPickerMode ?
                     this.displayResources(event.resourceId, 'picker') :
-                    this.router.navigate(event.route, {trigger: true});
+                    this.router.navigate('resources/' + event.resourceId, {trigger: true});
             },
             'resource-click': function (event) {
                 if (event.resourceType == 'directory') {
@@ -489,6 +467,7 @@
             }
         },
         initialize: function (parameters) {
+            this.views = {};
             this.parameters = parameters;
             this.dispatcher = _.extend({}, Backbone.Events);
             _.each(parameters.isPickerOnly ? ['picker'] : ['main', 'picker'], function (view) {
@@ -507,7 +486,7 @@
 
             if (!parameters.isPickerOnly) {
                 this.displayResources = _.bind(this.displayResources, this);
-                this.router = new manager.Router(this.displayResources);
+                this.router = new manager.Router(this.parameters.directoryId, this.displayResources);
                 Backbone.history.start() || this.displayResources(parameters.directoryId, 'main');
             }
         },
@@ -522,7 +501,7 @@
                     $.ajax({
                         url: this.parameters.appPath + '/resource/parents/' + directoryId,
                         success: function (path) {
-                            this.parameters.directoryId == 0 && path.unshift({id: 0});
+                            (this.parameters.directoryId == 0 || view == 'picker') && path.unshift({id: 0});
                             this.views[view].render(resources, path, isSearchMode);
                             this.views[view].isAppended ||
                                 this.parameters.parentElement.append(this.views[view].el)
@@ -532,13 +511,17 @@
                 }
             });
         },
-        displayCreationForm: function (resourceType, directoryId) {
+
+        displayForm: function (type, resource) {
+            var formSource = (
+                (type == 'create' && '/resource/form/' + resource.type) ||
+                (type == 'rename' && '/resource/rename/form/' + resource.id));
+            formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
             this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
             $.ajax({
-                url: this.parameters.appPath + '/resource/form/' + resourceType,
+                url: this.parameters.appPath + formSource,
                 success: function (form) {
-//                    form = form.replace('_instanceId', directoryId);
-                    this.views['form'].render(form, directoryId);
+                    this.views['form'].render(form, resource.id, type);
                     this.views['form'].isAppended ||
                         this.parameters.parentElement.append(this.views['form'].el)
                         && (this.views['form'].isAppended = true);
@@ -553,26 +536,9 @@
                 processData: false,
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
-                    if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close());
-                    } else {
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
+                        this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close()) :
                         this.views['form'].render(data, parentDirectoryId);
-                    }
-                }
-            });
-        },
-
-
-        displayRenameForm: function (resourceId) {
-            this.views['renameForm'] || (this.views['renameForm'] = new manager.Views.RenameForm(this.dispatcher));
-            $.ajax({
-                url: this.parameters.appPath + '/resource/rename/form/' + resourceId,
-                success: function (form) {
-//                    form = form.replace('_instanceId', resourceId);
-                    this.views['renameForm'].render(form, resourceId);
-                    this.views['renameForm'].isAppended ||
-                        this.parameters.parentElement.append(this.views['renameForm'].el)
-                        && (this.views['renameForm'].isAppended = true);
                 }
             });
         },
@@ -584,17 +550,12 @@
                 processData: false,
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
-                    if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        console.debug(data)
-                        //this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close());
-                    } else {
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
+                        this.views['main'].subViews.resources.renameThumbnail(resourceId, data[0], this.views['form'].close()) :
                         this.views['renameForm'].render(data, resourceId);
-                    }
                 }
             });
         },
-
-
         delete_: function (resourceIds) {
             $.ajax({
                 url: this.parameters.appPath + '/resource/multidelete',
@@ -625,79 +586,52 @@
         download: function (resourceIds) {
             window.location = this.parameters.appPath + '/resource/multiexport?' + $.param({ids: resourceIds});
         },
-        /*
-        rename: function (resourceId) {
-            alert('rename ' + resourceId)
-        },*/
-        manageRights: function (resourceId) {
-            alert('rights of ' + resourceId)
-        },
         open: function (resourceType, resourceId) {
             window.location = this.parameters.appPath + '/resource/custom/' + resourceType + '/open/' + resourceId;
         },
-        custom: function (action, resourceId) {
-            alert('custom action "' + action + '" on resource ' + resourceId);
+        manageRights: function (resourceId) {
+            alert('Rights of ' + resourceId + ' (not implemented yet)')
         },
-        openPicker: function () {
-            this.views.picker.isAppended || this.displayResources(0, 'picker');
-            this.views.picker.$el.modal('show');
+        custom: function (action, resourceId) {
+            alert('Custom action "' + action + '" on resource ' + resourceId + ' (not implemented yet)');
+        },
+        picker: function (action) {
+            action == 'open' && (this.views.picker.isAppended || this.displayResources(0, 'picker'));
+            !this.parameters.isPickerOnly && (this.views.picker.subViews.actions.targetDirectoryId = this.views.main.currentDirectory.id);
+            this.views.picker.$el.modal(action == 'open' ? 'show' : 'hide');
         }
     };
 
+    /**
+     * Initializes the resource manager with a set of options :
+     * - appPath: the base url of the application (default to empty string).
+     * - directoryId : the id of the directory to open in main (vs picker) mode (default to "0", i.e. pseudo-root of all directories).
+     * - parentElement: the jquery element in which the views will be rendered (default to "body" element).
+     * - resourceTypes: an object whose properties describe the available resource types (default to empty object).
+     * - isPickerOnly: wheither the manager must initialize a main view and a picker view, or just the picker one (default to false).
+     * - isMultiSelectAllowed: wheither the selection of multiple resources in picker mode should be allowed or not (default to false).
+     * - pickerCallback: the function to be called when resources are selected in picker mode (default to  empty function).
+     *
+     * @param object parameters The parameters of the manager
+     */
     manager.initialize = function (parameters) {
         parameters = parameters || {};
         parameters.directoryId = parameters.directoryId || '0';
         parameters.parentElement = parameters.parentElement || $('body');
         parameters.resourceTypes = parameters.resourceTypes || {};
-
-        // needed ?
-        parameters.workspaceDirectories = parameters.workspaceDirectories || [];
         parameters.isPickerOnly = parameters.isPickerOnly || false;
+        parameters.isPickerMultiSelectAllowed = parameters.isPickerMultiSelectAllowed || false;
+        parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         manager.Controller.initialize(parameters);
     };
 
-    manager.openPicker = function () {
-        manager.Controller.openPicker();
+    /**
+     * Opens or closes the resource picker, depending on the "action" parameter.
+     *
+     * @param string action The action to be taken, i.e. "open" or "close" (default to "open")
+     */
+    manager.picker = function (action) {
+        manager.Controller.picker(action == 'open' ? action : 'close');
     }
 })();
-
-$(function() {
-    var container = $(document.createElement('div'))
-        .attr('class', 'container')
-        .prependTo('body');
-
-    Claroline.ResourceManager.initialize({
-        'directoryId': '0',
-        'parentElement': container,
-        'resourceTypes': {
-            'file': {
-                name: 'Fichier',
-                isDownloadable: true,
-                customActions: {
-                    'foo': {
-                        'name': 'Custom...'
-                    }
-                }
-            },
-            'directory': {
-                name: 'Répertoire',
-                isDownloadable: true
-            },
-            'text': {
-                name: 'Texte'
-            },
-            'Forum': {
-                name: 'Forum'
-            },
-            'HTMLElement': {
-                name: 'Page html'
-            },
-            'Subject': {}
-        },
-        // needed ?
-        'workspaceDirectories': [{id: '85', name: 'abc - Workspace 1'}, {id: '1', name: 'PERSO - admin'}],
-        'isPickerOnly': false,
-        'appPath': Routing.generate('claro_home_index') + '..'
-    });
-});

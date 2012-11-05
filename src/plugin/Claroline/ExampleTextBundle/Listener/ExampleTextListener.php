@@ -30,7 +30,7 @@ class ExampleTextListener extends ContainerAware
         //The '_instanceId' isn't a mistake, it's a placeholder wich will be replaced with js later on.
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig', array(
+            'ClarolineCoreBundle:Resource:create_form.html.twig', array(
             'form' => $form->createView(),
             'resourceType' => 'ExampleText'
             )
@@ -58,7 +58,7 @@ class ExampleTextListener extends ContainerAware
 
         //if the form is invalid, renders the form with its errors.
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'forum'
