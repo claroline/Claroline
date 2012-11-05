@@ -7,12 +7,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-
-
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
-
-
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
@@ -56,7 +52,8 @@ class ResourceController extends Controller
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-            if($resourceType === 'file') {
+
+            if ($resourceType === 'file') {
                 $mimeType = $resource->getMimeType();
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType, true, $mimeType);
             } else {
@@ -110,8 +107,13 @@ class ResourceController extends Controller
         return new Response('Resource deleted', 204);
     }
 
-
-
+    /**
+     * Displays the form allowing to rename a resource instance.
+     *
+     * @param integer $instanceId
+     *
+     * @return Response
+     */
     public function renameFormAction($instanceId)
     {
         $instance = $this->getDoctrine()
@@ -126,6 +128,13 @@ class ResourceController extends Controller
         );
     }
 
+    /**
+     * Renames a resource instance.
+     *
+     * @param integer $instanceId
+     *
+     * @return Response
+     */
     public function renameAction($instanceId)
     {
         $request = $this->get('request');
@@ -136,17 +145,9 @@ class ResourceController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $resource = $form->getData();
-            $em->persist($resource);
+            $em->persist($instance);
             $em->flush();
-
-            /*
-            $content = $this->renderView(
-                'ClarolineCoreBundle:Resource:instances.json.twig',
-                array('instances' => array($resourceInstance))
-            );*/
-            $content = '["yo"]';
-            $response = new Response($content);
+            $response = new Response("[\"{$instance->getName()}\"]");
             $response->headers->set('Content-Type', 'application/json');
 
             return $response;
@@ -154,78 +155,6 @@ class ResourceController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('instanceId' => $instanceId, 'form' => $form->createView())
-        );
-    }
-
-    /**
-     * Renders the form allowing to edit the base properties (currently the
-     * sharable/public/private attribute) of a given resource.
-     *
-     * @param integer $resourceId
-     *
-     * @return Response
-     */
-    public function basePropertiesFormAction($resourceId)
-    {
-        $resource = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->find($resourceId);
-
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($user != $resource->getCreator()) {
-            throw new AccessDeniedHttpException('access denied');
-        }
-
-        $form = $this->createForm(new ResourcePropertiesType(), $resource);
-
-        return $this->render(
-            'ClarolineCoreBundle:Resource:properties_form.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
-        );
-    }
-
-    /**
-     * Updates the base properties of a given resource.
-     *
-     * @param integer $resourceId
-     *
-     * @return Response
-     */
-    public function updateBasePropertiesAction($instanceId)
-    {
-        $request = $this->get('request');
-        $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->find($instanceId);
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($user != $resourceInstance->getResource()->getCreator()) {
-            throw new AccessDeniedHttpException('access denied');
-        }
-
-        $form = $this->createForm(new ResourcePropertiesType(), $resourceInstance->getResource());
-        $form->bindRequest($request);
-
-        if ($form->isValid()) {
-            $resource = $form->getData();
-            $resourceInstance->setResource($resource);
-            $em->persist($resource);
-            $em->flush();
-            $content = $this->renderView(
-                'ClarolineCoreBundle:Resource:instances.json.twig',
-                array('instances' => array($resourceInstance))
-            );
-            $response = new Response($content);
-            $response->headers->set('Content-Type', 'application/json');
-
-            return $response;
-        }
-
-        return $this->render(
-            'ClarolineCoreBundle:Resource:properties_form.html.twig',
             array('instanceId' => $instanceId, 'form' => $form->createView())
         );
     }
@@ -480,28 +409,6 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resource types.
-     * It doesn't include the directory.
-     * Ony listable types are included.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function resourceTypesAction()
-    {
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findNavigableResourceType(true);
-
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resource_types.json.twig',
-            array('resourceTypes' => $resourceTypes)
-        );
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
      * Returns a json representation of the resources of a defined type for the current user.
      *
      * @param integer $resourceTypeId
@@ -514,33 +421,6 @@ class ResourceController extends Controller
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($rootId);
         $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->listChildrenResourceInstances($root, $resourceType, true);
         $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of the menus of actions available for each resource type.
-     *
-     * @return Response
-     */
-    public function menusAction()
-    {
-        $repo = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findBy(array('isListable' => 1));
-        $pluginResourceTypes = $repo->findListablePluginResourceTypes();
-
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:menus.json.twig',
-            array(
-                'resourceTypes' => $resourceTypes,
-                'pluginResourceTypes' => $pluginResourceTypes
-            )
-        );
-
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -597,35 +477,9 @@ class ResourceController extends Controller
     }
 
     /**
-     * Renders the resource filter
-     *
-     * @param string $prefix
-     *
-     * @return Response
-     */
-    public function rendersFiltersAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $roots = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->listRootsForUser($user, true);
-
-        $resourceTypes = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findNavigableResourceType();
-
-        $resourceIcons = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-            ->findBy(array('iconType' => 3));
-
-        return $this->render(
-            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes, 'resourceIcons' => $resourceIcons)
-        );
-    }
-
-    /**
      * Renders the searched resource list.
+     *
+     * @todo Add the (icon) "mimeType" filter (see ResourceInstanceRepository)
      *
      * @return Response
      */

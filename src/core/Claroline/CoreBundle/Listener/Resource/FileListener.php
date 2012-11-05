@@ -20,7 +20,7 @@ class FileListener extends ContainerAware
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'file'
@@ -55,7 +55,7 @@ class FileListener extends ContainerAware
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'file'

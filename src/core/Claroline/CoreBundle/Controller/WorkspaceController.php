@@ -166,9 +166,9 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:home.html.twig', array(
-            'workspace' => $workspace,
-            )
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:home.html.twig',
+            array('workspace' => $workspace)
         );
     }
 
@@ -186,10 +186,19 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
+        $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getRootForWorkspace($workspace)
+            ->getId();
+        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findBy(array('isListable' => true));
 
-        return $this->render('ClarolineCoreBundle:Workspace:resources.html.twig', array(
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:resources.html.twig',
+            array(
                 'workspace' => $workspace,
-                )
+                'directoryId' => $directoryId,
+                'resourceTypes' => $resourceTypes
+            )
         );
     }
 

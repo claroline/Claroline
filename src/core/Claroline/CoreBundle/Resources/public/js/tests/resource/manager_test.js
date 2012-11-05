@@ -1,73 +1,50 @@
 describe('The resource manager', function () {
+
     beforeEach(function () {
+        this.server = Claroline.FakeServer.create();
+        this.defaultParameters = {
+            'parentElement': $(document.createElement('div')),
+            'resourceTypes': {
+                'file': {name: 'Fichier'},
+                'directory': {name: 'Répertoire'},
+                'foo': {name: 'Foo', customActions: {'bar': {name: 'Bar', route: '/some_route'}}}
+            }
+        };
         this.manager = Claroline.ResourceManager;
-    })
-
-    describe('has a resource model', function () {
-        it('which is defined', function () {
-            expect(this.manager.Models.Resource).toBeDefined();
-        });
-
-        it('which can be instantiated', function () {
-            var resource = new this.manager.Models.Resource();
-            expect(resource).not.toBeNull();
-        });
     });
 
-    describe('has a directory collection', function () {
-        it('which is defined', function () {
-            expect(this.manager.Collections.Directory).toBeDefined();
-        });
-
-        it('which requires an id and a base url at initialization', function () {
-            var manager = this.manager;
-
-            // wrong initializations
-            expect(function () {//console.debug(this.manager)
-                new manager.Collections.Directory();
-            }).toThrow(new Error('Directory must have an id'));
-
-            expect(function () {
-                new manager.Collections.Directory([], 1);
-            }).toThrow(new Error('Directory must have a base url'));
-
-            // valid initialization
-            expect(
-                new manager.Collections.Directory([], 1, 'fakeUrl')
-            ).not.toBeNull();
-        });
-
-        it('whose id attribute is accessible', function () {
-            var directory = new this.manager.Collections.Directory([], 1, 'fakeUrl');
-            expect(directory.id).toBe(1);
-        });
-
-        describe('whose #fetch method', function () {
-            beforeEach(function() {
-                this.server = Claroline.FakeServer.create();
-                this.directoryId = 1;
-                this.fakeBaseUrl = '/resources';
-                this.directory = new this.manager.Collections.Directory([], this.directoryId, this.fakeBaseUrl);
-            });
-
-            afterEach(function () {
-                this.server.restore();
-            });
-
-            it('makes a get request with correct url', function () {
-                this.directory.fetch();
-                expect(this.server.requests.length).toEqual(1);
-                expect(this.server.requests[0].method).toBe('GET');
-                expect(this.server.requests[0].url).toBe(this.fakeBaseUrl + '/' + this.directoryId);
-            });
-
-            it('populates collection with directory resources', function () {
-                this.directory.fetch();
-                this.server.respond();
-                expect(this.directory.length).toBe(2);
-            });
-        });
+    afterEach(function () {
+        Backbone.History.started && Backbone.history.stop();
+        this.server.restore();
     });
 
+    it('builds two master views by default', function () {
+        this.manager.initialize(this.defaultParameters);
+        expect(_.size(this.manager.Controller.views)).toEqual(2);
+    });
+
+    it('builds one master view in picker mode', function () {
+        this.defaultParameters.isPickerOnly = true;
+        this.manager.initialize(this.defaultParameters);
+        expect(_.size(this.manager.Controller.views)).toEqual(1);
+    });
+
+    it('displays the root directories by default', function () {
+        this.manager.initialize(this.defaultParameters);
+        this.server.respond();
+        var resources = $('.resource', this.manager.Controller.views.main.subViews.resources.$el);
+        expect(resources.length).toEqual(2);
+        expect($('.resource-name', resources[0]).text()).toEqual('Foo (child of 0)');
+        expect($('.resource-name', resources[1]).text()).toEqual('Bar (child of 0)');
+    });
+
+    it('can display a specific directory', function () {
+        this.defaultParameters.directoryId = '12';
+        this.manager.initialize(this.defaultParameters);
+        this.server.respond();
+        var resources = $('.resource', this.manager.Controller.views.main.subViews.resources.$el);
+        expect(resources.length).toEqual(2);
+        expect($('.resource-name', resources[0]).text()).toEqual('Foo (child of 12)');
+        expect($('.resource-name', resources[1]).text()).toEqual('Bar (child of 12)');
+    });
 });
-

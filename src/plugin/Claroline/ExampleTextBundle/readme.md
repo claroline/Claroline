@@ -233,7 +233,7 @@ Please find the Symfony documentation here: http://symfony.com/doc/2.0/book/form
 
 Resources forms are a little be more complicated.
 
-You can use the 'ClarolineCoreBundle:Resource:resource_form.html.twig' as  default form for your resource.
+You can use the 'ClarolineCoreBundle:Resource:create_form.html.twig' as default form for your resource.
 
 
         ...
