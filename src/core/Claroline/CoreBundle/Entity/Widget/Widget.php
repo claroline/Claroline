@@ -23,18 +23,20 @@ class Widget
      */
     protected $plugin;
 
-
     /**
      * @ORM\Column(type="string")
      */
     protected $name;
 
+    /**
+     * @ORM\Column(type="boolean", name="is_configurable")
+     */
+    protected $isConfigurable;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetAdminOption")
-     * @ORM\JoinColumn(name="admin_workspace_option_id", referencedColumnName="id")
+     * @ORM\Column(type="string")
      */
-    protected $workspaceOption;
+    protected $icon;
 
     public function getId()
     {
@@ -61,13 +63,23 @@ class Widget
         return $this->name;
     }
 
-    public function getWorkspaceOption()
+    public function isConfigurable()
     {
-        return $this->workspaceOption;
+        return $this->isConfigurable;
     }
 
-    public function setWorkspaceOption($option)
+    public function setConfigurable($bool)
     {
-        $this->workspaceOption = $option;
+        $this->isConfigurable = $bool;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
     }
 }

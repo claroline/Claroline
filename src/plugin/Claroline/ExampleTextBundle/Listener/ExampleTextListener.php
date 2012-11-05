@@ -32,7 +32,7 @@ class ExampleTextListener extends ContainerAware
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:create_form.html.twig', array(
             'form' => $form->createView(),
-            'resourceType' => 'ExampleText'
+            'resourceType' => 'claroline_exampletext'
             )
         );
 
@@ -61,7 +61,7 @@ class ExampleTextListener extends ContainerAware
             'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'forum'
+                'resourceType' => 'claroline_exampletext'
             )
         );
         //give it back to the event.

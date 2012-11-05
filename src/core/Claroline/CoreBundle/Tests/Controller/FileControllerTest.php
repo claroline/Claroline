@@ -52,15 +52,6 @@ class FileControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($this->getUploadedFiles()));
     }
 
-    public function testDownload()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $node = $this->uploadFile($this->pwr->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/export/{$node->id}");
-        $headers = $this->client->getResponse()->headers;
-        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=text.txt'));
-    }
-
     public function testDelete()
     {
         $this->logUser($this->getFixtureReference('user/user'));

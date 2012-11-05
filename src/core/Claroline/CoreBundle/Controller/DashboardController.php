@@ -47,7 +47,7 @@ class DashboardController extends Controller
     {
         $resourceTypes = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findBy(array('isListable' => true));
+            ->findBy(array('isVisible' => true));
 
         return $this->render(
             'ClarolineCoreBundle:Dashboard:resources.html.twig',
@@ -80,7 +80,7 @@ class DashboardController extends Controller
             $eventName = strtolower("widget_{$widget->getName()}_dashboard");
             $event = new DisplayWidgetEvent();
             $this->get('event_dispatcher')->dispatch($eventName, $event);
-            $responsesString[$widget->getName()] = $event->getContent();
+            $responsesString[strtolower($widget->getName())] = $event->getContent();
         }
 
         return $this->render('ClarolineCoreBundle:Dashboard:widgets\plugins.html.twig', array('widgets' => $responsesString));

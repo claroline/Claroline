@@ -12,6 +12,12 @@ class CreateResourceEvent extends Event
 {
     private $resource;
     private $formContent;
+    private $resourceType;
+
+    public function __construct($resourceType = null)
+    {
+        $this->resourceType = $resourceType;
+    }
 
     /**
      * Sets the newly created resource (success scenario).
@@ -45,11 +51,24 @@ class CreateResourceEvent extends Event
 
     /**
      * Returns the form content with validation errors
-     *
      * @return string
      */
     public function getErrorFormContent()
     {
         return $this->formContent;
+    }
+
+    public function setResourceType($resourceType)
+    {
+        $this->resourceType = $resourceType;
+    }
+
+    /**
+     * Return the resource type (used by the file manager)
+     * @return string
+     */
+    public function getResourceType()
+    {
+        return $this->resourceType;
     }
 }

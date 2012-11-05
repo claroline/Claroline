@@ -61,13 +61,13 @@ class ResourceExtenderTest extends FunctionalTestCase
         $conn = $this->em->getConnection();
 
         // Insert a fake extension plugin
-        $sql = "INSERT INTO claro_plugin (bundle_fqcn, vendor_name, short_name, name_translation_key, description)"
-            . " VALUES ('TestTest', '', 'Test', 'test', 'test')";
+        $sql = "INSERT INTO claro_plugin ( vendor_name, short_name)"
+            . " VALUES ( 'test', 'Test')";
         $conn->exec($sql);
         $pluginId = $conn->lastInsertId();
 
         // Insert two specific resource types (see test/Stub/Entity)
-        $sql = "INSERT INTO claro_resource_type (plugin_id, class, type, is_listable, is_navigable)"
+        $sql = "INSERT INTO claro_resource_type (plugin_id, class, type, is_visible, is_browsable)"
             . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1', 'SpecificResource1', true, false),"
             . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2', 'SpecificResource2', true, false)";
         $conn->exec($sql);

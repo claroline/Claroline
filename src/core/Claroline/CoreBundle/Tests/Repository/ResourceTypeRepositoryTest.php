@@ -59,34 +59,27 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $plugin = new Plugin();
         $plugin->setVendorName('Test');
         $plugin->setBundleName('Test');
-        $plugin->setBundleFQCN('Test\Test');
-        $plugin->setNameTranslationKey('test');
-        $plugin->setDescriptionTranslationKey('test');
         $plugin->setHasOptions(true);
         $plugin->setIcon('fakeicon');
-        $plugin->setTranslationDomain('test');
 
         $firstType = new ResourceType();
         $firstType->setType('Type x');
         $firstType->setClass('XXX/XXX/XXX');
-        $firstType->setListable(true);
-        $firstType->setNavigable(false);
+        $firstType->setVisible(true);
+        $firstType->setBrowsable(false);
         $firstType->setPlugin($plugin);
-        $firstType->setDownloadable(true);
 
         $secondType = new ResourceType();
         $secondType->setType('Type y');
         $secondType->setClass('YYY/YYY/YYY');
-        $secondType->setListable(true);
-        $secondType->setNavigable(false);
+        $secondType->setVisible(true);
+        $secondType->setBrowsable(false);
         $secondType->setPlugin($plugin);
-        $secondType->setDownloadable(true);
 
         $thirdType = new ResourceType();
         $thirdType->setType('Type z');
-        $thirdType->setListable(true);
-        $thirdType->setNavigable(false);
-        $thirdType->setDownloadable(true);
+        $thirdType->setVisible(true);
+        $thirdType->setBrowsable(false);
 
         $this->em->persist($plugin);
         $this->em->persist($firstType);

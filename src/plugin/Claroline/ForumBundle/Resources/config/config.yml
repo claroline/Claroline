@@ -1,31 +1,26 @@
 plugin:
   has_options: true
-  plugin_translation_name_key: forum
-  plugin_translation_domain: forum
   icon: res_forum.png
 
   resources:
     - class: Claroline\ForumBundle\Entity\Forum
-      name: Forum
+      name: claroline_forum
       is_visible: true
-      is_browsable: true
-      is_downloadable: true
+      is_browsable: false
       large_icon: res_forum.png
       actions:
         - name: open
           is_action_in_new_page: true
 
     - class: Claroline\ForumBundle\Entity\Subject
-      name: Subject
-      is_visible: true
-      is_browsable: true
-      is_downloadable: false
+      name: claroline_subject
+      is_visible: false
+      is_browsable: false
 
     - class: Claroline\ForumBundle\Entity\Message
-      name: Message
-      is_visible: true
-      is_browsable: true
-      is_downloadable: false
+      name: claroline_message
+      is_visible: false
+      is_browsable: false
 
 
 

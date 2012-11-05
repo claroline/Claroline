@@ -58,7 +58,7 @@ class FileListener extends ContainerAware
             'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'file'
+                'resourceType' => $event->getResourceType()
             )
         );
         $event->setErrorFormContent($content);
