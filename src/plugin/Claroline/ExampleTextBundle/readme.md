@@ -120,17 +120,19 @@ This file will be parsed by the plugin installator to install your plugin and cr
     plugin:
         # Set this to "true" if your plugin must have an entry in the plugins configuration page.
         has_options: true
-        # Translation key that will be used to display the name of your plugin
-        plugin_translation_name_key: example
-        # Translation domain of your plugin. Will allow to load your transation file
-        # (domain.language.yml, e.g. example.fr.yml)
-        plugin_translation_domain: example
+        # You can set an icon for your plugin. The icon must be in your public/images/icons folder.
+        icon: icon.png
 
         # Widgets declared by your plugin.
         widgets:
         # Each widget requires a name.
-         - name: exemple
-         - name: theAnswerToLifeUniverseAndEverything
+         - name: claroline_exemple
+        # Set this to true if the widget is configurable
+           is_configurable: true
+        # You can set an icon for your widget. The icon must be in your public/images/icons folder.
+           icon: something.jpeg
+         - name: claroline_theanswertolifeuniverseandeverything
+           is_configurable: false
 
         # Properties of resources managed by your plugin
         # You can define as many resource types as you want in this file.
@@ -141,26 +143,26 @@ This file will be parsed by the plugin installator to install your plugin and cr
             # In this case you can extend *Claroline\CoreBundle\Entity\Resource\File*.
           - class: Claroline\ExampleTextBundle\Entity\ExampleText
             # Your resource type name
-            name: ExampleText
+            name: claroline_exampletext
             # Is it visible in the resource manager ?
             is_visible: true
             # Is it possible to navigate within your resource (does it have sub-resources ?)
             is_browsable: true
-            # Is it possible to download it ?
-            is_downloadable: true
             # Icons for your resource.
             # They must be stored in the Resource/public/images/icons/large and small folders
             large_icon: res_text.png
             small_icon: res_text.png
             # Which are the actions we can fire from the resource manager.
             # Note that the resource manager will set some defaults actions
-            #  (parameters, delete and download if you set the "downloadable" parameter to true).
+            #  (parameters, delete and download).
             actions:
                 # The name of the action is the translation key that will be used to display
                 #  the action in the list of available actions for your resource.
                 #  The name will be passed to you by the Event manager.
               - name: open
                 is_action_in_new_page: true
+
+**/!\ it's a good practice to prefix your resources and widgets names to avoid possible conflicts with other plugins **
 
 ## Listener
 
@@ -180,15 +182,15 @@ You declare in this file all events that you want to catch.
         calls:
           - [setContainer, ["@service_container"]]
         tags:
-          - { name: kernel.event_listener, event: create_form_exampletext, method: onCreateForm }
-          - { name: kernel.event_listener, event: create_exampletext, method: onCreate }
-          - { name: kernel.event_listener, event: delete_exampletext, method: onDelete }
-          - { name: kernel.event_listener, event: export_exampletext, method: onExport }
-          - { name: kernel.event_listener, event: copy_exampletext, method: onCopy }
-          - { name: kernel.event_listener, event: open_exampletext, method: onOpen }
-          - { name: kernel.event_listener, event: plugin_options_example, method: onAdministrate }
+          - { name: kernel.event_listener, event: create_form_claroline_exampletext, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_claroline_exampletext, method: onCreate }
+          - { name: kernel.event_listener, event: delete_claroline_exampletext, method: onDelete }
+          - { name: kernel.event_listener, event: export_claroline_exampletext, method: onExport }
+          - { name: kernel.event_listener, event: copy_claroline_exampletext, method: onCopy }
+          - { name: kernel.event_listener, event: open_claroline_exampletext, method: onOpen }
+          - { name: kernel.event_listener, event: plugin_options_clarolineexampletext, method: onAdministrate }
 
-Here is the list of events fired by the resource manager:
+Here is the list of events fired by the resource manager (lower case is forced here):
 
 * create_form_*resourcetypename*
 * create_*resourcetypename*
@@ -201,9 +203,14 @@ Where *resourcetypename* is the name of your resource in lowercase (e.g. "exampl
 
 This event is fired by the plugin managemement page:
 
-* *plugin*_*options*_*mydomain*
+* *plugin*_*options*_*myvendormyshortbundlename*
 
-Where *mydomain* is the domain you specified in your config file.
+Where the shortbundle name is your bundle name without 'Bundle'.
+
+#### note concerning the download
+
+If your plugin don't catch the download event, a placeholder will be set in the archive.
+The export event is fired for resource whose is_visible field is set to true.
 
 ### Listener implementation class
 
@@ -247,7 +254,7 @@ You can use the 'ClarolineCoreBundle:Resource:create_form.html.twig' as default 
             /*you must add the attribute resourceType to the twig File.
             The Resource Manager need
             to know wich kind of resource is going to be added.*/
-            'resourceType' => 'ExampleText'
+            'resourceType' => 'claroline_exampletext'
             )
         );
         ...
@@ -261,7 +268,7 @@ If you want to write your own twig file, your form action must be:
 where resourceType is the 'name' field you defined in your config.yml file and _instanceId is a placeholder used
 by the javascript manager.
 
-###### Using existing forms & validations.
+###### Using existing forms & validations
 
 This may be usefull if the *class* field you defined in your config file is an existing resource.
 Let's assume you're using the Claroline\CoreBundle\Resource\File class.
@@ -293,7 +300,7 @@ in the config files.
             'ClarolineCoreBundle:Resource:resource_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'MyResource'
+                'resourceType' => 'myresourcetype'
             )
         );
         $event->setResponseContent($content);
@@ -303,6 +310,50 @@ in the config files.
 This function will create a File whose ResourceType is MyResource.
 Because you extended the FileListener, you don't have to implement
 the create_xxx event.
+
+## Translations
+
+Each plugin require several translations domains:
+
+* plugin_description
+* resource
+* widget
+
+We use lower case for every translation keys.
+
+### plugin_description
+
+Create the *plugin_description* file in your Resources/translations folder.
+
+    plugin_description.en.yml
+
+Here is the translation key used to translate your plugin name:
+
+    myvendorbundleshortname : this is a translation
+
+eg:
+
+    clarolineexampletext: exemple
+
+### resource
+
+Create the *resource* file in your Resources/translations folder.
+
+This is were you can translate the resource types you defined in your config file.
+They'll be displayed at the resource creation.
+
+/!\ everything must be lower case here
+
+    exampletext: example
+
+### widget
+
+Create the *widget* file in your Resources/translations folder.
+You can translate your widget names here.
+
+    mywidgetname: mytranslation
+
+Where mywidgetname is the name you defined in your config file.
 
 ## Resources
 
@@ -317,9 +368,8 @@ This entity job is to stock important attributes wich will differ depending on
 the ResourceType.
 Theses attributes are:
 
-* isNavigable;
-* isListable;
-* isDownloadable;
+* isBrowsable;
+* isVisible;
 
 These attributes are defined in the resource section in your config file.
 

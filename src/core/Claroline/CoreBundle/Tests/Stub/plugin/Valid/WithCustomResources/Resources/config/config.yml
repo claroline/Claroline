@@ -1,17 +1,13 @@
 plugin:
   has_options: true
-  plugin_translation_name_key: plugin
-  plugin_translation_domain: plugin
 
   resources:
     - class: Valid\WithCustomResources\Entity\ResourceA
       name: ResourceA
       is_visible: true
       is_browsable: true
-      is_downloadable: true
 
     - class: Valid\WithCustomResources\Entity\ResourceB
       name: ResourceB
       is_visible: true
       is_browsable: true
-      is_downloadable: true

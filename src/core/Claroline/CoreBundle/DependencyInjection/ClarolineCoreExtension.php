@@ -27,5 +27,6 @@ class ClarolineCoreExtension extends Extension
         $loader->load('workspace.yml');
         $loader->load('resource.yml');
         $loader->load('utilities.yml');
+        $loader->load('widget.yml');
     }
 }

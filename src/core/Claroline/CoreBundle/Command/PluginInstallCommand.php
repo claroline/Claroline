@@ -22,7 +22,7 @@ class PluginInstallCommand extends SinglePluginCommand
         $vendor = $input->getArgument('vendor_name');
         $bundle = $input->getArgument('bundle_name');
         $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
-
+        
         if ($this->installPlugin($fqcn, $output)) {
             $this->resetCache($output);
             $this->installAssets($output);

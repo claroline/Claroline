@@ -42,3 +42,5 @@ system("php {$rootDirectory}/app/console claroline:install --with-plugins --with
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
 
 require_once __DIR__.'/delete_files';
+
+system("php {$rootDirectory}/app/console claroline:user:create --admin admin admin admin admin");

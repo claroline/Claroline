@@ -1,17 +1,17 @@
 plugin:
   has_options: true
-  plugin_translation_name_key: exemple
-  plugin_translation_domain: exemple
 
   widgets:
-    - name: exemple
+    - name: claroline_mywidget1
+      is_configurable: true
+    - name: claroline_mywidget2
+      is_configurable: false
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText
-      name: ExampleText
+      name: claroline_exampletext
       is_visible: true
       is_browsable: true
-      is_downloadable: true
       large_icon: res_text.png
       actions:
         - name: open

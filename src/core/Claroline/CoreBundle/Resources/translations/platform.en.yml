@@ -37,6 +37,7 @@ create_group: Create group
 list_groups: List groups
 platform_parameters: Platform parameters
 platform_plugins: Platform plugins
+platform_widgets: Platform widgets
 
 # registration
 login: Login
@@ -170,7 +171,7 @@ unregister: Unregister
 save: Save
 from: From
 to: To
-results: results
+results: Results
 
 # resource type
 directory: Directory
@@ -178,3 +179,9 @@ file: File
 
 #msg
 no_search_results: Your search hasn't returned any result.
+
+# widgets
+display_options: Display options
+widget_settings: Widget settings
+visible: Visible
+lock: Lock

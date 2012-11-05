@@ -1,0 +1,16 @@
+services:
+
+
+  claroline.listener.test_widget:
+    class:  Valid\WithWidgets\Listener
+    calls:
+      - [setContainer, ["@service_container"]]
+    tags:
+      - { name: kernel.event_listener, event: widget_claroline_testwidget1_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget1_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget2_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget2_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget3_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget3_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget4_dashboard, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_testwidget4_workspace, method: onDisplay }

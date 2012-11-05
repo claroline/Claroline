@@ -14,13 +14,36 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
+    public static function setUpBeforeClass()
+    {
+        $client = self::createClient();
+        $container = $client->getContainer();
+        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $plugin = $loader->load($pluginFqcn);
+        $dbWriter->insert($plugin);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        $client = self::createClient();
+        $container = $client->getContainer();
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $plugin = $loader->load($pluginFqcn);
+        $container->get('claroline.plugin.recorder')->unregister($plugin);
+        $container->get('claroline.plugin.migrator')->remove($plugin);
+    }
+
     public function testWSCreatorCanSeeHisWS()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
-
     }
 
     public function testAdminCanSeeHisWs()
@@ -55,14 +78,10 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
 
     public function testWSManagerCanSeeHisWS()
     {
-        $this->markTestSkipped('Skipped until widgets are fixed');
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('GET', "/workspaces/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $link = $crawler->filter("#link-home-{$this->getFixtureReference('workspace/ws_d')->getId()}")->link();
         $crawler = $this->client->click($link);
-
-        var_dump($this->client->getResponse()->getContent());
-
         $this->assertEquals(1, $crawler->filter(".welcome-home")->count());
     }
 
@@ -87,7 +106,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
 
     public function testDisplayHome()
     {
-         $this->markTestSkipped('Skipped until widgets are fixed');
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
 
@@ -173,5 +191,34 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
          $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testManagerCanSeeWidgetProperties()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/widget/display");
+        $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
+    }
+
+    public function testManagerCanInvertWidgetVisible()
+    {
+        //admin must unlock first
+        $this->logUser($this->getFixtureReference('user/user'));
+        $configs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findAll();
+        $countConfigs = count($configs);
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/widgets");
+        $countVisibleWidgets = count($crawler->filter('.widget-content'));
+        $this->client->request(
+            'POST', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/widget/{$configs[0]->getWidget()->getId()}/baseconfig/{$configs[0]->getId()}/invertvisible"
+        );
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/widgets");
+        $this->assertEquals($countVisibleWidgets, count($crawler->filter('.widget-content')));
+        $configs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findAll();
+        $this->assertEquals(++$countConfigs, count($configs));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/widgets");
+        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget-content')));
     }
 }

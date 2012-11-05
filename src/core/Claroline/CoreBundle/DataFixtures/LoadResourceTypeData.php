@@ -57,10 +57,9 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
             $type->setType($attributes[0]);
-            $type->setListable($attributes[1]);
-            $type->setNavigable($attributes[2]);
+            $type->setVisible($attributes[1]);
+            $type->setBrowsable($attributes[2]);
             $type->setClass($attributes[3]);
-            $type->setDownloadable($attributes[4]);
             $type->addMetaType($documentMetatype);
             $manager->persist($type);
 

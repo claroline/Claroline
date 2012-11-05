@@ -140,35 +140,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(4, count($jsonResponse));
     }
 
-    public function testResourcePropertiesCanBeEdited()
-    {
-        $this->markTestSkipped('Irrelevant since the name was moved from abstractResource to ResourceInstance');
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request(
-            'POST', "/resource/update/properties/{$this->pwr->getId()}", array('resource_options_form' => array('name' => "EDITED", 'shareType' => 1))
-        );
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals("EDITED", $jsonResponse[0]->title);
-        $this->assertEquals(1, $jsonResponse[0]->shareType);
-    }
-
-    public function testDirectoryDownload()
-    {
-        ob_start(null);
-        $this->logUser($this->getFixtureReference('user/user'));
-        //with an empty dir
-        $this->client->request('GET', "/resource/export/{$this->userRoot->getId()}");
-        $headers = $this->client->getResponse()->headers;
-        $name = strtolower(str_replace(' ', '_', $this->userRoot->getName() . '.zip'));
-        $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
-        $this->createBigTree($this->userRoot->getId());
-        //with a full dir
-        $this->client->request('GET', "/resource/export/{$this->userRoot->getId()}");
-        $headers = $this->client->getResponse()->headers;
-        $this->assertTrue($headers->contains('Content-Disposition', "attachment; filename={$name}"));
-        ob_clean();
-    }
-
     public function testRootsAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -370,7 +341,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
     }
 
-    public function testDeleteUserRemovesHisPersonnalDataTree()
+    public function S_testDeleteUserRemovesHisPersonnalDataTree()
     {
         $this->markTestSkipped("Can't make it work.");
         $this->logUser($this->getFixtureReference('user/user'));
@@ -398,18 +369,18 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
-        $file = $this->uploadFile($this->userRoot->getId(), 'txt.txt');
+        $this->uploadFile($this->userRoot->getId(), 'txt.txt');
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
     public function testMultiDeleteActionLogsEvent()
     {
-        $this->markTestSkipped('Skipped until resource logging is fixed');
+        $this->markTestSkipped('logger is commented in multidelete');
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->pwr->getId());
         $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
-        $crawler = $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
@@ -422,14 +393,13 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMultiMoveLogsEvent()
     {
-        $this->markTestSkipped('Skipped until resource logging is fixed');
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot->getId());
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $theContainer = $this->createDirectory($this->userRoot->getId(), 'container');
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->client->request(
-            'GET', "/resource/multimove/{$theContainer->id}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+            'GET', "/resource/multimove/{$theContainer->id}?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}"
         );
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(2, count($postEvents) - count($preEvents));
@@ -437,16 +407,15 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMultiExportLogsEvent()
     {
-        $this->markTestSkipped('Skipped until resource logging is fixed');
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->userRoot->getId());
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         ob_start();
-        $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
+        $this->client->request('GET', "/resource/multiexport?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}");
         ob_clean();
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
-        $this->assertEquals(4, count($postEvents) - count($preEvents));
+        $this->assertEquals(5, count($postEvents) - count($preEvents));
     }
 
     private function uploadFile($parentId, $name, $shareType = 1)

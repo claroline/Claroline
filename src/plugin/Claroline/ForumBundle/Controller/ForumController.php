@@ -86,8 +86,8 @@ class ForumController extends Controller
             $em->flush();
             $creator = $this->get('claroline.resource.manager');
             //instantiation of the new resources
-            $subjectInstance = $creator->create($subject, $forumInstanceId, 'Subject');
-            $creator->create($message, $subjectInstance->getId(), 'Message');
+            $subjectInstance = $creator->create($subject, $forumInstanceId, 'claroline_subject');
+            $creator->create($message, $subjectInstance->getId(), 'claroline_message');
 
             return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
         } else {
@@ -149,7 +149,7 @@ class ForumController extends Controller
             $message = $form->getData();
             $subject = $subjectInstance->getResource();
             $user = $this->get('security.context')->getToken()->getUser();
-            $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'Message'));
+            $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'claroline_message'));
             $message->setSubject($subject);
             $message->setCreator($user);
             $message->setResourceType($messageType);
@@ -157,7 +157,7 @@ class ForumController extends Controller
             $title = $subjectInstance->getParent()->getName();
             $message->setName($title . '-' . date('m/d/Y h:i:m'));
             $em->persist($message);
-            $creator->create($message, $subjectInstance->getId(), 'Message');
+            $creator->create($message, $subjectInstance->getId(), 'claroline_message');
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
