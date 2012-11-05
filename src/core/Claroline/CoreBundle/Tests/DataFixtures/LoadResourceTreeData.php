@@ -15,7 +15,6 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
 {
     /** @var ContainerInterface $container */
     private $container;
-
     private $username;
     private $depth;
     private $directoryCount;
