@@ -68,12 +68,6 @@ claro_workspace_widget_properties:
   requirements:
     _method: GET
 
-claro_workspace_widget_properties_display:
-  pattern: /{workspaceId}/properties/widget/display
-  defaults: { _controller: ClarolineCoreBundle:Workspace:widgetDisplayProperties }
-  requirements:
-    _method: GET
-
 claro_workspace_widget_invertvisible:
   pattern: /{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible
   defaults: { _controller: ClarolineCoreBundle:Workspace:invertVisibleWidget }
@@ -82,8 +76,10 @@ claro_workspace_widget_invertvisible:
   options:
     expose: true
 
-claro_workspace_widgets_configuration:
-   pattern: /{workspaceId}/configuration/widgets
-   defaults: { _controller: ClarolineCoreBundle:Workspace:configurationWidgets }
-   requirements:
-     _method: GET
+claro_workspace_widget_configuration:
+  pattern: /{workspaceId}/widget/{widgetId}/configuration
+  defaults: { _controller: ClarolineCoreBundle:Workspace:configureWidget }
+  requirements:
+    _method: GET
+  options:
+    expose: true

@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -11,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetEvent;
 
 /**
  * This controller is able to:
@@ -241,40 +241,16 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    //todo: dql request to find the relevant widgets
     public function widgetsPropertiesAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-
-        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
-            array('workspace' => $workspace)
-        );
-    }
-
-    public function widgetDisplayPropertiesAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties_display_options.html.twig',
+        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
     }
-
-    public function configurationWidgetsAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array('isConfigurable' => true));
-
-        return $this->render('ClarolineCoreBundle:Workspace:tools\widget_configuration_list.html.twig',
-            array('workspace' => $workspace, 'widgets' => $widgets)
-        );
-    }
-
-
 
     /**
      * If the option doens't exist in the database yet, it's created here.
@@ -312,6 +288,31 @@ class WorkspaceController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    /**
+     * Throws a ConfigureWidgetEvent
+     *
+     * @param integer $workspaceId
+     * @param integer $widgetId
+     *
+     * @return Response
+     */
+    public function configureWidgetAction($workspaceId, $widgetId)
+    {
+         $em = $this->get('doctrine.orm.entity_manager');
+         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
+         $event = new ConfigureWidgetEvent($workspace, $widget);
+         $eventName = strtolower("widget_{$widget->getName()}_configuration");
+         $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+         if (get_class($event->getResponse()) == 'Symfony\Component\HttpFoundation\Response'){
+            return $event->getResponse();
+         } else {
+             throw new \Exception("event $eventName didn't return any Response");
+         }
+
     }
 
     /*******************/
