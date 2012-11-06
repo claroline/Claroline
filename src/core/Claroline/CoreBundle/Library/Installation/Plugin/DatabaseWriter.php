@@ -217,12 +217,10 @@ class DatabaseWriter
         if(isset($widget['icon'])){
             $widgetEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$widget['icon']}");
         } else {
-            $defaultIcon = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-                ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
-            $widgetEntity->setIcon($defaultIcon->getLargeIcon());
+            $defaultIcon = "bundles/clarolinecore/images/resources/icons/large/res_default.png";
+            $widgetEntity->setIcon($defaultIcon);
         }
-        
+
         $this->em->persist($widgetEntity);
         $widgetConfig = new DisplayConfig();
         $widgetConfig->setWidget($widgetEntity);

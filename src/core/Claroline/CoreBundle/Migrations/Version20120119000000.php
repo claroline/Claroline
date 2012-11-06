@@ -473,7 +473,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_widget');
         $this->addId($table);
         $table->addColumn('name', 'string');
-        $table->addColumn('plugin_id', 'integer');
+        $table->addColumn('plugin_id', 'integer', array('notnull' => false));
         $table->addColumn('is_configurable', 'boolean');
         $table->addColumn('icon', 'string', array('length' => 255));
         $table->addUniqueIndex(array('name'));
