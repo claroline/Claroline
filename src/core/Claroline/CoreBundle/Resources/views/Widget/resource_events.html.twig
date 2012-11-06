@@ -1,5 +1,5 @@
 {% for log in logs %}
 <p>
-    action {{ log.getAction() }} done on {{ log.getPath() }} by {{ log.getUpdator().getUsername() }}
+   {{ 'action'|trans({}, 'platform') }} {{ log.getAction()|trans({}, 'platform') }} {{ 'done_on'|trans({}, 'platform') }} {{ log.getPath()|trans({}, 'platform') }} {{ 'by'|trans({}, 'platform') }} {{ log.getUpdator().getUsername() }}
 </p>
 {% endfor %}

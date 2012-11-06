@@ -185,3 +185,14 @@ display_options: Options d'affichage
 widget_settings: Paramètres des widgets
 visible: Visible
 lock: Verrouiller
+
+# resource logger
+action: action
+done_on: effectuée sur
+by: par
+create: créer
+delete: supprimer
+export: exporter
+move: déplacer
+copy: copier
+

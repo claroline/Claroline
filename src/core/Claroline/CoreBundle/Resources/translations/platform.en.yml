@@ -185,3 +185,14 @@ display_options: Display options
 widget_settings: Widget settings
 visible: Visible
 lock: Lock
+
+# resource logger
+action: action
+done_on: done on
+by: by
+create: create
+delete: delete
+export: export
+move: move
+copy: copy
+
