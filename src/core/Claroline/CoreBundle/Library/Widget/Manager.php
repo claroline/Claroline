@@ -65,7 +65,8 @@ class Manager
         return $tmpArray;
     }
 
-    private function generateChild($config){
+    private function generateChild($config)
+    {
         $childConfig = new DisplayConfig();
         $childConfig->setParent($config);
         $childConfig->setVisible($config->isVisible());
