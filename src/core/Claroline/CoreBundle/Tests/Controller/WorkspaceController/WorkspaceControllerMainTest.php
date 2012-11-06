@@ -108,11 +108,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     {
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
-
-         var_dump($this->client->getResponse()->getContent());
-
          $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
     }
 
     public function testUserCantAccessUnregisteredHome()
@@ -196,7 +192,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     public function testManagerCanSeeWidgetProperties()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/widget/display");
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/widget");
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
     }
 
