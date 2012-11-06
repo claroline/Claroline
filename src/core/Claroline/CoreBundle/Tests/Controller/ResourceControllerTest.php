@@ -440,17 +440,6 @@ class ResourceControllerTest extends FunctionalTestCase
         return $obj[0];
     }
 
-    private function createForum($parentId, $name, $shareType = 1)
-    {
-        $this->client->request(
-            'POST', "/resource/create/forum/{$parentId}", array('forum_form' => array('name' => $name, 'shareType' => $shareType))
-        );
-
-        $obj = json_decode($this->client->getResponse()->getContent());
-
-        return $obj[0];
-    }
-
     //DIR
     //private child
     //public child

@@ -28,7 +28,7 @@ class Version20121002000000 extends BundleMigration
         $table->addColumn('is_default', 'boolean');
 
         $table->addForeignKeyConstraint(
-           $schema->getTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
+            $schema->getTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
     }
 }
