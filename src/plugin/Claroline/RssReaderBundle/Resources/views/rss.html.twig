@@ -1,0 +1,9 @@
+<h4> {{ rss.channel.title }} </h4>
+<br>
+
+{% for item in rss.channel.item %}
+<div class="wrapper">
+    <h5>{{ item.pubDate }} <a href="{{ item.link }}">{{ item.title }}</a></h5>
+    {{ item.description }}
+</div>
+{% endfor %}

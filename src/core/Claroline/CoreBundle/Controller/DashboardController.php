@@ -74,7 +74,7 @@ class DashboardController extends Controller
         $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
 
         foreach ($widgets as $widget){
-            $eventName = strtolower("widget_{$widget->getName()}_dashboard");
+            $eventName = strtolower("widget_{$widget->getName()}");
             $event = new DisplayWidgetEvent();
             $this->get('event_dispatcher')->dispatch($eventName, $event);
             $responsesString[strtolower($widget->getName())] = $event->getContent();

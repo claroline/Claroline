@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetEvent;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -639,6 +640,21 @@ class AdministrationController extends Controller
         $em->flush();
 
         return new Response('success', 204);
+    }
+
+    public function configureWidgetAction($widgetId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
+        $event = new ConfigureWidgetEvent(null, true);
+        $eventName = strtolower("widget_{$widget->getName()}_configuration");
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if ($event->getContent() !== '') {
+            return $this->render('ClarolineCoreBundle:Administration:widget_configuration.html.twig', array('content' => $event->getContent()));
+        } else {
+            throw new \Exception("event $eventName didn't return any Response");
+        }
     }
 
      /**
