@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 
 /**
  * Controller of the user's dashboard.

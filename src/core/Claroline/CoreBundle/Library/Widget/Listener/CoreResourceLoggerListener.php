@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Widget\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 
 class CoreResourceLoggerListener extends ContainerAware
 {

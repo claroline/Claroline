@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetEvent;
 

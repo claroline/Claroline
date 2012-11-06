@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Plugin\Event;
+namespace Claroline\CoreBundle\Library\Widget\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
