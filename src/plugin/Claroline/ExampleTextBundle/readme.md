@@ -610,7 +610,7 @@ Define a listener in your listeners.yml file
 
 Simply set a string in the $event->setContent() method.
 
-    use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+    use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
     ...
     function onDisplay(DisplayWidgetEvent $event)
     {

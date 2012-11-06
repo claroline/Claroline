@@ -3,7 +3,7 @@
 namespace Claroline\ExampleTextBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Plugin\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetEvent;
 use Symfony\Component\HttpFoundation\Response;
 
