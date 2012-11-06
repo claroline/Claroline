@@ -56,18 +56,6 @@ class DashboardController extends Controller
     }
 
     /**
-     * Display a log widget
-     * //todo create a database widget and use wigetsAction instead
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function resourceLogsAction()
-    {
-        $logs = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLogger')->getLastLogs($this->get('security.context')->getToken()->getUser());
-        return $this->render('ClarolineCoreBundle:Dashboard:widgets\resource_events.html.twig', array('logs' => $logs));
-    }
-
-    /**
      * Display registered widgets
      * @return \Symfony\Component\HttpFoundation\Response
      */
