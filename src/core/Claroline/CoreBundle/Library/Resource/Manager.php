@@ -111,6 +111,8 @@ class Manager
                 ResourceLoggerEvent::MOVE_ACTION
             );
             $this->ed->dispatch('log_resource', $event);
+
+            return $child;
         } catch (UnexpectedValueException $e) {
             throw new \UnexpectedValueException("You cannot move a directory into itself");
         }
@@ -184,6 +186,8 @@ class Manager
         $this->ed->dispatch('log_resource', $logevent);
 
         $this->em->persist($instanceCopy);
+
+        return $instanceCopy;
     }
 
     private function createCopy(ResourceInstance $resourceInstance)

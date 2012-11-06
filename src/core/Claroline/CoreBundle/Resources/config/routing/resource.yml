@@ -10,15 +10,14 @@ claro_resource_create:
     options:
         expose: true
 
-claro_resource_properties_form:
-    pattern: /form/properties/{resourceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:basePropertiesForm }
+claro_resource_rename_form:
+    pattern: /rename/form/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:renameForm }
     options:
         expose: true
-
-claro_resource_properties_update:
-    pattern: /update/properties/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:updateBaseProperties }
+claro_resource_rename:
+    pattern: /rename/{instanceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:rename }
     options:
         expose: true
 
@@ -82,23 +81,11 @@ claro_resource_parents:
      options:
         expose: true
 
-claro_resource_types:
-    pattern: types
-    defaults: { _controller: ClarolineCoreBundle:Resource:resourceTypes }
-    options:
-        expose: true
-
 claro_resources_list:
     pattern: list/{resourceTypeId}/{rootId}
     defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
     options:
        expose: true
-
-claro_resource_menus:
-    pattern: /menus
-    defaults: { _controller: ClarolineCoreBundle:Resource:menus }
-    options:
-        expose: true
 
 claro_resource_add_workspace:
     pattern: /workspace/add/{instanceId}/{instanceDestinationId}
@@ -109,12 +96,6 @@ claro_resource_add_workspace:
 claro_resource_multi_add_workspace:
     pattern: /workspace/multi/add/{instanceDestinationId}
     defaults: { _controller: ClarolineCoreBundle:Resource:multiAddToWorkspace }
-    options:
-        expose: true
-
-claro_resource_renders_filter:
-    pattern: /filter/renders
-    defaults: { _controller: ClarolineCoreBundle:Resource:rendersFilters }
     options:
         expose: true
 

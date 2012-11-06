@@ -133,12 +133,15 @@ resource: Ressource
 resources: Ressources
 resource_manager: Gestionnaire de ressources
 owner: Propriétaire
+path: Emplacement
 open: Ouvrir
-download: télécharger
-copy: copier
-cut: couper
-paste: coller
-close: fermer
+download: Télécharger
+copy: Copier
+cut: Couper
+paste: Coller
+close: Fermer
+rename: Renommer
+manage_rights: Gérer les droits
 
 # workspace
 workspace: Espace d'activités
@@ -154,22 +157,31 @@ files: Fichiers
 # common
 name: Nom
 id: Id
+type: Type
+type-s: Type(s)
 add: Ajouter
+create: Créer
+search: Rechercher
 delete: Supprimer
 show: Voir
 move : Déplacer
 settings: Paramètres
 register: Inscription
 unregister: Désinscription
-save: sauvegarder
+save: Sauvegarder
+from: Depuis
+to: Jusque
+results: Résultats
 
 # resource type
 directory: Répertoire
 file: Fichier
 
-# widgets
-display_options: options d'affichage
-widget_settings: paramètres des widgets
-visible: visible
-lock: verrouiller
+#msg
+no_search_results: Votre recherche n'a retourné aucun résultat.
 
+# widgets
+display_options: Options d'affichage
+widget_settings: Paramètres des widgets
+visible: Visible
+lock: Verrouiller

@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
@@ -51,7 +52,8 @@ class ResourceController extends Controller
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-            if($resourceType === 'file') {
+
+            if ($resourceType === 'file') {
                 $mimeType = $resource->getMimeType();
                 $instance = $manager->create($resource, $parentInstanceId, $resourceType, true, $mimeType);
             } else {
@@ -97,8 +99,8 @@ class ResourceController extends Controller
      */
     public function multiDeleteAction()
     {
+        $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
-        $ids = $this->getRequestParameters();
 
         foreach ($ids as $id) {
             $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
@@ -110,73 +112,53 @@ class ResourceController extends Controller
     }
 
     /**
-     * Renders the form allowing to edit the base properties (currently the
-     * sharable/public/private attribute) of a given resource.
+     * Displays the form allowing to rename a resource instance.
      *
-     * @param integer $resourceId
+     * @param integer $instanceId
      *
      * @return Response
      */
-    public function basePropertiesFormAction($resourceId)
+    public function renameFormAction($instanceId)
     {
-        $resource = $this->getDoctrine()
+        $instance = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->find($resourceId);
-
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($user != $resource->getCreator()) {
-            throw new AccessDeniedHttpException('access denied');
-        }
-
-        $form = $this->createForm(new ResourcePropertiesType(), $resource);
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->find($instanceId);
+        $form = $this->createForm(new ResourceNameType(), $instance);
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:properties_form.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('form' => $form->createView())
         );
     }
 
     /**
-     * Updates the base properties of a given resource.
+     * Renames a resource instance.
      *
-     * @param integer $resourceId
+     * @param integer $instanceId
      *
      * @return Response
      */
-    public function updateBasePropertiesAction($instanceId)
+    public function renameAction($instanceId)
     {
         $request = $this->get('request');
         $em = $this->getDoctrine()->getEntityManager();
-        $resourceInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+        $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->find($instanceId);
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($user != $resourceInstance->getResource()->getCreator()) {
-            throw new AccessDeniedHttpException('access denied');
-        }
-
-        $form = $this->createForm(new ResourcePropertiesType(), $resourceInstance->getResource());
+        $form = $this->createForm(new ResourceNameType(), $instance);
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $resource = $form->getData();
-            $resourceInstance->setResource($resource);
-            $em->persist($resource);
+            $em->persist($instance);
             $em->flush();
-            $content = $this->renderView(
-                'ClarolineCoreBundle:Resource:instances.json.twig',
-                array('instances' => array($resourceInstance))
-            );
-            $response = new Response($content);
+            $response = new Response("[\"{$instance->getName()}\"]");
             $response->headers->set('Content-Type', 'application/json');
 
             return $response;
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:properties_form.html.twig',
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
             array('instanceId' => $instanceId, 'form' => $form->createView())
         );
     }
@@ -209,30 +191,38 @@ class ResourceController extends Controller
 
     /**
      * Moves many instances (changes their parents).
-     * This function takes an array of parameters wich are the ids of the moved instances.
+     * This function takes an array of parameters which are the ids of the moved instances.
      *
      * @return Response
      */
     //no verification yet
     public function multiMoveAction($newParentId)
     {
-        $ids = $this->getRequestParameters();
+        $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
-        $newParent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($newParentId);
+        $instanceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+        $newParent = $instanceRepo->find($newParentId);
+        $resourceManager = $this->get('claroline.resource.manager');
+        $converter = $this->get('claroline.utilities.entity_converter');
+        $movedInstances = array();
 
         foreach ($ids as $id) {
-            $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
+            $instance = $instanceRepo->find($id);
 
-            if ($instance != null){
+            if ($instance != null) {
                 try {
-                     $this->get('claroline.resource.manager')->move($instance, $newParent);
+                     $movedInstance = $resourceManager->move($instance, $newParent);
+                     $movedInstances[] = $converter->toStdClass($movedInstance);
                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                     return new Response('cannot move a resource into itself', 500);
+                     throw new \RuntimeException('Cannot move a resource into itself');
                 }
             }
         }
 
-        return new Response('Resource moved');
+        $response = new Response(json_encode($movedInstances));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
@@ -274,7 +264,7 @@ class ResourceController extends Controller
      */
     public function multiExportAction()
     {
-        $ids = $this->getRequestParameters();
+        $ids = $this->container->get('request')->query->get('ids', array());
         $file = $this->get('claroline.resource.exporter')->exportResourceInstances($ids);
         $response = new StreamedResponse();
 
@@ -336,9 +326,10 @@ class ResourceController extends Controller
      */
     public function childrenAction($instanceId, $resourceTypeId)
     {
-        if($instanceId == 0) {
+        if ($instanceId == 0) {
             return $this->rootsAction();
         }
+
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $results = $repo->listDirectChildrenResourceInstances($instanceId, $resourceTypeId, true);
         $content = json_encode($results);
@@ -357,15 +348,17 @@ class ResourceController extends Controller
      */
     public function parentsAction($instanceId)
     {
-        if (0 == $instanceId) {
-            return new Response('[]');
-        }
-        $repo = $parents = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
-        $instance = $repo->find($instanceId);
-        $parents = $repo->listAncestors($instance);
-        $jsonParents = json_encode($parents);
-        $response = new Response($jsonParents);
+        $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+
+        if (0 == $instanceId) {
+            $response->setContent('[]');
+        } else {
+            $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+            $instance = $repo->find($instanceId);
+            $parents = $repo->listAncestors($instance);
+            $response->setContent(json_encode($parents));
+        }
 
         return $response;
     }
@@ -383,28 +376,6 @@ class ResourceController extends Controller
             ->listResourceInstancesForUser($user, true);
 
         $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of the resource types.
-     * It doesn't include the directory.
-     * Ony visible types are included.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function resourceTypesAction()
-    {
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findBy(array('isVisible' => 1));
-
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:resource_types.json.twig',
-            array('resourceTypes' => $resourceTypes)
-        );
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -430,30 +401,6 @@ class ResourceController extends Controller
         return $response;
     }
 
-    /**
-     * Returns a json representation of the menus of actions available for each resource type.
-     *
-     * @return Response
-     */
-    public function menusAction()
-    {
-        $repo = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $resourceTypes = $repo->findBy(array('isVisible' => 1));
-
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Resource:menus.json.twig',
-            array(
-                'resourceTypes' => $resourceTypes,
-            )
-        );
-
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
 
     /**
      * Adds a resource instance to a workspace.
@@ -483,64 +430,55 @@ class ResourceController extends Controller
      */
     public function multiAddToWorkspaceAction($instanceDestinationId)
     {
-        $ids = $this->getRequestParameters();
+        $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceDestinationId);
+        $converter = $this->get('claroline.utilities.entity_converter');
+        $newNodes = array();
 
         foreach ($ids as $id) {
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($id);
             if ($resource != null) {
-                $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
+                $newNode = $this->get('claroline.resource.manager')->addToDirectoryByReference($resource, $parent);
                 $em->flush();
+                $newNodes[] = $converter->toStdClass($newNode);
             }
         }
 
-        return new Response('success', 200);
-    }
+        $response = new Response(json_encode($newNodes));
+        $response->headers->set('Content-Type', 'application/json');
 
-    /**
-     * Renders the resource filter
-     *
-     * @param string $prefix
-     *
-     * @return Response
-     */
-    public function rendersFiltersAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $roots = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->listRootsForUser($user, true);
-
-        $resourceTypes = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findBy(array('isVisible' => 1));
-
-        $resourceIcons = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-            ->findBy(array('iconType' => 3));
-
-        return $this->render(
-            'ClarolineCoreBundle:Resource:resource_filter.html.twig', array('workspaceroots' => $roots, 'resourceTypes' => $resourceTypes, 'resourceIcons' => $resourceIcons)
-        );
+        return $response;
     }
 
     /**
      * Renders the searched resource list.
      *
+     * @todo Add the (icon) "mimeType" filter (see ResourceInstanceRepository)
+     *
      * @return Response
      */
     public function filterAction()
     {
+        $queryParameters = $this->container->get('request')->query->all();
+        $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
+        $allowedArrayCriteria = array('roots', 'types');
+        $criteria = array();
+
+        foreach ($queryParameters as $parameter => $value) {
+            if (in_array($parameter, $allowedStringCriteria) && is_string($value)) {
+                $criteria[$parameter] = $value;
+            } elseif (in_array($parameter, $allowedArrayCriteria) && is_array($value)) {
+                $criteria[$parameter] = $value;
+            }
+        }
+
+        isset($criteria['roots']) || $criteria['roots'] = array();
         $user = $this->get('security.context')->getToken()->getUser();
-        $compiledArray = $this->get('claroline.resource.searcher')->createSearchArray($this->container->get('request')->query->all());
         $results = $this->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->listResourceInstancesForUserWithFilter($compiledArray, $user, true);
-
-        $content = json_encode($results);
-        $response = new Response($content);
+            ->listResourceInstancesForUserWithFilter($criteria, $user, true);
+        $response = new Response(json_encode($results));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -574,13 +512,5 @@ class ResourceController extends Controller
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
-    }
-
-    private function getRequestParameters()
-    {
-        $params = $this->container->get('request')->query->all();
-        unset($params['_']);
-
-        return $params;
     }
 }

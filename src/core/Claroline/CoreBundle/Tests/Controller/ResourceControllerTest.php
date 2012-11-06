@@ -59,24 +59,24 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(count($form), 1);
     }
 
-    public function testPropertiesFormCanBeDisplayed()
+    public function testRenameFormCanBeDisplayed()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
-        $crawler = $this->client->request('GET', "/resource/form/properties/{$dir->resource_id}");
-        $form = $crawler->filter('#resource_options_form');
+        $crawler = $this->client->request('GET', "/resource/rename/form/{$dir->resource_id}");
+        $form = $crawler->filter('#resource_name_form');
         $this->assertEquals(count($form), 1);
     }
 
-    public function testPropertiesFormErrorsAreDisplayed()
+    public function testRenameFormErrorsAreDisplayed()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
         $crawler = $this->client->request(
-            'POST', "/resource/update/properties/{$dir->id}", array('resource_options_form' => array('name' => '', 'shareType' => 1))
+            'POST', "/resource/rename/{$dir->id}",
+            array('resource_name_form' => array('name' => ''))
         );
-
-        $form = $crawler->filter('#resource_options_form');
+        $form = $crawler->filter('#resource_name_form');
         $this->assertEquals(count($form), 1);
     }
 
@@ -100,7 +100,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $theContainer = $this->createDirectory($this->userRoot->getId(), 'container');
         $this->client->request(
-            'GET', "/resource/multimove/{$theContainer->id}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+            'GET', "/resource/multimove/{$theContainer->id}?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}"
         );
         $this->client->request('GET', "/resource/children/{$theContainer->id}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -133,23 +133,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $theBigTree = $this->createBigTree($this->userRoot->getId());
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $this->client->request(
-            'GET', "/resource/workspace/multi/add/{$this->userRoot->getId()}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+            'GET', "/resource/workspace/multi/add/{$this->userRoot->getId()}?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}"
         );
         $this->client->request('GET', "/resource/children/{$this->userRoot->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(4, count($jsonResponse));
-    }
-
-    public function S_testResourcePropertiesCanBeEdited()
-    {
-        $this->markTestSkipped('Irrelevant since the name was moved from abstractResource to ResourceInstance');
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request(
-            'POST', "/resource/update/properties/{$this->pwr->getId()}", array('resource_options_form' => array('name' => "EDITED", 'shareType' => 1))
-        );
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals("EDITED", $jsonResponse[0]->title);
-        $this->assertEquals(1, $jsonResponse[0]->shareType);
     }
 
     public function testRootsAction()
@@ -184,14 +172,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count($jsonResponse));
     }
 
-    public function testMenusAction()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('GET', '/resource/menus');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertGreaterThan(3, count($jsonResponse));
-    }
-
     public function testGetEveryInstancesIdsFromMultiExportArray()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -208,7 +188,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(5, count($toExport));
     }
 
-    public function S_testMultiExportClassic()
+    public function testMultiExportClassic()
     {
         $this->marktestSkipped("streamedResponse broke this one");
         $this->logUser($this->getFixtureReference('user/user'));
@@ -275,20 +255,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->createBigTree($wsEroot->getId());
         $now = new \DateTime();
         //filter by types (1)
-        $crawler = $this->client->request('GET', '/resource/filter?types0=file');
+        $crawler = $this->client->request('GET', '/resource/filter?types[]=file');
         $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent(), true)));
 
         //filter by types (2)
-        $crawler = $this->client->request('GET', '/resource/filter?types0=file&types1=text');
+        $crawler = $this->client->request('GET', '/resource/filter?types[]=file&types[]=text');
         $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent(), true)));
 
         //filter by root (2)
-        $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr->getPath()}&roots1={$wsEroot->getPath()}");
-        $this->assertEquals(12, count(json_decode($this->client->getResponse()->getContent(), true)));
+        $crawler = $this->client->request('GET', "/resource/filter?roots[]={$adminpwr->getPath()}&roots[]={$wsEroot->getPath()}");
+        $this->assertEquals(10, count(json_decode($this->client->getResponse()->getContent(), true)));
 
         //filter by root (1)
-        $crawler = $this->client->request('GET', "/resource/filter?roots0={$adminpwr->getPath()}");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent(), true)));
+        $crawler = $this->client->request('GET', "/resource/filter?roots[]={$adminpwr->getPath()}");
+        $this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent(), true)));
 
         //filter by datecreation
         $crawler = $this->client->request('GET', "/resource/filter?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}");
@@ -305,8 +285,10 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
 
         //filter by mime
-        $crawler = $this->client->request('GET', "/resource/filter?mimeTypes=text");
+        /* This filter is not active for now (see ResourceController::filterAction's todo)
+        $crawler = $this->client->request('GET', "/resource/filter?mimeTypes[]=text");
         $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
+        */
     }
 
     public function testParents()
@@ -344,7 +326,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
         $this->client->request(
-            'GET', "/resource/multidelete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+            'GET', "/resource/multidelete?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}"
         );
         $crawler = $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -371,13 +353,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($userRoot, null);
         $tbg = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($theBigTree[0]->getId());
         $this->assertEquals($tbg, null);
-    }
-
-    public function testResourceFilterIsRendered()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', '/resource/filter/renders');
-        $this->assertEquals(1, count($crawler->filter('.active-filters')));
     }
 
     public function testCustomActionLogsEvent()
@@ -424,7 +399,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $theContainer = $this->createDirectory($this->userRoot->getId(), 'container');
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->client->request(
-            'GET', "/resource/multimove/{$theContainer->id}?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+            'GET', "/resource/multimove/{$theContainer->id}?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}"
         );
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(2, count($postEvents) - count($preEvents));
@@ -437,12 +412,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $theLoneFile = $this->uploadFile($this->userRoot->getId(), 'theLoneFile.txt');
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         ob_start();
-        $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
+        $this->client->request('GET', "/resource/multiexport?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}");
         ob_clean();
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(5, count($postEvents) - count($preEvents));
     }
-
 
     private function uploadFile($parentId, $name, $shareType = 1)
     {
@@ -456,7 +430,7 @@ class ResourceControllerTest extends FunctionalTestCase
         return $obj[0];
     }
 
-    public function createDirectory($parentId, $name, $shareType = 1)
+    private function createDirectory($parentId, $name, $shareType = 1)
     {
         $this->client->request(
             'POST', "/resource/create/directory/{$parentId}", array('directory_form' => array('name' => $name, 'shareType' => $shareType))
@@ -466,7 +440,7 @@ class ResourceControllerTest extends FunctionalTestCase
         return $obj[0];
     }
 
-    public function createForum($parentId, $name, $shareType = 1)
+    private function createForum($parentId, $name, $shareType = 1)
     {
         $this->client->request(
             'POST', "/resource/create/forum/{$parentId}", array('forum_form' => array('name' => $name, 'shareType' => $shareType))
