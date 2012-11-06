@@ -35,7 +35,7 @@
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getType() }}": {
-                            "name": "{{ resourceType.getType() }}",
+                            "name": "{{ resourceType.getType()|trans({}, 'resource') }}",
                             "customActions": {
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
