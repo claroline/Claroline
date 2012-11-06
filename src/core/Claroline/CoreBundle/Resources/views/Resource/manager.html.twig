@@ -1,0 +1,17 @@
+<ul class="breadcrumb"></ul>
+
+<div class="actions clearfix">
+    {% for resourceType in resourceTypes %}
+        <span class="resource-type" data-resource-type="{{ resourceType.type }}"></span>
+    {% endfor %}
+</div>
+
+<div class="filters">
+    {% if workspaceRoots is defined %}
+        {% for workspaceRoot in workspaceRoots %}
+            <span class="workspace-root" data-root-id="{{ workspaceRoot.id }}" data-root-name="{{ workspaceRoot.name }}"></span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="resources"></div>

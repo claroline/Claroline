@@ -1,0 +1,49 @@
+{% twig_js name="resource_thumbnail_template" %}
+
+<div>
+    <input type="checkbox"
+        value="{{ resource.id }}"
+        data-resource-name="{{ resource.name }}"
+        {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
+    />
+    <img src="{{ webRoot }}/{{ resource.large_icon }}"
+         data-id="{{ resource.id }}"
+         data-type="{{ resource.type }}"
+         data-type-id="{{ resource.resource_type_id }}"/>
+</div>
+{% if hasMenu == true %}
+    <div class="dropdown" rel="tooltip" title="{{ resource.name }}">
+        <a class="dropdown-toggle name" role="button" data-toggle="dropdown" href="#">
+            <span class="resource-name">{{ resource.displayableName|raw }}</span>
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a class="resource-menu-action" data-action="rename" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    {{ 'rename'|trans({}, 'platform') }}
+                </a>
+                <a class="resource-menu-action" data-action="download" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    {{ 'download'|trans({}, 'platform') }}
+                </a>
+                <a class="resource-menu-action" data-action="delete" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    {{ 'delete'|trans({}, 'platform') }}
+                </a>
+                <a class="resource-menu-action" data-action="manage-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    {{ 'manage_rights'|trans({}, 'platform') }}
+                </a>
+            </li>
+            {% if customActions|length > 0 %}
+            <li class="divider"></li>
+                {% for customAction, attributes in customActions %}
+                    <li>
+                        <a class="resource-menu-action" data-action="{{ customAction }}" data-is-custom="yes" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                            {{ attributes.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+{% else %}
+    <span class="name">{{ resource.displayableName|raw }}&nbsp;&nbsp;&nbsp;</span>
+{% endif %}

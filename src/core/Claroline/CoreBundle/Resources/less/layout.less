@@ -1,10 +1,9 @@
-/*
 ///////////////////////////////////////////////////////////////////////////////////
 // This less file contains only global layout rules (mainly for navbar, grid and //
 // footer positionning). It is included at the end of "bootstrap.less.pre". Keep //
 // it short and design-neutral.                                                  //
 ///////////////////////////////////////////////////////////////////////////////////
-*/
+
 html, body {
     height: 100%;
     margin: 0;
@@ -113,61 +112,81 @@ footer {
 /* RESOURCES MGR */
 /*****************/
 
-/* filter list */
-.res-icon-list {
-    margin-top: 30px;
-    margin-bottom: 30px;
+.resource-manager .actions .btn,
+.resource-manager .actions select {
+    height: 30px;
+    margin: 0;
 }
 
-.res-icon-list .res-block {
-    vertical-align: top;
-    margin-top:5px
+.resource-manager .filters,
+.resource-manager .resources {
+    margin: 16px 0 80px 0 !important;
 }
 
-.res-icon-list .res-block label {
-    display: inline;
+.resource-manager .filters {
+    width: 280px;
+    padding-top: 18px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-.res-icon-list .icon-caret-down {
-    color:lighten(@textColor,50%);
-    font-size: 20px;
-    text-decoration: none;
-}
-.res-icon-list .icon-caret-down:hover {
-    color:@textColor;
+.resource-manager .filters .form-actions {
+    margin-bottom: 0;
 }
 
-
-/* thumbnails list */
-.res-thumb-list {
-    margin-top: 20px;
-    margin-bottom: 20px;
+.resource-manager .filters .control-group label {
+    width: 70px;
+}
+.resource-manager .filters .controls {
+    margin-left: 76px;
 }
 
-.res-thumb-list .res-block {
-    display:inline-block;
-    width:180px;
+.resource-manager .filters .control-group select[multiple=multiple] {
+    width: 160px;
+}
+
+.resource-manager .filters .form-actions {
+    margin: 0;
+    padding: 16px;
     text-align: center;
+}
+
+.resource-thumbnail {
+    display: inline-block;
+    width: 130px;
+    height: 140px;
+    margin: 10px 18px;
     vertical-align: top;
-    margin: 15px;
 }
 
-.res-thumb-list .chk-instance {
-     vertical-align: top;
+.resource-thumbnail input[type=checkbox] {
+    vertical-align: top;
 }
 
-.res-thumb-list .res-block label {
-    display: inline;
+.resource-thumbnail .name {
+    display: block;
+    text-align: center;
 }
 
-.res-thumb-list .icon-caret-down {
-    color:lighten(@textColor,50%);
-    font-size: 20px;
-    text-decoration: none;
-    margin-left: 5px;
+.resource-thumbnail img:hover,
+.resource-thumbnail .dropdown-toggle:hover {
+    cursor: pointer;
 }
-.res-thumb-list .icon-caret-down:hover {
-    color:@textColor;
+
+.resource-thumbnail .dropdown-toggle {
+    color: #000;
+}
+
+.resource-manager .results {
+    padding-left: 20px;
+}
+
+.resource-manager .results table {
+    margin-top: 20px;
+}
+
+.resource-manager .results .checkbox-column {
+    width: 18px;
 }
 
 /**************/

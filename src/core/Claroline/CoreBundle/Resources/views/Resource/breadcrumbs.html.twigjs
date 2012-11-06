@@ -1,0 +1,14 @@
+{% twig_js name="resource_breadcrumbs_template" %}
+
+{% for resource in resources %}
+    <a href="#" data-resource-id="{{ resource.id }}">
+        {% if loop.first %}
+            <i class="icon-home"></i>
+        {% else %}
+            {{ resource.name }}
+        {% endif %}
+    </a>
+    {% if not loop.last %}
+        <span class="divider"> / </span>
+    {% endif %}
+{% endfor %}

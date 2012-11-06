@@ -8,10 +8,10 @@
 
 function emptyDir($directory)
 {
-    if (!is_dir($directory)){
+    if (!is_dir($directory)) {
         return;
     }
-    
+
     $iterator = new DirectoryIterator($directory);
 
     foreach ($iterator as $item) {

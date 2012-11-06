@@ -19,7 +19,7 @@ class ForumListener extends ContainerAware
     {
         $form = $this->container->get('form.factory')->create(new ForumType, new Forum());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_forum'
@@ -43,7 +43,7 @@ class ForumListener extends ContainerAware
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_forum'

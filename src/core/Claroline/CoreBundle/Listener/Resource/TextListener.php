@@ -17,7 +17,7 @@ class TextListener extends ContainerAware
     {
         $form = $this->container->get('form.factory')->create(new TextType, new Text());
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -49,11 +49,12 @@ class TextListener extends ContainerAware
             $revision->setText($text);
             $event->setResource($text);
             $event->stopPropagation();
+            
             return;
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'

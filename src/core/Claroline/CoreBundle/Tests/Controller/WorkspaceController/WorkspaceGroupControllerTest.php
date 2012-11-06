@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
 class WorkspaceGroupControllerTest extends FunctionalTestCase
 {
-
     protected function setUp()
     {
         parent::setUp();

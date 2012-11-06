@@ -205,13 +205,21 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     public function listAncestors(ResourceInstance $instance)
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
-        $parts = preg_split("/-(\d+)" . ResourceInstance::PATH_SEPARATOR . "/", $instance->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        for ($i = 0; $i < count($parts); $i+=2) {
-            $result["name"] = $parts[$i];
-            $result["id"] = $parts[$i + 1];
-            $results[] = $result;
+        $regex = '/-(\d+)' . ResourceInstance::PATH_SEPARATOR . '/';
+        $parts = preg_split($regex, $instance->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $ancestors = array();
+        $currentPath = '';
+
+        for ($i = 0, $count = count($parts); $i < $count; $i += 2) {
+            $ancestor = array();
+            $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
+            $ancestor['path'] = $currentPath;
+            $ancestor['name'] = $parts[$i];
+            $ancestor['id'] = $parts[$i + 1];
+            $ancestors[] = $ancestor;
         }
-        return $results;
+
+        return $ancestors;
     }
 
     /**
@@ -422,7 +430,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     {
         foreach ($values as $i => $value) {
             if ($isRootLike === true) {
-                $query->setParameter("{$key}{$i}", $value . "%");
+                $query->setParameter("{$key}{$i}", $value . "_%");
             } else if ($isLike === true) {
                 $query->setParameter("{$key}{$i}", "%" . $value . "%");
             } else {

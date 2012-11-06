@@ -97,13 +97,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     // ACCESS WORKSPACE MAIN PAGES +/
     //++++++++++++++++++++++++++++++/
 
-    public function testDisplayResource()
-    {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $crawler = $this->client->request('GET', "/workspaces/resource/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
-         $this->assertEquals(1, count($crawler->filter('html:contains("Resource manager")')));
-    }
-
     public function testUserCantAccessUnregisteredResource()
     {
          $this->logUser($this->getFixtureReference('user/user'));
@@ -115,6 +108,9 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     {
          $this->logUser($this->getFixtureReference('user/user'));
          $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
+
+         var_dump($this->client->getResponse()->getContent());
+
          $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
     }
