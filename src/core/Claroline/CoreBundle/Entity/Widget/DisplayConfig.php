@@ -12,6 +12,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class DisplayConfig
 {
+    const ADMIN_LEVEL = 0;
+    const WORKSPACE_LEVEL = 1;
+    const USER_LEVEL = 2;
 
     /**
      * @ORM\Id
@@ -153,6 +156,11 @@ class DisplayConfig
     public function getLvl()
     {
         return $this->lvl;
+    }
+
+    public function setLvl($lvl)
+    {
+        $this->lvl = $lvl;
     }
 
     public function getWorkspace()

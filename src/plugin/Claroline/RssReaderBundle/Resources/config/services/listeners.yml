@@ -1,0 +1,8 @@
+services:
+  claroline.listener.rssreader_widget:
+    class: Claroline\RssReaderBundle\Listeners\RssReaderListener
+    calls:
+      - [setContainer, ["@service_container"]]
+    tags:
+      - { name: kernel.event_listener, event: widget_claroline_rssreader, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_rssreader_configuration, method: onConfigure }

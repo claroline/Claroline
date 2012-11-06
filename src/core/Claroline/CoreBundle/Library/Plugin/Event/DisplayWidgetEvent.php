@@ -26,6 +26,6 @@ class DisplayWidgetEvent extends Event
 
     public function getWorkspace()
     {
-        return $this->workspcae;
+        return $this->workspace;
     }
 }

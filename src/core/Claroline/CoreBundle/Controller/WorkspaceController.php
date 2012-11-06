@@ -209,7 +209,7 @@ class WorkspaceController extends Controller
 
         foreach ($configs as $config){
             if($config->isVisible()){
-                $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
+                $eventName = strtolower("widget_{$config->getWidget()->getName()}");
                 $event = new DisplayWidgetEvent($workspace);
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
                 $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
@@ -303,16 +303,16 @@ class WorkspaceController extends Controller
          $em = $this->get('doctrine.orm.entity_manager');
          $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
          $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
-         $event = new ConfigureWidgetEvent($workspace, $widget);
+         $event = new ConfigureWidgetEvent($workspace);
          $eventName = strtolower("widget_{$widget->getName()}_configuration");
          $this->get('event_dispatcher')->dispatch($eventName, $event);
 
-         if (get_class($event->getResponse()) == 'Symfony\Component\HttpFoundation\Response'){
-            return $event->getResponse();
+         if ($event->getContent() !== ''){
+            return $this->render('ClarolineCoreBundle:Workspace:tools\widget_configuration.html.twig',
+                array('content' => $event->getContent(), 'workspace' => $workspace));
          } else {
              throw new \Exception("event $eventName didn't return any Response");
          }
-
     }
 
     /*******************/

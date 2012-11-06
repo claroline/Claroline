@@ -10,7 +10,7 @@
     </div> <!-- .widget-header -->
 
     <div class="widget-content" id="{{ "w-" ~ key ~ "-content" }}">
-        {{ value }}
+        {{ value|raw }}
     </div> <!-- .widget-content -->
 </section> <!-- /widget -->
 {% endfor %}

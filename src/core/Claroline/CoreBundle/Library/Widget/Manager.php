@@ -31,16 +31,28 @@ class Manager
         $childConfigs = array();
 
         foreach ($adminConfigs as $adminConfig) {
-            $childConfig = new DisplayConfig();
-            $childConfig->setParent($adminConfig);
-            $childConfig->setVisible($adminConfig->isVisible());
-            $childConfig->setWidget($adminConfig->getWidget());
-            $childConfigs[] = $childConfig;
+            $childConfigs[] = $this->generateChild($adminConfig);
         }
 
         $configs = array_merge($workspaceConfigs, $childConfigs);
 
         return $configs;
+    }
+
+    public function generateDisplayConfig($widgetId, $workspaceId)
+    {
+        $wsConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('workspace' => $workspaceId, 'widget' => $widgetId));
+        $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId));
+
+        if($wsConfig != null){
+            if($wsConfig->getParent()->isLocked()){
+                return $adminConfig;
+            } else {
+                return $wsConfig;
+            }
+        } else {
+            return $adminConfig;
+        }
     }
 
     private function setEntitiesArrayKeysAsIds($array)
@@ -52,6 +64,20 @@ class Manager
 
         return $tmpArray;
     }
+
+    private function generateChild($config){
+        $childConfig = new DisplayConfig();
+        $childConfig->setParent($config);
+        $childConfig->setVisible($config->isVisible());
+        $childConfig->setWidget($config->getWidget());
+        $childConfig->setLock($config->isLocked());
+        $lvl = $config->getLvl();
+        $lvl++;
+        $childConfig->setLvl($lvl);
+
+        return $childConfig;
+    }
+
 
 }
 

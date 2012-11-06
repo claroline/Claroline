@@ -2,30 +2,29 @@
 
 namespace Claroline\CoreBundle\Library\Widget\Event;
 
-use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Event dispatched when a widget is configured.
  */
 class ConfigureWidgetEvent extends Event
 {
-    private $widget;
     private $workspace;
-    private $response;
+    private $content;
+    private $isDefault;
+    private $isDashboard;
 
     /**
      * Constructor.
      *
      * @param AbstractWorkspace $workspace
-     * @param Widget $widget
      */
-    public function __construct(AbstractWorkspace $workspace, Widget $widget)
+    public function __construct($workspace, $isDefault = false, $isDashboard = false )
     {
         $this->workspace = $workspace;
-        $this->widget = $widget;
+        $this->isDefault = $isDefault;
+        $this->isDashboard = $isDashboard;
     }
 
     public function getWorkspace()
@@ -38,23 +37,33 @@ class ConfigureWidgetEvent extends Event
         $this->workspace = $workspace;
     }
 
-    public function getWidget()
+    public function setContent($content)
     {
-        return $this->widget;
+        $this->content = $content;
     }
 
-    public function setWidget($widget)
+    public function getContent()
     {
-        $this->widget = $widget;
+        return $this->content;
     }
 
-    public function setResponse(Response $response)
+    public function isDefault()
     {
-        $this->response = $response;
+        return $this->isDefault;
     }
 
-    public function getResponse()
+    public function isDashboard()
     {
-        return $this->response;
+        return $this->isDashboard;
+    }
+
+    public function setDefault($bool)
+    {
+        $this->isDefault = $bool;
+    }
+
+    public function setDashboard($bool)
+    {
+        $this->isDashboard = $bool;
     }
 }

@@ -1,0 +1,11 @@
+claro_rss_config_create:
+    pattern: /workspace/{workspaceId}/isDashboard/{isDashboard}/isDefault/{isDefault}
+    defaults: { _controller: ClarolineRssReaderBundle:RssReader:createConfig }
+    requirements:
+      _method: POST
+
+claro_rss_config_update:
+    pattern: /update/workspace/{configId}
+    defaults: { _controller: ClarolineRssReaderBundle:RssReader:updateConfig }
+    requirements:
+      _method: POST
