@@ -112,8 +112,8 @@
         {
             "package": "jms/twig-js-bundle",
             "version": "dev-master",
-            "source-reference": "782e363416f48d6c0404c5877a747df4d1e87cc3",
-            "commit-date": "1349115421"
+            "source-reference": "45d068be5edecff6b7b2b29cff3382f0cbf8f329",
+            "commit-date": "1352320630"
         },
         {
             "package": "kriswallsmith/assetic",
@@ -236,8 +236,8 @@
         {
             "package": "twig/twig",
             "version": "dev-master",
-            "source-reference": "abec35b833abfce5eb0ac7ce2bf2bf3462a5bebf",
-            "commit-date": "1352101924"
+            "source-reference": "5d87c321bf6880b91d19024c53def337ef62a484",
+            "commit-date": "1352319081"
         }
     ],
     "packages-dev": null,
