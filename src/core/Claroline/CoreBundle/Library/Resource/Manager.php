@@ -139,15 +139,13 @@ class Manager
         }
 
         $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
-//        $rc = $this->createReference($resourceInstance->getResource());
-//        $rc->setWorkspace($resourceInstance->getWorkspace());
         $this->em->remove($resourceInstance);
         $this->em->flush();
-//        $event = new ResourceLoggerEvent(
-//            $rc,
-//            ResourceLoggerEvent::DELETE_ACTION
-//        );
-//        $this->ed->dispatch('log_resource', $event);
+        $event = new ResourceLoggerEvent(
+            $resourceInstance,
+            ResourceLoggerEvent::DELETE_ACTION
+        );
+        $this->ed->dispatch('log_resource', $event);
     }
 
     /**

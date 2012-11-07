@@ -188,8 +188,8 @@ lock: Lock
 
 # resource logger
 action: action
-done_on: done on
-by: by
+date: date
+link: link
 create: create
 delete: delete
 export: export
