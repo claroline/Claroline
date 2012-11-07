@@ -106,6 +106,12 @@ login_failure: Login has failed. Check your username and password are correct.
 account_created: Account created.
 workspace.name_not_blank: The workspace's name is required.
 
+##############
+# WORKSPACES #
+##############
+
+owners: owner(s)
+
 ########
 # MISC #
 ########
