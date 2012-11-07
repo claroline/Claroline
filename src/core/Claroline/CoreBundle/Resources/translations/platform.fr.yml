@@ -213,3 +213,11 @@ export: exporter
 move: déplacer
 copy: copier
 
+# roles
+user: utilisateur
+admin: administrateur
+ws_creator: professeur
+manager: manager
+visitor: visiteur
+collaborator: collaborateur
+

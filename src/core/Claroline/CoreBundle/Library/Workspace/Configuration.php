@@ -23,9 +23,9 @@ class Configuration
     {
         $this->workspaceType = self::TYPE_SIMPLE;
         $this->isPublic = true;
-        $this->visitorTranslationKey = 'Visitor';
-        $this->collaboratorTranslationKey = 'Collaborator';
-        $this->managerTranslationKey = 'Manager';
+        $this->visitorTranslationKey = 'visitor';
+        $this->collaboratorTranslationKey = 'collaborator';
+        $this->managerTranslationKey = 'manager';
         $this->type = AbstractWorkspace::STANDARD;
     }
 
