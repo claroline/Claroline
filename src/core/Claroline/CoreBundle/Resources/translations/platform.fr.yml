@@ -106,6 +106,12 @@ login_failure:  La connexion a échoué. Vérifiez que votre nom d'utilisateur e
 account_created:  Compte créé
 workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
 
+##############
+# WORKSPACES #
+##############
+
+owners: propriétaire(s)
+
 ########
 # MISC #
 ########
