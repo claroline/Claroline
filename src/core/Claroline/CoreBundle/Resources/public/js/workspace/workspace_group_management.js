@@ -37,7 +37,7 @@
 
     $('#delete-group-button').click(function(){
         $('#validation-box').modal('show');
-        $('#validation-box-body').html('removing '+ $('.chk-group:checked').length +' group(s)');
+        $('#validation-box-body').html(Twig.render(remove_group_confirm, {'nbGroups': $('.chk-group:checked').length}));
     });
 
    $('#modal-valid-button').click(function(){

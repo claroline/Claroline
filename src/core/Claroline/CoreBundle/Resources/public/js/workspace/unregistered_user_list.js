@@ -61,7 +61,7 @@
         route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
             route,
-            function(users){alert(users.length+' users added to the workspace')},
+            function(users){alert(Twig.render(add_user_confirm, {'nbUsers': users.length}))},
             undefined,
             'PUT'
         )

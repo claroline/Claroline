@@ -8,7 +8,7 @@
     <td align="center">{{ group.name }}</td>
     <td align="center">{{ group.roles }}</td>
     <td>
-        <button class="btn btn-secondary button-parameters-group">parameter</button>
+        <button class="btn btn-secondary button-parameters-group">{{'parameters'|trans({}, 'platform')|capitalize }}</button>
     </td>
 </tr>
 {% endfor %}

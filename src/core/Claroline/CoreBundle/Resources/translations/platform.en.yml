@@ -111,6 +111,12 @@ workspace.name_not_blank: The workspace's name is required.
 ##############
 
 owners: owner(s)
+unregistered_users: unregistered users
+unregistered_groups: unregistered groups
+add_user_confirm_message: users(s) added
+remove_user_confirm_message: User(s) removed
+add_group_confirm_message: group(s) added
+remove_group_confirm_message: Group(s) removed
 
 ########
 # MISC #
@@ -178,6 +184,8 @@ save: Save
 from: From
 to: To
 results: Results
+parameters: parameters
+reset: reset
 
 # resource type
 directory: Directory
