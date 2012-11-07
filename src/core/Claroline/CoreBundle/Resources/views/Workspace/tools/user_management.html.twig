@@ -28,21 +28,21 @@
     </div>
     <p>
         <input type="text" id="search-user-txt" class="search-query" value=""/>
-        <input type="button" id="search-user-button" value="{{ 'search'|trans({}, 'platform')|capitalize }}" class="btn btn-secondary"/>
-        <input type="button" id="reset-user-button" value="{{ 'reset'|trans({}, 'platform')|capitalize }}" class="btn btn-secondary"/>
-        <input type="button" id="delete-user-button" value="{{ 'delete'|trans({}, 'platform')|capitalize }}" class="btn btn-primary"/>
-        <a href="{{ path('claro_workspace_unregistered_users_list', {'workspaceId': workspace.getId()})}}" id="add-user-link" style="float:right;">{{ 'add_user'|trans({}, 'platform') }}</a>
+        <input type="button" id="search-user-button" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-secondary"/>
+        <input type="button" id="reset-user-button" value="{{ 'reset'|trans({}, 'platform') }}" class="btn btn-secondary"/>
+        <input type="button" id="delete-user-button" value="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-primary"/>
+        <a href="{{ path('claro_workspace_unregistered_users_list', {'workspaceId': workspace.getId()}) }}" id="add-user-link" style="float:right;">{{ 'add_user'|trans({}, 'platform') }}</a>
     </p>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
             <tr>
-                <th>{{ 'administrative_code'|trans({}, 'platform')|capitalize }}</th>
-                <th>{{ 'last_name'|trans({}, 'platform')|capitalize }}</th>
-                <th>{{ 'first_name'|trans({}, 'platform')|capitalize }}</th>
-                <th>{{ 'mail'|trans({}, 'platform')|capitalize }}</th>
-                <th>{{ 'role'|trans({}, 'platform')|capitalize }}</th>
-                <th>{{ 'parameters'|trans({}, 'platform')|capitalize }}</th>
-                <th>{{ 'delete'|trans({}, 'platform')|capitalize }}</th>
+                <td>{{ 'administrative_code'|trans({}, 'platform') }}</td>
+                <td>{{ 'last_name'|trans({}, 'platform') }}</td>
+                <td>{{ 'first_name'|trans({}, 'platform') }}</td>
+                <td>{{ 'mail'|trans({}, 'platform') }}</td>
+                <td>{{ 'role'|trans({}, 'platform') }}</td>
+                <td>{{ 'parameters'|trans({}, 'platform') }}</td>
+                <td>{{ 'delete'|trans({}, 'platform') }}</td>
             </tr>
         </thead>
         <tbody id="user-table-body">
@@ -55,8 +55,8 @@
         <div id="validation-box-body" class="modal-body" id="modal-body">
         </div>
         <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform')|capitalize }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform')|capitalize }}"/>
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
         </div>
     </div>
 {% endblock %}

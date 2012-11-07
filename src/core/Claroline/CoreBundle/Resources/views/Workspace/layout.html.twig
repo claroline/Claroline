@@ -73,7 +73,7 @@
     <div class="span1"></div>
     <div class="span11">
         <div class="owner-list">
-            {{'owner_s'|trans({}, 'platform')|capitalize }}:
+            {{'owner_s'|trans({}, 'platform') }}:
             {% for user in workspace.getManagerRole().getUsers() %}
                 {{user.getLastName()}} {{user.getFirstName}}
                 {% if loop.last != true %}, {% endif %}

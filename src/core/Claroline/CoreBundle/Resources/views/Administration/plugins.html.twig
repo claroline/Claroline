@@ -1,18 +1,18 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-{% for plugin in plugins %}
-    <span class="plugin-item">
-        <figure>
-            <img src="{{asset(plugin.getIcon())}}"/>
-            <figcaption class="plugin-figcaption">
-                {% if plugin.hasOptions() %}
-                    <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()})}}">{{  plugin.getShortName()|lower|trans({}, 'plugin_description')|capitalize }}</a>
-                {% else %}
-                    {{  plugin.getShortName()|lower|trans({}, 'plugin_description')|capitalize }}
-                {% endif %}
-            </figcaption>
-        </figure>
-    </span>
-{% endfor %}
+    {% for plugin in plugins %}
+        <span class="plugin-item">
+            <figure>
+                <img src="{{ asset(plugin.getIcon()) }}"/>
+                <figcaption class="plugin-figcaption">
+                    {% if plugin.hasOptions() %}
+                        <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()}) }}">{{  plugin.getShortName()|lower|trans({}, 'plugin_description') }}</a>
+                    {% else %}
+                        {{  plugin.getShortName()|lower|trans({}, 'plugin_description') }}
+                    {% endif %}
+                </figcaption>
+            </figure>
+        </span>
+    {% endfor %}
 {% endblock %}
