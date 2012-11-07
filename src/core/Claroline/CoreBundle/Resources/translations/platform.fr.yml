@@ -1,8 +1,11 @@
 account_created: Compte créé
-action: action
+action: Action
 add: Ajouter
 add_group: Ajouter un groupe
+add_group_s_confirm_message: groupe(s) ajouté(s)
 add_user: Ajouter un utilisateur
+add_user_s_confirm_message: utilisateur(s) ajouté(s)
+admin: Administrateur
 administration: Administration
 administrative_code: Code administratif
 all_workspaces: Tous les espaces
@@ -10,15 +13,19 @@ by: par
 cancel: Annuler
 choose_resource_form_type: Type de ressource
 close: Fermer
+collaborator: Collaborateur
+configure: Configurer
 copy: Copier
 create: Créer
 create_group: Créer un groupe
 create_workspace: Ajouter un espace d'activités
+creation_date: Date de création
 cut: Couper
 dashboard: Tableau de bord
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Ressources
+date: Date
 delete: Supprimer
 directory: Répertoire
 display_options: Options d'affichage
@@ -38,6 +45,7 @@ groups: Groupes
 home: Accueil
 id: Id
 last_name: Nom
+link: Lien
 list_groups: Lister les groupes
 list_users: Lister les utilisateurs
 list_workspaces: Tous les espaces d'activités
@@ -56,12 +64,15 @@ my_portfolio: Mon portfolio
 my_resources: Mes resources
 my_workspace: Mon espace de travail
 my_workspaces: Mes espaces d'activités
+manager: Gestionnaire
 name: Nom
 no_search_results: Votre recherche n'a retourné aucun résultat.
 note: Note
 ok: Ok
 open: Ouvrir
 owner: Propriétaire
+owner_s: Propriétaire(s)
+parameters: Paramètres
 password: Mot de passe
 paste: Coller
 path: Emplacement
@@ -82,10 +93,14 @@ profile_form_phone: Téléphone
 profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification
 profile_form_username: Nom d'utilisateur
+properties: Propriétés
 register: Inscription
 registered_groups: Groupes enregistrés
 registered_users: Utilisateurs enregistrés
+remove_group_s_confirm_message: groupe(s) supprimé(s)
+remove_user_s_confirm_message: utilisateur(s) supprimé(s)
 rename: Renommer
+reset: Réinitialiser
 resource: Ressource
 resource_manager: Gestionnaire de ressources
 resources: Ressources
@@ -99,6 +114,8 @@ to: Jusque
 type_s: Type(s)
 type: Type
 unregister: Désinscription
+unregistered_groups: groupes non enregistrés
+unregistered_users: utilisateurs non enregistrés
 user: Utilisateur
 user_form_administrativeCode: Code administratif
 user_form_firstName: Nom
@@ -114,6 +131,7 @@ user_management: Gestion des utilisateurs
 username: Nom d'utilisateur
 users: Utilisateurs
 visible: Visible
+visitor: Visiteur
 widget_settings: Paramètres des widgets
 workspace.create: Créer un nouvel espace d'activités
 workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
@@ -125,3 +143,4 @@ workspace_resource: Ressources
 workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: Espaces d'activités
+ws_creator: Créateur d'espaces

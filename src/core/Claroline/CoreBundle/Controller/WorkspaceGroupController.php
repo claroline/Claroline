@@ -121,11 +121,13 @@ class WorkspaceGroupController extends Controller
         $params = $this->get('request')->query->all();
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        foreach ($params['groupId'] as $groupId) {
-            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
-            if (null != $group) {
-                foreach ($roles as $role) {
-                    $group->removeRole($role);
+        if(isset($params['groupId'])){
+            foreach ($params['groupId'] as $groupId) {
+                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+                if (null != $group) {
+                    foreach ($roles as $role) {
+                        $group->removeRole($role);
+                    }
                 }
             }
         }
@@ -197,11 +199,13 @@ class WorkspaceGroupController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = array();
 
-        foreach ($params['groupId'] as $groupId) {
-             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
-             $groups[] = $group;
-             $group->addRole($workspace->getCollaboratorRole());
-             $em->flush();
+        if (isset($params['groupId'])){
+            foreach ($params['groupId'] as $groupId) {
+                 $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+                 $groups[] = $group;
+                 $group->addRole($workspace->getCollaboratorRole());
+                 $em->flush();
+            }
         }
 
         $content = $this->renderView('ClarolineCoreBundle:Workspace:group.json.twig', array('groups' => $groups));
@@ -267,12 +271,15 @@ class WorkspaceGroupController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
-        foreach ($parameters['groupId'] as $groupId) {
-            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
-            if (null !== $group){
-                if ($group->hasRole($workspace->getManagerRole()->getName())) {
-                    $countRemovedManagers += count($group->getUsers());
+        if(isset($parameters['groupId'])){
+            foreach ($parameters['groupId'] as $groupId) {
+                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+
+                if (null !== $group){
+                    if ($group->hasRole($workspace->getManagerRole()->getName())) {
+                        $countRemovedManagers += count($group->getUsers());
+                    }
                 }
             }
         }

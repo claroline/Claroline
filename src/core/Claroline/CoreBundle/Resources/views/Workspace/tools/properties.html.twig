@@ -4,10 +4,10 @@
    {% spaceless %}
         <ul class="breadcrumb">
             <li>
-                <a href="#">{{ 'properties'|trans({}, 'platform') }}</a>
+                <a href="#">{{ 'parameters'|trans({}, 'platform')|capitalize }}</a>
             </li>
         </ul>
     {% endspaceless %}
-    <a href="{{path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()})}}">widgets</a>
+    <a href="{{path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()})}}">{{ 'widgets'|trans({}, 'platform')|capitalize }}</a>
 
 {% endblock %}

@@ -1,8 +1,11 @@
 account_created: Account created.
-action: action
+action: Action
 add: Add
 add_group: Add group
+add_group_s_confirm_message: group(s) added
 add_user: Add user
+add_user_s_confirm_message: users(s) added
+admin: Administrator
 administration: Administration
 administrative_code: Administrative code
 all_workspaces: All workspaces
@@ -10,15 +13,19 @@ by: by
 cancel: Cancel
 choose_resource_form_type: Resource type
 close: Close
+collaborator: Collaborator
+configure: Configure
 copy: Copy
 create: Create
 create_group: Create group
 create_workspace: New workspace
+creation_date: Creation date
 cut: Cut
 dashboard: Dashboard
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Resources
+date: Date
 delete: Delete
 directory: Directory
 display_options: Display options
@@ -38,6 +45,7 @@ groups: Groups
 home: Home
 id: Id
 last_name: Last name
+link: Link
 list_groups: List groups
 list_users: List users
 list_workspaces: List workspaces
@@ -46,6 +54,7 @@ login: Login
 login_failure: Login has failed. Check your username and password are correct.
 logout: Logout
 mail: Mail
+manager: Manager
 manage_rights: Manage rights
 move : Move
 my_account: My account
@@ -62,6 +71,8 @@ note: Note
 ok: Ok
 open: Open
 owner: Owner
+owner_s: Owner(s)
+parameters: Parameters
 password: Password
 paste: Paste
 path: Path
@@ -82,10 +93,14 @@ profile_form_phone: Phone
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
 profile_form_username: Username
+properties: Properties
 register: Register
 registered_groups: Registered groups
 registered_users: Registered users
+remove_group_s_confirm_message: group(s) removed
+remove_user_s_confirm_message: user(s) removed
 rename: Rename
+reset: Reset
 resource: Resource
 resource_manager: Resource manager
 resources: Resources
@@ -99,6 +114,8 @@ to: To
 type: Type
 type_s: Type(s)
 unregister: Unregister
+unregistered_groups: Unregistered groups
+unregistered_users: Unregistered users
 user: User
 user_form_administrativeCode: Administrative code
 user_form_firstName: First name
@@ -114,6 +131,7 @@ user_management: User management
 username: Username
 users: Users
 visible: Visible
+visitor: Visitor
 widget_settings: Widget settings
 workspace.create: Create a new workspace
 workspace.name_not_blank: The workspace's name is required.
@@ -125,3 +143,4 @@ workspace_resource: Resources
 workspace_tools: Tools
 workspace_welcome: Welcome
 workspaces: Workspaces
+ws_creator: Workspace creator

@@ -87,6 +87,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('mail', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('administrative_code', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
+        $table->addColumn('creation_date', 'datetime');
         $table->addUniqueIndex(array('username'));
 
         $table->addForeignKeyConstraint(
