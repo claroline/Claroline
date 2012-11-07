@@ -1,10 +1,15 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
+<div class="span2">
+  <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
+</div>
+<div class="span10">
     {{ 'first_name'|trans({}, 'platform') }}: {{ user.getFirstName() }}<br/>
     {{ 'last_name'|trans({}, 'platform') }}: {{ user.getLastName() }}<br/>
     {{ 'username'|trans({}, 'platform') }}: {{ user.getUsername() }}<br/>
     {{ 'mail'|trans({}, 'platform') }}: {{ user.getMail() }}<br/>
     {{ 'phone'|trans({}, 'platform') }}: {{ user.getPhone() }}<br/>
-    {{ 'note'|trans({}, 'platform') }}: {{ user.getNote() }}<br/>
+    {{ 'creation_date'|trans({}, 'platform') }} : {{ user.getCreationDate()|date("d-m-Y H:i:s") }} 
+</div>
 {% endblock %}
