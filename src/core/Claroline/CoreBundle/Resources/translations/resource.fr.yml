@@ -1,3 +1,6 @@
 file: Fichier
 directory: Répertoire
 text: Texte
+
+# action
+open: Open

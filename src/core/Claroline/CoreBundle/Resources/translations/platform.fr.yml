@@ -188,8 +188,8 @@ lock: Verrouiller
 
 # resource logger
 action: action
-done_on: effectuée sur
-by: par
+date: date
+link: lien
 create: créer
 delete: supprimer
 export: exporter

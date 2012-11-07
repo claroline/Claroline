@@ -1,3 +1,6 @@
 file: File
 directory: Directory
 text: Text
+
+# action
+open: Open

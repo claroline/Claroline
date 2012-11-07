@@ -250,7 +250,7 @@ class ResourceController extends Controller
         $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
         $logevent = new ResourceLoggerEvent(
             $ri,
-            ResourceLoggerEvent::CUSTOM_ACTION.'_'.$action
+            $action
         );
         $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 

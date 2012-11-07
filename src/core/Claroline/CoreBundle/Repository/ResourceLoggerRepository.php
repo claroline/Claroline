@@ -23,12 +23,12 @@ class ResourceLoggerRepository extends EntityRepository
             if ($workspace !== null){
                 $dql.= " AND ws.id = {$workspace->getId()}";
             }
-            
+
             $dql.= "ORDER by rl.dateLog DESC
            ";
 
         $query = $this->_em->createQuery($dql);
-        $query->setMaxResults(10);
+        $query->setMaxResults(5);
 
         $paginator = new Paginator($query, true);
 
