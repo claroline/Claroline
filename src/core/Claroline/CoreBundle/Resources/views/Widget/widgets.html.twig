@@ -1,15 +1,15 @@
 {% for key, value in widgets %}
-<section class="widget" id="{{ "w-" ~ key }}">
+<div class="widget" id="{{ "w-" ~ key }}">
     <div class="widget-header">
         <span class="icon-calendar"></span>
-        <h3>{{ key|trans({}, 'widget') }}</h3>
-         <div class="widget-commands">
-              <a href="" onClick="$('#{{ "w-" ~ key ~ "-content" }}').toggle('fast'); return false;"><span class="icon-minus"></span></a>
+        <h3>{{ key|trans({}, 'widget') }}
+        <div class="widget-commands">
+          <a href="" onClick="$('#{{ "w-" ~ key ~ "-content" }}').toggle('fast'); return false;"><span class="icon-minus"></span></a>
         </div>
-    </div> <!-- .widget-header -->
-
+        </h3>
+    </div>
     <div class="widget-content" id="{{ "w-" ~ key ~ "-content" }}">
         {{ value|raw }}
-    </div> <!-- .widget-content -->
-</section> <!-- /widget -->
+    </div>
+</div>
 {% endfor %}
