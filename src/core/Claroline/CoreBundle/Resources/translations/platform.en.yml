@@ -1,198 +1,127 @@
-#########
-# LINKS #
-#########
-
-# top bar links
+account_created: Account created.
+action: action
+add: Add
+add_group: Add group
+add_user: Add user
 administration: Administration
-dashboard: Dashboard
-home: Home
-my_account: My account
-my_workspace: My workspace
-my_resources: My resources
-my_contacts: My contacts
-my_notes: My notes
-my_portfolio: My portfolio
-my_agenda: My agenda
+administrative_code: Administrative code
 all_workspaces: All workspaces
-
-# tabs dashboard
+by: by
+cancel: Cancel
+choose_resource_form_type: Resource type
+close: Close
+copy: Copy
+create: Create
+create_group: Create group
+create_workspace: New workspace
+cut: Cut
+dashboard: Dashboard
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Resources
-
-# tabs workspace
-workspace_welcome: Welcome
-workspace_resource: Resources
-workspace_tools: Tools
-workspace_administration: Administration
-
-# workspace tools
-user_management: User management
-group_management: Group management
-
-# administration links
-add_user: Add user
-list_users: List users
-create_group: Create group
-list_groups: List groups
-platform_parameters: Platform parameters
-platform_plugins: Platform plugins
-platform_widgets: Platform widgets
-
-# registration
-login: Login
-logout: Logout
-register: Register
-
-# workspace links
-create_workspace: New workspace
-my_workspaces: My workspaces
-list_workspaces: List workspaces
+delete: Delete
+directory: Directory
+display_options: Display options
+done_on: done on
+download: Download
+export: export
+file: File
+files: Files
 find_workspaces: Find workspaces
-
-#########
-# FORMS #
-#########
-
-#users form field labels
-user_form_firstName: First name
-user_form_lastName: Last name
-user_form_username: Username
-user_form_plainPassword_first: Password
-user_form_plainPassword_second: Verification
-user_form_administrativeCode: Administrative code
-user_form_mail: Mail
-user_form_phone: Phone
-user_form_ownedRoles: Role(s)
-user_form_note: Personnal note
-
-# profile form field labels
-profile_form_firstName: First name
-profile_form_lastName: Last name
-profile_form_username: Username
-profile_form_plainPassword_first: Password
-profile_form_plainPassword_second: Verification
-profile_form_administrativeCode: Administrative code
-profile_form_mail: Mail
-profile_form_phone: Phone
-profile_form_ownedRoles: Role(s)
-profile_form_note: Personnal note
-
-# platform settings form field labels
-platform_parameters_form_selfRegistration: Auto-inscription
-platform_parameters_form_localLanguage: Langue
-platform_parameters_form_theme: Theme
-
-# group form field labels
+first_name: First name
+from: From
+group: Group
 group_form_name: Name
 group_form_ownedRoles: Roles
-
-# workspace form field labels
-workspace_form_name: Name
-workspace_form_type: Type
-
-# file manager form field labels
-choose_resource_form_type: Resource type
-
-# form buttons
-ok: Ok
-cancel: Cancel
-
-############
-# MESSAGES #
-############
-
-login_failure: Login has failed. Check your username and password are correct.
-account_created: Account created.
-workspace.name_not_blank: The workspace's name is required.
-
-########
-# MISC #
-########
-
-# user
-first_name: First name
-last_name: Last name
-mail: Mail
-phone: Phone
-note: Note
-username: Username
-password: Password
-role: Role
-user: User
-users: Users
-administrative_code: Administrative code
-
-# group
-group: Group
+group_management: Group management
 groups: Groups
-add_group: Add group
-
-# resource
-resource: Resource
-resources: Resources
-resource_manager: Resource manager
-owner: Owner
-path: Path
-open: Open
-download: Download
-copy: Copy
-cut: Cut
-paste: Paste
-close : Close
-rename: Rename
-manage_rights: Manage rights
-
-# workspace
-workspace: Workspace
-workspaces: Workspaces
-workspace.create: Create a new workspace
-registered_users: Registered users
-registered_groups: Registered groups
-
-# file
-file: Fichier
-files: Fichiers
-
-# common
-name: Name
+home: Home
 id: Id
+last_name: Last name
+list_groups: List groups
+list_users: List users
+list_workspaces: List workspaces
+lock: Lock
+login: Login
+login_failure: Login has failed. Check your username and password are correct.
+logout: Logout
+mail: Mail
+manage_rights: Manage rights
+move : Move
+my_account: My account
+my_agenda: My agenda
+my_contacts: My contacts
+my_notes: My notes
+my_portfolio: My portfolio
+my_resources: My resources
+my_workspace: My workspace
+my_workspaces: My workspaces
+name: Name
+no_search_results: Your search hasn't returned any result.
+note: Note
+ok: Ok
+open: Open
+owner: Owner
+password: Password
+paste: Paste
+path: Path
+phone: Phone
+platform_parameters: Platform parameters
+platform_parameters_form_localLanguage: Langue
+platform_parameters_form_selfRegistration: Auto-inscription
+platform_parameters_form_theme: Theme
+platform_plugins: Platform plugins
+platform_widgets: Platform widgets
+profile_form_administrativeCode: Administrative code
+profile_form_firstName: First name
+profile_form_lastName: Last name
+profile_form_mail: Mail
+profile_form_note: Personnal note
+profile_form_ownedRoles: Role(s)
+profile_form_phone: Phone
+profile_form_plainPassword_first: Password
+profile_form_plainPassword_second: Verification
+profile_form_username: Username
+register: Register
+registered_groups: Registered groups
+registered_users: Registered users
+rename: Rename
+resource: Resource
+resource_manager: Resource manager
+resources: Resources
+results: Results
+role: Role
+save: Save
+search: Search
+settings: Settings
+show: Show
+to: To
 type: Type
 type_s: Type(s)
-add: Add
-create: Create
-search: Search
-delete: Delete
-show: Show
-move : Move
-settings: Settings
-register: Register
 unregister: Unregister
-save: Save
-from: From
-to: To
-results: Results
-
-# resource type
-directory: Directory
-file: File
-
-#msg
-no_search_results: Your search hasn't returned any result.
-
-# widgets
-display_options: Display options
-widget_settings: Widget settings
+user: User
+user_form_administrativeCode: Administrative code
+user_form_firstName: First name
+user_form_lastName: Last name
+user_form_mail: Mail
+user_form_note: Personnal note
+user_form_ownedRoles: Role(s)
+user_form_phone: Phone
+user_form_plainPassword_first: Password
+user_form_plainPassword_second: Verification
+user_form_username: Username
+user_management: User management
+username: Username
+users: Users
 visible: Visible
-lock: Lock
-
-# resource logger
-action: action
-done_on: done on
-by: by
-create: create
-delete: delete
-export: export
-move: move
-copy: copy
-
+widget_settings: Widget settings
+workspace.create: Create a new workspace
+workspace.name_not_blank: The workspace's name is required.
+workspace: Workspace
+workspace_administration: Administration
+workspace_form_name: Name
+workspace_form_type: Type
+workspace_resource: Resources
+workspace_tools: Tools
+workspace_welcome: Welcome
+workspaces: Workspaces
