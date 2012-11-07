@@ -20,7 +20,10 @@ class CoreResourceLoggerListener extends ContainerAware
 
     private function renderForWorkspace($workspace)
     {
-        return('not implemented yet');
+        $logs = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLogger')->getLastLogs($this->container->get('security.context')->getToken()->getUser(), $workspace);
+
+        return $this->container->get('templating')->render('ClarolineCoreBundle:Widget:resource_events.html.twig', array('logs' => $logs));
     }
 
     private function renderForDashboard()

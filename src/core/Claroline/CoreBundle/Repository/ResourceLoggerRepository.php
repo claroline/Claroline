@@ -7,7 +7,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ResourceLoggerRepository extends EntityRepository
 {
-    public function getLastLogs($user)
+    public function getLastLogs($user, $workspace = null)
     {
         $dql = "
             SELECT rl FROM Claroline\CoreBundle\Entity\Logger\ResourceLogger rl
@@ -18,8 +18,13 @@ class ResourceLoggerRepository extends EntityRepository
                 JOIN w.roles wr
                 JOIN wr.users ur
                 WHERE ur.id = {$user->getId()}
-            )
-            ORDER by rl.dateLog DESC
+            )";
+
+            if ($workspace !== null){
+                $dql.= " AND ws.id = {$workspace->getId()}";
+            }
+            
+            $dql.= "ORDER by rl.dateLog DESC
            ";
 
         $query = $this->_em->createQuery($dql);
@@ -28,6 +33,5 @@ class ResourceLoggerRepository extends EntityRepository
         $paginator = new Paginator($query, true);
 
         return $paginator;
-
     }
 }
