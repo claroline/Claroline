@@ -1,198 +1,127 @@
-#########
-# LINKS #
-#########
-
-# top bar links
+account_created: Compte créé
+action: action
+add: Ajouter
+add_group: Ajouter un groupe
+add_user: Ajouter un utilisateur
 administration: Administration
-dashboard: Tableau de bord
-home: Accueil
-my_account: Mon compte
-my_workspace: Mon espace de travail
-my_resources: Mes resources
-my_contacts: Mes contacts
-my_notes: Mes notes
-my_portfolio: Mon portfolio
-my_agenda: Mon agenda
+administrative_code: Code administratif
 all_workspaces: Tous les espaces
-
-# tabs
+by: par
+cancel: Annuler
+choose_resource_form_type: Type de ressource
+close: Fermer
+copy: Copier
+create: Créer
+create_group: Créer un groupe
+create_workspace: Ajouter un espace d'activités
+cut: Couper
+dashboard: Tableau de bord
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Ressources
-
-# tabs workspace
-workspace_welcome: Accueil
-workspace_resource: Ressources
-workspace_tools: Outils
-workspace_administration: Administration
-
-# workspace tools
-user_management: Gestion des utilisateurs
-group_management: Gestion des groupes
-
-# administration links
-add_user: Ajouter un utilisateur
-list_users: Lister les utilisateurs
-create_group: Créer un groupe
-list_groups: Lister les groupes
-platform_parameters: Paramètres de la plateforme
-platform_plugins: Plugins de la plateforme
-platform_widgets: Widgets de la plateforme
-
-# registration
-login: Connexion
-logout: Déconnexion
-register: Inscription
-
-# workspace links
-create_workspace: Ajouter un espace d'activités
-my_workspaces: Mes espaces d'activités
-list_workspaces: Tous les espaces d'activités
-find_workspaces: Trouver un espace d'activité
-
-#########
-# FORMS #
-#########
-
-# user form field labels
-user_form_firstName: Nom
-user_form_lastName: Prénom
-user_form_username: Nom d'utilisateur
-user_form_plainPassword_first: Mot de passe
-user_form_plainPassword_second: Vérification
-user_form_administrativeCode: Code administratif
-user_form_mail: Mail
-user_form_phone: Téléphone
-user_form_ownedRoles: Role(s)
-user_form_note: Note personnelle
-
-# profile form field labels
-profile_form_firstName: Nom
-profile_form_lastName: Prénom
-profile_form_username: Nom d'utilisateur
-profile_form_plainPassword_first: Mot de passe
-profile_form_plainPassword_second: Vérification
-profile_form_administrativeCode: Code administratif
-profile_form_mail: Mail
-profile_form_phone: Téléphone
-profile_form_ownedRoles: Role(s)
-profile_form_note: Note personnelle
-
-# platform settings form field labels
-platform_parameters_form_selfRegistration: Auto-inscription
-platform_parameters_form_localLanguage: Langue
-platform_parameters_form_theme: Thème
-
-# group form field labels
-group_form_name: Nom
-group_form_ownedRoles: Rôles
-
-# workspace form field labels
-workspace_form_name: Nom
-workspace_form_type: Type
-
-# file manager form field labels
-choose_resource_form_type: Type de ressource
-
-# form buttons
-ok: Ok
-cancel: Annuler
-
-############
-# MESSAGES #
-############
-
-login_failure:  La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
-account_created:  Compte créé
-workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
-
-########
-# MISC #
-########
-
-# user
-first_name: Prénom
-last_name: Nom
-mail: Mail
-phone: Téléphone
-note: Note
-username: Nom d'utilisateur
-password: Mot de passe
-role: Rôle
-user: Utilisateur
-users: Utilisateurs
-administrative_code: Code administratif
-
-# group
-group: Groupe
-groups: Groupes
-add_group: Ajouter un groupe
-
-# resource
-resource: Ressource
-resources: Ressources
-resource_manager: Gestionnaire de ressources
-owner: Propriétaire
-path: Emplacement
-open: Ouvrir
+delete: Supprimer
+directory: Répertoire
+display_options: Options d'affichage
+done_on: effectuée sur
 download: Télécharger
-copy: Copier
-cut: Couper
-paste: Coller
-close: Fermer
-rename: Renommer
-manage_rights: Gérer les droits
-
-# workspace
-workspace: Espace d'activités
-workspaces: Espaces d'activités
-workspace.create: Créer un nouvel espace d'activités
-registered_users: Utilisateurs enregistrés
-registered_groups: Groupes enregistrés
-
-# file
+export: exporter
 file: Fichier
 files: Fichiers
-
-# common
-name: Nom
-id: Id
-type: Type
-type-s: Type(s)
-add: Ajouter
-create: Créer
-search: Rechercher
-delete: Supprimer
-show: Voir
-move : Déplacer
-settings: Paramètres
-register: Inscription
-unregister: Désinscription
-save: Sauvegarder
+find_workspaces: Trouver un espace d'activité
+first_name: Prénom
 from: Depuis
-to: Jusque
-results: Résultats
-
-# resource type
-directory: Répertoire
-file: Fichier
-
-#msg
-no_search_results: Votre recherche n'a retourné aucun résultat.
-
-# widgets
-display_options: Options d'affichage
-widget_settings: Paramètres des widgets
-visible: Visible
+group: Groupe
+group_form_name: Nom
+group_form_ownedRoles: Rôles
+group_management: Gestion des groupes
+groups: Groupes
+home: Accueil
+id: Id
+last_name: Nom
+list_groups: Lister les groupes
+list_users: Lister les utilisateurs
+list_workspaces: Tous les espaces d'activités
 lock: Verrouiller
-
-# resource logger
-action: action
-done_on: effectuée sur
-by: par
-create: créer
-delete: supprimer
-export: exporter
-move: déplacer
-copy: copier
-
+login: Connexion
+login_failure:  La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
+logout: Déconnexion
+mail: Mail
+manage_rights: Gérer les droits
+move : Déplacer
+my_account: Mon compte
+my_agenda: Mon agenda
+my_contacts: Mes contacts
+my_notes: Mes notes
+my_portfolio: Mon portfolio
+my_resources: Mes resources
+my_workspace: Mon espace de travail
+my_workspaces: Mes espaces d'activités
+name: Nom
+no_search_results: Votre recherche n'a retourné aucun résultat.
+note: Note
+ok: Ok
+open: Ouvrir
+owner: Propriétaire
+password: Mot de passe
+paste: Coller
+path: Emplacement
+phone: Téléphone
+platform_parameters: Paramètres de la plateforme
+platform_parameters_form_localLanguage: Langue
+platform_parameters_form_selfRegistration: Auto-inscription
+platform_parameters_form_theme: Thème
+platform_plugins: Plugins de la plateforme
+platform_widgets: Widgets de la plateforme
+profile_form_administrativeCode: Code administratif
+profile_form_firstName: Nom
+profile_form_lastName: Prénom
+profile_form_mail: Mail
+profile_form_note: Note personnelle
+profile_form_ownedRoles: Role(s)
+profile_form_phone: Téléphone
+profile_form_plainPassword_first: Mot de passe
+profile_form_plainPassword_second: Vérification
+profile_form_username: Nom d'utilisateur
+register: Inscription
+registered_groups: Groupes enregistrés
+registered_users: Utilisateurs enregistrés
+rename: Renommer
+resource: Ressource
+resource_manager: Gestionnaire de ressources
+resources: Ressources
+results: Résultats
+role: Rôle
+save: Sauvegarder
+search: Rechercher
+settings: Paramètres
+show: Voir
+to: Jusque
+type_s: Type(s)
+type: Type
+unregister: Désinscription
+user: Utilisateur
+user_form_administrativeCode: Code administratif
+user_form_firstName: Nom
+user_form_lastName: Prénom
+user_form_mail: Mail
+user_form_note: Note personnelle
+user_form_ownedRoles: Role(s)
+user_form_phone: Téléphone
+user_form_plainPassword_first: Mot de passe
+user_form_plainPassword_second: Vérification
+user_form_username: Nom d'utilisateur
+user_management: Gestion des utilisateurs
+username: Nom d'utilisateur
+users: Utilisateurs
+visible: Visible
+widget_settings: Paramètres des widgets
+workspace.create: Créer un nouvel espace d'activités
+workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
+workspace: Espace d'activités
+workspace_administration: Administration
+workspace_form_name: Nom
+workspace_form_type: Type
+workspace_resource: Ressources
+workspace_tools: Outils
+workspace_welcome: Accueil
+workspaces: Espaces d'activités
