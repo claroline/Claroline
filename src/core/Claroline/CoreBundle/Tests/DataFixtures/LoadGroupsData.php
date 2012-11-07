@@ -109,7 +109,7 @@ class LoadGroupsData extends LoggableFixture implements ContainerAwareInterface
                     // Add random id in array if not already in it.
                     if (!array_key_exists($pos, $userAddedIds)) {
                         $userAddedIds[$pos] = $pos;
-                        //echo "add user {$id} to group {$group->getId()}\n";
+//                        $this->log("add user {$users[$pos]->getId()} to group {$group->getId()}\n");
                         $group->addUser($users[$pos]);
                         $created = true;
                     }
@@ -119,7 +119,7 @@ class LoadGroupsData extends LoggableFixture implements ContainerAwareInterface
             $manager->persist($group);
             $manager->flush();
             // Clear EntityManager (EM) after each group to free memory and speed the EM process.
-            $manager->clear();
+//            $manager->clear();
         }
     }
 
