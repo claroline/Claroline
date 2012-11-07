@@ -134,6 +134,7 @@ role: Role
 user: User
 users: Users
 administrative_code: Administrative code
+creation_date: Creation date
 
 # group
 group: Group
