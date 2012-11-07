@@ -225,7 +225,7 @@ class WorkspaceController extends Controller
             }
         }
 
-        return $this->render('ClarolineCoreBundle:Dashboard:widgets\plugins.html.twig', array('widgets' => $responsesString));
+        return $this->render('ClarolineCoreBundle:Widget:widgets.html.twig', array('widgets' => $responsesString));
     }
 
     /**
