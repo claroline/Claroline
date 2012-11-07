@@ -186,6 +186,8 @@ to: Jusque
 results: Résultats
 parameters: paramètres
 reset: réinitialiser
+properties: propriétés
+configure: configurer
 
 # resource type
 directory: Répertoire
