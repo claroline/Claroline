@@ -8,7 +8,7 @@
         <td>
             <div>
                 {% for role in user.getOwnedRoles() %}
-                    {{ role.getTranslationKey() }}
+                    {{ role.getTranslationKey()|trans({}, 'platform')|capitalize  }}
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}
             </div>

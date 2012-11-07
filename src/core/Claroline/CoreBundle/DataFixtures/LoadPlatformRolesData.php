@@ -25,14 +25,17 @@ class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInt
     {
         $userRole = new Role();
         $userRole->setName(PlatformRoles::USER);
+        $userRole->setTranslationKey('user');
 
         $creatorRole = new Role();
         $creatorRole->setName(PlatformRoles::WS_CREATOR);
         $creatorRole->setParent($userRole);
+        $creatorRole->setTranslationKey('creator');
 
         $adminRole = new Role();
         $adminRole->setName(PlatformRoles::ADMIN);
         $adminRole->setParent($creatorRole);
+        $adminRole->setTranslationKey('admin');
 
         $manager->persist($userRole);
         $manager->persist($creatorRole);
