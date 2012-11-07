@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
@@ -141,6 +142,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $personalWorkspace;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", name="creation_date")
+     */
+    protected $created;
 
 
     public function __construct()
@@ -400,5 +407,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function addAbstractResource(AbstractResource $abstractResource)
     {
         $this->abstractResources->add($abstractResource);
+    }
+
+    public function getCreationDate()
+    {
+        return $this->created;
     }
 }

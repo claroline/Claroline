@@ -50,7 +50,7 @@
         ClaroUtils.sendRequest(
             route,
             function(groups){
-                alert(groups.length+' groups added to the workspace')
+                alert(Twig.render(add_group_confirm, {'nbGroups':groups.length }))
                 },
             undefined,
             'PUT'

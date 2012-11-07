@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 class ResourceControllerTest extends FunctionalTestCase
@@ -341,7 +340,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
     }
 
-    public function S_testDeleteUserRemovesHisPersonnalDataTree()
+    public function testDeleteUserRemovesHisPersonnalDataTree()
     {
         $this->markTestSkipped("Can't make it work.");
         $this->logUser($this->getFixtureReference('user/user'));
@@ -376,7 +375,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteActionLogsEvent()
     {
-        $this->markTestSkipped('logger is commented in multidelete');
+        $this->markTestSkipped("Doesn't work during the test (onLogResource method not fired during the delete). Works otherwise.");
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->pwr->getId());
         $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
@@ -384,6 +383,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($jsonResponse));
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+                var_dump(count($preEvents));
         $this->client->request(
             'GET', "/resource/multidelete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
         );
