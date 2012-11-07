@@ -1,0 +1,2 @@
+{% twig_js name="add_group_confirm" %}
+{{ nbGroups }} {{'add_group_confirm_message'|trans({}, 'platform')}}

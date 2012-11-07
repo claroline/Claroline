@@ -4,6 +4,7 @@
     {% javascripts
        vars=["locale"]
       "@ClarolineCoreBundle/Resources/views/Administration/group_list.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/Workspace/tools/remove_group_confirm.html.twigjs"
        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
@@ -28,8 +29,8 @@
 
     <p>
         <input type="text" id="search-group-txt" class="search-query" value=""/>
-        <input type="button" id="search-group-button" value="search" class="btn btn-secondary search-group-button"/>
-        <input type="button" id="delete-group-button" value="delete" class="btn btn-primary"/>
+        <input type="button" id="search-group-button" value="{{'search'|trans({}, 'platform')|capitalize }}" class="btn btn-secondary search-group-button"/>
+        <input type="button" id="delete-group-button" value="{{ 'delete'|trans({}, 'platform')|capitalize }}" class="btn btn-primary"/>
         <a href="{{ path('claro_workspace_unregistered_groups_list', {'workspaceId': workspace.getId()})}}" id="add-group-link" style="float:right;">{{ 'add_group'|trans({}, 'platform') }}</a>
     </p>
 
@@ -37,8 +38,8 @@
         <thead>
             <th></th>
             <th>{{ 'name'|trans({}, 'platform') }}</th>
-            <th>{{ 'role'|trans({}, 'role') }}</th>
-            <th></th>
+            <th>{{ 'role'|trans({}, 'platform')|capitalize }}</th>
+            <th>{{ 'parameters'|trans({}, 'platform')|capitalize }}</th>
         </thead>
         <tbody id="group-table-body">
 
@@ -52,8 +53,8 @@
         <div id="validation-box-body" class="modal-body" id="modal-body">
         </div>
         <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="Ok"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="Cancel"/>
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{'ok'|trans({}, 'platform')|capitalize }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{'cancel'|trans({}, 'platform')|capitalize }}"/>
         </div>
     </div>
 {% endblock %}

@@ -258,11 +258,13 @@ class WorkspaceUserController extends Controller
         $params = $this->get('request')->query->all();
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        foreach ($params['userId'] as $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-            if (null != $user) {
-                foreach ($roles as $role) {
-                    $user->removeRole($role);
+        if(isset($params['userId'])){
+            foreach ($params['userId'] as $userId) {
+                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+                if (null != $user) {
+                    foreach ($roles as $role) {
+                        $user->removeRole($role);
+                    }
                 }
             }
         }
@@ -281,15 +283,17 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
 
-        foreach ($parameters['userId'] as $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+        if(isset($parameters['userId'])){
+            foreach ($parameters['userId'] as $userId) {
+                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
 
-            if (null !== $user) {
-                if ($workspace == $user->getPersonalWorkspace()) {
-                    throw new LogicException("You can't remove the original manager from a personal workspace");
-                }
-                if ($user->hasRole($workspace->getManagerRole()->getName())) {
-                    $countRemovedManagers++;
+                if (null !== $user) {
+                    if ($workspace == $user->getPersonalWorkspace()) {
+                        throw new LogicException("You can't remove the original manager from a personal workspace");
+                    }
+                    if ($user->hasRole($workspace->getManagerRole()->getName())) {
+                        $countRemovedManagers++;
+                    }
                 }
             }
         }

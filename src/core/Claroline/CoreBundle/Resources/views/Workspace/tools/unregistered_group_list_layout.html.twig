@@ -4,6 +4,7 @@
     {% javascripts
        vars=["locale"]
       "@ClarolineCoreBundle/Resources/views/Administration/user_list.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/Workspace/tools/add_group_confirm.html.twigjs"
        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
@@ -32,7 +33,7 @@
     <div id="groups-button-div">
         <p>
         <input type="text" id="search-group-txt" class="search-query" value="" />
-        <input type="button" id="search-button" value ="search" class="btn btn-secondary search-group-button"/>
+        <input type="button" id="search-button" value="{{'search'|trans({},'platform') }}" class="btn btn-secondary search-group-button"/>
         <a href="#" class="btn btn-primary btn-save-groups" id="btn-save-groups"> {{ 'add'|trans({}, 'platform') }}</a>
         <p/>
     </div>
@@ -50,7 +51,6 @@
 
     <p>
         <a href="#" class="btn btn-primary btn-save-groups" id="btn-save-groups"> {{ 'add'|trans({}, 'platform') }}</a>
-        <input type="button" id="search-button" value ="search" class="btn btn-secondary search-group-button"/>
     </p>
 
     <div id="validation-box" class="modal hide fade">
@@ -59,8 +59,8 @@
         <div id="validation-box-body" class="modal-body" id="modal-body">
         </div>
         <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="Ok"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="Cancel"/>
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({},'platform')|capitalize }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({},'platform')|capitalize }}"/>
         </div>
     </div>
 {% endblock %}

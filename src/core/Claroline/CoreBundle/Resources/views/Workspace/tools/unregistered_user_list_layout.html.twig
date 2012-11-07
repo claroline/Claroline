@@ -4,6 +4,7 @@
     {% javascripts
        vars=["locale"]
       "@ClarolineCoreBundle/Resources/views/Administration/user_list.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/Workspace/tools/add_user_confirm.html.twigjs"
        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
@@ -21,7 +22,7 @@
             <span class="divider"> / </span>
             <li>
                 <a href="#"
-                id="link_unregistered_users">{{ 'unregistered_users'|trans({}, 'platform') }}
+                id="link_unregistered_users">{{ 'unregistered_users'|trans({}, 'platform')|capitalize }}
                 </a>
             </li>
         </ul>
@@ -32,7 +33,7 @@
     <div id="user-search-div">
         <p>
         <input type="text" id="search-user-txt" class="search-query" value="" />
-        <input type="button" id="search-button" value ="search" class="btn btn-secondary"/>
+        <input type="button" id="search-button" value ="{{ 'search'|trans({}, 'platform') }}" class="btn btn-secondary"/>
         <a href="#" class="btn btn-primary" id="btn-save-users"> {{ 'add'|trans({}, 'platform') }}</a>
         <p/>
     </div>

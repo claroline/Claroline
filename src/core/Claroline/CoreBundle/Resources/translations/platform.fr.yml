@@ -111,6 +111,12 @@ workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
 ##############
 
 owners: propriétaire(s)
+unregistered_users: utilisateurs non enregistrés
+unregistered_groups: groupes non enregistrés
+add_user_confirm_message: utilisateur(s) ajoutés
+remove_user_confirm_message: Nombre d'utilisateur(s) supprimé(s)
+add_group_confirm_message: utilisateurs(s) ajoutés
+remove_group_confirm_message: Nombre de groupe(s) supprimé(s)
 
 ########
 # MISC #
@@ -178,6 +184,8 @@ save: Sauvegarder
 from: Depuis
 to: Jusque
 results: Résultats
+parameters: paramètres
+reset: réinitialiser
 
 # resource type
 directory: Répertoire
