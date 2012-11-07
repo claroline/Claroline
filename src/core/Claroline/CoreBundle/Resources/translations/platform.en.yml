@@ -186,6 +186,8 @@ to: To
 results: Results
 parameters: parameters
 reset: reset
+properties: properties
+configure: configure
 
 # resource type
 directory: Directory
