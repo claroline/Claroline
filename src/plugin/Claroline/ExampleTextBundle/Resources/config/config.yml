@@ -13,7 +13,4 @@ plugin:
       is_visible: true
       is_browsable: true
       large_icon: res_text.png
-      actions:
-        - name: open
-          is_action_in_new_page: true
 

@@ -46,12 +46,6 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true)
         );
 
-        $customActions = array(
-            array('open', false),
-            null,
-            array('open', false)
-        );
-
         $i=0;
 
         foreach ($resourceTypes as $attributes) {
@@ -63,12 +57,14 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->addMetaType($documentMetatype);
             $manager->persist($type);
 
-            if ($customActions[$i] !== null) {
-                $actions = new ResourceTypeCustomAction();
-                $actions->setAction($customActions[$i][0]);
-                $actions->setAsync($customActions[$i][1]);
-                $actions->setResourceType($type);
-                $manager->persist($actions);
+            if(isset($customActions[$i])){
+                if ($customActions[$i] !== null) {
+                    $actions = new ResourceTypeCustomAction();
+                    $actions->setAction($customActions[$i][0]);
+                    $actions->setAsync($customActions[$i][1]);
+                    $actions->setResourceType($type);
+                    $manager->persist($actions);
+                }
             }
 
             $this->addReference("resource_type/{$attributes[0]}", $type);

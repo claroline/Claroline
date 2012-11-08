@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\PlayFileEvent;
@@ -110,7 +111,7 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onOpen(CustomActionResourceEvent $event)
+    public function onOpen(OpenResourceEvent $event)
     {
         $instance =  $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($event->getInstanceId());
         $file = $instance->getResource();

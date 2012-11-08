@@ -47,7 +47,7 @@
 
     $('.delete-users-button').click(function(){
         $('#validation-box').modal('show');
-        $('#validation-box-body').html('removing '+ $('.chk-user:checked').length +' user(s)');
+        $('#validation-box-body').html(Twig.render(remove_user_confirm, {'nbUsers':  $('.chk-user:checked').length }));
     });
 
     $('#modal-valid-button').click(function(){

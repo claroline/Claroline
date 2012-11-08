@@ -17,7 +17,7 @@
                 <td>{{ log.getUpdator().getUsername() }}</td>
                 <td>
                     {% if log.getInstance() != null %}
-                        <a href="{{ path('claro_resource_custom', {'resourceType': log.getResourceType().getType(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ 'open'|trans({}, 'platform') }}</a>
+                        <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getType(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ 'open'|trans({}, 'platform') }}</a>
                     {% endif %}
                 </td>
             </tr>

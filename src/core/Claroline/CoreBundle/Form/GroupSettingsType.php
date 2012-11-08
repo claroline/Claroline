@@ -14,9 +14,15 @@ class GroupSettingsType extends GroupType
             'ownedRoles',
             'entity',
             array(
-                'class' => 'Claroline\CoreBundle\Entity\Role', 'expanded' => false,
-                'multiple' => true, 'property' => 'name', 'read_only' => false,
-                'required' => false
+                'class' => 'Claroline\CoreBundle\Entity\Role',
+                'expanded' => false,
+                'multiple' => true,
+                'property' => 'translationKey',
+                'disabled' => false,
+                'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
+                    return $er->createQueryBuilder('r')
+                        ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                }
             )
         );
     }
@@ -24,5 +30,12 @@ class GroupSettingsType extends GroupType
     public function getName()
     {
         return 'group_form';
+    }
+
+    public function getDefaultOptions(array $options)
+    {
+       return array(
+           'translation_domain' => 'platform'
+       );
     }
 }

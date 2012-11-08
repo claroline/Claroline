@@ -5,7 +5,7 @@
 {
     "id": {{group.getId()}},
     "name": "{{group.getName()}}",
-    "roles": "{% for role in  group.getWorkspaceRoleCollection() %}{{role.getTranslationKey()}}{% if not loop.last %} ,{% endif %}{% endfor %}"
+    "roles": "{% for role in  group.getWorkspaceRoleCollection() %}{{role.getTranslationKey()|trans({},'platform')}}{% if not loop.last %} ,{% endif %}{% endfor %}"
 }
 {% if i < groups|length %}, {% endif %}
 {% endfor %}
