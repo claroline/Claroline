@@ -39,9 +39,9 @@ class CreatorTest extends FunctionalTestCase
         $this->assertEquals(Configuration::TYPE_SIMPLE, get_class($workspace));
         $this->assertEquals('Workspace Foo', $workspace->getName());
         $this->assertTrue($workspace->isPublic());
-        $this->assertEquals('Visitor', $workspace->getVisitorRole()->getTranslationKey());
-        $this->assertEquals('Collaborator', $workspace->getCollaboratorRole()->getTranslationKey());
-        $this->assertEquals('Manager', $workspace->getManagerRole()->getTranslationKey());
+        $this->assertEquals('visitor', $workspace->getVisitorRole()->getTranslationKey());
+        $this->assertEquals('collaborator', $workspace->getCollaboratorRole()->getTranslationKey());
+        $this->assertEquals('manager', $workspace->getManagerRole()->getTranslationKey());
     }
 
     public function testWorkspaceCanBeCreatedWithCustomParameters()
