@@ -67,4 +67,11 @@ class ProfileType extends BaseProfileType
     {
         return 'profile_form';
     }
+
+    public function getDefaultOptions(array $options)
+    {
+       return array(
+           'translation_domain' => 'platform'
+       );
+    }
 }
