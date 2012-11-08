@@ -36,11 +36,13 @@ file: File
 files: Files
 find_workspaces: Find workspaces
 first_name: First name
+form_role: Role
 from: From
 group: Group
 group_form_name: Name
 group_form_ownedRoles: Roles
 group_management: Group management
+group_parameter: Group parameter
 groups: Groups
 home: Home
 id: Id

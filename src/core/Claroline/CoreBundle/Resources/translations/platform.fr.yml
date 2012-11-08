@@ -36,11 +36,13 @@ file: Fichier
 files: Fichiers
 find_workspaces: Trouver un espace d'activité
 first_name: Prénom
+form_role: Rôle
 from: Depuis
 group: Groupe
 group_form_name: Nom
 group_form_ownedRoles: Rôles
 group_management: Gestion des groupes
+group_parameter: Paramètres du groupe
 groups: Groupes
 home: Accueil
 id: Id
