@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
 
 class WorkspaceControllerMainTest extends FunctionalTestCase
 {
@@ -20,7 +21,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $container = $client->getContainer();
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
         $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $loader = new Loader($pluginDirectory);
         $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
         $plugin = $loader->load($pluginFqcn);
         $dbWriter->insert($plugin);
@@ -31,27 +32,27 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $client = self::createClient();
         $container = $client->getContainer();
         $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
+        $loader = new Loader($pluginDirectory);
         $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
         $plugin = $loader->load($pluginFqcn);
         $container->get('claroline.plugin.recorder')->unregister($plugin);
         $container->get('claroline.plugin.migrator')->remove($plugin);
     }
 
-    public function testWSCreatorCanSeeHisWS()
+    public function testWSCreatorCanSeeHisWorkspaces()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
+        $this->assertEquals(5, $crawler->filter('.row-workspace')->count());
     }
 
-    public function testAdminCanSeeHisWs()
+    public function testAdminCanSeeHisWorkspaces()
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
+        $this->assertEquals(3, $crawler->filter('.row-workspace')->count());
     }
 
     public function testWSCreatorCanCreateWS()
@@ -73,7 +74,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_d')->getId()}");
         $crawler = $this->client->request('GET', "/workspaces/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
-        $this->assertEquals(3, $crawler->filter('.row-workspace')->count());
+        $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
     }
 
     public function testWSManagerCanSeeHisWS()
@@ -99,94 +100,93 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredResource()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/resource/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/resource/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDisplayHome()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantAccessUnregisteredHome()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDisplayUserManagement()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/user_management");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/user_management");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantAccessUnregisteredUserManagement()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/user_management");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/user_management");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDisplayUnregisteredUserList()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/users/unregistered");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/users/unregistered");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantAccessUnregisteredUserList()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/users/unregistered");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/users/unregistered");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDisplayUserParameters()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantAccessUnregisteredUserParameters()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDisplayGroupManagement()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/group_management");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/group_management");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantAccessUnregisteredGroupManagement()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/group_management");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/group_management");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDisplayUnregisteredGroupList()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
-         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCantAccessUnregisteredGroupList()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
-         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
-         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId()}/tools/groups/unregistered");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testManagerCanSeeWidgetProperties()
