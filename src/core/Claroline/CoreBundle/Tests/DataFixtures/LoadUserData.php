@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -37,91 +38,36 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $wsCreatorRole = $this->getReference('role/ws_creator');
         $adminRole = $this->getReference('role/admin');
 
-        $wsCreatorService = $this->container->get('claroline.workspace.creator');
-        $type = Configuration::TYPE_SIMPLE;
-        $config = new Configuration();
-        $config->setWorkspaceType($type);
-        $config->setWorkspaceName("my workspace");
-        $config->setWorkspaceCode("PERSO");
+        $wsCreator = $this->container->get('claroline.workspace.creator');
+        $wsConfig = new Configuration();
+        $wsConfig->setWorkspaceType(Configuration::TYPE_SIMPLE);
+        $wsConfig->setWorkspaceName('my workspace');
+        $wsConfig->setWorkspaceCode('PERSO');
 
-        $user = new User();
-        $user->setFirstName('Jane');
-        $user->setLastName('Doe');
-        $user->setUserName('user');
-        $user->setPlainPassword('123');
-        $user->addRole($userRole);
-        $manager->persist($user);
-        $repositoryOne = $wsCreatorService->createWorkspace($config, $user);
-        $repositoryOne->setType(AbstractWorkspace::USER_REPOSITORY);
-        $user->addRole($repositoryOne->getManagerRole());
-        $user->setPersonalWorkspace($repositoryOne);
+        $users = array(
+            array('Jane', 'Doe', 'user', '123', $userRole),
+            array('Bob', 'Doe', 'user_2', '123', $userRole),
+            array('Bill', 'Doe', 'user_3', '123', $userRole),
+            array('Henry', 'Doe', 'ws_creator', '123', $wsCreatorRole),
+            array('John', 'Doe', 'admin', '123', $adminRole)
+        );
 
-        $secondUser = new User();
-        $secondUser->setFirstName('Bob');
-        $secondUser->setLastName('Doe');
-        $secondUser->setUserName('user_2');
-        $secondUser->setPlainPassword('123');
-        $secondUser->addRole($userRole);
-        $manager->persist($secondUser);
-        $repositoryTwo = $wsCreatorService->createWorkspace($config, $secondUser);
-        $repositoryTwo->setType(AbstractWorkspace::USER_REPOSITORY);
-        $secondUser->addRole($repositoryTwo->getManagerRole());
-        $secondUser->setPersonalWorkspace($repositoryTwo);
-
-        $thirdUser = new User();
-        $thirdUser->setFirstName('Bill');
-        $thirdUser->setLastName('Doe');
-        $thirdUser->setUserName('user_3');
-        $thirdUser->setPlainPassword('123');
-        $thirdUser->addRole($userRole);
-        $manager->persist($thirdUser);
-        $repositoryThree = $wsCreatorService->createWorkspace($config, $thirdUser);
-        $repositoryThree->setType(AbstractWorkspace::USER_REPOSITORY);
-        $thirdUser->addRole($repositoryThree->getManagerRole());
-        $thirdUser->setPersonalWorkspace($repositoryThree);
-
-        $wsCreator = new User();
-        $wsCreator->setFirstName('Henry');
-        $wsCreator->setLastName('Doe');
-        $wsCreator->setUserName('ws_creator');
-        $wsCreator->setPlainPassword('123');
-        $wsCreator->addRole($wsCreatorRole);
-        $manager->persist($wsCreator);
-        $repositoryFour = $wsCreatorService->createWorkspace($config, $wsCreator);
-        $repositoryFour->setType(AbstractWorkspace::USER_REPOSITORY);
-        $wsCreator->addRole($repositoryFour->getManagerRole());
-        $wsCreator->setPersonalWorkspace($repositoryFour);
-
-        $admin = new User();
-        $admin->setFirstName('John');
-        $admin->setLastName('Doe');
-        $admin->setUserName('admin');
-        $admin->setPlainPassword('123');
-        $admin->addRole($adminRole);
-        $manager->persist($admin);
-        $repositoryFive = $wsCreatorService->createWorkspace($config, $wsCreator);
-        $repositoryFive->setType(AbstractWorkspace::USER_REPOSITORY);
-        $admin->addRole($repositoryFive->getManagerRole());
-        $admin->setPersonalWorkspace($repositoryFive);
-
-        $manager->persist($user);
-        $manager->persist($secondUser);
-        $manager->persist($thirdUser);
-        $manager->persist($wsCreator);
-        $manager->persist($admin);
-        $manager->persist($repositoryOne);
-        $manager->persist($repositoryTwo);
-        $manager->persist($repositoryThree);
-        $manager->persist($repositoryFour);
-        $manager->persist($repositoryFive);
+        foreach ($users as $userProps) {
+            $user = new User();
+            $user->setFirstName($userProps[0]);
+            $user->setLastName($userProps[1]);
+            $user->setUserName($userProps[2]);
+            $user->setPlainPassword($userProps[3]);
+            $user->addRole($userProps[4]);
+            $ws = $wsCreator->createWorkspace($wsConfig, $user);
+            $ws->setType(AbstractWorkspace::USER_REPOSITORY);
+            $user->addRole($ws->getManagerRole());
+            $user->setPersonalWorkspace($ws);
+            $this->addReference("user/{$userProps[2]}", $user);
+            $manager->persist($user);
+        }
 
         $manager->flush();
-
-        $this->addReference('user/user', $user);
-        $this->addReference('user/user_2', $secondUser);
-        $this->addReference('user/user_3', $thirdUser);
-        $this->addReference('user/ws_creator', $wsCreator);
-        $this->addReference('user/admin', $admin);
     }
 
     public function getOrder()

@@ -14,7 +14,6 @@ class WorkspaceRepository extends EntityRepository
             JOIN w.roles wr
             JOIN wr.users u
             WHERE u.id = :userId
-            AND w.type != 0
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
