@@ -8,6 +8,16 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
 
+    $('.btn-save-users').attr('disabled', 'disabled');
+
+    $('.checkbox-user-name').live('change', function(){
+        if ($('.checkbox-user-name:checked').length){
+           $('.btn-save-users').removeAttr('disabled');
+        } else {
+           $('.btn-save-users').attr('disabled', 'disabled');
+        }
+    })
+
     var standardRoute = function(){
         return Routing.generate('claro_workspace_unregistered_users_paginated', {
             'workspaceId': twigWorkspaceId,
@@ -48,7 +58,7 @@
         }
     });
 
-    $('#btn-save-users').on('click', function(event){
+    $('.btn-save-users').on('click', function(event){
         var parameters = {};
         var i = 0;
         var array = new Array();
@@ -76,10 +86,10 @@
         while (i<JSONString.length)
         {
             var list = '<tr class="row-user">'
-            +'<td align="center"><input class="checkbox-user-name" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>'
             +'<td align="center">'+JSONString[i].username+'</td>'
             +'<td align="center">'+JSONString[i].lastname+'</td>'
             +'<td align="center">'+JSONString[i].firstname+'</td>'
+            +'<td align="center"><input class="checkbox-user-name" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>'
             +'</tr>';
             $('#user-table-checkboxes-body').append(list);
             i++;

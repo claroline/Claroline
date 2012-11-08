@@ -2,9 +2,18 @@
     var loading = false;
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
-
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
+
+    $('.delete-users-button').attr('disabled', 'disabled');
+
+    $('.chk-user').live('change', function(){
+        if ($('.chk-user:checked').length){
+           $('.delete-users-button').removeAttr('disabled');
+        } else {
+           $('.delete-users-button').attr('disabled', 'disabled');
+        }
+    })
 
     var standardRoute = function(){
         return Routing.generate('claro_admin_paginated_user_list', {
@@ -71,6 +80,7 @@
                 });
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
+                $('.delete-users-button').attr('disabled', 'disabled');
             },
             undefined,
             'DELETE'

@@ -19,9 +19,9 @@
         {{ group.getName() }}: {{ 'add_user'|trans({}, 'platform') }}
     </h6>
         <p>
-        <input id="search-user-txt" type="text" class="search-query"/>
-        <button class="btn btn-secondary" id="search-user-button" type="submit">{{ 'search'|trans({}, 'platform') }}</button>
-        <button class="btn btn-primary add-users-button">{{ 'add'|trans({}, 'platform') }}</button>
+        <button class="btn btn-secondary pull-right" id="search-user-button" type="submit">{{ 'search'|trans({}, 'platform') }}</button>
+        <input id="search-user-txt" type="text" class="search-query pull-right input-small"/>
+        <button class="btn btn-secondary add-users-button">{{ 'add'|trans({}, 'platform') }}</button>
     </p>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
@@ -37,7 +37,7 @@
         </tbody>
     </table>
     <p>
-        <button class="btn btn-primary add-users-button">{{ 'add'|trans({}, 'platform') }}</button>
+        <button class="btn btn-secondary add-users-button">{{ 'add'|trans({}, 'platform') }}</button>
     </p>
     <div id="twig-attributes" data-group-id="{{ group.getId() }}"></div>
 {% endblock %}

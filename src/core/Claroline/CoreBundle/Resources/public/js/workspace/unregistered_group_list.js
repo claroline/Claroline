@@ -8,6 +8,17 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
 
+   $('.btn-save-groups').attr('disabled', 'disabled');
+
+    $('.checkbox-group-name').live('change', function(){
+        if ($('.checkbox-group-name:checked').length){
+           $('.btn-save-groups').removeAttr('disabled');
+        } else {
+           $('.btn-save-groups').attr('disabled', 'disabled');
+        }
+    })
+
+
 
     var standardRoute = function(){
         return Routing.generate('claro_workspace_unregistered_groups_paginated', {
@@ -57,6 +68,7 @@
             )
         $('.checkbox-group-name:checked').each(function(index, element){
             $(element).parent().parent().remove();
+            $('.btn-save-groups').attr('disabled', 'disabled');
         })
     });
 
@@ -80,8 +92,8 @@
         while (i<JSONObject.length)
         {
             var row = '<tr class="row-group">'
-            +'<td align="center"><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
             +'<td align="center">'+JSONObject[i].name+'</td>'
+            +'<td align="center"><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
             +'</tr>';
             $('#group-table-body').append(row);
             i++;

@@ -10,6 +10,16 @@
     }, 0);
     $('#loading').hide();
 
+    $('.delete-users-button').attr('disabled', 'disabled');
+
+    $('.chk-user').live('change', function(){
+        if ($('.chk-user:checked').length){
+           $('.delete-users-button').removeAttr('disabled');
+        } else {
+           $('.delete-users-button').attr('disabled', 'disabled');
+        }
+    })
+
     var standardRoute = function(){
         return Routing.generate('claro_admin_paginated_group_user_list', {
             'offset' : $('.row-user').length,
@@ -78,6 +88,7 @@
                 });
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
+                $('.delete-users-button').attr('disabled', 'disabled');
             },
             undefined,
             'DELETE'

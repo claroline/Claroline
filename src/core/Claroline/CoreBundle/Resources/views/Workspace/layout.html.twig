@@ -4,12 +4,12 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span7">
-            <h2 class="section-header">{{ workspace.getCode() ~' - '~ workspace.getName() }}</h2>
+            <h2 class="section-header">{{ workspace.getName() ~': '~ workspace.getCode() }}</h2>
         </div>
         <div class="span5 workspace-top-toolbox">
             <br>
             <input id="generic-search-field" type="text" width="100px" class="search-query"/>
-            <button class="btn btn-primary">{{ 'resources'|trans({}, 'platform') }}</button>
+            <button class="btn btn-secondary">{{ 'resources'|trans({}, 'platform') }}</button>
         </div>
     </div>
 </div>
@@ -69,6 +69,7 @@
         </div>
     </div>
 </div>
+<br/>
 <div class="container-fluid">
     <div class="span1"></div>
     <div class="span11">

@@ -7,6 +7,16 @@
     $('html, body').animate({scrollTop: 0}, 0);
     $('#loading').hide();
 
+    $('.delete-groups-button').attr('disabled', 'disabled');
+
+    $('.chk-group').live('change', function(){
+        if ($('.chk-group:checked').length){
+           $('.delete-groups-button').removeAttr('disabled');
+        } else {
+           $('.delete-groups-button').attr('disabled', 'disabled');
+        }
+    })
+
     var standardRoute = function(){
         return Routing.generate('claro_admin_paginated_group_list', {
             'format': 'html',
@@ -58,6 +68,7 @@
                 });
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
+                $('.delete-groups-button').attr('disabled', 'disabled');
             },
             undefined,
             'DELETE'

@@ -8,6 +8,16 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
 
+    $('.delete-users-button').attr('disabled', 'disabled');
+
+    $('.chk-delete-user').live('change', function(){
+        if ($('.chk-delete-user:checked').length){
+           $('.delete-users-button').removeAttr('disabled');
+        } else {
+           $('.delete-users-button').attr('disabled', 'disabled');
+        }
+    })
+
     var standardRoute = function(){
         return Routing.generate('claro_workspace_registered_users_paginated', {
                 'workspaceId':twigWorkspaceId,
@@ -82,6 +92,7 @@
                 });
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
+                $('.delete-users-button').attr('disabled', 'disabled');
             },
             undefined,
             'DELETE'
