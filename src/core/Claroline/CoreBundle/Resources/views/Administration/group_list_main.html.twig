@@ -1,8 +1,14 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts
+       vars=["locale"]
+      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/remove_group_confirm.html.twigjs"
+       filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script src='{{ asset('bundles/clarolinecore/js/administration/group_list.js') }}' type="text/javascript"></script>
-
 {% endblock %}
 {% block section_content %}
     <h3 class="sub-section-header" id="group-list-block">{{ 'groups'|trans({}, 'platform') }}</h3>
@@ -15,11 +21,8 @@
         <thead>
             <tr>
                 <th>{{ 'name'|trans({}, 'platform') }}</th>
-                <th>{{ 'role'|trans({}, 'platform') }}</th>
                 <th>{{ 'users'|trans({}, 'platform') }}</th>
-                <th>{{ 'resources'|trans({}, 'platform') }}</th>
                 <th>{{ 'settings'|trans({}, 'platform') }}</th>
-                <th>{{ 'move'|trans({}, 'platform') }}</th>
                 <th>{{ 'delete'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
@@ -39,8 +42,8 @@
         <div id="validation-box-body" class="modal-body" id="modal-body">
         </div>
         <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="Ok"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="Cancel"/>
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
         </div>
     </div>
 {% endblock %}

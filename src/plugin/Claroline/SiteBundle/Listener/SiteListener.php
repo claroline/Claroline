@@ -4,6 +4,7 @@ namespace Claroline\SiteBundle\Listener;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Listener\Resource\FileListener;
 use Claroline\CoreBundle\Form\FileType;
@@ -25,7 +26,7 @@ class SiteListener extends FileListener
         $event->stopPropagation();
     }
 
-    public function onOpen(CustomActionResourceEvent $event)
+    public function onOpen(OpenResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
         $instance = $this->container->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($event->getInstanceId());

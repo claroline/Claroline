@@ -8,7 +8,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 {
     /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
     private $configHandler;
-
+/*
     public static function setUpBeforeClass()
     {
         $client = self::createClient();
@@ -23,7 +23,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $plugin = $loader->load($pluginFqcn);
         $dbWriter->insert($plugin);
     }
-
+*/
     protected function setUp()
     {
         parent::setUp();

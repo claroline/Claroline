@@ -98,9 +98,11 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
 
-        foreach ($params['id'] as $userId) {
-            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-            $em->remove($user);
+        if(issset($params['id'])){
+            foreach ($params['id'] as $userId) {
+                $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+                $em->remove($user);
+            }
         }
 
         $em->flush();
@@ -425,11 +427,13 @@ class AdministrationController extends Controller
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $users = array();
 
-        foreach ($params['userId'] as $userId) {
-            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-            if($user !== null){
-                $group->addUser($user);
-                $users[] = $user;
+        if(isset($params['userId'])){
+            foreach ($params['userId'] as $userId) {
+                $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+                if($user !== null){
+                    $group->addUser($user);
+                    $users[] = $user;
+                }
             }
         }
 
@@ -458,10 +462,12 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
-        foreach ($params['userId'] as $userId){
-            $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-            $group->removeUser($user);
-            $em->persist($group);
+        if(isset($params['userId'])){
+            foreach ($params['userId'] as $userId){
+                $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+                $group->removeUser($user);
+                $em->persist($group);
+            }
         }
 
         $em->flush();
@@ -479,9 +485,11 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
 
-        foreach ($params['id'] as $groupId) {
-            $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
-            $em->remove($group);
+        if(isset($params['id'])){
+            foreach ($params['id'] as $groupId) {
+                $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
+                $em->remove($group);
+            }
         }
 
         $em->flush();

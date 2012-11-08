@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
-use Claroline\CoreBundle\Entity\Resource\Text;
 
 class TextControllerTest extends FunctionalTestCase
 {
@@ -32,7 +30,7 @@ class TextControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
-        $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->id}");
+        $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
         $node = $crawler->filter('#text_content');
         $this->assertTrue(strpos($node->text(), 'hello world') !== false);
     }
@@ -44,7 +42,7 @@ class TextControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->resource_id}");
         $form = $crawler->filter('button[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
-        $crawler = $this->client->request('GET', "/resource/custom/text/open/{$text->id}");
+        $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
         $node = $crawler->filter('#text_content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
         $textId = $text->{'resource_id'};

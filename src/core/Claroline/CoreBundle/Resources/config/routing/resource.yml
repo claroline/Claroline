@@ -32,7 +32,7 @@ claro_resource_multi_delete:
     defaults: { _controller: ClarolineCoreBundle:Resource:multiDelete }
     options:
         expose: true
-        
+
 claro_multi_export:
     pattern: /multiexport
     defaults: { _controller: ClarolineCoreBundle:Resource:multiExport }
@@ -50,6 +50,12 @@ claro_resource_multimove:
    defaults: { _controller: ClarolineCoreBundle:Resource:multimove }
    options:
         expose: true
+
+claro_resource_open:
+   pattern: /open/{resourceType}/{instanceId}
+   defaults: { _controller: ClarolineCoreBundle:Resource:open }
+   options:
+     expose: true
 
 claro_resource_custom:
     pattern: /custom/{resourceType}/{action}/{instanceId}

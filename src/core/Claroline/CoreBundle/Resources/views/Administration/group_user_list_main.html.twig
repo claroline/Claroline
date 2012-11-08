@@ -5,6 +5,7 @@
     {% javascripts
        vars=["locale"]
       "@ClarolineCoreBundle/Resources/views/Administration/user_list_short.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/remove_user_confirm.html.twigjs"
        filter="twig_js"
     %}
 
@@ -50,8 +51,8 @@
         <div id="validation-box-body" class="modal-body" id="modal-body">
         </div>
         <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="Ok"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="Cancel"/>
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
         </div>
     </div>
 {% endblock %}

@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 /**
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
  * @ORM\Table(name="claro_role")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")

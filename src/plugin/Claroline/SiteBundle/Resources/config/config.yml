@@ -6,7 +6,4 @@ plugin:
       name: claroline_site
       is_visible: true
       is_browsable: false
-      actions:
-        - name: open
-          is_action_in_new_page: true
 

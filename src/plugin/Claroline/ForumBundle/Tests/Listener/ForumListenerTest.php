@@ -46,7 +46,7 @@ class ForumListenerTest extends FunctionalTestCase
         $userRoot = $userRoot = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test', 'shareType' => 0)));
         $datas = json_decode($this->client->getResponse()->getContent());
-        $crawler = $this->client->request('POST', "/resource/custom/claroline_forum/open/{$datas[0]->id}");
+        $crawler = $this->client->request('POST', "/resource/open/claroline_forum/{$datas[0]->id}");
         $this->assertEquals(1, count($crawler->filter('#subjects_table')));
     }
 

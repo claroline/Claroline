@@ -356,10 +356,21 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testCustomActionLogsEvent()
     {
+        $this->markTestSkipped('not custom action defined yet');
         $this->logUser($this->getFixtureReference('user/user'));
         $file = $this->uploadFile($this->userRoot->getId(), 'txt.txt');
         $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->client->request('GET', "/resource/custom/file/open/{$file->id}");
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->assertEquals(1, count($postEvents)-count($preEvents));
+    }
+
+    public function testOpenActionLogsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->userRoot->getId(), 'txt.txt');
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $this->client->request('GET', "/resource/open/file/{$file->id}");
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(1, count($postEvents)-count($preEvents));
     }

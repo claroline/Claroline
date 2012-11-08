@@ -5,7 +5,7 @@ namespace Claroline\ExampleTextBundle\Listener;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 use Claroline\ExampleTextBundle\Entity\ExampleText;
@@ -109,11 +109,7 @@ class ExampleTextListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    //Open is a custom action.
-    //Here we're going to do a redirection to the ExampleTextController and keep the workspace context.
-    //While we were working with resource in the other event, this one works with instances (links)
-    //because they allow us to keep the context (workspace).
-    public function onOpen(CustomActionResourceEvent $event)
+    public function onOpen(OpenResourceEvent $event)
     {
         //Redirection to the controller.
         $route = $this->container->get('router')->generate('claro_exampletext_open', array('exampleTextInstanceId' => $event->getInstanceId()));

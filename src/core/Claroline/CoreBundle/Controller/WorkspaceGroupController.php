@@ -49,7 +49,7 @@ class WorkspaceGroupController extends Controller
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
         $role = $em->getRepository('ClarolineCoreBundle:Group')->getRoleOfWorkspace($groupId, $workspaceId);
         $defaultData = array('role' => $role[0]);
-        $form = $this->createFormBuilder($defaultData)
+        $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role', 'entity', array(
                 'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
