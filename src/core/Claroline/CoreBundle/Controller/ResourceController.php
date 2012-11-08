@@ -93,7 +93,6 @@ class ResourceController extends Controller
 
     public function openAction($instanceId, $resourceType)
     {
-        $em = $this->getDoctrine()->getEntityManager();
         $event = new OpenResourceEvent($instanceId);
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('open', $resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -104,12 +103,11 @@ class ResourceController extends Controller
             );
         }
 
-        $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
-        $logevent = new ResourceLoggerEvent(
-                $ri,
-                'open'
-        );
-        $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+        $em = $this->getDoctrine()->getEntityManager();
+        $ri = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->find($instanceId);
+        $logEvent = new ResourceLoggerEvent($ri, 'open');
+        $this->get('event_dispatcher')->dispatch('log_resource', $logEvent);
 
         return $event->getResponse();
     }
