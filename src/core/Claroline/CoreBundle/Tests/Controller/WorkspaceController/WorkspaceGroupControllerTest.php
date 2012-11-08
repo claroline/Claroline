@@ -123,7 +123,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $groups = json_decode($this->client->getResponse()->getContent());
 
         foreach ($groups as $group) {
-            $this->assertContains('Manager', $group->roles);
+            $this->assertContains('manager', $group->roles);
         }
     }
 
@@ -139,7 +139,6 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->client->request(
             'DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?userId[]={$this->getFixtureReference('user/ws_creator')->getId()}"
         );
-            var_dump($this->client->getResponse()->getContent());
         $crawler = $this->client->request(
             'POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId()))
         );

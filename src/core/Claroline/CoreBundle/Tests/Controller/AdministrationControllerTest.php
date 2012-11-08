@@ -8,7 +8,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 {
     /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
     private $configHandler;
-/*
+
     public static function setUpBeforeClass()
     {
         $client = self::createClient();
@@ -23,7 +23,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $plugin = $loader->load($pluginFqcn);
         $dbWriter->insert($plugin);
     }
-*/
+
     protected function setUp()
     {
         parent::setUp();
@@ -239,15 +239,17 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanEditGroupSettings()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
+        $originalRoleId = $this->getFixtureReference('role/role_a')->getId();
+        $adminRoleId = $this->getFixtureReference('role/admin')->getId();
         $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
-        $selected = $crawler->filterXpath("//select/option[. = 'ROLE_A']")->attr('selected');
-        $this->assertEquals("selected", $selected);
+        $selected = $crawler->filter("option[value={$originalRoleId}]")->attr('selected');
+        $this->assertEquals('selected', $selected);
         $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[ownedRoles]'] = $this->getFixtureReference('role/admin')->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
-        $selected = $crawler->filter('option:contains("ROLE_ADMIN")')->attr('selected');
-        $this->assertEquals("selected", $selected);
+        $selected = $crawler->filter("option[value={$adminRoleId}]")->attr('selected');
+        $this->assertEquals('selected', $selected);
     }
 
     public function testGroupSettingsFormWithErrorsIsRendered()

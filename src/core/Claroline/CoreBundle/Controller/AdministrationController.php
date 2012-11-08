@@ -95,17 +95,18 @@ class AdministrationController extends Controller
      */
     public function multiDeleteUserAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
 
-        if(isset($params['id'])){
+        if (isset($params['id'])) {
+            $em = $this->getDoctrine()->getEntityManager();
+
             foreach ($params['id'] as $userId) {
                 $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
                 $em->remove($user);
             }
-        }
 
-        $em->flush();
+            $em->flush();
+        }
 
         return new Response('user(s) removed', 204);
     }
