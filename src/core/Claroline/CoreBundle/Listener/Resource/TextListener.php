@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 
 class TextListener extends ContainerAware
 {
@@ -49,7 +50,7 @@ class TextListener extends ContainerAware
             $revision->setText($text);
             $event->setResource($text);
             $event->stopPropagation();
-            
+
             return;
         }
 
@@ -64,7 +65,7 @@ class TextListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onOpen(CustomActionResourceEvent $event)
+    public function onOpen(OpenResourceEvent $event)
     {
         $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($event->getInstanceId())->getResource();
         $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $event->getInstanceId()));

@@ -197,6 +197,7 @@ Here is the list of events fired by the resource manager (lower case is forced h
 * delete_*resourcetypename*
 * export_*resourcetypename*
 * copy_*resourcetypename*
+* open_*resourcetypename*
 * *customaction*_*resourcetypename*
 
 Where *resourcetypename* is the name of your resource in lowercase (e.g. "exampletext") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
