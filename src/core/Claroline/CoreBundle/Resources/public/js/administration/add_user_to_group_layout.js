@@ -9,6 +9,17 @@
     }, 0);
     $('#loading').hide();
 
+    $('.add-users-button').attr('disabled', 'disabled');
+
+    $('.chk-user').live('change', function(){
+        if ($('.chk-user:checked').length){
+           $('.add-users-button').removeAttr('disabled');
+        } else {
+           $('.add-users-button').attr('disabled', 'disabled');
+        }
+    })
+
+
     var standardRoute = function(){
         return Routing.generate('claro_admin_groupless_users', {
             'offset' : $('.row-user').length,
@@ -69,6 +80,7 @@
         $('.chk-user:checked').each(function(index, element){
              $(element).parent().parent().remove();
         })
+        $('.add-users-button').attr('disabled', 'disabled');
     });
 
     function lazyloadUsers(route){

@@ -8,6 +8,16 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
 
+    $('.delete-groups-button').attr('disabled', 'disabled');
+
+    $('.chk-group').live('change', function(){
+        if ($('.chk-group:checked').length){
+           $('.delete-groups-button').removeAttr('disabled');
+        } else {
+           $('.delete-groups-button').attr('disabled', 'disabled');
+        }
+    })
+
     var standardRoute = function(){
         return Routing.generate('claro_workspace_registered_groups_paginated', {
                     'workspaceId':twigWorkspaceId,
@@ -35,7 +45,7 @@
         }
     });
 
-    $('#delete-group-button').click(function(){
+    $('.delete-groups-button').click(function(){
         $('#validation-box').modal('show');
         $('#validation-box-body').html(Twig.render(remove_group_confirm, {'nbGroups': $('.chk-group:checked').length}));
     });
@@ -60,6 +70,7 @@
                 });
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
+                $('.delete-groups-button').attr('disabled', 'disabled');
             },
             undefined,
             'DELETE'

@@ -68,7 +68,7 @@ class WorkspaceUserController extends Controller
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $role = $em->getRepository('ClarolineCoreBundle:User')->getRoleOfWorkspace($userId, $workspaceId);
         $defaultData = array('role' => $role[0]);
-        $form = $this->createFormBuilder($defaultData)
+        $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role', 'entity', array(
                 'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
@@ -168,21 +168,24 @@ class WorkspaceUserController extends Controller
     public function multiAddUserAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
-
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $users = array();
+        
+        if (isset($params['userId'])) {
 
-        foreach ($params['userId'] as $userId) {
-             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
-             $users[] = $user;
-             $user->addRole($workspace->getCollaboratorRole());
-             $em->flush();
-        }
+            $em = $this->get('doctrine.orm.entity_manager');
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
-        //small hack to get the current workspace as the only workspace role. Do not flush after this !
-        foreach ($users as $user){
-            $user->setWorkspaceRoleCollection($workspace->getCollaboratorRole());
+            foreach ($params['userId'] as $userId) {
+                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+                $users[] = $user;
+                $user->addRole($workspace->getCollaboratorRole());
+                $em->flush();
+            }
+
+            //small hack to get the current workspace as the only workspace role. Do not flush after this !
+            foreach ($users as $user) {
+                $user->setWorkspaceRoleCollection($workspace->getCollaboratorRole());
+            }
         }
 
         $content = $this->renderView('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => $users));

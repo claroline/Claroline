@@ -14,6 +14,7 @@ cancel: Annuler
 choose_resource_form_type: Type de ressource
 close: Fermer
 collaborator: Collaborateur
+configuration: Configuration
 configure: Configurer
 copy: Copier
 create: Créer
@@ -116,8 +117,8 @@ to: Jusque
 type_s: Type(s)
 type: Type
 unregister: Désinscription
-unregistered_groups: groupes non enregistrés
-unregistered_users: utilisateurs non enregistrés
+unregistered_groups: Groupes non enregistrés
+unregistered_users: Utilisateurs non enregistrés
 user: Utilisateur
 user_form_administrativeCode: Code administratif
 user_form_firstName: Nom
@@ -130,6 +131,7 @@ user_form_plainPassword_first: Mot de passe
 user_form_plainPassword_second: Vérification
 user_form_username: Nom d'utilisateur
 user_management: Gestion des utilisateurs
+user_parameters: Paramètres de l'utilisateur
 username: Nom d'utilisateur
 users: Utilisateurs
 visible: Visible
@@ -139,6 +141,7 @@ workspace.create: Créer un nouvel espace d'activités
 workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
 workspace: Espace d'activités
 workspace_administration: Administration
+workspace_form_code: Code
 workspace_form_name: Nom
 workspace_form_type: Type
 workspace_resource: Ressources

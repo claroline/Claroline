@@ -32,7 +32,7 @@ class RssReaderListener extends ContainerAware
 
         //check if the config is correct
         if ($rssconfig == null) {
-            $event->setContent('url not defined');
+            $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
             $event->stopPropagation();
             return;
         }
@@ -42,7 +42,7 @@ class RssReaderListener extends ContainerAware
             $rss = simplexml_load_file($rssconfig->getUrl());
         }
         catch(\Exception $e){
-            $event->setContent('rss url invalid');
+            $event->setContent($this->container->get('translator')->trans('rss_url_invalid', array(), 'rss_reader'));
             $event->stopPropagation();
             return;
         }

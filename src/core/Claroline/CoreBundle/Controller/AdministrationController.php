@@ -98,7 +98,7 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
 
-        if(issset($params['id'])){
+        if(isset($params['id'])){
             foreach ($params['id'] as $userId) {
                 $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
                 $em->remove($user);

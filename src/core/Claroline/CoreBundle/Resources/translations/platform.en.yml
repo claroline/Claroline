@@ -14,6 +14,7 @@ cancel: Cancel
 choose_resource_form_type: Resource type
 close: Close
 collaborator: Collaborator
+configuration: Configuration
 configure: Configure
 copy: Copy
 create: Create
@@ -130,6 +131,7 @@ user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
 user_management: User management
+user_parameters: User parameters
 username: Username
 users: Users
 visible: Visible
@@ -139,6 +141,7 @@ workspace.create: Create a new workspace
 workspace.name_not_blank: The workspace's name is required.
 workspace: Workspace
 workspace_administration: Administration
+workspace_form_code: Code
 workspace_form_name: Name
 workspace_form_type: Type
 workspace_resource: Resources

@@ -27,11 +27,10 @@
          data-workspaceId="{{workspace.getId()}}">
     </div>
     <p>
-        <input type="text" id="search-user-txt" class="search-query" value=""/>
-        <input type="button" id="search-user-button" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-secondary"/>
-        <input type="button" id="reset-user-button" value="{{ 'reset'|trans({}, 'platform') }}" class="btn btn-secondary"/>
-        <input type="button" id="delete-user-button" value="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-primary"/>
-        <a href="{{ path('claro_workspace_unregistered_users_list', {'workspaceId': workspace.getId()}) }}" id="add-user-link" style="float:right;">{{ 'add_user'|trans({}, 'platform') }}</a>
+        <input type="button" id="delete-user-button" value="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-secondary delete-users-button"/>
+        <a class="btn btn-secondary" href="{{ path('claro_workspace_unregistered_users_list', {'workspaceId': workspace.getId()}) }}" id="add-user-link">{{ 'add_user'|trans({}, 'platform') }}</a>
+        <input type="button" id="search-user-button" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-secondary pull-right"/>
+        <input type="text" id="search-user-txt" class="search-query input-small pull-right" value=""/>
     </p>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
@@ -42,12 +41,13 @@
                 <td>{{ 'mail'|trans({}, 'platform') }}</td>
                 <td>{{ 'role'|trans({}, 'platform') }}</td>
                 <td>{{ 'parameters'|trans({}, 'platform') }}</td>
-                <td>{{ 'delete'|trans({}, 'platform') }}</td>
+                <td></td>
             </tr>
         </thead>
         <tbody id="user-table-body">
         </tbody>
     </table>
+    <input type="button" id="delete-user-button" value="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-secondary delete-users-button"/>
 
     <div id="validation-box" class="modal hide fade">
         <div class="modal-header">
