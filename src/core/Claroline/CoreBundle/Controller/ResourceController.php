@@ -8,11 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Form\ResourceNameType;
-use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 
 class ResourceController extends Controller
 {
@@ -89,6 +89,29 @@ class ResourceController extends Controller
         $this->get('claroline.resource.manager')->delete($resourceInstance);
 
         return new Response('Resource deleted', 204);
+    }
+
+    public function openAction($instanceId, $resourceType)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $event = new OpenResourceEvent($instanceId);
+        $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('open', $resourceType);
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (!$event->getResponse() instanceof Response) {
+            throw new \Exception(
+                "Open event '{$eventName}' didn't return any Response."
+            );
+        }
+
+        $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $logevent = new ResourceLoggerEvent(
+                $ri,
+                'open'
+        );
+        $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+
+        return $event->getResponse();
     }
 
     /**

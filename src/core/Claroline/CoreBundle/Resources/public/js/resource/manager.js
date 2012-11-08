@@ -587,7 +587,7 @@
             window.location = this.parameters.appPath + '/resource/multiexport?' + $.param({ids: resourceIds});
         },
         open: function (resourceType, resourceId) {
-            window.location = this.parameters.appPath + '/resource/custom/' + resourceType + '/open/' + resourceId;
+            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId;
         },
         manageRights: function (resourceId) {
             alert('Rights of ' + resourceId + ' (not implemented yet)')
