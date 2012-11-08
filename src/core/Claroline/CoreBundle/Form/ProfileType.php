@@ -13,7 +13,8 @@ class ProfileType extends BaseProfileType
     public function __construct($platformRoles)
     {
         foreach ($platformRoles as $role) {
-            if ($role->getTranslationKey() == 'ROLE_ADMIN') {
+
+            if ($role->getTranslationKey() == 'admin') {
                 $this->grantRole = true;
             }
         }
@@ -34,8 +35,12 @@ class ProfileType extends BaseProfileType
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
                     'multiple' => true,
-                    'property' => 'name',
-                    'disabled' => false
+                    'property' => 'translationKey',
+                    'disabled' => false,
+                    'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
+                        return $er->createQueryBuilder('r')
+                            ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                    }
                 )
             );
         } else {
@@ -46,8 +51,12 @@ class ProfileType extends BaseProfileType
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
                     'multiple' => true,
-                    'property' => 'name',
-                    'disabled' => true
+                    'property' => 'translationKey',
+                    'disabled' => true,
+                    'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
+                        return $er->createQueryBuilder('r')
+                            ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                    }
                 )
             );
         }
