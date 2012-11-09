@@ -1,5 +1,5 @@
 plugin:
-  has_options: true
+  has_options: false
 
   resources:
     - class: Claroline\CoreBundle\Entity\Resource\File

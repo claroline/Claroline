@@ -6,11 +6,6 @@
         <div class="span7">
             <h2 class="section-header">{{ workspace.getName() ~': '~ workspace.getCode() }}</h2>
         </div>
-        <div class="span5 workspace-top-toolbox">
-            <br>
-            <input id="generic-search-field" type="text" width="100px" class="search-query"/>
-            <button class="btn btn-secondary">{{ 'resources'|trans({}, 'platform') }}</button>
-        </div>
     </div>
 </div>
 {% endblock %}
@@ -27,8 +22,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class=row-fluid">
+<div class="wrapper">
+    <div class="wrapper">
         <div class="span1">
             <div class="workspace-left-toolbox">
                 <div class="wrapper">
@@ -99,19 +94,4 @@
     </div>
 </div>
 <br/>
-<div class="container-fluid">
-    <div class="span1"></div>
-    <div class="span11">
-        <div class="owner-list">
-            {{'owner_s'|trans({}, 'platform') }}:
-            {% for user in workspace.getManagerRole().getUsers() %}
-                {{user.getLastName()}} {{user.getFirstName}}
-                {% if loop.last != true %}, {% endif %}
-            {% endfor %}
-            {% for group in workspace.getManagerRole().getGroups() %}
-                ,{{ group.getName() }}
-            {% endfor %}
-        </div>
-    </div>
-</div>
 {% endblock %}

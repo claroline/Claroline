@@ -1,8 +1,8 @@
 plugin:
-  has_options: true
+  has_options: false
 
   widgets:
-    - name: claroline_mywidget1
+    - name: false
       is_configurable: true
     - name: claroline_mywidget2
       is_configurable: false
