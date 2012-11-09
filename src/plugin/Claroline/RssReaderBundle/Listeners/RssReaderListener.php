@@ -58,10 +58,6 @@ class RssReaderListener extends ContainerAware
     public function onConfigure(ConfigureWidgetEvent $event)
     {
         $workspace = $event->getWorkspace();
-
-        ($event->isDashboard()) ? $isDashboard = 1 : $isDashboard = 0;
-        ($event->isDefault()) ? $isDefault = 1 : $isDefault = 0;
-
         $em = $this->container->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('Claroline\RssReaderBundle\Entity\Config');
 
@@ -81,8 +77,8 @@ class RssReaderListener extends ContainerAware
                 'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
-                'isDefault' => $isDefault,
-                'isDashboard' => $isDashboard
+                'isDefault' => $event->isDefault(),
+                'isDashboard' => $event->isDashboard()
                 )
             );
         } else {
