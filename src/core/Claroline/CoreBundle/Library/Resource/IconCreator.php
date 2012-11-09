@@ -46,6 +46,8 @@ class IconCreator
     private function createThumbNail($name, $destinationPath, $newWidth, $newHeight, $mimeExtension, $baseMime)
     {
         $srcImg = null;
+        $destinationPath = null;
+        
         if ($this->hasGdExtension) {
             if ($baseMime == 'image') {
                 $funcname = 'imagecreatefrom' . $mimeExtension;
@@ -53,7 +55,6 @@ class IconCreator
                     $srcImg = $funcname($name);
                     $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
                 }
-                $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
             } else {
                 switch ($mimeExtension) {
                     case "mov":
