@@ -22,8 +22,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class=row-fluid">
+<div class="wrapper">
+    <div class="wrapper">
         <div class="span1">
             <div class="workspace-left-toolbox">
                 <div class="wrapper">
@@ -94,19 +94,4 @@
     </div>
 </div>
 <br/>
-<div class="container-fluid">
-    <div class="span1"></div>
-    <div class="span11">
-        <div class="owner-list">
-            {{'owner_s'|trans({}, 'platform') }}:
-            {% for user in workspace.getManagerRole().getUsers() %}
-                {{user.getLastName()}} {{user.getFirstName}}
-                {% if loop.last != true %}, {% endif %}
-            {% endfor %}
-            {% for group in workspace.getManagerRole().getGroups() %}
-                ,{{ group.getName() }}
-            {% endfor %}
-        </div>
-    </div>
-</div>
 {% endblock %}
