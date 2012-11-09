@@ -109,9 +109,12 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             'GET', "/workspaces/{$pwu->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $users = json_decode($this->client->getResponse()->getContent());
+        $managerRole = $this->client->getContainer()
+            ->get('translator')
+            ->trans('manager', array(), 'platform');
 
         foreach ($users as $user) {
-            $this->assertContains('manager', $user->roles);
+            $this->assertContains($managerRole, $user->roles);
         }
     }
 
