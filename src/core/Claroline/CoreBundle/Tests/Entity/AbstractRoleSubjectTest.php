@@ -67,9 +67,8 @@ class AbstractRoleSubjectTest extends FixtureTestCase
         $wsCreatorRole = $this->getFixtureReference('role/ws_creator');
         $user->removeRole($wsCreatorRole);
         $userRoles = $user->getOwnedRoles(true);
-        $this->assertEquals(7, count($userRoles));
-        $this->assertEquals(PlatformRoles::USER, $userRoles[6]->getName());
-
+        $this->assertEquals(4, count($userRoles));
+        $this->assertEquals(PlatformRoles::USER, $userRoles[3]->getName());
         $groupB = $this->getFixtureReference('group/group_b');
         $roleD = $this->getFixtureReference('role/role_d');
         $groupB->removeRole($roleD);
