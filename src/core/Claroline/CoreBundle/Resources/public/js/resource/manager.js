@@ -137,8 +137,8 @@
                             this.setPasteBinState(false, false);
                         }
 
-                        this.checkedResources.resources.hasOwnProperty(event.resourceId) ? // add the resource to the selection or remove it if already present
-                            delete this.checkedResources.resources[event.resourceId] :
+                        this.checkedResources.resources.hasOwnProperty(event.resource.id) ? // add the resource to the selection or remove it if already present
+                            delete this.checkedResources.resources[event.resource.id] :
                             (this.checkedResources.resources[event.resource.id] = event.resource.name);
                         this.checkedResources.directoryId = this.currentDirectory.id;
                         this.checkedResources.isSearchMode = this.isSearchMode;
