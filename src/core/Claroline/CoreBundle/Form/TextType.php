@@ -14,7 +14,7 @@ class TextType extends AbstractType
         $builder->add('shareType', 'choice', array(
             'choices' => array(true => 'public', false => 'private'),
             'multiple' => false,
-            'expanded' => true,
+            'expanded' => false,
             'label' => 'sharable'
         ));
     }
@@ -28,6 +28,7 @@ class TextType extends AbstractType
     {
         return array(
             'data_class' => 'Claroline\CoreBundle\Entity\Resource\Text',
+            'translation_domain' => 'platform'
         );
     }
 }

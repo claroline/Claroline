@@ -18,4 +18,11 @@ class ExampleTextType extends AbstractType
     {
         return 'example_text_form';
     }
+
+    public function getDefaultOptions(array $options)
+    {
+       return array(
+           'translation_domain' => 'platform'
+       );
+    }
 }
