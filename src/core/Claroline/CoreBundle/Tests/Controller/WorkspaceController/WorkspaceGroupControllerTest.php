@@ -119,11 +119,14 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
         $groups = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($groups));
+        $managerRole = $this->client->getContainer()
+            ->get('translator')
+            ->trans('manager', array(), 'platform');
 
         foreach ($groups as $group) {
-            $this->assertContains('manager', $group->roles);
+            $this->assertContains($managerRole, $group->roles);
         }
     }
 
