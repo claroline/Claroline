@@ -1,26 +1,14 @@
-<table class="table table-striped table-bordered table-condensed" id="events-table">
-    <thead>
-        <tr>
-            <th>{{ 'date'|trans({}, 'platform') }}</th>
-            <th>{{ 'action'|trans({}, 'platform') }}</th>
-            <th>{{ 'resource'|trans({}, 'platform') }}</th>
-            <th>{{ 'user'|trans({}, 'platform') }}</th>
-            <th>{{ 'link'|trans({}, 'platform') }}</th>
-        </tr>
-    </thead>
-    <tbody id="events-table-body">
-       {% for log in logs %}
-            <tr>
-                <td>{{ log.getDate()|date("d-m-Y H:i:s") }}</td>
-                <td>{{ log.getAction()|trans({}, 'platform') }}</td>
-                <td>{{ log.getPath()|trans({}, 'platform') }}</td>
-                <td>{{ log.getUpdator().getUsername() }}</td>
-                <td>
-                    {% if log.getInstance() != null %}
-                        <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getType(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ 'open'|trans({}, 'platform') }}</a>
-                    {% endif %}
-                </td>
-            </tr>
-       {% endfor %}
-    </tbody>
-</table>
+{% for log in logs %}
+{{ 'resource_log_message'|trans(
+    {
+        '%date%': log.getDate()|date("d-m-Y H:i:s"),
+        '%action%': log.getAction()|trans({},'platform'),
+        '%path%': log.getPath(),
+        '%username%': log.getUpdator().getUsername()
+    }, 'platform')
+}}
+{% if log.getInstance() != null %}
+    <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getType(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ 'open'|trans({}, 'platform') }}</a>
+{% endif %}
+</br>
+{% endfor %}
