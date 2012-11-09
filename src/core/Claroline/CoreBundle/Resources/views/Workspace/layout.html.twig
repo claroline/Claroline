@@ -15,53 +15,82 @@
 </div>
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('#workspace_home_link').tooltip();
+        $('#workspace_resource_link').tooltip();
+        $('#link_user_management').tooltip();
+        $('#link_group_management').tooltip();
+        $('#link_workspace_parameters').tooltip();
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class=row-fluid">
-        <div class="span1 workspace-left-toolbox">
-            <div class="wrapper">
-                <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}"
-                   id="workspace_home_link">
-                   <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/home.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}"
-                   id="workspace_resource_link">
-                   <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/resource.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
-                id="link_user_management">
+        <div class="span1">
+            <div class="workspace-left-toolbox">
+                <div class="wrapper">
+                    <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}"
+                       id="workspace_home_link"
+                       rel="tooltip"
+                       data-original-title="{{ 'home'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/home.png')}}" />
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                    <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}"
+                       id="workspace_resource_link"
+                       rel="tooptip"
+                       data-original-title="{{ 'resources'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/resource.png')}}" />
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                    <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
+                    id="link_user_management"
+                    rel="tooltip"
+                    data-original-title="{{ 'user_management'|trans({}, 'platform') }}"
+                    data-placement="right">
                     <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
-                id="link_group_management">
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                    <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
+                    id="link_group_management"
+                    rel="tooltip"
+                    data-original-title="{{ 'group_management'|trans({}, 'platform') }}"
+                    data-placement="right">
                     <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/users.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                <a href="#">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                <a href="#">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/comment.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                 <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/process.png')}}" />
-                </a>
-            </div>
-            <div class="workspace-toolbox-item">
-                <a href="#">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
-                </a>
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                    <a href="#">
+                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png')}}" />
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                    <a href="#">
+                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/comment.png')}}" />
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                     <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}"
+                        id="link_workspace_parameters"
+                        rel="tooltip"
+                        data-original-title="{{ 'parameters'|trans({}, 'platform') }}"
+                        data-placement="right">
+                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/process.png')}}" />
+                    </a>
+                </div>
+                <div class="workspace-toolbox-item">
+                    <a href="#">
+                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
+                    </a>
+                </div>
             </div>
         </div>
         <div class="span11 section-content">
