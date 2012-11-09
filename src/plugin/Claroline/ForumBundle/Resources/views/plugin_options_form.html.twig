@@ -1,9 +1,15 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-<form action="{{path('claro_forum_edit_options')}}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
-
-    <input type="submit" />
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+<form action="{{path('claro_forum_edit_options')}}"
+      method="post" {{ form_enctype(form) }}
+      class="form-horizontal">
+   {{ form_errors(form) }}
+   {{ form_widget(form) }}
+   {{ form_rest(form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+    </div>
 </form>
 {% endblock %}

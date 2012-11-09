@@ -22,17 +22,24 @@ create_group: Créer un groupe
 create_workspace: Ajouter un espace d'activités
 creation_date: Date de création
 cut: Couper
-dashboard: Tableau de bord
+dashboard: Bureau
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Ressources
 date: Date
 delete: Supprimer
 directory: Répertoire
+directory_form_name: Nom
+directory_form_shareType: Redistribution
 display_options: Options d'affichage
 done_on: effectuée sur
 download: Télécharger
 export: exporter
+file_form_name: Nom
+file_form_license: License
+file_form_shareType: Redistribution
+file_form_shareType_0 : Oui
+file_form_shareType_1: Non
 file: Fichier
 files: Fichiers
 find_workspaces: Trouver un espace d'activité
@@ -86,6 +93,7 @@ platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème
 platform_plugins: Plugins de la plateforme
 platform_widgets: Widgets de la plateforme
+private: Privée
 profile_form_administrativeCode: Code administratif
 profile_form_firstName: Nom
 profile_form_lastName: Prénom
@@ -97,6 +105,7 @@ profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification
 profile_form_username: Nom d'utilisateur
 properties: Propriétés
+public: Publique
 register: Inscription
 registered_groups: Groupes enregistrés
 registered_users: Utilisateurs enregistrés
@@ -113,6 +122,9 @@ save: Sauvegarder
 search: Rechercher
 settings: Paramètres
 show: Voir
+text_form_name: Nom
+text_form_text: Texte
+text_form_shareType: Redistribution
 to: Jusque
 type_s: Type(s)
 type: Type
@@ -136,6 +148,7 @@ username: Nom d'utilisateur
 users: Utilisateurs
 visible: Visible
 visitor: Visiteur
+widgets: Widgets
 widget_settings: Paramètres des widgets
 workspace.create: Créer un nouvel espace d'activités
 workspace.name_not_blank:  Veuillez spécifier un nom pour ce workspace.
