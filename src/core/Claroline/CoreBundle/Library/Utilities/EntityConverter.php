@@ -57,25 +57,25 @@ class EntityConverter
     private function prepareResourceInstance(ResourceInstance $instance)
     {
         $preparedInstance = new stdClass();
-        $preparedInstance->id = $instance->getId();
-        $preparedInstance->name = $instance->getName();
-        $preparedInstance->created = $instance->getCreationDate()->format('d-m-Y H:i:s');
-        $preparedInstance->updated = $instance->getModificationDate()->format('d-m-Y H:i:s');
-        $preparedInstance->lvl = $instance->getLvl();
-        $preparedInstance->parent_id = $instance->getParent() != null ? $instance->getParent()->getId() : null;
-        $preparedInstance->workspace_id = $instance->getWorkspace()->getId();
-        $preparedInstance->resource_id = $instance->getResource()->getId();
-        $preparedInstance->instanceCreator_id = $instance->getCreator()->getId();
-        $preparedInstance->instance_creator_username = $instance->getCreator()->getUsername();
-        $preparedInstance->resource_creator_id = $instance->getResource()->getCreator()->getId();
-        $preparedInstance->resource_creator_username = $instance->getResource()->getCreator()->getUsername();
-        $preparedInstance->resource_type_id = $instance->getResource()->getResourceType()->getId();
-        $preparedInstance->type = $instance->getResource()->getResourceType()->getType();
-        $preparedInstance->is_navigable = $instance->getResourceType()->getBrowsable();
-        $preparedInstance->small_icon = $instance->getResource()->getIcon()->getSmallIcon();
-        $preparedInstance->large_icon = $instance->getResource()->getIcon()->getLargeIcon();
-        $preparedInstance->path = $instance->getPath();
-        $preparedInstance->path_for_display = $instance->getPathForDisplay();
+        $preparedInstance->{'id'} = $instance->getId();
+        $preparedInstance->{'name'} = $instance->getName();
+        $preparedInstance->{'created'} = $instance->getCreationDate()->format('d-m-Y H:i:s');
+        $preparedInstance->{'updated'} = $instance->getModificationDate()->format('d-m-Y H:i:s');
+        $preparedInstance->{'lvl'} = $instance->getLvl();
+        $preparedInstance->{'parent_id'} = $instance->getParent() != null ? $instance->getParent()->getId() : null;
+        $preparedInstance->{'workspace_id'} = $instance->getWorkspace()->getId();
+        $preparedInstance->{'resource_id'} = $instance->getResource()->getId();
+        $preparedInstance->{'instanceCreator_id'} = $instance->getCreator()->getId();
+        $preparedInstance->{'instance_creator_username'} = $instance->getCreator()->getUsername();
+        $preparedInstance->{'resource_creator_id'} = $instance->getResource()->getCreator()->getId();
+        $preparedInstance->{'resource_creator_username'} = $instance->getResource()->getCreator()->getUsername();
+        $preparedInstance->{'resource_type_id'} = $instance->getResource()->getResourceType()->getId();
+        $preparedInstance->{'type'} = $instance->getResource()->getResourceType()->getType();
+        $preparedInstance->{'is_navigable'} = $instance->getResourceType()->getBrowsable();
+        $preparedInstance->{'small_icon'} = $instance->getResource()->getIcon()->getSmallIcon();
+        $preparedInstance->{'large_icon'} = $instance->getResource()->getIcon()->getLargeIcon();
+        $preparedInstance->{'path'} = $instance->getPath();
+        $preparedInstance->{'path_for_display'} = $instance->getPathForDisplay();
 
         return $preparedInstance;
     }
