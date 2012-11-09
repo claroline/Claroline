@@ -46,7 +46,6 @@ class IconCreator
     private function createThumbNail($name, $destinationPath, $newWidth, $newHeight, $mimeExtension)
     {
         if ($this->hasGdExtension) {
-
             switch ($mimeExtension) {
                 case "jpeg":
                     $srcImg = imagecreatefromjpeg($name);

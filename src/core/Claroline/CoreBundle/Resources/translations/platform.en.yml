@@ -162,3 +162,5 @@ workspace_tools: Tools
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: Workspace creator
+
+resource_log_message: "%date%: action %action% done on %path% by %username%"

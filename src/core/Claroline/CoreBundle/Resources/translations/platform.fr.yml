@@ -162,3 +162,5 @@ workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: Espaces d'activités
 ws_creator: Créateur d'espaces
+
+resource_log_message: L'utilisateur %username% a effectué l'action %action% sur %path% le %date%
