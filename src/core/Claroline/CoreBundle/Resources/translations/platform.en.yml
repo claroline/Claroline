@@ -22,18 +22,25 @@ create_group: Create group
 create_workspace: New workspace
 creation_date: Creation date
 cut: Cut
-dashboard: Dashboard
+dashboard: Desktop
 dashboard_tab_info: Informations
 dashboard_tab_perso: Perso
 dashboard_tab_resources: Resources
 date: Date
 delete: Delete
 directory: Directory
+directory_form_name: Name
+directory_form_shareType: Sharable
 display_options: Display options
 done_on: done on
 download: Download
 export: export
 file: File
+file_form_name: Name
+file_form_license: License
+file_form_shareType: Sharable
+file_form_shareType_0 : Yes
+file_form_shareType_1: False
 files: Files
 find_workspaces: Find workspaces
 first_name: First name
@@ -86,6 +93,7 @@ platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
 platform_plugins: Platform plugins
 platform_widgets: Platform widgets
+private: Privée
 profile_form_administrativeCode: Administrative code
 profile_form_firstName: First name
 profile_form_lastName: Last name
@@ -97,6 +105,7 @@ profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
 profile_form_username: Username
 properties: Properties
+public: Public
 register: Register
 registered_groups: Registered groups
 registered_users: Registered users
@@ -113,6 +122,9 @@ save: Save
 search: Search
 settings: Settings
 show: Show
+text_form_name: Name
+text_form_text: Text
+text_form_shareType: Sharable
 to: To
 type: Type
 type_s: Type(s)
@@ -136,6 +148,7 @@ username: Username
 users: Users
 visible: Visible
 visitor: Visitor
+widgets: Widgets
 widget_settings: Widget settings
 workspace.create: Create a new workspace
 workspace.name_not_blank: The workspace's name is required.

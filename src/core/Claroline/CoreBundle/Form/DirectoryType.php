@@ -13,7 +13,7 @@ class DirectoryType extends AbstractType
         $builder->add('shareType', 'choice', array(
             'choices' => array(true => 'public', false => 'private'),
             'multiple' => false,
-            'expanded' => true,
+            'expanded' => false,
             'label' => 'sharable'
         ));
     }
@@ -21,6 +21,13 @@ class DirectoryType extends AbstractType
     public function getName()
     {
         return 'directory_form';
+    }
+
+    public function getDefaultOptions(array $options)
+    {
+       return array(
+           'translation_domain' => 'platform'
+       );
     }
 
 }
