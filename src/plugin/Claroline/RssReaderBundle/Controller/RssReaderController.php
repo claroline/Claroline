@@ -24,7 +24,7 @@ class RssReaderController extends Controller
             $em->persist($config);
             $em->flush();
         } else {
-            return $this->renderrender(
+            return $this->render(
                 'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
@@ -53,7 +53,7 @@ class RssReaderController extends Controller
             $em->persist($config);
             $em->flush();
         } else {
-            return $this->renderrender(
+            return $this->render(
                 'ClarolineRssReaderBundle::form_workspace_update.html.twig', array(
                 'form' => $form->createView(),
                 'rssConfig' => $rssConfig

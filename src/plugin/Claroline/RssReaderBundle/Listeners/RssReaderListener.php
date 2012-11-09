@@ -28,6 +28,8 @@ class RssReaderListener extends ContainerAware
 
         } else {
             $rssconfig = $repo->findOneBy(array('isDashboard' => true));
+            //Taking the default workspace config. Temporary fix because the dashboard configuration isn't done
+            $rssconfig = $repo->findOneBy(array('isDefault' => true));
         }
 
         //check if the config is correct
@@ -67,12 +69,13 @@ class RssReaderListener extends ContainerAware
             $config = $repo->findOneBy(array('workspace' => $workspace->getId()));
             $workspaceId = $workspace->getId();
         } else {
-            $config = $repo->findOneBy(array('isDashboard' => $isDashboard, 'isDefault' => $isDefault));
+            $config = $repo->findOneBy(array('isDashboard' => $event->isDashboard(), 'isDefault' => $event->isDefault()));
             $workspaceId = 0;
         }
 
         if ($config == null) {
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
+            
             $content = $this->container->get('templating')->render(
                 'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
                 'form' => $form->createView(),
