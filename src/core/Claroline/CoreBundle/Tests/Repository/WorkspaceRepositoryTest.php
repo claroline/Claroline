@@ -21,8 +21,10 @@ class WorkspaceRepositoryTest extends FixtureTestCase
     public function testGetWorkspacesOfUserReturnsExpectedResults()
     {
         $user = $this->getFixtureReference('user/user');
+        $ws = $this->wsRepo->getWorkspacesOfUser($user);
 
-        $this->assertEquals(array(), $this->wsRepo->getWorkspacesOfUser($user));
+        $this->assertEquals(1, count($ws));
+        $this->assertEquals($user->getPersonalWorkspace(), $ws[0]);
 
         $this->createWorkspace('Workspace 1', $user);
         $this->createWorkspace('Workspace 2', $user);
@@ -31,9 +33,9 @@ class WorkspaceRepositoryTest extends FixtureTestCase
         $this->getEntityManager()->flush();
 
         $userWs = $this->wsRepo->getWorkspacesOfUser($user);
-        $this->assertEquals(3, count($userWs));
-        $this->assertEquals('Workspace 2', $userWs[1]->getName());
-        $this->assertEquals('Workspace 3', $userWs[2]->getName());
+        $this->assertEquals(4, count($userWs));
+        $this->assertEquals('Workspace 1', $userWs[1]->getName());
+        $this->assertEquals('Workspace 2', $userWs[2]->getName());
     }
 
     private function createWorkspace($name, $user)
