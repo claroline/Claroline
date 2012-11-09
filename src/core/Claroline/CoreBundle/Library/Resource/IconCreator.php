@@ -43,32 +43,30 @@ class IconCreator
     }
 
     //the end could be refactored: what does imagedestroy should do ? is everything clean ?
-    private function createThumbNail($name, $destinationPath, $newWidth, $newHeight, $mimeExtension)
+    private function createThumbNail($name, $destinationPath, $newWidth, $newHeight, $mimeExtension, $baseMime)
     {
+        $srcImg = null;
         if ($this->hasGdExtension) {
-            switch ($mimeExtension) {
-                case "jpeg":
-                    $srcImg = imagecreatefromjpeg($name);
+            if ($baseMime == 'image') {
+                $funcname = 'imagecreatefrom' . $mimeExtension;
+                if(function_exists($funcname)){
+                    $srcImg = $funcname($name);
                     $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
-                    break;
-                case "jpg":
-                    $srcImg = imagecreatefromjpeg($name);
-                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
-                    break;
-                case "png":
-                    $srcImg = imagecreatefrompng($name);
-                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
-                    break;
-                case "mov":
-                    $srcImg = $this->createMpegGDI($name);
-                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
-                    break;
-                case "mp4":
-                    $srcImg = $this->createMpegGDI($name);
-                    $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
-                    break;
-                default:
-                    return null;
+                }
+                $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
+            } else {
+                switch ($mimeExtension) {
+                    case "mov":
+                        $srcImg = $this->createMpegGDI($name);
+                        $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
+                        break;
+                    case "mp4":
+                        $srcImg = $this->createMpegGDI($name);
+                        $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.png";
+                        break;
+                    default:
+                        return null;
+                }
             }
 
             if($srcImg == null) {
@@ -160,7 +158,7 @@ class IconCreator
 
             $originalPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
             $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid();
-            $generatedFilePath = $this->createThumbNail($originalPath, $newPath, 100, 100, $mimeElements[1]);
+            $generatedFilePath = $this->createThumbNail($originalPath, $newPath, 100, 100, $mimeElements[1], $mimeElements[0]);
             $generatedFile = pathinfo($generatedFilePath, PATHINFO_BASENAME);
             $iconName = "thumbnails/{$generatedFile}";
             $imgs = new ResourceIcon();
