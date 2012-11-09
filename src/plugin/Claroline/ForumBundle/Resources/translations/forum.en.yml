@@ -1,5 +1,8 @@
-new_message: Nouveau message
-responses: Réponses
-author: Auteur
+new_message: New message
+new_subject: New subject
+responses: Responses
+author: Author
 forum: Forum
-subject: Sujet
+subject: Subject
+last_message: Last message
+started_by: Started by
