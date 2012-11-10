@@ -1,14 +1,20 @@
-{% for log in logs %}
-{{ 'resource_log_message'|trans(
-    {
-        '%date%': log.getDate()|date("d-m-Y H:i:s"),
-        '%action%': log.getAction()|trans({},'platform'),
-        '%path%': log.getPath(),
-        '%username%': log.getUpdator().getUsername()
-    }, 'platform')
-}}
-{% if log.getInstance() != null %}
-    <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getType(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ 'open'|trans({}, 'platform') }}</a>
-{% endif %}
-</br>
-{% endfor %}
+<ul>
+    {% for log in logs %}
+    <li>
+        <span class="notification-date">
+            {% if log.getDate()|date('d-m-Y') == ''|date('d-m-Y') %}
+                {{ 'today'|trans({}, 'platform') ~ ', ' }}
+            {% else %}
+                {{ log.getDate()|date('d-m-Y') ~ ', ' }}
+            {% endif %}{{ log.getDate()|date('H:i') }}
+        </span> :
+        {{ log.getUpdator().getFirstName() ~ ' ' ~ log.getUpdator().getLastName() }}
+        {{ ('log_' ~ log.getAction() ~ '_verb')|trans({}, 'platform') }}
+        {% if log.getInstance() != null %}
+            <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getType(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ log.getPath() }}</a>
+        {% else %}
+            <em>{{ log.getPath() }}</em>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>

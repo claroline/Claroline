@@ -63,6 +63,11 @@ lock: Verrouiller
 login: Connexion
 login_failure:  La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.
 logout: Déconnexion
+log_copy_verb: a copié
+log_create_verb: a créé
+log_delete_verb: a supprimé
+log_move_verb: a déplacé
+log_open_verb: a ouvert
 mail: Mail
 manage_rights: Gérer les droits
 move : Déplacer
@@ -126,6 +131,7 @@ text_form_name: Nom
 text_form_text: Texte
 text_form_shareType: Redistribution
 to: Jusque
+today: Aujourd'hui
 type_s: Type(s)
 type: Type
 unregister: Désinscription
@@ -162,5 +168,3 @@ workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: Espaces d'activités
 ws_creator: Créateur d'espaces
-
-resource_log_message: L'utilisateur %username% a effectué l'action %action% sur %path% le %date%

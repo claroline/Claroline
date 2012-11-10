@@ -63,6 +63,11 @@ lock: Lock
 login: Login
 login_failure: Login has failed. Check your username and password are correct.
 logout: Logout
+log_copy_verb: has copied
+log_create_verb: has created
+log_delete_verb: has deleted
+log_move_verb: has moved
+log_open_verb: has opened
 mail: Mail
 manager: Manager
 manage_rights: Manage rights
@@ -126,6 +131,7 @@ text_form_name: Name
 text_form_text: Text
 text_form_shareType: Sharable
 to: To
+today: Today
 type: Type
 type_s: Type(s)
 unregister: Unregister
@@ -162,5 +168,3 @@ workspace_tools: Tools
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: Workspace creator
-
-resource_log_message: "%date%: action %action% done on %path% by %username%"
