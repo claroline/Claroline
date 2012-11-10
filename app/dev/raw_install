@@ -40,7 +40,7 @@ system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
 system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
 
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
+system("php {$rootDirectory}/app/console claroline:user:create --admin John Doe admin admin");
 
 require_once __DIR__.'/delete_files';
 
-system("php {$rootDirectory}/app/console claroline:user:create --admin admin admin admin admin");
