@@ -13,11 +13,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $('#workspace_home_link').tooltip();
-        $('#workspace_resource_link').tooltip();
-        $('#link_user_management').tooltip();
-        $('#link_group_management').tooltip();
-        $('#link_workspace_parameters').tooltip();
+        $('[rel=tooltip]').tooltip();
     </script>
 {% endblock %}
 
@@ -38,7 +34,7 @@
                 <div class="workspace-toolbox-item">
                     <a href="{{ path('claro_workspace_resources', {'workspaceId': workspace.getId()}) }}"
                        id="workspace_resource_link"
-                       rel="tooptip"
+                       rel="tooltip"
                        data-original-title="{{ 'resources'|trans({}, 'platform') }}"
                        data-placement="right">
                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/resource.png')}}" />
@@ -46,30 +42,36 @@
                 </div>
                 <div class="workspace-toolbox-item">
                     <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
-                    id="link_user_management"
-                    rel="tooltip"
-                    data-original-title="{{ 'user_management'|trans({}, 'platform') }}"
-                    data-placement="right">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
+                       id="link_user_management"
+                       rel="tooltip"
+                       data-original-title="{{ 'user_management'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
                     </a>
                 </div>
                 <div class="workspace-toolbox-item">
                     <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
-                    id="link_group_management"
-                    rel="tooltip"
-                    data-original-title="{{ 'group_management'|trans({}, 'platform') }}"
-                    data-placement="right">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/users.png')}}" />
+                       id="link_group_management"
+                       rel="tooltip"
+                       data-original-title="{{ 'group_management'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/users.png')}}" />
                     </a>
                 </div>
                 <div class="workspace-toolbox-item">
-                    <a href="#">
-                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png')}}" />
+                    <a href="#"
+                       rel="tooltip"
+                       data-original-title="{{ 'dashboard'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png')}}" />
                     </a>
                 </div>
                 <div class="workspace-toolbox-item">
-                    <a href="#">
-                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/comment.png')}}" />
+                    <a href="#"
+                       rel="tooltip"
+                       data-original-title="{{ 'communication'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/comment.png')}}" />
                     </a>
                 </div>
                 <div class="workspace-toolbox-item">
@@ -82,8 +84,11 @@
                     </a>
                 </div>
                 <div class="workspace-toolbox-item">
-                    <a href="#">
-                        <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
+                    <a href="#"
+                       rel="tooltip"
+                       data-original-title="{{ 'agenda'|trans({}, 'platform') }}"
+                       data-placement="right">
+                       <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
                     </a>
                 </div>
             </div>

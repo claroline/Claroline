@@ -8,12 +8,14 @@ add_user_s_confirm_message: users(s) added
 admin: Administrator
 administration: Administration
 administrative_code: Administrative code
+agenda: Agenda
 all_workspaces: All workspaces
 by: by
 cancel: Cancel
 choose_resource_form_type: Resource type
 close: Close
 collaborator: Collaborator
+communication: Communication
 configuration: Configuration
 configure: Configure
 copy: Copy
@@ -22,12 +24,10 @@ create_group: Create group
 create_workspace: New workspace
 creation_date: Creation date
 cut: Cut
-dashboard: Desktop
-dashboard_tab_info: Informations
-dashboard_tab_perso: Perso
-dashboard_tab_resources: Resources
+dashboard: Dashboard
 date: Date
 delete: Delete
+desktop: Desktop
 directory: Directory
 directory_form_name: Name
 directory_form_shareType: Sharable
@@ -54,6 +54,7 @@ group_parameter: Group parameter
 groups: Groups
 home: Home
 id: Id
+informations: Informations
 last_name: Last name
 link: Link
 list_groups: List groups
@@ -71,6 +72,7 @@ log_open_verb: has opened
 mail: Mail
 manager: Manager
 manage_rights: Manage rights
+misc: Miscellaneous
 move : Move
 my_account: My account
 my_agenda: My agenda

@@ -8,12 +8,14 @@ add_user_s_confirm_message: utilisateur(s) ajouté(s)
 admin: Administrateur
 administration: Administration
 administrative_code: Code administratif
+agenda: Agenda
 all_workspaces: Tous les espaces
 by: par
 cancel: Annuler
 choose_resource_form_type: Type de ressource
 close: Fermer
 collaborator: Collaborateur
+communication: Communication
 configuration: Configuration
 configure: Configurer
 copy: Copier
@@ -22,12 +24,10 @@ create_group: Créer un groupe
 create_workspace: Ajouter un espace d'activités
 creation_date: Date de création
 cut: Couper
-dashboard: Bureau
-dashboard_tab_info: Informations
-dashboard_tab_perso: Perso
-dashboard_tab_resources: Ressources
+dashboard: Tableau de bord
 date: Date
 delete: Supprimer
+desktop: Bureau
 directory: Répertoire
 directory_form_name: Nom
 directory_form_shareType: Redistribution
@@ -54,6 +54,7 @@ group_parameter: Paramètres du groupe
 groups: Groupes
 home: Accueil
 id: Id
+informations: Informations
 last_name: Nom
 link: Lien
 list_groups: Lister les groupes
@@ -70,6 +71,7 @@ log_move_verb: a déplacé
 log_open_verb: a ouvert
 mail: Mail
 manage_rights: Gérer les droits
+misc: Divers
 move : Déplacer
 my_account: Mon compte
 my_agenda: Mon agenda
