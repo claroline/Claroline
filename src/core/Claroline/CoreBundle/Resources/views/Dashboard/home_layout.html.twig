@@ -1,0 +1,17 @@
+{% extends 'ClarolineCoreBundle:Dashboard:layout.html.twig' %}
+
+{% block sectionContent %}
+    <div id="tabs" class="row-fluid">
+        <div class="span12">
+            <ul class="nav nav-tabs">
+                <li class="{% if 'claro_dashboard_info' == app.request.get('_route') %}active{% endif %}">
+                    <a href="{{ path('claro_dashboard_info') }}" id="dashboard_info_link">{{ 'informations'|trans({}, 'platform') }}</a>
+                </li>
+                <li class="{% if 'claro_dashboard_perso' == app.request.get('_route') %}active{% endif %}">
+                    <a href="{{ path('claro_dashboard_perso') }}" id="dashboard_perso_link">{{ 'misc'|trans({}, 'platform') }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% block homeTab %}{% endblock %}
+{% endblock %}

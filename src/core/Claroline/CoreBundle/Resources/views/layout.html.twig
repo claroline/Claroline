@@ -19,12 +19,11 @@
     <div id="wrapper">
         {% render 'ClarolineCoreBundle:Layout:topBar' %}
         <div id="grid" class="container-fluid">
-            {% block sectionHeader %}{% endblock %}
-            <div id="tabs" class="row-fluid">
-                <div class="span12">
-                    {% block tabs %}{% endblock %}
+            {% block sectionHeader %}
+                <div class="row-fluid content">
+                    <div class="span12"></div>
                 </div>
-            </div>
+            {% endblock %}
             <div class="row-fluid content">
                 {% block content %}{% endblock %}
             </div>

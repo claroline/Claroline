@@ -8,6 +8,9 @@
             </li>
         </ul>
     {% endspaceless %}
-    <a href="{{ path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
-
+    <ul>
+        <li>
+            <a href="{{ path('claro_workspace_widget_properties', {'workspaceId': workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
 {% endblock %}

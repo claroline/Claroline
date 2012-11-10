@@ -1,13 +1,5 @@
-{% extends 'ClarolineCoreBundle:Dashboard:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Dashboard:home_layout.html.twig' %}
 
-{% block content %}
-
-<div class="container">
-    <div class="row">
-        <div class="span12">
-            {% render "ClarolineCoreBundle:Dashboard:widgets" %}
-        </div>
-    </div>
-</div>
-
+{% block homeTab %}
+    {% render "ClarolineCoreBundle:Dashboard:widgets" %}
 {% endblock %}
