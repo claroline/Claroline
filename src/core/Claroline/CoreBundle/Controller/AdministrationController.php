@@ -69,8 +69,9 @@ class AdministrationController extends Controller
             $type = Configuration::TYPE_SIMPLE;
             $config = new Configuration();
             $config->setWorkspaceType($type);
-            $config->setWorkspaceName($user->getUsername());
-            $config->setWorkspaceCode('PERSO');
+            $personalWorkspaceName = $this->get('translator')->trans('personal_workspace', array(), 'platform');
+            $config->setWorkspaceName($personalWorkspaceName);
+            $config->setWorkspaceCode($user->getUsername());
             $wsCreator = $this->get('claroline.workspace.creator');
             $workspace = $wsCreator->createWorkspace($config, $user);
             $workspace->setType(AbstractWorkspace::USER_REPOSITORY);

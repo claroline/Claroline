@@ -71,19 +71,20 @@
                     {% for workspace in workspaces %}
                         <li>
                             <a href="{{path('claro_workspace_home', {'workspaceId': workspace.getId()})}}" id="link-workspace-{{ workspace.getId() }}">
-                            {{workspace.getCode()}} - {{ workspace.getName() }}
+                                {{ workspace.getName() }}
+                                <span class="workspace-code">({{ workspace.getCode() }})</span>
                             </a>
                         </li>
                     {% endfor %}
                     <li class="divider"></li>
                     <li>
                         <a href="{{ path('claro_workspace_by_user', {'userId': app.user.id }) }}" id="link-my-workspaces">
-                                {{ 'my_workspaces'|trans({}, 'platform') }}
+                            {{ 'my_workspaces'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('claro_workspace_list') }}" id="link-search-workspaces">
-                                {{ 'find_workspaces'|trans({}, 'platform') }}
+                            {{ 'find_workspaces'|trans({}, 'platform') }}
                         </a>
                     </li>
                     <li class="divider"></li>

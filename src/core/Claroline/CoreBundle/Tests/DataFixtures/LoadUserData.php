@@ -41,8 +41,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $wsCreator = $this->container->get('claroline.workspace.creator');
         $wsConfig = new Configuration();
         $wsConfig->setWorkspaceType(Configuration::TYPE_SIMPLE);
-        $wsConfig->setWorkspaceName('my workspace');
-        $wsConfig->setWorkspaceCode('PERSO');
+        $wsConfig->setWorkspaceName('Personal workspace');
 
         $users = array(
             array('Jane', 'Doe', 'user', '123', $userRole),
@@ -59,6 +58,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
             $user->setUserName($userProps[2]);
             $user->setPlainPassword($userProps[3]);
             $user->addRole($userProps[4]);
+            $wsConfig->setWorkspaceCode($userProps[2]);
             $ws = $wsCreator->createWorkspace($wsConfig, $user);
             $ws->setType(AbstractWorkspace::USER_REPOSITORY);
             $user->addRole($ws->getManagerRole());

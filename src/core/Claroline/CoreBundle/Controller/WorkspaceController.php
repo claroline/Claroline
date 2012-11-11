@@ -116,7 +116,6 @@ class WorkspaceController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $wsCreator = $this->get('claroline.workspace.creator');
             $wsCreator->createWorkspace($config, $user);
-            $this->get('session')->getFlashBag()->add('success', 'Workspace created');
             $route = $this->get('router')->generate('claro_workspace_list');
 
             return new RedirectResponse($route);

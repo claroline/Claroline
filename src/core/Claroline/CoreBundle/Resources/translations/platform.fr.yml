@@ -21,7 +21,7 @@ configure: Configurer
 copy: Copier
 create: Créer
 create_group: Créer un groupe
-create_workspace: Ajouter un espace d'activités
+create_workspace: Créer un espace d'activités
 creation_date: Date de création
 cut: Couper
 dashboard: Tableau de bord
@@ -42,7 +42,7 @@ file_form_shareType_0 : Oui
 file_form_shareType_1: Non
 file: Fichier
 files: Fichiers
-find_workspaces: Trouver un espace d'activité
+find_workspaces: Tous les espaces
 first_name: Prénom
 form_role: Rôle
 from: Depuis
@@ -93,6 +93,7 @@ parameters: Paramètres
 password: Mot de passe
 paste: Coller
 path: Emplacement
+personal_workspace: Espace personnel
 phone: Téléphone
 platform_parameters: Paramètres de la plateforme
 platform_parameters_form_localLanguage: Langue
@@ -102,8 +103,8 @@ platform_plugins: Plugins de la plateforme
 platform_widgets: Widgets de la plateforme
 private: Privée
 profile_form_administrativeCode: Code administratif
-profile_form_firstName: Nom
-profile_form_lastName: Prénom
+profile_form_firstName: Prénom
+profile_form_lastName: Nom
 profile_form_mail: Mail
 profile_form_note: Note personnelle
 profile_form_ownedRoles: Role(s)
