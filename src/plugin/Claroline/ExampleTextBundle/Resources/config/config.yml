@@ -2,10 +2,10 @@ plugin:
   has_options: false
 
   widgets:
-    - name: false
-      is_configurable: true
-    - name: claroline_mywidget2
+    - name: claroline_mywidget1
       is_configurable: false
+#    - name: claroline_mywidget2
+#      is_configurable: false
 
   resources:
     - class: Claroline\ExampleTextBundle\Entity\ExampleText
