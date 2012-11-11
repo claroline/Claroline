@@ -325,10 +325,12 @@ class ResourceInstance
      */
     public static function convertPathForDisplay($path)
     {
-        $pathForDisplay = preg_replace('(-\d+' . ResourceInstance::PATH_SEPARATOR . ')', '/', $path);
+        $pathForDisplay = preg_replace('/-\d+' . ResourceInstance::PATH_SEPARATOR . '/', ' / ', $path);
+
         if ($pathForDisplay !== null && strlen($pathForDisplay) > 0) {
-            $pathForDisplay = substr_replace($pathForDisplay, "", -1);
+            $pathForDisplay = substr_replace($pathForDisplay, "", -3);
         }
+
         return $pathForDisplay;
     }
 }

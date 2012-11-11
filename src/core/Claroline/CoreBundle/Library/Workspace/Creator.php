@@ -34,7 +34,7 @@ class Creator
         $this->entityManager->persist($workspace);
         $root = new ResourceInstance();
         $rootDir = new Directory();
-        $root->setName($workspace->getCode().' - '.$workspace->getName());
+        $root->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rootDir->setShareType(0);
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager

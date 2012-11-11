@@ -21,7 +21,7 @@ configure: Configure
 copy: Copy
 create: Create
 create_group: Create group
-create_workspace: New workspace
+create_workspace: Create workspace
 creation_date: Creation date
 cut: Cut
 dashboard: Dashboard
@@ -93,6 +93,7 @@ parameters: Parameters
 password: Password
 paste: Paste
 path: Path
+personal_workspace: Personal workspace
 phone: Phone
 platform_parameters: Platform parameters
 platform_parameters_form_localLanguage: Langue

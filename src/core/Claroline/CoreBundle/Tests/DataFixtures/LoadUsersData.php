@@ -66,7 +66,6 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
         $role = $this->loadRole($this->role);
 
         for ($i = 0; $i < $this->nbUsers; $i++) {
-
             $user = new User();
             $user->setFirstName($this->firstNames[mt_rand(0, $this->maxFirstNameOffset)]);
             $user->setLastName($this->lastNames[mt_rand(0, $this->maxLastNameOffset)]);
@@ -77,8 +76,8 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             $user->addRole($role);
             $config = new Configuration();
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $config->setWorkspaceName($user->getUsername());
-            $config->setWorkspaceCode('PERSO');
+            $config->setWorkspaceName('Personal workspace');
+            $config->setWorkspaceCode($user->getUsername());
             $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
             $workspace = $wsCreator->createWorkspace($config, $user);
             $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
