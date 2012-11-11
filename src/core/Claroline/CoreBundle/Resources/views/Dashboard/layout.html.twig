@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block content %}
-    <div class="span1">
+    <div class="tool-list">
         <div class="workspace-left-toolbox">
-            <div class="wrapper">
+            <div class="workspace-toolbox-item">
                 <a href="{{ path('claro_dashboard_index') }}"
                    rel="tooltip"
                    data-original-title="{{ 'home'|trans({}, 'platform') }}"
                    data-placement="right">
-                   <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/home.png')}}" />
+                   <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/home_small.png')}}" />
                 </a>
             </div>
             <div class="workspace-toolbox-item">
@@ -20,7 +20,7 @@
                    rel="tooltip"
                    data-original-title="{{ 'resources'|trans({}, 'platform') }}"
                    data-placement="right">
-                   <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/resource.png') }}" />
+                   <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/resource_small.png') }}" />
                 </a>
             </div>
             <div class="workspace-toolbox-item">
@@ -28,7 +28,7 @@
                    rel="tooltip"
                    data-original-title="{{ 'dashboard'|trans({}, 'platform') }}"
                    data-placement="right">
-                   <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/chart_pie.png') }}" />
+                   <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/chart_pie_small.png') }}" />
                 </a>
             </div>
             <div class="workspace-toolbox-item">
@@ -36,7 +36,7 @@
                    rel="tooltip"
                    data-original-title="{{ 'communication'|trans({}, 'platform') }}"
                    data-placement="right">
-                   <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/comment.png') }}" />
+                   <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/comment_small.png') }}" />
                 </a>
             </div>
             <div class="workspace-toolbox-item">
@@ -44,7 +44,7 @@
                     rel="tooltip"
                     data-original-title="{{ 'parameters'|trans({}, 'platform') }}"
                     data-placement="right">
-                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/process.png')}}" />
+                    <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/process_small.png')}}" />
                 </a>
             </div>
             <div class="workspace-toolbox-item">
@@ -52,12 +52,12 @@
                    rel="tooltip"
                    data-original-title="{{ 'agenda'|trans({}, 'platform') }}"
                    data-placement="right">
-                   <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar.png')}}" />
+                   <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar_small.png')}}" />
                 </a>
             </div>
         </div>
     </div>
-    <div class="span11 section-content">
+    <div class="section-content">
         {% block sectionContent %}{% endblock %}
     </div>
 {% endblock %}
