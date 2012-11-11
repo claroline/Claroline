@@ -6,8 +6,8 @@
     </td>
     <td>{{ subject.count_messages }}</td>
     <td>
-        <p>{{ subject.last_message_creator_firstname }}</p>
-        <p>{{ subject.last_message_created|date('m/d/Y H:i:s') }}</p>
+        {{ subject.last_message_creator_firstname }}<br/>
+        {{ subject.last_message_created|date('m/d/Y H:i:s') }}
     </td>
 </tr>
 {% endfor %}

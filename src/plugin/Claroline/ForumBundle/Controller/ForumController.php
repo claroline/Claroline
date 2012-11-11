@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ForumController extends Controller
 {
-
     public function OpenAction($instanceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -26,13 +25,9 @@ class ForumController extends Controller
         $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsFormForumInstance($instance);
         $nbPages = ceil($countSubjects/$limit);
 
-        $content = $this->render(
+        return $this->render(
             'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'limit' => $limit, 'nbPages' => $nbPages)
         );
-
-        $response = new Response($content);
-
-        return $response;
     }
 
     public function subjectsAction($forumInstanceId, $offset)
@@ -43,18 +38,19 @@ class ForumController extends Controller
         $limit = $limits[0]->getSubjects();
         $subjects = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($forumInstance, $offset, $limit);
 
-        return $this->render('ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects));
+        return $this->render(
+            'ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects)
+        );
     }
 
     public function forumSubjectCreationFormAction($forumInstanceId)
     {
         $formSubject = $this->get('form.factory')->create(new SubjectType());
         $workspace = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($forumInstanceId)->getWorkspace();
-        $content = $this->render(
+
+        return $this->render(
             'ClarolineForumBundle::subject_form.html.twig', array('form' => $formSubject->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $workspace)
         );
-
-        return new Response($content);
     }
 
     /*
@@ -90,11 +86,11 @@ class ForumController extends Controller
             $creator->create($message, $subjectInstance->getId(), 'claroline_message');
 
             return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
-        } else {
-            return $this->render(
-                'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
-            );
         }
+
+        return $this->render(
+            'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
+        );
     }
 
     public function showMessagesAction($subjectInstanceId)
@@ -161,11 +157,11 @@ class ForumController extends Controller
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
-        } else {
-            return $this->render(
-                'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
-            );
         }
+
+        return $this->render(
+           'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+        );
     }
 
     public function editForumOptionsAction()
@@ -181,14 +177,12 @@ class ForumController extends Controller
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
-        } else {
-
-            return $this->render(
-                'ClarolineForumBundle::plugin_options_form.html.twig', array(
-                'form' => $form->createView()
-                )
-            );
         }
-    }
 
+        return $this->render(
+            'ClarolineForumBundle::plugin_options_form.html.twig', array(
+            'form' => $form->createView()
+            )
+        );
+    }
 }
