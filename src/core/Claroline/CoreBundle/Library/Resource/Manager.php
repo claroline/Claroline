@@ -127,9 +127,9 @@ class Manager
     {
         if (1 === $resourceInstance->getResource()->getInstanceCount()) {
 
-            if ($resourceInstance->getResourceType()->getType() !== 'directory') {
+            if ($resourceInstance->getResourceType()->getName() !== 'directory') {
                 $eventName = $this->ut->normalizeEventName(
-                    'delete', $resourceInstance->getResourceType()->getType()
+                    'delete', $resourceInstance->getResourceType()->getName()
                 );
                 $event = new DeleteResourceEvent(array($resourceInstance->getResource()));
                 $this->ed->dispatch($eventName, $event);
@@ -158,7 +158,7 @@ class Manager
     {
         $resource = $resourceInstance->getResource();
 
-        if ($resource->getResourceType()->getType() != 'directory') {
+        if ($resource->getResourceType()->getName() != 'directory') {
             $instanceCopy = $this->createReference($resource);
             $instanceCopy->setParent($parent);
             $instanceCopy->setWorkspace($parent->getWorkspace());
@@ -195,7 +195,7 @@ class Manager
         $ric->setCreator($user);
         $this->em->flush();
 
-        if ($resourceInstance->getResourceType()->getType()=='directory') {
+        if ($resourceInstance->getResourceType()->getName()=='directory') {
             $resourceCopy = new Directory();
             $resourceCopy->setName($resourceInstance->getResource()->getName());
             $resourceCopy->setCreator($user);
@@ -204,7 +204,7 @@ class Manager
             $resourceCopy->setIcon($resourceInstance->getResource()->getIcon());
         } else {
             $event = new CopyResourceEvent($resourceInstance->getResource());
-            $eventName = $this->ut->normalizeEventName('copy', $resourceInstance->getResourceType()->getType());
+            $eventName = $this->ut->normalizeEventName('copy', $resourceInstance->getResourceType()->getName());
             $this->ed->dispatch($eventName, $event);
             $resourceCopy = $event->getCopy();
             $resourceCopy->setCreator($user);
@@ -238,12 +238,12 @@ class Manager
         foreach ($children as $child) {
             $rsrc = $child->getResource();
             if ($rsrc->getInstanceCount() === 1) {
-                if ($child->getResourceType()->getType() == 'directory') {
+                if ($child->getResourceType()->getName() == 'directory') {
                    $this->em->remove($rsrc);
                    $this->em->flush();
                 } else {
                     $event = new DeleteResourceEvent(array($child->getResource()));
-                    $this->ed->dispatch("delete_{$child->getResourceType()->getType()}", $event);
+                    $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
                     $this->em->flush();
                 }
             }

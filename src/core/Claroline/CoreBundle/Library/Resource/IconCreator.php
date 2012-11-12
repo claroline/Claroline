@@ -120,7 +120,7 @@ class IconCreator
     {
         $type = $resource->getResourceType();
 
-        if ($type->getType() !== 'file') {
+        if ($type->getName() !== 'file') {
             $icon = $this->getTypeIcon($type);
         } else {
             $icon = $this->getFileIcon($resource, $mimeType, $isFixture);
@@ -169,7 +169,7 @@ class IconCreator
     public function getTypeIcon(ResourceType $type)
     {
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $icon = $repo->findOneBy(array('type' => $type->getType(), 'iconType' => IconType::TYPE));
+        $icon = $repo->findOneBy(array('type' => $type->getName(), 'iconType' => IconType::TYPE));
 
         if ($icon === null) {
             $icon = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));

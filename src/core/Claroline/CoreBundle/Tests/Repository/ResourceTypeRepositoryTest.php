@@ -33,9 +33,9 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         // that the repository can retrieve the ones we have added
         $this->assertEquals($newTypeCount, $typeCount + 2);
         $lastType = array_pop($types);
-        $this->assertEquals('Type y', $lastType->getType());
+        $this->assertEquals('Type y', $lastType->getName());
         $lastType = array_pop($types);
-        $this->assertEquals('Type x', $lastType->getType());
+        $this->assertEquals('Type x', $lastType->getName());
     }
 
     public function testFindPluginResourceNameFqcns()
@@ -63,21 +63,21 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $plugin->setIcon('fakeicon');
 
         $firstType = new ResourceType();
-        $firstType->setType('Type x');
+        $firstType->setName('Type x');
         $firstType->setClass('XXX/XXX/XXX');
         $firstType->setVisible(true);
         $firstType->setBrowsable(false);
         $firstType->setPlugin($plugin);
 
         $secondType = new ResourceType();
-        $secondType->setType('Type y');
+        $secondType->setName('Type y');
         $secondType->setClass('YYY/YYY/YYY');
         $secondType->setVisible(true);
         $secondType->setBrowsable(false);
         $secondType->setPlugin($plugin);
 
         $thirdType = new ResourceType();
-        $thirdType->setType('Type z');
+        $thirdType->setName('Type z');
         $thirdType->setVisible(true);
         $thirdType->setBrowsable(false);
 

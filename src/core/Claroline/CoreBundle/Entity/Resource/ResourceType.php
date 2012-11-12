@@ -21,7 +21,7 @@ class ResourceType
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="name", length=255)
      */
     protected $type;
 
@@ -120,7 +120,7 @@ class ResourceType
      *
      * @return string
      */
-    public function getType()
+    public function getName()
     {
         return $this->type;
     }
@@ -130,7 +130,7 @@ class ResourceType
      *
      * @param string $type
      */
-    public function setType($type)
+    public function setName($type)
     {
         $this->type = $type;
     }
