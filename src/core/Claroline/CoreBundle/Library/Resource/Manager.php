@@ -55,7 +55,7 @@ class Manager
      */
     public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null, $user = null)
     {
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('type' => $resourceType));
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => $resourceType));
 
         if($user == null){
             $user = $this->sc->getToken()->getUser();
@@ -199,7 +199,7 @@ class Manager
             $resourceCopy = new Directory();
             $resourceCopy->setName($resourceInstance->getResource()->getName());
             $resourceCopy->setCreator($user);
-            $resourceCopy->setResourceType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByType('directory'));
+            $resourceCopy->setResourceType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'));
             $resourceCopy->addResourceInstance($ric);
             $resourceCopy->setIcon($resourceInstance->getResource()->getIcon());
         } else {

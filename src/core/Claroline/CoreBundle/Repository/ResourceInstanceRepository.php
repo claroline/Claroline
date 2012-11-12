@@ -91,15 +91,15 @@ class ResourceInstanceRepository extends MaterializedPathRepository
                 . " FROM " . self::FROM_INSTANCES
                 . " WHERE " . self::WHERECONDITION_USER_WORKSPACE;
         if ($resourceType === null) {
-            $dql.="AND rt.type != 'directory'";
+            $dql.="AND rt.name != 'directory'";
         } else {
-            $dql.="AND rt.type = :rt_type";
+            $dql.="AND rt.name = :rt_name";
         }
         $dql .= " ORDER BY ri.path ";
 
         $query = $this->_em->createQuery($dql);
         if ($resourceType !== null) {
-            $query->setParameter('rt_type', $resourceType->getName());
+            $query->setParameter('rt_name', $resourceType->getName());
         }
         $query->setParameter('u_id', $user->getId());
 
@@ -117,11 +117,11 @@ class ResourceInstanceRepository extends MaterializedPathRepository
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
                 . " FROM " . self::FROM_INSTANCES
-                . " WHERE rt.type = :rt_type
+                . " WHERE rt.name = :rt_name
                     AND (ri.path LIKE :pathlike AND ri.path <> :path)";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('rt_type', $resourceType->getName());
+        $query->setParameter('rt_name', $resourceType->getName());
         $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 
@@ -185,12 +185,12 @@ class ResourceInstanceRepository extends MaterializedPathRepository
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
                     JOIN ri.abstractResource ar
                     JOIN ar.resourceType rt
-                WHERE rt.type != :rt_type"
+                WHERE rt.name != :rt_name"
                 . " AND " . self::WHERECONDITION_USER_WORKSPACE
                 . " ORDER BY ri.path";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('rt_type', 'directory');
+        $query->setParameter('rt_name', 'directory');
         $query->setParameter('u_id', $user->getId());
 
         return $query->getSingleScalarResult();
@@ -286,10 +286,10 @@ class ResourceInstanceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= " AND (rt.type = :{$key}{$i}";   // eg. "types0"
+                $dqlPart.= " AND (rt.name = :{$key}{$i}";   // eg. "types0"
                 $isFirst = false;
             } else {
-                $dqlPart .= " OR rt.type = :{$key}{$i}";
+                $dqlPart .= " OR rt.name = :{$key}{$i}";
             }
         }
         if (strlen($dqlPart) > 0) {
