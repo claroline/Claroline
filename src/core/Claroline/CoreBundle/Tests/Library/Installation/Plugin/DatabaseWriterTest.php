@@ -148,7 +148,7 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $dql = "
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.type = 'ResourceXCustom'";
+            WHERE rt.name = 'ResourceXCustom'";
 
         $resourceType = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($resourceType));
@@ -156,7 +156,7 @@ class DatabaseWriterTest extends TransactionalTestCase
         $dql = "
             SELECT ca FROM Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction ca,
             Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.type = 'ResourceXCustom'
+            WHERE rt.name = 'ResourceXCustom'
             AND ca.resourceType = '{$resourceType[0]->getId()}'";
 
         $customAction = $this->em->createQuery($dql)->getResult();
