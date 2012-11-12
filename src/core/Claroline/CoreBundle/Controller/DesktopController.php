@@ -6,37 +6,37 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 
 /**
- * Controller of the user's dashboard.
+ * Controller of the user's desktop.
  */
-class DashboardController extends Controller
+class DesktopController extends Controller
 {
     /**
-     * Displays the dashboard index.
+     * Displays the desktop index.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
         // There is no real "index" page, it is usually the "information" tab
         // (in the future, this could be set by the administrator)
-        return $this->redirect($this->generateUrl('claro_dashboard_info'));
+        return $this->redirect($this->generateUrl('claro_desktop_info'));
     }
 
     /**
-     * Displays the Info dashboard tab.
+     * Displays the Info desktop tab.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function infoAction()
     {
-        return $this->render('ClarolineCoreBundle:Dashboard:info.html.twig');
+        return $this->render('ClarolineCoreBundle:Desktop:info.html.twig');
     }
 
     /**
-     * Displays the Perso dashboard tab.
+     * Displays the Perso desktop tab.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function persoAction()
     {
-        return $this->render('ClarolineCoreBundle:Dashboard:perso.html.twig');
+        return $this->render('ClarolineCoreBundle:Desktop:perso.html.twig');
     }
 
     /**
@@ -50,7 +50,7 @@ class DashboardController extends Controller
             ->findBy(array('isVisible' => true));
 
         return $this->render(
-            'ClarolineCoreBundle:Dashboard:resources.html.twig',
+            'ClarolineCoreBundle:Desktop:resources.html.twig',
             array('resourceTypes' => $resourceTypes)
         );
     }

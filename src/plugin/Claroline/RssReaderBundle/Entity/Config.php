@@ -34,9 +34,9 @@ class Config
     protected $isDefault = false;
 
     /**
-     * @ORM\Column(type="boolean", name="is_dashboard")
+     * @ORM\Column(type="boolean", name="is_desktop")
      */
-    protected $isDashboard = false;
+    protected $isDesktop = false;
 
     public function getId()
     {
@@ -68,9 +68,9 @@ class Config
         return $this->isDefault;
     }
 
-    public function isDashboard()
+    public function isDesktop()
     {
-        return $this->isDashboard;
+        return $this->isDesktop;
     }
 
     public function setDefault($bool)
@@ -78,9 +78,9 @@ class Config
         $this->isDefault = $bool;
     }
 
-    public function setDashboard($bool)
+    public function setDesktop($bool)
     {
-        $this->isDashboard = $bool;
+        $this->isDesktop = $bool;
     }
 
 }

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RssReaderController extends Controller
 {
-    public function createConfigAction($workspaceId, $isDashboard, $isDefault)
+    public function createConfigAction($workspaceId, $isDesktop, $isDefault)
     {
         $form = $this->get('form.factory')->create(new ConfigType(), new Config());
         $form->bindRequest($this->get('request'));
@@ -19,7 +19,7 @@ class RssReaderController extends Controller
             $config = $form->getData();
             $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
             $config->setWorkspace($workspace);
-            $config->setDashboard($isDashboard);
+            $config->setDesktop($isDesktop);
             $config->setDefault($isDefault);
             $em->persist($config);
             $em->flush();
@@ -28,7 +28,7 @@ class RssReaderController extends Controller
                 'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
-                'isDashboard' => $isDashboard,
+                'isDesktop' => $isDesktop,
                 'isDefault' => $isDefault
                 )
             );

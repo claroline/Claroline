@@ -24,7 +24,7 @@ class Version20121002000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('url', 'string', array('length' => 255));
-        $table->addColumn('is_dashboard', 'boolean');
+        $table->addColumn('is_desktop', 'boolean');
         $table->addColumn('is_default', 'boolean');
 
         $table->addForeignKeyConstraint(

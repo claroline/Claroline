@@ -27,8 +27,8 @@ class RssReaderListener extends ContainerAware
             }
 
         } else {
-            $rssconfig = $repo->findOneBy(array('isDashboard' => true));
-            //Taking the default workspace config. Temporary fix because the dashboard configuration isn't done
+            $rssconfig = $repo->findOneBy(array('isDesktop' => true));
+            //Taking the default workspace config. Temporary fix because the desktop configuration isn't done
             $rssconfig = $repo->findOneBy(array('isDefault' => true));
         }
 
@@ -69,7 +69,7 @@ class RssReaderListener extends ContainerAware
             $config = $repo->findOneBy(array('workspace' => $workspace->getId()));
             $workspaceId = $workspace->getId();
         } else {
-            $config = $repo->findOneBy(array('isDashboard' => $event->isDashboard(), 'isDefault' => $event->isDefault()));
+            $config = $repo->findOneBy(array('isDesktop' => $event->isDesktop(), 'isDefault' => $event->isDefault()));
             $workspaceId = 0;
         }
 
@@ -81,7 +81,7 @@ class RssReaderListener extends ContainerAware
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
                 'isDefault' => $event->isDefault(),
-                'isDashboard' => $event->isDashboard()
+                'isDesktop' => $event->isDesktop()
                 )
             );
         } else {

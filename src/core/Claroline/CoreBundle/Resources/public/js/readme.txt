@@ -2,7 +2,7 @@ Requirements for writing resources templates views
 --------------------------------------------------
 
 The twigjs templates are loaded by the twig template
-src\core\Claroline\CoreBundle\Resources\views\Dashboard\resources.html.twig:
+src\core\Claroline\CoreBundle\Resources\views\Desktop\resources.html.twig:
     {% javascripts
        vars=["locale"]
       "@ClarolineCoreBundle/Resources/views/Resource/resource_thumbnail.html.twigjs"
@@ -12,7 +12,7 @@ src\core\Claroline\CoreBundle\Resources\views\Dashboard\resources.html.twig:
 You must add your new twigjs template in this place.
 
 The templates are given to the ClaroRessourceGetter in the file
-src\core\Claroline\CoreBundle\Resources\public\js\dashboard\dashboard_resource.js:
+src\core\Claroline\CoreBundle\Resources\public\js\desktop\desktop_resource.js:
 var resourceGetter = new ClaroResourceGetter.getter(resource_thumbnail_template, resource_list_template);
 The name to provide is the name set in the twigjs template (at first line).
 The ClaroRessourceGetter need two templates: the first one well be used to display resources in "thumbnails" view

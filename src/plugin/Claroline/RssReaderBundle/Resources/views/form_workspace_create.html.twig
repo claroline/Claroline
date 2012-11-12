@@ -1,9 +1,9 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-{% if isDashboard == false %}
-{% set isDashboard = 0 %}
+{% if isDesktop == false %}
+{% set isDesktop = 0 %}
 {% endif %}
 <form class="form-horizontal" id="rss-reader-form"
-      action="{{ path('claro_rss_config_create', {'workspaceId': workspaceId, 'isDashboard':isDashboard, 'isDefault':isDefault}) }} "
+      action="{{ path('claro_rss_config_create', {'workspaceId': workspaceId, 'isDesktop':isDesktop, 'isDefault':isDefault}) }} "
       method="post" {{ form_enctype(form) }}
 >
     <fieldset>
