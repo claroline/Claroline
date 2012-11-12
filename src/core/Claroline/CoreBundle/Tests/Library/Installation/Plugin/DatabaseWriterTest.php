@@ -95,8 +95,8 @@ class DatabaseWriterTest extends TransactionalTestCase
         $pluginResourceTypes = $this->em->createQuery($dql)->getResult();
 
         $this->assertEquals(2, count($pluginResourceTypes));
-        $this->assertEquals('ResourceA', $pluginResourceTypes[0]->getType());
-        $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getType());
+        $this->assertEquals('ResourceA', $pluginResourceTypes[0]->getName());
+        $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getName());
     }
 
     public function testLargeIconsArePersisted()

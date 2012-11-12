@@ -99,7 +99,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
 
         $query = $this->_em->createQuery($dql);
         if ($resourceType !== null) {
-            $query->setParameter('rt_type', $resourceType->getType());
+            $query->setParameter('rt_type', $resourceType->getName());
         }
         $query->setParameter('u_id', $user->getId());
 
@@ -121,7 +121,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
                     AND (ri.path LIKE :pathlike AND ri.path <> :path)";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('rt_type', $resourceType->getType());
+        $query->setParameter('rt_type', $resourceType->getName());
         $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 

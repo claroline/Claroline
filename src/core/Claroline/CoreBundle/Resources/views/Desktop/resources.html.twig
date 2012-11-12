@@ -34,13 +34,13 @@
                 "appPath": "{{ path('claro_home_index') ~ '..' }}",
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
-                        "{{ resourceType.getType() }}": {
-                            "name": "{{ resourceType.getType()|trans({}, 'resource') }}",
+                        "{{ resourceType.getName() }}": {
+                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
                             "customActions": {
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getType(), 'action': customAction.getAction(), 'instanceId': '_instanceId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'instanceId': '_instanceId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}

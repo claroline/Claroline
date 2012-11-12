@@ -157,7 +157,7 @@ class DatabaseWriter
             ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
             ->findOneBy(array('iconType' => 'type'));
         $resourceIcon->setIconType($defaultIconType);
-        $resourceIcon->setType($resourceType->getType());
+        $resourceIcon->setType($resourceType->getName());
 
         if (isset($resource['small_icon'])) {
             $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$resource['small_icon']}");
@@ -188,7 +188,7 @@ class DatabaseWriter
     private function persistResourceTypes($resource, $pluginEntity, $plugin)
     {
         $resourceType = new ResourceType();
-        $resourceType->setType($resource['name']);
+        $resourceType->setName($resource['name']);
         $resourceType->setVisible($resource['is_visible']);
         $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setPlugin($pluginEntity);

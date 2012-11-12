@@ -158,7 +158,7 @@ class IconCreatorTest extends FixtureTestCase
     {
         $dir = new Directory();
         $undefinedType = new ResourceType();
-        $undefinedType->setType('undefined');
+        $undefinedType->setName('undefined');
         $dir->setResourceType($undefinedType);
         $dir = $this->iconCreator->setResourceIcon($dir);
         $name = $dir->getIcon()->getLargeIcon();

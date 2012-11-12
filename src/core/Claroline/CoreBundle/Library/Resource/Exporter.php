@@ -50,9 +50,9 @@ class Exporter
         foreach ($instanceIds as $instanceId) {
             $instance = $repo->find($instanceId);
 
-            if ($instance->getResource()->getResourceType()->getType() != 'directory') {
+            if ($instance->getResource()->getResourceType()->getName() != 'directory') {
 
-                $eventName = $this->ut->normalizeEventName('export', $instance->getResource()->getResourceType()->getType());
+                $eventName = $this->ut->normalizeEventName('export', $instance->getResource()->getResourceType()->getName());
                 $event = new ExportResourceEvent($instance->getResource()->getId());
                 $this->ed->dispatch($eventName, $event);
                 $obj = $event->getItem();
@@ -93,7 +93,7 @@ class Exporter
 
         foreach ($instanceIds as $instanceId) {
             $instance = $repoIns->find($instanceId);
-            ($instance->getResource()->getResourceType()->getType() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
+            ($instance->getResource()->getResourceType()->getName() == 'directory') ? $dirIds[] = $instanceId : $resIds[] = $instanceId;
         }
 
         $toAppend = array();
@@ -103,7 +103,7 @@ class Exporter
             $children = $repoIns->getChildren($directoryInstance, false);
 
             foreach ($children as $child) {
-                if ($child->getResource()->getResourceType()->getType() != 'directory' && $child->getResource()->getResourceType()->isVisible()) {
+                if ($child->getResource()->getResourceType()->getName() != 'directory' && $child->getResource()->getResourceType()->isVisible()) {
                     $toAppend[] = $child->getId();
                 }
             }

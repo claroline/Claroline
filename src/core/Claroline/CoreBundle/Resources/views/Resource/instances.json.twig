@@ -7,7 +7,7 @@
         "instanceCount": {{ instance.getResource().getInstanceCount() }},
         "shareType": "{{ instance.getResource().getShareType() }}",
         "resourceId": "{{ instance.getResource().getId() }}",
-        "type": "{{ instance.getResource().getResourceType().getType() }}",
+        "type": "{{ instance.getResource().getResourceType().getName() }}",
         "typeId": "{{ instance.getResource().getResourceType().getId() }}",
         "workspaceId": "{{ instance.getWorkspace().getId() }}",
         "dateInstanceCreation" : "{{ instance.getCreationDate()|date('m/d/Y') }}"
