@@ -50,7 +50,7 @@ class RssReaderController extends Controller
 
         if ($form->isValid()) {
             $config = $form->getData();
-            $em->persist($config);
+            ($config->getUrl() == '') ? $em->remove($config): $em->persist($config);
             $em->flush();
         } else {
             return $this->render(

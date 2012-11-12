@@ -9,7 +9,7 @@ class ConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('url');
+        $builder->add('url', 'text', array('required' => false));
     }
 
     public function getName()
