@@ -64,21 +64,7 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($user);
-            $type = Configuration::TYPE_SIMPLE;
-            $config = new Configuration();
-            $config->setWorkspaceType($type);
-            $personalWorkspaceName = $this->get('translator')->trans('personal_workspace', array(), 'platform');
-            $config->setWorkspaceName($personalWorkspaceName);
-            $config->setWorkspaceCode($user->getUsername());
-            $wsCreator = $this->get('claroline.workspace.creator');
-            $workspace = $wsCreator->createWorkspace($config, $user);
-            $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
-            $user->addRole($workspace->getManagerRole());
-            $user->setPersonalWorkspace($workspace);
-            $em->persist($workspace);
-            $em->flush();
+            $this->get('claroline.user.creator')->create($user);
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }

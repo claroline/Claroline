@@ -95,23 +95,6 @@ class CreateUserCommand extends ContainerAwareCommand
         }
 
         $em->persist($user);
-        $config = new Configuration();
-        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-        $locale = $this->getContainer()
-            ->get('claroline.config.platform_config_handler')
-            ->getParameter('locale_language');
-        $translator = $this->getContainer()
-            ->get('translator');
-        $translator->setLocale($locale);
-        $personalWorkspaceName = $translator->trans('personal_workspace', array(), 'platform');
-        $config->setWorkspaceName($personalWorkspaceName);
-        $config->setWorkspaceCode($user->getUsername());
-        $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
-        $workspace = $wsCreator->createWorkspace($config, $user);
-        $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
-        $user->addRole($workspace->getManagerRole());
-        $user->setPersonalWorkspace($workspace);
-        $em->persist($workspace);
-        $em->flush();
+        $this->getContainer()->get('claroline.user.creator')->create($user);
     }
 }

@@ -74,17 +74,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             $user->setAdministrativeCode('UCL-' . $user->getUsername());
             $user->setPlainPassword('123');
             $user->addRole($role);
-            $config = new Configuration();
-            $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $config->setWorkspaceName('Personal workspace');
-            $config->setWorkspaceCode($user->getUsername());
-            $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
-            $workspace = $wsCreator->createWorkspace($config, $user);
-            $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
-            $user->addRole($workspace->getManagerRole());
-            $user->setPersonalWorkspace($workspace);
-            $manager->persist($user);
-            $manager->persist($workspace);
+            $user = $this->container->get('claroline.user.creator')->create($user);
             $this->log(" {$i} users created");
         }
 
