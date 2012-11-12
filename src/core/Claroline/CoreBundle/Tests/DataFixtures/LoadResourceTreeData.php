@@ -70,9 +70,9 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $this->userRootDirectory = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
             ->findOneBy(array('parent' => null, 'workspace' => $this->user->getPersonalWorkspace()->getId()));
         $this->dirType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'directory'));
+            ->findOneBy(array('name' => 'directory'));
         $this->fileType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'file'));
+            ->findOneBy(array('name' => 'file'));
         $nextId = $manager->createQuery('SELECT MAX(i.id) + 1 FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance i')
             ->getSingleResult();
         $this->generateItems($manager, $this->depth, 0, $this->directoryCount, $this->fileCount, $this->userRootDirectory, array_shift($nextId));

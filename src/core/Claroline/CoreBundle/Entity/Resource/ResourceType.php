@@ -21,9 +21,9 @@ class ResourceType
     protected $id;
 
     /**
-     * @ORM\Column(type="name", length=255)
+     * @ORM\Column(type="string", length=255, name="name")
      */
-    protected $type;
+    protected $name;
 
     /**
      * @ORM\OneToMany(
@@ -122,17 +122,17 @@ class ResourceType
      */
     public function getName()
     {
-        return $this->type;
+        return $this->name;
     }
 
     /**
      * Sets the resource type name.
      *
-     * @param string $type
+     * @param string $name
      */
-    public function setName($type)
+    public function setName($name)
     {
-        $this->type = $type;
+        $this->name = $name;
     }
 
     /**

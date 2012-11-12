@@ -164,7 +164,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'file'))
+            ->findOneBy(array('name' => 'file'))
             ->getId();
         $this->client->request('GET', "/resource/list/{$fileId}/{$this->userRoot->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
