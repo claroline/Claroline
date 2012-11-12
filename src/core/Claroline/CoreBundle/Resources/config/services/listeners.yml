@@ -73,4 +73,5 @@ services:
       calls:
         - [setContainer, ["@service_container"]]
       tags:
-        - { name: kernel.event_listener, event: widget_core_resource_logger, method: onDisplay }
+        - { name: kernel.event_listener, event: widget_core_resource_logger_workspace, method: onWorkspaceDisplay }
+        - { name: kernel.event_listener, event: widget_core_resource_logger_desktop, method: onDesktopDisplay }

@@ -7,15 +7,16 @@ use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 
 class CoreResourceLoggerListener extends ContainerAware
 {
-    public function onDisplay(DisplayWidgetEvent $event)
+    public function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {
-        if($event->getWorkspace()!== null){
-            $event->setContent($this->renderForWorkspace($event->getWorkspace()));
-            $event->stopPropagation();
-            return;
-        } else {
-            $event->setContent($this->renderForDesktop());
-        }
+        $event->setContent($this->renderForWorkspace($event->getWorkspace()));
+        $event->stopPropagation();
+    }
+
+    public function onDesktopDisplay(DisplayWidgetEvent $event)
+    {
+        $event->setContent($this->renderForDesktop());
+        $event->stopPropagation();
     }
 
     private function renderForWorkspace($workspace)

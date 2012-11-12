@@ -13,6 +13,14 @@ class Manager
         $this->em = $em;
     }
 
+    /**
+     * Generate the the configuration of every widget of the current workspace.
+     * If the configuration was never defined before, a "fake" one is created (lvl1)
+     * wich can be persisted if you want to create it.
+     *
+     * @param type $workspaceId
+     * @return type
+     */
     public function generateWorkspaceDisplayConfig($workspaceId)
     {
         $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
@@ -53,6 +61,15 @@ class Manager
         } else {
             return $adminConfig;
         }
+    }
+
+    public function isDefaultConfig($widgetId, $workspaceId)
+    {
+        $dconfig = $this->generateDisplayConfig($widgetId, $workspaceId);
+        $bool = true;
+        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
+
+        return $bool;
     }
 
     private function setEntitiesArrayKeysAsIds($array)

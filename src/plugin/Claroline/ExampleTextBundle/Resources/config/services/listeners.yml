@@ -33,6 +33,8 @@ services:
     calls:
       - [setContainer, ["@service_container"]]
     tags:
-      - { name: kernel.event_listener, event: widget_claroline_mywidget1, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget2, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget1_desktop, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget1_workspace, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget2_desktop, method: onDisplay }
+      - { name: kernel.event_listener, event: widget_claroline_mywidget2_workspace, method: onDisplay }
       - { name: kernel.event_listener, event: widget_claroline_mywidget1_configuration, method: onConfigure }
