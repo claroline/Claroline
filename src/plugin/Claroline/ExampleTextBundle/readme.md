@@ -584,7 +584,7 @@ This example will show you the main files of a basic HTML5 video player.
 
 Widgets can be displayed at 2 differents key pages:
 
-* Dashboard home
+* Desktop home
 * Workspace home
 
 Every time a user is loading one of these page, the list of registered widgets will be loaded.
@@ -596,7 +596,7 @@ Where
 
 * widget is a prefix
 * widgetName is the name of your widget defined in the config file.
-* the last word is either workspace or dashboard depending on where the widget is displayed
+* the last word is either workspace or desktop depending on where the widget is displayed
 
 ### Catching the event
 
@@ -605,7 +605,7 @@ Define a listener in your listeners.yml file
     myvendor.listener.mybundle_widget:
       class: ...
       tags:
-        - { name: kernel.event_listener, event: widget_widgetname_dashboard, method: onDisplay }
+        - { name: kernel.event_listener, event: widget_widgetname_desktop, method: onDisplay }
 
 ## Listener implementation
 

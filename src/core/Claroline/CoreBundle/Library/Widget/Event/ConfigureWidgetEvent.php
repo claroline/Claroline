@@ -13,18 +13,18 @@ class ConfigureWidgetEvent extends Event
     private $workspace;
     private $content;
     private $isDefault;
-    private $isDashboard;
+    private $isDesktop;
 
     /**
      * Constructor.
      *
      * @param AbstractWorkspace $workspace
      */
-    public function __construct($workspace, $isDefault = false, $isDashboard = false )
+    public function __construct($workspace, $isDefault = false, $isDesktop = false )
     {
         $this->workspace = $workspace;
         $this->isDefault = $isDefault;
-        $this->isDashboard = $isDashboard;
+        $this->isDesktop = $isDesktop;
     }
 
     public function getWorkspace()
@@ -52,9 +52,9 @@ class ConfigureWidgetEvent extends Event
         return $this->isDefault;
     }
 
-    public function isDashboard()
+    public function isDesktop()
     {
-        return $this->isDashboard;
+        return $this->isDesktop;
     }
 
     public function setDefault($bool)
@@ -62,8 +62,8 @@ class ConfigureWidgetEvent extends Event
         $this->isDefault = $bool;
     }
 
-    public function setDashboard($bool)
+    public function setDesktop($bool)
     {
-        $this->isDashboard = $bool;
+        $this->isDesktop = $bool;
     }
 }

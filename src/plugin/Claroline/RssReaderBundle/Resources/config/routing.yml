@@ -1,5 +1,5 @@
 claro_rss_config_create:
-    pattern: /workspace/{workspaceId}/isDashboard/{isDashboard}/isDefault/{isDefault}
+    pattern: /workspace/{workspaceId}/isDesktop/{isDesktop}/isDefault/{isDefault}
     defaults: { _controller: ClarolineRssReaderBundle:RssReader:createConfig }
     requirements:
       _method: POST
