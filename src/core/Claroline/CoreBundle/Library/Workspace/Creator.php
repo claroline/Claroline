@@ -39,7 +39,7 @@ class Creator
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'directory'));
+            ->findOneBy(array('name' => 'directory'));
         $directoryIcon = $this->entityManager
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
             ->findOneBy(array('type' => 'directory', 'iconType' => 1));

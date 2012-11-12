@@ -45,7 +45,7 @@ class IconCreatorTest extends FixtureTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'file'));
+            ->findOneBy(array('name' => 'file'));
     }
 
     protected function tearDown()
@@ -147,7 +147,7 @@ class IconCreatorTest extends FixtureTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('type' => 'directory'));
+            ->findOneBy(array('name' => 'directory'));
         $dir->setResourceType($dirType);
         $dir = $this->iconCreator->setResourceIcon($dir);
         $name = $dir->getIcon()->getLargeIcon();

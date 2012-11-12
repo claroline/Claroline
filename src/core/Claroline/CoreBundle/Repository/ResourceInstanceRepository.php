@@ -40,7 +40,7 @@ class ResourceInstanceRepository extends MaterializedPathRepository
             reu.id as resource_creator_id,
             reu.username as resource_creator_username,
             rt.id as resource_type_id,
-            rt.type as type,
+            rt.name as type,
             rt.isBrowsable as is_browsable,
             ic.smallIcon as small_icon,
             ic.largeIcon as large_icon ";
