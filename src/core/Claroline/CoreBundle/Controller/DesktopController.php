@@ -65,7 +65,7 @@ class DesktopController extends Controller
         $widgets = $em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
 
         foreach ($widgets as $widget){
-            $eventName = strtolower("widget_{$widget->getName()}");
+            $eventName = strtolower("widget_{$widget->getName()}_desktop");
             $event = new DisplayWidgetEvent();
             $this->get('event_dispatcher')->dispatch($eventName, $event);
             $responsesString[strtolower($widget->getName())] = $event->getContent();
