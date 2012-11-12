@@ -145,7 +145,7 @@ class ForumController extends Controller
             $message = $form->getData();
             $subject = $subjectInstance->getResource();
             $user = $this->get('security.context')->getToken()->getUser();
-            $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('type' => 'claroline_message'));
+            $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('name' => 'claroline_message'));
             $message->setSubject($subject);
             $message->setCreator($user);
             $message->setResourceType($messageType);
