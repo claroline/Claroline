@@ -81,7 +81,7 @@
             array[i] = element.value;
             i++;
         });
-        parameters.userId = array;
+        parameters.userIds = array;
         var route = Routing.generate('claro_workspace_delete_users', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(

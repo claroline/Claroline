@@ -77,7 +77,7 @@
             array[i] = element.value;
             i++;
         });
-        parameters.userId = array;
+        parameters.userIds = array;
         var route = Routing.generate('claro_admin_multidelete_user_from_group', {'groupId': groupId});
         route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(

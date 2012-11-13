@@ -55,7 +55,7 @@
             array[i] = element.value;
             i++;
         })
-        parameters.groupId = array;
+        parameters.groupIds = array;
         var route = Routing.generate('claro_workspace_multiadd_group', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(
