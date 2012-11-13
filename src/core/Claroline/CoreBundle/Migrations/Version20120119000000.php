@@ -495,6 +495,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('is_locked', 'boolean', array('notnull' => false));
         $table->addColumn('is_visible', 'boolean');
+        $table->addColumn('is_desktop', 'boolean');
         $table->addColumn('lft', 'integer', array('notnull' => true));
         $table->addColumn('rgt', 'integer', array('notnull' => true));
         $table->addColumn('lvl', 'integer', array('notnull' => true));

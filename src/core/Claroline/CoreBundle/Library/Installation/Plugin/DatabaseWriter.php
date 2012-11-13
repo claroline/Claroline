@@ -222,12 +222,24 @@ class DatabaseWriter
         }
 
         $this->em->persist($widgetEntity);
-        $widgetConfig = new DisplayConfig();
-        $widgetConfig->setWidget($widgetEntity);
-        $widgetConfig->setLock(true);
-        $widgetConfig->setVisible(true);
-        $widgetConfig->setParent(null);
-        $this->em->persist($widgetConfig);
+
+        $wWidgetConfig = new DisplayConfig();
+        $wWidgetConfig->setWidget($widgetEntity);
+        $wWidgetConfig->setLock(true);
+        $wWidgetConfig->setVisible(true);
+        $wWidgetConfig->setParent(null);
+        $wWidgetConfig->setDesktop(false);
+
+        $dWidgetConfig = new DisplayConfig();
+        $dWidgetConfig->setWidget($widgetEntity);
+        $dWidgetConfig->setLock(true);
+        $dWidgetConfig->setVisible(true);
+        $dWidgetConfig->setParent(null);
+        $dWidgetConfig->setDesktop(true);
+
+        $this->em->persist($wWidgetConfig);
+        $this->em->persist($dWidgetConfig);
+
         $this->em->flush();
     }
 }

@@ -4,7 +4,8 @@ namespace Claroline\RssReaderBundle\Listeners;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetEvent;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
 
@@ -51,7 +52,7 @@ class RssReaderListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onConfigure(ConfigureWidgetEvent $event)
+    public function onWorkspaceConfigure(ConfigureWidgetWorkspaceEvent $event)
     {
         $workspace = $event->getWorkspace();
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -63,7 +64,7 @@ class RssReaderListener extends ContainerAware
             $config = $repo->findOneBy(array('workspace' => $workspace->getId()));
             $workspaceId = $workspace->getId();
         } else {
-            $config = $repo->findOneBy(array('isDesktop' => $event->isDesktop(), 'isDefault' => $event->isDefault()));
+            $config = $repo->findOneBy(array('isDesktop' => false, 'isDefault' => $event->isDefault()));
             $workspaceId = 0;
         }
 
@@ -88,6 +89,12 @@ class RssReaderListener extends ContainerAware
             );
         }
         $event->setContent($content);
+    }
+
+    public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
+    {
+
+        $event->setContent('faurm');
     }
 
     private function getRssContent($rssconfig)

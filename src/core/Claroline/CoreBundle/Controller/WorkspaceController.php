@@ -287,6 +287,7 @@ class WorkspaceController extends Controller
             $displayConfig->setWorkspace($workspace);
             $displayConfig->setVisible($baseConfig->isVisible());
             $displayConfig->setLock(true);
+            $displayConfig->setDesktop(false);
             $displayConfig->invertVisible();
         } else {
             $displayConfig->invertVisible();
@@ -311,8 +312,8 @@ class WorkspaceController extends Controller
          $em = $this->get('doctrine.orm.entity_manager');
          $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
          $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
-         $event = new ConfigureWidgetEvent($workspace);
-         $eventName = strtolower("widget_{$widget->getName()}_configuration");
+         $event = new ConfigureWidgetWorkspaceEvent($workspace);
+         $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
          $this->get('event_dispatcher')->dispatch($eventName, $event);
 
          if ($event->getContent() !== ''){

@@ -6,4 +6,5 @@ services:
     tags:
       - { name: kernel.event_listener, event: widget_claroline_rssreader_workspace, method: onWorkspaceDisplay }
       - { name: kernel.event_listener, event: widget_claroline_rssreader_desktop, method: onDesktopDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_rssreader_configuration, method: onConfigure }
+      - { name: kernel.event_listener, event: widget_claroline_rssreader_configuration_workspace, method: onWorkspaceConfigure }
+      - { name: kernel.event_listener, event: widget_claroline_rssreader_configuration_desktop, method: onDesktopConfigure }
