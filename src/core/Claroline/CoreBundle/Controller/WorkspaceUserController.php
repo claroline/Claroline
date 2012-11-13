@@ -88,7 +88,7 @@ class WorkspaceUserController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $userIds = array($userId);
-                $parameters['userId'] = $userIds;
+                $parameters['userIds'] = $userIds;
                 $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
@@ -286,8 +286,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
 
-        if(isset($parameters['userId'])){
-            foreach ($parameters['userId'] as $userId) {
+        if(isset($parameters['userIds'])){
+            foreach ($parameters['userIds'] as $userId) {
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
 
                 if (null !== $user) {

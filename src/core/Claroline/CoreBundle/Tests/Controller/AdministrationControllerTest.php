@@ -122,7 +122,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/users/0.html');
         $this->assertEquals(5, $crawler->filter('.row-user')->count());
-        $this->client->request('DELETE', "/admin/users?id[]={$this->getFixtureReference('user/user')->getId()}");
+        $this->client->request('DELETE', "/admin/users?ids[]={$this->getFixtureReference('user/user')->getId()}");
         $crawler = $this->client->request('GET', '/admin/users/0.html');
         $this->assertEquals(4, $crawler->filter('.row-user')->count());
     }
@@ -173,7 +173,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'PUT',
-            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userId[]={$this->getFixtureReference('user/admin')->getId()}"
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/admin')->getId()}"
         );
        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
@@ -183,11 +183,11 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'PUT', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userId[]={$this->getFixtureReference('user/admin')->getId()}"
+            'PUT', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/admin')->getId()}"
         );
 
         $this->client->request(
-            'DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userId[]={$this->getFixtureReference('user/admin')->getId()}"
+            'DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/admin')->getId()}"
         );
        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
@@ -231,7 +231,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testMultiDeleteGroups()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('DELETE', "/admin/groups?id[]={$this->getFixtureReference('group/group_a')->getId()}");
+        $this->client->request('DELETE', "/admin/groups?ids[]={$this->getFixtureReference('group/group_a')->getId()}");
         $crawler = $this->client->request('GET', '/admin/groups/0.html');
         $this->assertEquals(2, $crawler->filter('.row-group')->count());
     }
