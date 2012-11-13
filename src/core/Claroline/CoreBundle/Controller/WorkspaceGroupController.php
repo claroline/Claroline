@@ -69,7 +69,7 @@ class WorkspaceGroupController extends Controller
             //verifications: his role cannot be changed
             if ($newRole->getId() != $workspace->getManagerRole()->getId()){
                 $groupIds = array($group->getId());
-                $parameters['groupId'] = $groupIds;
+                $parameters['groupIds'] = $groupIds;
                 $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
@@ -272,8 +272,8 @@ class WorkspaceGroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
 
-        if(isset($parameters['groupId'])){
-            foreach ($parameters['groupId'] as $groupId) {
+        if(isset($parameters['groupIds'])){
+            foreach ($parameters['groupIds'] as $groupId) {
                 $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
                 if (null !== $group){

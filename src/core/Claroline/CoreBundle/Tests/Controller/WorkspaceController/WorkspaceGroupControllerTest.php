@@ -34,7 +34,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupId[]={$groupA}&groupId[]={$groupB}&groupId[]={$groupC}"
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupIds[]={$groupA}&groupIds[]={$groupB}&groupIds[]={$groupC}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -65,7 +65,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?groupId[]={$this->getFixtureReference('group/manyGroup1')->getId()}");
+        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?groupIds[]={$this->getFixtureReference('group/manyGroup1')->getId()}");
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
@@ -78,7 +78,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadManyUsersData());
         $this->loadFixture(new LoadManyGroupsData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?groupId[]={$this->getFixtureReference('group/manyGroup1')->getId()}");
+        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?groupIds[]={$this->getFixtureReference('group/manyGroup1')->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -93,9 +93,9 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}",
             array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
         );
-        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?userId[]={$this->getFixtureReference('user/ws_creator')->getId()}");
+        $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-        $crawler = $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?groupId[]={$this->getFixtureReference('group/manyGroup1')->getId()}");
+        $crawler = $this->client->request('DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups?groupIds[]={$this->getFixtureReference('group/manyGroup1')->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
     }
@@ -140,7 +140,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             'POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId()))
         );
         $this->client->request(
-            'DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?userId[]={$this->getFixtureReference('user/ws_creator')->getId()}"
+            'DELETE', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}"
         );
         $crawler = $this->client->request(
             'POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/group/{$this->getFixtureReference('group/manyGroup1')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getCollaboratorRole()->getId()))
@@ -184,7 +184,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadGroupData);
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupId[]={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -230,7 +230,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadGroupData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
-            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupId[]={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            'PUT', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/add/group?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->client->request(
             'GET', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/group/search/group/registered/0", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
