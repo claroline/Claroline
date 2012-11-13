@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationWidgetController extends Controller
 {
