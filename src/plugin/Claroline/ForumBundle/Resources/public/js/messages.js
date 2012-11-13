@@ -11,19 +11,18 @@
             pager.remove();
         }
 
-        pager = ClaroUtils.renderPager(nbPages, page, 'message', $('#messages_table'));
+        pager = Claroline.Utilities.renderPager(nbPages, page, 'message', $('#messages_table'));
         setPagerActions();
         var offset = (page-1)*limit;
         var route = Routing.generate('claro_forum_messages', {'subjectInstanceId': subjectInstanceId, 'offset': offset});
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(data){
                 $('#table-message-body').empty();
                 $('#table-message-body').append(data);
             },
-            undefined,
-            'GET'
-        );
+            type: 'GET'
+        });
 
         return pager;
     }

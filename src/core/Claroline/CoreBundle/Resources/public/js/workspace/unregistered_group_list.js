@@ -58,14 +58,13 @@
         parameters.groupIds = array;
         var route = Routing.generate('claro_workspace_multiadd_group', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(groups){
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(groups){
                 alert(Twig.render(add_group_confirm, {'nbGroups':groups.length }))
                 },
-            undefined,
-            'PUT'
-            )
+            type: 'PUT'
+        })
         $('.checkbox-group-name:checked').each(function(index, element){
             $(element).parent().parent().remove();
             $('.btn-save-groups').attr('disabled', 'disabled');
@@ -103,9 +102,9 @@
     function lazyloadGroups(route){
         loading = true;
         $('#loading').show();
-        ClaroUtils.sendRequest(
-            route(),
-            function(groups){
+        Claroline.Utilities.ajax({
+            url: route(),
+            success: function(groups){
                 createGroupsChkBoxes(groups);
                 loading = false;
                 $('#loading').hide();
@@ -113,11 +112,13 @@
                     stop = true;
                 }
             },
-            function(){
+            complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
                     lazyloadGroups(route)
                 }
-            }
-        )
+            },
+            type: 'GET'
+
+        })
     }
 })();

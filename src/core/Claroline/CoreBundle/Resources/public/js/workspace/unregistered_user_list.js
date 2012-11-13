@@ -69,12 +69,11 @@
         parameters.userIds = array;
         var route = Routing.generate('claro_workspace_multiadd_user', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(users){alert(Twig.render(add_user_confirm, {'nbUsers': users.length}))},
-            undefined,
-            'PUT'
-        )
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(users){alert(Twig.render(add_user_confirm, {'nbUsers': users.length}))},
+            type: 'PUT'
+        })
         $('.checkbox-user-name:checked').each(function(index, element){
              $(element).parent().parent().remove();
         })
@@ -99,9 +98,9 @@
     function lazyloadUsers(route) {
         loading = true;
         $('#user-loading').show();
-        ClaroUtils.sendRequest(
-            route(),
-            function(users){
+        Claroline.Utilities.ajax({
+            url: route(),
+            success: function(users){
                 createUsersChkBoxes(users);
                 loading = false;
                 $('#user-loading').hide();
@@ -109,11 +108,12 @@
                     stop = true;
                 }
             },
-            function(){
+            complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
                     lazyloadUsers(route)
                 }
-            }
-        );
+            },
+            type: 'GET'
+        });
     }
 })();
