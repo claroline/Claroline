@@ -26,8 +26,8 @@ class Manager
         $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
 
         $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
-        $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null)));
-
+        $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => false)));
+/*
         foreach ($workspaceConfigs as $workspaceConfig) {
             if (!$workspaceConfig->getParent()->isLocked()) {
                 unset($adminConfigs[$workspaceConfig->getParent()->getId()]);
@@ -43,14 +43,24 @@ class Manager
         }
 
         $configs = array_merge($workspaceConfigs, $childConfigs);
+*/
+        return $this->mergeConfigs($adminConfigs, $workspaceConfigs);
+    }
 
-        return $configs;
+    public function generateDesktopDisplayConfig($userId)
+    {
+        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+
+        $userConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('user' => $user)));
+        $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => true)));
+
+        return $this->mergeConfigs($adminConfigs, $userConfigs);
     }
 
     public function generateDisplayConfig($widgetId, $workspaceId)
     {
         $wsConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('workspace' => $workspaceId, 'widget' => $widgetId));
-        $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId));
+        $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => false));
 
         if($wsConfig != null){
             if($wsConfig->getParent()->isLocked()){
@@ -96,6 +106,25 @@ class Manager
         return $childConfig;
     }
 
+    private function mergeConfigs($adminConfigs, $childConfigs)
+    {
+        foreach ($childConfigs as $childConfig) {
+            if (!$childConfig->getParent()->isLocked()) {
+                unset($adminConfigs[$childConfig->getParent()->getId()]);
+            } else {
+                unset($childConfigs[$childConfig->getId()]);
+            }
+        }
 
+        $generatedConfigs = array();
+
+        foreach ($adminConfigs as $adminConfig) {
+            $generatedConfigs[] = $this->generateChild($adminConfig);
+        }
+
+        $configs = array_merge($childConfigs, $generatedConfigs);
+
+        return $configs;
+    }
 }
 

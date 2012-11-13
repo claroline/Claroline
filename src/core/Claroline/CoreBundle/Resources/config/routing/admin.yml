@@ -194,13 +194,22 @@ claro_admin_invert_widgetconfig_visible:
     options:
       expose: true
 
-claro_admin_widget_configuration:
-  pattern: widget/{widgetId}/configuration
-  defaults: { _controller: ClarolineCoreBundle:Administration:configureWidget }
+claro_admin_widget_configuration_workspace:
+  pattern: widget/{widgetId}/configuration/workspace
+  defaults: { _controller: ClarolineCoreBundle:Administration:configureWorkspaceWidget }
   requirements:
     _method: GET
   options:
     expose: true
+
+claro_admin_widget_configuration_desktop:
+  pattern: widget/{widgetId}/configuration/desktop
+  defaults: { _controller: ClarolineCoreBundle:Administration:configureDesktopWidget }
+  requirements:
+    _method: GET
+  options:
+    expose: true
+
 
 #SOON TO BE REST
 

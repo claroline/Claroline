@@ -98,6 +98,11 @@ class DisplayConfig
      */
     protected $isVisible;
 
+    /**
+     * @ORM\Column(type="boolean", name="is_desktop")
+     */
+    protected $isDesktop;
+
     public function getId()
     {
         return $this->id;
@@ -171,5 +176,25 @@ class DisplayConfig
     public function setWorkspace($workspace)
     {
         $this->workspace = $workspace;
+    }
+
+    public function setDesktop($bool)
+    {
+        $this->isDesktop = $bool;
+    }
+
+    public function isDesktop()
+    {
+        return $this->isDesktop;
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }

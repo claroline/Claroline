@@ -19,3 +19,21 @@ claro_desktop_resources:
 claro_desktop_widgets:
     pattern: /widgets
     defaults: { _controller: ClarolineCoreBundle:Desktop:widgets }
+
+claro_desktop_user_parameters:
+    pattern: /user/parameters
+    defaults: { _controller: ClarolineCoreBundle:Desktop:desktopUserParameters }
+
+claro_widget_properties:
+    pattern: /widget/properties
+    defaults: { _controller: ClarolineCoreBundle:Desktop:widgetProperties }
+
+claro_desktop_widget_invertvisible:
+    pattern: /config/{displayConfigId}/widget/{widgetId}/invert
+    defaults: { _controller: ClarolineCoreBundle:Desktop:invertVisibleUserWidget }
+    requirements:
+      _method: POST
+    options:
+      expose: true
+
+

@@ -8,23 +8,21 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetEvent extends Event
+class ConfigureWidgetWorkspaceEvent extends Event
 {
     private $workspace;
     private $content;
     private $isDefault;
-    private $isDesktop;
 
     /**
      * Constructor.
      *
      * @param AbstractWorkspace $workspace
      */
-    public function __construct($workspace, $isDefault = false, $isDesktop = false )
+    public function __construct($workspace, $isDefault = false)
     {
         $this->workspace = $workspace;
         $this->isDefault = $isDefault;
-        $this->isDesktop = $isDesktop;
     }
 
     public function getWorkspace()
@@ -52,18 +50,8 @@ class ConfigureWidgetEvent extends Event
         return $this->isDefault;
     }
 
-    public function isDesktop()
-    {
-        return $this->isDesktop;
-    }
-
     public function setDefault($bool)
     {
         $this->isDefault = $bool;
-    }
-
-    public function setDesktop($bool)
-    {
-        $this->isDesktop = $bool;
     }
 }
