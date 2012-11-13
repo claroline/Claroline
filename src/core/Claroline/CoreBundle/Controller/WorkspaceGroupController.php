@@ -121,8 +121,8 @@ class WorkspaceGroupController extends Controller
         $params = $this->get('request')->query->all();
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        if(isset($params['groupId'])){
-            foreach ($params['groupId'] as $groupId) {
+        if(isset($params['groupIds'])){
+            foreach ($params['groupIds'] as $groupId) {
                 $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
                 if (null != $group) {
                     foreach ($roles as $role) {
@@ -199,8 +199,8 @@ class WorkspaceGroupController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $groups = array();
 
-        if (isset($params['groupId'])){
-            foreach ($params['groupId'] as $groupId) {
+        if (isset($params['groupIds'])){
+            foreach ($params['groupIds'] as $groupId) {
                  $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
                  $groups[] = $group;
                  $group->addRole($workspace->getCollaboratorRole());

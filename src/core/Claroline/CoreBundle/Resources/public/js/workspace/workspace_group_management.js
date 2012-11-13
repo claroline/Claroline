@@ -59,7 +59,7 @@
             i++;
         });
 
-        parameters.groupId = array;
+        parameters.groupIds = array;
         var route = Routing.generate('claro_workspace_delete_groups', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
         ClaroUtils.sendRequest(

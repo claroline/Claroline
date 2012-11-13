@@ -85,10 +85,10 @@ class AdministrationController extends Controller
     {
         $params = $this->get('request')->query->all();
 
-        if (isset($params['id'])) {
+        if (isset($params['ids'])) {
             $em = $this->getDoctrine()->getEntityManager();
 
-            foreach ($params['id'] as $userId) {
+            foreach ($params['ids'] as $userId) {
                 $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
                 $em->remove($user);
             }
@@ -416,8 +416,8 @@ class AdministrationController extends Controller
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
         $users = array();
 
-        if(isset($params['userId'])){
-            foreach ($params['userId'] as $userId) {
+        if(isset($params['userIds'])){
+            foreach ($params['userIds'] as $userId) {
                 $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
                 if($user !== null){
                     $group->addUser($user);
@@ -451,8 +451,8 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
 
-        if(isset($params['userId'])){
-            foreach ($params['userId'] as $userId){
+        if(isset($params['userIds'])){
+            foreach ($params['userIds'] as $userId){
                 $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
                 $group->removeUser($user);
                 $em->persist($group);
@@ -474,8 +474,8 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
 
-        if(isset($params['id'])){
-            foreach ($params['id'] as $groupId) {
+        if(isset($params['ids'])){
+            foreach ($params['ids'] as $groupId) {
                 $group = $em->getRepository('Claroline\CoreBundle\Entity\Group')->find($groupId);
                 $em->remove($group);
             }

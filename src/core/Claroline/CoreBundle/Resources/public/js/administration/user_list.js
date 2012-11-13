@@ -68,7 +68,7 @@
             array[i] = element.value;
             i++;
         });
-        parameters.id = array;
+        parameters.ids = array;
 
         var route = Routing.generate('claro_admin_multidelete_user');
         route+= '?'+$.param(parameters);

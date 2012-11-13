@@ -169,13 +169,13 @@ class WorkspaceUserController extends Controller
     {
         $params = $this->get('request')->query->all();
         $users = array();
-        
-        if (isset($params['userId'])) {
+
+        if (isset($params['userIds'])) {
 
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
-            foreach ($params['userId'] as $userId) {
+            foreach ($params['userIds'] as $userId) {
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
                 $users[] = $user;
                 $user->addRole($workspace->getCollaboratorRole());
@@ -261,8 +261,8 @@ class WorkspaceUserController extends Controller
         $params = $this->get('request')->query->all();
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
-        if(isset($params['userId'])){
-            foreach ($params['userId'] as $userId) {
+        if(isset($params['userIds'])){
+            foreach ($params['userIds'] as $userId) {
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
                 if (null != $user) {
                     foreach ($roles as $role) {
