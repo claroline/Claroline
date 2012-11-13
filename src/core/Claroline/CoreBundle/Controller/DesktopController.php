@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
 
 /**
  * Controller of the user's desktop.
@@ -120,4 +121,28 @@ class DesktopController extends Controller
 
         return new Response('success');
     }
+
+    /**
+     * Throws a ConfigureWidgetEvent
+     *
+     * @param integer $widgetId
+     *
+     * @return Response
+     */
+    public function configureWidgetAction($widgetId)
+    {
+         $em = $this->get('doctrine.orm.entity_manager');
+         $user = $this->get('security.context')->getToken()->getUser();
+         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
+         $event = new ConfigureWidgetDesktopEvent($user);
+         $eventName = strtolower("widget_{$widget->getName()}_configuration_desktop");
+         $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+         if ($event->getContent() !== ''){
+             return $this->render('ClarolineCoreBundle:Desktop:widget_configuration.html.twig', array('content' => $event->getContent()));
+         } else {
+             throw new \Exception("event $eventName didn't return any Response");
+         }
+    }
+
 }
