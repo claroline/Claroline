@@ -5,7 +5,7 @@
         var widgetId = e.currentTarget.parentNode.parentNode.dataset.widgetId;
         console.debug(e);
         var route = Routing.generate('claro_desktop_widget_invertvisible', {'displayConfigId': displayConfigId, 'widgetId': widgetId });
-        ClaroUtils.sendRequest(route, undefined, undefined, 'POST');
+        Claroline.Utilities.ajax({url:route, type:'POST'});
     })
 
 })()

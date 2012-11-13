@@ -71,12 +71,11 @@
         parameters.userIds = array;
         var route = Routing.generate('claro_admin_multiadd_user_to_group', {'groupId': groupId});
         route+='?'+$.param(parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(users){alert(Twig.render(add_user_confirm, {'nbUsers': users.length}))},
-            undefined,
-            'PUT'
-        )
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(users){alert(Twig.render(add_user_confirm, {'nbUsers': users.length}))},
+            type: 'PUT'
+        })
         $('.chk-user:checked').each(function(index, element){
              $(element).parent().parent().remove();
         })
@@ -86,9 +85,10 @@
     function lazyloadUsers(route){
         loading = true;
         $('#loading').show();
-        ClaroUtils.sendRequest(
-            route(),
-            function(users){
+        Claroline.Utilities.ajax({
+            url: route(),
+            type: 'GET',
+            success: function(users){
                 $('#user-table-body').append(Twig.render(user_list_short, {
                     'users': users
                 }));
@@ -98,12 +98,12 @@
                     stop = true;
                 }
             },
-            function(){
+            complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
                     lazyloadUsers(route)
                 }
             }
-        )
+        })
     }
 })();
 

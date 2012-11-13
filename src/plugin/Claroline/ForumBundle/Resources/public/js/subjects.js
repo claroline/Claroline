@@ -11,21 +11,20 @@
             pager.remove();
         }
 
-        pager = ClaroUtils.renderPager(nbPages, page, 'subject', $('#subjects_table'))
+        pager = Claroline.Utilities.renderPager(nbPages, page, 'subject', $('#subjects_table'))
         setPagerActions();
         var offset = (page-1)*limit;
         var route = Routing.generate('claro_forum_subjects', {'forumInstanceId': forumInstanceId, 'offset': offset});
-        ClaroUtils.sendRequest(
-            route,
-            function(data){
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(data){
                 $('#table-subjects-body').empty();
                 $('#table-subjects-body').append(data);
             },
-            undefined,
-            'GET'
-        )
+            type: 'GET'
+        })
 
-            return pager;
+        return pager;
     }
 
     function setPagerActions(){
@@ -39,8 +38,8 @@
             activePageSubjects(activePage);
         })
 
-        $('.message-paginator-prev-item').on('click', function(e){
-            subject--;
+        $('.subject-paginator-prev-item').on('click', function(e){
+            activePage--;
             activePageSubjects(activePage);
         })
     }

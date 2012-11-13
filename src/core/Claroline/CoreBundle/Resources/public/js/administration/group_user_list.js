@@ -80,9 +80,9 @@
         parameters.userIds = array;
         var route = Routing.generate('claro_admin_multidelete_user_from_group', {'groupId': groupId});
         route+='?'+$.param(parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(){
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(){
                 $('.chk-user:checked').each(function(index, element){
                      $(element).parent().parent().remove();
                 });
@@ -90,18 +90,18 @@
                 $('#validation-box-body').empty();
                 $('.delete-users-button').attr('disabled', 'disabled');
             },
-            undefined,
-            'DELETE'
-        );
+            type: 'DELETE'
+        });
     });
 
 
     function lazyloadUsers(route){
         loading = true;
         $('#loading').show();
-        ClaroUtils.sendRequest(
-            route(),
-            function(users){
+        Claroline.Utilities.ajax({
+            url: route(),
+            type: 'GET',
+            success: function(users){
                 $('#user-table-body').append(Twig.render(user_list_short, {
                     'users': users
                 }));
@@ -111,11 +111,11 @@
                     stop = true;
                 }
             },
-            function(){
+            complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
                     lazyloadUsers(route)
                 }
             }
-        )
+        })
     }
 })();

@@ -60,9 +60,9 @@
         parameters.ids = array;
         var route = Routing.generate('claro_admin_multidelete_group');
         route+= '?'+$.param(parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(){
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(){
                 $('.chk-group:checked').each(function(index, element){
                      $(element).parent().parent().remove();
                 });
@@ -70,9 +70,8 @@
                 $('#validation-box-body').empty();
                 $('.delete-groups-button').attr('disabled', 'disabled');
             },
-            undefined,
-            'DELETE'
-        );
+            type: 'DELETE'
+        });
     });
 
     $('#modal-cancel-button').click(function(){
@@ -95,9 +94,10 @@
     function lazyloadGroups(route){
         loading = true;
         $('#loading').show();
-        ClaroUtils.sendRequest(
-            route(),
-            function(groups){
+        Claroline.Utilities.ajax({
+            url: route(),
+            type: 'GET',
+            success: function(groups){
                 $('#group-table-body').append(groups);
                 loading = false;
                 $('#loading').hide();
@@ -105,11 +105,11 @@
                     stop = true;
                 }
             },
-            function(){
+            complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
                     lazyloadGroups(route)
                 }
             }
-        )
+        })
     }
 })();

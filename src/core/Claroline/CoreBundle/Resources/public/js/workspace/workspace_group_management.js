@@ -62,9 +62,9 @@
         parameters.groupIds = array;
         var route = Routing.generate('claro_workspace_delete_groups', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
-        ClaroUtils.sendRequest(
-            route,
-            function(){
+        Claroline.Utilities.ajax({
+            url: route,
+            success: function(){
                 $('.chk-group:checked').each(function(index, element){
                      $(element).parent().parent().remove();
                 });
@@ -72,9 +72,8 @@
                 $('#validation-box-body').empty();
                 $('.delete-groups-button').attr('disabled', 'disabled');
             },
-            undefined,
-            'DELETE'
-        );
+            type: 'DELETE'
+        });
     });
 
     $('#modal-cancel-button').click(function(){
@@ -98,9 +97,9 @@
     function lazyloadGroups(route){
         loading = true;
         $('#loading').show();
-        ClaroUtils.sendRequest(
-            route(),
-            function(groups){
+        Claroline.Utilities.ajax({
+            url: route(),
+            success: function(groups){
                 $('#group-table-body').append(Twig.render(group_list, {
                     'groups': groups
                 }));
@@ -110,12 +109,13 @@
                     stop = true;
                 }
             },
-            function(){
+            complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
                     lazyloadGroups(route)
                 }
-            }
-        )
+            },
+            type: 'GET'
+        })
     }
 
     $('.button-parameters-group').live('click', function(e){
