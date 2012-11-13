@@ -76,7 +76,7 @@ class RssReaderListener extends ContainerAware
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
                 'isDefault' => $event->isDefault(),
-                'isDesktop' => $event->isDesktop()
+                'isDesktop' => false
                 )
             );
         } else {
@@ -94,7 +94,7 @@ class RssReaderListener extends ContainerAware
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {
 
-        $event->setContent('faurm');
+        $event->setContent('form');
     }
 
     private function getRssContent($rssconfig)

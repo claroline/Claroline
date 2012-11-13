@@ -8,9 +8,10 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetDesktopEvent
+class ConfigureWidgetDesktopEvent extends Event
 {
     private $user;
+    private $content;
 
     /**
      * Constructor.
@@ -23,7 +24,7 @@ class ConfigureWidgetDesktopEvent
         $this->isDefault = $isDefault;
     }
 
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -31,6 +32,16 @@ class ConfigureWidgetDesktopEvent
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 
 }
