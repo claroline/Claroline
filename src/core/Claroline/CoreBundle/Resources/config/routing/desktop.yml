@@ -29,7 +29,7 @@ claro_widget_properties:
     defaults: { _controller: ClarolineCoreBundle:Desktop:widgetProperties }
 
 claro_desktop_widget_invertvisible:
-    pattern: /config/{displayConfigId}/widget/{widgetId}/invert
+    pattern: /config/{displayConfigId}/widget/{widgetId}/invertvisible
     defaults: { _controller: ClarolineCoreBundle:Desktop:invertVisibleUserWidget }
     requirements:
       _method: POST

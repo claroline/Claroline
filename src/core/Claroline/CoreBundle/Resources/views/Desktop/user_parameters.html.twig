@@ -4,7 +4,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/clarolinecore/js/administration/widgets.js') }}" type="text/javascript"></script>
 {% endblock %}
-    
+
 {% block sectionContent %}
    {% spaceless %}
         <ul class="breadcrumb">
@@ -14,7 +14,7 @@
         </ul>
     {% endspaceless %}
     <ul>
-        <li>
+        <li class='li-user-parameters'>
             <a href="{{ path('claro_widget_properties') }}">{{ 'widgets'|trans({}, 'platform') }}</a>
         </li>
     </ul>

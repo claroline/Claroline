@@ -11,4 +11,9 @@ class Listener
        $event->setContent('someContent');
    }
 
+   function onConfigure($event)
+   {
+       $event->setContent('configure stub widget form');
+   }
+
 }

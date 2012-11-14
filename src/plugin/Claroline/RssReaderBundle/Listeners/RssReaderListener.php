@@ -36,9 +36,8 @@ class RssReaderListener extends ContainerAware
     public function onDesktopDisplay(DisplayWidgetEvent $event)
     {
         $repo = $this->container->get('doctrine.orm.entity_manager')->getRepository('Claroline\RssReaderBundle\Entity\Config');
-        $widget = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_rssreader'));
         $rssconfig = $repo->findOneBy(array('isDefault' => true));
-        
+
         //check if the config is correct
         if ($rssconfig == null) {
             $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
