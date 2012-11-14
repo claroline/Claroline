@@ -47,8 +47,7 @@ class AdministrationWidgetController extends Controller
         $event = new ConfigureWidgetWorkspaceEvent(null, true);
         $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
         $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if ($event->getContent() !== '') {
+        if ($event->getContent() != '') {
             return $this->render('ClarolineCoreBundle:Administration:widget_configuration.html.twig', array('content' => $event->getContent()));
         } else {
             throw new \Exception("event $eventName didn't return any Response");
@@ -63,7 +62,7 @@ class AdministrationWidgetController extends Controller
         $eventName = strtolower("widget_{$widget->getName()}_configuration_desktop");
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
-        if ($event->getContent() !== '') {
+        if ($event->getContent() != '') {
             return $this->render('ClarolineCoreBundle:Administration:widget_configuration.html.twig', array('content' => $event->getContent()));
         } else {
             throw new \Exception("event $eventName didn't return any Response");

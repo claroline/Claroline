@@ -47,11 +47,11 @@ class AdministrationControllerTest extends FunctionalTestCase
         $container = $client->getContainer();
         $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
         $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
-        $pluginFqcn = 'Valid\Simple\ValidSimple';
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
         $plugin = $loader->load($pluginFqcn);
         $container->get('claroline.plugin.recorder')->unregister($plugin);
         $container->get('claroline.plugin.migrator')->remove($plugin);
-        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $pluginFqcn = 'Valid\Simple\ValidSimple';
         $plugin = $loader->load($pluginFqcn);
         $container->get('claroline.plugin.recorder')->unregister($plugin);
         $container->get('claroline.plugin.migrator')->remove($plugin);
@@ -313,13 +313,13 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true, 'isDesktop' => false));
         //exampletext has 4 widgets
         $this->assertGreaterThan(3, count($configs));
         $this->client->request('POST', "/admin/plugin/visible/{$configs[0]->getId()}");
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true, 'isDesktop' => false));
         $this->assertGreaterThan(2, count($configs));
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => false));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => false, 'isDesktop' => false));
         $this->assertGreaterThan(0, count($configs));
     }
 
@@ -327,16 +327,54 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true, 'isDesktop' => false));
         //exampletext has 4 widgets
         $this->assertGreaterThan(3, count($configs));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true, 'isDesktop' => false));
         $this->assertGreaterThan(2, count($configs));
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => false));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => false, 'isDesktop' => false));
         $this->assertGreaterThan(0, count($configs));
     }
 
+    public function testDesktopDisplayVisibleWidgets()
+    {
+         $this->logUser($this->getFixtureReference('user/admin'));
+         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true, 'isDesktop' => true));
+         $crawler = $this->client->request('GET', '/desktop/info');
+         $this->assertEquals(count($crawler->filter('.widget')), count($configs));
+    }
+/*
+    public function testConfigureWorkspaceWidgetActionThrowsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $widget = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_mywidget1'));
+
+        $invoked = 0;
+        $dispatcher = $this->client->getContainer()->get('event_dispatcher');
+        //the event is never fired for some unknown reason.
+        //the dependency injection class from the plugin is never used either.
+        $dispatcher->addListener("widget_{$widget->getName()}_configuration_workspace", function () use (&$invoked) {
+            $invoked++;
+            var_dump('invok');
+        });
+
+        $this->client->request('GET', "/admin/widget/{$widget->getId()}/configuration/workspace");
+        $this->assertEquals(1, $invoked);
+
+//        var_dump($this->client->getResponse()->getContent());
+    }
+
+    public function testConfigureDesktopWidgetActionThrowsEvent()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $widgets = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
+        $this->client->request('GET', "/admin/widget/{$widgets[0]->getId()}/configuration/desktop");
+
+//        var_dump($this->client->getResponse()->getContent());
+    }
+*/
     private function getUser($username)
     {
         $user = $this->em

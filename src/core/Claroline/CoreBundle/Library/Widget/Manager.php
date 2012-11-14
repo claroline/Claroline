@@ -15,8 +15,8 @@ class Manager
 
     /**
      * Generate the the configuration of every widget of the current workspace.
-     * If the configuration was never defined before, a "fake" one is created (lvl1)
-     * wich can be persisted if you want to create it.
+     * If the configuration was never defined before, a temporary one is created (lvl1).
+     * Temporaries config have their id set to NULL.
      *
      * @param type $workspaceId
      * @return type
@@ -26,24 +26,9 @@ class Manager
         $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
 
         $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
+        var_dump(count($workspaceConfigs));
         $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => false)));
-/*
-        foreach ($workspaceConfigs as $workspaceConfig) {
-            if (!$workspaceConfig->getParent()->isLocked()) {
-                unset($adminConfigs[$workspaceConfig->getParent()->getId()]);
-            } else {
-                unset($workspaceConfigs[$workspaceConfig->getId()]);
-            }
-        }
 
-        $childConfigs = array();
-
-        foreach ($adminConfigs as $adminConfig) {
-            $childConfigs[] = $this->generateChild($adminConfig);
-        }
-
-        $configs = array_merge($workspaceConfigs, $childConfigs);
-*/
         return $this->mergeConfigs($adminConfigs, $workspaceConfigs);
     }
 
