@@ -6,7 +6,7 @@
 {% set isDefault = 0 %}
 {% endif %}
 <form class="form-horizontal" id="rss-reader-form"
-      action="{{ path('claro_rss_config_create', {'workspaceId': workspaceId, 'isDesktop':isDesktop, 'isDefault':isDefault}) }} "
+      action="{{ path('claro_rss_config_create', {'workspaceId': workspaceId, 'isDesktop':isDesktop, 'isDefault':isDefault, 'userId':userId}) }} "
       method="post" {{ form_enctype(form) }}
 >
     <fieldset>

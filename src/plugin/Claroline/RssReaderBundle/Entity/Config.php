@@ -24,6 +24,12 @@ class Config
     protected $workspace;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * @ORM\Column(type="string", name="url")
      */
     protected $url;
@@ -37,6 +43,8 @@ class Config
      * @ORM\Column(type="boolean", name="is_desktop")
      */
     protected $isDesktop = false;
+
+
 
     public function getId()
     {
@@ -81,6 +89,16 @@ class Config
     public function setDesktop($bool)
     {
         $this->isDesktop = $bool;
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 
 }
