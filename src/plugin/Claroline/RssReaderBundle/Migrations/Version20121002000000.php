@@ -26,6 +26,7 @@ class Version20121002000000 extends BundleMigration
         $table->addColumn('url', 'string', array('length' => 255));
         $table->addColumn('is_desktop', 'boolean');
         $table->addColumn('is_default', 'boolean');
+        $table->addColumn('user_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')

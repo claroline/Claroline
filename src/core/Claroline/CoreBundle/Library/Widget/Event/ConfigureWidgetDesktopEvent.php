@@ -44,5 +44,10 @@ class ConfigureWidgetDesktopEvent extends Event
         return $this->content;
     }
 
+    public function isDefault()
+    {
+        return $this->isDefault;
+    }
+
 }
 

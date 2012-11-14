@@ -24,9 +24,7 @@ class Manager
     public function generateWorkspaceDisplayConfig($workspaceId)
     {
         $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-
         $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
-        var_dump(count($workspaceConfigs));
         $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => false)));
 
         return $this->mergeConfigs($adminConfigs, $workspaceConfigs);
@@ -42,7 +40,7 @@ class Manager
         return $this->mergeConfigs($adminConfigs, $userConfigs);
     }
 
-    public function generateDisplayConfig($widgetId, $workspaceId)
+    private function getWorkspaceForcedConfig($widgetId, $workspaceId)
     {
         $wsConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('workspace' => $workspaceId, 'widget' => $widgetId));
         $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => false));
@@ -58,9 +56,35 @@ class Manager
         }
     }
 
-    public function isDefaultConfig($widgetId, $workspaceId)
+    public function isWorkspaceDefaultConfig($widgetId, $workspaceId)
     {
-        $dconfig = $this->generateDisplayConfig($widgetId, $workspaceId);
+        $dconfig = $this->getWorkspaceForcedConfig($widgetId, $workspaceId);
+        $bool = true;
+        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
+
+        return $bool;
+    }
+
+    private function getDesktopForcedConfig($widgetId, $userId)
+    {
+        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+        $userConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('user' => $userId, 'widget' => $widgetId));
+        $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => true));
+
+        if($userConfig != null){
+            if($userConfig->getParent()->isLocked()){
+                return $adminConfig;
+            } else {
+                return $userConfig;
+            }
+        } else {
+            return $adminConfig;
+        }
+    }
+
+    public function isDesktopDefaultConfig($widgetId, $userId)
+    {
+        $dconfig = $this->getDesktopForcedConfig($widgetId, $userId);
         $bool = true;
         ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
 

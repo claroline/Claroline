@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RssReaderController extends Controller
 {
-    public function createConfigAction($workspaceId, $isDesktop, $isDefault)
+    public function createConfigAction($workspaceId, $isDesktop, $isDefault, $userId)
     {
         $form = $this->get('form.factory')->create(new ConfigType(), new Config());
         $form->bindRequest($this->get('request'));
@@ -18,7 +18,9 @@ class RssReaderController extends Controller
         if ($form->isValid()) {
             $config = $form->getData();
             $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+            $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
             $config->setWorkspace($workspace);
+            $config->setUser($user);
             $config->setDesktop($isDesktop);
             $config->setDefault($isDefault);
             $em->persist($config);
@@ -29,7 +31,8 @@ class RssReaderController extends Controller
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
                 'isDesktop' => $isDesktop,
-                'isDefault' => $isDefault
+                'isDefault' => $isDefault,
+                'userId' => $userId
                 )
             );
         }
@@ -37,7 +40,11 @@ class RssReaderController extends Controller
         if ($config->getWorkspace() != null) {
             return new RedirectResponse($this->generateUrl('claro_workspace_home', array('workspaceId' => $config->getWorkspace()->getId())));
         } else {
+            if ($isDefault){
             return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
+            } else {
+                return new RedirectResponse($this->generateUrl('claro_desktop_index'));
+            }
         }
     }
 
