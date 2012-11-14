@@ -398,7 +398,7 @@ At first, get the claroline.resource.manager service.
 
 Then you must use the create() method.
 
-Here is the method's signature:
+Here is the method signature:
 
      create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null, $user = null)
 
@@ -582,6 +582,84 @@ This example will show you the main files of a basic HTML5 video player.
 
 ## Widgets
 
+### Configuring the widget
+
+This one is currently a little more complex. You can create your own configuration table for a widget and
+use its datas to display different informations depending on the context.
+
+#### Workspace
+
+The Claroline kernel works using a default configuration (defined by the admin) and a specific configuration for each different widget.
+The kernel will fire the *widget_**your_widget_name**_configuration_workspace* each time the configuration form is asked.
+First you must define a listener to catch the event.
+
+**listeners.yml file:**
+
+     - { name: kernel.event_listener, event: widget_claroline_my_widget_configuration_workspace, method: onWorkspaceConfigure }
+
+**listener class:**
+
+    public function onWorkspaceConfigure(ConfigureWidgetWorkspaceEvent $event)
+    {
+        ...
+    }
+
+You can know for wich workspace the configuration change is asked using
+
+    $workspace = $event->getWorkspace();
+
+If the $workspace is null, it means it's a change for the default configuration.
+
+You'll need to return the configuration form html to the kernel.
+
+    ...
+    $content = $this->container->get('templating')->render(
+        'MyVendorMyBundle::my_form.html.twig', array(
+        'form' => $form->createView(),
+        'rssConfig' => $config
+        )
+    );
+
+    $event->setContent($content);
+    $event->stopPropagation();
+
+The action of the form should redirect to one of your controller wich will persist the modification to the configuration.
+You'll have to take care of the redirection once the change are persisted.
+You'll want to redirect to these routes depending on the context:
+
+        if ($config->getWorkspace() != null) {
+            return new RedirectResponse($this->generateUrl('claro_workspace_home', array('workspaceId' => $config->getWorkspace()->getId())));
+        } else {
+            return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
+        }
+
+*In this snippet, the $config var is an entity of the plugin widget configuration table.*
+
+#### Desktop
+
+The kernel use the same system for the desktop widgets where the different workspace are replaced by the users of the platform.
+You can catch the event using
+
+**listeners.yml file:**
+
+     - { name: kernel.event_listener, event: widget_claroline_my_widget_configuration_Desktop, method: onDesktopConfigure }
+
+**listener class:**
+
+    public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
+    {
+        ...
+    }
+
+You can know for wich user the configuration change is asked using
+
+    $user = $event->getUser();
+
+If the $user is null, it means it's a change for the default configuration.
+
+
+### Displaying the widget
+
 Widgets can be displayed at 2 differents key pages:
 
 * Desktop home
@@ -590,7 +668,7 @@ Widgets can be displayed at 2 differents key pages:
 Every time a user is loading one of these page, the list of registered widgets will be loaded.
 Every time the platform wants to display a widget, the event is fired
 
-    widget_*widgetName*_*workspace|dashbloard*
+    widget_*widget_name*_*workspace|dekstop*
 
 Where
 
@@ -605,24 +683,34 @@ Define a listener in your listeners.yml file
     myvendor.listener.mybundle_widget:
       class: ...
       tags:
-        - { name: kernel.event_listener, event: widget_widgetname_desktop, method: onDisplay }
+        - { name: kernel.event_listener, event: widget_widgetname_workspace, method: onWorkspaceDisplay }
 
-## Listener implementation
+### Listener implementation
+
+#### Workspace
 
 Simply set a string in the $event->setContent() method.
 
     use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
     ...
-    function onDisplay(DisplayWidgetEvent $event)
+    function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {
         $event->setContent('someContent');
     }
 
+If your widget is configurable, you can find the context using $event->getWorkspace()->getId()
+Then you must know if the admin wants the default config to be used. You can know it using
 
-### Keeping the context
+    $boolean = $this->container->get('claroline.widget.manager')->isDefaultConfig($widget->getId(), $event->getWorkspace()->getId();
+
+###### Keeping the context
 
 You can retrieve the workspace using
     $event->getWorkspace();
+
+#### Desktop
+
+Not done yet.
 
 ## Notification & tracking
 

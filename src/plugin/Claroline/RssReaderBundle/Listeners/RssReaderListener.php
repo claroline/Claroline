@@ -91,7 +91,6 @@ class RssReaderListener extends ContainerAware
 
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {
-
         $event->setContent('form');
     }
 
