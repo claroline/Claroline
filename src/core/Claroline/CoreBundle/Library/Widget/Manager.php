@@ -19,7 +19,8 @@ class Manager
      * Temporaries config have their id set to NULL.
      *
      * @param type $workspaceId
-     * @return type
+     *
+     * @return array
      */
     public function generateWorkspaceDisplayConfig($workspaceId)
     {
@@ -30,6 +31,15 @@ class Manager
         return $this->mergeConfigs($adminConfigs, $workspaceConfigs);
     }
 
+    /**
+     * Generate the the configuration of every widget of the current user.
+     * If the configuration was never defined before, a temporary one is created (lvl1).
+     * Temporaries config have their id set to NULL.
+     *
+     * @param type $userId
+     *
+     * @return array
+     */
     public function generateDesktopDisplayConfig($userId)
     {
         $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
@@ -38,6 +48,44 @@ class Manager
         $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => true)));
 
         return $this->mergeConfigs($adminConfigs, $userConfigs);
+    }
+
+    /**
+     * Tells if the default config must be used (ie locked by the admin)
+     * in a workspace for these parameters:
+     * widgetId & workspaceId
+     *
+     * @param integer $widgetId
+     * @param integer $workspaceId
+     *
+     * @return boolean
+     */
+    public function isWorkspaceDefaultConfig($widgetId, $workspaceId)
+    {
+        $dconfig = $this->getWorkspaceForcedConfig($widgetId, $workspaceId);
+        $bool = true;
+        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
+
+        return $bool;
+    }
+
+    /**
+     * Tells if the default config must be used (ie locked by the admin)
+     * for a user for these parameters:
+     * widgetId & workspaceId
+     *
+     * @param integer $widgetId
+     * @param integer $userId
+     *
+     * @return boolean
+     */
+    public function isDesktopDefaultConfig($widgetId, $userId)
+    {
+        $dconfig = $this->getDesktopForcedConfig($widgetId, $userId);
+        $bool = true;
+        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
+
+        return $bool;
     }
 
     private function getWorkspaceForcedConfig($widgetId, $workspaceId)
@@ -56,15 +104,6 @@ class Manager
         }
     }
 
-    public function isWorkspaceDefaultConfig($widgetId, $workspaceId)
-    {
-        $dconfig = $this->getWorkspaceForcedConfig($widgetId, $workspaceId);
-        $bool = true;
-        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
-
-        return $bool;
-    }
-
     private function getDesktopForcedConfig($widgetId, $userId)
     {
         $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
@@ -80,15 +119,6 @@ class Manager
         } else {
             return $adminConfig;
         }
-    }
-
-    public function isDesktopDefaultConfig($widgetId, $userId)
-    {
-        $dconfig = $this->getDesktopForcedConfig($widgetId, $userId);
-        $bool = true;
-        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
-
-        return $bool;
     }
 
     private function setEntitiesArrayKeysAsIds($array)

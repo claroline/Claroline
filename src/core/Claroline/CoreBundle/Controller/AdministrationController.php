@@ -212,8 +212,8 @@ class AdministrationController extends Controller
     /**
      * Returns the platform group list.
      *
-     * @param $offset the offset.
-     * @param $format the format.
+     * @param integer $offset the offset.
+     * @param string $format the format.
      *
      * @return Response.
      */
@@ -355,7 +355,7 @@ class AdministrationController extends Controller
     /**
      * Returns a list of users not registered to the Group $group.
      *
-     * @param integer $group
+     * @param integer $groupId
      * @param integer $offset
      *
      * @return Response
@@ -465,7 +465,7 @@ class AdministrationController extends Controller
     /**
      * Deletes multiple groups.
      *
-     *  @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function multiDeleteGroupAction()
     {
