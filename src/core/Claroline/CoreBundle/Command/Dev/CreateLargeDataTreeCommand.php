@@ -9,6 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTreeData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
+/**
+ * Creates a large resource tree
+ */
 class CreateLargeDataTreeCommand extends ContainerAwareCommand
 {
 
