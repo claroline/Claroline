@@ -32,7 +32,7 @@ class FileControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
@@ -56,7 +56,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $node = $this->uploadFile($this->pwr->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/delete/{$node->id}");
+        $this->client->request('GET', "/resource/delete?ids[]={$node->id}");
         $this->client->request('POST', "/resource/children/{$this->pwr->getId()}");
         $file = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($file));
@@ -92,9 +92,8 @@ class FileControllerTest extends FunctionalTestCase
         $file =  $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-            ->find($stdFile->id)
-            ->getResource();
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($stdFile->id);
         $event = new CopyResourceEvent($file);
         $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_file', $event);
         $this->assertEquals(1, count($event->getCopy()));
@@ -107,7 +106,8 @@ class FileControllerTest extends FunctionalTestCase
             'POST',
             "/resource/create/file/{$parentId}",
             array('file_form' => array()),
-            array('file_form' => array('name' => $file))
+            array('file_form' => array('file' => $file, 'name' => 'name'))
+
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());

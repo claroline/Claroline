@@ -25,9 +25,9 @@ class ExampleTextListener extends ContainerAware
         //Be carefull, the resourceType is case sensitive.
         //If you don't want to use the default form, feel free to create your own.
         //Make sure the submit route is
-        //action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentInstanceId':'_instanceId'}) }}".
+        //action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentInstanceId':'_resourceId'}) }}".
         //Anything else different won't work.
-        //The '_instanceId' isn't a mistake, it's a placeholder wich will be replaced with js later on.
+        //The '_resourceId' isn't a mistake, it's a placeholder wich will be replaced with js later on.
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:create_form.html.twig', array(
@@ -73,13 +73,7 @@ class ExampleTextListener extends ContainerAware
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-
-        foreach ($event->getResources() as $exampleText) {
-            $em->remove($exampleText);
-            //not sure if the flush is needed
-            $em->flush();
-        }
-
+        $em->remove($event->getResource());
         $event->stopPropagation();
     }
 
@@ -97,10 +91,7 @@ class ExampleTextListener extends ContainerAware
     //Fired once a resource is exported (downloaded).
     public function onExport(ExportResourceEvent $event)
     {
-        $exampleText = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\ExampleTextBundle\Entity\ExampleText')
-            ->find($event->getResourceId());
-
+        $exampleText = $event->getResource();
         //create new temporary file wich contains our text.
         $tmpfname = tempnam(sys_get_temp_dir(), 'clarotemp').".txt";
         //the name of the exported file will be its current name with the $tmpfname extension.
@@ -112,7 +103,7 @@ class ExampleTextListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
         //Redirection to the controller.
-        $route = $this->container->get('router')->generate('claro_exampletext_open', array('exampleTextInstanceId' => $event->getInstanceId()));
+        $route = $this->container->get('router')->generate('claro_exampletext_open', array('exampleTextId' => $event->getResource()->getId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }

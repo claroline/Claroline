@@ -2,14 +2,14 @@
 
 namespace Claroline\CoreBundle\Library\Resource;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class Utilities
 {
-    public function getUniqueName (ResourceInstance $resourceInstance, ResourceInstance $parent)
+    public function getUniqueName (AbstractResource $resource, AbstractResource $parent)
     {
         $children = $parent->getChildren();
-        $name = $resourceInstance->getName();
+        $name = $resource->getName();
         $arName = explode('~', pathinfo($name, PATHINFO_FILENAME));
         $baseName = $arName[0];
         $nbName = 0;
@@ -19,7 +19,7 @@ class Utilities
                 $childArName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
                 $childBaseName = $childArName[0];
                 if($childBaseName == $baseName && pathinfo($child->getName(),
-                    PATHINFO_EXTENSION) == pathinfo($resourceInstance->getName(), PATHINFO_EXTENSION)) {
+                    PATHINFO_EXTENSION) == pathinfo($resource->getName(), PATHINFO_EXTENSION)) {
                     if(array_key_exists(1, $childArName)) {
                         $ind = $childArName[1];
                         if ($ind >= $nbName) {
@@ -33,9 +33,9 @@ class Utilities
             }
         }
         if (0 != $nbName) {
-            $newName = $baseName.'~'.$nbName.'.'.pathinfo($resourceInstance->getName(), PATHINFO_EXTENSION);
+            $newName = $baseName.'~'.$nbName.'.'.pathinfo($resource->getName(), PATHINFO_EXTENSION);
         } else {
-            $newName = $resourceInstance->getName();
+            $newName = $resource->getName();
         }
 
         return $newName;

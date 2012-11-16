@@ -67,13 +67,13 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $this->log('Number of files that will be generated: ' . $numTot * $this->fileCount);
         $this->user = $manager->getRepository('Claroline\CoreBundle\Entity\User')->findOneBy(array('username' => $this->username));
         $this->workspace = $this->user->getPersonalWorkspace();
-        $this->userRootDirectory = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+        $this->userRootDirectory = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->findOneBy(array('parent' => null, 'workspace' => $this->user->getPersonalWorkspace()->getId()));
         $this->dirType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findOneBy(array('name' => 'directory'));
         $this->fileType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findOneBy(array('name' => 'file'));
-        $nextId = $manager->createQuery('SELECT MAX(i.id) + 1 FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance i')
+        $nextId = $manager->createQuery('SELECT MAX(i.id) + 1 FROM Claroline\CoreBundle\Entity\Resource\AbstractResource i')
             ->getSingleResult();
         $this->generateItems($manager, $this->depth, 0, $this->directoryCount, $this->fileCount, $this->userRootDirectory, array_shift($nextId));
         $manager->flush();
@@ -141,17 +141,13 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $dir = new Directory();
         $dir->setResourceType($this->dirType);
         $dir->setCreator($this->user);
-        $ri = new ResourceInstance();
-        $ri->setCreator($this->user);
-        $ri->setResource($dir);
-        $ri->setName($name);
-        $ri->setParent($parent);
-        $ri->setWorkspace($this->workspace);
+        $dir->setName($name);
+        $dir->setParent($parent);
+        $dir->setWorkspace($this->workspace);
         $dir = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($dir, $this->dirType);
         $em->persist($dir);
-        $em->persist($ri);
 
-        return $ri;
+        return $dir;
     }
 
     private function addFile($em, $depth, $name, $mimeType, $parent)
@@ -165,15 +161,11 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $file->setSize(0);
         $file->setMimeType($mimeType);
         $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, $mimeType, true);
-        $ri = new ResourceInstance();
-        $ri->setCreator($this->user);
-        $ri->setResource($file);
-        $ri->setName($name);
-        $ri->setParent($parent);
-        $ri->setWorkspace($this->workspace);
+        $file->setName($name);
+        $file->setParent($parent);
+        $file->setWorkspace($this->workspace);
         $em->persist($file);
-        $em->persist($ri);
 
-        return $ri;
+        return $file;
     }
 }

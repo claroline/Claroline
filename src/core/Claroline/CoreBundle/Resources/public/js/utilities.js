@@ -216,8 +216,8 @@
                 }
             }
         }
-        $.ajax(ajaxOptions);
 
+        $.ajax(ajaxOptions);
     }
 
     /* Gets the <title> of a document

@@ -372,7 +372,7 @@
             render: function (form, targetResourceId, eventOnSubmit) {
                 this.targetResourceId = targetResourceId;
                 this.eventOnSubmit = eventOnSubmit;
-                form = form.replace('_instanceId', targetResourceId);
+                form = form.replace('_resourceId', targetResourceId);
                 $(this.el).html(Twig.render(modal_template, {
                     'body': form
                 })).modal();
@@ -434,7 +434,7 @@
                 this.custom(event.action, event.id);
             },
             'paste': function (event) {
-                this[event.isCutMode ? 'move' : 'add'](event.ids, event.directoryId);
+                this[event.isCutMode ? 'move' : 'copy'](event.ids, event.directoryId);
             },
             'breadcrumb-click': function (event) {
                 event.isPickerMode ?
@@ -558,16 +558,16 @@
         },
         delete_: function (resourceIds) {
             $.ajax({
-                url: this.parameters.appPath + '/resource/multidelete',
+                url: this.parameters.appPath + '/resource/delete',
                 data: {ids: resourceIds},
                 success: function () {
                     this.views.main.subViews.resources.removeResources(resourceIds);
                 }
             });
         },
-        add: function (resourceIds, directoryId) {
+        copy: function (resourceIds, directoryId) {
             $.ajax({
-                url: this.parameters.appPath + '/resource/workspace/multi/add/' + directoryId,
+                url: this.parameters.appPath + '/resource/copy/' + directoryId,
                 data: {ids: resourceIds},
                 success: function (data) {
                     this.views.main.subViews.resources.addThumbnails(data);
@@ -576,7 +576,7 @@
         },
         move: function (resourceIds, newParentDirectoryId) {
             $.ajax({
-                url: this.parameters.appPath + '/resource/multimove/' + newParentDirectoryId,
+                url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
                 data: {ids: resourceIds},
                 success: function (data) {
                     this.views.main.subViews.resources.addThumbnails(data);
@@ -584,7 +584,7 @@
             });
         },
         download: function (resourceIds) {
-            window.location = this.parameters.appPath + '/resource/multiexport?' + $.param({ids: resourceIds});
+            window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
         open: function (resourceType, resourceId) {
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId;

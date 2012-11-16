@@ -13,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 // TODO: Implements AdvancedUserInterface
@@ -123,14 +122,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance",
-     *      mappedBy="user"
-     * )
-     */
-    protected $resourceInstances;
-
-    /**
-     * @ORM\OneToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *      mappedBy="user"
      * )
@@ -156,7 +147,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
-        $this->resourceInstances = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
@@ -375,18 +365,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             $this->mail,
             $this->administrativeCode
             ) = unserialize($serialized);
-    }
-
-    public function getResourceInstances()
-    {
-        return $this->resourceInstances;
-    }
-
-    public function addResourceInstance(ResourceInstance $resourceInstance)
-    {
-         $resourceInstance->setCreator($this);
-        $this->resourceInstances->add($resourceInstance);
-
     }
 
     public function setPersonalWorkspace($workspace)

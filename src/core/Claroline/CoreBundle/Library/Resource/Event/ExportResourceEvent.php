@@ -4,13 +4,14 @@ namespace Claroline\CoreBundle\Library\Resource\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
  */
 class ExportResourceEvent extends Event
 {
-    private $resourceId;
+    private $resource;
     private $item;
 
     /**
@@ -18,9 +19,9 @@ class ExportResourceEvent extends Event
      *
      * @param integer $resourceId
      */
-    public function __construct($resourceId)
+    public function __construct(AbstractResource $resource)
     {
-        $this->resourceId = $resourceId;
+        $this->resource = $resource;
     }
 
     /**
@@ -28,9 +29,9 @@ class ExportResourceEvent extends Event
      *
      * @return integer
      */
-    public function getResourceId()
+    public function getResource()
     {
-        return $this->resourceId;
+        return $this->resource;
     }
 
     /**

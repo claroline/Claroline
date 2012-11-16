@@ -19,10 +19,10 @@ class ResourceLogger
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance")
-     * @ORM\JoinColumn(name="instance_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */
-    protected $instance;
+    protected $resource;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", cascade={"persist"})
@@ -74,14 +74,14 @@ class ResourceLogger
      */
     protected $path;
 
-    public function getInstance()
+    public function getResource()
     {
-        return $this->instance;
+        return $this->resource;
     }
 
-    public function setInstance($instance)
+    public function setResource($resource)
     {
-        $this->instance = $instance;
+        $this->resource = $resource;
     }
 
     public function getResourceType()

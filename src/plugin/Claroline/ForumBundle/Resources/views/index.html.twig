@@ -8,13 +8,13 @@
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_forum_open', {'instanceId': forumInstance.getId()}) }}">
-                {{ forumInstance.getName() }}
+            <a href="{{ path('claro_forum_open', {'resourceId': forum.getId()}) }}">
+                {{ forum.getName() }}
             </a>
         </li>
     </ul>
     <p>
-        <a href="{{ path('claro_forum_form_subject_creation', {'forumInstanceId': forumInstance.getId()}) }}">
+        <a href="{{ path('claro_forum_form_subject_creation', {'forumId': forum.getId()}) }}">
             <button class="btn">{{ 'new_subject'|trans({}, 'forum') }}</button>
         </a>
     </p>
@@ -30,7 +30,7 @@
     </table>
     <div id="twig-attributes"
          data-nbPages="{{ nbPages }}"
-         data-forumInstanceId="{{ forumInstance.getId() }}"
+         data-forumId="{{ forum.getId() }}"
          data-limit="{{ limit }}">
     </div>
 {% endblock %}

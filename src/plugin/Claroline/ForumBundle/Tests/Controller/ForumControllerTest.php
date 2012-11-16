@@ -15,11 +15,6 @@ class ForumControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->client->followRedirects();
-        $this->resourceInstanceRepository = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
     }
 
     public function tearDown()
@@ -61,7 +56,7 @@ class ForumControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($this->getFixtureReference('forum_instance/forum')->getId())
             ->getChildren();
 
