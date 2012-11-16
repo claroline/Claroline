@@ -6,16 +6,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\License;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+
 
 /**
  * Base entity for all resources.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AbstractResourceRepository")
  * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
+ * @Gedmo\Tree(type="materializedPath")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
  *     "file" = "File",
@@ -26,17 +28,14 @@ use Claroline\CoreBundle\Entity\License;
  */
 abstract class AbstractResource
 {
+    const PATH_SEPARATOR = '`';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="abstractResource", cascade={"persist", "remove"})
-     */
-    protected $resourceInstances;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResources", cascade={"persist"})
@@ -80,12 +79,66 @@ abstract class AbstractResource
     protected $icon;
 
     /**
+     * @Gedmo\TreePathSource
+     * @ORM\Column(type="string", length=255, name="name")
      * @Assert\NotBlank()
      */
     protected $name;
 
+    /**
+     * Note : Fetch "eager" option is required because on name update, in order to build
+     * the new path, the materialized path extension uses the reflection api to retrieve
+     * the resource's parents paths, but the parents are proxies and their "path" property
+     * is empty until it is lazy-loaded via the dedicated getter...
+     * (see Gedmo\Tree\Strategy\AbstractMaterializedPath, line 283 :
+     *  '$pathProp->getValue($parent)' returns null).
+     *
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *      inversedBy="children",
+     *      fetch="EAGER"
+     * )
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     * })
+     */
+    protected $parent;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    protected $lvl;
+
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *      mappedBy="parent"
+     * )
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    protected $children;
+
+    /**
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *      inversedBy="resources"
+     * )
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     */
+    protected $workspace;
+
+     /**
+    * @Gedmo\TreePath(separator="`")
+    * @ORM\Column(name="path", type="string", length=3000, nullable=true)
+    */
+    protected $path;
+
     const PRIVATE_RESOURCE = 0;
     const PUBLIC_RESOURCE = 1;
+
+
 
     /**
      * Constructor.
@@ -115,36 +168,6 @@ abstract class AbstractResource
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Adds a resource instance to the instance collection.
-     *
-     * @param ResourceInstance $resourceInstance
-     */
-    public function addResourceInstance(ResourceInstance $resourceInstance)
-    {
-        $this->resourceInstances->add($resourceInstance);
-    }
-
-    /**
-     * Removes a resource instance from the instance collection.
-     *
-     * @param ResourceInstance $resourceInstance
-     */
-    public function removeResourceInstance(ResourceInstance $resourceInstance)
-    {
-        $this->resourceInstances->removeElement($resourceInstance);
-    }
-
-    /**
-     * Returns the number of instances of the resource.
-     *
-     * @return integer
-     */
-    public function getInstanceCount()
-    {
-        return count($this->resourceInstances);
     }
 
     /**
@@ -263,29 +286,44 @@ abstract class AbstractResource
         $this->creator = $creator;
     }
 
-    /**
-     * Returns the instances of the resource.
+        /**
+     * Returns the children resource instances.
      *
-     * @return ArrayCollection[ResourceInstance]
+     * @return \Doctrine\Common\ArrayCollection
      */
-    public function getResourceInstances()
+    public function getChildren()
     {
-        return $this->resourceInstances;
+        return $this->children;
     }
 
     /**
-     * Returns the resource name. Required for the FormType.
+     * Adds a child resource.
      *
-     * @param type $name
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      */
-    public function setName($name)
+    public function addChild(AbstractResource $resource)
     {
-        $this->name = $name;
+        $this->children[] = $resource;
     }
 
-    public function getName()
+    /**
+     * Sets the workspace containing the resource instance.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
+    public function setWorkspace(AbstractWorkspace $workspace)
     {
-        return $this->name;
+        $this->workspace = $workspace;
+    }
+
+    /**
+     * Returns the workspace containing the resource instance.
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     */
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 
     public function getIcon()
@@ -296,5 +334,97 @@ abstract class AbstractResource
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    /**
+     * Sets the parent resource.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
+     */
+    public function setParent(AbstractResource $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Returns the parent resource.
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+        /**
+     * Return the lvl value of the resource in the tree.
+     *
+     * @return integer
+     */
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    /**
+     * Returns the "raw" path of the resource
+     * (the path merge names and ids of all items).
+     * Eg.: "Root-1/subdir-2/file.txt-3/"
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Returns the path cleaned from its ids.
+     * Eg.: "Root/subdir/file.txt"
+     * @return
+     */
+    public function getPathForDisplay()
+    {
+        return self::convertPathForDisplay($this->path);
+    }
+
+    /**
+     * Sets the resource name.
+     *
+     * @param string $name
+     * @throws an exception if the name contains the path separator ('/').
+     */
+    public function setName($name)
+    {
+        if (strpos(self::PATH_SEPARATOR, $name) !== false) {
+            throw new \InvalidArgumentException('Invalid character "' . self::PATH_SEPARATOR . '" in resource name.');
+        }
+
+        $this->name = $name;
+    }
+
+    /**
+     * Returns the resource name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Convert a path for display: remove ids.
+     * @param type $path
+     * @return string
+     */
+    public static function convertPathForDisplay($path)
+    {
+        $pathForDisplay = preg_replace('/-\d+' . self::PATH_SEPARATOR . '/', ' / ', $path);
+
+        if ($pathForDisplay !== null && strlen($pathForDisplay) > 0) {
+            $pathForDisplay = substr_replace($pathForDisplay, "", -3);
+        }
+
+        return $pathForDisplay;
     }
 }

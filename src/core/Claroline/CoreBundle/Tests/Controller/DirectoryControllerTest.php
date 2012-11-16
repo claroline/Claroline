@@ -26,7 +26,7 @@ class DirectoryControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
@@ -74,7 +74,10 @@ class DirectoryControllerTest extends FunctionalTestCase
         $object = new Directory();
         $object->setName('child_dir');
         $this->addResource($object, $dirRi->getId(), 'directory');
-        $this->client->request('GET', "/resource/delete/{$dirRi->getId()}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($dir));
+        $this->client->request('GET', "/resource/delete?ids[]={$dirRi->getId()}");
         $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($dir));
@@ -100,6 +103,6 @@ class DirectoryControllerTest extends FunctionalTestCase
         return $this->client
             ->getContainer()
             ->get('claroline.resource.manager')
-            ->create($object, $parentId, $resourceType, true, 'text/plain');
+            ->create($object, $parentId, $resourceType, 'text/plain');
     }
 }

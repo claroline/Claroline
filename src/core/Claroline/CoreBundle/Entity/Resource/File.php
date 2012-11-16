@@ -32,6 +32,9 @@ class File extends AbstractResource
      *
      * @return integer
      */
+
+    private $file;
+
     public function getSize()
     {
         return $this->size;
@@ -108,5 +111,15 @@ class File extends AbstractResource
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
+    }
+
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
     }
 }

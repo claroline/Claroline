@@ -3,31 +3,32 @@
 namespace Claroline\CoreBundle\Library\Resource\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Event dispatched by the resource controller when a resource deletion is asked.
  */
 class DeleteResourceEvent extends Event
 {
-    private $resources;
+    private $resource;
 
     /**
      * Constructor.
      *
-     * @param array[AbstractResource] $resources
+     * @param AbstractResource $resources
      */
-    public function __construct(array $resources)
+    public function __construct(AbstractResource $resource)
     {
-        $this->resources = $resources;
+        $this->resource = $resource;
     }
 
     /**
      * Returns the resource to be deleted.
      *
-     * @return array[AbstractResource]
+     * @return AbstractResource
      */
-    public function getResources()
+    public function getResource()
     {
-        return $this->resources;
+        return $this->resource;
     }
 }

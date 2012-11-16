@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 class Manager
@@ -53,7 +54,7 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentInstanceId, $resourceType, $returnInstance = true, $mimeType = null, $user = null)
+    public function create(AbstractResource $resource, $parentId, $resourceType, $mimeType = null, $user = null)
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => $resourceType));
 
@@ -62,31 +63,32 @@ class Manager
         }
 
         if (null !== $resource) {
-            $ri = new ResourceInstance();
-            $ri->setCreator($user);
-            $dir = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
-                ->find($parentInstanceId);
-            $ri->setParent($dir);
+
+            $resource->setCreator($user);
+            $parent = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                ->find($parentId);
+
+            $resource->setParent($parent);
             $resource->setResourceType($resourceType);
-            $ri->setWorkspace($dir->getWorkspace());
-            $ri->setResource($resource);
-            $ri->setName($resource->getName());
-            $rename = $this->ut->getUniqueName($ri, $dir);
-            $ri->setName($rename);
-            $this->em->persist($ri);
+            $resource->setWorkspace($parent->getWorkspace());
+            $rename = $this->ut->getUniqueName($resource, $parent);
+            $resource->setName($rename);
             $resource->setCreator($user);
             $this->em->persist($resource);
+
+
             $resource = $this->ic->setResourceIcon($resource, $mimeType);
             $this->em->flush();
 
+
             $event = new ResourceLoggerEvent(
-                $ri,
+                $resource,
                 ResourceLoggerEvent::CREATE_ACTION
             );
             $this->ed->dispatch('log_resource', $event);
 
-            return $returnInstance ? $ri : $resource;
+            return $resource;
         }
 
         throw \Exception("failed to create resource");
@@ -98,7 +100,7 @@ class Manager
      * @param ResourceInstance  $child
      * @param ResourceInstance  $parent
      */
-    public function move(ResourceInstance $child, ResourceInstance $parent)
+    public function move(AbstractResource $child, AbstractResource $parent)
     {
         $child->setWorkspace($parent->getWorkspace());
         $child->setParent($parent);
@@ -121,134 +123,100 @@ class Manager
     /**
      * Removes a resource instance.
      *
-     * @param ResourceInstance $resourceInstance
+     * @param AbstractResource $resource
      */
-    public function delete(ResourceInstance $resourceInstance)
+    public function delete(AbstractResource $resource)
     {
-        if (1 === $resourceInstance->getResource()->getInstanceCount()) {
+        if ($resource->getResourceType()->getName() !== 'directory') {
+            $eventName = $this->ut->normalizeEventName(
+                'delete', $resource->getResourceType()->getName()
+            );
 
-            if ($resourceInstance->getResourceType()->getName() !== 'directory') {
-                $eventName = $this->ut->normalizeEventName(
-                    'delete', $resourceInstance->getResourceType()->getName()
-                );
-                $event = new DeleteResourceEvent(array($resourceInstance->getResource()));
-                $this->ed->dispatch($eventName, $event);
-            } else {
-                $this->deleteDirectory($resourceInstance);
-            }
+            $event = new DeleteResourceEvent($resource);
+            $this->ed->dispatch($eventName, $event);
+
+        } else {
+            $this->deleteDirectory($resource);
         }
 
-        $resourceInstance->getResource()->removeResourceInstance($resourceInstance);
-        $this->em->remove($resourceInstance);
         $this->em->flush();
-        $event = new ResourceLoggerEvent(
-            $resourceInstance,
-            ResourceLoggerEvent::DELETE_ACTION
-        );
-        $this->ed->dispatch('log_resource', $event);
     }
 
     /**
-     * Adds a resource to a directory by reference.
+     * Copy a resource in a directory
      *
-     * @param ResourceInstance $resourceInstance
-     * @param ResourceInstance $parent
+     * @param AbstractResource $resource
+     * @param AbstractResource $parent
      */
-    public function addToDirectoryByReference(ResourceInstance $resourceInstance, ResourceInstance $parent)
+    public function copy(AbstractResource $resource, AbstractResource $parent)
     {
-        $resource = $resourceInstance->getResource();
+        $copy = $this->createCopy($resource);
+        $copy->setParent($parent);
+        $copy->setWorkspace($parent->getWorkspace());
+        $rename = $this->ut->getUniqueName($resource, $parent);
+        $copy->setName($rename);
 
-        if ($resource->getResourceType()->getName() != 'directory') {
-            $instanceCopy = $this->createReference($resource);
-            $instanceCopy->setParent($parent);
-            $instanceCopy->setWorkspace($parent->getWorkspace());
-            $rename = $this->ut->getUniqueName($resourceInstance, $parent);
-            $instanceCopy->setName($rename);
-        } else {
-            $instances = $resource->getResourceInstances();
-            $instanceCopy = $this->createCopy($instances[0]);
-            $instanceCopy->setParent($parent);
-            $instanceCopy->setWorkspace($parent->getWorkspace());
-            $rename = $this->ut->getUniqueName($resourceInstance, $parent);
-            $instanceCopy->setName($rename);
-
-            foreach ($instances[0]->getChildren() as $child) {
-                $this->addToDirectoryByReference($child, $instanceCopy);
+        if ($resource->getResourceType()->getName() == 'directory') {
+            foreach ($resource->getChildren() as $child) {
+                $this->copy($child, $copy);
             }
         }
 
         $logevent = new ResourceLoggerEvent(
-            $resourceInstance,
+            $resource,
             ResourceLoggerEvent::COPY_ACTION
         );
+
         $this->ed->dispatch('log_resource', $logevent);
-
-        $this->em->persist($instanceCopy);
-
-        return $instanceCopy;
+        $this->em->persist($copy);
+        $this->em->flush();
+        
+        return $copy;
     }
 
-    private function createCopy(ResourceInstance $resourceInstance)
+    /**
+     *  Creates a resource copy with no name
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $originalResource
+     *
+     * @return AbstractResource
+     */
+    private function createCopy(AbstractResource $originalResource)
     {
         $user = $this->sc->getToken()->getUser();
-        $ric = new ResourceInstance();
-        $ric->setCreator($user);
-        $this->em->flush();
 
-        if ($resourceInstance->getResourceType()->getName()=='directory') {
+        if ($originalResource->getResourceType()->getName()=='directory') {
             $resourceCopy = new Directory();
-            $resourceCopy->setName($resourceInstance->getResource()->getName());
-            $resourceCopy->setCreator($user);
             $resourceCopy->setResourceType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'));
-            $resourceCopy->addResourceInstance($ric);
-            $resourceCopy->setIcon($resourceInstance->getResource()->getIcon());
         } else {
-            $event = new CopyResourceEvent($resourceInstance->getResource());
-            $eventName = $this->ut->normalizeEventName('copy', $resourceInstance->getResourceType()->getName());
+            $event = new CopyResourceEvent($originalResource);
+            $eventName = $this->ut->normalizeEventName('copy', $originalResource->getResourceType()->getName());
             $this->ed->dispatch($eventName, $event);
             $resourceCopy = $event->getCopy();
-            $resourceCopy->setCreator($user);
-            $resourceCopy->setResourceType($resourceInstance->getResourceType());
-            $resourceCopy->addResourceInstance($ric);
+
+            $resourceCopy->setResourceType($originalResource->getResourceType());
         }
 
+        $resourceCopy->setCreator($user);
+        $resourceCopy->setIcon($originalResource->getIcon());
         $this->em->persist($resourceCopy);
-        $ric->setResource($resourceCopy);
 
-        return $ric;
+        return $resourceCopy;
     }
 
-    private function createReference(AbstractResource $resource)
+    private function deleteDirectory(AbstractResource $resource)
     {
-        $ric = new ResourceInstance();
-        $ric->setCreator($this->sc->getToken()->getUser());
-        $ric->setResource($resource);
-        $resource->addResourceInstance($ric);
-
-        return $ric;
-    }
-
-    private function deleteDirectory(ResourceInstance $directoryInstance)
-    {
-        if ($directoryInstance->getParent() === null){
+        if ($resource->getParent() === null){
            throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->getChildren($directoryInstance, false);
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getChildren($resource, false);
         foreach ($children as $child) {
-            $rsrc = $child->getResource();
-            if ($rsrc->getInstanceCount() === 1) {
-                if ($child->getResourceType()->getName() == 'directory') {
-                   $this->em->remove($rsrc);
-                   $this->em->flush();
-                } else {
-                    $event = new DeleteResourceEvent(array($child->getResource()));
-                    $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
-                    $this->em->flush();
-                }
-            }
+            $event = new DeleteResourceEvent($child);
+            $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
+            $this->em->flush();
         }
 
-        $this->em->remove($directoryInstance->getResource());
+        $this->em->remove($resource);
     }
 }

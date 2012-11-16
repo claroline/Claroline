@@ -62,9 +62,9 @@ abstract class AbstractWorkspace
     protected $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceInstance", mappedBy="workspace")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="workspace")
      */
-    protected $resourcesInstance;
+    protected $resources;
 
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -269,9 +269,9 @@ abstract class AbstractWorkspace
         return $this->roles;
     }
 
-    public function getResourcesInstance()
+    public function getResources()
     {
-        return $this->resourcesInstance;
+        return $this->resources;
     }
 
     public function setType($type)

@@ -43,7 +43,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $creator = $this->getContainer()->get('claroline.resource.manager');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
-        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
         $maxOffset = count($collaborators);
@@ -51,10 +51,8 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $maxOffset--;
         $forum = new Forum();
         $forum->setName($this->forumName);
-        $manager->persist($forum);
-        $manager->flush();
-        $forumInstance = $creator->create($forum, $root->getId(), 'claroline_forum', true, null, $user);
-        $this->log("forum {$forumInstance->getName()} created");
+        $forum = $creator->create($forum, $root->getId(), 'claroline_forum', null, $user);
+        $this->log("forum {$forum->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
             $title = $this->generateLipsum(5);
@@ -63,10 +61,9 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject->setName($title);
             $subject->setTitle($title);
             $subject->setCreator($user);
-            $subject->setForum($forumInstance->getResource());
-            $manager->persist($subject);
+            $subject->setForum($forum);
             $this->log("subject $title created");
-            $subjectInstance = $creator->create($subject, $forumInstance->getId(), 'claroline_subject', true, null, $user);
+            $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', null, $user);
 
             $entityToBeDetached = array();
             for ($j=0; $j<$this->nbMessages; $j++){
@@ -77,7 +74,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $message->setCreator($sender);
                 $message->setContent($this->generateLipsum(150, true));
                 $message->setSubject($subject);
-                $inst = $creator->create($message, $subjectInstance->getId(), 'claroline_message', true, null, $sender);
+                $inst = $creator->create($message, $subject->getId(), 'claroline_message', null, $sender);
                 $entityToBeDetached[] = $message;
                 $entityToBeDetached[] = $inst;
             }
@@ -89,7 +86,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
 
         $manager->flush();
 
-        $this->addReference("forum_instance/forum", $forumInstance);
+        $this->addReference("forum_instance/forum", $forum);
     }
 
     private function getArrayLipsum()

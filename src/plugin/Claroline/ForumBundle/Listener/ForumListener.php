@@ -5,7 +5,7 @@ namespace Claroline\ForumBundle\Listener;
 use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumOptionsType;
@@ -56,7 +56,7 @@ class ForumListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->container->get('router')->generate('claro_forum_open', array('instanceId' => $event->getInstanceId()));
+        $route = $this->container->get('router')->generate('claro_forum_open', array('resourceId' => $event->getResource()->getId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
@@ -72,6 +72,13 @@ class ForumListener extends ContainerAware
         );
         $response = new Response($content);
         $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    public function onDelete(DeleteResourceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->remove($event->getResource());
         $event->stopPropagation();
     }
 }

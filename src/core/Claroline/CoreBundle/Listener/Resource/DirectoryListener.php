@@ -3,12 +3,10 @@
 namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Resource\ResourceEvent;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 
 
 class DirectoryListener extends ContainerAware

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Utilities;
 use \stdClass;
 use \RuntimeException;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Utility class gathering conversion methods for Doctrine entities.
@@ -35,8 +35,8 @@ class EntityConverter
      */
     public function toStdClass($entity)
     {
-        if ($entity instanceof ResourceInstance) {
-            return $this->prepareResourceInstance($entity);
+        if ($entity instanceof AbstractResource) {
+            return $this->prepareResourceEntity($entity);
         }
 
         throw new RuntimeException('Unable to convert entity of type : ' . get_class($entity));
@@ -54,28 +54,25 @@ class EntityConverter
         return json_encode($this->toStdClass($entity));
     }
 
-    private function prepareResourceInstance(ResourceInstance $instance)
+    private function prepareResourceEntity(AbstractResource $resource)
     {
         $preparedInstance = new stdClass();
-        $preparedInstance->{'id'} = $instance->getId();
-        $preparedInstance->{'name'} = $instance->getName();
-        $preparedInstance->{'created'} = $instance->getCreationDate()->format('d-m-Y H:i:s');
-        $preparedInstance->{'updated'} = $instance->getModificationDate()->format('d-m-Y H:i:s');
-        $preparedInstance->{'lvl'} = $instance->getLvl();
-        $preparedInstance->{'parent_id'} = $instance->getParent() != null ? $instance->getParent()->getId() : null;
-        $preparedInstance->{'workspace_id'} = $instance->getWorkspace()->getId();
-        $preparedInstance->{'resource_id'} = $instance->getResource()->getId();
-        $preparedInstance->{'instanceCreator_id'} = $instance->getCreator()->getId();
-        $preparedInstance->{'instance_creator_username'} = $instance->getCreator()->getUsername();
-        $preparedInstance->{'resource_creator_id'} = $instance->getResource()->getCreator()->getId();
-        $preparedInstance->{'resource_creator_username'} = $instance->getResource()->getCreator()->getUsername();
-        $preparedInstance->{'resource_type_id'} = $instance->getResource()->getResourceType()->getId();
-        $preparedInstance->{'type'} = $instance->getResource()->getResourceType()->getName();
-        $preparedInstance->{'is_navigable'} = $instance->getResourceType()->getBrowsable();
-        $preparedInstance->{'small_icon'} = $instance->getResource()->getIcon()->getSmallIcon();
-        $preparedInstance->{'large_icon'} = $instance->getResource()->getIcon()->getLargeIcon();
-        $preparedInstance->{'path'} = $instance->getPath();
-        $preparedInstance->{'path_for_display'} = $instance->getPathForDisplay();
+        $preparedInstance->{'id'} = $resource->getId();
+        $preparedInstance->{'name'} = $resource->getName();
+        $preparedInstance->{'created'} = $resource->getCreationDate()->format('d-m-Y H:i:s');
+        $preparedInstance->{'updated'} = $resource->getModificationDate()->format('d-m-Y H:i:s');
+        $preparedInstance->{'lvl'} = $resource->getLvl();
+        $preparedInstance->{'parent_id'} = $resource->getParent() != null ? $resource->getParent()->getId() : null;
+        $preparedInstance->{'workspace_id'} = $resource->getWorkspace()->getId();
+        $preparedInstance->{'creator_id'} = $resource->getCreator()->getId();
+        $preparedInstance->{'creator_username'} = $resource->getCreator()->getUsername();
+        $preparedInstance->{'resource_type_id'} = $resource->getResourceType()->getId();
+        $preparedInstance->{'type'} = $resource->getResourceType()->getName();
+        $preparedInstance->{'is_navigable'} = $resource->getResourceType()->getBrowsable();
+        $preparedInstance->{'small_icon'} = $resource->getIcon()->getSmallIcon();
+        $preparedInstance->{'large_icon'} = $resource->getIcon()->getLargeIcon();
+        $preparedInstance->{'path'} = $resource->getPath();
+        $preparedInstance->{'path_for_display'} = $resource->getPathForDisplay();
 
         return $preparedInstance;
     }

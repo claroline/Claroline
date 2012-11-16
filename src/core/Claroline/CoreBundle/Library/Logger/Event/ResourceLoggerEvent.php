@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 class ResourceLoggerEvent extends Event
 {
-    private $instance;
+    private $resource;
     private $action;
     private $logDescr;
     private $url;
@@ -20,25 +20,21 @@ class ResourceLoggerEvent extends Event
 
     /**
      * Constructor.
-     *
-     * @param integer $resourceId
      */
-    public function __construct($instance, $action, $logDescr = null, $url = null)
+    public function __construct($resource, $action, $logDescr = null, $url = null)
     {
-        $this->instance = $instance;
+        $this->resource = $resource;
         $this->action = $action;
         $this->logDescr = $logDescr;
         $this->url = $url;
     }
 
     /**
-     * Returns the id of the resource on which the action is to be taken.
-     *
-     * @return integer
+     * Returns the resource on which the action is to be taken.
      */
-    public function getInstance()
+    public function getResource()
     {
-        return $this->instance;
+        return $this->resource;
     }
 
     public function getAction()
