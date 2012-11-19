@@ -99,37 +99,18 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getName());
     }
 
-    public function testLargeIconsArePersisted()
+    public function testResourceIconsArePersisted()
     {
         $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithLargeIcon{$ds}Entity{$ds}ResourceX.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithResourceIcon{$ds}Entity{$ds}ResourceX.php";
 
-        $pluginFqcn = 'Valid\WithLargeIcon\ValidWithLargeIcon';
+        $pluginFqcn = 'Valid\WithResourceIcon\ValidWithResourceIcon';
         $plugin = $this->loader->load($pluginFqcn);
         $this->dbWriter->insert($plugin);
 
         $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon ri
-            WHERE ri.largeIcon LIKE '%validwithlargeicon%'
-            ";
-
-        $resourceIcon = $this->em->createQuery($dql)->getResult();
-        $this->assertEquals(1, count($resourceIcon));
-        $this->assertEquals($resourceIcon[0]->getIconType()->getIconType(), 'type');
-    }
-
-    public function testSmallIconsArePersisted()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithSmallIcon{$ds}Entity{$ds}ResourceX.php";
-
-        $pluginFqcn = 'Valid\WithSmallIcon\ValidWithSmallIcon';
-        $plugin = $this->loader->load($pluginFqcn);
-        $this->dbWriter->insert($plugin);
-
-        $dql = "
-            SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon ri
-            WHERE ri.smallIcon LIKE '%validwithsmallicon%'
+            WHERE ri.iconLocation LIKE '%validwithlargeicon%'
             ";
 
         $resourceIcon = $this->em->createQuery($dql)->getResult();

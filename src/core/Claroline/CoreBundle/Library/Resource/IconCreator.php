@@ -153,9 +153,8 @@ class IconCreator
                     ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
                     ->find(IconType::GENERATED);
                 $icon->setIconType($generatedIconType);
-                $icon->setLargeIcon($iconName);
+                $icon->setIconLocation($iconName);
                 $icon->setType('generated');
-                $icon->setSmallIcon(null); //null for now
                 $this->em->persist($icon);
                 $this->em->flush();
 

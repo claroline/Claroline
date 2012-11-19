@@ -123,6 +123,12 @@ rename: Rename
 reset: Reset
 resource: Resource
 resource_manager: Resource manager
+resource_properties_form_shareType: Redistribution
+resource_properties_form_name: Nom
+resource_properties_form_userIcon: Icône
+resource_properties_form_shareType: Share type
+resource_properties_form_name: Name
+resource_properties_form_userIcon: Icon
 resources: Resources
 results: Results
 role: Role

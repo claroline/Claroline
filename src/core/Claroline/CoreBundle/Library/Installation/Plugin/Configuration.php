@@ -81,22 +81,14 @@ class Configuration implements ConfigurationInterface
                             ->end()
                        ->booleanNode('is_visible')->isRequired()->end()
                        ->booleanNode('is_browsable')->isRequired()->end()
-                       ->scalarNode('large_icon')
+                       ->scalarNode('icon')
                            ->validate()
                                 ->ifTrue(function($v) use ($plugin) {
-                                    return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isLargeIconValid', array($v, $plugin));
+                                    return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isResourceIconValid', array($v, $plugin));
                                 })
-                                ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}large{$ds}%s)")
+                                ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}%s)")
                            ->end()
                        ->end()
-                       ->scalarNode('small_icon')
-                           ->validate()
-                                ->ifTrue(function($v) use ($plugin) {
-                                    return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isSmallIconValid', array($v, $plugin));
-                                })
-                                ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}small{$ds}%s)")
-                           ->end()
-                        ->end()
                        ->arrayNode('actions')
                          ->prototype('array')
                             ->children()
@@ -159,11 +151,11 @@ class Configuration implements ConfigurationInterface
         return false;
     }
 
-    public static function isLargeIconValid($v, $plugin)
+    public static function isResourceIconValid($v, $plugin)
     {
         $ds = DIRECTORY_SEPARATOR;
         $imgFolder = $plugin->getImgFolder();
-        $expectedImgLocation = $imgFolder . $ds . 'large' . $ds . $v;
+        $expectedImgLocation = $imgFolder . $ds . $ds . $v;
 
         if (file_exists($expectedImgLocation)) {
 
