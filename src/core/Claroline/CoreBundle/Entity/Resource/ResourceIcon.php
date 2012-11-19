@@ -20,15 +20,10 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="large_icon")
+     * @ORM\Column(type="string", name="icon_location")
      */
-    protected $largeIcon;
+    protected $iconLocation;
 
-    /**
-     * @ORM\Column(type="string", name="small_icon")
-     */
-
-    protected $smallIcon;
     /**
      * @ORM\Column(type="string", name="type")
      */
@@ -64,24 +59,14 @@ class ResourceIcon
         return $this->id;
     }
 
-    public function getLargeIcon()
+    public function getIconLocation()
     {
-        return $this->largeIcon;
+        return $this->iconLocation;
     }
 
-    public function setLargeIcon($largeIcon)
+    public function setIconLocation($iconLocation)
     {
-        $this->largeIcon = $largeIcon;
-    }
-
-    public function getSmallIcon()
-    {
-        return $this->smallIcon;
-    }
-
-    public function setSmallIcon($smallIcon)
-    {
-        $this->smallIcon = $smallIcon;
+        $this->iconLocation = $iconLocation;
     }
 
     public function getAbstractResources()

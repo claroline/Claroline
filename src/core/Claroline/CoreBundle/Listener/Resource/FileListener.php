@@ -52,6 +52,7 @@ class FileListener extends ContainerAware
             $file->setMimeType($mimeType);
             $event->setResource($file);
             $event->stopPropagation();
+
             return;
         }
 

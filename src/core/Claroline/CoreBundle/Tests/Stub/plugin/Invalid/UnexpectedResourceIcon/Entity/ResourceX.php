@@ -1,6 +1,6 @@
 <?php
 
-namespace Invalid\UnexpectedSmallIcon\Entity;
+namespace Invalid\UnexpectedResourceIcon\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;

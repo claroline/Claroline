@@ -52,6 +52,7 @@ class DatabaseWriter
         $errors = $this->validator->validate($plugin);
 
         if(0!= count($errors)){
+//            var_dump($errors);
             return $errors;
         }
 
@@ -67,7 +68,7 @@ class DatabaseWriter
             $defaultIcon = $this->em
                 ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
                 ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
-            $pluginEntity->setIcon($defaultIcon->getLargeIcon());
+            $pluginEntity->setIcon($defaultIcon->getIconLocation());
         }
 
         $this->em->persist($pluginEntity);
@@ -159,16 +160,10 @@ class DatabaseWriter
         $resourceIcon->setIconType($defaultIconType);
         $resourceIcon->setType($resourceType->getName());
 
-        if (isset($resource['small_icon'])) {
-            $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$resource['small_icon']}");
+        if (isset($resource['icon'])) {
+            $resourceIcon->setIconLocation("bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}");
         } else {
-            $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
-        }
-
-        if (isset($resource['large_icon'])) {
-            $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$resource['large_icon']}");
-        } else {
-            $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
+            $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
         }
 
         $this->em->persist($resourceIcon);

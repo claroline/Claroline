@@ -1,6 +1,6 @@
 <?php
 
-namespace Valid\WithSmallIcon\Entity;
+namespace Valid\WithResourceIcon\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
