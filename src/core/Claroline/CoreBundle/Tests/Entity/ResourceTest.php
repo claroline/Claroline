@@ -17,6 +17,7 @@ class ResourceTest extends FixtureTestCase
     {
         $resource = new Directory();
         $resource->setName('Test');
+        $resource->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
         $resource->setCreator($this->getFixtureReference('user/admin'));
         $this->getEntityManager()->persist($resource);
         $this->getEntityManager()->flush();
