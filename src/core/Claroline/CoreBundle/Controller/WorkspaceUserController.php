@@ -165,7 +165,7 @@ class WorkspaceUserController extends Controller
      */
     //todo: detach($user)
     //todo: flush outsite the loop
-    public function multiAddUserAction($workspaceId)
+    public function addUsersAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
         $users = array();
@@ -252,7 +252,7 @@ class WorkspaceUserController extends Controller
      *
      * @return Response
      */
-    public function removeMultipleUsersAction($workspaceId)
+    public function removeUsersAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
