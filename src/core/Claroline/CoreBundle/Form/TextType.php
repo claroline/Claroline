@@ -11,12 +11,6 @@ class TextType extends AbstractType
     {
         $builder->add('name', 'text');
         $builder->add('text', 'textarea');
-        $builder->add('shareType', 'choice', array(
-            'choices' => array(true => 'public', false => 'private'),
-            'multiple' => false,
-            'expanded' => false,
-            'label' => 'sharable'
-        ));
     }
 
     public function getName()
