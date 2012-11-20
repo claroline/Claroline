@@ -293,14 +293,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count($jsonResponse));
     }
 
-    public function testFlatPagination()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createBigTree($this->pwr->getId());
-        $this->client->request('POST', "/resource/instance/flat/1");
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
     public function testDelete()
     {
         $this->logUser($this->getFixtureReference('user/user'));

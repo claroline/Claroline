@@ -458,36 +458,6 @@ class ResourceController extends Controller
         return $response;
     }
 
-    /**
-     * Returns the number of non directory instances for the current user
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function countPageInstanceAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $count = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->countResourceInstancesForUser($user);
-        $pages = ceil($count/self::THUMB_PER_PAGE);
-
-        return new Response($pages);
-    }
-
-    public function paginatedFlatResourceAction($page)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $results = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->listResourcesForUser($user, true, ($page-1)*self::THUMB_PER_PAGE, self::THUMB_PER_PAGE);
-
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
     private function removeOldIcon($resource){
         $icon = $resource->getIcon();
 
