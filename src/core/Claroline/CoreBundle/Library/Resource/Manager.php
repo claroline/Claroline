@@ -78,17 +78,17 @@ class Manager
             $resource->setCreator($user);
 
             if ($resource->getUserIcon() == null){
-                 $this->em->persist($resource);
                 $resource = $this->ic->setResourceIcon($resource, $mimeType);
+
             } else {
                 //upload the icon
                 $iconFile = $resource->getUserIcon();
                 $icon = $this->createCustomIcon($iconFile);
                 $this->em->persist($icon);
                 $resource->setIcon($icon);
-                $this->em->persist($resource);
             }
-
+            
+            $this->em->persist($resource);
             $this->em->flush();
 
 

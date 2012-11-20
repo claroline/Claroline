@@ -417,18 +417,17 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
         $this->client->request(
-            'POST', "/resource/create/file/{$parentId}", array('file_form' => array('shareType' => $shareType)), array('file_form' => array('file' => $file, 'name' => 'tmp'))
+            'POST', "/resource/create/file/{$parentId}", array('file_form' => array()), array('file_form' => array('file' => $file, 'name' => 'tmp'))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
-
         return $obj[0];
     }
 
     private function createDirectory($parentId, $name, $shareType = 1)
     {
         $this->client->request(
-            'POST', "/resource/create/directory/{$parentId}", array('directory_form' => array('name' => $name, 'shareType' => $shareType))
+            'POST', "/resource/create/directory/{$parentId}", array('directory_form' => array('name' => $name))
         );
         $obj = json_decode($this->client->getResponse()->getContent());
 
