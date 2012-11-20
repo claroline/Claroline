@@ -15,11 +15,6 @@ use Claroline\ForumBundle\Entity\Forum;
  */
 class Subject extends AbstractResource
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ForumBundle\Entity\Forum", inversedBy="subjects", cascade={"persist"})
-     * @ORM\JoinColumn(name="forum_id", referencedColumnName="id")
-     */
-    protected $forum;
 
     /**
      * @ORM\Column(type="string", name="title")
@@ -35,16 +30,6 @@ class Subject extends AbstractResource
     public function __construct()
     {
         $this->messages = new ArrayCollection();
-    }
-
-    public function getForum()
-    {
-        return $this->forum;
-    }
-
-    public function setForum(Forum $forum)
-    {
-        $this->forum = $forum;
     }
 
     public function getTitle()

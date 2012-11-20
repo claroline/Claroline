@@ -20,12 +20,6 @@ class Message extends AbstractResource
      */
     protected $content;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ForumBundle\Entity\Subject", inversedBy="messages", cascade={"persist"})
-     * @ORM\JoinColumn(name="forum_subject_id", referencedColumnName="id")
-     */
-    protected $subject;
-
     public function setContent($content)
     {
         $this->content = $content;
@@ -34,15 +28,5 @@ class Message extends AbstractResource
     public function getContent()
     {
         return $this->content;
-    }
-
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    public function setSubject(Subject $subject)
-    {
-        $this->subject = $subject;
     }
 }
