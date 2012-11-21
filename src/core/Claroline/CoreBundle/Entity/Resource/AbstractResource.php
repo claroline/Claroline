@@ -129,11 +129,14 @@ abstract class AbstractResource
      */
     protected $workspace;
 
-     /**
+   /**
     * @Gedmo\TreePath(separator="`")
     * @ORM\Column(name="path", type="string", length=3000, nullable=true)
     */
     protected $path;
+
+    //the user icon
+    protected $userIcon;
 
     const PRIVATE_RESOURCE = 0;
     const PUBLIC_RESOURCE = 1;
@@ -410,6 +413,24 @@ abstract class AbstractResource
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Sets a user icon.
+     * @param file $iconFile
+     */
+    public function setUserIcon($userIcon)
+    {
+        $this->userIcon = $userIcon;
+    }
+
+    /**
+     * Gets the user icon.
+     * @return file
+     */
+    public function getUserIcon()
+    {
+        return $this->userIcon;
     }
 
     /**

@@ -40,13 +40,9 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('title', 'string', array('length' => 250));
-        $table->addColumn('forum_id', 'integer');
         $this->storeTable($table);
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_forum'), array('forum_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
 
@@ -56,19 +52,15 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('content', 'text');
-        $table->addColumn('forum_subject_id', 'integer');
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
-        );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_forum_subject'), array('forum_subject_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
 
     private function createForumOptionsTable(Schema $schema)
     {
         $table = $schema->createTable('claro_forum_options');
-        
+
         $this->addId($table);
         $table->addColumn('subjects', 'integer');
         $table->addColumn('messages', 'integer');

@@ -35,7 +35,7 @@ class ForumListenerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $userRoot = $this->resourceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
-        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test', 'shareType' => 0)));
+        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test')));
         $this->assertEquals(count(json_decode($this->client->getResponse()->getContent())), 1);
     }
 
@@ -44,7 +44,7 @@ class ForumListenerTest extends FunctionalTestCase
         $this->loadFixture(new LoadOptionsData());
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $userRoot = $this->resourceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
-        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test', 'shareType' => 0)));
+        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test')));
         $datas = json_decode($this->client->getResponse()->getContent());
         $crawler = $this->client->request('POST', "/resource/open/claroline_forum/{$datas[0]->id}");
         $this->assertEquals(1, count($crawler->filter('#subjects_table')));

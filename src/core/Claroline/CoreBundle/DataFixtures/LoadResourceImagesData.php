@@ -28,7 +28,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function load (ObjectManager $manager)
     {
-        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type', 'default');
+        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type', 'default', 'custom');
         $defaultIconType = null;
         $basicIconMimeType = null;
         $completeIconMimeType = null;
@@ -55,7 +55,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             }
         }
 
-        $largeIconsWebFolder = 'bundles/clarolinecore/images/resources/icons/large/';
+        $largeIconsWebFolder = 'bundles/clarolinecore/images/resources/icons/';
         $defaultIcon = null;
 
         /*
@@ -85,8 +85,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
 
         foreach ($resourceImages as $resourceImage) {
             $rimg = new ResourceIcon();
-            $rimg->setLargeIcon($resourceImage[0]);
-            $rimg->setSmallIcon($resourceImage[1]);
+            $rimg->setIconLocation($resourceImage[0]);
             $rimg->setIconType($resourceImage[2]);
             $rimg->setType($resourceImage[3]);
             $manager->persist($rimg);

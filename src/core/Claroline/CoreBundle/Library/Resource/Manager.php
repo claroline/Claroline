@@ -6,7 +6,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
@@ -50,7 +51,7 @@ class Manager
      * @param AbstractResource $object
      * @param boolean          $instance the return type
      *
-     * @return ResourceInstance | Resource
+     * @return  Abstractesource
      *
      * @throws \Exception
      */
@@ -75,10 +76,19 @@ class Manager
             $rename = $this->ut->getUniqueName($resource, $parent);
             $resource->setName($rename);
             $resource->setCreator($user);
+
+            if ($resource->getUserIcon() == null){
+                $resource = $this->ic->setResourceIcon($resource, $mimeType);
+
+            } else {
+                //upload the icon
+                $iconFile = $resource->getUserIcon();
+                $icon = $this->createCustomIcon($iconFile);
+                $this->em->persist($icon);
+                $resource->setIcon($icon);
+            }
+            
             $this->em->persist($resource);
-
-
-            $resource = $this->ic->setResourceIcon($resource, $mimeType);
             $this->em->flush();
 
 
@@ -97,8 +107,8 @@ class Manager
     /**
      * Moves a resource instance.
      *
-     * @param ResourceInstance  $child
-     * @param ResourceInstance  $parent
+     * @param Abstractesource  $child
+     * @param Abstractesource  $parent
      */
     public function move(AbstractResource $child, AbstractResource $parent)
     {
@@ -170,7 +180,7 @@ class Manager
         $this->ed->dispatch('log_resource', $logevent);
         $this->em->persist($copy);
         $this->em->flush();
-        
+
         return $copy;
     }
 
@@ -218,5 +228,20 @@ class Manager
         }
 
         $this->em->remove($resource);
+    }
+
+    public function createCustomIcon($file)
+    {
+        $iconName = $file->getClientOriginalName();;
+        $extension = pathinfo($iconName, PATHINFO_EXTENSION);
+        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        $file->move($this->container->getParameter('claroline.thumbnails.directory'), $hashName);
+        //entity creation
+        $icon = new ResourceIcon();
+        $icon->setIconLocation('thumbnails'.DIRECTORY_SEPARATOR.$hashName);
+        $icon->setIconType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::CUSTOM_ICON));
+        $icon->setType('custom');
+
+        return $icon;
     }
 }

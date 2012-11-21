@@ -69,8 +69,7 @@ class EntityConverter
         $preparedInstance->{'resource_type_id'} = $resource->getResourceType()->getId();
         $preparedInstance->{'type'} = $resource->getResourceType()->getName();
         $preparedInstance->{'is_navigable'} = $resource->getResourceType()->getBrowsable();
-        $preparedInstance->{'small_icon'} = $resource->getIcon()->getSmallIcon();
-        $preparedInstance->{'large_icon'} = $resource->getIcon()->getLargeIcon();
+        $preparedInstance->{'large_icon'} = $resource->getIcon()->getIconLocation();
         $preparedInstance->{'path'} = $resource->getPath();
         $preparedInstance->{'path_for_display'} = $resource->getPathForDisplay();
 

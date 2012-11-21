@@ -61,7 +61,6 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject->setName($title);
             $subject->setTitle($title);
             $subject->setCreator($user);
-            $subject->setForum($forum);
             $this->log("subject $title created");
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', null, $user);
 
@@ -73,7 +72,6 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $message->setName('tmp-'.microtime());
                 $message->setCreator($sender);
                 $message->setContent($this->generateLipsum(150, true));
-                $message->setSubject($subject);
                 $inst = $creator->create($message, $subject->getId(), 'claroline_message', null, $sender);
                 $entityToBeDetached[] = $message;
                 $entityToBeDetached[] = $inst;

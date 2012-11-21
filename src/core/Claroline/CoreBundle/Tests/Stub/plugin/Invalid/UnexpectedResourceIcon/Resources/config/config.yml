@@ -3,7 +3,7 @@ plugin:
 
   resources:
     - name: ResourceX
-      class: Invalid\UnexpectedSmallIcon\Entity\ResourceX
+      class: Invalid\UnexpectedResourceIcon\Entity\ResourceX
       is_visible: true
       is_browsable: false
-      small_icon: icn.gif
+      icon: icn.gif
