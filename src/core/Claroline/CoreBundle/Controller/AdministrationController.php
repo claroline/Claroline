@@ -79,7 +79,7 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiDeleteUserAction()
+    public function deleteUsersAction()
     {
         $params = $this->get('request')->query->all();
 
@@ -407,7 +407,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function multiaddUserstoGroupAction($groupId)
+    public function addUsersToGroupAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
@@ -443,7 +443,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function multiDeleteUserFromGroupAction($groupId)
+    public function deleteUsersFromGroupAction($groupId)
     {
         $params = $this->get('request')->query->all();
         $em = $this->getDoctrine()->getEntityManager();
@@ -467,7 +467,7 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiDeleteGroupAction()
+    public function deleteGroupsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();

@@ -31,8 +31,7 @@ class Converter
         $resourceArray['resource_type_id'] = $resource->getResourceType()->getId();
         $resourceArray['type'] = $resource->getResourceType()->getName();
         $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
-        $resourceArray['small_icon'] = $resource->getIcon()->getSmallIcon();
-        $resourceArray['large_icon'] = $resource->getIcon()->getLargeIcon();
+        $resourceArray['large_icon'] = $resource->getIcon()->getIconLocation();
         $resourceArray['path'] = $resource->getPath();
         $resourceArray['path_for_display'] = $resource->getPathForDisplay();
         $array = array();

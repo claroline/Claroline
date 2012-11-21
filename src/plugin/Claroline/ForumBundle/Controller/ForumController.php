@@ -72,11 +72,9 @@ class ForumController extends Controller
             $message->setContent($dataMessage['content']);
             $subject->setCreator($user);
             $message->setCreator($user);
-            $subject->setForum($forum);
             $message->setName($subject->getTitle() . '-' . date('m/d/Y h:i:m'));
             $subject->setName($subject->getTitle());
             $subject->resetMessages();
-            $message->setSubject($subject);
             $creator = $this->get('claroline.resource.manager');
             //instantiation of the new resources
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject');
@@ -142,7 +140,6 @@ class ForumController extends Controller
             $message = $form->getData();
             $user = $this->get('security.context')->getToken()->getUser();
             $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('name' => 'claroline_message'));
-            $message->setSubject($subject);
             $message->setCreator($user);
             $message->setResourceType($messageType);
             $creator = $this->get('claroline.resource.manager');

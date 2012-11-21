@@ -123,6 +123,9 @@ rename: Renommer
 reset: Réinitialiser
 resource: Ressource
 resource_manager: Gestionnaire de ressources
+resource_properties_form_shareType: Redistribution
+resource_properties_form_name: Nom
+resource_properties_form_userIcon: Icône
 resources: Ressources
 results: Résultats
 role: Rôle

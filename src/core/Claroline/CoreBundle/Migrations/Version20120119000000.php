@@ -249,7 +249,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => false));
-        $table->addColumn('icon_id', 'integer', array('notnull' => false));
+        $table->addColumn('icon_id', 'integer', array('notnull' => true));
         $table->addColumn('path', 'string', array('length' => 1000, 'notnull' => false));
         $table->addColumn('name', 'string');
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
@@ -432,10 +432,9 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_icon');
         $this->addId($table);
-        $table->addColumn('large_icon', 'string', array('notnull' => false, 'length' => 255));
-        $table->addColumn('small_icon', 'string', array('notnull' => false, 'length' => 255));
+        $table->addColumn('icon_location', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('icon_type_id', 'integer', array('notnull' => false));
-        $table->addColumn('type', 'string');
+        $table->addColumn('type', 'string', array('length' => 255));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_icon_type'), array('icon_type_id'), array('id'), array('onDelete' => 'SET NULL')

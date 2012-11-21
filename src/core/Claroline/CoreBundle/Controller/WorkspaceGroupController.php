@@ -112,7 +112,7 @@ class WorkspaceGroupController extends Controller
      *
      * @return Response
      */
-    public function removeMultipleGroupsAction($workspaceId)
+    public function removeGroupsAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
@@ -192,7 +192,7 @@ class WorkspaceGroupController extends Controller
      *
      * @return Response
      */
-    public function multiAddGroupAction($workspaceId)
+    public function addGroupsAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
         $em = $this->get('doctrine.orm.entity_manager');

@@ -32,20 +32,20 @@ class ForumRepository extends EntityRepository
 
         FROM  Claroline\ForumBundle\Entity\Subject s
 
-        JOIN s.messages m
-        JOIN s.messages m_count
+        JOIN s.children m
+        JOIN s.children m_count
         JOIN s.creator subjectCreator
         JOIN s.parent pri
         JOIN m.creator lastUser WITH lastUser.id =
             (
                 SELECT lcu.id FROM Claroline\ForumBundle\Entity\Message m2
-                JOIN m2.subject s2
+                JOIN m2.parent s2
                 JOIN m2.creator lcu
-                JOIN s2.forum f2
+                JOIN s2.parent f2
                 WHERE NOT EXISTS
                 (
                     SELECT m3 FROM Claroline\ForumBundle\Entity\Message m3
-                    JOIN m3.subject s3
+                    JOIN m3.parent s3
                     WHERE s2.id = s3.id
                     AND m2.id < m3.id
                 )

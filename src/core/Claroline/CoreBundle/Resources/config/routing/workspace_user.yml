@@ -1,6 +1,6 @@
 claro_workspace_multiadd_user:
    pattern: /{workspaceId}/add/user
-   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:multiAddUser }
+   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:addUsers }
    options:
       expose: true
    requirements:
@@ -84,7 +84,7 @@ claro_workspace_unregistered_users_paginated:
 
 claro_workspace_delete_users:
     pattern: /{workspaceId}/users
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:removeMultipleUsers }
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:removeUsers }
     options:
        expose: true
     requirements:

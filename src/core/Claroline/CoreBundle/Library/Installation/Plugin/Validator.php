@@ -47,9 +47,9 @@ class Validator
             $errors = $checker->check($plugin);
             if (null !== $errors = $checker->check($plugin)) {
                 $validationErrors = array_merge($validationErrors, $errors);
-            } 
+            }
         }
-
+//        var_dump($validationErrors);
         return $validationErrors;
     }
 }

@@ -299,10 +299,17 @@
                     this.$('#' + resourceIds[i]).remove();
                 }
             },
-            renameThumbnail: function (resourceId, newName, successHandler) {
-                newName = Claroline.Utilities.formatText(newName, 20, 2);
-                this.$('#' + resourceId + ' .resource-name').html(newName);
-                successHandler && successHandler();
+            editProperties: function(resourceId, properties, successHandler){
+                console.debug(properties);
+                if(properties.name != undefined){
+                    var newName = Claroline.Utilities.formatText(properties.name, 20, 2);
+                    this.$('#' + resourceId + ' .resource-name').html(newName);
+                }
+                if (properties.icon != undefined){
+                    this.$('#' + resourceId + ' .resource-img').attr('src', this.parameters.appPath + '/../' + properties.icon);
+                }
+                
+              successHandler && successHandler();
             },
             dispatchClick: function (event) {
                 event.preventDefault();
@@ -424,11 +431,8 @@
             'download': function (event) {
                 this.download(event.ids);
             },
-            'rename': function (event) {
-                this.rename(event.action, event.data, event.resourceId);
-            },
-            'rename-form': function (event) {
-                this.displayRenameForm(event.ids[0]);
+            'properties': function(event){
+                this.editProperties(event.action, event.data, event.resourceId);
             },
             'custom': function (event) {
                 this.custom(event.action, event.id);
@@ -515,7 +519,7 @@
         displayForm: function (type, resource) {
             var formSource = (
                 (type == 'create' && '/resource/form/' + resource.type) ||
-                (type == 'rename' && '/resource/rename/form/' + resource.id));
+                (type == 'properties' && '/resource/properties/form/' + resource.id));
             formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
             this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
             $.ajax({
@@ -542,20 +546,21 @@
                 }
             });
         },
-        rename: function (formAction, formData, resourceId) {
+        editProperties: function(formAction, formData, resourceId) {
             $.ajax({
                 url: formAction,
                 data: formData,
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                success: function (data, textStatus, jqXHR) {
+                success: function(data, textStatus, jqXHR) {
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
-                        this.views['main'].subViews.resources.renameThumbnail(resourceId, data[0], this.views['form'].close()) :
-                        this.views['renameForm'].render(data, resourceId);
+                    this.views['main'].subViews.resources.editProperties(resourceId, data, this.views['form'].close()) :
+                    this.views['renameForm'].render(data, resourceId);
                 }
             });
-        },
+        }
+        ,
         delete_: function (resourceIds) {
             $.ajax({
                 url: this.parameters.appPath + '/resource/delete',

@@ -2,8 +2,8 @@ plugin:
   has_options: true
 
   resources:
-    - class: Valid\WithLargeIcon\Entity\ResourceX
+    - class: Valid\WithResourceIcon\Entity\ResourceX
       name: ResourceX
       is_visible: true
       is_browsable: true
-      large_icon: validwithlargeicon.gif
+      icon: validwithlargeicon.gif

@@ -10,17 +10,6 @@ claro_resource_create:
     options:
         expose: true
 
-claro_resource_rename_form:
-    pattern: /rename/form/{resourceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:renameForm }
-    options:
-        expose: true
-claro_resource_rename:
-    pattern: /rename/{resourceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:rename }
-    options:
-        expose: true
-
 claro_resource_delete:
     pattern: /delete
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
@@ -99,14 +88,10 @@ claro_resource_every_instances:
     options:
         expose: true
 
-claro_resource_count_instances:
-    pattern: /count/instances
-    defaults: { _controller: ClarolineCoreBundle:Resource:countPageInstance }
-    options:
-        expose: true
+claro_resource_form_properties:
+    pattern: /properties/form/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:propertiesForm }
 
-claro_resource_paginate_all:
-    pattern: /instance/flat/{page}
-    defaults: { _controller: ClarolineCoreBundle:Resource:paginatedFlatResource }
-    options:
-        expose: true
+claro_resource_edit_properties:
+    pattern: /properties/edit/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:changeProperties }
