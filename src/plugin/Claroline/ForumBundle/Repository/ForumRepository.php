@@ -21,9 +21,9 @@ class ForumRepository extends EntityRepository
         SELECT
         s.id as id,
         COUNT(m_count.id) AS count_messages,
-        MAX(m.created) AS last_message_created,
+        MAX(m.creationDate) AS last_message_created,
         s.id as subjectId,
-        s.created as subject_created,
+        s.creationDate as subject_created,
         s.name as title,
         subjectCreator.lastName as subject_creator_lastname,
         subjectCreator.firstName as subject_creator_firstname,
