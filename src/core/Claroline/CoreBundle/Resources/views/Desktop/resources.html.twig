@@ -31,7 +31,8 @@
             Claroline.ResourceManager.initialize({
                 "parentElement": $('div.section-content'),
                 "isPickerMultiSelectAllowed": true,
-                "appPath": "{{ path('claro_home_index') ~ '..' }}",
+                "appPath": "{{ app.request.getBaseUrl }}",
+                "webPath": "{{ asset('') }}",
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {
