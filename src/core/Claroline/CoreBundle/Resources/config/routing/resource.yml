@@ -101,3 +101,16 @@ claro_resource_create_shortcut:
     defaults: { _controller: ClarolineCoreBundle:Resource:createShortcut }
     options:
         expose: true
+
+claro_resource_rename_form:
+    pattern: /rename/form/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:renameForm }
+    options:
+        expose: true
+
+claro_resource_rename:
+    pattern: /rename/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:rename }
+    options:
+        expose: true
+

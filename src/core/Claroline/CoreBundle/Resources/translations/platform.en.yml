@@ -36,6 +36,7 @@ done_on: done on
 download: Download
 export: export
 file: File
+file_form_file: File
 file_form_name: Name
 file_form_license: License
 file_form_shareType: Sharable
@@ -123,6 +124,9 @@ rename: Rename
 reset: Reset
 resource: Resource
 resource_manager: Resource manager
+resource_properties_form_creationDate: Creation Date
+resource_properties_form_resourceType: Resource type
+resource_properties_form_creator: Creator
 resource_properties_form_shareType: Redistribution
 resource_properties_form_name: Nom
 resource_properties_form_userIcon: Icône
