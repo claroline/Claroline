@@ -38,7 +38,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             rt.id as resource_type_id,
             rt.name as type,
             rt.isBrowsable as is_browsable,
-            ic.iconLocation as large_icon ";
+            ic.relativeUrl as large_icon ";
 
     /** FROM DQL part to join all needed entities. */
     const FROM_RESOURCES = "

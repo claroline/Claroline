@@ -83,11 +83,11 @@ class Manager
             } else {
                 //upload the icon
                 $iconFile = $resource->getUserIcon();
-                $icon = $this->createCustomIcon($iconFile);
+                $icon = $this->ic->createCustomIcon($iconFile);
                 $this->em->persist($icon);
                 $resource->setIcon($icon);
             }
-            
+
             $this->em->persist($resource);
             $this->em->flush();
 
@@ -137,18 +137,21 @@ class Manager
      */
     public function delete(AbstractResource $resource)
     {
-        if ($resource->getResourceType()->getName() !== 'directory') {
-            $eventName = $this->ut->normalizeEventName(
-                'delete', $resource->getResourceType()->getName()
-            );
-
-            $event = new DeleteResourceEvent($resource);
-            $this->ed->dispatch($eventName, $event);
-
+        //If it's a link, the link is removed.
+        if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $this->em->remove($resource);
         } else {
-            $this->deleteDirectory($resource);
-        }
+            if ($resource->getResourceType()->getName() !== 'directory') {
+                $eventName = $this->ut->normalizeEventName(
+                    'delete', $resource->getResourceType()->getName()
+                );
 
+                $event = new DeleteResourceEvent($resource);
+                $this->ed->dispatch($eventName, $event);
+            } else {
+                $this->deleteDirectory($resource);
+            }
+        }
         $this->em->flush();
     }
 
@@ -160,24 +163,37 @@ class Manager
      */
     public function copy(AbstractResource $resource, AbstractResource $parent)
     {
-        $copy = $this->createCopy($resource);
-        $copy->setParent($parent);
-        $copy->setWorkspace($parent->getWorkspace());
-        $rename = $this->ut->getUniqueName($resource, $parent);
-        $copy->setName($rename);
+        if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $copy = new \Claroline\CoreBundle\Entity\Resource\ResourceShortcut();
+            $copy->setParent($parent);
+            $copy->setWorkspace($parent->getWorkspace());
+            $rename = $this->ut->getUniqueName($resource, $parent);
+            $copy->setName($rename);
+            $copy->setResource($resource->getResource());
+            $copy->setIcon($resource->getIcon());
+            $copy->setResourceType($resource->getResourceType());
+            $copy->setCreator($this->sc->getToken()->getUser());
+        } else {
+            $copy = $this->createCopy($resource);
+            $copy->setParent($parent);
+            $copy->setWorkspace($parent->getWorkspace());
+            $rename = $this->ut->getUniqueName($resource, $parent);
+            $copy->setName($rename);
 
-        if ($resource->getResourceType()->getName() == 'directory') {
-            foreach ($resource->getChildren() as $child) {
-                $this->copy($child, $copy);
+            if ($resource->getResourceType()->getName() == 'directory') {
+                foreach ($resource->getChildren() as $child) {
+                    $this->copy($child, $copy);
+                }
             }
+
+            $logevent = new ResourceLoggerEvent(
+                $resource,
+                ResourceLoggerEvent::COPY_ACTION
+            );
+
+            $this->ed->dispatch('log_resource', $logevent);
         }
 
-        $logevent = new ResourceLoggerEvent(
-            $resource,
-            ResourceLoggerEvent::COPY_ACTION
-        );
-
-        $this->ed->dispatch('log_resource', $logevent);
         $this->em->persist($copy);
         $this->em->flush();
 
@@ -228,20 +244,5 @@ class Manager
         }
 
         $this->em->remove($resource);
-    }
-
-    public function createCustomIcon($file)
-    {
-        $iconName = $file->getClientOriginalName();;
-        $extension = pathinfo($iconName, PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        $file->move($this->container->getParameter('claroline.thumbnails.directory'), $hashName);
-        //entity creation
-        $icon = new ResourceIcon();
-        $icon->setIconLocation('thumbnails'.DIRECTORY_SEPARATOR.$hashName);
-        $icon->setIconType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::CUSTOM_ICON));
-        $icon->setType('custom');
-
-        return $icon;
     }
 }

@@ -50,6 +50,10 @@ class Exporter
         foreach ($resourceIds as $resourceId) {
             $resource = $repo->find($resourceId);
 
+            if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                $resource = $resource->getResource();
+            }
+            
             if ($resource->getResourceType()->getName() != 'directory') {
 
                 $eventName = $this->ut->normalizeEventName('export', $resource->getResourceType()->getName());

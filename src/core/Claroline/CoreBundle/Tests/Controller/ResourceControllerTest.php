@@ -83,18 +83,22 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testChangeIcon()
     {
+        $ds = DIRECTORY_SEPARATOR;
+        $png = __DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}icon.png";
+        copy($png, __DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
+
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
-        $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), 'image.png', 'image/png', null, null, true);
+        $file = new UploadedFile(__DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png", 'image.png', 'image/png', null, null, true);
         $crawler = $this->client->request(
             'POST', "/resource/properties/edit/{$dir->id}",
             array('resource_properties_form' => array('name' => $dir->name)), array('resource_properties_form' => array('userIcon' => $file))
         );
-
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $images = $this->getUploadedFiles($this->thumbsDir);
-        $this->assertEquals(1, count($images));
-        $this->assertContains($images[0], $jsonResponse->icon);
+        $this->assertEquals(2, count($images));
+        $name = str_replace("thumbnails{$ds}", "", $jsonResponse->icon);
+        $this->assertContains($name, $images);
     }
 
     public function testMove()
@@ -403,6 +407,99 @@ class ResourceControllerTest extends FunctionalTestCase
         ob_clean();
         $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
         $this->assertEquals(5, count($postEvents) - count($preEvents));
+    }
+
+    public function testCreateShortcutAction()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->id}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(2, count($jsonResponse));
+    }
+
+    public function testOpenFileShortcut()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->id}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->client->request('GET', "/resource/open/file/{$file->id}");
+        $openFile = $this->client->getResponse()->getContent();
+        $this->client->request('GET', "/resource/open/file/{$jsonResponse[0]->id}");
+        $openShortcut = $this->client->getResponse()->getContent();
+        $this->assertEquals($openFile, $openShortcut);
+
+    }
+
+    public function testChildrenShortcut()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $roots = $this->createTree($this->pwr->getId());
+        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$roots[0]->id}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->client->request('GET', "/resource/children/{$jsonResponse[0]->id}");
+        $openShortcut = $this->client->getResponse()->getContent();
+        $this->client->request('GET', "/resource/children/{$roots[0]->id}");
+        $openDirectory = $this->client->getResponse()->getContent();
+        $this->assertEquals($openDirectory, $openShortcut);
+    }
+
+    public function testDeleteShortcut()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->id}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $crawler = $this->client->request('GET', "/resource/delete?ids[]={$jsonResponse[0]->id}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($jsonResponse));
+    }
+
+    public function testDeleteShortcutTarget()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->id}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $crawler = $this->client->request('GET', "/resource/delete?ids[]={$file->id}");
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($jsonResponse));
+    }
+
+    public function testEditShortcutIcon()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $png = __DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}icon.png";
+        copy($png, __DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
+
+        $this->logUser($this->getFixtureReference('user/user'));
+        $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
+        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$dir->id}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+
+        $file = new UploadedFile(__DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png", 'image.png', 'image/png', null, null, true);
+        $crawler = $this->client->request(
+            'POST', "/resource/properties/edit/{$jsonResponse[0]->id}",
+            array('resource_properties_form' => array('name' => $dir->name)), array('resource_properties_form' => array('userIcon' => $file))
+        );
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $images = $this->getUploadedFiles($this->thumbsDir);
+        $this->assertEquals(2, count($images));
+        $name = str_replace("thumbnails{$ds}", "", $jsonResponse->icon);
+        $this->assertContains($name, $images);
+
+        //is it the "shortcut" icon ?
+        $icon = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->findOneBy(array('relativeUrl' => $jsonResponse->icon));
+
+        $this->assertTrue($icon->isShortcut());
     }
 
     private function uploadFile($parentId, $name, $shareType = 1)

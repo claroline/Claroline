@@ -95,3 +95,9 @@ claro_resource_form_properties:
 claro_resource_edit_properties:
     pattern: /properties/edit/{resourceId}
     defaults: { _controller: ClarolineCoreBundle:Resource:changeProperties }
+
+claro_resource_create_shortcut:
+    pattern: /shortcut/{newParentId}/create
+    defaults: { _controller: ClarolineCoreBundle:Resource:createShortcut }
+    options:
+        expose: true
