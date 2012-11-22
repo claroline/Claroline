@@ -260,7 +260,7 @@
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
                     'customActions': this.parameters.resourceTypes[resource.type].customActions || {},
-                    'webRoot': this.parameters.appPath + '/..'
+                    'webRoot': this.parameters.webPath
                 }));
             }
         }),
@@ -605,11 +605,12 @@
     /**
      * Initializes the resource manager with a set of options :
      * - appPath: the base url of the application (default to empty string).
+     * - webPath: the base url of the web directory (default to empty string).
      * - directoryId : the id of the directory to open in main (vs picker) mode (default to "0", i.e. pseudo-root of all directories).
      * - parentElement: the jquery element in which the views will be rendered (default to "body" element).
      * - resourceTypes: an object whose properties describe the available resource types (default to empty object).
-     * - isPickerOnly: wheither the manager must initialize a main view and a picker view, or just the picker one (default to false).
-     * - isMultiSelectAllowed: wheither the selection of multiple resources in picker mode should be allowed or not (default to false).
+     * - isPickerOnly: whether the manager must initialize a main view and a picker view, or just the picker one (default to false).
+     * - isMultiSelectAllowed: whether the selection of multiple resources in picker mode should be allowed or not (default to false).
      * - pickerCallback: the function to be called when resources are selected in picker mode (default to  empty function).
      *
      * @param object parameters The parameters of the manager
@@ -623,6 +624,7 @@
         parameters.isPickerMultiSelectAllowed = parameters.isPickerMultiSelectAllowed || false;
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
+        parameters.webPath = parameters.webPath || '';
         manager.Controller.initialize(parameters);
     };
 
