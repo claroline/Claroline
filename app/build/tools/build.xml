@@ -29,7 +29,10 @@
     </target>
 
     <target name="rawInstall"
-            description="Install vendors, create database and tables, install plugins">
+            description="Install vendors, create database, tables, config files, install plugins">
+        <touch file="${appdir}/config/local/plugin/bundles"/>
+        <touch file="${appdir}/config/local/plugin/namespaces"/>
+        <touch file="${appdir}/config/local/plugin/routing.yml"/>
         <exec executable="php" failonerror="true">
             <arg path="${basedir}/composer.phar" />
             <arg value="install" />
