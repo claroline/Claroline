@@ -18,7 +18,10 @@ class Widget
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Plugin",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
      */
     protected $plugin;

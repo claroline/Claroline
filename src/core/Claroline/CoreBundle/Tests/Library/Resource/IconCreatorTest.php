@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Resource;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -65,11 +64,12 @@ class IconCreatorTest extends FixtureTestCase
 
     public function testCreateVideoThumbnail()
     {
-        ob_start(null);
+        ob_start();
         $file = new File();
         $file->setResourceType($this->fileType);
         $file->setHashName('video.mp4');
         $file = $this->iconCreator->setResourceIcon($file, 'video/mp4');
+
         if ($this->areLoaded) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
             $this->assertEquals(1, count($thumbs));
@@ -77,7 +77,8 @@ class IconCreatorTest extends FixtureTestCase
             $name = $file->getIcon()->getLargeIcon();
             $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_video.png', $name);
         }
-        ob_clean();
+        
+        ob_end_clean();
     }
 
     public function testCreateImageThumbnail()
@@ -95,8 +96,8 @@ class IconCreatorTest extends FixtureTestCase
             $name = $file->getIcon()->getLargeIcon();
             $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.jpg', $name);
         }
-        
-        ob_clean();
+
+        ob_end_clean();
     }
 
     public function testUnknownVideoMimeThumbnail()

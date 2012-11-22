@@ -30,12 +30,11 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
         $this->pwr = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->userRoot = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('workspace/ws_a'));
-    }
+   }
 
     public function tearDown()
     {
         parent::tearDown();
-
         $this->cleanDirectory($this->upDir);
     }
 
@@ -188,7 +187,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMultiExportClassic()
     {
-        $this->marktestSkipped("streamedResponse broke this one");
+        $this->markTestSkipped("streamedResponse broke this one");
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/resource/multiexport?0={$this->userRoot->getId()}");
         $headers = $this->client->getResponse()->headers;
@@ -204,7 +203,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->getResponse()->send();
         $content = ob_get_contents();
         ob_clean();
-        var_dump($content);
         file_put_contents($filename, $content);
         // Check the archive content
         $zip = new \ZipArchive();
