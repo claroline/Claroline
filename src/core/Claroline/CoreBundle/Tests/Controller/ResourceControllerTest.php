@@ -73,7 +73,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST', "/resource/properties/edit/{$dir->id}",
             array('resource_properties_form' => array('name' => 'new_name'))
         );
@@ -90,7 +90,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
         $file = new UploadedFile(__DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png", 'image.png', 'image/png', null, null, true);
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST', "/resource/properties/edit/{$dir->id}",
             array('resource_properties_form' => array('name' => $dir->name)), array('resource_properties_form' => array('userIcon' => $file))
         );
@@ -452,7 +452,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->id}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $crawler = $this->client->request('GET', "/resource/delete?ids[]={$jsonResponse[0]->id}");
+        $this->client->request('GET', "/resource/delete?ids[]={$jsonResponse[0]->id}");
         $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
@@ -464,7 +464,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->id}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $crawler = $this->client->request('GET', "/resource/delete?ids[]={$file->id}");
+        $this->client->request('GET', "/resource/delete?ids[]={$file->id}");
         $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($jsonResponse));
@@ -482,7 +482,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
 
         $file = new UploadedFile(__DIR__."{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png", 'image.png', 'image/png', null, null, true);
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST', "/resource/properties/edit/{$jsonResponse[0]->id}",
             array('resource_properties_form' => array('name' => $dir->name)), array('resource_properties_form' => array('userIcon' => $file))
         );

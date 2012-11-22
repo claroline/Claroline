@@ -55,7 +55,7 @@ class ResourceController extends Controller
 
             if ($resourceType === 'file') {
                 $mimeType = $resource->getMimeType();
-                $instance = $manager->create($resource, $parentId, $resourceType,  $mimeType);
+                $instance = $manager->create($resource, $parentId, $resourceType, $mimeType);
             } else {
                 $instance = $manager->create($resource, $parentId, $resourceType);
             }
@@ -507,7 +507,8 @@ class ResourceController extends Controller
 
     }
 
-    private function removeOldIcon($resource){
+    private function removeOldIcon($resource)
+    {
         $icon = $resource->getIcon();
 
         if ($icon->getIconType()->getIconType() == IconType::CUSTOM_ICON) {
@@ -519,7 +520,8 @@ class ResourceController extends Controller
         }
     }
 
-    private function getResource($resource){
+    private function getResource($resource)
+    {
 
         if(get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
             $resource = $resource->getResource();
