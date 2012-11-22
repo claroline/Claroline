@@ -103,13 +103,19 @@
                     this.filters.toggle();
                 },
                 'click button.add': function () {
-                    this.parameters.isPickerOnly ?
-                        this.parameters.pickerCallback(this.checkedResources.resources) :
+                    if (this.parameters.isPickerOnly){
+                        this.parameters.pickerCallback(this.checkedResources.resources, this.currentDirectory.id)
+                    } else {
+                        if(this.callback){
+                            this.callback(_.keys(this.checkedResources.resources), this.targetDirectoryId);
+                        } else {
                         this.dispatcher.trigger('paste', {
                             ids: _.keys(this.checkedResources.resources),
                             directoryId: this.targetDirectoryId,
                             isCutMode: false
                         });
+                        }
+                    }
                     this.dispatcher.trigger('picker', {action: 'close'});
                 }
             },
@@ -179,9 +185,20 @@
                 parameters.isCreateAllowed = parameters.isAddAllowed =
                     !(directory.id == 0 || (!this.parameters.isPickerMode && this.isSearchMode));
                 $(this.el).html(Twig.render(resource_actions_template, parameters));
+            },
+            createShortcut: function(resourceIds, newParentId){
+                var url = Routing.generate('claro_resource_create_shortcut', { 'newParentId': newParentId});
+                $.ajax({
+                    url: url,
+                    data: {ids: resourceIds},
+                    success: function (data, textStatus, jqXHR) {
+                        this.views['main'].subViews.resources.addThumbnails(data);
+                    }
+                });
             }
         }),
         Filters: Backbone.View.extend({
+
             className: 'filters form-horizontal',
             events: {
                 'click button.filter': function () {
@@ -308,7 +325,7 @@
                 if (properties.icon != undefined){
                     this.$('#' + resourceId + ' .resource-img').attr('src', this.parameters.appPath + '/../' + properties.icon);
                 }
-                
+
               successHandler && successHandler();
             },
             dispatchClick: function (event) {
@@ -414,7 +431,7 @@
     manager.Controller = {
         events: {
             'picker': function (event) {
-                this.picker(event.action);
+                this.picker(event.action, event.callback);
             },
             'create': function (event) {
                 this.create(event.action, event.data, event.resourceId);
@@ -517,21 +534,26 @@
         },
 
         displayForm: function (type, resource) {
-            var formSource = (
-                (type == 'create' && '/resource/form/' + resource.type) ||
-                (type == 'properties' && '/resource/properties/form/' + resource.id));
-            formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
-            this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
-            $.ajax({
-                url: this.parameters.appPath + formSource,
-                success: function (form) {
-                    this.views['form'].render(form, resource.id, type);
-                    this.views['form'].isAppended ||
-                        this.parameters.parentElement.append(this.views['form'].el)
-                        && (this.views['form'].isAppended = true);
-                }
-            });
+            if (resource.type == 'resource_shortcut'){
+                this.dispatcher.trigger('picker', {action: 'open', callback: function(resources, newParentId){this.createShortcut(resources, newParentId)}});
+            } else {
+                var formSource = (
+                    (type == 'create' && '/resource/form/' + resource.type) ||
+                    (type == 'properties' && '/resource/properties/form/' + resource.id));
+                formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
+                this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
+                $.ajax({
+                    url: this.parameters.appPath + formSource,
+                    success: function (form) {
+                        this.views['form'].render(form, resource.id, type);
+                        this.views['form'].isAppended ||
+                            this.parameters.parentElement.append(this.views['form'].el)
+                            && (this.views['form'].isAppended = true);
+                    }
+                });
+            }
         },
+
         create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
                 url: formAction,
@@ -600,9 +622,10 @@
         custom: function (action, resourceId) {
             alert('Custom action "' + action + '" on resource ' + resourceId + ' (not implemented yet)');
         },
-        picker: function (action) {
+        picker: function (action, callback) {
             action == 'open' && (this.views.picker.isAppended || this.displayResources(0, 'picker'));
             !this.parameters.isPickerOnly && (this.views.picker.subViews.actions.targetDirectoryId = this.views.main.currentDirectory.id);
+            callback && (this.views.picker.subViews.actions.callback = callback);
             this.views.picker.$el.modal(action == 'open' ? 'show' : 'hide');
         }
     };

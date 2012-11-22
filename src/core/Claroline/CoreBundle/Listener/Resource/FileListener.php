@@ -138,7 +138,7 @@ class FileListener extends ContainerAware
                 $response->headers->set('Connection', 'close');
             }
         }
-
+        
         $event->setResponse($response);
         $event->stopPropagation();
     }

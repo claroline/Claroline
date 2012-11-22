@@ -23,7 +23,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  *     "file" = "File",
  *     "directory" = "Directory",
  *     "link" = "Link",
- *     "text" = "Text"
+ *     "text" = "Text",
+ *     "resource_shortcut" = "ResourceShortcut"
  * })
  */
 abstract class AbstractResource
@@ -119,6 +120,15 @@ abstract class AbstractResource
      * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $children;
+
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut", cascade={"remove"},
+     *      mappedBy="resource"
+     * )
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    protected $shortcuts;
 
     /**
      * @ORM\ManyToOne(
@@ -448,4 +458,11 @@ abstract class AbstractResource
 
         return $pathForDisplay;
     }
+
+    public function getShortcuts()
+    {
+        return $this->shortcuts;
+    }
+
+
 }
