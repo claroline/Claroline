@@ -12,7 +12,7 @@
     processIsolation            = "false"
     stopOnFailure               = "false"
     syntaxCheck                 = "false"
-    bootstrap                   = "bootstrap.php.cache" >
+    bootstrap                   = "phpunit_bootstrap.php" >
 
     <php>
         <!-- temporary : should be set directly in php.ini -->

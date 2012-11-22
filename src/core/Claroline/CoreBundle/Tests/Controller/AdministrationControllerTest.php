@@ -3,30 +3,20 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
 
 class AdministrationControllerTest extends FunctionalTestCase
 {
     /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
     private $configHandler;
 
-    public static function setUpBeforeClass()
-    {
-        $client = self::createClient();
-        $container = $client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
-        $pluginFqcn = 'Valid\Simple\ValidSimple';
-        $plugin = $loader->load($pluginFqcn);
-        $dbWriter->insert($plugin);
-        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
-        $plugin = $loader->load($pluginFqcn);
-        $dbWriter->insert($plugin);
-    }
-
     protected function setUp()
     {
         parent::setUp();
+        $this->registerStubPlugins(array(
+            'Valid\Simple\ValidSimple',
+            'Valid\WithWidgets\ValidWithWidgets'
+        ));
         $this->loadUserFixture();
         $this->loadGroupFixture();
         $this->configHandler = $this->client
@@ -39,22 +29,6 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         parent::tearDown();
         $this->configHandler->eraseTestConfiguration();
-    }
-
-    public static function tearDownAfterClass()
-    {
-        $client = self::createClient();
-        $container = $client->getContainer();
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new \Claroline\CoreBundle\Library\Installation\Plugin\Loader($pluginDirectory);
-        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
-        $plugin = $loader->load($pluginFqcn);
-        $container->get('claroline.plugin.recorder')->unregister($plugin);
-        $container->get('claroline.plugin.migrator')->remove($plugin);
-        $pluginFqcn = 'Valid\Simple\ValidSimple';
-        $plugin = $loader->load($pluginFqcn);
-        $container->get('claroline.plugin.recorder')->unregister($plugin);
-        $container->get('claroline.plugin.migrator')->remove($plugin);
     }
 
     public function testAdminCanSeeGroups()
@@ -375,6 +349,20 @@ class AdministrationControllerTest extends FunctionalTestCase
 //        var_dump($this->client->getResponse()->getContent());
     }
 */
+
+    private function registerStubPlugins(array $pluginFqcns)
+    {
+        $container = $this->client->getContainer();
+        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new Loader($pluginDirectory);
+
+        foreach ($pluginFqcns as $pluginFqcn) {
+            $plugin = $loader->load($pluginFqcn);
+            $dbWriter->insert($plugin);
+        }
+    }
+
     private function getUser($username)
     {
         $user = $this->em

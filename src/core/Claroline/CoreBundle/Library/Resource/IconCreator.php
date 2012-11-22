@@ -96,16 +96,17 @@ class IconCreator
 
     private function createMpegGDI($name)
     {
+        $image = null;
+
         if ($this->hasFfmpegExtension) {
             $media = new \ffmpeg_movie($name);
             $frameCount = $media->getFrameCount();
             $frame = $media->getFrame(round($frameCount / 2));
-            $gdImage = $frame->toGDImage();
+            $image = $frame->toGDImage();
 
-            return $gdImage;
         }
 
-        return null;
+        return $image;
     }
 
     /**
