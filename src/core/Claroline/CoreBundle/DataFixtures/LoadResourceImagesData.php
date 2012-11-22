@@ -58,7 +58,6 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
         $ds = DIRECTORY_SEPARATOR;
         $largeIconsWebFolder = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}";
         $relativeUrl = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}";
-        $defaultIcon = null;
 
         /*
          * [1] thumbnail link

@@ -20,8 +20,6 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $defaultIcon = "bundles/clarolinecore/images/resources/icons/large/res_default.png";
-
         //name, isConfigurable, icon
         $items = array(
 //           array('core_resource_logger', false, $defaultIcon)

@@ -152,7 +152,7 @@ class ForumController extends Controller
         }
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' => $form->createView(), 'workspace' => $subject->getWorkspace())
         );
     }
 

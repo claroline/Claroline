@@ -107,7 +107,6 @@ class FileControllerTest extends FunctionalTestCase
             "/resource/create/file/{$parentId}",
             array('file_form' => array()),
             array('file_form' => array('file' => $file, 'name' => 'name'))
-
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
