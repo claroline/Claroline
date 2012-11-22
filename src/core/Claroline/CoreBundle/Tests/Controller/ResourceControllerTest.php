@@ -41,6 +41,27 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->cleanDirectory($this->thumbsDir);
     }
 
+    public function testRenameFormCanBeDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
+        $crawler = $this->client->request('GET', "/resource/rename/form/{$dir->id}");
+        $form = $crawler->filter('#resource_name_form');
+        $this->assertEquals(count($form), 1);
+    }
+
+    public function testRenameFormErrorsAreDisplayed()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $dir = $this->createDirectory($this->pwr->getId(), 'testDir');
+        $crawler = $this->client->request(
+            'POST', "/resource/rename/{$dir->id}",
+            array('resource_name_form' => array('name' => ''))
+        );
+        $form = $crawler->filter('#resource_name_form');
+        $this->assertEquals(count($form), 1);
+    }
+
     public function testDirectoryCreationFormCanBeDisplayed()
     {
         $this->logUser($this->getFixtureReference('user/user'));

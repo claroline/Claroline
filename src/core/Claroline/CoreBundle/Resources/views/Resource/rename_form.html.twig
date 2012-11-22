@@ -1,0 +1,9 @@
+<form novalidate="novalidate"
+      action="{{ path('claro_resource_rename', {'resourceId': '_resourceId'}) }}"
+      method="post" {{ form_enctype(form) }}
+      id="resource-rename-form"
+      class="form-horizontal">
+   {{ form_errors(form) }}
+   {{ form_widget(form) }}
+   <input type="submit"/>
+</form>

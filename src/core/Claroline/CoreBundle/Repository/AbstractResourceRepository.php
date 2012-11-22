@@ -27,7 +27,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
     const SELECT_FOR_ARRAY = "
             ar.id as id,
             ar.name as name,
-            ar.created as created,
+            ar.creationDate as created,
             ar.updated as updated,
             ar.path as path,
             ar.lvl as lvl,
@@ -354,7 +354,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function buildDateFromFilter($key, $criteria)
     {
-        return " AND ar.created >= :{$key}";
+        return " AND ar.creationDate >= :{$key}";
     }
 
     /**
@@ -365,7 +365,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function buildDateToFilter($key, $criteria)
     {
-        return " AND ar.created <= :{$key}";
+        return " AND ar.creationDate <= :{$key}";
     }
 
     /**

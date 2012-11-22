@@ -310,6 +310,11 @@
                 }, this);
                 successHandler && successHandler();
             },
+            renameThumbnail: function (resourceId, newName, successHandler) {
+                newName = Claroline.Utilities.formatText(newName, 20, 2);
+                this.$('#' + resourceId + ' .resource-name').html(newName);
+                successHandler && successHandler();
+            },
             removeResources: function (resourceIds) {
                 // same logic for both thumbnails and search results
                 for (var i = 0; i < resourceIds.length; ++i) {
@@ -448,6 +453,9 @@
             'download': function (event) {
                 this.download(event.ids);
             },
+            'rename': function (event) {
+                this.rename(event.action, event.data, event.resourceId);
+            },
             'properties': function(event){
                 this.editProperties(event.action, event.data, event.resourceId);
             },
@@ -539,6 +547,7 @@
             } else {
                 var formSource = (
                     (type == 'create' && '/resource/form/' + resource.type) ||
+                    (type == 'rename' && '/resource/rename/form/' + resource.id) ||
                     (type == 'properties' && '/resource/properties/form/' + resource.id));
                 formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
                 this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
@@ -607,6 +616,20 @@
                 data: {ids: resourceIds},
                 success: function (data) {
                     this.views.main.subViews.resources.addThumbnails(data);
+                }
+            });
+        },
+        rename: function (formAction, formData, resourceId) {
+            $.ajax({
+                url: formAction,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function (data, textStatus, jqXHR) {
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
+                        this.views['main'].subViews.resources.renameThumbnail(resourceId, data[0], this.views['form'].close()) :
+                        this.views['renameForm'].render(data, resourceId);
                 }
             });
         },

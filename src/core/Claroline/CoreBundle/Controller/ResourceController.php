@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
+use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
@@ -115,6 +116,58 @@ class ResourceController extends Controller
         }
 
         return new Response('Resource deleted', 204);
+    }
+
+   /**
+    * Displays the form allowing to rename a resource.
+    *
+    * @param integer $resourceId
+    *
+    * @return Response
+    */
+    public function renameFormAction($resourceId)
+    {
+        $resource = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($resourceId);
+        $form = $this->createForm(new ResourceNameType(), $resource);
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+    * Renames a resource.
+    *
+    * @param integer $resourceId
+    *
+    * @return Response
+    */
+    public function renameAction($resourceId)
+    {
+        $request = $this->get('request');
+        $em = $this->getDoctrine()->getEntityManager();
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($resourceId);
+        $form = $this->createForm(new ResourceNameType(), $resource);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($resource);
+            $em->flush();
+            $response = new Response("[\"{$resource->getName()}\"]");
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('resourceId' => $resourceId, 'form' => $form->createView())
+        );
     }
 
     /**

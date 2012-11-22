@@ -50,10 +50,10 @@ abstract class AbstractResource
     protected $shareType;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created")
      * @Gedmo\Timestampable(on="create")
      */
-    protected $created;
+    protected $creationDate;
 
     /**
      * @ORM\Column(type="datetime")
@@ -246,7 +246,7 @@ abstract class AbstractResource
      */
     public function getCreationDate()
     {
-        return $this->created;
+        return $this->creationDate;
     }
 
     /**
