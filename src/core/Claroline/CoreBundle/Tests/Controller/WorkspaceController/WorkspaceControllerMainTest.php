@@ -10,7 +10,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadUserFixture(array('user', 'admin', 'ws_creator'));
         $this->loadWorkspaceFixture();
         $this->client->followRedirects();
     }
