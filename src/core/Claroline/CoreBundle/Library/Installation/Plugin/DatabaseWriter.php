@@ -6,6 +6,7 @@ use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\Resource\IconCreator;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
@@ -23,6 +24,8 @@ class DatabaseWriter
     private $validator;
     private $em;
     private $yamlParser;
+    private $im;
+    private $kernelRootDir;
 
     /**
      * Constructor.
@@ -30,16 +33,21 @@ class DatabaseWriter
      * @param SymfonyValidator  $validator
      * @param EntityManager     $em
      * @param Yaml              $yamlParser
+     * @param IconCreator       $im
      */
     public function __construct(
         Validator $validator,
         EntityManager $em,
-        Yaml $yamlParser
+        Yaml $yamlParser,
+        IconCreator $im,
+        $kernelRootDir
     )
     {
         $this->validator = $validator;
         $this->em = $em;
         $this->yamlParser = $yamlParser;
+        $this->im = $im;
+        $this->kernelRootDir = $kernelRootDir;
     }
 
     /**
@@ -52,6 +60,7 @@ class DatabaseWriter
         $errors = $this->validator->validate($plugin);
 
         if(0!= count($errors)){
+//            var_dump($errors);
             return $errors;
         }
 
@@ -62,12 +71,13 @@ class DatabaseWriter
         $pluginEntity->setHasOptions($processedConfiguration['has_options']);
 
         if(isset($processedConfiguration['icon'])){
-            $pluginEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$processedConfiguration['icon']}");
+            $ds = DIRECTORY_SEPARATOR;
+            $pluginEntity->setIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$processedConfiguration['icon']}");
         } else {
             $defaultIcon = $this->em
                 ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
                 ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
-            $pluginEntity->setIcon($defaultIcon->getLargeIcon());
+            $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
         }
 
         $this->em->persist($pluginEntity);
@@ -158,20 +168,19 @@ class DatabaseWriter
             ->findOneBy(array('iconType' => 'type'));
         $resourceIcon->setIconType($defaultIconType);
         $resourceIcon->setType($resourceType->getName());
+        $ds = DIRECTORY_SEPARATOR;
 
-        if (isset($resource['small_icon'])) {
-            $resourceIcon->setSmallIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/small/{$resource['small_icon']}");
+        if (isset($resource['icon'])) {
+            $resourceIcon->setIconLocation("{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
+            $resourceIcon->setRelativeUrl("{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
         } else {
-            $resourceIcon->setSmallIcon($defaultIcon->getSmallIcon());
+            $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
+            $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
 
-        if (isset($resource['large_icon'])) {
-            $resourceIcon->setLargeIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/large/{$resource['large_icon']}");
-        } else {
-            $resourceIcon->setLargeIcon($defaultIcon->getLargeIcon());
-        }
-
+        $resourceIcon->setShortcut(false);
         $this->em->persist($resourceIcon);
+        $this->im->createShortcutIcon($resourceIcon);
     }
 
     private function persistCustomAction($actions, $resourceType)
@@ -209,15 +218,18 @@ class DatabaseWriter
 
     private function persistWidget($widget, $pluginEntity, $plugin)
     {
+        $ds = DIRECTORY_SEPARATOR;
+
         $widgetEntity = new Widget();
         $widgetEntity->setName($widget['name']);
         $widgetEntity->setConfigurable($widget['is_configurable']);
         $widgetEntity->setPlugin($pluginEntity);
 
+
         if(isset($widget['icon'])){
-            $widgetEntity->setIcon("bundles/{$plugin->getAssetsFolder()}/images/icons/{$widget['icon']}");
+            $widgetEntity->setIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widget['icon']}");
         } else {
-            $defaultIcon = "bundles/clarolinecore/images/resources/icons/large/res_default.png";
+            $defaultIcon = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}res_default.png";
             $widgetEntity->setIcon($defaultIcon);
         }
 

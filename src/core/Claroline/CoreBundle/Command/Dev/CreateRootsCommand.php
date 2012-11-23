@@ -9,6 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceRootsData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
+/**
+ * Creates many resource roots (workspaces).
+ */
 class CreateRootsCommand extends ContainerAwareCommand
 {
     protected function configure()

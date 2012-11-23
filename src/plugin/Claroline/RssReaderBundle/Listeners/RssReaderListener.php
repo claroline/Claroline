@@ -137,20 +137,20 @@ class RssReaderListener extends ContainerAware
 
     private function getRssContent($rssconfig)
     {
-        //read & use the config
-        try{
-            $rss = simplexml_load_file($rssconfig->getUrl());
-        }
-        catch(\Exception $e){
-            $event->setContent($this->container->get('translator')->trans('rss_url_invalid', array(), 'rss_reader'));
-            $event->stopPropagation();
-            return;
+        require(__DIR__.'/../Resources/vendor/syndexport.php');
+
+        $rss = file_get_contents($rssconfig->getUrl());
+        $flux = new \SyndExport($rss);
+        $items = $flux->exportItems();
+
+        foreach ($items as $index => $item) {
+            if(isset($items[$index]['description'])){
+                $items[$index]['description']=  preg_replace('/<[^>]+>/i', '', $item['description']);
+            }
         }
 
-        $content = $this->container->get('templating')->render(
-            'ClarolineRssReaderBundle::rss.html.twig', array('rss' => $rss)
+        return $this->container->get('templating')->render(
+            'ClarolineRssReaderBundle::rss.html.twig', array('rss' => $items)
         );
-
-        return $content;
     }
 }

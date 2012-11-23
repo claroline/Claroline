@@ -36,6 +36,7 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceLoggerTable($schema);
         $this->createWidgetTable($schema);
         $this->createAdminWidgetConfig($schema);
+        $this->createResourceLinkTable($schema);
 
     }
 
@@ -70,6 +71,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_resource_logger');
         $schema->dropTable('claro_widget');
         $schema->dropTable('claro_widget_dispay');
+        $schema->dropTable('claro_resource_link');
     }
 
     private function createUserTable(Schema $schema)
@@ -249,7 +251,12 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => false));
-        $table->addColumn('icon_id', 'integer', array('notnull' => false));
+        $table->addColumn('icon_id', 'integer', array('notnull' => true));
+        $table->addColumn('path', 'string', array('length' => 1000, 'notnull' => false));
+        $table->addColumn('name', 'string');
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addColumn('lvl', 'integer', array('notnull' => false));
+        $table->addColumn('workspace_id', 'integer');
 
         $this->addDiscriminator($table);
 
@@ -264,6 +271,10 @@ class Version20120119000000 extends BundleMigration
         );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_icon'), array('icon_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
 
         $this->storeTable($table);
@@ -292,6 +303,20 @@ class Version20120119000000 extends BundleMigration
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createResourceLinkTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_shortcut');
+        $this->addId($table);
+        $table->addColumn('resource_id', 'integer');
+        $this->storeTable($table);
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
         );
     }
 
@@ -419,14 +444,17 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
+    //shortcut_id goes to ~
     private function createResourceIconTable(Schema $schema)
     {
         $table = $schema->createTable('claro_resource_icon');
         $this->addId($table);
-        $table->addColumn('large_icon', 'string', array('notnull' => false, 'length' => 255));
-        $table->addColumn('small_icon', 'string', array('notnull' => false, 'length' => 255));
+        $table->addColumn('icon_location', 'string', array('notnull' => false, 'length' => 255));
+        $table->addColumn('relative_url', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('icon_type_id', 'integer', array('notnull' => false));
-        $table->addColumn('type', 'string');
+        $table->addColumn('type', 'string', array('length' => 255));
+        $table->addColumn('is_shortcut', 'boolean');
+        $table->addColumn('shortcut_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_icon_type'), array('icon_type_id'), array('id'), array('onDelete' => 'SET NULL')
@@ -448,7 +476,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_logger');
         $this->addId($table);
-        $table->addColumn('instance_id', 'integer', array('notnull' => false));
+        $table->addColumn('resource_id', 'integer', array('notnull' => false));
         $table->addColumn('path', 'string');
         $table->addColumn('resource_type_id', 'integer');
         $table->addColumn('workspace_id', 'integer');

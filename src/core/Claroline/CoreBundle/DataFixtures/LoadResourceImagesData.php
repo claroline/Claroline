@@ -28,7 +28,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
      */
     public function load (ObjectManager $manager)
     {
-        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type', 'default');
+        $iconsType = array('type', 'generated', 'basic_mime_type', 'complete_mime_type', 'default', 'custom');
         $defaultIconType = null;
         $basicIconMimeType = null;
         $completeIconMimeType = null;
@@ -55,8 +55,9 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             }
         }
 
-        $largeIconsWebFolder = 'bundles/clarolinecore/images/resources/icons/large/';
-        $defaultIcon = null;
+        $ds = DIRECTORY_SEPARATOR;
+        $largeIconsWebFolder = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}";
+        $relativeUrl = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}";
 
         /*
          * [1] thumbnail link
@@ -67,29 +68,32 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
 
         //see www.webmaster-toolkit.com/mime-types.shtml for mime types
         $resourceImages = array(
-            array($largeIconsWebFolder.'res_default.png', $defaultIcon, $defaultIconType, 'default'),
-            array($largeIconsWebFolder.'res_file.png', $defaultIcon, $typeIconType, 'file'),
-            array($largeIconsWebFolder.'res_folder.png', $defaultIcon, $typeIconType, 'directory'),
-            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $completeIconMimeType, 'text/plain'),
-            array($largeIconsWebFolder.'res_text.png', $defaultIcon, $basicIconMimeType, 'text'),
-            array($largeIconsWebFolder.'res_url.png', $defaultIcon, $typeIconType, 'url'),
-            array($largeIconsWebFolder.'res_exercice.png', $defaultIcon, $typeIconType, 'exercice'),
-            array($largeIconsWebFolder.'res_video.png', $defaultIcon, $basicIconMimeType, 'video'),
-            array($largeIconsWebFolder.'res_msexcel.png', $defaultIcon, $completeIconMimeType, 'application/excel'),
-            array($largeIconsWebFolder.'res_mspowerpoint.png', $defaultIcon, $completeIconMimeType, 'application/powerpoint'),
-            array($largeIconsWebFolder.'res_msword.png', $defaultIcon, $completeIconMimeType, 'application/msword'),
-            array($largeIconsWebFolder.'res_msword.png', $defaultIcon, $completeIconMimeType, 'application/vnd.oasis.opendocument.text'),
-            array($largeIconsWebFolder.'res_pdf.png', $defaultIcon, $completeIconMimeType, 'application/pdf'),
-            array($largeIconsWebFolder.'res_image.png', $defaultIcon, $basicIconMimeType, 'image'),
+            array($largeIconsWebFolder.'res_default.png', $relativeUrl.'res_default.png', $defaultIconType, 'default'),
+            array($largeIconsWebFolder.'res_file.png', $relativeUrl.'res_file.png', $typeIconType, 'file'),
+            array($largeIconsWebFolder.'res_folder.png', $relativeUrl.'res_folder.png', $typeIconType, 'directory'),
+            array($largeIconsWebFolder.'res_text.png', $relativeUrl.'res_text.png', $completeIconMimeType, 'text/plain'),
+            array($largeIconsWebFolder.'res_text.png', $relativeUrl.'res_text.png', $basicIconMimeType, 'text'),
+            array($largeIconsWebFolder.'res_url.png', $relativeUrl.'res_url.png', $typeIconType, 'url'),
+            array($largeIconsWebFolder.'res_exercice.png', $relativeUrl.'res_exercice.png', $typeIconType, 'exercice'),
+            array($largeIconsWebFolder.'res_video.png', $relativeUrl.'res_video.png', $basicIconMimeType, 'video'),
+            array($largeIconsWebFolder.'res_msexcel.png', $relativeUrl.'res_msexcel.png', $completeIconMimeType, 'application/excel'),
+            array($largeIconsWebFolder.'res_mspowerpoint.png', $relativeUrl.'res_mspowerpoint.png', $completeIconMimeType, 'application/powerpoint'),
+            array($largeIconsWebFolder.'res_msword.png', $relativeUrl.'res_msword.png', $completeIconMimeType, 'application/msword'),
+            array($largeIconsWebFolder.'res_msword.png', $relativeUrl.'res_msword.png', $completeIconMimeType, 'application/vnd.oasis.opendocument.text'),
+            array($largeIconsWebFolder.'res_pdf.png', $relativeUrl.'res_pdf.png', $completeIconMimeType, 'application/pdf'),
+            array($largeIconsWebFolder.'res_image.png', $relativeUrl.'res_image.png', $basicIconMimeType, 'image'),
         );
 
         foreach ($resourceImages as $resourceImage) {
             $rimg = new ResourceIcon();
-            $rimg->setLargeIcon($resourceImage[0]);
-            $rimg->setSmallIcon($resourceImage[1]);
+            $rimg->setIconLocation($resourceImage[0]);
+            $rimg->setRelativeUrl($resourceImage[1]);
             $rimg->setIconType($resourceImage[2]);
             $rimg->setType($resourceImage[3]);
+            $rimg->setShortcut(false);
             $manager->persist($rimg);
+
+            $this->container->get('claroline.resource.icon_creator')->createShortcutIcon($rimg);
         }
 
         $manager->flush();

@@ -5,60 +5,37 @@ claro_resource_creation_form:
         expose: true
 
 claro_resource_create:
-    pattern: /create/{resourceType}/{parentInstanceId}
+    pattern: /create/{resourceType}/{parentId}
     defaults: { _controller: ClarolineCoreBundle:Resource:create }
     options:
         expose: true
 
-claro_resource_rename_form:
-    pattern: /rename/form/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:renameForm }
-    options:
-        expose: true
-claro_resource_rename:
-    pattern: /rename/{instanceId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:rename }
-    options:
-        expose: true
-
 claro_resource_delete:
-    pattern: /delete/{instanceId}
+    pattern: /delete
     defaults: { _controller: ClarolineCoreBundle:Resource:delete }
     options:
         expose: true
 
-claro_resource_multi_delete:
-    pattern: /multidelete
-    defaults: { _controller: ClarolineCoreBundle:Resource:multiDelete }
-    options:
-        expose: true
-
-claro_multi_export:
-    pattern: /multiexport
-    defaults: { _controller: ClarolineCoreBundle:Resource:multiExport }
+claro_resource_export:
+    pattern: /export
+    defaults: { _controller: ClarolineCoreBundle:Resource:export }
     options:
         expose: true
 
 claro_resource_move:
-   pattern: /move/{instanceId}/{newParentId}
+   pattern: /move/{newParentId}
    defaults: { _controller: ClarolineCoreBundle:Resource:move }
    options:
         expose: true
 
-claro_resource_multimove:
-   pattern: /multimove/{newParentId}
-   defaults: { _controller: ClarolineCoreBundle:Resource:multimove }
-   options:
-        expose: true
-
 claro_resource_open:
-   pattern: /open/{resourceType}/{instanceId}
+   pattern: /open/{resourceType}/{resourceId}
    defaults: { _controller: ClarolineCoreBundle:Resource:open }
    options:
      expose: true
 
 claro_resource_custom:
-    pattern: /custom/{resourceType}/{action}/{instanceId}
+    pattern: /custom/{resourceType}/{action}/{resourceId}
     defaults: { _controller: ClarolineCoreBundle:Resource:custom }
     options:
         expose: true
@@ -76,13 +53,13 @@ claro_resource_root:
         expose: true
 
 claro_resource_children:
-    pattern: children/{instanceId}/{resourceTypeId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:children, instanceId: 0, resourceTypeId: 0}
+    pattern: children/{resourceId}/{resourceTypeId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:children, resourceId: 0, resourceTypeId: 0}
     options:
         expose: true
 
 claro_resource_parents:
-     pattern: parents/{instanceId}
+     pattern: parents/{resourceId}
      defaults: { _controller: ClarolineCoreBundle:Resource:parents }
      options:
         expose: true
@@ -93,15 +70,9 @@ claro_resources_list:
     options:
        expose: true
 
-claro_resource_add_workspace:
-    pattern: /workspace/add/{instanceId}/{instanceDestinationId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:addToWorkspace }
-    options:
-        expose: true
-
-claro_resource_multi_add_workspace:
-    pattern: /workspace/multi/add/{instanceDestinationId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:multiAddToWorkspace }
+claro_resource_copy:
+    pattern: /copy/{resourceDestinationId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:copy }
     options:
         expose: true
 
@@ -117,14 +88,29 @@ claro_resource_every_instances:
     options:
         expose: true
 
-claro_resource_count_instances:
-    pattern: /count/instances
-    defaults: { _controller: ClarolineCoreBundle:Resource:countPageInstance }
+claro_resource_form_properties:
+    pattern: /properties/form/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:propertiesForm }
+
+claro_resource_edit_properties:
+    pattern: /properties/edit/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:changeProperties }
+
+claro_resource_create_shortcut:
+    pattern: /shortcut/{newParentId}/create
+    defaults: { _controller: ClarolineCoreBundle:Resource:createShortcut }
     options:
         expose: true
 
-claro_resource_paginate_all:
-    pattern: /instance/flat/{page}
-    defaults: { _controller: ClarolineCoreBundle:Resource:paginatedFlatResource }
+claro_resource_rename_form:
+    pattern: /rename/form/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:renameForm }
     options:
         expose: true
+
+claro_resource_rename:
+    pattern: /rename/{resourceId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:rename }
+    options:
+        expose: true
+

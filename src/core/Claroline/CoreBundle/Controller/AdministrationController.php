@@ -79,7 +79,7 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiDeleteUserAction()
+    public function deleteUsersAction()
     {
         $params = $this->get('request')->query->all();
 
@@ -212,8 +212,8 @@ class AdministrationController extends Controller
     /**
      * Returns the platform group list.
      *
-     * @param $offset the offset.
-     * @param $format the format.
+     * @param integer $offset the offset.
+     * @param string $format the format.
      *
      * @return Response.
      */
@@ -355,7 +355,7 @@ class AdministrationController extends Controller
     /**
      * Returns a list of users not registered to the Group $group.
      *
-     * @param integer $group
+     * @param integer $groupId
      * @param integer $offset
      *
      * @return Response
@@ -407,7 +407,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function multiaddUserstoGroupAction($groupId)
+    public function addUsersToGroupAction($groupId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();
@@ -443,7 +443,7 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function multiDeleteUserFromGroupAction($groupId)
+    public function deleteUsersFromGroupAction($groupId)
     {
         $params = $this->get('request')->query->all();
         $em = $this->getDoctrine()->getEntityManager();
@@ -465,9 +465,9 @@ class AdministrationController extends Controller
     /**
      * Deletes multiple groups.
      *
-     *  @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multiDeleteGroupAction()
+    public function deleteGroupsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
         $params = $this->get('request')->query->all();

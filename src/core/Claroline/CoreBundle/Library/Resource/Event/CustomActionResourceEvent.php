@@ -4,23 +4,24 @@ namespace Claroline\CoreBundle\Library\Resource\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
  */
 class CustomActionResourceEvent extends Event
 {
-    private $instanceId;
+    private $resource;
     private $response;
 
     /**
      * Constructor.
      *
-     * @param integer $resourceId
+     * @param AbstractResource $resource
      */
-    public function __construct($instanceId)
+    public function __construct(AbstractResource $resource)
     {
-        $this->instanceId = $instanceId;
+        $this->resource = $resource;
     }
 
     /**
@@ -28,9 +29,9 @@ class CustomActionResourceEvent extends Event
      *
      * @return integer
      */
-    public function getInstanceId()
+    public function getResource()
     {
-        return $this->instanceId;
+        return $this->resource;
     }
 
     /**

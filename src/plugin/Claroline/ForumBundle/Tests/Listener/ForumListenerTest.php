@@ -12,11 +12,11 @@ class ForumListenerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->client->followRedirects();
-        $this->resourceInstanceRepository = $this
+        $this->resourceRepository = $this
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance');
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
     }
 
     public function tearDown()
@@ -34,8 +34,8 @@ class ForumListenerTest extends FunctionalTestCase
     public function testForumCreation()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $userRoot = $userRoot = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
-        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test', 'shareType' => 0)));
+        $userRoot = $userRoot = $this->resourceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test')));
         $this->assertEquals(count(json_decode($this->client->getResponse()->getContent())), 1);
     }
 
@@ -43,8 +43,8 @@ class ForumListenerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadOptionsData());
         $this->logUser($this->getFixtureReference('user/user'));
-        $userRoot = $userRoot = $this->resourceInstanceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
-        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test', 'shareType' => 0)));
+        $userRoot = $userRoot = $this->resourceRepository->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}", array('forum_form' => array('name' => 'test')));
         $datas = json_decode($this->client->getResponse()->getContent());
         $crawler = $this->client->request('POST', "/resource/open/claroline_forum/{$datas[0]->id}");
         $this->assertEquals(1, count($crawler->filter('#subjects_table')));

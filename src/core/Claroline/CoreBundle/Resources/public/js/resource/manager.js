@@ -103,13 +103,19 @@
                     this.filters.toggle();
                 },
                 'click button.add': function () {
-                    this.parameters.isPickerOnly ?
-                        this.parameters.pickerCallback(this.checkedResources.resources) :
+                    if (this.parameters.isPickerOnly){
+                        this.parameters.pickerCallback(this.checkedResources.resources, this.currentDirectory.id)
+                    } else {
+                        if(this.callback){
+                            this.callback(_.keys(this.checkedResources.resources), this.targetDirectoryId);
+                        } else {
                         this.dispatcher.trigger('paste', {
                             ids: _.keys(this.checkedResources.resources),
                             directoryId: this.targetDirectoryId,
                             isCutMode: false
                         });
+                        }
+                    }
                     this.dispatcher.trigger('picker', {action: 'close'});
                 }
             },
@@ -179,9 +185,20 @@
                 parameters.isCreateAllowed = parameters.isAddAllowed =
                     !(directory.id == 0 || (!this.parameters.isPickerMode && this.isSearchMode));
                 $(this.el).html(Twig.render(resource_actions_template, parameters));
+            },
+            createShortcut: function(resourceIds, newParentId){
+                var url = Routing.generate('claro_resource_create_shortcut', { 'newParentId': newParentId});
+                $.ajax({
+                    url: url,
+                    data: {ids: resourceIds},
+                    success: function (data, textStatus, jqXHR) {
+                        this.views['main'].subViews.resources.addThumbnails(data);
+                    }
+                });
             }
         }),
         Filters: Backbone.View.extend({
+
             className: 'filters form-horizontal',
             events: {
                 'click button.filter': function () {
@@ -293,16 +310,28 @@
                 }, this);
                 successHandler && successHandler();
             },
+            renameThumbnail: function (resourceId, newName, successHandler) {
+                newName = Claroline.Utilities.formatText(newName, 20, 2);
+                this.$('#' + resourceId + ' .resource-name').html(newName);
+                successHandler && successHandler();
+            },
             removeResources: function (resourceIds) {
                 // same logic for both thumbnails and search results
                 for (var i = 0; i < resourceIds.length; ++i) {
                     this.$('#' + resourceIds[i]).remove();
                 }
             },
-            renameThumbnail: function (resourceId, newName, successHandler) {
-                newName = Claroline.Utilities.formatText(newName, 20, 2);
-                this.$('#' + resourceId + ' .resource-name').html(newName);
-                successHandler && successHandler();
+            editProperties: function(resourceId, properties, successHandler){
+                console.debug(properties);
+                if(properties.name != undefined){
+                    var newName = Claroline.Utilities.formatText(properties.name, 20, 2);
+                    this.$('#' + resourceId + ' .resource-name').html(newName);
+                }
+                if (properties.icon != undefined){
+                    this.$('#' + resourceId + ' .resource-img').attr('src', this.parameters.appPath + '/../' + properties.icon);
+                }
+
+              successHandler && successHandler();
             },
             dispatchClick: function (event) {
                 event.preventDefault();
@@ -372,7 +401,7 @@
             render: function (form, targetResourceId, eventOnSubmit) {
                 this.targetResourceId = targetResourceId;
                 this.eventOnSubmit = eventOnSubmit;
-                form = form.replace('_instanceId', targetResourceId);
+                form = form.replace('_resourceId', targetResourceId);
                 $(this.el).html(Twig.render(modal_template, {
                     'body': form
                 })).modal();
@@ -407,7 +436,7 @@
     manager.Controller = {
         events: {
             'picker': function (event) {
-                this.picker(event.action);
+                this.picker(event.action, event.callback);
             },
             'create': function (event) {
                 this.create(event.action, event.data, event.resourceId);
@@ -427,14 +456,14 @@
             'rename': function (event) {
                 this.rename(event.action, event.data, event.resourceId);
             },
-            'rename-form': function (event) {
-                this.displayRenameForm(event.ids[0]);
+            'properties': function(event){
+                this.editProperties(event.action, event.data, event.resourceId);
             },
             'custom': function (event) {
                 this.custom(event.action, event.id);
             },
             'paste': function (event) {
-                this[event.isCutMode ? 'move' : 'add'](event.ids, event.directoryId);
+                this[event.isCutMode ? 'move' : 'copy'](event.ids, event.directoryId);
             },
             'breadcrumb-click': function (event) {
                 event.isPickerMode ?
@@ -513,21 +542,27 @@
         },
 
         displayForm: function (type, resource) {
-            var formSource = (
-                (type == 'create' && '/resource/form/' + resource.type) ||
-                (type == 'rename' && '/resource/rename/form/' + resource.id));
-            formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
-            this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
-            $.ajax({
-                url: this.parameters.appPath + formSource,
-                success: function (form) {
-                    this.views['form'].render(form, resource.id, type);
-                    this.views['form'].isAppended ||
-                        this.parameters.parentElement.append(this.views['form'].el)
-                        && (this.views['form'].isAppended = true);
-                }
-            });
+            if (resource.type == 'resource_shortcut'){
+                this.dispatcher.trigger('picker', {action: 'open', callback: function(resources, newParentId){this.createShortcut(resources, newParentId)}});
+            } else {
+                var formSource = (
+                    (type == 'create' && '/resource/form/' + resource.type) ||
+                    (type == 'rename' && '/resource/rename/form/' + resource.id) ||
+                    (type == 'properties' && '/resource/properties/form/' + resource.id));
+                formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
+                this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
+                $.ajax({
+                    url: this.parameters.appPath + formSource,
+                    success: function (form) {
+                        this.views['form'].render(form, resource.id, type);
+                        this.views['form'].isAppended ||
+                            this.parameters.parentElement.append(this.views['form'].el)
+                            && (this.views['form'].isAppended = true);
+                    }
+                });
+            }
         },
+
         create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
                 url: formAction,
@@ -539,6 +574,48 @@
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
                         this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close()) :
                         this.views['form'].render(data, parentDirectoryId);
+                }
+            });
+        },
+        editProperties: function(formAction, formData, resourceId) {
+            $.ajax({
+                url: formAction,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR) {
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
+                    this.views['main'].subViews.resources.editProperties(resourceId, data, this.views['form'].close()) :
+                    this.views['renameForm'].render(data, resourceId);
+                }
+            });
+        }
+        ,
+        delete_: function (resourceIds) {
+            $.ajax({
+                url: this.parameters.appPath + '/resource/delete',
+                data: {ids: resourceIds},
+                success: function () {
+                    this.views.main.subViews.resources.removeResources(resourceIds);
+                }
+            });
+        },
+        copy: function (resourceIds, directoryId) {
+            $.ajax({
+                url: this.parameters.appPath + '/resource/copy/' + directoryId,
+                data: {ids: resourceIds},
+                success: function (data) {
+                    this.views.main.subViews.resources.addThumbnails(data);
+                }
+            });
+        },
+        move: function (resourceIds, newParentDirectoryId) {
+            $.ajax({
+                url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
+                data: {ids: resourceIds},
+                success: function (data) {
+                    this.views.main.subViews.resources.addThumbnails(data);
                 }
             });
         },
@@ -556,35 +633,8 @@
                 }
             });
         },
-        delete_: function (resourceIds) {
-            $.ajax({
-                url: this.parameters.appPath + '/resource/multidelete',
-                data: {ids: resourceIds},
-                success: function () {
-                    this.views.main.subViews.resources.removeResources(resourceIds);
-                }
-            });
-        },
-        add: function (resourceIds, directoryId) {
-            $.ajax({
-                url: this.parameters.appPath + '/resource/workspace/multi/add/' + directoryId,
-                data: {ids: resourceIds},
-                success: function (data) {
-                    this.views.main.subViews.resources.addThumbnails(data);
-                }
-            });
-        },
-        move: function (resourceIds, newParentDirectoryId) {
-            $.ajax({
-                url: this.parameters.appPath + '/resource/multimove/' + newParentDirectoryId,
-                data: {ids: resourceIds},
-                success: function (data) {
-                    this.views.main.subViews.resources.addThumbnails(data);
-                }
-            });
-        },
         download: function (resourceIds) {
-            window.location = this.parameters.appPath + '/resource/multiexport?' + $.param({ids: resourceIds});
+            window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
         open: function (resourceType, resourceId) {
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId;
@@ -595,9 +645,10 @@
         custom: function (action, resourceId) {
             alert('Custom action "' + action + '" on resource ' + resourceId + ' (not implemented yet)');
         },
-        picker: function (action) {
+        picker: function (action, callback) {
             action == 'open' && (this.views.picker.isAppended || this.displayResources(0, 'picker'));
             !this.parameters.isPickerOnly && (this.views.picker.subViews.actions.targetDirectoryId = this.views.main.currentDirectory.id);
+            callback && (this.views.picker.subViews.actions.callback = callback);
             this.views.picker.$el.modal(action == 'open' ? 'show' : 'hide');
         }
     };

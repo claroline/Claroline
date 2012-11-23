@@ -1,7 +1,7 @@
 (function(){
     var nbPages = document.getElementById('twig-attributes').getAttribute('data-nbPages');
     var limit = document.getElementById('twig-attributes').getAttribute('data-limit');
-    var subjectInstanceId = document.getElementById('twig-attributes').getAttribute('data-subjectInstanceId');
+    var subjectId = document.getElementById('twig-attributes').getAttribute('data-subjectId');
     var activePage = 1;
     var pager = activePageMessages(activePage);
 
@@ -14,7 +14,7 @@
         pager = Claroline.Utilities.renderPager(nbPages, page, 'message', $('#messages_table'));
         setPagerActions();
         var offset = (page-1)*limit;
-        var route = Routing.generate('claro_forum_messages', {'subjectInstanceId': subjectInstanceId, 'offset': offset});
+        var route = Routing.generate('claro_forum_messages', {'subjectId': subjectId, 'offset': offset});
         Claroline.Utilities.ajax({
             url: route,
             success: function(data){

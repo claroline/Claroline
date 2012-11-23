@@ -32,9 +32,8 @@ class Creator
         $workspace->setType($config->getType());
         $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
-        $root = new ResourceInstance();
         $rootDir = new Directory();
-        $root->setName("{$workspace->getName()} - {$workspace->getCode()}");
+        $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rootDir->setShareType(0);
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager
@@ -45,12 +44,9 @@ class Creator
             ->findOneBy(array('type' => 'directory', 'iconType' => 1));
         $rootDir->setIcon($directoryIcon);
         $rootDir->setResourceType($directoryType);
-        $root->setResource($rootDir);
-        $root->setWorkspace($workspace);
-        $root->setCreator($manager);
+        $rootDir->setWorkspace($workspace);
 
         $this->entityManager->persist($rootDir);
-        $this->entityManager->persist($root);
         $this->entityManager->flush();
         $workspace->initBaseRoles();
         $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
@@ -65,7 +61,6 @@ class Creator
 
         $this->entityManager->flush();
         $this->entityManager->detach($rootDir);
-        $this->entityManager->detach($root);
         //for some reason, it broke the test suite... and that's all.
 //        $this->entityManager->detach($workspace);
 

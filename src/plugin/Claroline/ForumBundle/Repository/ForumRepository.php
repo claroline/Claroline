@@ -7,59 +7,57 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ForumRepository extends EntityRepository
 {
-      const SELECT_SUBJECT = "
-            ri.id as instanceId,
-            COUNT(m_count.id) AS count_messages,
-            MAX(m.created) AS last_message_created,
-            s.id as subjectId,
-            s.created as subject_created,
-            ri.name as title,
-            subjectCreator.lastName as subject_creator_lastname,
-            subjectCreator.firstName as subject_creator_firstname,
-            lastUser.lastName as last_message_creator_lastname,
-            lastUser.firstName as last_message_creator_firstname
-            ";
 
       /**
        * Deep magic goes here.
        * Gets a subject with some of its last messages datas.
        *
-       * @param ResourceInstance $forumInstance
+       * @param ResourceInstance $forum
        * @return type
        */
-    public function getSubjects($forumInstance, $offset = null, $limit = null)
+    public function getSubjects($forum, $offset = null, $limit = null)
     {
         $dql = "
-        SELECT ".self::SELECT_SUBJECT."
+        SELECT
+        s.id as id,
+        COUNT(m_count.id) AS count_messages,
+        MAX(m.created) AS last_message_created,
+        s.id as subjectId,
+        s.created as subject_created,
+        s.name as title,
+        subjectCreator.lastName as subject_creator_lastname,
+        subjectCreator.firstName as subject_creator_firstname,
+        lastUser.lastName as last_message_creator_lastname,
+        lastUser.firstName as last_message_creator_firstname
+
         FROM  Claroline\ForumBundle\Entity\Subject s
-        JOIN s.messages m
-        JOIN s.messages m_count
-        JOIN s.resourceInstances ri
+
+        JOIN s.children m
+        JOIN s.children m_count
         JOIN s.creator subjectCreator
-        JOIN ri.parent pri
+        JOIN s.parent pri
         JOIN m.creator lastUser WITH lastUser.id =
             (
                 SELECT lcu.id FROM Claroline\ForumBundle\Entity\Message m2
-                JOIN m2.subject s2
+                JOIN m2.parent s2
                 JOIN m2.creator lcu
-                JOIN s2.forum f2
-                JOIN f2.resourceInstances ri2
+                JOIN s2.parent f2
                 WHERE NOT EXISTS
                 (
                     SELECT m3 FROM Claroline\ForumBundle\Entity\Message m3
-                    JOIN m3.subject s3
+                    JOIN m3.parent s3
                     WHERE s2.id = s3.id
                     AND m2.id < m3.id
                 )
-                and ri2.id = :instanceId
+                and f2.id = :forumId
                 and m2.id = m.id
             )
-        WHERE   pri.id = :instanceId
+        WHERE   pri.id = :forumId
         GROUP BY s.id
         ORDER BY count_messages DESC";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('instanceId', $forumInstance->getId());
+        $query->setParameter('forumId', $forum->getId());
         $query->setMaxResults($limit);
         $query->setFirstResult($offset);
 
@@ -83,30 +81,28 @@ class ForumRepository extends EntityRepository
         return $query->getResults();
     }
 
-    public function countMessagesForSubjectInstance($subjectInstance)
+    public function countMessagesForSubject($subject)
     {
         $dql = "
             SELECT Count(m) FROM Claroline\ForumBundle\Entity\Message m
-            JOIN m.resourceInstances ri
-            JOIN ri.parent pri
-            WHERE pri.id = :instanceId";
+            JOIN m.parent p
+            WHERE p.id = :parentId";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('instanceId', $subjectInstance->getId());
+        $query->setParameter('parentId', $subject->getId());
 
         return $query->getSingleScalarResult();
     }
 
-    public function countSubjectsFormForumInstance($forumInstance)
+    public function countSubjectsForForum($forum)
     {
         $dql = "
             SELECT COUNT(s) FROM Claroline\ForumBundle\Entity\Subject s
-            JOIN s.resourceInstances ri
-            JOIN ri.parent pri
-            WHERE pri.id = :instanceId";
+            JOIN s.parent p
+            WHERE p.id = :parentId";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('instanceId', $forumInstance->getId());
+        $query->setParameter('parentId', $forum->getId());
 
         return $query->getSingleScalarResult();
     }

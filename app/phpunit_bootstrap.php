@@ -25,6 +25,9 @@ function fallback($class)
         case 'appTestDebugProjectContainer':
             require_once __DIR__ . '/cache/test/appTestDebugProjectContainer.php';
             break;
+        case 'apptestUrlMatcher':
+            require_once __DIR__ . '/cache/test/apptestUrlMatcher.php';
+            break;
         default:
             if (strpos($class, 'Proxies\__CG__') === 0) {
                 $testProxyDir = __DIR__ . '/cache/test/doctrine/orm/Proxies';

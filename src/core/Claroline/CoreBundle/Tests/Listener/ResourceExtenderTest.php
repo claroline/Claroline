@@ -75,23 +75,40 @@ class ResourceExtenderTest extends FunctionalTestCase
 
     private function createSpecificResources()
     {
+        $defaultIcon = $this->client->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->findOneBy(array ('type' => 'default'));
+
         $this->loadUserFixture();
 
         $firstRes = new SpecificResource1();
         $firstRes->setSomeField('Test');
         $firstRes->setCreator($this->getFixtureReference('user/user'));
+        $firstRes->setWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $firstRes->setName('name');
+        $firstRes->setIcon($defaultIcon);
 
         $secondRes = new SpecificResource2();
         $secondRes->setSomeField('Test');
         $secondRes->setCreator($this->getFixtureReference('user/ws_creator'));
+        $secondRes->setWorkspace($this->getFixtureReference('user/ws_creator')->getPersonalWorkspace());
+        $secondRes->setName('name');
+        $secondRes->setIcon($defaultIcon);
 
         $thirdRes = new SpecificResource2();
         $thirdRes->setSomeField('Test');
         $thirdRes->setCreator($this->getFixtureReference('user/admin'));
+        $thirdRes->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+        $thirdRes->setName('name');
+        $thirdRes->setIcon($defaultIcon);
 
         $fourthRes = new Directory();
         $fourthRes->setName('Test');
         $fourthRes->setCreator($this->getFixtureReference('user/admin'));
+        $fourthRes->setWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $fourthRes->setName('name');
+        $fourthRes->setIcon($defaultIcon);
 
         $this->em->persist($firstRes);
         $this->em->persist($secondRes);

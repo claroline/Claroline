@@ -15,7 +15,7 @@ class TextControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
     }
 
@@ -39,13 +39,13 @@ class TextControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
-        $crawler = $this->client->request('GET', "/text/form/edit/{$text->resource_id}");
+        $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
         $form = $crawler->filter('button[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
         $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
         $node = $crawler->filter('#text_content');
         $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
-        $textId = $text->{'resource_id'};
+        $textId = $text->{'id'};
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($textId);
         $revisions = $text->getRevisions();
         $this->assertEquals(2, count($revisions));

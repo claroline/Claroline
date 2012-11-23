@@ -15,6 +15,7 @@ class IconType
     const BASIC_MIME_TYPE = 3;
     const COMPLETE_MIME_TYPE = 4;
     const DEFAULT_ICON = 5;
+    const CUSTOM_ICON = 6; //defined by the user
 
     /**
      * @ORM\Id

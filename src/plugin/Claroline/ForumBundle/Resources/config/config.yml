@@ -7,7 +7,7 @@ plugin:
       name: claroline_forum
       is_visible: true
       is_browsable: false
-      large_icon: res_forum.png
+      icon: res_forum.png
 
     - class: Claroline\ForumBundle\Entity\Subject
       name: claroline_subject

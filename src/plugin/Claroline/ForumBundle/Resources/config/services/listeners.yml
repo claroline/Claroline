@@ -7,4 +7,5 @@ services:
             - { name: kernel.event_listener, event: create_form_claroline_forum, method: onCreateForm }
             - { name: kernel.event_listener, event: create_claroline_forum, method: onCreate }
             - { name: kernel.event_listener, event: open_claroline_forum, method: onOpen }
+            - { name: kernel.event_listener, event: delete_claroline_forum, method: onDelete }
             - { name: kernel.event_listener, event: plugin_options_clarolineforum, method: onAdministrate }
