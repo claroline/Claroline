@@ -172,7 +172,7 @@ class DatabaseWriter
 
         if (isset($resource['icon'])) {
             $resourceIcon->setIconLocation("{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
-            $resourceIcon->setRelativeUrl("{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
+            $resourceIcon->setRelativeUrl("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
         } else {
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());

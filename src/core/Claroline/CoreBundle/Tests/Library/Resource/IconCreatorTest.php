@@ -74,7 +74,7 @@ class IconCreatorTest extends FixtureTestCase
             $thumbs = $this->getUploadedFiles($this->thumbDir);
             $this->assertEquals(2, count($thumbs));
         } else {
-            $name = $file->getIcon()->getIconLocation();
+            $name = $file->getIcon()->getRelativeUrl();
             $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_video.png', $name);
         }
 

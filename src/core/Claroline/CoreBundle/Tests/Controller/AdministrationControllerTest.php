@@ -17,8 +17,8 @@ class AdministrationControllerTest extends FunctionalTestCase
             'Valid\Simple\ValidSimple',
             'Valid\WithWidgets\ValidWithWidgets'
         ));
-        $this->loadUserFixture();
-        $this->loadGroupFixture();
+        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadGroupFixture(array('group_a'));
         $this->configHandler = $this->client
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
@@ -35,7 +35,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/groups/0.html');
-        $this->assertEquals(3, $crawler->filter('.row-group')->count());
+        $this->assertEquals(1, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanSearchGroups()
@@ -56,7 +56,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
-        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testAdminCanCreateUser()
@@ -78,7 +78,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
         $crawler = $this->client->request('GET', '/admin/users/0.html');
-        $this->assertEquals(6, $crawler->filter('.row-user')->count());
+        $this->assertEquals(3, $crawler->filter('.row-user')->count());
     }
 
     public function testUserCreationFormIsDisplayedWithErrors()
@@ -95,10 +95,10 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/users/0.html');
-        $this->assertEquals(5, $crawler->filter('.row-user')->count());
+        $this->assertEquals(2, $crawler->filter('.row-user')->count());
         $this->client->request('DELETE', "/admin/users?ids[]={$this->getFixtureReference('user/user')->getId()}");
         $crawler = $this->client->request('GET', '/admin/users/0.html');
-        $this->assertEquals(4, $crawler->filter('.row-user')->count());
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function S_testAdminCannotDeleteHimself()
@@ -130,7 +130,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['group_form[name]'] = 'Group D';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/admin/groups/0.html');
-        $this->assertEquals(4, $crawler->filter('.row-group')->count());
+        $this->assertEquals(2, $crawler->filter('.row-group')->count());
     }
 
     public function testGroupCreationFormIsDisplayedWithErrors()
@@ -150,7 +150,7 @@ class AdministrationControllerTest extends FunctionalTestCase
             "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/admin')->getId()}"
         );
        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
-       $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+       $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testAdminCanMultiDeleteUsersFromGroup()
@@ -164,28 +164,28 @@ class AdministrationControllerTest extends FunctionalTestCase
             'DELETE', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users?userIds[]={$this->getFixtureReference('user/admin')->getId()}"
         );
        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
-       $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+       $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testPaginatedGrouplessUsersAction()
     {
          $this->logUser($this->getFixtureReference('user/admin'));
          $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/unregistered/users/0");
-         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testSearchPaginatedGrouplessUsersAction()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/unregistered/users/0/search/doe");
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testSearchPaginatedUserOfGroups()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/search/doe/users/0");
-        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testAddUserToGroupLayoutAction()
@@ -207,7 +207,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('DELETE', "/admin/groups?ids[]={$this->getFixtureReference('group/group_a')->getId()}");
         $crawler = $this->client->request('GET', '/admin/groups/0.html');
-        $this->assertEquals(2, $crawler->filter('.row-group')->count());
+        $this->assertEquals(0, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanEditGroupSettings()

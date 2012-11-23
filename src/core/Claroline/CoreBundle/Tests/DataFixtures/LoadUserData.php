@@ -7,14 +7,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class LoadUserData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
+    private $usernames;
+
+    public function __construct($usernames = null)
+    {
+        if ($usernames != null){
+            $this->usernames = $usernames;
+        } else {
+            $this->usernames = array('admin', 'ws_creator', 'user', 'user_2', 'user_3');
+        }
+    }
+
     /** @var ContainerInterface $container */
     private $container;
 
@@ -39,22 +46,24 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         $adminRole = $this->getReference('role/admin');
 
         $users = array(
-            array('Jane', 'Doe', 'user', '123', $userRole),
-            array('Bob', 'Doe', 'user_2', '123', $userRole),
-            array('Bill', 'Doe', 'user_3', '123', $userRole),
-            array('Henry', 'Doe', 'ws_creator', '123', $wsCreatorRole),
-            array('John', 'Doe', 'admin', '123', $adminRole)
+            'user' => array('Jane', 'Doe', 'user', '123', $userRole),
+            'user_2' => array('Bob', 'Doe', 'user_2', '123', $userRole),
+            'user_3' => array('Bill', 'Doe', 'user_3', '123', $userRole),
+            'ws_creator' => array('Henry', 'Doe', 'ws_creator', '123', $wsCreatorRole),
+            'admin' => array('John', 'Doe', 'admin', '123', $adminRole)
         );
 
-        foreach ($users as $userProps) {
-            $user = new User();
-            $user->setFirstName($userProps[0]);
-            $user->setLastName($userProps[1]);
-            $user->setUserName($userProps[2]);
-            $user->setPlainPassword($userProps[3]);
-            $user->addRole($userProps[4]);
-            $user = $this->container->get('claroline.user.creator')->create($user);
-            $this->addReference("user/{$userProps[2]}", $user);
+        foreach ($this->usernames as $username) {
+            if(array_key_exists($username, $users)){
+                $user = new User();
+                $user->setFirstName($users[$username][0]);
+                $user->setLastName($users[$username][1]);
+                $user->setUserName($users[$username][2]);
+                $user->setPlainPassword($users[$username][3]);
+                $user->addRole($users[$username][4]);
+                $user = $this->container->get('claroline.user.creator')->create($user);
+                $this->addReference("user/{$users[$username][2]}", $user);
+            }
         }
 
         $manager->flush();
