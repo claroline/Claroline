@@ -41,14 +41,20 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
 
                 $group = new Group();
                 $group->setName($groups[$groupName][0]);
-                $group->addRole($this->getReference('role/'.$groups[$groupName][2]));
+
+                try{
+                    $role = $this->getReference('role/'.$groups[$groupName][2]);
+                    $group->addRole($role);
+                } catch(\Exception $e){
+                     //nothing
+                }
                 $usernames = $groups[$groupName][1];
 
                 if (null !== $usernames){
                     foreach($usernames as $username){
                         try{
                             $user = $this->getReference('user/'.$username);
-                        $group->addUser($user);
+                            $group->addUser($user);
                         } catch(\Exception $e){
                             //nothing
                         }

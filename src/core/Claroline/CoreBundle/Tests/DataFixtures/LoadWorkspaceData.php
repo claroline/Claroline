@@ -55,7 +55,7 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
         foreach ($this->workspaceNames as $workspaceName){
             if(array_key_exists($workspaceName, $workspaces)){
                 $ws = $this->createSimpleWorkspace($workspaces[$workspaceName][0], $this->getReference('user/'.$workspaces[$workspaceName][1]), $workspaces[$workspaceName][2]);
-                $ws->setPublic($workspaces[$workspaceName][4]);
+                $ws->setPublic($workspaces[$workspaceName][3]);
                 $manager->persist($ws);
                 $this->addReference('workspace/'.$workspaceName, $ws);
             }

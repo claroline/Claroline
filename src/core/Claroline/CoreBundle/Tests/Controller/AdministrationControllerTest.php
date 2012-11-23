@@ -13,10 +13,6 @@ class AdministrationControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->registerStubPlugins(array(
-            'Valid\Simple\ValidSimple',
-            'Valid\WithWidgets\ValidWithWidgets'
-        ));
         $this->loadUserFixture(array('user', 'admin'));
         $this->loadGroupFixture(array('group_a'));
         $this->configHandler = $this->client
@@ -277,6 +273,10 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanSeeWidgetParameters()
     {
+        $this->registerStubPlugins(array(
+            'Valid\Simple\ValidSimple',
+            'Valid\WithWidgets\ValidWithWidgets'
+        ));
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/widgets');
         //exampletext has 4 widgets
@@ -285,6 +285,10 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanSetWidgetVisibleOption()
     {
+        $this->registerStubPlugins(array(
+            'Valid\Simple\ValidSimple',
+            'Valid\WithWidgets\ValidWithWidgets'
+        ));
         $this->logUser($this->getFixtureReference('user/admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true, 'isDesktop' => false));
@@ -299,6 +303,10 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanSetWidgetLockOption()
     {
+        $this->registerStubPlugins(array(
+            'Valid\Simple\ValidSimple',
+            'Valid\WithWidgets\ValidWithWidgets'
+        ));
         $this->logUser($this->getFixtureReference('user/admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isLocked' => true, 'isDesktop' => false));
@@ -313,6 +321,10 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testDesktopDisplayVisibleWidgets()
     {
+                $this->registerStubPlugins(array(
+            'Valid\Simple\ValidSimple',
+            'Valid\WithWidgets\ValidWithWidgets'
+        ));
          $this->logUser($this->getFixtureReference('user/admin'));
          $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
          $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isVisible' => true, 'isDesktop' => true));
