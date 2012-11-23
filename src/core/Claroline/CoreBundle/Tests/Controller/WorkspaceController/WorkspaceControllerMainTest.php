@@ -11,7 +11,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $this->loadUserFixture();
+        $this->loadUserFixture(array('user', 'admin', 'ws_creator'));
         $this->loadWorkspaceFixture();
         $this->client->followRedirects();
     }
