@@ -34,9 +34,9 @@ abstract class FixtureTestCase extends TransactionalTestCase
         $this->loadFixture(new LoadPlatformRolesData());
     }
 
-    protected function loadWorkspaceFixture()
+    protected function loadWorkspaceFixture($workspaces = null)
     {
-        $this->loadFixture(new LoadWorkspaceData());
+        $this->loadFixture(new LoadWorkspaceData($workspaces));
     }
 
     protected function loadUserFixture($users = null)
