@@ -14,17 +14,15 @@
 
 $rootDirectory = realpath(__DIR__ . "/../..");
 
-function deleteIfExists($file) {
-    if (file_exists($file)) {
-        unlink($file);
-    }
+function refreshFile($file) {
+     file_put_contents($file, '');
 }
 
-deleteIfExists("{$rootDirectory}/app/config/local/plugin/bundles");
-deleteIfExists("{$rootDirectory}/app/config/local/plugin/namespaces");
-deleteIfExists("{$rootDirectory}/app/config/local/plugin/routing.yml");
-deleteIfExists("{$rootDirectory}/app/logs/dev.log");
-deleteIfExists("{$rootDirectory}/app/logs/test.log");
+refreshFile("{$rootDirectory}/app/config/local/plugin/bundles");
+refreshFile("{$rootDirectory}/app/config/local/plugin/namespaces");
+refreshFile("{$rootDirectory}/app/config/local/plugin/routing.yml");
+refreshFile("{$rootDirectory}/app/logs/dev.log");
+refreshFile("{$rootDirectory}/app/logs/test.log");
 
 require_once __DIR__.'/delete_files';
 
