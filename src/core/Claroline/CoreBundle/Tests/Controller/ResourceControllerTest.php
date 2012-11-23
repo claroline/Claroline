@@ -32,7 +32,6 @@ class ResourceControllerTest extends FunctionalTestCase
     public function tearDown()
     {
         parent::tearDown();
-
         $this->cleanDirectory($this->upDir);
         $this->cleanDirectory($this->thumbsDir);
     }
@@ -196,7 +195,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testExport()
     {
-        $this->marktestSkipped("streamedResponse broke this one");
+        $this->markTestSkipped("streamedResponse broke this one");
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/resource/export?0={$this->pwr->getId()}");
         $headers = $this->client->getResponse()->headers;

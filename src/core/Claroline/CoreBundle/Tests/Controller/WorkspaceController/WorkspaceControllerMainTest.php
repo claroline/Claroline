@@ -10,31 +10,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
         $this->client->followRedirects();
-    }
-
-    public static function setUpBeforeClass()
-    {
-        $client = self::createClient();
-        $container = $client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
-        $plugin = $loader->load($pluginFqcn);
-        $dbWriter->insert($plugin);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        $client = self::createClient();
-        $container = $client->getContainer();
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
-        $plugin = $loader->load($pluginFqcn);
-        $container->get('claroline.plugin.recorder')->unregister($plugin);
-        $container->get('claroline.plugin.migrator')->remove($plugin);
     }
 
     public function testWSCreatorCanSeeHisWorkspaces()
@@ -258,4 +235,16 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget-content')));
     }
 
+    private function registerStubPlugins(array $pluginFqcns)
+    {
+        $container = $this->client->getContainer();
+        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new Loader($pluginDirectory);
+
+        foreach ($pluginFqcns as $pluginFqcn) {
+            $plugin = $loader->load($pluginFqcn);
+            $dbWriter->insert($plugin);
+        }
+    }
 }

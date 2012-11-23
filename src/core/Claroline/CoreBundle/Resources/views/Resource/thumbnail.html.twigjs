@@ -6,8 +6,7 @@
         data-resource-name="{{ resource.name }}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
     />
-    <img src="{{ webRoot }}/{{ resource.large_icon }}"
-         class="resource-img"
+    <img src="{{ webRoot }}{{ resource.large_icon }}"
          data-id="{{ resource.id }}"
          data-type="{{ resource.type }}"
          data-type-id="{{ resource.resource_type_id }}"/>
