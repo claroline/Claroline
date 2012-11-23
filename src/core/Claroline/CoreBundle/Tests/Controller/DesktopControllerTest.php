@@ -9,7 +9,6 @@ class DesktopControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
         $this->client->followRedirects();
     }
 
@@ -21,6 +20,7 @@ class DesktopControllerTest extends FunctionalTestCase
     //test if the url is working
     public function testPersoAction()
     {
+        $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', '/desktop/perso');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -29,6 +29,7 @@ class DesktopControllerTest extends FunctionalTestCase
     //test if the url is working
     public function testResourceManagerAction()
     {
+        $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('GET', '/desktop/resources');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -36,6 +37,7 @@ class DesktopControllerTest extends FunctionalTestCase
 
     public function testDesktopParametersAction()
     {
+        $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/desktop/user/parameters');
         $this->assertEquals(1, count($crawler->filter('.li-user-parameters')));
@@ -43,6 +45,7 @@ class DesktopControllerTest extends FunctionalTestCase
 
     public function testManagerCanInvertWidgetVisible()
     {
+         $this->loadUserFixture(array('user', 'admin'));
         //admin must unlock first
         $this->logUser($this->getFixtureReference('user/user'));
         $configs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isDesktop' => true));
@@ -52,7 +55,6 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST', "/desktop/config/{$configs[0]->getId()}/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
         );
-                   var_dump($this->client->getResponse()->getContent());
         $crawler = $this->client->request('GET', "/desktop/info");
         $this->assertEquals($countVisibleWidgets, count($crawler->filter('.widget')));
         $configs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isDesktop' => true));

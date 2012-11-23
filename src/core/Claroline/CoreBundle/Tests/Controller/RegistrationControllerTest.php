@@ -13,7 +13,7 @@ class RegistrationControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadUserFixture(array('user'));
         $this->client->followRedirects();
         $this->configHandler = $this->client
             ->getContainer()

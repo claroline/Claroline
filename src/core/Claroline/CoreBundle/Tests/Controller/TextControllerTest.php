@@ -9,26 +9,26 @@ class TextControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadUserFixture(array('user'));
         $this->client->followRedirects();
         $this->pwr = $this
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function testAdd()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/user'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
         $this->assertEquals('This is a text', $text->name);
     }
 
     public function testDefaultAction()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/user'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
         $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
         $node = $crawler->filter('#text_content');
@@ -37,7 +37,7 @@ class TextControllerTest extends FunctionalTestCase
 
     public function testEditByRefAction()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getFixtureReference('user/user'));
         $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
         $form = $crawler->filter('button[type=submit]')->form();
