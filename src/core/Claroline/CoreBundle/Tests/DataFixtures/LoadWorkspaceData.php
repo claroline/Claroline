@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
@@ -15,9 +14,21 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     /** @var ContainerInterface $container */
     private $container;
 
+    private $workspaceNames;
+
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    public function __construct($workspaceNames = null)
+    {
+        if ($workspaceNames !== null)
+        {
+            $this->workspaceNames = $workspaceNames;
+        } else {
+            $this->workspaceNames = array('ws_a', 'ws_b', 'ws_c', 'ws_d', 'ws_e', 'ws_f');
+        }
     }
 
     /**
@@ -32,40 +43,25 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
      */
     public function load(ObjectManager $manager)
     {
-        $admin = $this->getReference('user/admin');
-        $wsCreator = $this->getReference('user/ws_creator');
+        $workspaces = array(
+            'ws_a' => array('Workspace_A', 'ws_creator', 'wsA', true, null),
+            'ws_b' => array('Workspace_B', 'ws_creator', 'wsB', true, 'ws_a'),
+            'ws_c' => array('Workspace_C', 'ws_creator', 'wsC', true, 'ws_a'),
+            'ws_d' => array('Workspace_D', 'ws_creator', 'wsD', false, 'ws_c'),
+            'ws_e' => array('Workspace_E', 'admin', 'wsE', false, 'ws_c'),
+            'ws_f' => array('Workspace_F', 'admin', 'wsF', false, 'ws_e')
+        );
 
-        $wsA = $this->createSimpleWorkspace('Workspace_A', $wsCreator, 'wsA');
-        $wsB = $this->createSimpleWorkspace('Workspace_B', $wsCreator, 'wsB');
-        $wsC = $this->createSimpleWorkspace('Workspace_C', $wsCreator, 'wsC');
-        $wsD = $this->createSimpleWorkspace('Workspace_D', $wsCreator, 'wsD');
-        $wsE = $this->createSimpleWorkspace('Workspace_E', $admin, 'wsE');
-        $wsF = $this->createSimpleWorkspace('Workspace_F', $admin, 'wsF');
+        foreach ($this->workspaceNames as $workspaceName){
+            if(array_key_exists($workspaceName, $workspaces)){
+                $ws = $this->createSimpleWorkspace($workspaces[$workspaceName][0], $this->getReference('user/'.$workspaces[$workspaceName][1]), $workspaces[$workspaceName][2]);
+                $ws->setPublic($workspaces[$workspaceName][4]);
+                $manager->persist($ws);
+                $this->addReference('workspace/'.$workspaceName, $ws);
+            }
 
-        $wsD->setPublic(false);
-        $wsE->setPublic(false);
-        $wsF->setPublic(false);
-
-        $wsB->setParent($wsA);
-        $wsC->setParent($wsA);
-        $wsD->setParent($wsC);
-        $wsE->setParent($wsC);
-        $wsF->setParent($wsE);
-
-        $manager->persist($wsA);
-        $manager->persist($wsB);
-        $manager->persist($wsC);
-        $manager->persist($wsD);
-        $manager->persist($wsE);
-        $manager->persist($wsF);
-        $manager->flush();
-
-        $this->addReference('workspace/ws_a', $wsA);
-        $this->addReference('workspace/ws_b', $wsB);
-        $this->addReference('workspace/ws_c', $wsC);
-        $this->addReference('workspace/ws_d', $wsD);
-        $this->addReference('workspace/ws_e', $wsE);
-        $this->addReference('workspace/ws_f', $wsF);
+            $manager->flush();
+        }
     }
 
     private function createSimpleWorkspace($name, $user, $code)
