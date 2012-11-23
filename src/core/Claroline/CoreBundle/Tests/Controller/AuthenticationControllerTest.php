@@ -10,12 +10,12 @@ class AuthenticationControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
         $this->client->followRedirects();
     }
 
     public function testLoginWithValidCredentialsDoesntReturnFailureMsg()
     {
+        $this->loadUserFixture(array('user'));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $this->assertEquals(0, $crawler->filter('#login-error')->count());
     }
