@@ -9,7 +9,6 @@ class DesktopSecurityTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
         $this->client->followRedirects();
     }
 
@@ -21,6 +20,7 @@ class DesktopSecurityTest extends FunctionalTestCase
 
     public function testAccessToDesktopSectionIsAllowedToSimpleUsers()
     {
+        $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/desktop');
         $this->assertTrue($crawler->filter('#link-desktop')->count() > 0);

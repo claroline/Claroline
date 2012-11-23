@@ -22,7 +22,7 @@ class FileControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadUserFixture(array('user'));
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}";
