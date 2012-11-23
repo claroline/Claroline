@@ -11,9 +11,8 @@ class AbstractWorkspaceTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        //$this->loadFixture(new LoadWorkspaceData());
-        $this->loadUserFixture();
-        $this->loadWorkspaceFixture();
+        $this->loadUserFixture(array('ws_creator'));
+        $this->loadWorkspaceFixture(array('ws_a', 'ws_b'));
     }
 
     public function testInitBaseRolesRequireWorkspaceToHaveAnIdentifier()
