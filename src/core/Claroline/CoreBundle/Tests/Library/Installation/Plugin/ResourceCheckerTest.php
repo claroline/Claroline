@@ -56,21 +56,11 @@ class ResourceCheckerTest extends WebTestCase
         $this->assertContains('must extend', $errors[0]->getMessage());
     }
 
-    public function testCheckerReturnsAnErrorOnUnexpectedSmallIcon()
-    {
-        $pluginFqcn = 'Invalid\UnexpectedSmallIcon\InvalidUnexpectedSmallIcon';
-        $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Invalid{$ds}UnexpectedSmallIcon{$ds}Entity{$ds}ResourceX.php";
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
-        $this->assertTrue($errors[0] instanceof ValidationError);
-        $this->assertContains('this file was not found', $errors[0]->getMessage());
-    }
-
     public function testCheckerReturnsAnErrorOnUnexpectedLargeIcon()
     {
-        $pluginFqcn = 'Invalid\UnexpectedLargeIcon\InvalidUnexpectedLargeIcon';
+        $pluginFqcn = 'Invalid\UnexpectedResourceIcon\InvalidUnexpectedResourceIcon';
         $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Invalid{$ds}UnexpectedLargeIcon{$ds}Entity{$ds}ResourceX.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Invalid{$ds}UnexpectedResourceIcon{$ds}Entity{$ds}ResourceX.php";
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
         $this->assertContains('this file was not found', $errors[0]->getMessage());

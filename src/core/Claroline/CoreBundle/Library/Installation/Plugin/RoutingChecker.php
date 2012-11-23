@@ -60,7 +60,6 @@ class RoutingChecker implements CheckerInterface
     private function checkRoutingPrefixIsValid()
     {
         $prefix = $this->plugin->getRoutingPrefix();
-
         if (!is_string($prefix)) {
             return $this->errors[] = new ValidationError(
                 "{$this->pluginFqcn} : routing prefix must be a string.",

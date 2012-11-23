@@ -10,6 +10,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Tests\DataFixtures\Special\LoadEntitiesInWorkspace;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
+/**
+ * Adds some entities (user or group) to a workspace.
+ */
 class WorkspaceManagementCommand extends ContainerAwareCommand
 {
     protected function configure()

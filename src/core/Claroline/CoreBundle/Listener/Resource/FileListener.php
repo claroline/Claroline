@@ -39,7 +39,7 @@ class FileListener extends ContainerAware
 
         if ($form->isValid()) {
             $file = $form->getData();
-            $tmpFile = $file->getName();
+            $tmpFile = $file->getFile();
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
@@ -52,6 +52,7 @@ class FileListener extends ContainerAware
             $file->setMimeType($mimeType);
             $event->setResource($file);
             $event->stopPropagation();
+
             return;
         }
 
@@ -70,15 +71,12 @@ class FileListener extends ContainerAware
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-
-        foreach ($event->getResources() as $file) {
-            $em->remove($file);
-            $pathName = $this->container->getParameter('claroline.files.directory')
-                . DIRECTORY_SEPARATOR
-                . $file->getHashName();
-            if (file_exists($pathName)) {
-                unlink($pathName);
-            }
+        $em->remove($event->getResource());
+        $pathName = $this->container->getParameter('claroline.files.directory')
+            . DIRECTORY_SEPARATOR
+            . $event->getResource()->getHashName();
+        if (file_exists($pathName)) {
+            unlink($pathName);
         }
 
         $event->stopPropagation();
@@ -90,6 +88,7 @@ class FileListener extends ContainerAware
         $newFile = new File();
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
+        $newFile->setMimeType($resource->getMimeType());
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
         $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
@@ -103,9 +102,7 @@ class FileListener extends ContainerAware
 
     public function onExport(ExportResourceEvent $event)
     {
-        $file = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\File')
-            ->find($event->getResourceId());
+        $file = $event->getResource();
         $hash = $file->getHashName();
         $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
         $event->stopPropagation();
@@ -113,17 +110,16 @@ class FileListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-        $instance =  $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($event->getInstanceId());
-        $file = $instance->getResource();
+        $file = $event->getResource();
         $mimeType = $file->getMimeType();
-        $playEvent = new PlayFileEvent($instance);
+        $playEvent = new PlayFileEvent($file);
         $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
         $this->container->get('event_dispatcher')->dispatch($eventName, $playEvent);
 
         if ($playEvent->getResponse() instanceof Response){
             $response = $playEvent->getResponse();
         } else {
-            $fallBackPlayEvent = new PlayFileEvent($instance);
+            $fallBackPlayEvent = new PlayFileEvent($file);
             $mimeElements = explode('/', $mimeType);
             $baseType = strtolower($mimeElements[0]);
             $fallBackPlayEventName = 'play_file_'.$baseType;
@@ -142,7 +138,7 @@ class FileListener extends ContainerAware
                 $response->headers->set('Connection', 'close');
             }
         }
-
+        
         $event->setResponse($response);
         $event->stopPropagation();
     }

@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Resource;
 
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class Converter
 {
@@ -15,38 +15,34 @@ class Converter
         $this->em = $em;
     }
 
-    public function instanceToArray(ResourceInstance $instance)
+    public function resourceToArray(AbstractResource $resource)
     {
-        $instanceArray = array();
-        $instanceArray['id'] = $instance->getId();
-        $instanceArray['name'] = $instance->getName();
-        $instanceArray['created'] = $instance->getCreationDate()->format('d-m-Y H:i:s');
-        $instanceArray['updated'] = $instance->getModificationDate()->format('d-m-Y H:i:s');;
-        $instanceArray['path'] = $instance->getPath();
-        $instanceArray['lvl'] = $instance->getLvl();
-        ($instance->getParent() != null) ? $instanceArray['parent_id'] = $instance->getParent()->getId() : $instanceArray['parent_id'] = null;
-        $instanceArray['workspace_id'] = $instance->getWorkspace()->getId();
-        $instanceArray['resource_id'] = $instance->getResource()->getId();
-        $instanceArray['instance_creator_id'] = $instance->getCreator()->getId();
-        $instanceArray['instance_creator_username'] = $instance->getCreator()->getUsername();
-        $instanceArray['resource_creator_id'] = $instance->getResource()->getCreator()->getId();
-        $instanceArray['resource_creator_username'] = $instance->getResource()->getCreator()->getUsername();
-        $instanceArray['resource_type_id'] = $instance->getResource()->getResourceType()->getId();
-        $instanceArray['type'] = $instance->getResource()->getResourceType()->getName();
-        $instanceArray['is_browsable'] = $instance->getResourceType()->getBrowsable();
-        $instanceArray['small_icon'] = $instance->getResource()->getIcon()->getSmallIcon();
-        $instanceArray['large_icon'] = $instance->getResource()->getIcon()->getLargeIcon();
-        $instanceArray['path'] = $instance->getPath();
-        $instanceArray['path_for_display'] = $instance->getPathForDisplay();
+        $resourceArray = array();
+        $resourceArray['id'] = $resource->getId();
+        $resourceArray['name'] = $resource->getName();
+        $resourceArray['created'] = $resource->getCreationDate()->format('d-m-Y H:i:s');
+        $resourceArray['updated'] = $resource->getModificationDate()->format('d-m-Y H:i:s');;
+        $resourceArray['path'] = $resource->getPath();
+        $resourceArray['lvl'] = $resource->getLvl();
+        ($resource->getParent() != null) ? $resourceArray['parent_id'] = $resource->getParent()->getId() : $resourceArray['parent_id'] = null;
+        $resourceArray['workspace_id'] = $resource->getWorkspace()->getId();
+        $resourceArray['creator_id'] = $resource->getCreator()->getId();
+        $resourceArray['creator_username'] = $resource->getCreator()->getUsername();
+        $resourceArray['resource_type_id'] = $resource->getResourceType()->getId();
+        $resourceArray['type'] = $resource->getResourceType()->getName();
+        $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
+        $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
+        $resourceArray['path'] = $resource->getPath();
+        $resourceArray['path_for_display'] = $resource->getPathForDisplay();
         $array = array();
-        $array[0] = $instanceArray;
+        $array[0] = $resourceArray;
 
         return $array;
     }
 
-    public function instanceToJson(ResourceInstance $instance)
+    public function ResourceToJson(AbstractResource $resource)
     {
-        $phpArray = $this->instanceToArray($instance);
+        $phpArray = $this->resourceToArray($resource);
         $json = json_encode($phpArray);
 
         return $json;

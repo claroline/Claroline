@@ -24,6 +24,8 @@ refreshFile("{$rootDirectory}/app/config/local/plugin/routing.yml");
 refreshFile("{$rootDirectory}/app/logs/dev.log");
 refreshFile("{$rootDirectory}/app/logs/test.log");
 
+require_once __DIR__.'/delete_files';
+
 system("php {$rootDirectory}/composer.phar install");
 system("php {$rootDirectory}/app/console claroline:themes:compile");
 
@@ -40,6 +42,3 @@ system("php {$rootDirectory}/app/console claroline:install --with-plugins --with
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
 system("php {$rootDirectory}/app/console claroline:user:create --admin John Doe admin admin");
 system("php {$rootDirectory}/app/console cache:clear"); //required for the translations from the plugins
-
-require_once __DIR__.'/delete_files';
-

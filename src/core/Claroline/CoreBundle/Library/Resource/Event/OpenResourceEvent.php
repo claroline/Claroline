@@ -3,23 +3,24 @@
 namespace Claroline\CoreBundle\Library\Resource\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Event dispatched by the resource controller when a resource is open
  */
 class OpenResourceEvent extends Event
 {
-    private $instanceId;
+    private $resource;
     private $response;
 
-    public function __construct($instanceId)
+    public function __construct(AbstractResource $resource)
     {
-        $this->instanceId = $instanceId;
+        $this->resource = $resource;
     }
 
-    public function getInstanceId()
+    public function getResource()
     {
-        return $this->instanceId;
+        return $this->resource;
     }
 
     public function setResponse($response)

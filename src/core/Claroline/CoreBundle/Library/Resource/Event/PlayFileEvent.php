@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PlayFileEvent extends Event
 {
-    private $instance;
+    private $resource;
     private $response;
 
     /**
@@ -15,19 +15,19 @@ class PlayFileEvent extends Event
      *
      * @param integer $resourceId
      */
-    public function __construct($instance)
+    public function __construct($resource)
     {
-        $this->instance = $instance;
+        $this->resource = $resource;
     }
 
     /**
-     * Returns the id of the resource on which the action is to be taken.
+     * Returns the resource on which the action is to be taken.
      *
-     * @return integer
+     * @return Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
-    public function getInstance()
+    public function getResource()
     {
-        return $this->instance;
+        return $this->resource;
     }
 
     /**

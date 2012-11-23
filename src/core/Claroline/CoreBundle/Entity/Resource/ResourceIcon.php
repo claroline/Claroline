@@ -20,28 +20,24 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="large_icon")
+     * @ORM\Column(type="string", name="icon_location")
      */
-    protected $largeIcon;
+    protected $iconLocation;
 
-    /**
-     * @ORM\Column(type="string", name="small_icon")
-     */
-
-    protected $smallIcon;
     /**
      * @ORM\Column(type="string", name="type")
      */
     protected $type;
 
     /**
-     * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      mappedBy="images",
-     *      cascade={"persist"}
-     * )
+     * @ORM\Column(type="boolean", name="is_shortcut")
      */
-    protected $abstractResources;
+    protected $isShortcut;
+
+    /**
+     * @ORM\Column(type="string", name="relative_url")
+     */
+    protected $relativeUrl;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\IconType")
@@ -49,7 +45,11 @@ class ResourceIcon
      */
     protected $iconType;
 
-
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
+     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id")
+     */
+    protected $shortcutIcon;
 
     /**
      * Constructor.
@@ -64,34 +64,14 @@ class ResourceIcon
         return $this->id;
     }
 
-    public function getLargeIcon()
+    public function getIconLocation()
     {
-        return $this->largeIcon;
+        return $this->iconLocation;
     }
 
-    public function setLargeIcon($largeIcon)
+    public function setIconLocation($iconLocation)
     {
-        $this->largeIcon = $largeIcon;
-    }
-
-    public function getSmallIcon()
-    {
-        return $this->smallIcon;
-    }
-
-    public function setSmallIcon($smallIcon)
-    {
-        $this->smallIcon = $smallIcon;
-    }
-
-    public function getAbstractResources()
-    {
-        return $this->abstractResources;
-    }
-
-    public function addAbstractResource($abstractResource)
-    {
-        $this->abstractResource->add($abstractResource);
+        $this->iconLocation = $iconLocation;
     }
 
     public function setIconType(IconType $iconType)
@@ -112,5 +92,35 @@ class ResourceIcon
     public function getType()
     {
         return $this->type;
+    }
+
+    public function isShortcut()
+    {
+        return $this->isShortcut;
+    }
+
+    public function setShortcut($boolean)
+    {
+        $this->isShortcut = $boolean;
+    }
+
+    public function getShortcutIcon()
+    {
+        return $this->shortcutIcon;
+    }
+
+    public function setShortcutIcon(ResourceIcon $shortcutIcon)
+    {
+        $this->shortcutIcon = $shortcutIcon;
+    }
+
+    public function setRelativeUrl($url)
+    {
+        $this->relativeUrl = $url;
+    }
+
+    public function getRelativeUrl()
+    {
+        return $this->relativeUrl;
     }
 }

@@ -43,7 +43,8 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $resourceTypes = array(
             array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File', true),
             array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory', true),
-            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true)
+            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true),
+            array('resource_shortcut', true, false, '\Claroline\CoreBundle\Entity\Resource\ResourceShortcut')
         );
 
         $i=0;

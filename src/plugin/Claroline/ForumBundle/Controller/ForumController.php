@@ -16,40 +16,40 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ForumController extends Controller
 {
-    public function OpenAction($instanceId)
+    public function OpenAction($resourceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($instanceId);
+        $forum = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
-        $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsFormForumInstance($instance);
+        $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsForForum($forum);
         $nbPages = ceil($countSubjects/$limit);
 
         return $this->render(
-            'ClarolineForumBundle::index.html.twig', array('forumInstance' => $instance, 'workspace' => $instance->getWorkspace(), 'limit' => $limit, 'nbPages' => $nbPages)
+            'ClarolineForumBundle::index.html.twig', array('forum' => $forum, 'workspace' => $forum->getWorkspace(), 'limit' => $limit, 'nbPages' => $nbPages)
         );
     }
 
-    public function subjectsAction($forumInstanceId, $offset)
+    public function subjectsAction($forumId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
+        $forum = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($forumId);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
-        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($forumInstance, $offset, $limit);
+        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($forum, $offset, $limit);
 
         return $this->render(
             'ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects)
         );
     }
 
-    public function forumSubjectCreationFormAction($forumInstanceId)
+    public function forumSubjectCreationFormAction($forumId)
     {
         $formSubject = $this->get('form.factory')->create(new SubjectType());
-        $workspace = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($forumInstanceId)->getWorkspace();
+        $workspace = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId)->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::subject_form.html.twig', array('form' => $formSubject->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $workspace)
+            'ClarolineForumBundle::subject_form.html.twig', array('form' => $formSubject->createView(), 'forumId' => $forumId, 'workspace' => $workspace)
         );
     }
 
@@ -57,12 +57,12 @@ class ForumController extends Controller
      * The form submission is working but I had to do some weird things to make it works.
      */
 
-    public function createSubjectAction($forumInstanceId)
+    public function createSubjectAction($forumId)
     {
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
         $form->bindRequest($this->get('request'));
         $em = $this->getDoctrine()->getEntityManager();
-        $forumInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($forumInstanceId);
+        $forum = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($forumId);
 
         if ($form->isValid()) {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -72,61 +72,56 @@ class ForumController extends Controller
             $message->setContent($dataMessage['content']);
             $subject->setCreator($user);
             $message->setCreator($user);
-            $subject->setForum($forumInstance->getResource());
             $message->setName($subject->getTitle() . '-' . date('m/d/Y h:i:m'));
             $subject->setName($subject->getTitle());
             $subject->resetMessages();
-            $message->setSubject($subject);
-            $em->persist($message);
-            $em->persist($subject);
-            $em->flush();
             $creator = $this->get('claroline.resource.manager');
             //instantiation of the new resources
-            $subjectInstance = $creator->create($subject, $forumInstanceId, 'claroline_subject');
-            $creator->create($message, $subjectInstance->getId(), 'claroline_message');
+            $subject = $creator->create($subject, $forum->getId(), 'claroline_subject');
+            $creator->create($message, $subject->getId(), 'claroline_message');
 
-            return new RedirectResponse($this->generateUrl('claro_forum_open', array('instanceId' => $forumInstanceId)));
+            return new RedirectResponse($this->generateUrl('claro_forum_open', array('resourceId' => $forum->getId())));
         }
 
         return $this->render(
-            'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumInstanceId' => $forumInstanceId, 'workspace' => $forumInstance->getWorkspace())
+            'ClarolineForumBundle::subject_form.html.twig', array('form' => $form->createView(), 'forumId' => $forum->getId(), 'workspace' => $forum->getWorkspace())
         );
     }
 
-    public function showMessagesAction($subjectInstanceId)
+    public function showMessagesAction($subjectId)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
-        $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForSubjectInstance($subjectInstance);
+        $subject = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($subjectId);
+        $countMessages = $em->getRepository('Claroline\ForumBundle\Entity\Forum')->countMessagesForSubject($subject);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
         $nbPages = ceil($countMessages/$limit);
-        $workspace = $subjectInstance->getWorkspace();
+        $workspace = $subject->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::messages_table.html.twig', array('subjectInstance' => $subjectInstance, 'workspace' => $workspace, 'limit' => $limit, 'nbPages' => $nbPages)
+            'ClarolineForumBundle::messages_table.html.twig', array('subject' => $subject, 'workspace' => $workspace, 'limit' => $limit, 'nbPages' => $nbPages)
         );
     }
 
-    public function messageCreationFormAction($subjectInstanceId)
+    public function messageCreationFormAction($subjectId)
     {
         $form = $this->get('form.factory')->create(new MessageType());
         $em = $this->getDoctrine()->getEntityManager();
-        $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $subject = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($subjectId);
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' => $form->createView(), 'workspace' => $subject->getWorkspace())
         );
     }
 
-    public function messagesAction($subjectInstanceId, $offset)
+    public function messagesAction($subjectId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $subject = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($subjectId);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
-        $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subjectInstance, $offset, $limit);
+        $messages = $em->getRepository('Claroline\ForumBundle\Entity\Message')->getMessages($subject, $offset, $limit);
 
         return $this->render(
             'ClarolineForumBundle::messages.html.twig', array('messages' => $messages)
@@ -134,33 +129,30 @@ class ForumController extends Controller
 
     }
 
-    public function createMessageAction($subjectInstanceId)
+    public function createMessageAction($subjectId)
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->bindRequest($this->get('request'));
         $em = $this->getDoctrine()->getEntityManager();
-        $subjectInstance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($subjectInstanceId);
+        $subject = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($subjectId);
 
         if ($form->isValid()) {
             $message = $form->getData();
-            $subject = $subjectInstance->getResource();
             $user = $this->get('security.context')->getToken()->getUser();
             $messageType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(array('name' => 'claroline_message'));
-            $message->setSubject($subject);
             $message->setCreator($user);
             $message->setResourceType($messageType);
             $creator = $this->get('claroline.resource.manager');
-            $title = $subjectInstance->getParent()->getName();
+            $title = $subject->getParent()->getName();
             $message->setName($title . '-' . date('m/d/Y h:i:m'));
-            $em->persist($message);
-            $creator->create($message, $subjectInstance->getId(), 'claroline_message');
+            $creator->create($message, $subject->getId(), 'claroline_message');
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectInstanceId' => $subjectInstanceId)));
+            return new RedirectResponse($this->generateUrl('claro_forum_show_message', array('subjectId' => $subjectId)));
         }
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectInstanceId' => $subjectInstanceId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' => $form->createView(), 'workspace' => $subject->getWorkspace())
         );
     }
 

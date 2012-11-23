@@ -72,12 +72,12 @@ class IconCreatorTest extends FixtureTestCase
 
         if ($this->areLoaded) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
-            $this->assertEquals(1, count($thumbs));
+            $this->assertEquals(2, count($thumbs));
         } else {
-            $name = $file->getIcon()->getLargeIcon();
-            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_video.png', $name);
+            $name = $file->getIcon()->getIconLocation();
+            $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_video.png', $name);
         }
-        
+
         ob_end_clean();
     }
 
@@ -91,12 +91,12 @@ class IconCreatorTest extends FixtureTestCase
 
         if (extension_loaded('gd')) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
-            $this->assertEquals(1, count($thumbs));
+            $this->assertEquals(2, count($thumbs));
         } else {
-            $name = $file->getIcon()->getLargeIcon();
-            $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.jpg', $name);
+            $name = $file->getIcon()->getIconLocation();
+            $this->assertEquals('bundles/clarolinecore/images/resources/large/res_image.jpg', $name);
         }
-
+        
         ob_end_clean();
     }
 
@@ -106,8 +106,8 @@ class IconCreatorTest extends FixtureTestCase
         $file->setResourceType($this->fileType);
         $file->setHashName('video.mp4');
         $file = $this->iconCreator->setResourceIcon($file, 'video/ThatOneDoesntExists');
-        $name = $file->getIcon()->getLargeIcon();
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_video.png', $name);
+        $name = $file->getIcon()->getRelativeUrl();
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_video.png', $name);
     }
 
     public function testUnknownImageMimeThumbnail()
@@ -116,9 +116,9 @@ class IconCreatorTest extends FixtureTestCase
         $file->setResourceType($this->fileType);
         $file->setHashName('image.jpg');
         $file = $this->iconCreator->setResourceIcon($file, 'image/ThatOneDoesntExists');
-        $name = $file->getIcon()->getLargeIcon();
+        $name = $file->getIcon()->getRelativeUrl();
         //no res_image yet
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_image.png', $name);
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_image.png', $name);
     }
 
     public function testFileGetCompleteMimeThumbnail()
@@ -127,8 +127,8 @@ class IconCreatorTest extends FixtureTestCase
         $file->setResourceType($this->fileType);
         $file->setHashName('text.txt');
         $file = $this->iconCreator->setResourceIcon($file, 'text/plain');
-        $name = $file->getIcon()->getLargeIcon();
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_text.png', $name);
+        $name = $file->getIcon()->getRelativeUrl();
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_text.png', $name);
     }
 
     public function testFileGetUnknownMimeThumbnail()
@@ -137,8 +137,8 @@ class IconCreatorTest extends FixtureTestCase
         $file->setResourceType($this->fileType);
         $file->setHashName('text.txt');
         $file = $this->iconCreator->setResourceIcon($file, 'INeverSaw/ThatMimeType');
-        $name = $file->getIcon()->getLargeIcon();
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_file.png', $name);
+        $name = $file->getIcon()->getRelativeUrl();
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_file.png', $name);
     }
 
     public function testGetTypeDefinedThumbnail()
@@ -151,8 +151,8 @@ class IconCreatorTest extends FixtureTestCase
             ->findOneBy(array('name' => 'directory'));
         $dir->setResourceType($dirType);
         $dir = $this->iconCreator->setResourceIcon($dir);
-        $name = $dir->getIcon()->getLargeIcon();
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_folder.png', $name);
+        $name = $dir->getIcon()->getRelativeUrl();
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_folder.png', $name);
     }
 
     public function testGetTypeUndefinedThumbnail()
@@ -162,8 +162,8 @@ class IconCreatorTest extends FixtureTestCase
         $undefinedType->setName('undefined');
         $dir->setResourceType($undefinedType);
         $dir = $this->iconCreator->setResourceIcon($dir);
-        $name = $dir->getIcon()->getLargeIcon();
-        $this->assertEquals('bundles/clarolinecore/images/resources/icons/large/res_default.png', $name);
+        $name = $dir->getIcon()->getRelativeUrl();
+        $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_default.png', $name);
 
     }
 

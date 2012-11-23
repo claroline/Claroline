@@ -1,6 +1,6 @@
 claro_workspace_multiadd_group:
    pattern: /{workspaceId}/add/group
-   defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:multiAddGroup }
+   defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:addGroups }
    options:
       expose: true
    requirements:
@@ -33,7 +33,7 @@ claro_workspace_tools_groups_management:
 
 claro_workspace_delete_groups:
     pattern: /{workspaceId}/groups
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:removeMultipleGroups }
+    defaults: { _controller: ClarolineCoreBundle:WorkspaceGroup:removeGroups }
     options:
       expose: true
     requirements:

@@ -186,7 +186,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
-        $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+        $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($workspace)
             ->getId();
         $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
