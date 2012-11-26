@@ -112,7 +112,9 @@ class ResourceController extends Controller
         foreach ($ids as $id) {
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
                 ->find($id);
-            $this->get('claroline.resource.manager')->delete($resource);
+            if ($resource !== null){
+                $this->get('claroline.resource.manager')->delete($resource);
+            }
         }
 
         return new Response('Resource deleted', 204);
