@@ -74,7 +74,7 @@ abstract class AbstractResource
     protected $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", cascade={"persist"})
      * @ORM\JoinColumn(name="icon_id", referencedColumnName="id")
      */
     protected $icon;
@@ -126,7 +126,6 @@ abstract class AbstractResource
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut", cascade={"remove"},
      *      mappedBy="resource"
      * )
-     * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $shortcuts;
 
