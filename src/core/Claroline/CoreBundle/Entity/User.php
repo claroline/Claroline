@@ -339,15 +339,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return serialize(array(
                 $this->id,
-                $this->firstName,
-                $this->lastName,
-                $this->username,
-                $this->password,
-                $this->salt,
-                $this->phone,
-                $this->note,
-                $this->mail,
-                $this->administrativeCode
             ));
     }
 
@@ -355,14 +346,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         list(
             $this->id,
-            $this->lastName,
-            $this->username,
-            $this->password,
-            $this->salt,
-            $this->phone,
-            $this->note,
-            $this->mail,
-            $this->administrativeCode
             ) = unserialize($serialized);
     }
 

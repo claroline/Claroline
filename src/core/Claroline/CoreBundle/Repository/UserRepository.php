@@ -5,12 +5,72 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Doctrine\ORM\NoResultException;
 
-class UserRepository extends EntityRepository
+class UserRepository extends EntityRepository implements UserProviderInterface
 {
     const PLATEFORM_ROLE = 1;
     const WORKSPACE_ROLE = 2;
     const ALL_ROLES = 3;
+
+    /*
+     * UserProviderInterface methods
+     */
+
+    public function loadUserByUsername($username)
+    {
+        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username LIKE :username"
+            ;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('username', $username);
+
+        try {
+
+            $user = $query->getSingleResult();
+            // The Query::getSingleResult() method throws an exception
+            // if there is no record matching the criteria.
+
+        } catch (NoResultException $e) {
+            throw new UsernameNotFoundException(sprintf('Unable to find an active admin AcmeUserBundle:User object identified by "%s".', $username), null, 0, $e);
+        }
+
+        return $user;
+    }
+
+    public function refreshUser(UserInterface $user)
+    {
+        $class = get_class($user);
+        if (!$this->supportsClass($class)) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
+        }
+
+        $dql = "SELECT u, roles, groups, group_roles FROM Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.roles roles
+            LEFT JOIN u.groups groups
+            LEFT JOIN groups.roles group_roles
+            WHERE u.id = :userId"
+            ;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+
+        return  $query->getSingleResult();
+    }
+
+    public function supportsClass($class)
+    {
+        return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
+    }
+
+    /*
+     * End UserProviderInterface methods
+     */
 
     //todo prepared statement here
     public function getUsersByUsernameList(array $usernames)

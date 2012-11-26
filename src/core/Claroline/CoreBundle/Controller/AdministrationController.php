@@ -617,4 +617,12 @@ class AdministrationController extends Controller
 
         return $items;
     }
+
+    public function userAction($username)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+//        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->loadUserByUsername($username);
+
+        return new Response('<body>'.count($user).'</body>');
+    }
 }
