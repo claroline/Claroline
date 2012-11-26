@@ -60,7 +60,7 @@ class DatabaseWriter
         $errors = $this->validator->validate($plugin);
 
         if(0!= count($errors)){
-//            var_dump($errors);
+            var_dump($errors);
             return $errors;
         }
 
