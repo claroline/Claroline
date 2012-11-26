@@ -534,11 +534,11 @@ class ResourceController extends Controller
             $resource = $repo->find($resourceId);
             $shortcut = new ResourceShortcut();
             $shortcut->setParent($parent);
-
             $creator = $this->get('security.context')->getToken()->getUser();
             $shortcut->setCreator($creator);
             $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
             $shortcut->setName($resource->getName());
+            $shortcut->setName($this->get('claroline.resource.utilities')->getUniqueName($shortcut, $parent));
             $shortcut->setWorkspace($parent->getWorkspace());
             $shortcut->setResourceType($resource->getResourceType());
 
