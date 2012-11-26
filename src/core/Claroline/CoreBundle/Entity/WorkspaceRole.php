@@ -3,11 +3,9 @@
 namespace Claroline\CoreBundle\Entity;
 
 use \RuntimeException;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 
 /**
  * @ORM\Entity
