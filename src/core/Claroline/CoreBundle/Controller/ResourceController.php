@@ -112,7 +112,9 @@ class ResourceController extends Controller
         foreach ($ids as $id) {
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
                 ->find($id);
-            $this->get('claroline.resource.manager')->delete($resource);
+            if ($resource !== null){
+                $this->get('claroline.resource.manager')->delete($resource);
+            }
         }
 
         return new Response('Resource deleted', 204);
@@ -534,11 +536,11 @@ class ResourceController extends Controller
             $resource = $repo->find($resourceId);
             $shortcut = new ResourceShortcut();
             $shortcut->setParent($parent);
-
             $creator = $this->get('security.context')->getToken()->getUser();
             $shortcut->setCreator($creator);
             $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
             $shortcut->setName($resource->getName());
+            $shortcut->setName($this->get('claroline.resource.utilities')->getUniqueName($shortcut, $parent));
             $shortcut->setWorkspace($parent->getWorkspace());
             $shortcut->setResourceType($resource->getResourceType());
 
