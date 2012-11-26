@@ -256,6 +256,5 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->client->getContainer()->get('doctrine.orm.entity_manager')->persist($this->getFixtureReference('group/group_a'));
         $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
     }
-
 }
 

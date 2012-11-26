@@ -167,18 +167,23 @@ class Manager
             $copy = new \Claroline\CoreBundle\Entity\Resource\ResourceShortcut();
             $copy->setParent($parent);
             $copy->setWorkspace($parent->getWorkspace());
-            $rename = $this->ut->getUniqueName($resource, $parent);
-            $copy->setName($rename);
             $copy->setResource($resource->getResource());
             $copy->setIcon($resource->getIcon());
             $copy->setResourceType($resource->getResourceType());
             $copy->setCreator($this->sc->getToken()->getUser());
+            $copy->setName($resource->getName());
+            $this->em->persist($copy);
+            $this->em->flush();
+            $rename = $this->ut->getUniqueName($resource, $parent);
+            $copy->setName($rename);
         } else {
             $copy = $this->createCopy($resource);
             $copy->setParent($parent);
             $copy->setWorkspace($parent->getWorkspace());
-            $rename = $this->ut->getUniqueName($resource, $parent);
-            $copy->setName($rename);
+            $copy->setName($resource->getName());
+            $this->em->persist($copy);
+            $this->em->flush();
+            $copy->setName($this->ut->getUniqueName($copy, $parent));
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
