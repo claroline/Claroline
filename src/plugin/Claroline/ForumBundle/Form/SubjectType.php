@@ -13,7 +13,7 @@ class SubjectType extends AbstractType
     {
         $builder->add('title', 'text')
             ->add('name', 'hidden', array('data' => 'tmp'))
-            ->add('messages', new MessageType());
+            ->add('message', new MessageType());
 
     }
 
