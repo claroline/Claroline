@@ -368,10 +368,12 @@ class AdministrationControllerTest extends FunctionalTestCase
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
         $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
+        $validator = $container->get('claroline.plugin.validator');
 
         foreach ($pluginFqcns as $pluginFqcn) {
             $plugin = $loader->load($pluginFqcn);
-            $dbWriter->insert($plugin);
+            $validator->validate($plugin);
+            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
         }
     }
 

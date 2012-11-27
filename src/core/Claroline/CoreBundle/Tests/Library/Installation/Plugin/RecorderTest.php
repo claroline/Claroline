@@ -35,7 +35,7 @@ class RecorderTest extends WebTestCase
             ->method('importRoutingResources')
             ->with(get_class($this->mockedPlugin), $this->mockedPlugin->getRoutingResourcesPaths(), $this->mockedPlugin->getRoutingPrefix());
 
-        $this->recorder->register($this->mockedPlugin);
+        $this->recorder->register($this->mockedPlugin, array());
     }
 
     public function testRecorderProperlyDelegatesToWritersOnUnregister()
