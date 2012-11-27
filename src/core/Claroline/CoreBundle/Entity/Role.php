@@ -99,7 +99,7 @@ class Role implements RoleInterface
     /**
      * @ORM\ManyToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\User",
-     *  inversedBy="workspaceRoles"
+     *  mappedBy="roles"
      * )
      * @ORM\JoinTable(name="claro_user_role",
      *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},

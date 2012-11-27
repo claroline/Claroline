@@ -32,7 +32,7 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\User",
-     *      cascade={"persist"}
+     *      cascade={"persist"}, mappedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_user_group",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},

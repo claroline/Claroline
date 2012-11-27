@@ -110,8 +110,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
-     *      inversedBy="users"
+     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole"
      * )
      * @ORM\JoinTable(name="claro_user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -123,7 +122,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @ORM\OneToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      mappedBy="user"
+     *      mappedBy="creator"
      * )
      */
     protected $abstractResources;
@@ -340,15 +339,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return serialize(array(
                 $this->id,
-                $this->firstName,
-                $this->lastName,
-                $this->username,
-                $this->password,
-                $this->salt,
-                $this->phone,
-                $this->note,
-                $this->mail,
-                $this->administrativeCode
             ));
     }
 
@@ -356,14 +346,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         list(
             $this->id,
-            $this->lastName,
-            $this->username,
-            $this->password,
-            $this->salt,
-            $this->phone,
-            $this->note,
-            $this->mail,
-            $this->administrativeCode
             ) = unserialize($serialized);
     }
 

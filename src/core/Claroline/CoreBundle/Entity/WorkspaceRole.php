@@ -3,11 +3,9 @@
 namespace Claroline\CoreBundle\Entity;
 
 use \RuntimeException;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 
 /**
  * @ORM\Entity
@@ -16,7 +14,7 @@ use Claroline\CoreBundle\Library\Security\SymfonySecurity;
 class WorkspaceRole extends Role
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
@@ -24,7 +22,7 @@ class WorkspaceRole extends Role
     /**
      * @ORM\ManyToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\Group",
-     *  inversedBy="workspaceRoles"
+     *  mappedBy="workspaceRoles"
      * )
      * @ORM\JoinTable(name="claro_group_role",
      *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
@@ -32,7 +30,6 @@ class WorkspaceRole extends Role
      * )
      */
     protected $groups;
-
 
     public function __construct()
     {
