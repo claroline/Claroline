@@ -8,10 +8,12 @@ use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Installation\Plugin\Configuration;
 
 /**
- * Checker used to validate the declared resources of a plugin.
+ * Checker used to validate the configuration file of a plugin.
  */
-class ConfigChecker implements CheckerInterface
+class ConfigurationChecker implements CheckerInterface
 {
+    private $processedConfiguration;
+
     public function __construct(Yaml $yamlParser)
     {
         $this->yamlParser = $yamlParser;
@@ -26,18 +28,20 @@ class ConfigChecker implements CheckerInterface
     {
         $this->plugin = $plugin;
         $config = $this->yamlParser->parse($plugin->getConfigFile());
-        if(null == $config){
+
+        if (null == $config){
             $error = new ValidationError('config.yml file missing');
             $errors = array($error);
 
             return $errors;
         }
+
         $processor = new Processor();
         $configuration = new Configuration($plugin);
 
         try {
             $processedConfiguration = $processor->processConfiguration($configuration, $config);
-            $plugin->setProcessedConfiguration($processedConfiguration);
+            $this->processedConfiguration = $processedConfiguration;
         }
         catch (\Exception $e) {
             $error = new ValidationError($e->getMessage());
@@ -45,5 +49,10 @@ class ConfigChecker implements CheckerInterface
 
             return $errors;
         }
+    }
+
+    public function getProcessedConfiguration()
+    {
+        return $this->processedConfiguration;
     }
 }

@@ -8,9 +8,9 @@
  * a few classes (app kernel, container, doctrine proxies, stub test classes) which are
  * not covered by the autoloader, but required 'manually' by the application at runtime.
  * If those classes are included in the test result (e.g. as part of an exception stack
- * trace or as the context of a partial/skipped test), they can be loaded by the phpunit
- * parent process and the unserialization fails. The following function is used as a
- * fallback in such case.
+ * trace or as the context of a partial/skipped test), they cannot be loaded by the
+ * phpunit parent process and the unserialization fails. The following function is used
+ * as a fallback in such case.
  *
  * @param string $class
  *

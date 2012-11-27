@@ -12,3 +12,4 @@ plugin:
       name: claroline_exampletext
       is_visible: true
       is_browsable: true
+      icon: res_text.png

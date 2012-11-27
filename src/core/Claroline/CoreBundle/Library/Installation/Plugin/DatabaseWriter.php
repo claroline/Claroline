@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
  */
 class DatabaseWriter
 {
-    private $validator;
     private $em;
     private $yamlParser;
     private $im;
@@ -36,14 +35,12 @@ class DatabaseWriter
      * @param IconCreator       $im
      */
     public function __construct(
-        Validator $validator,
         EntityManager $em,
         Yaml $yamlParser,
         IconCreator $im,
         $kernelRootDir
     )
     {
-        $this->validator = $validator;
         $this->em = $em;
         $this->yamlParser = $yamlParser;
         $this->im = $im;
@@ -55,24 +52,16 @@ class DatabaseWriter
      *
      * @param PluginBundle $plugin
      */
-    public function insert(PluginBundle $plugin)
+    public function insert(PluginBundle $plugin, array $pluginConfiguration)
     {
-        $errors = $this->validator->validate($plugin);
-
-        if(0!= count($errors)){
-            var_dump($errors);
-            return $errors;
-        }
-
-        $processedConfiguration = $plugin->getProcessedConfiguration();
         $pluginEntity = new Plugin();
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
-        $pluginEntity->setHasOptions($processedConfiguration['has_options']);
+        $pluginEntity->setHasOptions($pluginConfiguration['has_options']);
 
-        if(isset($processedConfiguration['icon'])){
+        if (isset($pluginConfiguration['icon'])){
             $ds = DIRECTORY_SEPARATOR;
-            $pluginEntity->setIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$processedConfiguration['icon']}");
+            $pluginEntity->setIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$pluginConfiguration['icon']}");
         } else {
             $defaultIcon = $this->em
                 ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
@@ -81,7 +70,7 @@ class DatabaseWriter
         }
 
         $this->em->persist($pluginEntity);
-        $this->persistConfiguration($processedConfiguration, $pluginEntity, $plugin);
+        $this->persistConfiguration($pluginConfiguration, $pluginEntity, $plugin);
         $this->em->flush();
     }
 
