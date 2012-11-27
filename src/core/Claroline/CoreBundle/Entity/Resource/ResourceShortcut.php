@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ResourceShortcut extends AbstractResource
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="shortcuts")
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
      */
     protected $resource;
