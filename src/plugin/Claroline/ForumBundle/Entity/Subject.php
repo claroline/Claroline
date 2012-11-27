@@ -22,15 +22,7 @@ class Subject extends AbstractResource
      */
     protected $title;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\ForumBundle\Entity\Message", mappedBy="subject", cascade={"persist"})
-     */
-    protected $messages;
-
-    public function __construct()
-    {
-        $this->messages = new ArrayCollection();
-    }
+    protected $message;
 
     public function getTitle()
     {
@@ -42,25 +34,13 @@ class Subject extends AbstractResource
         $this->title = $title;
     }
 
-    public function getMessages()
+    public function getMessage()
     {
-        return $this->messages;
+        return $this->message;
     }
 
-    public function addMessage(Message $message)
+    public function setMessage($message)
     {
-        $this->subjects->add($message);
+        return $this->message = $message;
     }
-
-    public function removeMessage(Message $message)
-    {
-        $this->subjects->removeElement($message);
-    }
-
-    public function resetMessages()
-    {
-        $this->messages = new ArrayCollection();
-    }
-
-
 }
