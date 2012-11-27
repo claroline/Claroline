@@ -93,10 +93,12 @@ class Installer
     {
         $this->checkRegistrationStatus($pluginFqcn, false);
         $plugin = $this->loader->load($pluginFqcn);
-        $errors = $this->migrator->install($plugin);
+        $errors = $this->validator->validate($plugin);
 
         if (0 === count($errors)) {
-            $this->recorder->register($plugin);
+            $config = $this->validator->getPluginConfiguration();
+            $this->migrator->install($plugin);
+            $this->recorder->register($plugin, $config);
             $this->kernel->shutdown();
             $this->kernel->boot();
         } else {
