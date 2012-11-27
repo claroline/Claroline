@@ -22,14 +22,14 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
     {
         //name, isConfigurable, icon
         $items = array(
-//           array('core_resource_logger', false, $defaultIcon)
+            array('core_resource_logger', false)
         );
 
         foreach ($items as $item) {
             $widget = new Widget();
             $widget->setName($item[0]);
             $widget->setConfigurable($item[1]);
-            $widget->setIcon($item[2]);
+            $widget->setIcon('fake/icon/path');
             $widget->setPlugin(null);
             $manager->persist($widget);
 

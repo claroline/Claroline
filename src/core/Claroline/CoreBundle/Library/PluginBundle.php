@@ -9,8 +9,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 abstract class PluginBundle extends Bundle
 {
-    private $processedConfiguration;
-
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
@@ -79,15 +77,5 @@ abstract class PluginBundle extends Bundle
     public function getAssetsFolder()
     {
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
-    }
-
-    public function setProcessedConfiguration($processedConfiguration)
-    {
-        $this->processedConfiguration = $processedConfiguration;
-    }
-
-    public function getProcessedConfiguration()
-    {
-        return $this->processedConfiguration;
     }
 }
