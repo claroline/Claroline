@@ -56,7 +56,6 @@ class Group extends AbstractRoleSubject
     public function __construct()
     {
         parent::__construct();
-        $this->workspaceRoles = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -90,13 +89,32 @@ class Group extends AbstractRoleSubject
         return $this->users;
     }
 
-    /**
-     * Returns the group's workspace roles as an ArrayCollection of WorkspaceRole objects.
-     *
-     * @return ArrayCollection[WorkspaceRole]
-     */
-    public function getWorkspaceRoleCollection()
+    public function getPlatformRole()
     {
-        return $this->workspaceRoles;
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                return $role;
+            }
+        }
     }
+
+    public function setPlatformRole($platformRole)
+    {
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                $removedRole = $role;
+            }
+        }
+
+        if(isset($removedRole)){
+            $this->roles->removeElement($removedRole);
+        }
+
+        $this->roles->add($platformRole);
+    }
+
 }

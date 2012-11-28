@@ -20,7 +20,7 @@ class ProfileControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/profile/form');
 
         // check user has user role and cannot change it
-        $readonly = $crawler->filter('#profile_form_ownedRoles')->attr('disabled');
+        $readonly = $crawler->filter('#profile_form_platformRole')->attr('disabled');
         $userTranslation = $this->client->getContainer()->get('translator')->trans('user', array(), 'platform');
         $selected = $crawler->filter('option:contains("'.$userTranslation.'")')->attr('selected');
         $this->assertEquals('disabled', $readonly);

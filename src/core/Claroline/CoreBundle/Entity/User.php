@@ -128,7 +128,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $created;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -350,4 +349,33 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return $this->created;
     }
+
+    public function getPlatformRole()
+    {
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                return $role;
+            }
+        }
+    }
+
+    public function setPlatformRole($platformRole)
+    {
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                $removedRole = $role;
+            }
+        }
+
+        if(isset($removedRole)){
+            $this->roles->removeElement($removedRole);
+        }
+
+        $this->roles->add($platformRole);
+    }
+
 }
