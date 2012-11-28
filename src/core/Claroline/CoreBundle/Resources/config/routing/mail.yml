@@ -1,0 +1,7 @@
+claro_mail_form:
+    pattern: /form/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Mail:form }
+
+claro_mail_send:
+    pattern: /send/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Mail:send }

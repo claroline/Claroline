@@ -10,6 +10,8 @@
     {{ 'username'|trans({}, 'platform') }}: {{ user.getUsername() }}<br/>
     {{ 'mail'|trans({}, 'platform') }}: {{ user.getMail() }}<br/>
     {{ 'phone'|trans({}, 'platform') }}: {{ user.getPhone() }}<br/>
-    {{ 'creation_date'|trans({}, 'platform') }} : {{ user.getCreationDate()|date("d-m-Y H:i:s") }} 
+    {{ 'creation_date'|trans({}, 'platform') }} : {{ user.getCreationDate()|date("d-m-Y H:i:s") }}
 </div>
+
+<a href="{{path('claro_mail_form', {'userId':user.getId()})}}">{{ 'send_mail'|trans({}, 'platform') }}</a>
 {% endblock %}
