@@ -617,11 +617,4 @@ class AdministrationController extends Controller
 
         return $items;
     }
-
-    public function userAction($username)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $this->get('security.context')->isGranted($user->getPersonalWorkspace()->getCollaboratorRole()->getName());
-        return new Response("<body>".'bonjour'."</body>");
-    }
 }

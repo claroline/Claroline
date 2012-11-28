@@ -1,7 +1,3 @@
-claro_fake_user:
-  pattern: /user/fake/{username}
-  defaults: { _controller: ClarolineCoreBundle:Administration:user }
-
 claro_admin_index:
    pattern: /
    defaults: { _controller: ClarolineCoreBundle:Administration:platformSettingsForm }
