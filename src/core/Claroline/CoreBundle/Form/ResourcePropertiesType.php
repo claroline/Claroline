@@ -25,7 +25,7 @@ class ResourcePropertiesType extends AbstractType
             ));
         $builder->add('resourceType',
             'entity',
-             array(
+            array(
                 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
                 'expanded' => false,
                 'multiple' => false,

@@ -12,7 +12,7 @@ class MailController extends Controller
     {
         $form = $this->createForm(new MailType());
 
-       return $this->render(
+        return $this->render(
             'ClarolineCoreBundle:Mail:mail_form.html.twig',
             array('form' => $form->createView(), 'userId' => $userId)
         );
