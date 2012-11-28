@@ -170,10 +170,10 @@ abstract class AbstractWorkspace
      * a name or if the workspace doesn't have a valid identifier (i.e. hasn't been
      * flushed yet), an exception will be thrown.
      *
-     * @param WorkspaceRole $role
+     * @param Role $role
      * @throw RuntimeException if the workspace has no id or if the role has no name
      */
-    public function addCustomRole(WorkspaceRole $role)
+    public function addCustomRole(Role $role)
     {
         $this->checkIdCondition();
 
@@ -205,7 +205,7 @@ abstract class AbstractWorkspace
         $this->roles->add($role);
     }
 
-    public function removeCustomRole(WorkspaceRole $role)
+    public function removeCustomRole(Role $role)
     {
         if (0 === strpos($role->getName(), self::$customPrefix . "_{$this->getId()}_")) {
             $this->roles->removeElement($role);

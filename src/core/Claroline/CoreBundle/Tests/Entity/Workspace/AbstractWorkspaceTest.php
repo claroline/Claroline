@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
+use Claroline\CoreBundle\Entity\Role;
 
 class AbstractWorkspaceTest extends FixtureTestCase
 {
@@ -13,7 +13,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
         parent::setUp();
         $this->loadUserFixture(array('ws_creator'));
         $this->loadWorkspaceFixture(array('ws_a', 'ws_b'));
-        $this->markTestSkipped("RoleWorkspace entity removed");
+//        $this->markTestSkipped("RoleWorkspace entity removed");
     }
 
     public function testInitBaseRolesRequireWorkspaceToHaveAnIdentifier()
@@ -29,7 +29,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
         $this->setExpectedException('RuntimeException');
 
         $ws = new SimpleWorkspace();
-        $ws->addCustomRole(new WorkspaceRole);
+        $ws->addCustomRole(new Role);
     }
 
     public function testAddCustomRoleDoesntAcceptRolesAlreadyBoundToAnotherWorkspace()
@@ -39,9 +39,10 @@ class AbstractWorkspaceTest extends FixtureTestCase
         $wsA = $this->getFixtureReference('workspace/ws_a');
         $wsB = $this->getFixtureReference('workspace/ws_b');
 
-        $wsRole = new WorkspaceRole();
+        $wsRole = new Role();
         $wsRole->setWorkspace($wsA);
         $wsRole->setName('FOO');
+        $wsRole->setRoleType(Role::WS_ROLE);
 
         $wsB->addCustomRole($wsRole);
     }
@@ -52,8 +53,9 @@ class AbstractWorkspaceTest extends FixtureTestCase
 
         $wsA = $this->getFixtureReference('workspace/ws_a');
 
-        $customRole = new WorkspaceRole();
+        $customRole = new Role();
         $customRole->setWorkspace($wsA);
+        $customRole->setRoleType(Role::WS_ROLE);
 
         $wsA->addCustomRole($customRole);
     }
@@ -63,9 +65,10 @@ class AbstractWorkspaceTest extends FixtureTestCase
         $wsA = $this->getFixtureReference('workspace/ws_a');
         //$wsA->initBaseRoles();
 
-        $customRole = new WorkspaceRole();
+        $customRole = new Role();
+        $customRole->setRoleType(Role::WS_ROLE);
         $customRole->setWorkspace($wsA);
-        $customRole->setName('FOO');
+        $customRole->setName('ROLE_FOO');
 
         $wsA->addCustomRole($customRole);
 
@@ -84,10 +87,12 @@ class AbstractWorkspaceTest extends FixtureTestCase
         $wsA = $this->getFixtureReference('workspace/ws_a');
         //$wsA->initBaseRoles();
 
-        $customRole = new WorkspaceRole();
-        $customRole->setName('FOO');
-        $dummyRole = new WorkspaceRole();
-        $dummyRole->setName('BAR');
+        $customRole = new Role();
+        $customRole->setName('ROLE_FOO');
+        $customRole->setRoleType(Role::WS_ROLE);
+        $dummyRole = new Role();
+        $dummyRole->setName('ROLE_BAR');
+        $dummyRole->setRoleType(Role::WS_ROLE);
 
         $wsA->addCustomRole($customRole);
 
