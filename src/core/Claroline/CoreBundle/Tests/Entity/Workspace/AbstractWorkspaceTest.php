@@ -13,6 +13,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
         parent::setUp();
         $this->loadUserFixture(array('ws_creator'));
         $this->loadWorkspaceFixture(array('ws_a', 'ws_b'));
+        $this->markTestSkipped("RoleWorkspace entity removed");
     }
 
     public function testInitBaseRolesRequireWorkspaceToHaveAnIdentifier()

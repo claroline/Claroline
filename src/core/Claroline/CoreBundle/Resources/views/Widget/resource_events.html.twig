@@ -10,8 +10,8 @@
         </span> :
         {{ log.getUpdator().getFirstName() ~ ' ' ~ log.getUpdator().getLastName() }}
         {{ ('log_' ~ log.getAction() ~ '_verb')|trans({}, 'platform') }}
-        {% if log.getInstance() != null %}
-         {#   <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'instanceId': log.getInstance().getId()})}}"> {{ log.getPath() }}</a> #}
+        {% if log.getResource() != null %}
+            <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getPath() }}</a>
         {% else %}
             <em>{{ log.getPath() }}</em>
         {% endif %}

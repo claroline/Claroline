@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
+use Claroline\CoreBundle\Entity\Role;
 
 //TODO: phone verification
 
@@ -39,7 +40,7 @@ class ProfileType extends BaseProfileType
                     'disabled' => false,
                     'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
                         return $er->createQueryBuilder('r')
-                            ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                            ->add('where', "r.roleType != ".Role::WS_ROLE);
                     }
                 )
             );
@@ -55,7 +56,7 @@ class ProfileType extends BaseProfileType
                     'disabled' => true,
                     'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
                         return $er->createQueryBuilder('r')
-                            ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                            ->add('where', "r.roleType != ".Role::WS_ROLE);
                     }
                 )
             );

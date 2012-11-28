@@ -45,7 +45,8 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
-        $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
+
+        $collaborators = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($user->getPersonalWorkspace());
         $maxOffset = count($collaborators);
         $this->log("collaborators found: ".count($collaborators));
         $maxOffset--;

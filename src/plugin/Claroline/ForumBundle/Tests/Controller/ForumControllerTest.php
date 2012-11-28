@@ -41,10 +41,8 @@ class ForumControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadOptionsData());
         $fix = new LoadEntitiesInWorkspace(2, 'user', 'user');
-//        $fix->setLogger(function($log){echo $log."\n";});
         $this->loadFixture($fix);
         $ffix = new LoadForumData('test', 'user', 2, 2);
-//        $ffix->setLogger(function($log){echo $log."\n";});
         $this->loadFixture($ffix);
 
         $this->logUser($this->getFixtureReference('user/user'));

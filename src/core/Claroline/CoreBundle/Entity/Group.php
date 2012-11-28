@@ -44,7 +44,7 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Role",
-     *      cascade={"persist"}
+     *      cascade={"persist"}, inversedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_group_role",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
@@ -52,18 +52,6 @@ class Group extends AbstractRoleSubject
      * )
      */
     protected $roles;
-
-    /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
-     *      inversedBy="groups"
-     * )
-     * @ORM\JoinTable(name="claro_group_role",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     */
-    protected $workspaceRoles;
 
     public function __construct()
     {

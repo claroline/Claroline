@@ -31,3 +31,6 @@ security:
 
     acl:
         connection: default
+
+    access_decision_manager:
+        allow_if_all_abstain: false
