@@ -109,17 +109,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $roles;
 
     /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole"
-     * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     */
-    protected $workspaceRoles;
-
-    /**
      * @ORM\OneToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *      mappedBy="creator"
@@ -249,18 +238,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if ($role instanceof WorkspaceRole){
             $role->addUser($this);
         }
-    }
-
-    public function getWorkspaceRoleCollection()
-    {
-        return $this->workspaceRoles;
-    }
-
-    //small hack, do not use this one (see WorkspaceController multiAddUserAction)
-    public function setWorkspaceRoleCollection($workspaceRoles)
-    {
-        $this->workspaceRoles->clear();
-        $this->workspaceRoles[] = $workspaceRoles;
     }
 
     public function eraseCredentials()

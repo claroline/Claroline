@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Form\GroupType;
+use Claroline\CoreBundle\Entity\Role;
 
 class GroupSettingsType extends GroupType
 {
@@ -21,7 +22,7 @@ class GroupSettingsType extends GroupType
                 'disabled' => false,
                 'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
                     return $er->createQueryBuilder('r')
-                        ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                        ->add('where', "r.roleType != ".Role::WS_ROLE);
                 }
             )
         );

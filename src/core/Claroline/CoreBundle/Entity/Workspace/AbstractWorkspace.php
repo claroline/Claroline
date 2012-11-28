@@ -6,9 +6,7 @@ use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
-use Claroline\CoreBundle\Entity\ToolInstance;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
+use Claroline\CoreBundle\Entity\Role;
 use JMS\SerializerBundle\Annotation\Type;
 
 /**
@@ -54,7 +52,7 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
+     *  targetEntity="Claroline\CoreBundle\Entity\Role",
      *  mappedBy="workspace",
      *  cascade={"persist"}
      * )
@@ -246,10 +244,11 @@ abstract class AbstractWorkspace
 
     private function doAddBaseRole($prefix, $parent = null)
     {
-        $baseRole = new WorkspaceRole();
+        $baseRole = new Role();
         $baseRole->setWorkspace($this);
         $baseRole->setName("{$prefix}_{$this->getId()}");
         $baseRole->setParent($parent);
+        $baseRole->setRoleType(Role::WS_ROLE);
         $this->roles->add($baseRole);
 
         return $baseRole;

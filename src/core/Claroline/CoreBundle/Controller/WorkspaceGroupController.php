@@ -52,7 +52,7 @@ class WorkspaceGroupController extends Controller
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role', 'entity', array(
-                'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
+                'class' => 'Claroline\CoreBundle\Entity\Role',
                 'property' => 'translationKey',
                 'query_builder' => function(EntityRepository $er) use ($workspaceId) {
                     return $er->createQueryBuilder('wr')

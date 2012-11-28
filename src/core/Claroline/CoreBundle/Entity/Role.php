@@ -10,22 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
  * @ORM\Table(name="claro_role")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({
- *      "Claroline\CoreBundle\Entity\Role" = "Claroline\CoreBundle\Entity\Role",
- *      "Claroline\CoreBundle\Entity\WorkspaceRole" = "Claroline\CoreBundle\Entity\WorkspaceRole"
- * })
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\Tree(type="nested")
  * @DoctrineAssert\UniqueEntity("name")
  */
 class Role implements RoleInterface
 {
+    const BASE_ROLE = 1;
+    const WS_ROLE = 2;
+    const CUSTOM_ROLE = 3;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -108,6 +107,29 @@ class Role implements RoleInterface
      */
     protected $users;
 
+    /**
+     * @ORM\ManyToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\Group",
+     *  mappedBy="roles"
+     * )
+     * @ORM\JoinTable(name="claro_group_role",
+     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
+
+   /**
+    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
+    * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+    */
+    protected $workspace;
+
+    /**
+     * @ORM\Column(name="role_type", type="integer")
+     */
+    protected $roleType;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -155,10 +177,6 @@ class Role implements RoleInterface
 
     public function getTranslationKey()
     {
-        if (null === $this->translationKey) {
-            return $this->getName();
-        }
-
         return $this->translationKey;
     }
 
@@ -210,8 +228,43 @@ class Role implements RoleInterface
     public function addUser($user)
     {
         $this->users->add($user);
-        if($user->hasRole($this)){
+
+        if ($user->hasRole($this)) {
             $user->addRole($this);
         }
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+   /**
+    * Binds the role to a workspace instance. This method is aimed to be used
+    * by the AbstractWorkspace role setters.
+    *
+    * @param AbstractWorkspace $workspace
+    */
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $ws = $this->getWorkspace();
+
+        if (null !== $ws) {
+            throw new RuntimeException(
+                "This role is already bound to workspace '{$ws->getName()}'"
+            );
+        }
+
+        $this->workspace = $workspace;
+    }
+
+    public function setRoleType($roleType)
+    {
+        $this->roleType = $roleType;
+    }
+
+    public function getRoleType()
+    {
+        return $this->roleType;
     }
 }
