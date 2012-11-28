@@ -30,12 +30,12 @@ class ProfileType extends BaseProfileType
             ->add('phone', 'text', array('required' => false));
         if ($this->grantRole == true) {
             $builder->add(
-                'ownedRoles',
+                'platformRole',
                 'entity',
                 array(
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
-                    'multiple' => true,
+                    'multiple' => false,
                     'property' => 'translationKey',
                     'disabled' => false,
                     'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
@@ -46,12 +46,12 @@ class ProfileType extends BaseProfileType
             );
         } else {
             $builder->add(
-                'ownedRoles',
+                'platformRole',
                 'entity',
                 array(
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
-                    'multiple' => true,
+                    'multiple' => false,
                     'property' => 'translationKey',
                     'disabled' => true,
                     'query_builder' => function(\Doctrine\ORM\EntityRepository $er){

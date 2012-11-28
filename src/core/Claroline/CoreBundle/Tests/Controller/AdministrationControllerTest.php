@@ -70,7 +70,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['profile_form[username]'] = 'tototata';
         $form['profile_form[plainPassword][first]'] = 'abc';
         $form['profile_form[plainPassword][second]'] = 'abc';
-        $form['profile_form[ownedRoles]'] = $this->getFixtureReference('role/user')->getId();
+        $form['profile_form[platformRole]'] = $this->getFixtureReference('role/user')->getId();
         $this->client->submit($form);
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
@@ -228,7 +228,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $selected = $crawler->filter("option[value={$originalRoleId}]")->attr('selected');
         $this->assertEquals('selected', $selected);
         $form = $crawler->filter('button[type=submit]')->form();
-        $form['group_form[ownedRoles]'] = $this->getFixtureReference('role/admin')->getId();
+        $form['group_form[platformRole]'] = $this->getFixtureReference('role/admin')->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}");
         $selected = $crawler->filter("option[value={$adminRoleId}]")->attr('selected');
@@ -251,7 +251,6 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->configHandler->setParameter('allow_self_registration', false);
         $crawler = $this->client->request('GET', '/');
         $this->assertEquals(0, $crawler->filter("#link-registration")->count());
-
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
         $link = $crawler->filter("#link_platform_parameters")->link();

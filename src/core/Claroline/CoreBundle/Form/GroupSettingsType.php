@@ -12,12 +12,12 @@ class GroupSettingsType extends GroupType
     {
         parent::buildForm($builder, $options);
         $builder->add(
-            'ownedRoles',
+            'platformRole',
             'entity',
             array(
                 'class' => 'Claroline\CoreBundle\Entity\Role',
                 'expanded' => false,
-                'multiple' => true,
+                'multiple' => false,
                 'property' => 'translationKey',
                 'disabled' => false,
                 'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
