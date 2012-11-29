@@ -55,6 +55,7 @@ group_form_name: Nom
 group_form_ownedRoles: Rôles
 group_management: Gestion des groupes
 group_parameter: Paramètres du groupe
+group_form_platformRole: Role
 groups: Groupes
 home: Accueil
 id: Id
@@ -114,6 +115,7 @@ profile_form_lastName: Nom
 profile_form_mail: Mail
 profile_form_note: Note personnelle
 profile_form_ownedRoles: Role(s)
+profile_form_platformRole: Role
 profile_form_phone: Téléphone
 profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification

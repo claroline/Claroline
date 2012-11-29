@@ -54,10 +54,11 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    // TODO : add error handling (exceptions)
     public function onDelete(DeleteResourceEvent $event)
     {
-
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->remove($event->getResource());
+        $event->stopPropagation();
     }
 
     public function onCopy(CopyResourceEvent $event)
