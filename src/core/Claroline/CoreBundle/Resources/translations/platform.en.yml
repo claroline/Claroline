@@ -1,8 +1,11 @@
 account_created: Account created.
 action: Action
+activity_form_name: Name
+activity_form_instruction: Instructions
 add: Add
 add_group: Add group
 add_group_s_confirm_message: group(s) added
+add_resource: Add resource
 add_user: Add user
 add_user_s_confirm_message: users(s) added
 admin: Administrator
@@ -71,6 +74,8 @@ log_delete_verb: has deleted
 log_move_verb: has moved
 log_open_verb: has opened
 mail: Mail
+mail_form_object: Object
+mail_form_content: Content
 manager: Manager
 manage_rights: Manage rights
 misc: Miscellaneous
@@ -138,6 +143,7 @@ results: Results
 role: Role
 save: Save
 search: Search
+send_mail: Send a mail
 settings: Settings
 show: Show
 text_form_name: Name

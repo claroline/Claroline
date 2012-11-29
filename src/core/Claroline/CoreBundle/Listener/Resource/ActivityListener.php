@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Response;
 
 class ActivityListener extends ContainerAware
 {
@@ -71,6 +72,13 @@ class ActivityListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-
+        $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findBy(array('isVisible' => true));
+        $activity = $event->getResource();
+        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace()));
+        $response = new Response($content);
+        $event->setResponse($response);
+        $event->stopPropagation();
     }
 }
