@@ -1,0 +1,48 @@
+diff --git a/app/config/config.yml b/app/config/config.yml
+index 5491c80..84ca8d5 100644
+--- a/app/config/config.yml
++++ b/app/config/config.yml
+@@ -49,13 +49,14 @@ doctrine:
+         auto_mapping: true
+         mappings:
+             StofDoctrineExtensionsBundle: false
+-
+-# Swiftmailer Configuration
++            
+ swiftmailer:
+-    transport: %mailer_transport%
+-    host:      %mailer_host%
+-    username:  %mailer_user%
+-    password:  %mailer_password%
++    transport:  %mailer_transport%
++    encryption: %mailer_encryption%
++    auth_mode:  %mailer_auth_mode%
++    host:       %mailer_host%
++    username:   %mailer_user%
++    password:   %mailer_password%
+ 
+ jms_security_extra:
+     secure_all_services: false
+diff --git a/src/core/Claroline/CoreBundle/Controller/MailController.php b/src/core/Claroline/CoreBundle/Controller/MailController.php
+index 062ca8e..3666a05 100644
+--- a/src/core/Claroline/CoreBundle/Controller/MailController.php
++++ b/src/core/Claroline/CoreBundle/Controller/MailController.php
+@@ -31,12 +31,15 @@ class MailController extends Controller
+                 ->setSubject($data['object'])
+                 ->setFrom('noreply@claroline.net')
+                 ->setTo($user->getMail())
+-                ->setBody($data['content']);
++                ->setBody($data['content'], 'text/html');
+             $this->get('mailer')->send($message);
+         }
+ 
+-        return new Response(
+-            "rhello"
++        // add success/error message...
++
++        return $this->render(
++            'ClarolineCoreBundle:Mail:mail_form.html.twig',
++            array('form' => $form->createView(), 'userId' => $userId)
+         );
+     }
+ }
