@@ -2,9 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 
 class ActivityListenerTest extends FunctionalTestCase
 {
@@ -63,8 +61,7 @@ class ActivityListenerTest extends FunctionalTestCase
 
     private function createActivity($name, $instruction)
     {
-
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST',
             "/resource/create/activity/{$this->pwr->getId()}",
             array('activity_form' => array('name' => $name, 'instruction' => $instruction))

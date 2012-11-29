@@ -37,6 +37,7 @@ class Version20120119000000 extends BundleMigration
         $this->createAdminWidgetConfig($schema);
         $this->createResourceLinkTable($schema);
         $this->createActivityTable($schema);
+        $this->createActivityResourcesTable($schema);
 
     }
 
@@ -72,6 +73,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_widget_dispay');
         $schema->dropTable('claro_resource_link');
         $schema->dropTable('claro_activity');
+        $schema->dropTable('claro_resource_activity');
     }
 
     private function createUserTable(Schema $schema)
@@ -194,6 +196,8 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_role'), array('role_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+
+        $table->addUniqueIndex(array('role_id', 'user_id'));
     }
 
     private function createGroupRoleTable(Schema $schema)
@@ -381,6 +385,8 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+
+        $table->addUniqueIndex(array('resource_type_id', 'meta_type_id'));
     }
 
     private function createLinkTable(Schema $schema)
@@ -518,5 +524,18 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_activity');
         $this->addId($table);
         $table->addColumn('instruction', 'string');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createActivityResourcesTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_activity');
+        $this->addId($table);
+        $table->addColumn('resource_id', 'integer');
+        $table->addColumn('activity_id', 'integer');
+        $table->addUniqueIndex(array('activity_id', 'resource_id'));
     }
 }

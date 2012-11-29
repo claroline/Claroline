@@ -1,8 +1,11 @@
 account_created: Compte créé
 action: Action
+activity_form_name: Nom
+activity_form_instruction: Instructions
 add: Ajouter
 add_group: Ajouter un groupe
 add_group_s_confirm_message: groupe(s) ajouté(s)
+add_resource: Ajouter un ressource
 add_user: Ajouter un utilisateur
 add_user_s_confirm_message: utilisateur(s) ajouté(s)
 admin: Administrateur
@@ -71,6 +74,8 @@ log_delete_verb: a supprimé
 log_move_verb: a déplacé
 log_open_verb: a ouvert
 mail: Mail
+mail_form_object: Objet
+mail_form_content: Contenu
 manage_rights: Gérer les droits
 misc: Divers
 move : Déplacer
@@ -135,6 +140,7 @@ results: Résultats
 role: Rôle
 save: Sauvegarder
 search: Rechercher
+send_mail: Envoyer un mail
 settings: Paramètres
 show: Voir
 text_form_name: Nom

@@ -56,13 +56,13 @@ class ResourceController extends Controller
 
             if ($resourceType === 'file') {
                 $mimeType = $resource->getMimeType();
-                $instance = $manager->create($resource, $parentId, $resourceType, $mimeType);
+                $resource = $manager->create($resource, $parentId, $resourceType, $mimeType);
             } else {
-                $instance = $manager->create($resource, $parentId, $resourceType);
+                $resource = $manager->create($resource, $parentId, $resourceType);
             }
 
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($instance));
+            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
         } else {
             if($event->getErrorFormContent() != null){
                 $response->setContent($event->getErrorFormContent());
