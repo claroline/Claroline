@@ -24,7 +24,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  *     "directory" = "Directory",
  *     "link" = "Link",
  *     "text" = "Text",
- *     "resource_shortcut" = "ResourceShortcut"
+ *     "resource_shortcut" = "ResourceShortcut",
+ *     "activity" = "Activity"
  * })
  */
 abstract class AbstractResource

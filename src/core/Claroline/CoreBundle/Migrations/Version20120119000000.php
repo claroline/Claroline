@@ -36,6 +36,7 @@ class Version20120119000000 extends BundleMigration
         $this->createWidgetTable($schema);
         $this->createAdminWidgetConfig($schema);
         $this->createResourceLinkTable($schema);
+        $this->createActivityTable($schema);
 
     }
 
@@ -62,7 +63,6 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
         $schema->dropTable('claro_workspace_message');
-        $schema->dropTable('claro_resource_instance');
         $schema->dropTable('claro_license');
         $schema->dropTable('claro_meta_type');
         $schema->dropTable('claro_meta_type_resource_type');
@@ -71,6 +71,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_widget');
         $schema->dropTable('claro_widget_dispay');
         $schema->dropTable('claro_resource_link');
+        $schema->dropTable('claro_activity');
     }
 
     private function createUserTable(Schema $schema)
@@ -510,5 +511,12 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_widget'), array('widget_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+    }
+
+    private function createActivityTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_activity');
+        $this->addId($table);
+        $table->addColumn('instruction', 'string');
     }
 }
