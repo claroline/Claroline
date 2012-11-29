@@ -45,7 +45,7 @@ claro_text:
     resource: "@ClarolineCoreBundle/Resources/config/routing/text.yml"
     prefix: text
 
-claro_text:
+claro_mail:
     resource: "@ClarolineCoreBundle/Resources/config/routing/mail.yml"
     prefix: mail
 
