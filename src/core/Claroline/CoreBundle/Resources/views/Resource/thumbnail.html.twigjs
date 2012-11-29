@@ -31,7 +31,7 @@
                 <a class="resource-menu-action" data-action="manage-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
                     {{ 'manage_rights'|trans({}, 'platform') }}
                 </a>
-                <a class="resource-menu-action" data-action="properties" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                <a class="resource-menu-action" data-action="edit-properties" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
                     {{ 'properties'|trans({}, 'platform') }}
                 </a>
             </li>

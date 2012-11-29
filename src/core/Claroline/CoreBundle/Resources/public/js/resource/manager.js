@@ -198,7 +198,6 @@
             }
         }),
         Filters: Backbone.View.extend({
-
             className: 'filters form-horizontal',
             events: {
                 'click button.filter': function () {
@@ -315,23 +314,15 @@
                 this.$('#' + resourceId + ' .resource-name').html(newName);
                 successHandler && successHandler();
             },
+            changeThumbnailIcon: function (resourceId, newIconPath, successHandler) {
+                this.$('#' + resourceId + ' img').attr('src', this.parameters.webPath + newIconPath);
+                successHandler && successHandler();
+            },
             removeResources: function (resourceIds) {
                 // same logic for both thumbnails and search results
                 for (var i = 0; i < resourceIds.length; ++i) {
                     this.$('#' + resourceIds[i]).remove();
                 }
-            },
-            editProperties: function(resourceId, properties, successHandler){
-                console.debug(properties);
-                if(properties.name != undefined){
-                    var newName = Claroline.Utilities.formatText(properties.name, 20, 2);
-                    this.$('#' + resourceId + ' .resource-name').html(newName);
-                }
-                if (properties.icon != undefined){
-                    this.$('#' + resourceId + ' .resource-img').attr('src', this.parameters.appPath + '/../' + properties.icon);
-                }
-
-              successHandler && successHandler();
             },
             dispatchClick: function (event) {
                 event.preventDefault();
@@ -438,14 +429,11 @@
             'picker': function (event) {
                 this.picker(event.action, event.callback);
             },
-            'create': function (event) {
-                this.create(event.action, event.data, event.resourceId);
-            },
             'display-form': function (event) {
                 this.displayForm(event.type, event.resource);
             },
-            'creation-form': function (event) {
-                this.displayCreationForm(event.resourceType, event.directoryId);
+            'create': function (event) {
+                this.create(event.action, event.data, event.resourceId);
             },
             'delete': function (event) {
                 this.delete_(event.ids);
@@ -456,7 +444,7 @@
             'rename': function (event) {
                 this.rename(event.action, event.data, event.resourceId);
             },
-            'properties': function(event){
+            'edit-properties': function(event){
                 this.editProperties(event.action, event.data, event.resourceId);
             },
             'custom': function (event) {
@@ -540,15 +528,19 @@
                 }
             });
         },
-
         displayForm: function (type, resource) {
             if (resource.type == 'resource_shortcut'){
-                this.dispatcher.trigger('picker', {action: 'open', callback: function(resources, newParentId){this.createShortcut(resources, newParentId)}});
+                this.dispatcher.trigger('picker', {
+                    action: 'open',
+                    callback: function (resources, newParentId) {
+                        this.createShortcut(resources, newParentId)
+                    }
+                });
             } else {
                 var formSource = (
                     (type == 'create' && '/resource/form/' + resource.type) ||
                     (type == 'rename' && '/resource/rename/form/' + resource.id) ||
-                    (type == 'properties' && '/resource/properties/form/' + resource.id));
+                    (type == 'edit-properties' && '/resource/properties/form/' + resource.id));
                 formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
                 this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
                 $.ajax({
@@ -562,7 +554,6 @@
                 });
             }
         },
-
         create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
                 url: formAction,
@@ -577,21 +568,6 @@
                 }
             });
         },
-        editProperties: function(formAction, formData, resourceId) {
-            $.ajax({
-                url: formAction,
-                data: formData,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function(data, textStatus, jqXHR) {
-                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
-                    this.views['main'].subViews.resources.editProperties(resourceId, data, this.views['form'].close()) :
-                    this.views['renameForm'].render(data, resourceId);
-                }
-            });
-        }
-        ,
         delete_: function (resourceIds) {
             $.ajax({
                 url: this.parameters.appPath + '/resource/delete',
@@ -629,7 +605,24 @@
                 success: function (data, textStatus, jqXHR) {
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
                         this.views['main'].subViews.resources.renameThumbnail(resourceId, data[0], this.views['form'].close()) :
-                        this.views['renameForm'].render(data, resourceId);
+                        this.views['form'].render(data, resourceId);
+                }
+            });
+        },
+        editProperties: function(formAction, formData, resourceId) {
+            $.ajax({
+                url: formAction,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR) {
+                    if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                        data.name && this.views['main'].subViews.resources.renameThumbnail(resourceId, data.name, this.views['form'].close());
+                        data.icon && this.views['main'].subViews.resources.changeThumbnailIcon(resourceId, data.icon, this.views['form'].close());
+                    } else {
+                        this.views['form'].render(data, resourceId);
+                    }
                 }
             });
         },
