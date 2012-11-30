@@ -172,8 +172,6 @@ class Manager
             $copy->setResourceType($resource->getResourceType());
             $copy->setCreator($this->sc->getToken()->getUser());
             $copy->setName($resource->getName());
-            $this->em->persist($copy);
-            $this->em->flush();
             $rename = $this->ut->getUniqueName($resource, $parent);
             $copy->setName($rename);
         } else {
@@ -181,8 +179,6 @@ class Manager
             $copy->setParent($parent);
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setName($resource->getName());
-            $this->em->persist($copy);
-            $this->em->flush();
             $copy->setName($this->ut->getUniqueName($copy, $parent));
 
             if ($resource->getResourceType()->getName() == 'directory') {

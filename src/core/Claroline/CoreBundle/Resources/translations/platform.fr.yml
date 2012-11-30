@@ -1,8 +1,11 @@
 account_created: Compte créé
 action: Action
+activity_form_name: Nom
+activity_form_instruction: Instructions
 add: Ajouter
 add_group: Ajouter un groupe
 add_group_s_confirm_message: groupe(s) ajouté(s)
+add_resource: Ajouter une ressource
 add_user: Ajouter un utilisateur
 add_user_s_confirm_message: utilisateur(s) ajouté(s)
 admin: Administrateur
@@ -52,6 +55,7 @@ group_form_name: Nom
 group_form_ownedRoles: Rôles
 group_management: Gestion des groupes
 group_parameter: Paramètres du groupe
+group_form_platformRole: Role
 groups: Groupes
 home: Accueil
 id: Id
@@ -71,6 +75,8 @@ log_delete_verb: a supprimé
 log_move_verb: a déplacé
 log_open_verb: a ouvert
 mail: Mail
+mail_form_object: Objet
+mail_form_content: Contenu
 manage_rights: Gérer les droits
 misc: Divers
 move : Déplacer
@@ -109,6 +115,7 @@ profile_form_lastName: Nom
 profile_form_mail: Mail
 profile_form_note: Note personnelle
 profile_form_ownedRoles: Role(s)
+profile_form_platformRole: Role
 profile_form_phone: Téléphone
 profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification
@@ -135,6 +142,7 @@ results: Résultats
 role: Rôle
 save: Sauvegarder
 search: Rechercher
+send_mail: Envoyer un mail
 settings: Paramètres
 show: Voir
 text_form_name: Nom

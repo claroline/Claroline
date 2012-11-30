@@ -155,6 +155,7 @@ class TextController extends Controller
         $size = count($revisions);
         $size--;
         $d = $i = 0;
+        $differences = null;
 
         while ($i < $size) {
             $new = $revisions[$i]->getContent();
@@ -179,7 +180,8 @@ class TextController extends Controller
             'ClarolineCoreBundle:Text:history.html.twig',
             array(
                 'differences' => $differences,
-                'original' => $revisions[$size]->getContent()
+                'original' => $revisions[$size]->getContent(),
+                'workspace' => $text->getWorkspace()
             )
         );
     }
@@ -187,10 +189,7 @@ class TextController extends Controller
     public function editFormAction($textId)
     {
         $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
-        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $textId));
-        $response = new Response($content);
-
-        return $response;
+        return $this->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $textId, 'workspace' => $text->getWorkspace()));
     }
 
     public function editAction($textId)
