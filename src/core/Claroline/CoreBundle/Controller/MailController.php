@@ -31,12 +31,15 @@ class MailController extends Controller
                 ->setSubject($data['object'])
                 ->setFrom('noreply@claroline.net')
                 ->setTo($user->getMail())
-                ->setBody($data['content']);
+                ->setBody($data['content'], 'text/html');
             $this->get('mailer')->send($message);
         }
 
-        return new Response(
-            "rhello"
+        // add success/error message...
+
+        return $this->render(
+            'ClarolineCoreBundle:Mail:mail_form.html.twig',
+            array('form' => $form->createView(), 'userId' => $userId)
         );
     }
 }
