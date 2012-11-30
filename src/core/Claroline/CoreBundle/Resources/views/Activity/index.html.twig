@@ -65,7 +65,7 @@
             success: function(resources){
                 var html = "";
                 html+= "<li>";
-                html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': resources[0].resourceType, 'action': 'open', 'resourceId': resources[0].id})+">"+resources[0].path_for_display+"</a> ";
+                html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': resources[0].type, 'action': 'open', 'resourceId': resources[0].id})+">"+resources[0].path_for_display+"</a> ";
                 html+= " | <a class='remove-resource' href="+Routing.generate('claro_activity_remove_resource', {'resourceId':resources[0].id, 'activityId': {{ activity.getId() }} })+">{{ 'delete'|trans({}, 'platform') }}</a>";
                 html+= "</li>";
 
