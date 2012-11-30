@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
@@ -138,7 +137,7 @@ class FileListener extends ContainerAware
                 $response->headers->set('Connection', 'close');
             }
         }
-        
+
         $event->setResponse($response);
         $event->stopPropagation();
     }

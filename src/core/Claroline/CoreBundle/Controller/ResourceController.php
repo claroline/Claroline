@@ -56,13 +56,13 @@ class ResourceController extends Controller
 
             if ($resourceType === 'file') {
                 $mimeType = $resource->getMimeType();
-                $instance = $manager->create($resource, $parentId, $resourceType, $mimeType);
+                $resource = $manager->create($resource, $parentId, $resourceType, $mimeType);
             } else {
-                $instance = $manager->create($resource, $parentId, $resourceType);
+                $resource = $manager->create($resource, $parentId, $resourceType);
             }
 
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($instance));
+            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
         } else {
             if($event->getErrorFormContent() != null){
                 $response->setContent($event->getErrorFormContent());
@@ -480,7 +480,9 @@ class ResourceController extends Controller
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
             if ($resource != null) {
                 $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+                $em->persist($newNode);
                 $em->flush();
+                $em->refresh($parent);
                 $newNodes[] = $converter->toStdClass($newNode);
             }
         }
@@ -552,6 +554,7 @@ class ResourceController extends Controller
 
             $em->persist($shortcut);
             $em->flush();
+            $em->refresh($parent);
             $links[] = $converter->toStdClass($shortcut);
         }
 
