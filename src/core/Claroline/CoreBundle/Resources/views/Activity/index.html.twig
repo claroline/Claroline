@@ -90,7 +90,7 @@
 {% endblock %}
 {% block section_content %}
     <h3>
-        <b>{{ 'activity'|trans({}, 'platform') }} {{ activity.getName() }}</b>
+        <b>{{ 'activity'|trans({}, 'resource') }} {{ activity.getName() }}</b>
     </h3>
     <div id="activity-instruction">
         <h4>{{ 'Instructions'|trans({}, 'platform') }} :</h4>
@@ -109,5 +109,5 @@
             </ul>
     </div>
 
-    <button id="add_resource_button">{{'add_resource'|trans({},'platform')}}</button>
+    <button id="add_resource_button" class="btn btn-secondary">{{'add_resource'|trans({},'platform')}}</button>
 {% endblock %}

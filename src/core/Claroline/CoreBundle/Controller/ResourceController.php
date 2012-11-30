@@ -480,7 +480,9 @@ class ResourceController extends Controller
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
             if ($resource != null) {
                 $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+                $em->persist($newNode);
                 $em->flush();
+                $em->refresh($parent);
                 $newNodes[] = $converter->toStdClass($newNode);
             }
         }
@@ -552,6 +554,7 @@ class ResourceController extends Controller
 
             $em->persist($shortcut);
             $em->flush();
+            $em->refresh($parent);
             $links[] = $converter->toStdClass($shortcut);
         }
 

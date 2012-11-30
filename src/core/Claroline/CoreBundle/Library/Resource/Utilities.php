@@ -15,23 +15,16 @@ class Utilities
         $nbName = 0;
 
         if (null != $children) {
+            $nbName = 0;
             foreach ($children as $child) {
-                $childArName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
-                $childBaseName = $childArName[0];
-                if($childBaseName == $baseName && pathinfo($child->getName(),
-                    PATHINFO_EXTENSION) == pathinfo($resource->getName(), PATHINFO_EXTENSION)) {
-                    if(array_key_exists(1, $childArName)) {
-                        $ind = $childArName[1];
-                        if ($ind >= $nbName) {
-                            $nbName = $ind;
-                            $nbName++;
-                        }
-                    } else {
-                        $nbName = 1;
-                    }
+                $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
+                if ($baseName == $arChildName[0]){
+                    $nbName++;
                 }
             }
         }
+
+
         if (0 != $nbName) {
             $newName = $baseName.'~'.$nbName.'.'.pathinfo($resource->getName(), PATHINFO_EXTENSION);
         } else {
