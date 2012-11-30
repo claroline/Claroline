@@ -2,7 +2,6 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
 {% endblock %}
 
 {% block javascripts %}
@@ -100,14 +99,16 @@
     <div id="resource_linked">
         {{ 'resources'|trans({}, 'platform') }}:
             <ul id="resource-list">
-                {% for resource in activity.getResources() %}
+                {% for resourceActivity in resourceActivities %}
                 <li>
-                     <a href="{{ path('claro_resource_open', {'resourceType': resource.getResourceType().getName(), 'action': 'open', 'resourceId': resource.getId()})}}"> {{ resource.getPathForDisplay() }}</a>
-                     | <a class="remove-resource" href="{{ path('claro_activity_remove_resource', {'resourceId':resource.getId(), 'activityId': activity.getId()})}}">{{ 'delete'|trans({}, 'platform') }}</a>
+                     <a href="{{ path('claro_resource_open', {'resourceType': resourceActivity.getResource().getResourceType().getName(), 'action': 'open', 'resourceId': resourceActivity.getResource().getId()})}}"> {{ resourceActivity.getResource().getPathForDisplay() }}</a>
+                     | <a class="remove-resource" href="{{ path('claro_activity_remove_resource', {'resourceId':resourceActivity.getResource().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">{{ 'delete'|trans({}, 'platform') }}</a>
                 </li>
                 {% endfor %}
             </ul>
     </div>
 
     <button id="add_resource_button" class="btn btn-secondary">{{'add_resource'|trans({},'platform')}}</button>
+
+    <a href={{ path('claro_activity_parameters', {'activityId': activity.getId()}) }}> {{ 'parameters'|trans({}, 'platform') }}</a>
 {% endblock %}
