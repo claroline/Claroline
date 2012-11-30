@@ -185,16 +185,6 @@
                 parameters.isCreateAllowed = parameters.isAddAllowed =
                     !(directory.id == 0 || (!this.parameters.isPickerMode && this.isSearchMode));
                 $(this.el).html(Twig.render(resource_actions_template, parameters));
-            },
-            createShortcut: function(resourceIds, newParentId){
-                var url = Routing.generate('claro_resource_create_shortcut', { 'newParentId': newParentId});
-                $.ajax({
-                    url: url,
-                    data: {ids: resourceIds},
-                    success: function (data, textStatus, jqXHR) {
-                        this.views['main'].subViews.resources.addThumbnails(data);
-                    }
-                });
             }
         }),
         Filters: Backbone.View.extend({
@@ -530,11 +520,12 @@
         },
         displayForm: function (type, resource) {
             if (resource.type == 'resource_shortcut'){
+                var createShortcut = _.bind(function (resources, parentId) {
+                    this.createShortcut(resources, parentId);
+                }, this);
                 this.dispatcher.trigger('picker', {
                     action: 'open',
-                    callback: function (resources, newParentId) {
-                        this.createShortcut(resources, newParentId)
-                    }
+                    callback: createShortcut
                 });
             } else {
                 var formSource = (
@@ -565,6 +556,15 @@
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
                         this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close()) :
                         this.views['form'].render(data, parentDirectoryId);
+                }
+            });
+        },
+        createShortcut: function(resourceIds, parentId){
+            $.ajax({
+                url: this.parameters.appPath + '/resource/shortcut/' +  parentId + '/create',
+                data: {ids: resourceIds},
+                success: function (data) {
+                    this.views['main'].subViews.resources.addThumbnails(data);
                 }
             });
         },
