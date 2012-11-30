@@ -39,6 +39,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: create_form_directory, method: onCreateForm }
             - { name: kernel.event_listener, event: create_directory, method: onCreate }
+            - { name: kernel.event_listener, event: open_directory, method: onOpen }
 
     claroline.listener.file_listener:
         class: Claroline\CoreBundle\Listener\Resource\FileListener
