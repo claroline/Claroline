@@ -300,8 +300,9 @@
                 successHandler && successHandler();
             },
             renameThumbnail: function (resourceId, newName, successHandler) {
-                newName = Claroline.Utilities.formatText(newName, 20, 2);
-                this.$('#' + resourceId + ' .resource-name').html(newName);
+                displayableName = Claroline.Utilities.formatText(newName, 20, 2);
+                this.$('#' + resourceId + ' .resource-name').html(displayableName);
+                this.$('#' + resourceId + ' .dropdown[rel=tooltip]').attr('title', newName);
                 successHandler && successHandler();
             },
             changeThumbnailIcon: function (resourceId, newIconPath, successHandler) {
