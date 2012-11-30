@@ -77,7 +77,8 @@ class ActivityListener extends ContainerAware
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findBy(array('isVisible' => true));
         $activity = $event->getResource();
-        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace()));
+        $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
+        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace(), 'resourceActivities' => $resourceActivities));
         $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();

@@ -37,8 +37,8 @@ class ActivityControllerTest extends FunctionalTestCase
             );
         $obj = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($obj));
-        $resActivity = $repo->find($activity->id);
-        $this->assertEquals(1, count($resActivity->getResources()));
+        $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
+        $this->assertEquals(1, count($resourceActivity));
 //       the code below doens't work: no idea why
 //        $this->client->request(
 //            'DELETE',

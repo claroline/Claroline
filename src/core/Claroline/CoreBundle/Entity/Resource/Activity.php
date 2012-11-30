@@ -19,19 +19,27 @@ class Activity extends AbstractResource
     protected $instruction;
 
     /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource"
-     * )
-     * @ORM\JoinTable(name="claro_resource_activity",
-     *      joinColumns={@ORM\JoinColumn(name="activity_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")}
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceActivity",
+     *      mappedBy="activity"
      * )
      */
-    protected $resources;
+    protected $resourcesActivity;
+
+    /**
+     * @ORM\Column(type="datetime", name="date_beginning")
+     */
+    protected $dateBeginning;
+
+    /**
+     * @ORM\Column(type="datetime", name="date_end")
+     */
+    protected $dateEnd;
+
 
     public function __construct()
     {
-        $this->resources = new ArrayCollection();
+        $this->resourcesActivity = new ArrayCollection();
     }
 
     /**
@@ -52,23 +60,43 @@ class Activity extends AbstractResource
         $this->instruction = $instruction;
     }
 
-    public function addResource(AbstractResource $resource)
-    {
+    public function addResourceActivity(ResourceActivity $resourceActivity)
+    {/*
         foreach ($this->resources as $activityResource){
             if ($resource->getPath() == $activityResource->getPath()){
                 throw new \Exception('This resource was already added in the current activity');
             }
-        }
-        $this->resources->add($resource);
+        }*/
+        $this->resources->add($resourceActivity);
     }
 
-    public function removeResource(AbstractResource $resource)
+    public function removeResource(ResourceActivity $resourceActivity)
     {
-        $this->resources->removeElement($resource);
+        $this->resources->removeElement($resourceActivity);
     }
 
-    public function getResources()
+    public function getResourceActivity()
     {
-        return $this->resources;
+        return $this->resourcesActivity;
+    }
+
+    public function setDateBeginning($date)
+    {
+        $this->dateBeginning = $date;
+    }
+
+    public function getDateBeginning()
+    {
+        return $this->dateBeginning;
+    }
+
+    public function setDateEnd($date)
+    {
+        $this->dateEnd = $date;
+    }
+
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
     }
 }

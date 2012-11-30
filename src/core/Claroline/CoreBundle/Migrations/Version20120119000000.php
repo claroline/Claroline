@@ -524,6 +524,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_activity');
         $this->addId($table);
         $table->addColumn('instruction', 'string');
+        $table->addColumn('date_beginning', 'datetime', array('notnull' => false));
+        $table->addColumn('date_end', 'datetime', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('id'), array('id'), array('onDelete' => 'CASCADE')
@@ -536,6 +538,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('resource_id', 'integer');
         $table->addColumn('activity_id', 'integer');
+        $table->addColumn('sequence_order', 'integer');
         $table->addUniqueIndex(array('activity_id', 'resource_id'));
     }
 }

@@ -173,6 +173,7 @@ user_management: User management
 user_parameters: User parameters
 username: Username
 users: Users
+validate: Validate
 visible: Visible
 visitor: Visitor
 widgets: Widgets
