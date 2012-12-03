@@ -22,7 +22,7 @@ class ActivityController extends Controller
         $link->setActivity($activity);
         $link->setResource($resource);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->findBy(array('activity' => $activityId));
-        $order = count($resourceActivities) + 1;
+        $order = count($resourceActivities);
         $link->setSequenceOrder($order);
         $em->persist($link);
         $em->flush();
@@ -50,7 +50,6 @@ class ActivityController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->findBy(array('activity' => $activityId));
         $params = $this->get('request')->query->all();
-
         foreach($resourceActivities as $resourceActivity){
             foreach($params['ids'] as $key => $id){
                 if ($id == $resourceActivity->getResource()->getId()) {

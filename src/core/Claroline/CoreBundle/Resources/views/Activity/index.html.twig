@@ -77,12 +77,11 @@
 
         $('.close').live('click', function(e){
             e.preventDefault();
-            console.debug(e);
             Claroline.Utilities.ajax({
                 url: e.target.href,
                 type: 'DELETE',
                 success: function(){
-                    $(e.currentTarget.parentElement).remove();
+                    $(e.currentTarget.parentElement.parentElement).remove();
                 }
             });
         });
@@ -102,7 +101,7 @@
     <ul id="sortable" class="nav nav-tabs nav-stacked">
     {% for resourceActivity in resourceActivities %}
             <li id={{ resourceActivity.getResource().getId() }}>
-                <span class="close" href="{{ path('claro_activity_remove_resource', {'resourceId':resourceActivity.getResource().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">x</span>
+                <span><a class="close" href="{{ path('claro_activity_remove_resource', {'resourceId':resourceActivity.getResource().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">x</a></span>
                 <a href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResource().getResourceType().getName(), 'resourceId':resourceActivity.getResource().getId()} )}}">{{ resourceActivity.getResource().getName() }}</a>
             </li>
     {% endfor %}
