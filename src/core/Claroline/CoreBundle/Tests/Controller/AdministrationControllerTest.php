@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationControllerTest extends FunctionalTestCase
 {
@@ -344,36 +345,22 @@ class AdministrationControllerTest extends FunctionalTestCase
          $crawler = $this->client->request('GET', '/desktop/info');
          $this->assertEquals(count($crawler->filter('.widget')), count($configs));
     }
-/*
+
     public function testConfigureWorkspaceWidgetActionThrowsEvent()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $widget = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_mywidget1'));
-
-        $invoked = 0;
-        $dispatcher = $this->client->getContainer()->get('event_dispatcher');
-        //the event is never fired for some unknown reason.
-        //the dependency injection class from the plugin is never used either.
-        $dispatcher->addListener("widget_{$widget->getName()}_configuration_workspace", function () use (&$invoked) {
-            $invoked++;
-            var_dump('invok');
-        });
-
-        $this->client->request('GET', "/admin/widget/{$widget->getId()}/configuration/workspace");
-        $this->assertEquals(1, $invoked);
-
-//        var_dump($this->client->getResponse()->getContent());
+        $widget = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_rssreader'));
+        $crawler = $this->client->request('GET', "/admin/widget/{$widget->getId()}/configuration/workspace");
+        $this->assertEquals(count($crawler->filter('#rss_form')), 1);
     }
 
     public function testConfigureDesktopWidgetActionThrowsEvent()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $widgets = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
-        $this->client->request('GET', "/admin/widget/{$widgets[0]->getId()}/configuration/desktop");
-
-//        var_dump($this->client->getResponse()->getContent());
+        $widget = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_rssreader'));
+        $crawler = $this->client->request('GET', "/admin/widget/{$widget->getId()}/configuration/desktop");
+        $this->assertEquals(count($crawler->filter('#rss_form')), 1);
     }
-*/
 
     private function registerStubPlugins(array $pluginFqcns)
     {

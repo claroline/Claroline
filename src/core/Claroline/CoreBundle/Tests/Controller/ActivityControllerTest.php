@@ -40,17 +40,20 @@ class ActivityControllerTest extends FunctionalTestCase
         $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
         $this->assertEquals(1, count($resourceActivity));
 //       the code below doens't work: no idea why
-//        $this->client->request(
-//            'DELETE',
-//            "/activity/{$activity->id}/remove/resource/{$file->id}"
-//        );
-//            $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
-//        $lastActivity = $repo->find($activity->id);
-//                foreach($lastActivity->getResources() as $res){
-//        }
-//        $this->assertEquals(0, count($lastActivity->getResources()));
-
+        $this->client->request(
+            'DELETE',
+            "/activity/{$activity->id}/remove/resource/{$file->id}"
+        );
+        $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
+        $this->assertEquals(0, count($resourceActivity));
     }
+
+//    public function testSequenceOrder()
+//    {
+//        $this->logUser($this->getFixtureReference('user/admin'));
+//
+//    }
 
     private function createActivity($name, $instruction)
     {

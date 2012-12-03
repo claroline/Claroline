@@ -21,7 +21,9 @@ class ActivityController extends Controller
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResource($resource);
-        $link->setSequenceOrder(1);
+        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->findBy(array('activity' => $activityId));
+        $order = count($resourceActivities) + 1;
+        $link->setSequenceOrder($order);
         $em->persist($link);
         $em->flush();
         $response = new Response();
