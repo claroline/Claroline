@@ -16,7 +16,7 @@ class ResourcePropertiesType extends AbstractType
             'expanded' => false,
             'label' => 'sharable'
         ));
-        $builder->add('userIcon', 'file');
+        $builder->add('userIcon', 'file', array('required' => false));
         $builder->add('creationDate',
             'date',
             array('disabled' => true,
