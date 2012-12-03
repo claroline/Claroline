@@ -60,6 +60,7 @@ groups: Groups
 home: Home
 id: Id
 informations: Informations
+instructions: Instructions
 last_name: Last name
 link: Link
 list_groups: List groups

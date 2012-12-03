@@ -60,6 +60,7 @@ groups: Groupes
 home: Accueil
 id: Id
 informations: Informations
+instructions: Consignes
 last_name: Nom
 link: Lien
 list_groups: Lister les groupes
