@@ -9,8 +9,9 @@ class ResourceActivityRepository extends EntityRepository
     public function getResourcesActivityForActivity($activity)
     {
         $dql = "SELECT ra, r FROM Claroline\CoreBundle\Entity\Resource\ResourceActivity ra
-            JOIN ra.resource r
-            JOIN ra.activity a WITH a.id = {$activity->getId()}
+            LEFT JOIN ra.resource r
+            LEFT JOIN ra.activity a
+            WHERE a.id = {$activity->getId()}
             ORDER BY ra.sequenceOrder
             ";
 
