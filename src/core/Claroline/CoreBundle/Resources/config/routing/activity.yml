@@ -10,10 +10,6 @@ claro_activity_remove_resource:
     options:
       expose: true
 
-claro_activity_parameters:
-    pattern: /{activityId}/parameters
-    defaults: { _controller: ClarolineCoreBundle:Activity:parameters }
-
 claro_activity_set_sequence:
     pattern: /{activityId}/set/sequence
     defaults: { _controller: ClarolineCoreBundle:Activity:setSequenceOrder }

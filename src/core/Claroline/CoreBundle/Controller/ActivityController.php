@@ -42,23 +42,13 @@ class ActivityController extends Controller
         return new Response('success', 204);
     }
 
-    public function parametersAction($activityId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $activity = $repo->find($activityId);
-        $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
-
-        return $this->render('ClarolineCoreBundle:Activity:parameters.html.twig', array('workspace' => $activity->getWorkspace(), 'activity' => $activity, 'resourceActivities' => $resourceActivities));
-    }
-
     //dql optimization must be done later to get resource activities
     public function setSequenceOrderAction($activityId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->findBy(array('activity' => $activityId));
         $params = $this->get('request')->query->all();
-        
+
         foreach($resourceActivities as $resourceActivity){
             foreach($params['ids'] as $key => $id){
                 if ($id == $resourceActivity->getResource()->getId()) {
