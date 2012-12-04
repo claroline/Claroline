@@ -24,7 +24,7 @@ class Activity extends AbstractResource
      *      mappedBy="activity"
      * )
      */
-    protected $resourcesActivity;
+    protected $resourcesActivities;
 
     /**
      * @ORM\Column(type="datetime", name="date_beginning")
@@ -39,7 +39,7 @@ class Activity extends AbstractResource
 
     public function __construct()
     {
-        $this->resourcesActivity = new ArrayCollection();
+        $this->resourcesActivities = new ArrayCollection();
     }
 
     /**
@@ -60,13 +60,13 @@ class Activity extends AbstractResource
         $this->instruction = $instruction;
     }
 
-    public function addResourceActivity(ResourceActivity $resourceActivity)
-    {/*
-        foreach ($this->resources as $activityResource){
-            if ($resource->getPath() == $activityResource->getPath()){
+    public function addResourceActivity(ResourceActivity $newResourceActivity)
+    {
+        foreach ($this->resourcesActivities as $resourceActivity){
+            if ($resourceActivity->getResource()->getPath() == $newResourceActivity->getResource()->getPath()){
                 throw new \Exception('This resource was already added in the current activity');
             }
-        }*/
+        }
         $this->resources->add($resourceActivity);
     }
 
@@ -75,9 +75,9 @@ class Activity extends AbstractResource
         $this->resources->removeElement($resourceActivity);
     }
 
-    public function getResourceActivity()
+    public function getResourceActivities()
     {
-        return $this->resourcesActivity;
+        return $this->resourcesActivities;
     }
 
     public function setDateBeginning($date)
