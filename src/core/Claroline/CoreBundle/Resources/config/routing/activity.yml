@@ -15,3 +15,9 @@ claro_activity_set_sequence:
     defaults: { _controller: ClarolineCoreBundle:Activity:setSequenceOrder }
     options:
       expose: true
+
+claro_activity_left_menu:
+    pattern: /leftmenu/{activityId}
+    defaults: { _controller: ClarolineCoreBundle:Activity:renderLeftMenu }
+    options:
+      expose: true

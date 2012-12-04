@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 /**
  * Controller of the user's desktop.
@@ -62,5 +64,13 @@ class ActivityController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    public function renderLeftMenuAction($activityId)
+    {
+        $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
+        $resourceActivities = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
+
+        return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => count($resourceActivities)));
     }
 }

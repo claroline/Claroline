@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Configuration\Twig;
 
 use Twig_Extension;
-use Twig_Environment;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class PlatformConfigurationExtension extends Twig_Extension

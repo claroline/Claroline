@@ -18,18 +18,6 @@ class ResourceTypeRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findVisiblePluginResourceType()
-    {
-        $dql = "
-            SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.plugin IS NOT NULL AND rt.isVisible = 1
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
     public function findPluginResourceNameFqcns()
     {
         $sql = 'SELECT class FROM claro_resource_type WHERE plugin_id IS NOT NULL';
@@ -38,19 +26,5 @@ class ResourceTypeRepository extends EntityRepository
             ->getConnection()
             ->query($sql)
             ->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function findBrowsableResourceType($isDirectoryIncluded = true)
-    {
-        $dql = "
-            SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.isBrowsable = true";
-        if (!$isDirectoryIncluded) {
-            $dql.="and rt.type != 'directory'";
-        }
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
     }
 }
