@@ -4,3 +4,6 @@ services:
         class: Claroline\CoreBundle\Library\Utilities\EntityConverter
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    claroline.utilities.lipsum_generator:
+        class: Claroline\CoreBundle\Library\Utilities\LipsumGenerator

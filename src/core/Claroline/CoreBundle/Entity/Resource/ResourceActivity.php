@@ -17,7 +17,6 @@ class ResourceActivity
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      */
-
     protected $id;
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", inversedBy="resourceActivity")

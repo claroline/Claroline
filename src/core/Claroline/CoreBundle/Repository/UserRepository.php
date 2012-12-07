@@ -247,7 +247,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $paginator;
     }
 
-    public function usersOfGroup($groupId, $offset, $limit)
+    public function usersOfGroup($groupId, $offset = null, $limit = null)
     {
         $dql = "
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u

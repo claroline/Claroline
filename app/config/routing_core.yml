@@ -49,6 +49,10 @@ claro_mail:
     resource: "@ClarolineCoreBundle/Resources/config/routing/mail.yml"
     prefix: mail
 
+claro_message:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/message.yml"
+    prefix: message
+
 claro_activity:
     resource: "@ClarolineCoreBundle/Resources/config/routing/activity.yml"
     prefix: activity

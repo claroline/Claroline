@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\MailType;
-use Symfony\Component\HttpFoundation\Response;
 
 class MailController extends Controller
 {
