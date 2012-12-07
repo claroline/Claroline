@@ -5,8 +5,6 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
 
 /**
  * Controller of the user's desktop.

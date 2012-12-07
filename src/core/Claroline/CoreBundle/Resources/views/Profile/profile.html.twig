@@ -13,5 +13,6 @@
     {{ 'creation_date'|trans({}, 'platform') }} : {{ user.getCreationDate()|date("d-m-Y H:i:s") }}
 </div>
 
-<a href="{{path('claro_mail_form', {'userId':user.getId()})}}">{{ 'send_mail'|trans({}, 'platform') }}</a>
+<a href="{{path('claro_mail_form', {'userId':user.getId()})}}">{{ 'send_mail'|trans({}, 'platform') }}</a><br/>
+<a href="{{path('claro_message_form')}}?ids[]={{ user.getId() }}">{{ 'send_message'|trans({}, 'platform') }}</a><br/>
 {% endblock %}

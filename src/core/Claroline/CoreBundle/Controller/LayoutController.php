@@ -46,6 +46,8 @@ class LayoutController extends Controller
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
+        $alertMsg = false;
+
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($user instanceof User) {
@@ -55,6 +57,11 @@ class LayoutController extends Controller
                 ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
                 ->getAllWsOfUser($user);
             $personalWs = $user->getPersonalWorkspace();
+            $unreadMessages = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('Claroline\CoreBundle\Entity\Message')
+                ->getUnreadMessages($user);
+
+            (count($unreadMessages) == 0) ? $alertMsg = false: $alertMsg = true;
 
         } else {
             $configHandler = $this->get('claroline.config.platform_config_handler');
@@ -76,7 +83,8 @@ class LayoutController extends Controller
                 'register_target' => $registerTarget,
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
-                'personalWs' => $personalWs
+                'personalWs' => $personalWs,
+                'alertMsg' => $alertMsg
             )
         );
     }

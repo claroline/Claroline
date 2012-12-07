@@ -128,9 +128,18 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $created;
 
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\UserMessage",
+     *      mappedBy="user"
+     * )
+     */
+    protected $userMessages;
+
     public function __construct()
     {
         parent::__construct();
+        $this->userMessages = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
@@ -378,4 +387,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
+    public function getUserMessages()
+    {
+        return $this->userMessages;
+    }
 }
