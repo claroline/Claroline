@@ -18,6 +18,22 @@ claro_message_list_sent:
     pattern: /list/sent
     defaults: { _controller: ClarolineCoreBundle:Message:listSent }
 
+claro_message_list_received_search_object:
+    pattern: /list/received/object/{object}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchObjectReceived }
+
+claro_message_list_sent_search_object:
+    pattern: /list/sent/object/{object}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchObjectSent }
+
+claro_message_list_received_search_user:
+    pattern: /list/received/user/{fromUser}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchFromUser }
+
+claro_message_list_sent_search_user:
+    pattern: /list/sent/user/{toUser}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchToUser }
+
 claro_message_list_received_removed:
     pattern: /list/received/removed
     defaults: { _controller: ClarolineCoreBundle:Message:listReceivedRemoved }
