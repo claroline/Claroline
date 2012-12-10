@@ -159,7 +159,7 @@ class MessageController extends Controller
 
         if ($userMessage != null){
         //was received by the current user
-            $form = $this->createForm(new MessageType($userMessage->getMessage()->getUser()->getUsername()));
+            $form = $this->createForm(new MessageType($userMessage->getMessage()->getUser()->getUsername(), 'Re: '.$message->getObject(), true));
             $userMessage->markAsRead();
             $em->persist($userMessage);
             $em->flush();
@@ -172,7 +172,7 @@ class MessageController extends Controller
                  $stringUsername.= "{$userMessage->getUser()->getUsername()}; ";
             }
 
-            $form = $this->createForm(new MessageType($stringUsername));
+            $form = $this->createForm(new MessageType($stringUsername, 'Re: '.$message->getObject()));
         }
 
         return $this->render(
