@@ -25,7 +25,7 @@
     var searchRoute = function(){
         return Routing.generate('claro_admin_paginated_search_user_list', {
             'format': 'html',
-            'offset': $('.row-group').length,
+            'offset': $('.row-user').length,
             'search': document.getElementById('search-user-txt').value
         })
     }
