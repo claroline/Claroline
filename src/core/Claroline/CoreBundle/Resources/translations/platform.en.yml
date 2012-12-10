@@ -1,8 +1,11 @@
 account_created: Account created.
 action: Action
+activity_form_name: Name
+activity_form_instruction: Instructions
 add: Add
 add_group: Add group
 add_group_s_confirm_message: group(s) added
+add_resource: Add resource
 add_user: Add user
 add_user_s_confirm_message: users(s) added
 admin: Administrator
@@ -24,7 +27,7 @@ create_group: Create group
 create_workspace: Create workspace
 creation_date: Creation date
 cut: Cut
-desktop: Desktop
+dashboard: Dashboard
 date: Date
 delete: Delete
 desktop: Desktop
@@ -35,7 +38,9 @@ display_options: Display options
 done_on: done on
 download: Download
 export: export
+fast_answer: Fast answer
 file: File
+file_form_file: File
 file_form_name: Name
 file_form_license: License
 file_form_shareType: Sharable
@@ -51,10 +56,12 @@ group_form_name: Name
 group_form_ownedRoles: Roles
 group_management: Group management
 group_parameter: Group parameter
+group_form_platformRole: Role
 groups: Groups
 home: Home
 id: Id
 informations: Informations
+instructions: Instructions
 last_name: Last name
 link: Link
 list_groups: List groups
@@ -70,10 +77,20 @@ log_delete_verb: has deleted
 log_move_verb: has moved
 log_open_verb: has opened
 mail: Mail
+mail_form_object: Object
+mail_form_content: Content
 manager: Manager
 manage_rights: Manage rights
 misc: Miscellaneous
 move : Move
+message_form_object: Object
+message_form_content: Content
+message_form_to: To
+messages_received: Messages received
+messages_removed: Messages removed
+messages_received_removed: Messages received removed
+messages_sent_removed: Messages sent removed
+messages_sent: Messages sent
 my_account: My account
 my_agenda: My agenda
 my_contacts: My contacts
@@ -108,6 +125,7 @@ profile_form_lastName: Last name
 profile_form_mail: Mail
 profile_form_note: Personnal note
 profile_form_ownedRoles: Role(s)
+profile_form_platformRole: Role
 profile_form_phone: Phone
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
@@ -123,6 +141,9 @@ rename: Rename
 reset: Reset
 resource: Resource
 resource_manager: Resource manager
+resource_properties_form_creationDate: Creation Date
+resource_properties_form_resourceType: Resource type
+resource_properties_form_creator: Creator
 resource_properties_form_shareType: Redistribution
 resource_properties_form_name: Nom
 resource_properties_form_userIcon: Icône
@@ -134,6 +155,8 @@ results: Results
 role: Role
 save: Save
 search: Search
+send_mail: Send a mail
+send_message: Send a message
 settings: Settings
 show: Show
 text_form_name: Name
@@ -161,6 +184,7 @@ user_management: User management
 user_parameters: User parameters
 username: Username
 users: Users
+validate: Validate
 visible: Visible
 visitor: Visitor
 widgets: Widgets

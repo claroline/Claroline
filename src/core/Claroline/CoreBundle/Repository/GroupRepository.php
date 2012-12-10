@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Claroline\CoreBundle\Entity\Role;
 
 
 class GroupRepository extends EntityRepository
@@ -13,7 +14,9 @@ class GroupRepository extends EntityRepository
     {
         $dql = "
             SELECT g FROM Claroline\CoreBundle\Entity\Group g
-            JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :id
+            LEFT JOIN g.roles rg
+            LEFT JOIN rg.workspace w
+            WHERE w.id = :id
        ";
 
         if ($role != null) {
@@ -33,14 +36,13 @@ class GroupRepository extends EntityRepository
     public function unregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "
-            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
-            LEFT JOIN g.workspaceRoles gwr
 
             WHERE g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.workspaceRoles wr
+                LEFT JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
                 JOIN wr.workspace w
                 WHERE w.id = :id
             )
@@ -62,15 +64,14 @@ class GroupRepository extends EntityRepository
         $search = strtoupper($search);
 
         $dql = "
-            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
-            LEFT JOIN g.workspaceRoles gwr
 
             WHERE UPPER(g.name) LIKE :search
             AND g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.workspaceRoles wr
+                JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
                 JOIN wr.workspace w
                 WHERE w.id = :id
             )
@@ -94,14 +95,13 @@ class GroupRepository extends EntityRepository
         $search = strtoupper($search);
 
         $dql = "
-            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
+            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
-            LEFT JOIN g.workspaceRoles gwr
             WHERE UPPER(g.name) LIKE :search
             AND g IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.workspaceRoles wr
+                JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
                 JOIN wr.workspace w
                 WHERE w.id = :id
             )
@@ -123,9 +123,8 @@ class GroupRepository extends EntityRepository
     public function groups($offset, $limit)
     {
         $dql = "
-            SELECT g, r, gwr FROM Claroline\CoreBundle\Entity\Group g
-              LEFT JOIN g.roles r
-              LEFT JOIN g.workspaceRoles gwr";
+            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
+              LEFT JOIN g.roles r";
 
          $query = $this->_em->createQuery($dql)
             ->setFirstResult($offset)
@@ -141,10 +140,9 @@ class GroupRepository extends EntityRepository
         $search = strtoupper($search);
 
         $dql = "
-            SELECT g, r, gwr
+            SELECT g, r
             FROM Claroline\CoreBundle\Entity\Group g
-              LEFT JOIN g.roles r
-              LEFT JOIN g.workspaceRoles gwr
+            LEFT JOIN g.roles r
             WHERE UPPER(g.name) LIKE :search
         ";
 
@@ -161,10 +159,11 @@ class GroupRepository extends EntityRepository
     public function registeredGroupsOfWorkspace($workspaceId, $offset, $limit)
     {
         $dql = "
-            SELECT g, wr, r
+            SELECT g, wr
             FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles r
-            JOIN g.workspaceRoles wr JOIN wr.workspace w WHERE w.id = :workspaceId
+            LEFT JOIN g.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+            LEFT JOIN wr.workspace w
+            WHERE w.id = :workspaceId
        ";
 
         $query = $this->_em->createQuery($dql);
@@ -180,7 +179,7 @@ class GroupRepository extends EntityRepository
     public function getRoleOfWorkspace($groupId, $workspaceId)
     {
         $dql = "
-            SELECT wr FROM Claroline\CoreBundle\Entity\WorkspaceRole wr
+            SELECT wr FROM Claroline\CoreBundle\Entity\Role wr
             JOIN wr.workspace ws
             JOIN wr.groups g
             WHERE ws.id = :workspaceId

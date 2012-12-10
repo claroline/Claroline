@@ -57,8 +57,6 @@ class Configuration implements ConfigurationInterface
         $resourceFile = $plugin->getConfigFile();
         $imgFolder = $plugin->getImgFolder();
 
-        $ds = DIRECTORY_SEPARATOR;
-
         $pluginSection
             ->arrayNode('resources')
                 ->prototype('array')

@@ -8,7 +8,7 @@
             "source": {
                 "type": "git",
                 "url": "http://github.com/claroline/FrontEndBundle",
-                "reference": "b5d02cf7758c7d544ec4ea5ebca32b3ea9e6a6cb"
+                "reference": "f09bd92dcffe955f4cd0e2921de8f16ec80b2fb8"
             },
             "dist": {
                 "type": "zip",

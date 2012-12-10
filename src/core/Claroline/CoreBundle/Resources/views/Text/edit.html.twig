@@ -1,6 +1,8 @@
-{% extends "ClarolineCoreBundle::layout.html.twig" %}
+{# to keep the workspace layout, extends this template #}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{# use the section_content block to display yor html #}
+{% block section_content %}
 
-{% block content %}
     <!-- editeur wysiwyg -->
         <script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js') }}' type='text/javascript'></script>
         <script type="text/javascript">

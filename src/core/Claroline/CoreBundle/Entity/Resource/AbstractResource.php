@@ -23,7 +23,9 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  *     "file" = "File",
  *     "directory" = "Directory",
  *     "link" = "Link",
- *     "text" = "Text"
+ *     "text" = "Text",
+ *     "resource_shortcut" = "ResourceShortcut",
+ *     "activity" = "Activity"
  * })
  */
 abstract class AbstractResource
@@ -49,10 +51,10 @@ abstract class AbstractResource
     protected $shareType;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created")
      * @Gedmo\Timestampable(on="create")
      */
-    protected $created;
+    protected $creationDate;
 
     /**
      * @ORM\Column(type="datetime")
@@ -73,7 +75,7 @@ abstract class AbstractResource
     protected $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", cascade={"persist"})
      * @ORM\JoinColumn(name="icon_id", referencedColumnName="id")
      */
     protected $icon;
@@ -119,6 +121,14 @@ abstract class AbstractResource
      * @ORM\OrderBy({"id" = "ASC"})
      */
     protected $children;
+
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut", cascade={"remove"},
+     *      mappedBy="resource"
+     * )
+     */
+    protected $shortcuts;
 
     /**
      * @ORM\ManyToOne(
@@ -236,7 +246,7 @@ abstract class AbstractResource
      */
     public function getCreationDate()
     {
-        return $this->created;
+        return $this->creationDate;
     }
 
     /**
@@ -448,4 +458,11 @@ abstract class AbstractResource
 
         return $pathForDisplay;
     }
+
+    public function getShortcuts()
+    {
+        return $this->shortcuts;
+    }
+
+
 }

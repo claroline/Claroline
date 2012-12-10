@@ -31,7 +31,7 @@ class ForumControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('#subject_forum_form')));
         $form = $crawler->filter('button[type=submit]')->form();
         $form['subject_forum_form[title]'] = 'title';
-        $form['subject_forum_form[messages][content]'] = 'content';
+        $form['subject_forum_form[message][content]'] = 'content';
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/forum/{$this->getFixtureReference('forum_instance/forum')->getId()}/offset/0");
         $this->assertEquals(1, count($crawler->filter('.row-subject')));
@@ -41,10 +41,8 @@ class ForumControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadOptionsData());
         $fix = new LoadEntitiesInWorkspace(2, 'user', 'user');
-//        $fix->setLogger(function($log){echo $log."\n";});
         $this->loadFixture($fix);
         $ffix = new LoadForumData('test', 'user', 2, 2);
-//        $ffix->setLogger(function($log){echo $log."\n";});
         $this->loadFixture($ffix);
 
         $this->logUser($this->getFixtureReference('user/user'));

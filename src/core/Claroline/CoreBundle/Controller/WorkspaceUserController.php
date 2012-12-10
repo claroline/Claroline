@@ -71,7 +71,7 @@ class WorkspaceUserController extends Controller
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role', 'entity', array(
-                'class' => 'Claroline\CoreBundle\Entity\WorkspaceRole',
+                'class' => 'Claroline\CoreBundle\Entity\Role',
                 'property' => 'translationKey',
                 'query_builder' => function(EntityRepository $er) use ($workspaceId) {
                     return $er->createQueryBuilder('wr')
@@ -182,10 +182,6 @@ class WorkspaceUserController extends Controller
                 $em->flush();
             }
 
-            //small hack to get the current workspace as the only workspace role. Do not flush after this !
-            foreach ($users as $user) {
-                $user->setWorkspaceRoleCollection($workspace->getCollaboratorRole());
-            }
         }
 
         $content = $this->renderView('ClarolineCoreBundle:Administration:user_list.json.twig', array('users' => $users));

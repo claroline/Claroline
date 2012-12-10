@@ -10,7 +10,7 @@ class WorkspaceRepository extends EntityRepository
     public function getWorkspacesOfUser(User $user)
     {
         $dql = "
-            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            SELECT w, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.roles wr
             JOIN wr.users u
             WHERE u.id = :userId
@@ -24,7 +24,8 @@ class WorkspaceRepository extends EntityRepository
     public function getNonPersonnalWS()
     {
         $dql = "
-            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            SELECT w, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles wr
             WHERE w.type != 0
         ";
 
@@ -36,7 +37,7 @@ class WorkspaceRepository extends EntityRepository
     public function getAllWsOfUser(User $user)
     {
         $dql = "
-            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            SELECT w, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.roles wr JOIN wr.users u WHERE u.id = :userId
             ";
 

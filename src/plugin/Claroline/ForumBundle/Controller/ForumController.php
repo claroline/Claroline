@@ -67,14 +67,13 @@ class ForumController extends Controller
         if ($form->isValid()) {
             $user = $this->get('security.context')->getToken()->getUser();
             $subject = $form->getData();
-            $dataMessage = $subject->getMessages();
+            $dataMessage = $subject->getMessage();
             $message = new Message();
             $message->setContent($dataMessage['content']);
             $subject->setCreator($user);
             $message->setCreator($user);
             $message->setName($subject->getTitle() . '-' . date('m/d/Y h:i:m'));
             $subject->setName($subject->getTitle());
-            $subject->resetMessages();
             $creator = $this->get('claroline.resource.manager');
             //instantiation of the new resources
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject');
@@ -152,7 +151,7 @@ class ForumController extends Controller
         }
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' => $form->createView(), 'workspace' => $subjectInstance->getWorkspace())
+            'ClarolineForumBundle::message_form.html.twig', array('subjectId' => $subjectId, 'form' => $form->createView(), 'workspace' => $subject->getWorkspace())
         );
     }
 

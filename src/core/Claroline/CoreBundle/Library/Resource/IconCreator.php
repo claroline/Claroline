@@ -56,7 +56,6 @@ class IconCreator
                 return null;
             }
 
-            $destinationPath = "{$destinationPath}@{$newWidth}x{$newHeight}.{$mimeExtension}";
             $this->getFormatedImg($newWidth, $newHeight, $srcImg, $destinationPath);
             imagedestroy($srcImg);
 
@@ -96,16 +95,17 @@ class IconCreator
 
     private function createMpegGDI($name)
     {
+        $image = null;
+
         if ($this->hasFfmpegExtension) {
             $media = new \ffmpeg_movie($name);
             $frameCount = $media->getFrameCount();
             $frame = $media->getFrame(round($frameCount / 2));
-            $gdImage = $frame->toGDImage();
+            $image = $frame->toGDImage();
 
-            return $gdImage;
         }
 
-        return null;
+        return $image;
     }
 
     /**
@@ -141,8 +141,9 @@ class IconCreator
 
         // if video or img => generate the thumbnail, otherwise find an existing one.
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image') && $isFixture == false) {
+//               throw new \Exception('gogogo');
             $originalPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
-            $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid();
+            $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid().".png";
             $thumbnailPath = $this->createThumbNail($originalPath, $newPath, 100, 100, $mimeElements[1], $mimeElements[0]);
 
             if ($thumbnailPath !== null) {
@@ -153,8 +154,11 @@ class IconCreator
                     ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
                     ->find(IconType::GENERATED);
                 $icon->setIconType($generatedIconType);
-                $icon->setIconLocation($iconName);
+                $icon->setIconLocation($newPath);
+                $icon->setRelativeUrl($iconName);
                 $icon->setType('generated');
+                $icon->setShortcut(false);
+                $this->createShortcutIcon($icon);
                 $this->em->persist($icon);
                 $this->em->flush();
 
@@ -191,6 +195,56 @@ class IconCreator
                 $icon = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
             }
         }
+
+        return $icon;
+    }
+
+    public function createShortcutIcon(ResourceIcon $icon)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $basepath = $icon->getIconLocation();
+        $extension = pathinfo($icon->getIconLocation(), PATHINFO_EXTENSION);
+        $stampPath = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
+
+        $im = imagecreatefrompng($basepath);
+        $stamp = imagecreatefrompng($stampPath);
+        imagesavealpha($im, true);
+        imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
+        $name = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        imagepng($im, $this->container->getParameter('claroline.thumbnails.directory').$ds.$name);
+        imagedestroy($im);
+
+        $shortcutIcon = new ResourceIcon();
+        $shortcutIcon->setIconLocation("{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$name}");
+        $shortcutIcon->setRelativeUrl("thumbnails{$ds}{$name}");
+        $shortcutIcon->setIconType($icon->getIconType());
+        $shortcutIcon->setType($icon->getType());
+        $shortcutIcon->setShortcut(true);
+        $icon->setShortcutIcon($shortcutIcon);
+        $shortcutIcon->setShortcutIcon($shortcutIcon);
+        $this->em->persist($icon);
+        $this->em->persist($shortcutIcon);
+        $this->em->flush();
+
+        return $shortcutIcon;
+    }
+
+    public function createCustomIcon($file)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $iconName = $file->getClientOriginalName();;
+        $extension = pathinfo($iconName, PATHINFO_EXTENSION);
+        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        $file->move($this->container->getParameter('claroline.thumbnails.directory'), $hashName);
+        //entity creation
+        $icon = new ResourceIcon();
+        $icon->setIconLocation("{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$hashName}");
+        $icon->setRelativeUrl("thumbnails{$ds}{$hashName}");
+        $icon->setIconType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')->find(IconType::CUSTOM_ICON));
+        $icon->setType('custom');
+        $icon->setShortcut(false);
+        $this->em->persist($icon);
+        $this->createShortcutIcon($icon);
 
         return $icon;
     }

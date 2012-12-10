@@ -103,13 +103,19 @@
                     this.filters.toggle();
                 },
                 'click button.add': function () {
-                    this.parameters.isPickerOnly ?
-                        this.parameters.pickerCallback(this.checkedResources.resources) :
+                    if (this.parameters.isPickerOnly){
+                        this.parameters.pickerCallback(this.checkedResources.resources, this.currentDirectory.id)
+                    } else {
+                        if(this.callback){
+                            this.callback(_.keys(this.checkedResources.resources), this.targetDirectoryId);
+                        } else {
                         this.dispatcher.trigger('paste', {
                             ids: _.keys(this.checkedResources.resources),
                             directoryId: this.targetDirectoryId,
                             isCutMode: false
                         });
+                        }
+                    }
                     this.dispatcher.trigger('picker', {action: 'close'});
                 }
             },
@@ -260,7 +266,7 @@
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
                     'customActions': this.parameters.resourceTypes[resource.type].customActions || {},
-                    'webRoot': this.parameters.appPath + '/..'
+                    'webRoot': this.parameters.webPath
                 }));
             }
         }),
@@ -293,23 +299,21 @@
                 }, this);
                 successHandler && successHandler();
             },
+            renameThumbnail: function (resourceId, newName, successHandler) {
+                displayableName = Claroline.Utilities.formatText(newName, 20, 2);
+                this.$('#' + resourceId + ' .resource-name').html(displayableName);
+                this.$('#' + resourceId + ' .dropdown[rel=tooltip]').attr('title', newName);
+                successHandler && successHandler();
+            },
+            changeThumbnailIcon: function (resourceId, newIconPath, successHandler) {
+                this.$('#' + resourceId + ' img').attr('src', this.parameters.webPath + newIconPath);
+                successHandler && successHandler();
+            },
             removeResources: function (resourceIds) {
                 // same logic for both thumbnails and search results
                 for (var i = 0; i < resourceIds.length; ++i) {
                     this.$('#' + resourceIds[i]).remove();
                 }
-            },
-            editProperties: function(resourceId, properties, successHandler){
-                console.debug(properties);
-                if(properties.name != undefined){
-                    var newName = Claroline.Utilities.formatText(properties.name, 20, 2);
-                    this.$('#' + resourceId + ' .resource-name').html(newName);
-                }
-                if (properties.icon != undefined){
-                    this.$('#' + resourceId + ' .resource-img').attr('src', this.parameters.appPath + '/../' + properties.icon);
-                }
-                
-              successHandler && successHandler();
             },
             dispatchClick: function (event) {
                 event.preventDefault();
@@ -414,16 +418,13 @@
     manager.Controller = {
         events: {
             'picker': function (event) {
-                this.picker(event.action);
-            },
-            'create': function (event) {
-                this.create(event.action, event.data, event.resourceId);
+                this.picker(event.action, event.callback);
             },
             'display-form': function (event) {
                 this.displayForm(event.type, event.resource);
             },
-            'creation-form': function (event) {
-                this.displayCreationForm(event.resourceType, event.directoryId);
+            'create': function (event) {
+                this.create(event.action, event.data, event.resourceId);
             },
             'delete': function (event) {
                 this.delete_(event.ids);
@@ -431,7 +432,10 @@
             'download': function (event) {
                 this.download(event.ids);
             },
-            'properties': function(event){
+            'rename': function (event) {
+                this.rename(event.action, event.data, event.resourceId);
+            },
+            'edit-properties': function(event){
                 this.editProperties(event.action, event.data, event.resourceId);
             },
             'custom': function (event) {
@@ -515,22 +519,32 @@
                 }
             });
         },
-
         displayForm: function (type, resource) {
-            var formSource = (
-                (type == 'create' && '/resource/form/' + resource.type) ||
-                (type == 'properties' && '/resource/properties/form/' + resource.id));
-            formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
-            this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
-            $.ajax({
-                url: this.parameters.appPath + formSource,
-                success: function (form) {
-                    this.views['form'].render(form, resource.id, type);
-                    this.views['form'].isAppended ||
-                        this.parameters.parentElement.append(this.views['form'].el)
-                        && (this.views['form'].isAppended = true);
-                }
-            });
+            if (resource.type == 'resource_shortcut'){
+                var createShortcut = _.bind(function (resources, parentId) {
+                    this.createShortcut(resources, parentId);
+                }, this);
+                this.dispatcher.trigger('picker', {
+                    action: 'open',
+                    callback: createShortcut
+                });
+            } else {
+                var formSource = (
+                    (type == 'create' && '/resource/form/' + resource.type) ||
+                    (type == 'rename' && '/resource/rename/form/' + resource.id) ||
+                    (type == 'edit-properties' && '/resource/properties/form/' + resource.id));
+                formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
+                this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
+                $.ajax({
+                    url: this.parameters.appPath + formSource,
+                    success: function (form) {
+                        this.views['form'].render(form, resource.id, type);
+                        this.views['form'].isAppended ||
+                            this.parameters.parentElement.append(this.views['form'].el)
+                            && (this.views['form'].isAppended = true);
+                    }
+                });
+            }
         },
         create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
@@ -546,21 +560,15 @@
                 }
             });
         },
-        editProperties: function(formAction, formData, resourceId) {
+        createShortcut: function(resourceIds, parentId){
             $.ajax({
-                url: formAction,
-                data: formData,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function(data, textStatus, jqXHR) {
-                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
-                    this.views['main'].subViews.resources.editProperties(resourceId, data, this.views['form'].close()) :
-                    this.views['renameForm'].render(data, resourceId);
+                url: this.parameters.appPath + '/resource/shortcut/' +  parentId + '/create',
+                data: {ids: resourceIds},
+                success: function (data) {
+                    this.views['main'].subViews.resources.addThumbnails(data);
                 }
             });
-        }
-        ,
+        },
         delete_: function (resourceIds) {
             $.ajax({
                 url: this.parameters.appPath + '/resource/delete',
@@ -588,6 +596,37 @@
                 }
             });
         },
+        rename: function (formAction, formData, resourceId) {
+            $.ajax({
+                url: formAction,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function (data, textStatus, jqXHR) {
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
+                        this.views['main'].subViews.resources.renameThumbnail(resourceId, data[0], this.views['form'].close()) :
+                        this.views['form'].render(data, resourceId);
+                }
+            });
+        },
+        editProperties: function(formAction, formData, resourceId) {
+            $.ajax({
+                url: formAction,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR) {
+                    if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                        data.name && this.views['main'].subViews.resources.renameThumbnail(resourceId, data.name, this.views['form'].close());
+                        data.icon && this.views['main'].subViews.resources.changeThumbnailIcon(resourceId, data.icon, this.views['form'].close());
+                    } else {
+                        this.views['form'].render(data, resourceId);
+                    }
+                }
+            });
+        },
         download: function (resourceIds) {
             window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
@@ -600,9 +639,10 @@
         custom: function (action, resourceId) {
             alert('Custom action "' + action + '" on resource ' + resourceId + ' (not implemented yet)');
         },
-        picker: function (action) {
+        picker: function (action, callback) {
             action == 'open' && (this.views.picker.isAppended || this.displayResources(0, 'picker'));
             !this.parameters.isPickerOnly && (this.views.picker.subViews.actions.targetDirectoryId = this.views.main.currentDirectory.id);
+            callback && (this.views.picker.subViews.actions.callback = callback);
             this.views.picker.$el.modal(action == 'open' ? 'show' : 'hide');
         }
     };
@@ -610,11 +650,12 @@
     /**
      * Initializes the resource manager with a set of options :
      * - appPath: the base url of the application (default to empty string).
+     * - webPath: the base url of the web directory (default to empty string).
      * - directoryId : the id of the directory to open in main (vs picker) mode (default to "0", i.e. pseudo-root of all directories).
      * - parentElement: the jquery element in which the views will be rendered (default to "body" element).
      * - resourceTypes: an object whose properties describe the available resource types (default to empty object).
-     * - isPickerOnly: wheither the manager must initialize a main view and a picker view, or just the picker one (default to false).
-     * - isMultiSelectAllowed: wheither the selection of multiple resources in picker mode should be allowed or not (default to false).
+     * - isPickerOnly: whether the manager must initialize a main view and a picker view, or just the picker one (default to false).
+     * - isMultiSelectAllowed: whether the selection of multiple resources in picker mode should be allowed or not (default to false).
      * - pickerCallback: the function to be called when resources are selected in picker mode (default to  empty function).
      *
      * @param object parameters The parameters of the manager
@@ -628,6 +669,7 @@
         parameters.isPickerMultiSelectAllowed = parameters.isPickerMultiSelectAllowed || false;
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
+        parameters.webPath = parameters.webPath || '';
         manager.Controller.initialize(parameters);
     };
 

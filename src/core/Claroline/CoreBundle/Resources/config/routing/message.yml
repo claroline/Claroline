@@ -1,0 +1,59 @@
+claro_message_form:
+    pattern: /form
+    defaults: { _controller: ClarolineCoreBundle:Message:form }
+
+claro_message_form_for_group:
+    pattern: /form/group/{groupId}
+    defaults: { _controller: ClarolineCoreBundle:Message:formForGroup }
+
+claro_message_send:
+    pattern: /send/{parentId}
+    defaults: { _controller: ClarolineCoreBundle:Message:send, parentId: 0 }
+
+claro_message_list_received:
+    pattern: /list/received
+    defaults: { _controller: ClarolineCoreBundle:Message:listReceived }
+
+claro_message_list_sent:
+    pattern: /list/sent
+    defaults: { _controller: ClarolineCoreBundle:Message:listSent }
+
+claro_message_list_received_search_object:
+    pattern: /list/received/object/{object}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchObjectReceived }
+
+claro_message_list_sent_search_object:
+    pattern: /list/sent/object/{object}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchObjectSent }
+
+claro_message_list_received_search_user:
+    pattern: /list/received/user/{fromUser}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchFromUser }
+
+claro_message_list_sent_search_user:
+    pattern: /list/sent/user/{toUser}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchToUser }
+
+claro_message_list_received_removed:
+    pattern: /list/received/removed
+    defaults: { _controller: ClarolineCoreBundle:Message:listReceivedRemoved }
+
+claro_message_list_sent_removed:
+    pattern: /list/sent/removed
+    defaults: { _controller: ClarolineCoreBundle:Message:listSentRemoved }
+
+claro_message_show:
+    pattern: /show/{messageId}
+    defaults: { _controller: ClarolineCoreBundle:Message:show }
+
+claro_message_delete_from:
+    pattern: /delete/from
+    defaults: { _controller: ClarolineCoreBundle:Message:deleteFromUser }
+    options:
+      expose: true
+
+claro_message_delete_to:
+    pattern: /delete/to
+    defaults: { _controller: ClarolineCoreBundle:Message:deleteToUser }
+    options:
+      expose: true

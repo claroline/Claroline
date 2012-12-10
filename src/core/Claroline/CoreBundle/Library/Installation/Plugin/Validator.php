@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Library\PluginBundle;
 class Validator
 {
     private $checkers;
+    private $pluginConfiguration;
 
     /**
      * Constructor.
@@ -45,11 +46,22 @@ class Validator
 
         foreach ($this->checkers as $checker) {
             $errors = $checker->check($plugin);
+
             if (null !== $errors = $checker->check($plugin)) {
                 $validationErrors = array_merge($validationErrors, $errors);
+                continue;
+            }
+
+            if ($checker instanceof ConfigurationChecker) {
+                $this->pluginConfiguration = $checker->getProcessedConfiguration();
             }
         }
-//        var_dump($validationErrors);
+
         return $validationErrors;
+    }
+
+    public function getPluginConfiguration()
+    {
+        return $this->pluginConfiguration;
     }
 }

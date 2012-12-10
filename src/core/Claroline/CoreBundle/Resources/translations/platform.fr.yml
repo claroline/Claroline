@@ -1,8 +1,11 @@
 account_created: Compte créé
 action: Action
+activity_form_name: Nom
+activity_form_instruction: Instructions
 add: Ajouter
 add_group: Ajouter un groupe
 add_group_s_confirm_message: groupe(s) ajouté(s)
+add_resource: Ajouter une ressource
 add_user: Ajouter un utilisateur
 add_user_s_confirm_message: utilisateur(s) ajouté(s)
 admin: Administrateur
@@ -24,7 +27,7 @@ create_group: Créer un groupe
 create_workspace: Créer un espace d'activités
 creation_date: Date de création
 cut: Couper
-desktop: Tableau de bord
+dashboard: Tableau de bord
 date: Date
 delete: Supprimer
 desktop: Bureau
@@ -34,7 +37,9 @@ directory_form_shareType: Redistribution
 display_options: Options d'affichage
 done_on: effectuée sur
 download: Télécharger
-export: exporter
+export: Exporter
+fast_answer: Réponse rapide
+file_form_file: Fichier
 file_form_name: Nom
 file_form_license: License
 file_form_shareType: Redistribution
@@ -51,10 +56,12 @@ group_form_name: Nom
 group_form_ownedRoles: Rôles
 group_management: Gestion des groupes
 group_parameter: Paramètres du groupe
+group_form_platformRole: Role
 groups: Groupes
 home: Accueil
 id: Id
 informations: Informations
+instructions: Consignes
 last_name: Nom
 link: Lien
 list_groups: Lister les groupes
@@ -70,9 +77,19 @@ log_delete_verb: a supprimé
 log_move_verb: a déplacé
 log_open_verb: a ouvert
 mail: Mail
+mail_form_object: Objet
+mail_form_content: Contenu
 manage_rights: Gérer les droits
 misc: Divers
 move : Déplacer
+message_form_object: Objet
+message_form_content: Contenu
+message_form_to: A
+messages_received: Messages reçus
+messages_removed: Messages supprimés
+messages_sent_removed: Messages envoyés supprimés
+messages_received_removed: Messages reçus supprimés
+messages_sent: Messages envoyés
 my_account: Mon compte
 my_agenda: Mon agenda
 my_contacts: Mes contacts
@@ -108,6 +125,7 @@ profile_form_lastName: Nom
 profile_form_mail: Mail
 profile_form_note: Note personnelle
 profile_form_ownedRoles: Role(s)
+profile_form_platformRole: Role
 profile_form_phone: Téléphone
 profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification
@@ -123,6 +141,9 @@ rename: Renommer
 reset: Réinitialiser
 resource: Ressource
 resource_manager: Gestionnaire de ressources
+resource_properties_form_creationDate: Date de création
+resource_properties_form_resourceType: Type de ressource
+resource_properties_form_creator: Créateur
 resource_properties_form_shareType: Redistribution
 resource_properties_form_name: Nom
 resource_properties_form_userIcon: Icône
@@ -131,6 +152,8 @@ results: Résultats
 role: Rôle
 save: Sauvegarder
 search: Rechercher
+send_mail: Envoyer un mail
+send_message: Envoyer un message
 settings: Paramètres
 show: Voir
 text_form_name: Nom
@@ -158,6 +181,7 @@ user_management: Gestion des utilisateurs
 user_parameters: Paramètres de l'utilisateur
 username: Nom d'utilisateur
 users: Utilisateurs
+validate: Valider
 visible: Visible
 visitor: Visiteur
 widgets: Widgets

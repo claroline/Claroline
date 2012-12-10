@@ -45,7 +45,8 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
-        $collaborators = $user->getPersonalWorkspace()->getCollaboratorRole()->getUsers();
+
+        $collaborators = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($user->getPersonalWorkspace());
         $maxOffset = count($collaborators);
         $this->log("collaborators found: ".count($collaborators));
         $maxOffset--;
@@ -55,7 +56,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $this->log("forum {$forum->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
-            $title = $this->generateLipsum(5);
+            $title = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(5);
             $user = $collaborators[rand(0, $maxOffset)];
             $subject = new Subject();
             $subject->setName($title);
@@ -71,7 +72,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $message = new Message();
                 $message->setName('tmp-'.microtime());
                 $message->setCreator($sender);
-                $message->setContent($this->generateLipsum(150, true));
+                $message->setContent($this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true));
                 $inst = $creator->create($message, $subject->getId(), 'claroline_message', null, $sender);
                 $entityToBeDetached[] = $message;
                 $entityToBeDetached[] = $inst;
@@ -85,74 +86,5 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $manager->flush();
 
         $this->addReference("forum_instance/forum", $forum);
-    }
-
-    private function getArrayLipsum()
-    {
-        $lipsum = array('lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'curabitur', 'vel', 'hendrerit', 'libero', 'eleifend',
-            'blandit', 'nunc', 'ornare', 'odio', 'ut', 'orci', 'gravida', 'imperdiet', 'nullam', 'purus', 'lacinia', 'a',
-            'pretium', 'quis', 'congue', 'praesent', 'sagittis', 'laoreet', 'auctor', 'mauris', 'non', 'velit', 'eros', 'dictum', 'proin', 'accumsan',
-            'sapien', 'nec', 'massa', 'volutpat', 'venenatis', 'sed', 'eu', 'molestie', 'lacus', 'quisque', 'porttitor', 'ligula',
-            'dui', 'mollis', 'tempus', 'at', 'magna', 'vestibulum', 'turpis', 'ac', 'diam', 'tincidunt', 'id', 'condimentum', 'enim',
-            'sodales', 'in', 'hac', 'habitasse', 'platea', 'dictumst', 'aenean', 'neque', 'fusce', 'augue', 'leo', 'eget', 'semper', 'mattis', 'tortor',
-            'scelerisque', 'nulla', 'interdum', 'tellus', 'malesuada', 'rhoncus', 'porta', 'sem', 'aliquet', 'et', 'nam', 'suspendisse',
-            'potenti', 'vivamus', 'luctus', 'fringilla', 'erat', 'donec', 'justo', 'vehicula', 'ultricies', 'varius', 'ante',
-            'primis', 'faucibus', 'ultrices', 'posuere', 'cubilia', 'curae', 'etiam', 'cursus', 'aliquam', 'quam', 'dapibus',
-            'nisl', 'feugiat', 'egestas', 'class', 'aptent', 'taciti', 'sociosqu', 'ad', 'litora', 'torquent', 'per', 'conubia', 'nostra',
-            'inceptos', 'himenaeos', 'phasellus', 'nibh', 'pulvinar', 'vitae', 'urna', 'iaculis', 'lobortis', 'nisi', 'viverra',
-            'arcu', 'morbi', 'pellentesque', 'metus', 'commodo', 'ut', 'facilisis', 'felis', 'tristique', 'ullamcorper', 'placerat', 'aenean',
-            'convallis', 'sollicitudin', 'integer', 'rutrum', 'duis', 'est', 'etiam', 'bibendum', 'donec', 'pharetra', 'vulputate', 'maecenas',
-            'mi', 'fermentum', 'consequat', 'suscipit', 'aliquam', 'habitant', 'senectus', 'netus', 'fames', 'quisque', 'euismod',
-            'curabitur', 'lectus', 'elementum', 'tempor', 'risus', 'cras');
-
-        return $lipsum;
-    }
-
-    /**
-     * if nbwords = 0, then it's somewhat random (from 5 to 500)
-     *
-     * @param integer $nbWords
-     * @param boolean $isFullText
-     *
-     * @return string
-     */
-    private function generateLipsum($nbWords = 0, $isFullText = false)
-    {
-        $words = $this->getArrayLipsum();
-        $content = '';
-        $endPhrase = array('?', '!', '.', '...');
-        $loopBeforeEnd = 0;
-
-        if ($nbWords == 0) {
-            $nbWords = rand(5, 500);
-        }
-
-        for ($i = 0; $i < $nbWords; $i++) {
-
-            if ($loopBeforeEnd == 0) {
-                $loopBeforeEnd = rand(3, 15);
-            }
-
-            $loopBeforeEnd--;
-
-            if ($isFullText && $loopBeforeEnd == 0) {
-                $content.="{$endPhrase[array_rand($endPhrase)]} " . ucfirst($words[array_rand($words)]);
-            } else {
-
-                if ($content != '') {
-                    $content .= ' ';
-                }
-
-                $content.= "{$words[array_rand($words)]}";
-            }
-
-            $i++;
-        }
-
-        if ($isFullText) {
-            $content = ucfirst($content) . '.';
-        }
-
-        return $content;
     }
 }

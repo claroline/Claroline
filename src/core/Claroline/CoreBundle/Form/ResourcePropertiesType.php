@@ -16,7 +16,31 @@ class ResourcePropertiesType extends AbstractType
             'expanded' => false,
             'label' => 'sharable'
         ));
-        $builder->add('userIcon', 'file');
+        $builder->add('userIcon', 'file', array('required' => false));
+        $builder->add('creationDate',
+            'date',
+            array('disabled' => true,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd'
+            ));
+        $builder->add('resourceType',
+            'entity',
+            array(
+                'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
+                'expanded' => false,
+                'multiple' => false,
+                'property' => 'name',
+                'disabled' => true
+            ));
+        $builder->add('creator',
+            'entity',
+            array(
+                'class' => 'Claroline\CoreBundle\Entity\User',
+                'expanded' => false,
+                'multiple' => false,
+                'property' => 'username',
+                'disabled' => true
+            ));
 
     }
 

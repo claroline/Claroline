@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
+use Claroline\CoreBundle\Entity\Role;
 
 //TODO: phone verification
 
@@ -29,33 +30,33 @@ class ProfileType extends BaseProfileType
             ->add('phone', 'text', array('required' => false));
         if ($this->grantRole == true) {
             $builder->add(
-                'ownedRoles',
+                'platformRole',
                 'entity',
                 array(
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
-                    'multiple' => true,
+                    'multiple' => false,
                     'property' => 'translationKey',
                     'disabled' => false,
                     'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
                         return $er->createQueryBuilder('r')
-                            ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                            ->add('where', "r.roleType != ".Role::WS_ROLE);
                     }
                 )
             );
         } else {
             $builder->add(
-                'ownedRoles',
+                'platformRole',
                 'entity',
                 array(
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
-                    'multiple' => true,
+                    'multiple' => false,
                     'property' => 'translationKey',
                     'disabled' => true,
                     'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
                         return $er->createQueryBuilder('r')
-                            ->add('where', 'r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole');
+                            ->add('where', "r.roleType != ".Role::WS_ROLE);
                     }
                 )
             );
