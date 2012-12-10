@@ -19,12 +19,12 @@ class UserMessage
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="userMessages")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Message")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Message", inversedBy="userMessages")
      */
     private $message;
 
