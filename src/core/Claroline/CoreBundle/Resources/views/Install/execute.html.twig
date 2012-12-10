@@ -1,0 +1,69 @@
+ {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+{% block content %} 
+<div class="span3">
+    <h3> Progression</h3>
+    <ol class="nav nav-list">
+            {%block naviguation %}      
+            
+            {%endblock %}
+        </ol>
+        <p>  Progression</p>
+        <div class="progress">
+            <div class="bar" style="width: 95%;"></div>
+        </div>
+    </div>
+    <div class="span6">
+
+                  {%block data %}
+        <h3> Verification de vos paramètres </h3>
+        
+          <form action="{{ path('claro_execute') }}" method="post" >
+        <fieldset> 
+            <legend> Base de données </legend>
+                <ul>
+                    
+                    <li><strong> Adresse de la DB</strong> :{{ value.dbHost }}</li>
+                    <li><strong>Nom de la DB</strong> :{{ value.dbName }}</li>
+                    <li><strong>Nom d'utilisateur</strong> :{{ value.dbUser }}</li>
+                    <li><strong> Mot de passe </strong> :{{ value.dbPassword }}</li>
+                    
+                    
+                </ul>
+        </fieldset>
+                <fieldset> 
+            <legend> Paramètres de l'administrateur  </legend>
+                <ul>
+                    <li><strong>Nom</strong> <span class="orange"> :{{ value.0 }} </span></li>
+                    <li><strong> Prénom </strong> :{{ value.1 }}</li>
+                    <li><strong>Nom d'utilisateur</strong> :{{ value.2 }}</li>
+                    <li><strong>Mot de passe </strong> :{{ value.3.first }}</li>
+                    <li><strong>Adresse E-mail</strong> :{{ value.4 }}</li>
+                </ul>
+                </fieldset>      
+            <input type="submit" value="suivant" />
+            </form>
+            <form action="{{ path('claro_showAdminForm') }}" method="post" >
+            <input type="submit" name="submit" value="retour" />
+            </form>  
+        </form>
+        
+        
+        {%endblock data %}
+        </div>
+        <div class="span2">
+            <h3> <i class="icon-info-sign"></i> Astuces/Aides</h3>
+            <div class="action">
+             Notez précieusement ces informations et gardez les dans un endroit sécurisé
+            </div>
+        </div>
+        <div class="span12">
+
+        </div>
+
+    </div>
+    <div class="alert alert-error">
+        {% for key, flash in app.session.getFlashes() %}
+        {{ flash }}
+        {% endfor %}
+    </div>
+{% endblock %}

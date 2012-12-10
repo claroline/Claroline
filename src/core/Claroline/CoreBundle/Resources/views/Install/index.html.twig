@@ -1,0 +1,63 @@
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+    {% block content %}  
+     <div class="span3">
+         <h3> Progression</h3>
+        <ol class="nav nav-list">
+            {%block naviguation %}
+            {%endblock %}
+           </ol>
+            <p>  Progression</p>
+            <div class="progress">
+              <div class="bar" style="width: 30%;"></div>
+            </div>
+    </div>
+             <div class="span6">
+          
+                  {%block data %}
+        <h3> Etape 1 : Configuration requise </h3>
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Paramètres </th>
+                    <th>Valeur minimum requise  </th>
+                    <th> Votre valeur </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Php version</td>
+                    <td>  5.2</td>
+                    <td> {{version.php}}</td>
+                </tr>
+                <tr>
+                    <td>Mysql version</td>
+                    <td>  4.xx</td>
+                    <td> {{version.mysql}} </td>
+                </tr>
+                <tr>
+                    <td>Permission lecture et écriture</td>
+                    <td> [Dossiers app/local],[web],[files]</td>
+                    <td> {{version.chmod}} </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+          <a href="{{path('claro_showDbForm')}}" class="btn" > suivant </a>
+          </p>
+{%endblock data %}
+        </div>
+            <div class="span2">
+                <h3> Astuces/Aides</h3>
+                <div class="action">
+                    Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.
+                    </div>
+                </div>
+            <div class="span12">
+      
+        </div>
+  
+   </div>
+
+{% endblock %}
+   
