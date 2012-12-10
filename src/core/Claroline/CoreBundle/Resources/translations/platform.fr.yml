@@ -37,7 +37,8 @@ directory_form_shareType: Redistribution
 display_options: Options d'affichage
 done_on: effectuée sur
 download: Télécharger
-export: exporter
+export: Exporter
+fast_answer: Réponse rapide
 file_form_file: Fichier
 file_form_name: Nom
 file_form_license: License
@@ -60,6 +61,7 @@ groups: Groupes
 home: Accueil
 id: Id
 informations: Informations
+instructions: Consignes
 last_name: Nom
 link: Lien
 list_groups: Lister les groupes
@@ -80,6 +82,14 @@ mail_form_content: Contenu
 manage_rights: Gérer les droits
 misc: Divers
 move : Déplacer
+message_form_object: Objet
+message_form_content: Contenu
+message_form_to: A
+messages_received: Messages reçus
+messages_removed: Messages supprimés
+messages_sent_removed: Messages envoyés supprimés
+messages_received_removed: Messages reçus supprimés
+messages_sent: Messages envoyés
 my_account: Mon compte
 my_agenda: Mon agenda
 my_contacts: Mes contacts
@@ -143,6 +153,7 @@ role: Rôle
 save: Sauvegarder
 search: Rechercher
 send_mail: Envoyer un mail
+send_message: Envoyer un message
 settings: Paramètres
 show: Voir
 text_form_name: Nom

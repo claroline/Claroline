@@ -29,6 +29,7 @@ class Version20120119000000 extends BundleMigration
         $this->createTextContentTable($schema);
         $this->createTextTable($schema);
         $this->createMessageTable($schema);
+        $this->createUserMessageTable($schema);
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
@@ -63,7 +64,8 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace');
         $schema->dropTable('claro_group');
         $schema->dropTable('claro_user');
-        $schema->dropTable('claro_workspace_message');
+        $schema->dropTable('claro_user_message');
+        $schema->dropTable('claro_message');
         $schema->dropTable('claro_license');
         $schema->dropTable('claro_meta_type');
         $schema->dropTable('claro_meta_type_resource_type');
@@ -335,22 +337,46 @@ class Version20120119000000 extends BundleMigration
         );
     }
 
-    private function createMessageTable(Schema $schema)
+    private function createUserMessageTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_workspace_message');
+        $table = $schema->createTable('claro_user_message');
         $this->addId($table);
-        $table->addColumn('workspace_id', 'integer');
         $table->addColumn('user_id', 'integer');
-        $table->addColumn('content', 'text');
-        $table->addColumn('date_creation', 'datetime');
-        $table->addColumn('date_modification', 'datetime');
-        $table->addColumn('last_modif_user_id', 'integer');
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
-        );
+        $table->addColumn('message_id', 'integer');
+        $table->addColumn('is_read', 'boolean');
+        $table->addColumn('is_removed', 'boolean');
+
+        $table->addUniqueIndex(array('user_id', 'message_id'));
+
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_message'), array('message_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createMessageTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_message');
+        $this->addId($table);
+        $table->addColumn('object', 'string');
+        $table->addColumn('content', 'string', array('1000'));
+        $table->addColumn('date', 'datetime');
+        $table->addColumn('user_id', 'integer');
+        $table->addColumn('is_removed', 'boolean');
+        $table->addColumn('lft', 'integer', array('notnull' => true));
+        $table->addColumn('rgt', 'integer', array('notnull' => true));
+        $table->addColumn('lvl', 'integer', array('notnull' => true));
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($table);
     }
 
     private function createLicenseTable(Schema $schema)

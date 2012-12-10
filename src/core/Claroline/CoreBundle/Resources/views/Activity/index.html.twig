@@ -25,6 +25,8 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/activity/index.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({
@@ -64,23 +66,22 @@
             success: function(resources){
                 var html = "";
                 html+= "<li>";
-                html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': resources[0].type, 'action': 'open', 'resourceId': resources[0].id})+">"+resources[0].path_for_display+"</a> ";
-                html+= " | <a class='remove-resource' href="+Routing.generate('claro_activity_remove_resource', {'resourceId':resources[0].id, 'activityId': {{ activity.getId() }} })+">{{ 'delete'|trans({}, 'platform') }}</a>";
-                html+= "</li>";
+                html+= "<span class='close' href="+Routing.generate('claro_activity_remove_resource', {'resourceId':resources[0].id, 'activityId': {{ activity.getId() }} })+">x</span>";
+                html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': resources[0].type, 'action': 'open', 'resourceId': resources[0].id})+">"+resources[0].name+"</a> ";
+                html+="</li>";
 
-                $("#resource-list").append(html);
+                $("#sortable").append(html);
             },
         });
         }
 
-        $('.remove-resource').live('click', function(e){
+        $('.close').live('click', function(e){
             e.preventDefault();
-            console.debug(e);
             Claroline.Utilities.ajax({
                 url: e.target.href,
                 type: 'DELETE',
                 success: function(){
-                    $(e.currentTarget.parentElement).remove();
+                    $(e.currentTarget.parentElement.parentElement).remove();
                 }
             });
         });
@@ -92,23 +93,20 @@
         <b>{{ 'activity'|trans({}, 'resource') }} {{ activity.getName() }}</b>
     </h3>
     <div id="activity-instruction">
-        <h4>{{ 'Instructions'|trans({}, 'platform') }} :</h4>
-        {{ activity.getInstruction() }}
+        <h4>{{ 'instructions'|trans({}, 'platform') }} :</h4>
+            {{ activity.getInstruction() }}
     </div>
     <br>
-    <div id="resource_linked">
-        {{ 'resources'|trans({}, 'platform') }}:
-            <ul id="resource-list">
-                {% for resourceActivity in resourceActivities %}
-                <li>
-                     <a href="{{ path('claro_resource_open', {'resourceType': resourceActivity.getResource().getResourceType().getName(), 'action': 'open', 'resourceId': resourceActivity.getResource().getId()})}}"> {{ resourceActivity.getResource().getPathForDisplay() }}</a>
-                     | <a class="remove-resource" href="{{ path('claro_activity_remove_resource', {'resourceId':resourceActivity.getResource().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">{{ 'delete'|trans({}, 'platform') }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-    </div>
+
+    <ul id="sortable" class="nav nav-tabs nav-stacked">
+    {% for resourceActivity in resourceActivities %}
+            <li id={{ resourceActivity.getResource().getId() }}>
+                <span><a class="close" href="{{ path('claro_activity_remove_resource', {'resourceId':resourceActivity.getResource().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">x</a></span>
+                <a href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResource().getResourceType().getName(), 'resourceId':resourceActivity.getResource().getId()} )}}">{{ resourceActivity.getResource().getName() }}</a>
+            </li>
+    {% endfor %}
+    </ul>
 
     <button id="add_resource_button" class="btn btn-secondary">{{'add_resource'|trans({},'platform')}}</button>
-
-    <a href={{ path('claro_activity_parameters', {'activityId': activity.getId()}) }}> {{ 'parameters'|trans({}, 'platform') }}</a>
+    <div id="twig-attributes" data-activity-id="{{ activity.getId() }}"></div>
 {% endblock %}

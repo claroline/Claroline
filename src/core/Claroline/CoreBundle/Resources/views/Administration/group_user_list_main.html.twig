@@ -18,6 +18,7 @@
     <h3 class="sub-section-header">{{ 'group'|trans({}, 'platform') }} "{{ group.getName() }}" : {{ 'users'|trans({}, 'platform') }}</h3>
     <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_user_list_addable_to_group', {'groupId' : group.getId()}) }}">{{ 'add_user'|trans({}, 'platform') }}</a>
     <button class="btn btn-secondary delete-users-button">{{ 'delete'|trans({}, 'platform') }}</button>
+    <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'groupId': group.getId()}) }}">{{ 'send_message'|trans({}, 'platform') }}</a>
     <button class="btn btn-secondary pull-right" id="search-user-button" type="submit">{{ 'search'|trans({}, 'platform') }}</button>
     <input id="search-user-txt" type="text" class="search-query input-small pull-right"/>
     </p>

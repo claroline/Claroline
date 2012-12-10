@@ -1,0 +1,33 @@
+<html>
+    <head>
+    {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+        {% block stylesheets %}
+        <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
+        <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
+        <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
+    {% endblock %}
+    </head>
+    <body>
+        <div id="twig-attributes"
+             {% for key, resourceActivity in resourceActivities %}
+             {% set step = key+1 %}
+             data-step-{{ step }}-resource-id="{{ resourceActivity.getResource().getId() }}"
+             data-step-{{ step }}-resource-type="{{ resourceActivity.getResource().getResourceType().getName() }}"
+             data-total-steps = {{ totalSteps }}
+             {% endfor %}
+             >
+        </div>
+        <div id="progress-bar">
+            {{ 'avancement'|trans({}, 'platform') }}: 1 /{{ totalSteps }}
+        </div>
+
+        <button class="icon-arrow-left"></button>
+        <button class="icon-arrow-right"></button>
+        <br/>
+
+        <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+        <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/activity/left_menu.js') }}'></script>
+    </body>
+</html>
