@@ -21,7 +21,9 @@ class ActivityController extends Controller
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResource($resource);
-        $link->setSequenceOrder(1);
+        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->findBy(array('activity' => $activityId));
+        $order = count($resourceActivities);
+        $link->setSequenceOrder($order);
         $em->persist($link);
         $em->flush();
         $response = new Response();
@@ -42,23 +44,12 @@ class ActivityController extends Controller
         return new Response('success', 204);
     }
 
-    public function parametersAction($activityId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $activity = $repo->find($activityId);
-        $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
-
-        return $this->render('ClarolineCoreBundle:Activity:parameters.html.twig', array('workspace' => $activity->getWorkspace(), 'activity' => $activity, 'resourceActivities' => $resourceActivities));
-    }
-
     //dql optimization must be done later to get resource activities
     public function setSequenceOrderAction($activityId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->findBy(array('activity' => $activityId));
         $params = $this->get('request')->query->all();
-        
         foreach($resourceActivities as $resourceActivity){
             foreach($params['ids'] as $key => $id){
                 if ($id == $resourceActivity->getResource()->getId()) {
@@ -71,5 +62,13 @@ class ActivityController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    public function renderLeftMenuAction($activityId)
+    {
+        $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
+        $resourceActivities = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
+
+        return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => count($resourceActivities)));
     }
 }

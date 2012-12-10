@@ -78,7 +78,14 @@ class ActivityListener extends ContainerAware
             ->findBy(array('isVisible' => true));
         $activity = $event->getResource();
         $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
-        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace(), 'resourceActivities' => $resourceActivities));
+
+        if ($this->container->get('security.context')->getToken()->getUser() == $activity->getCreator() ){
+            $content = $this->container->get('templating')->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace(), 'resourceActivities' => $resourceActivities));
+        } else {
+
+            $content = $this->container->get('templating')->render('ClarolineCoreBundle:Activity:player/activity.html.twig', array('activity' => $activity, 'resource' => $resourceActivities[0]->getResource()));
+        }
+
         $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();

@@ -1,0 +1,7 @@
+services:
+  claroline.listener.image_player_listener:
+    class: Claroline\ImagePlayerBundle\Listener\ImagePlayerListener
+    calls:
+        - [setContainer, ["@service_container"]]
+    tags:
+        - { name: kernel.event_listener, event: play_file_image, method: onOpenImage }

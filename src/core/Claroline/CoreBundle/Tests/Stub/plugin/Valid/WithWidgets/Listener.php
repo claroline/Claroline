@@ -3,6 +3,7 @@
 namespace Valid\WithWidgets;
 
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 
 class Listener
 {
@@ -13,7 +14,8 @@ class Listener
 
    function onConfigure($event)
    {
-       $event->setContent('configure stub widget form');
+       var_dump('je passe');
+       $event->setContent(new Response('configure stub widget form'));
    }
 
 }

@@ -38,6 +38,7 @@ display_options: Display options
 done_on: done on
 download: Download
 export: export
+fast_answer: Fast answer
 file: File
 file_form_file: File
 file_form_name: Name
@@ -60,6 +61,7 @@ groups: Groups
 home: Home
 id: Id
 informations: Informations
+instructions: Instructions
 last_name: Last name
 link: Link
 list_groups: List groups
@@ -81,6 +83,14 @@ manager: Manager
 manage_rights: Manage rights
 misc: Miscellaneous
 move : Move
+message_form_object: Object
+message_form_content: Content
+message_form_to: To
+messages_received: Messages received
+messages_removed: Messages removed
+messages_received_removed: Messages received removed
+messages_sent_removed: Messages sent removed
+messages_sent: Messages sent
 my_account: My account
 my_agenda: My agenda
 my_contacts: My contacts
@@ -146,6 +156,7 @@ role: Role
 save: Save
 search: Search
 send_mail: Send a mail
+send_message: Send a message
 settings: Settings
 show: Show
 text_form_name: Name

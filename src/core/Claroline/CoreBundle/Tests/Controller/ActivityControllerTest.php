@@ -39,16 +39,54 @@ class ActivityControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($obj));
         $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
         $this->assertEquals(1, count($resourceActivity));
-//       the code below doens't work: no idea why
-//        $this->client->request(
-//            'DELETE',
-//            "/activity/{$activity->id}/remove/resource/{$file->id}"
-//        );
-//            $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
-//        $lastActivity = $repo->find($activity->id);
-//                foreach($lastActivity->getResources() as $res){
-//        }
-//        $this->assertEquals(0, count($lastActivity->getResources()));
+//       the code below doesn't work: no idea why
+        $this->client->request(
+            'DELETE',
+            "/activity/{$activity->id}/remove/resource/{$file->id}"
+        );
+        $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
+        $this->assertEquals(0, count($resourceActivity));
+    }
+
+    public function testSequenceOrder()
+    {
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $repo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $file1 = $this->uploadFile($this->pwr->getId(), 'file1');
+        $file2= $this->uploadFile($this->pwr->getId(), 'file2');
+        $activity = $this->createActivity('name', 'instruction');
+        $activityEntity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\Activity')->find($activity->id);
+        $this->client->request(
+            'POST',
+            "/activity/{$activity->id}/add/resource/{$file1->id}"
+        );
+        $this->client->request(
+            'POST',
+            "/activity/{$activity->id}/add/resource/{$file2->id}"
+        );
+
+       $resourceActivities = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->getResourcesActivityForActivity($activityEntity);
+
+       foreach($resourceActivities as $resourceActivity){
+           $orders[] = $resourceActivity->getSequenceOrder();
+           $ids[] = $resourceActivity->getResource()->getId();
+       }
+
+       $this->assertEquals(array('0', '1'), $orders);
+
+       $this->client->request(
+           'GET', "/activity/{$activity->id}/set/sequence?ids[]={$ids[1]}&ids[]={$ids[0]}"
+           );
+
+       $reverseActivities = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->getResourcesActivityForActivity($activityEntity);
+
+        foreach ($reverseActivities as $reverseActivity) {
+
+            $reverseIds[] = $reverseActivity->getResource()->getId();
+        }
+
+        $this->assertEquals($ids, array_reverse($reverseIds));
 
     }
 
