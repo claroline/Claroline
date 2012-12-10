@@ -71,7 +71,6 @@ class MessageController extends Controller
                 $message->setParent($parent);
             }
 
-            $em->persist($message);
             $to = str_replace(' ', '', $message->getTo());
             $usernames = explode(';', $to);
 
@@ -83,6 +82,7 @@ class MessageController extends Controller
                     $userMessage->setUser($user);
                     $userMessage->setMessage($message);
                     $em->persist($userMessage);
+                    $em->persist($message);
                 } else {
                     $usernamesNotFound[] = $username;
                 }
@@ -212,5 +212,49 @@ class MessageController extends Controller
         }
 
         return new Response ('success', 204);
+    }
+
+    public function listSearchObjectReceivedAction($object)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->searchUserReceivedMessagesObject($object, $this->get('security.context')->getToken()->getUser());
+
+        return $this->render(
+            'ClarolineCoreBundle:Message:list_received.html.twig', array('userMessages' => $userMessages)
+        );
+    }
+
+    public function listSearchObjectSentAction($object)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $messages = $em->getRepository('ClarolineCoreBundle:Message')->searchSentMessagesObject($object, $this->get('security.context')->getToken()->getUser());
+
+        return $this->render(
+            'ClarolineCoreBundle:Message:list_sent.html.twig', array('messages' => $messages)
+        );
+    }
+
+    public function listSearchFromUserAction($fromUser)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->searchFromUser($fromUser, $this->get('security.context')->getToken()->getUser());
+
+        return $this->render(
+            'ClarolineCoreBundle:Message:list_received.html.twig', array('userMessages' => $userMessages)
+        );
+    }
+
+    public function listSearchToUserAction($toUser)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $messages = $em->getRepository('ClarolineCoreBundle:Message')->searchToUser($toUser, $this->get('security.context')->getToken()->getUser());
+
+        return $this->render(
+            'ClarolineCoreBundle:Message:list_sent.html.twig', array('messages' => $messages)
+        );
     }
 }
