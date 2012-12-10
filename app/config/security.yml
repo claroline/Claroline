@@ -8,6 +8,9 @@ security:
         Claroline\CoreBundle\Entity\User: sha512
 
     firewalls:
+        install:
+            pattern: ^/install
+            security: false
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
