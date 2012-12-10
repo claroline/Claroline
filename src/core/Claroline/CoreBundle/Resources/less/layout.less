@@ -202,6 +202,11 @@ footer {
     text-align: center;
 }
 
+.resource-thumbnail img {
+    max-width: 100px;
+    max-heigth: 100px;
+}
+
 .resource-thumbnail img:hover,
 .resource-thumbnail .dropdown-toggle:hover {
     cursor: pointer;
@@ -221,11 +226,6 @@ footer {
 
 .resource-manager .results .checkbox-column {
     width: 18px;
-}
-
-.resource-img {
-    max-width: 100px;
-    max-heigth: 100px;
 }
 
 /**************/
@@ -269,4 +269,34 @@ footer {
 
 .plugin-figcaption {
     text-align:center;
+}
+
+/********/
+/* MISC */
+/********/
+
+.alert-message {
+    height: 20px;
+    color: red;
+}
+
+/************/
+/* MESSAGES */
+/************/
+
+.user-information {
+    border: 1px solid @widgetBorder;
+    padding: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+        -moz-border-radius-bottomleft: 5px;
+            border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+        -moz-border-radius-bottomright: 5px;
+            border-bottom-right-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+            border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5x;
+        -moz-border-radius-topright: 5px;
+            border-top-right-radius: 5px;
 }

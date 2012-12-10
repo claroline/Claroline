@@ -39,11 +39,13 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $documentMetatype = new MetaType();
         $documentMetatype->setName('document');
         $manager->persist($documentMetatype);
-        // resource type attributes : name, listable, navigable, class, download
+        // resource type attributes : name, listable, navigable, class
         $resourceTypes = array(
-            array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File', true),
-            array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory', true),
-            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text', true)
+            array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File'),
+            array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory'),
+            array('text', true, false, 'Claroline\CoreBundle\Entity\Resource\Text'),
+            array('resource_shortcut', true, false, 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'),
+            array('activity', true, false, 'Claroline\CoreBundle\Entity\Resource\Activity')
         );
 
         $i=0;

@@ -68,7 +68,7 @@ class TextListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
-        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $event->getResource()->getId()));
+        $content = $this->container->get('templating')->render('ClarolineCoreBundle:Text:index.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $event->getResource()->getId(), 'workspace' => $text->getWorkspace()));
         $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();

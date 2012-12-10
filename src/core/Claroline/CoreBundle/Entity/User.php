@@ -109,21 +109,9 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $roles;
 
     /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
-     *      inversedBy="users"
-     * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     */
-    protected $workspaceRoles;
-
-    /**
      * @ORM\OneToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      mappedBy="user"
+     *      mappedBy="creator"
      * )
      */
     protected $abstractResources;
@@ -140,10 +128,18 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $created;
 
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\UserMessage",
+     *      mappedBy="user"
+     * )
+     */
+    protected $userMessages;
 
     public function __construct()
     {
         parent::__construct();
+        $this->userMessages = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->workspaceRoles = new ArrayCollection();
@@ -252,18 +248,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
     }
 
-    public function getWorkspaceRoleCollection()
-    {
-        return $this->workspaceRoles;
-    }
-
-    //small hack, do not use this one (see WorkspaceController multiAddUserAction)
-    public function setWorkspaceRoleCollection($workspaceRoles)
-    {
-        $this->workspaceRoles->clear();
-        $this->workspaceRoles[] = $workspaceRoles;
-    }
-
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -340,15 +324,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return serialize(array(
                 $this->id,
-                $this->firstName,
-                $this->lastName,
-                $this->username,
-                $this->password,
-                $this->salt,
-                $this->phone,
-                $this->note,
-                $this->mail,
-                $this->administrativeCode
             ));
     }
 
@@ -356,14 +331,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         list(
             $this->id,
-            $this->lastName,
-            $this->username,
-            $this->password,
-            $this->salt,
-            $this->phone,
-            $this->note,
-            $this->mail,
-            $this->administrativeCode
             ) = unserialize($serialized);
     }
 
@@ -390,5 +357,38 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function getCreationDate()
     {
         return $this->created;
+    }
+
+    public function getPlatformRole()
+    {
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                return $role;
+            }
+        }
+    }
+
+    public function setPlatformRole($platformRole)
+    {
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                $removedRole = $role;
+            }
+        }
+
+        if(isset($removedRole)){
+            $this->roles->removeElement($removedRole);
+        }
+
+        $this->roles->add($platformRole);
+    }
+
+    public function getUserMessages()
+    {
+        return $this->userMessages;
     }
 }

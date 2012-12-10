@@ -9,18 +9,18 @@ class ProfileControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
         $this->client->followRedirects();
     }
 
     public function testLoggedUserCanEditHisProfile()
     {
+        $this->loadUserFixture(array('user'));
         $user = $this->getFixtureReference('user/user');
         $this->logUser($user);
         $crawler = $this->client->request('GET', '/profile/form');
 
         // check user has user role and cannot change it
-        $readonly = $crawler->filter('#profile_form_ownedRoles')->attr('disabled');
+        $readonly = $crawler->filter('#profile_form_platformRole')->attr('disabled');
         $userTranslation = $this->client->getContainer()->get('translator')->trans('user', array(), 'platform');
         $selected = $crawler->filter('option:contains("'.$userTranslation.'")')->attr('selected');
         $this->assertEquals('disabled', $readonly);
@@ -45,6 +45,7 @@ class ProfileControllerTest extends FunctionalTestCase
 
     public function testPublicProfileCanBeSeenByOtherUsers()
     {
+        $this->loadUserFixture(array('user', 'admin'));
         $adminId = $this->getFixtureReference('user/admin')->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/profile/view/{$adminId}");

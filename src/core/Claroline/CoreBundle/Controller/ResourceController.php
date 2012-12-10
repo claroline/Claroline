@@ -7,7 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\IconType;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
+use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
@@ -54,13 +56,13 @@ class ResourceController extends Controller
 
             if ($resourceType === 'file') {
                 $mimeType = $resource->getMimeType();
-                $instance = $manager->create($resource, $parentId, $resourceType,  $mimeType);
+                $resource = $manager->create($resource, $parentId, $resourceType, $mimeType);
             } else {
-                $instance = $manager->create($resource, $parentId, $resourceType);
+                $resource = $manager->create($resource, $parentId, $resourceType);
             }
 
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($instance));
+            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
         } else {
             if($event->getErrorFormContent() != null){
                 $response->setContent($event->getErrorFormContent());
@@ -77,6 +79,10 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
+
+        //If it's a link, the resource will be its target.
+        $resource = $this->getResource($resource);
+
         $event = new OpenResourceEvent($resource);
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('open', $resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -106,10 +112,64 @@ class ResourceController extends Controller
         foreach ($ids as $id) {
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
                 ->find($id);
-            $this->get('claroline.resource.manager')->delete($resource);
+            if ($resource !== null){
+                $this->get('claroline.resource.manager')->delete($resource);
+            }
         }
 
         return new Response('Resource deleted', 204);
+    }
+
+   /**
+    * Displays the form allowing to rename a resource.
+    *
+    * @param integer $resourceId
+    *
+    * @return Response
+    */
+    public function renameFormAction($resourceId)
+    {
+        $resource = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($resourceId);
+        $form = $this->createForm(new ResourceNameType(), $resource);
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+    * Renames a resource.
+    *
+    * @param integer $resourceId
+    *
+    * @return Response
+    */
+    public function renameAction($resourceId)
+    {
+        $request = $this->get('request');
+        $em = $this->getDoctrine()->getEntityManager();
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($resourceId);
+        $form = $this->createForm(new ResourceNameType(), $resource);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($resource);
+            $em->flush();
+            $response = new Response("[\"{$resource->getName()}\"]");
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('resourceId' => $resourceId, 'form' => $form->createView())
+        );
     }
 
     /**
@@ -154,9 +214,14 @@ class ResourceController extends Controller
 
             if ($file !== null) {
                 $this->removeOldIcon($resource);
-                $manager = $this->get('claroline.resource.manager');
+                $manager = $this->get('claroline.resource.icon_creator');
                 $icon = $manager->createCustomIcon($file);
                 $em->persist($icon);
+
+                if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
+                    $icon = $icon->getShortcutIcon();
+                }
+
                 $resource->setIcon($icon);
             }
 
@@ -165,9 +230,9 @@ class ResourceController extends Controller
            $em->flush();
            $content = "{";
            if (isset($icon)) {
-               $content.='"icon": "'.$icon->getIconLocation().'"';
+               $content.='"icon": "'.$icon->getRelativeUrl().'"';
            } else {
-               $content.='"icon": "'.$resource->getIcon()->getIconLocation().'"';
+               $content.='"icon": "'.$resource->getIcon()->getRelativeUrl().'"';
            }
            $content.=', "name": "'.$resource->getName().'"';
            $content.='}';
@@ -325,7 +390,8 @@ class ResourceController extends Controller
         }
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $results = $repo->listDirectChildrenResources($resourceId, $resourceTypeId, true);
+        $resource = $this->getResource($repo->find($resourceId));
+        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true);
         $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -414,7 +480,9 @@ class ResourceController extends Controller
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
             if ($resource != null) {
                 $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+                $em->persist($newNode);
                 $em->flush();
+                $em->refresh($parent);
                 $newNodes[] = $converter->toStdClass($newNode);
             }
         }
@@ -458,7 +526,47 @@ class ResourceController extends Controller
         return $response;
     }
 
-    private function removeOldIcon($resource){
+    public function createShortcutAction($newParentId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $ids = $this->container->get('request')->query->get('ids', array());
+        $parent = $repo->find($newParentId);
+        $converter = $this->get('claroline.utilities.entity_converter');
+
+        foreach($ids as $resourceId){
+            $resource = $repo->find($resourceId);
+            $shortcut = new ResourceShortcut();
+            $shortcut->setParent($parent);
+            $creator = $this->get('security.context')->getToken()->getUser();
+            $shortcut->setCreator($creator);
+            $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
+            $shortcut->setName($resource->getName());
+            $shortcut->setName($this->get('claroline.resource.utilities')->getUniqueName($shortcut, $parent));
+            $shortcut->setWorkspace($parent->getWorkspace());
+            $shortcut->setResourceType($resource->getResourceType());
+
+            if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
+                 $shortcut->setResource($resource);
+            } else {
+                 $shortcut->setResource($resource->getResource());
+            }
+
+            $em->persist($shortcut);
+            $em->flush();
+            $em->refresh($parent);
+            $links[] = $converter->toStdClass($shortcut);
+        }
+
+        $response = new Response(json_encode($links));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+
+    }
+
+    private function removeOldIcon($resource)
+    {
         $icon = $resource->getIcon();
 
         if ($icon->getIconType()->getIconType() == IconType::CUSTOM_ICON) {
@@ -468,5 +576,15 @@ class ResourceController extends Controller
                 unlink($pathName);
             }
         }
+    }
+
+    private function getResource($resource)
+    {
+
+        if(get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
+            $resource = $resource->getResource();
+        }
+
+        return $resource;
     }
 }

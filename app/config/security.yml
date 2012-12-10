@@ -2,12 +2,15 @@ security:
 
     providers:
         user_db:
-            entity: { class: Claroline\CoreBundle\Entity\User, property: username }
+            entity: { class: Claroline\CoreBundle\Entity\User }
 
     encoders:
         Claroline\CoreBundle\Entity\User: sha512
 
     firewalls:
+        install:
+            pattern: ^/install
+            security: false
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -31,3 +34,6 @@ security:
 
     acl:
         connection: default
+
+    access_decision_manager:
+        allow_if_all_abstain: false

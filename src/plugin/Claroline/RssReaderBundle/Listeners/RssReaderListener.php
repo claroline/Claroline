@@ -139,15 +139,16 @@ class RssReaderListener extends ContainerAware
     {
         require(__DIR__.'/../Resources/vendor/syndexport.php');
 
-        $rss = file_get_contents($rssconfig->getUrl());   
+        $rss = file_get_contents($rssconfig->getUrl());
         $flux = new \SyndExport($rss);
         $items = $flux->exportItems();
 
         foreach ($items as $index => $item) {
-            if(isset($items[$index]['description']))
-            $items[$index]['description']=  preg_replace('/<[^>]+>/i', '', $item['description']);
+            if(isset($items[$index]['description'])){
+                $items[$index]['description']=  preg_replace('/<[^>]+>/i', '', $item['description']);
+            }
         }
-        
+
         return $this->container->get('templating')->render(
             'ClarolineRssReaderBundle::rss.html.twig', array('rss' => $items)
         );

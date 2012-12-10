@@ -32,7 +32,7 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\User",
-     *      cascade={"persist"}
+     *      cascade={"persist"}, mappedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_user_group",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
@@ -44,7 +44,7 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Role",
-     *      cascade={"persist"}
+     *      cascade={"persist"}, inversedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_group_role",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
@@ -53,22 +53,9 @@ class Group extends AbstractRoleSubject
      */
     protected $roles;
 
-    /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\WorkspaceRole",
-     *      inversedBy="groups"
-     * )
-     * @ORM\JoinTable(name="claro_group_role",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     */
-    protected $workspaceRoles;
-
     public function __construct()
     {
         parent::__construct();
-        $this->workspaceRoles = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -102,13 +89,32 @@ class Group extends AbstractRoleSubject
         return $this->users;
     }
 
-    /**
-     * Returns the group's workspace roles as an ArrayCollection of WorkspaceRole objects.
-     *
-     * @return ArrayCollection[WorkspaceRole]
-     */
-    public function getWorkspaceRoleCollection()
+    public function getPlatformRole()
     {
-        return $this->workspaceRoles;
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                return $role;
+            }
+        }
     }
+
+    public function setPlatformRole($platformRole)
+    {
+        $roles = $this->getOwnedRoles();
+
+        foreach ($roles as $role){
+            if($role->getRoleType() != Role::WS_ROLE){
+                $removedRole = $role;
+            }
+        }
+
+        if(isset($removedRole)){
+            $this->roles->removeElement($removedRole);
+        }
+
+        $this->roles->add($platformRole);
+    }
+
 }

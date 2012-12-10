@@ -34,3 +34,4 @@ services:
          class: Claroline\CoreBundle\Library\Resource\Converter
          arguments:
            - "@doctrine.orm.entity_manager"
+

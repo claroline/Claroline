@@ -3,7 +3,7 @@
 
 parameters:
 
-# database 
+# database
 
     database_driver: pdo_mysql
     database_host: localhost
@@ -22,7 +22,9 @@ parameters:
 # mail
 
     mailer_transport: smtp
-    mailer_host: localhost
+    mailer_encryption: ~
+    mailer_auth_mode: ~
+    mailer_host: ~
     mailer_user: ~
     mailer_password: ~
 

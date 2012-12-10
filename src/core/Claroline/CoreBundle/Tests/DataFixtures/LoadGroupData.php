@@ -9,6 +9,17 @@ use Claroline\CoreBundle\Entity\Group;
 
 class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
 {
+    protected $groupsName;
+
+    public function __construct($groupsName = null)
+    {
+        if ($groupsName !== null) {
+            $this->groupsName = $groupsName;
+        } else {
+            $this->groupsName = array('group_a', 'group_b', 'group_c');
+        }
+    }
+
     /**
      * Loads three groups with the following roles :
      *
@@ -18,27 +29,44 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $groupA = new Group();
-        $groupA->setName('Group A');
-        $groupA->addRole($this->getReference('role/role_a'));
-        $groupA->addUser($this->getReference('user/user'));
-        $groupA->addUser($this->getReference('user/user_2'));
-        $groupB = new Group();
-        $groupB->setName(('Group B'));
-        $groupB->addRole($this->getReference('role/role_d'));
-        $groupB->addUser($this->getReference('user/user_3'));
-        $groupC = new Group();
-        $groupC->setName(('Group C'));
-        $groupC->addRole($this->getReference('role/role_f'));
+        $groups = array(
+            'group_a' => array('Group A', array('user', 'user_2'), 'role_a'),
+            'group_b' => array('Group B', array('user_3'), 'role_d'),
+            'group_c' => array('Group C', null, 'role_f')
+        );
 
-        $manager->persist($groupA);
-        $manager->persist($groupB);
-        $manager->persist($groupC);
+        foreach($this->groupsName as $groupName){
+
+            if (array_key_exists($groupName, $groups)) {
+
+                $group = new Group();
+                $group->setName($groups[$groupName][0]);
+
+                try{
+                    $role = $this->getReference('role/'.$groups[$groupName][2]);
+                    $group->addRole($role);
+                } catch(\Exception $e){
+                     //nothing
+                }
+                $usernames = $groups[$groupName][1];
+
+                if (null !== $usernames){
+                    foreach($usernames as $username){
+                        try{
+                            $user = $this->getReference('user/'.$username);
+                            $group->addUser($user);
+                        } catch(\Exception $e){
+                            //nothing
+                        }
+                    }
+                }
+
+                $manager->persist($group);
+                $this->addReference('group/'.$groupName, $group);
+            }
+        }
+
         $manager->flush();
-
-        $this->addReference('group/group_a', $groupA);
-        $this->addReference('group/group_b', $groupB);
-        $this->addReference('group/group_c', $groupC);
     }
 
     public function getOrder()

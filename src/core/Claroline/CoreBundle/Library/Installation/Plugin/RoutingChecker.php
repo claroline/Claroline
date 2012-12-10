@@ -50,15 +50,8 @@ class RoutingChecker implements CheckerInterface
         $this->plugin = $plugin;
         $this->pluginFqcn = get_class($plugin);
         $this->errors = array();
-
-        //if the prefix is not valid, the checker must stop otherwise other
-        //tests won't work;
         $this->checkRoutingPrefixIsValid();
-        if(count($this->errors)> 0){
-            return $this->errors;
-        }
-
-        $this->checkRoutingPrefixIsNotAlreadyRegistered();
+        count($this->errors) === 0 && $this->checkRoutingPrefixIsNotAlreadyRegistered();
         $this->checkRoutingResourcesAreLoadable();
 
         return $this->errors;

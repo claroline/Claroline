@@ -7,6 +7,8 @@ use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class DirectoryListener extends ContainerAware
@@ -47,6 +49,26 @@ class DirectoryListener extends ContainerAware
             )
         );
         $event->setErrorFormContent($content);
+        $event->stopPropagation();
+    }
+
+    public function onOpen(OpenResourceEvent $event)
+    {
+        $dir = $event->getResource();
+        $file = $this->container->get('claroline.resource.exporter')->exportResources(array($dir->getId()));
+        $response = new StreamedResponse();
+
+        $response->setCallBack(function() use($file){
+            readfile($file);
+        });
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=archive');
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Connection', 'close');
+
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

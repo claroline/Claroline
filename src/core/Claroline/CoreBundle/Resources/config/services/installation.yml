@@ -63,7 +63,7 @@ services:
             - "%kernel.root_dir%/config/local/plugin/routing.yml"
 
     claroline.plugin.config_checker:
-        class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigChecker
+        class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker
         arguments:
             - "@symfony.yaml"
 
@@ -89,9 +89,10 @@ services:
     claroline.plugin.recorder_database_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter
         arguments:
-            - "@claroline.plugin.validator"
             - "@doctrine.orm.entity_manager"
             - "@symfony.yaml"
+            - "@claroline.resource.icon_creator"
+            - %kernel.root_dir%
 
     # symfony class used as service argument
     symfony.yaml:

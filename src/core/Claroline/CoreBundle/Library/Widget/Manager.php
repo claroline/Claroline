@@ -106,7 +106,6 @@ class Manager
 
     private function getDesktopForcedConfig($widgetId, $userId)
     {
-        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
         $userConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('user' => $userId, 'widget' => $widgetId));
         $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => true));
 

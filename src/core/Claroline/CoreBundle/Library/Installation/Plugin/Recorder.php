@@ -51,11 +51,11 @@ class Recorder
      *
      * @param PluginBundle $plugin
      */
-    public function register(PluginBundle $plugin)
+    public function register(PluginBundle $plugin, array $pluginConfiguration)
     {
         $pluginFqcn = get_class($plugin);
 
-        $this->dbWriter->insert($plugin);
+        $this->dbWriter->insert($plugin, $pluginConfiguration);
         $this->configWriter->registerNamespace($plugin->getVendorName());
         $this->configWriter->addInstantiableBundle($pluginFqcn);
         $this->configWriter->importRoutingResources(

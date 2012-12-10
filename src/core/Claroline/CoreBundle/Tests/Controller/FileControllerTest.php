@@ -4,8 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadResourceTypeData;
-use Claroline\CoreBundle\DataFixtures\LoadMimeTypeData;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 
 class FileControllerTest extends FunctionalTestCase
@@ -22,7 +20,7 @@ class FileControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadUserFixture(array('user'));
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}";
@@ -107,7 +105,6 @@ class FileControllerTest extends FunctionalTestCase
             "/resource/create/file/{$parentId}",
             array('file_form' => array()),
             array('file_form' => array('file' => $file, 'name' => 'name'))
-
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
