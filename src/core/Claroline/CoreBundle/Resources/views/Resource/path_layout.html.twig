@@ -1,0 +1,14 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <div class="section-content">
+         {% block section_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('[rel=tooltip]').tooltip();
+    </script>
+{% endblock %}

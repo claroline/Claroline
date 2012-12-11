@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Configuration\Twig;
+namespace Claroline\CoreBundle\Library\Twig;
 
 use Twig_Extension;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;

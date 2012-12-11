@@ -12,7 +12,7 @@ services:
             - %claroline.config.platform_options_files%
 
      claroline.config.platform_config_twig_extension:
-        class: Claroline\CoreBundle\Library\Configuration\Twig\PlatformConfigurationExtension
+        class: Claroline\CoreBundle\Library\Twig\PlatformConfigurationExtension
         arguments:
             - "@claroline.config.platform_config_handler"
         tags:
