@@ -10,7 +10,7 @@ $('.icon-arrow-right').live('click', function(){
 
     var resourceId = document.getElementById('twig-attributes').getAttribute('data-step-'+currentStep+'-resource-id');
     var resourceType = document.getElementById('twig-attributes').getAttribute('data-step-'+currentStep+'-resource-type');
-    window.parent.document.getElementById('right-frame').src = Routing.generate('claro_resource_open', {'resourceId': resourceId, 'resourceType': resourceType});
+    window.parent.document.getElementById('right-frame').src = Routing.generate('claro_resource_open', {'resourceId': resourceId, 'resourceType': resourceType}) + '?_mode=path';
 });
 
 $('.icon-arrow-left').live('click', function(){
@@ -19,6 +19,6 @@ $('.icon-arrow-left').live('click', function(){
 
     var resourceId = document.getElementById('twig-attributes').getAttribute('data-step-'+currentStep+'-resource-id');
     var resourceType = document.getElementById('twig-attributes').getAttribute('data-step-'+currentStep+'-resource-type');
-    window.parent.document.getElementById('right-frame').src = Routing.generate('claro_resource_open', {'resourceId': resourceId, 'resourceType': resourceType});
+    window.parent.document.getElementById('right-frame').src = Routing.generate('claro_resource_open', {'resourceId': resourceId, 'resourceType': resourceType}) + '?_mode=path';
 });
 })();

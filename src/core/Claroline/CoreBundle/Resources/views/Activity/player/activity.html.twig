@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="wrapper">
-    <iframe height="500px" width="25%" src="{{ path('claro_activity_left_menu', {'activityId':activity.getId()}) }}" id="left-frame"></iframe>
-    <iframe height="500px" width="70%" src="{{ path('claro_resource_open', {'resourceId':resource.getId(), 'resourceType':resource.getResourceType().getName() }) }}" id="right-frame"></iframe>
+    <iframe height="500px" width="25%" src="{{ _path('claro_activity_left_menu', {'activityId':activity.getId()}) }}" id="left-frame"></iframe>
+    <iframe height="500px" width="70%" src="{{ _path('claro_resource_open', {'resourceId':resource.getId(), 'resourceType': resource.getResourceType().getName() }) }}?_mode=path" id="right-frame"></iframe>
 </div>
 {% endblock %}
