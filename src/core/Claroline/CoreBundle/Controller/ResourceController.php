@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
@@ -391,6 +392,11 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource = $this->getResource($repo->find($resourceId));
+
+        if (!$this->get('security.context')->isGranted('VIEW', $resource)) {
+            throw new AccessDeniedException();
+        }
+
         $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true);
         $content = json_encode($results);
         $response = new Response($content);
@@ -580,8 +586,7 @@ class ResourceController extends Controller
 
     private function getResource($resource)
     {
-
-        if(get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
+        if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $resource = $resource->getResource();
         }
 

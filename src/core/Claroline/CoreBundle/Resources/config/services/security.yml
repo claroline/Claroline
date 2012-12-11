@@ -4,7 +4,11 @@ services:
         class: Claroline\CoreBundle\Library\Security\Voter\AdministratorVoter
         tags:
             -  { name: security.voter }
-
+    claroline.security.resource_voter:
+        class: Claroline\CoreBundle\Library\Security\Voter\ResourceVoter
+        tags:
+            -  { name: security.voter }
+            
     claroline.security.right_manager.delegate.entity:
         class: Claroline\CoreBundle\Library\Security\RightManager\Delegate\EntityDelegate
 
