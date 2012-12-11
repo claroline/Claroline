@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Activity extends AbstractResource
 {
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string")
      */
     protected $instruction;
