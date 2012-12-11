@@ -29,7 +29,9 @@
             {% for key, resourceActivity in resourceActivities %}
             {% set step = key+1 %}
             <li>
-               <a id="step-{{ step }}" href="#" >{{ resourceActivity.getResource().getName() }}</a>
+               <a onclick="loadActivity({{ step }});" id="step-{{ step }}" href="#" >
+                  {{ resourceActivity.getResource().getName() }}
+               </a>
             </li>
             {% endfor %}
         </ul>
