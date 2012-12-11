@@ -85,7 +85,7 @@ class MessageRepository extends NestedTreeRepository
             AND u.id = {$user->getId()}";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('search',  "%{$search}%");
+        $query->setParameter('search', "%{$search}%");
         $query->setFirstResult($offset)
             ->setMaxResults($limit);
         $paginator = new Paginator($query, true);
@@ -109,7 +109,7 @@ class MessageRepository extends NestedTreeRepository
             AND m.isRemoved = {$isRemoved}";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('search',  "%{$search}%");
+        $query->setParameter('search', "%{$search}%");
         $query->setFirstResult($offset)
             ->setMaxResults($limit);
         $paginator = new Paginator($query, true);
@@ -159,7 +159,7 @@ class MessageRepository extends NestedTreeRepository
         $query = $this->_em->createQuery($dql);
         $query->setFirstResult($offset)
             ->setMaxResults($limit);
-        $query->setParameter('search',  "%{$search}%");
+        $query->setParameter('search', "%{$search}%");
         $paginator = new Paginator($query, true);
 
         return $paginator;
