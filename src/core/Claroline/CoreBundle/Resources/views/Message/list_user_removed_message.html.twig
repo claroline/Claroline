@@ -1,0 +1,7 @@
+{% for userMessage in userMessages %}
+    <tr class="row-user-message">
+        <td>{{ userMessage.getMessage().getDate()|date('d-m-Y') }}</td>
+        <td>{{ userMessage.getMessage().getUser().getUsername() }}</td>
+        <td><a href="{{ path('claro_message_show', {'messageId': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
+    </tr>
+{% endfor %}
