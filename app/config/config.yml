@@ -49,7 +49,7 @@ doctrine:
         auto_mapping: true
         mappings:
             StofDoctrineExtensionsBundle: false
-            
+
 swiftmailer:
     transport:  %mailer_transport%
     encryption: %mailer_encryption%
