@@ -159,6 +159,8 @@ send_mail: Send a mail
 send_message: Send a message
 settings: Settings
 show: Show
+show_as_admin: Show as admin
+show_as_user: Show as user
 text_form_name: Name
 text_form_text: Text
 text_form_shareType: Sharable
