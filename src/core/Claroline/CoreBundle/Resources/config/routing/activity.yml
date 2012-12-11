@@ -21,3 +21,11 @@ claro_activity_left_menu:
     defaults: { _controller: ClarolineCoreBundle:Activity:renderLeftMenu }
     options:
       expose: true
+
+claro_activity_show_player:
+    pattern: /player/{activityId}
+    defaults: { _controller: ClarolineCoreBundle:Activity:showPlayer }
+
+claro_activity_setup:
+    pattern: /setup/{activityId}
+    defaults: { _controller: ClarolineCoreBundle:Activity:showSetUp }
