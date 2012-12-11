@@ -17,16 +17,16 @@
     })
 
     var standardRoute = function(){
-        return Routing.generate('claro_message_list_received', {
+        return Routing.generate('claro_message_list_removed', {
             'offset' : $('.row-user-message').length
         });
     }
 
     var searchRoute = function(){
-        return Routing.generate('claro_message_list_received_search', {
+        return Routing.generate('claro_message_list_removed_search', {
             'offset' : $('.row-user-message').length,
             'search': document.getElementById('search-msg-txt').value
-        });
+        })
     }
 
     layloadUserMessage(standardRoute);

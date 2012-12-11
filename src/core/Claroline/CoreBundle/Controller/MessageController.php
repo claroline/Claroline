@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MessageController extends Controller
 {
+    const MESSAGE_PER_PAGE = 20;
+
     public function formForGroupAction($groupId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -105,47 +107,46 @@ class MessageController extends Controller
          }
     }
 
-    public function listReceivedAction()
+    public function listReceivedLayoutAction()
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->getUserReceivedMessages($this->get('security.context')->getToken()->getUser());
-
         return $this->render(
-            'ClarolineCoreBundle:Message:list_received.html.twig', array('userMessages' => $userMessages)
+            'ClarolineCoreBundle:Message:list_received_layout.html.twig'
         );
     }
 
-    public function listSentAction()
+    public function listSentLayoutAction()
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')->getSentMessages($this->get('security.context')->getToken()->getUser());
-
         return $this->render(
-            'ClarolineCoreBundle:Message:list_sent.html.twig', array('messages' => $messages)
+            'ClarolineCoreBundle:Message:list_sent_layout.html.twig'
         );
     }
 
-    public function listReceivedRemovedAction()
+    public function listReceivedAction($offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->getUserReceivedMessages($this->get('security.context')->getToken()->getUser(), true);
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->getUserReceivedMessages($this->get('security.context')->getToken()->getUser(), false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Message:list_received_removed.html.twig', array('userMessages' => $userMessages)
+            'ClarolineCoreBundle:Message:list_user_message.html.twig', array('userMessages' => $userMessages)
         );
     }
 
-    public function listSentRemovedAction()
+    public function listSentAction($offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')->getSentMessages($this->get('security.context')->getToken()->getUser(), true);
+        $messages = $em->getRepository('ClarolineCoreBundle:Message')->getSentMessages($this->get('security.context')->getToken()->getUser(), false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Message:list_sent_removed.html.twig', array('messages' => $messages)
+            'ClarolineCoreBundle:Message:list_message.html.twig', array('messages' => $messages)
+        );
+    }
+
+    public function listRemovedLayoutAction()
+    {
+        return $this->render(
+            'ClarolineCoreBundle:Message:list_removed_layout.html.twig'
         );
     }
 
@@ -159,7 +160,7 @@ class MessageController extends Controller
 
         if ($userMessage != null){
         //was received by the current user
-            $form = $this->createForm(new MessageType($userMessage->getMessage()->getUser()->getUsername()));
+            $form = $this->createForm(new MessageType($userMessage->getMessage()->getUser()->getUsername(), 'Re: '.$message->getObject(), true));
             $userMessage->markAsRead();
             $em->persist($userMessage);
             $em->flush();
@@ -172,7 +173,7 @@ class MessageController extends Controller
                  $stringUsername.= "{$userMessage->getUser()->getUsername()}; ";
             }
 
-            $form = $this->createForm(new MessageType($stringUsername));
+            $form = $this->createForm(new MessageType($stringUsername, 'Re: '.$message->getObject()));
         }
 
         return $this->render(
@@ -214,47 +215,47 @@ class MessageController extends Controller
         return new Response ('success', 204);
     }
 
-    public function listSearchObjectReceivedAction($object)
+    public function listSearchReceivedAction($search, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->searchUserReceivedMessagesObject($object, $this->get('security.context')->getToken()->getUser());
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->searchUserReceivedMessages($search, $this->get('security.context')->getToken()->getUser(), false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Message:list_received.html.twig', array('userMessages' => $userMessages)
+            'ClarolineCoreBundle:Message:list_user_message.html.twig', array('userMessages' => $userMessages)
         );
     }
 
-    public function listSearchObjectSentAction($object)
+    public function listSearchSentAction($search, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')->searchSentMessagesObject($object, $this->get('security.context')->getToken()->getUser());
+        $messages = $em->getRepository('ClarolineCoreBundle:Message')->searchSentMessages($search, $this->get('security.context')->getToken()->getUser(), false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Message:list_sent.html.twig', array('messages' => $messages)
+            'ClarolineCoreBundle:Message:list_message.html.twig', array('messages' => $messages)
         );
     }
 
-    public function listSearchFromUserAction($fromUser)
+    public function listRemovedAction($offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->searchFromUser($fromUser, $this->get('security.context')->getToken()->getUser());
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->getRemovedMessages($this->get('security.context')->getToken()->getUser(), $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Message:list_received.html.twig', array('userMessages' => $userMessages)
+            'ClarolineCoreBundle:Message:list_user_removed_message.html.twig', array('userMessages' => $userMessages)
         );
     }
 
-    public function listSearchToUserAction($toUser)
+    public function listRemovedSearchAction($search, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')->searchToUser($toUser, $this->get('security.context')->getToken()->getUser());
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')->searchRemovedMessages($search, $this->get('security.context')->getToken()->getUser(), $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
-            'ClarolineCoreBundle:Message:list_sent.html.twig', array('messages' => $messages)
+            'ClarolineCoreBundle:Message:list_user_removed_message.html.twig', array('userMessages' => $userMessages)
         );
     }
 }

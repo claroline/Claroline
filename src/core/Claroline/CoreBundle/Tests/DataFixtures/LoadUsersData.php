@@ -36,14 +36,14 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
 
         $this->firstNames = array(
             "Mary", "Amanda", "James", "Patricia", "Michael", "Sarah", "Patrick", "Homer", "Bart", "Marge", "Lisa",
-            "John", "Stan", "Stephane", "Emmanuel", "Nicolas", "Frederic", "Luke", "Luc", "Kenneth", "Stanley",
-            "Kyle", "Leopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica", "Matthieu", "Aurelie", "Elisabeth",
-            "Louis", "Jerome", "Ned", "Ralph", "Charles Montgomery",
+            "John", "Stan", "Stéphane", "Emmanuel", "Nicolas", "Frédéric", "Luke", "Luc", "Kenneth", "Stanley",
+            "Kyle", "Léopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica", "Matthieu", "Aurélie", "Elisabeth",
+            "Louis", "Jérome", "Ned", "Ralph", "Charles-Montgomery",
             "Waylon", "Carl", "Timothy", "Kirk", "Milhouse", "Todd", "Maude", "Benjamen", "ObiWan", "George", "Barack",
-            "Alfred", "Paul", "Gabriel", "Anne", "Theophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
-            "Jean-Kevin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Melanie", "Sophie",
-            "Dominique", "Coralie", "Camille", "Claudia", "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Helene", "14M4M3G4Z0RD",
-            "Frank", "Melissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne"
+            "Alfred", "Paul", "Gabriel", "Anne", "Théophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
+            "Jean-Kévin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Mélanie", "Sophie",
+            "Dominique", "Coralie", "Camille", "Claudia", "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Hélène", "14M4M3G4Z0RD",
+            "Frank", "Mélissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne", "Chloé"
         );
 
         $this->lastNames = array(
