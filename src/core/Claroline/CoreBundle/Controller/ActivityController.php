@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -67,8 +68,10 @@ class ActivityController extends Controller
     {
         $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
         $resourceActivities = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
+        $totalSteps = $this->countSteps($activity, 0);
+        $totalItems = $this->countItems($activity, 0);
 
-        return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => count($resourceActivities)));
+        return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => $totalSteps, 'totalItems' => $totalItems));
     }
 
    public function showPlayerAction($activityId)
@@ -88,5 +91,37 @@ class ActivityController extends Controller
        $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
 
        return $this->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace(), 'resourceActivities' => $resourceActivities));
+   }
+
+   public function showInstructionsAction($activityId)
+   {
+       $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
+
+       return $this->render('ClarolineCoreBundle:Activity:player\instructions.html.twig', array('instructions' => $activity->getInstructions()));
+   }
+
+   private function countSteps(Activity $activity, $countSteps)
+   {
+       foreach($activity->getResourceActivities() as $resourceActivity){
+           if($resourceActivity->getResource()->getResourceType()->getName() !== 'activity'){
+               $countSteps++;
+           } else {
+               $countSteps = $this->countSteps($resourceActivity->getResource(), $countSteps);
+           }
+       }
+
+       return $countSteps;
+   }
+
+   private function countItems(Activity $activity, $countItems)
+   {
+       foreach($activity->getResourceActivities() as $resourceActivity){
+           $countItems++;
+           if($resourceActivity->getResource()->getResourceType()->getName() == 'activity'){
+               $countItems = $this->countItems($resourceActivity->getResource(), $countItems);
+           }
+       }
+
+       return $countItems;
    }
 }
