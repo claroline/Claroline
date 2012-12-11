@@ -1,3 +1,26 @@
+{% macro parseActivity(activity, totalResources, totalItems) %}
+    <ul>
+        <li>
+            <a id="item-{{ totalItems }}" href="{{ path('claro_activity_show_instructions', {'activityId':activity.getId()}) }}" class="activity-instruction">{{ activity.getName() }}</a>
+            <ul>
+            {% for resourceActivity in activity.getResourceActivities %}
+                {% set totalItems = totalItems + 1 %}
+                {% if resourceActivity.getResource().getResourceType().getName() != 'activity' %}
+                    {% set totalResources = totalResources + 1 %}
+                    <li>
+                        <a id="item-{{ totalItems }}" class="activity-step" data-step="{{ totalResources }}" href="{{ path('claro_resource_open',{'resourceType': resourceActivity.getResource().getResourceType().getName(), 'resourceId': resourceActivity.getResource.getId()}) }}">{{ resourceActivity.getResource().getName() }}</a>
+                    </li>
+                {% else %}
+                    {{ _self.parseActivity(resourceActivity.getResource(), totalResources, totalItems) }}
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endmacro %}
+
+{% from _self import parseActivity %}
+
 <html>
     <head>
     {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
@@ -9,32 +32,18 @@
     </head>
     <body>
         <div id="twig-attributes"
-             {% for key, resourceActivity in resourceActivities %}
-             {% set step = key+1 %}
-             data-step-{{ step }}-resource-id="{{ resourceActivity.getResource().getId() }}"
-             data-step-{{ step }}-resource-type="{{ resourceActivity.getResource().getResourceType().getName() }}"
-             data-total-steps = {{ totalSteps }}
-             {% endfor %}
-             >
+             data-total-steps="{{ totalSteps }}"
+             data-total-items="{{ totalItems }}"
+        >
         </div>
         <div id="progress-bar">
             {{ 'avancement'|trans({}, 'platform') }}: 1 /{{ totalSteps }}
         </div>
-
         <button class="icon-arrow-left"></button>
         <button class="icon-arrow-right"></button>
         <br/>
 
-        <ul>
-            {% for key, resourceActivity in resourceActivities %}
-            {% set step = key+1 %}
-            <li>
-               <a onclick="loadActivity({{ step }});" id="step-{{ step }}" href="#" >
-                  {{ resourceActivity.getResource().getName() }}
-               </a>
-            </li>
-            {% endfor %}
-        </ul>
+        {{ parseActivity(activity, 0, 1) }}
 
         <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>

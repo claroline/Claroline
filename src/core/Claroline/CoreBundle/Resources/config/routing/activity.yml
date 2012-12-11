@@ -29,3 +29,7 @@ claro_activity_show_player:
 claro_activity_setup:
     pattern: /setup/{activityId}
     defaults: { _controller: ClarolineCoreBundle:Activity:showSetUp }
+
+claro_activity_show_instructions:
+    pattern: /instructions/{activityId}
+    defaults: { _controller: ClarolineCoreBundle:Activity:showInstructions }

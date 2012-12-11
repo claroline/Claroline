@@ -10,7 +10,7 @@ class ActivityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
-        $builder->add('instruction', 'textarea');
+        $builder->add('instructions', 'textarea');
     }
 
     public function getName()
