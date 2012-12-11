@@ -70,4 +70,23 @@ class ActivityController extends Controller
 
         return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => count($resourceActivities)));
     }
+
+   public function showPlayerAction($activityId)
+   {
+       $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
+       $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
+
+       return $this->render('ClarolineCoreBundle:Activity:player/activity.html.twig', array('activity' => $activity, 'resource' => $resourceActivities[0]->getResource()));
+   }
+
+   public function showSetUpAction($activityId)
+   {
+       $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findBy(array('isVisible' => true));
+       $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
+       $resourceActivities = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
+
+       return $this->render('ClarolineCoreBundle:Activity:index.html.twig', array('resourceTypes' => $resourceTypes, 'activity' => $activity, 'workspace' => $activity->getWorkspace(), 'resourceActivities' => $resourceActivities));
+   }
 }

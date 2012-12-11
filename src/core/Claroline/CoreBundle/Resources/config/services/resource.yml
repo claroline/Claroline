@@ -35,3 +35,10 @@ services:
          arguments:
            - "@doctrine.orm.entity_manager"
 
+    claroline.resource.platform_path_extension:
+        class: Claroline\CoreBundle\Library\Configuration\Twig\PathExtension
+        arguments:
+          - "@router"
+        tags:
+            - { name: twig.extension }
+
