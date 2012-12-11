@@ -10,37 +10,53 @@ claro_message_send:
     pattern: /send/{parentId}
     defaults: { _controller: ClarolineCoreBundle:Message:send, parentId: 0 }
 
-claro_message_list_received:
+claro_message_list_received_layout:
     pattern: /list/received
+    defaults: { _controller: ClarolineCoreBundle:Message:listReceivedLayout }
+
+claro_message_list_sent_layout:
+    pattern: /list/sent
+    defaults: { _controller: ClarolineCoreBundle:Message:listSentLayout }
+
+claro_message_list_removed_layout:
+  pattern: /list/removed
+  defaults: { _controller: ClarolineCoreBundle:Message:listRemovedLayout }
+
+claro_message_list_received:
+    pattern: /list/received/{offset}
     defaults: { _controller: ClarolineCoreBundle:Message:listReceived }
+    options:
+      expose: true
 
 claro_message_list_sent:
-    pattern: /list/sent
+    pattern: /list/sent/{offset}
     defaults: { _controller: ClarolineCoreBundle:Message:listSent }
+    options:
+      expose: true
 
-claro_message_list_received_search_object:
-    pattern: /list/received/object/{object}
-    defaults: { _controller: ClarolineCoreBundle:Message:listSearchObjectReceived }
+claro_message_list_received_search:
+    pattern: /list/received/search/{search}/offset/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchReceived }
+    options:
+      expose: true
 
-claro_message_list_sent_search_object:
-    pattern: /list/sent/object/{object}
-    defaults: { _controller: ClarolineCoreBundle:Message:listSearchObjectSent }
+claro_message_list_sent_search:
+    pattern: /list/sent/search/{search}/offset/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Message:listSearchSent }
+    options:
+      expose: true
 
-claro_message_list_received_search_user:
-    pattern: /list/received/user/{fromUser}
-    defaults: { _controller: ClarolineCoreBundle:Message:listSearchFromUser }
+claro_message_list_removed:
+    pattern: /list/removed/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Message:listRemoved }
+    options:
+      expose: true
 
-claro_message_list_sent_search_user:
-    pattern: /list/sent/user/{toUser}
-    defaults: { _controller: ClarolineCoreBundle:Message:listSearchToUser }
-
-claro_message_list_received_removed:
-    pattern: /list/received/removed
-    defaults: { _controller: ClarolineCoreBundle:Message:listReceivedRemoved }
-
-claro_message_list_sent_removed:
-    pattern: /list/sent/removed
-    defaults: { _controller: ClarolineCoreBundle:Message:listSentRemoved }
+claro_message_list_removed_search:
+    pattern: /list/removed/search/{search}/offset/{offset}
+    defaults: { _controller: ClarolineCoreBundle:Message:listRemovedSearch }
+    options:
+      expose: true
 
 claro_message_show:
     pattern: /show/{messageId}
