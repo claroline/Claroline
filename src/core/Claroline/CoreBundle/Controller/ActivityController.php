@@ -17,7 +17,6 @@ class ActivityController extends Controller
         $repoResource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $resource = $repoResource->find($resourceId);
         $activity = $repoResource->find($activityId);
-        $repoResActivity = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResource($resource);

@@ -94,7 +94,7 @@ class MessageController extends Controller
             $form = $this->createForm(new MessageType());
 
             return $this->render(
-                    'ClarolineCoreBundle:Message:message_form.html.twig', array('form' => $form->createView())
+                'ClarolineCoreBundle:Message:message_form.html.twig', array('form' => $form->createView())
             );
 
          } else {
@@ -195,7 +195,7 @@ class MessageController extends Controller
             $em->flush();
         }
 
-        return new Response ('success', 204);
+        return new Response('success', 204);
     }
 
     public function deleteToUserAction()
@@ -212,7 +212,7 @@ class MessageController extends Controller
             $em->flush();
         }
 
-        return new Response ('success', 204);
+        return new Response('success', 204);
     }
 
     public function listSearchReceivedAction($search, $offset)
