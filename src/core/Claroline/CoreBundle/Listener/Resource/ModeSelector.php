@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Resource\Mode;
 
 /**
@@ -22,6 +24,13 @@ class ModeSelector
 
         if ($mode === 'path') {
             Mode::$isPathMode = true;
+        }
+    }
+
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if (($response = $event->getResponse()) instanceof RedirectResponse && Mode::$isPathMode) {
+            $response->setTargetUrl($response->getTargetUrl() . '?_mode=path');
         }
     }
 }

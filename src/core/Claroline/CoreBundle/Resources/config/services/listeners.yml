@@ -26,6 +26,7 @@ services:
         class: Claroline\CoreBundle\Listener\Resource\ModeSelector
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
     claroline.listener.ajax_authentication:
         class: Claroline\CoreBundle\Listener\AjaxAuthenticationListener
