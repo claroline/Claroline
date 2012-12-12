@@ -72,7 +72,8 @@ class ActivityController extends Controller
         $totalItems = $this->countItems($activity, 0);
         $totalItems ++;
 
-        return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => $totalSteps, 'totalItems' => $totalItems));
+        $items = array('resource' => $activity, 'step' => 1, 'resources' => $this->getItems($activity));
+        return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'items' => $items, 'totalSteps' => $totalSteps, 'totalItems' => $totalItems));
     }
 
    public function showPlayerAction($activityId)
@@ -98,7 +99,7 @@ class ActivityController extends Controller
    {
        $activity = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
 
-       return $this->render('ClarolineCoreBundle:Activity:player\instructions.html.twig', array('instructions' => $activity->getInstructions()));
+       return $this->render('ClarolineCoreBundle:Activity:player\instructions.html.twig', array('instructions' => $activity));
    }
 
    private function countSteps(Activity $activity, $countSteps)
@@ -124,5 +125,24 @@ class ActivityController extends Controller
        }
 
        return $countItems;
+   }
+
+   /**
+    * Returns an array containing activities & resources
+    * /!\ pointer usage
+    */
+   private function getItems(Activity $activity, &$step = 1, $items = array())
+   {
+
+       foreach($activity->getResourceActivities() as $resourceActivity){
+           $step++;
+           if($resourceActivity->getResource()->getResourceType()->getName() == 'activity'){
+               $items[] = array('resource' => $resourceActivity->getResource(), 'step' => $step, 'resources' => $this->getItems($resourceActivity->getResource(), $step));
+           } else {
+               $items[] = array('resource' => $resourceActivity->getResource(), 'step' => $step);
+           }
+       }
+
+       return $items;
    }
 }

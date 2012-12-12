@@ -2,6 +2,7 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 {# use the section_content block to display yor html #}
 {% block section_content %}
+
     <div id="text_content">
         {{ text|raw }}
         <a href="{{ path('claro_text_history', {'textId':textId}) }}">history</a>
