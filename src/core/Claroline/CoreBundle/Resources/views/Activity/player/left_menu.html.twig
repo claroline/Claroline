@@ -1,22 +1,20 @@
-{% macro parseActivity(activity, totalResources, totalItems) %}
-    <li>
-        <a id="item-{{ totalItems }}" href="{{ path('claro_activity_show_instructions', {'activityId':activity.getId()}) }}" class="activity-instruction">{{ activity.getName() }}</a>
-        <ul>
-        {% for resourceActivity in activity.getResourceActivities %}
-            {% set totalItems = totalItems + 1 %}
-            {% if resourceActivity.getResource().getResourceType().getName() != 'activity' %}
-                {% set totalResources = totalResources + 1 %}
-                <li>
-                    <a id="item-{{ totalItems }}" class="activity-step" data-step="{{ totalResources }}" href="{{ path('claro_resource_open',{'resourceType': resourceActivity.getResource().getResourceType().getName(), 'resourceId': resourceActivity.getResource.getId()}) }}?_mode=path">
-                        {{ resourceActivity.getResource().getName() }}
-                    </a>
-                </li>
-            {% else %}
-                {{ _self.parseActivity(resourceActivity.getResource(), totalResources, totalItems) }}
-            {% endif %}
-        {% endfor %}
-        </ul>
-    </li>
+{% macro parseActivity(item) %}
+      {% if item.resources is defined %}
+        <li>
+            <a id="item-{{ item.step }}" href="{{ path('claro_activity_show_instructions', {'activityId':item.resource.getId()}) }}" class="activity-instruction">{{ item.resource.getName() }}</a>
+            <ul>
+               {% for subItem in item.resources %}
+                    {{ _self.parseActivity(subItem) }}
+               {% endfor %}
+            </ul>
+        </li>
+        {% else %}
+        <li>
+            <a id="item-{{ item.step }}" class="activity-step" href="{{ path('claro_resource_open',{'resourceType': item.resource.getResourceType().getName(), 'resourceId': item.resource.getId()}) }}?_mode=path">
+                {{ item.resource.getName() }}
+            </a>
+        </li>
+      {% endif %}
 {% endmacro %}
 
 {% from _self import parseActivity %}
@@ -44,7 +42,7 @@
         <hr/>
 
         <ul>
-            {{ parseActivity(activity, 0, 1) }}
+            {{ parseActivity(items) }}
         </ul>
 
         <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
