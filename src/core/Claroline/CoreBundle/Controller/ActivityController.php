@@ -70,6 +70,7 @@ class ActivityController extends Controller
         $resourceActivities = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')->getResourcesActivityForActivity($activity);
         $totalSteps = $this->countSteps($activity, 0);
         $totalItems = $this->countItems($activity, 0);
+        $totalItems ++;
 
         return $this->render('ClarolineCoreBundle:Activity:player/left_menu.html.twig', array('resourceActivities' => $resourceActivities, 'activity' => $activity, 'totalSteps' => $totalSteps, 'totalItems' => $totalItems));
     }
