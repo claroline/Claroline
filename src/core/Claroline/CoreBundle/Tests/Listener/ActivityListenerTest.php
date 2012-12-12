@@ -64,7 +64,7 @@ class ActivityListenerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/create/activity/{$this->pwr->getId()}",
-            array('activity_form' => array('name' => $name, 'instruction' => $instruction))
+            array('activity_form' => array('name' => $name, 'instructions' => $instruction))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
