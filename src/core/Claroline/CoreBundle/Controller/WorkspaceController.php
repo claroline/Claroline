@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Form\ResourceRightsType;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 
 /**
@@ -258,6 +259,70 @@ class WorkspaceController extends Controller
         return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
+    }
+
+    /**
+     * Renders the workspace roles configuration page.
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function configureRolesAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\roles.html.twig', array('workspace' => $workspace, 'roles' => $roles));
+    }
+
+    /**
+     * Renders the resource configuration for a specific role.
+     *
+     * @param integer $roleId
+     *
+     * @return Response
+     */
+    public function resourcesRightsFormAction($workspaceId, $roleId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('role' => $role, 'resource' => null));
+        $form = $this->get('form.factory')->create(new ResourceRightsType(), $config);
+
+        return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
+            array('workspace' => $workspace, 'role' => $role, 'form' => $form->createView())
+         );
+    }
+
+    /**
+     * Edit the resources permissions
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
+    public function editResourcesRightsAction($workspaceId, $roleId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('role' => $role, 'resource' => null));
+        $form = $this->get('form.factory')->create(new ResourceRightsType(), $config);
+        $form->bindRequest($this->getRequest());
+
+        if ($form->isValid()) {
+            $em->persist($config);
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('claro_workspace_roles', array('workspaceId' => $workspaceId)));
+        }
+
+         return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
+            array('workspace' => $workspace, 'role' => $role, 'form' => $form->createView())
+         );
     }
 
     /**

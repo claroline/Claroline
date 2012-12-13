@@ -148,8 +148,16 @@ resource_properties_form_shareType: Redistribution
 resource_properties_form_name: Nom
 resource_properties_form_userIcon: Icône
 resources: Ressources
+resources_rights: Droits des ressources
+resources_rights_form_canSee: Voir
+resources_rights_form_canDelete: Supprimer
+resources_rights_form_canOpen: Ouvrir
+resources_rights_form_canEdit: Editer
+resources_rights_form_canCopy: Copier
+resources_rights_form_canShare: Partager
 results: Résultats
 role: Rôle
+roles: Rôles
 save: Sauvegarder
 search: Rechercher
 send_mail: Envoyer un mail

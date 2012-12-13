@@ -123,7 +123,6 @@ abstract class AbstractWorkspace
             }
         }
 
-
         $visitorRole = $this->doAddBaseRole(self::$visitorPrefix, $this->createDefaultsResourcesRights(true, false, false, false, false, false));
         $collaboratorRole = $this->doAddBaseRole(self::$collaboratorPrefix, $this->createDefaultsResourcesRights(true, false, true, false, false, false), $visitorRole);
         $this->doAddBaseRole(self::$managerPrefix, $this->createDefaultsResourcesRights(true, true, true, true, true, true), $collaboratorRole);
@@ -249,7 +248,7 @@ abstract class AbstractWorkspace
         $baseRole->setName("{$prefix}_{$this->getId()}");
         $baseRole->setParent($parent);
         $baseRole->setRoleType(Role::WS_ROLE);
-        $baseRole->addResourceRightsWorkspace($rsw);
+        $baseRole->addResourceRights($rsw);
         $rsw->setRole($baseRole);
         $this->roles->add($baseRole);
 
@@ -296,7 +295,7 @@ abstract class AbstractWorkspace
     }
 
     /**
-     * Creates a ResourceRightsWorkspace entity (will be used as the default one)
+     * Creates a ResourceRights entity (will be used as the default one)
      * @param boolean $canSee
      * @param boolean $canDelete
      * @param boolean $canOpen
@@ -304,11 +303,11 @@ abstract class AbstractWorkspace
      * @param boolean $canCopy
      * @param boolean $canShare
      *
-     * @return ResourceRightsWorkspace
+     * @return ResourceRights
      */
     private function createDefaultsResourcesRights($canSee, $canDelete, $canOpen, $canEdit, $canCopy, $canShare)
     {
-        $resourceRight = new ResourceRightsWorkspace();
+        $resourceRight = new ResourceRights();
         $resourceRight->setCanCopy($canCopy);
         $resourceRight->setCanDelete($canDelete);
         $resourceRight->setCanEdit($canEdit);

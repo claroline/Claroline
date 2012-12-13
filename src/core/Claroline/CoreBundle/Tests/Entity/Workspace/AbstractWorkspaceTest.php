@@ -109,7 +109,7 @@ class AbstractWorkspaceTest extends FixtureTestCase
     public function testInitBaseRoleCreatesDefaultResourcesRightsAfterPersist()
     {
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRightsWorkspace');
+        $repo = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights');
         $before = count($repo->findAll());
         $workspace = new SimpleWorkspace();
         $workspace->setName('ws');

@@ -7,10 +7,10 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
  * @ORM\Table(name="claro_resource_rights")
  */
-class ResourceRightsWorkspace
+class ResourceRights
 {
     /**
      * @ORM\Id

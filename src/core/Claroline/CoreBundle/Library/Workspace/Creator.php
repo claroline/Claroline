@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRightsWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 
 class Creator
 {
