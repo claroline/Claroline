@@ -24,5 +24,4 @@ class ActivityType extends AbstractType
            'translation_domain' => 'platform'
        );
     }
-
 }

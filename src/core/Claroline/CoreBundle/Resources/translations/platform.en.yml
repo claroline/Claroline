@@ -151,8 +151,16 @@ resource_properties_form_shareType: Share type
 resource_properties_form_name: Name
 resource_properties_form_userIcon: Icon
 resources: Resources
+resources_rights: Resources rights
+resources_rights_form_canSee: See
+resources_rights_form_canDelete: Selete
+resources_rights_form_canOpen: Open
+resources_rights_form_canEdit: Edit
+resources_rights_form_canCopy: Copy
+resources_rights_form_canShare: Share
 results: Results
 role: Role
+roles: Roles
 save: Save
 search: Search
 send_mail: Send a mail
