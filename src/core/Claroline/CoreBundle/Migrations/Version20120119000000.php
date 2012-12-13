@@ -578,7 +578,7 @@ class Version20120119000000 extends BundleMigration
 
     private function createResourceRightsTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_resource_custom_rights');
+        $table = $schema->createTable('claro_resource_rights');
         $this->addId($table);
         $table->addColumn('resource_id', 'integer', array('notnull' => false));
         $table->addColumn('role_id', 'integer');
