@@ -33,7 +33,6 @@ class Creator
         $this->entityManager->persist($workspace);
         $rootDir = new Directory();
         $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
-        $rootDir->setShareType(0);
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')

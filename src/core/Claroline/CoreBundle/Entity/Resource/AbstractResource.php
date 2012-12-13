@@ -46,11 +46,6 @@ abstract class AbstractResource
     protected $license;
 
     /**
-     * @ORM\Column(type="integer", name="share_type")
-     */
-    protected $shareType;
-
-    /**
      * @ORM\Column(type="datetime", name="created")
      * @Gedmo\Timestampable(on="create")
      */
@@ -148,17 +143,11 @@ abstract class AbstractResource
     //the user icon
     protected $userIcon;
 
-    const PRIVATE_RESOURCE = 0;
-    const PUBLIC_RESOURCE = 1;
-
-
-
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->setShareType(self::PRIVATE_RESOURCE);
         $this->resourceInstances = new ArrayCollection();
     }
 
@@ -201,42 +190,6 @@ abstract class AbstractResource
     public function setLicense(License $license)
     {
         $this->license = $license;
-    }
-
-    /**
-     * Returns the resource share type. If the first parameter is set to true,
-     * the type will be returned as a string, otherwise it will be returned
-     * as an integer.
-     *
-
-     * @param boolean $asString
-     *
-     * @return integer|string
-     */
-    public function getShareType($asString = false)
-    {
-        if (true === $asString) {
-            switch ($this->shareType) {
-                case self::PRIVATE_RESOURCE:
-                    return 'private';
-                    break;
-                case self::PUBLIC_RESOURCE:
-                    return 'public';
-                    break;
-            }
-        }
-
-        return $this->shareType;
-    }
-
-    /**
-     * Sets the share type
-     *
-     * @param integer $shareType
-     */
-    public function setShareType($shareType)
-    {
-        $this->shareType = $shareType;
     }
 
     /**

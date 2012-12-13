@@ -55,7 +55,6 @@ class DirectoryControllerTest extends FunctionalTestCase
         $dirRi = $this->addResource($rootDir, $this->pwr->getId(), 'directory');
         $object = new File();
         $object->setName('file.txt');
-        $object->setShareType(1);
         $object->setSize(42);
         $object->setMimeType('Mime/Type');
         $object->setHashName('hashName');
