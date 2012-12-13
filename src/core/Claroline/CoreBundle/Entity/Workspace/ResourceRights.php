@@ -54,11 +54,6 @@ class ResourceRights
      */
     protected $canCopy;
 
-    /**
-     * @ORM\Column(type="boolean", name="can_share")
-     */
-    protected $canShare;
-
     public function getId()
     {
         return $this->id;
@@ -132,15 +127,5 @@ class ResourceRights
     public function setCanCopy($canCopy)
     {
         $this->canCopy = $canCopy;
-    }
-
-    public function getCanShare()
-    {
-        return $this->canShare;
-    }
-
-    public function setCanShare($canShare)
-    {
-        $this->canShare = $canShare;
     }
 }

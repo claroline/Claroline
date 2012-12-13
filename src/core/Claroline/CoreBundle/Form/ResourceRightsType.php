@@ -19,7 +19,6 @@ class ResourceRightsType extends AbstractType
          $builder->add('canOpen', 'checkbox');
          $builder->add('canEdit', 'checkbox');
          $builder->add('canCopy', 'checkbox');
-         $builder->add('canShare', 'checkbox');
     }
 
     public function getName()
