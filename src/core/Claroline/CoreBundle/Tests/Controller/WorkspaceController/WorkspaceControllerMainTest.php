@@ -246,7 +246,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/workspaces/{$workspace->getId()}/properties/roles/{$workspace->getVisitorRole()->getId()}/resources/rights/edit",
-            array('resources_rights_form' => array('canSee' => true, 'canDelete' => true, 'canOpen' => false, 'canEdit' => false, 'canCopy' => false, 'canShare' => false))
+            array('resources_rights_form' => array('canSee' => true, 'canDelete' => true, 'canOpen' => false, 'canEdit' => false, 'canCopy' => false))
         );
 
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');

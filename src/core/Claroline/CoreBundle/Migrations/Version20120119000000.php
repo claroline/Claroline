@@ -587,7 +587,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('can_open', 'boolean');
         $table->addColumn('can_edit', 'boolean');
         $table->addColumn('can_copy', 'boolean');
-        $table->addColumn('can_share', 'boolean');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
