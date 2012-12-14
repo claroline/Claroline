@@ -12,7 +12,7 @@ tinyMCE.init({
 {% endblock %}
 
 {% block section_content %}
-<form novalidate="novalidate" action="{{path('claro_forum_create_subject', {'forumId':forumId})}}" method="post" {{ form_enctype(form) }} id="subject_form">
+<form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'forumId':forumId}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
     <div class="form-actions">

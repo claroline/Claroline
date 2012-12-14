@@ -9,17 +9,17 @@
 
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_forum_open', {'resourceId': subject.getParent().getId()}) }}">
+            <a href="{{ _path('claro_forum_open', {'resourceId': subject.getParent().getId()}) }}">
                 {{ subject.getParent().getName() }}
             </a>
         </li>
         <span class="divider"> / </span>
         <li>
-            <a href="{{ path('claro_forum_open', {'resourceId': subject.getParent().getId()}) }}">{{ subject.getName() }}</a>
+            <a href="{{ _path('claro_forum_open', {'resourceId': subject.getParent().getId()}) }}">{{ subject.getName() }}</a>
         </li>
     </ul>
     <p>
-        <a href='{{ path('claro_forum_message_form', {'subjectId':subject.getId()}) }}'
+        <a href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'
             <button class="btn"> {{ 'new_message'|trans({}, 'forum') }} </button>
         </a>
     </p>

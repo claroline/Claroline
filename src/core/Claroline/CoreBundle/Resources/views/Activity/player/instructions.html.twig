@@ -1,0 +1,14 @@
+<html>
+    <head>
+    {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+        {% block stylesheets %}
+        <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
+        <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
+        <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
+    {% endblock %}
+    </head>
+    <body>
+        <h3> {{ instructions.getName() }} </h3>
+        {{ instructions.getInstructions|raw }}
+    </body>
+</html>

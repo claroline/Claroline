@@ -35,3 +35,10 @@ services:
          arguments:
            - "@doctrine.orm.entity_manager"
 
+    claroline.resource.mode_extension:
+        class: Claroline\CoreBundle\Library\Twig\ResourceModeExtension
+        arguments:
+          - "@router"
+        tags:
+            - { name: twig.extension }
+

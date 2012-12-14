@@ -34,7 +34,7 @@ class Creator
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
         $workspace = $this->wsCreator->createWorkspace($config, $user);
-        $workspace->setType(AbstractWorkspace::USER_REPOSITORY);
+        $workspace->setType(AbstractWorkspace::PERSONNAL);
         $user->addRole($workspace->getManagerRole());
         $user->setPersonalWorkspace($workspace);
         $this->em->persist($workspace);

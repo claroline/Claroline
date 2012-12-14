@@ -1,7 +1,7 @@
 account_created: Account created.
 action: Action
 activity_form_name: Name
-activity_form_instruction: Instructions
+activity_form_instructions: Instructions
 add: Add
 add_group: Add group
 add_group_s_confirm_message: group(s) added
@@ -151,14 +151,24 @@ resource_properties_form_shareType: Share type
 resource_properties_form_name: Name
 resource_properties_form_userIcon: Icon
 resources: Resources
+resources_rights: Resources rights
+resources_rights_form_canSee: See
+resources_rights_form_canDelete: Selete
+resources_rights_form_canOpen: Open
+resources_rights_form_canEdit: Edit
+resources_rights_form_canCopy: Copy
+resources_rights_form_canShare: Share
 results: Results
 role: Role
+roles: Roles
 save: Save
 search: Search
 send_mail: Send a mail
 send_message: Send a message
 settings: Settings
 show: Show
+show_as_admin: Show as admin
+show_as_user: Show as user
 text_form_name: Name
 text_form_text: Text
 text_form_shareType: Sharable

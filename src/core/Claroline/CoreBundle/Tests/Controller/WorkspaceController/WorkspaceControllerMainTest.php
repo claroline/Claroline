@@ -220,6 +220,42 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget-content')));
     }
 
+    public function testDisplayWsRolesProperties()
+    {
+        $this->loadUserFixture(array('user'));
+        $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/roles");
+        $this->assertEquals(3, count($crawler->filter('.row-role')));
+    }
+
+    public function testDisplayResourceRightsForm()
+    {
+        $this->loadUserFixture(array('user'));
+        $this->logUser($this->getFixtureReference('user/user'));
+        $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
+        $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/roles/{$workspace->getVisitorRole()->getId()}/resources/rights/form");
+        $this->assertEquals(1, count($crawler->filter('#resources_rights_form')));
+    }
+
+    public function testEditResourceRights()
+    {
+        $this->loadUserFixture(array('user'));
+        $this->logUser($this->getFixtureReference('user/user'));
+        $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
+
+        $this->client->request(
+            'POST',
+            "/workspaces/{$workspace->getId()}/properties/roles/{$workspace->getVisitorRole()->getId()}/resources/rights/edit",
+            array('resources_rights_form' => array('canSee' => true, 'canDelete' => true, 'canOpen' => false, 'canEdit' => false, 'canCopy' => false))
+        );
+
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('role' => $workspace->getVisitorRole(), 'resource' => null));
+
+        $this->assertTrue($config->getCanSee());
+        $this->assertTrue($config->getCanDelete());
+    }
+
     private function registerStubPlugins(array $pluginFqcns)
     {
         $container = $this->client->getContainer();

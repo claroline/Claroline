@@ -2,7 +2,7 @@
 
 {% block section_content %}
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-<form action="{{path('claro_forum_edit_options')}}"
+<form action="{{ _path('claro_forum_edit_options') }}"
       method="post" {{ form_enctype(form) }}
       class="form-horizontal">
    {{ form_errors(form) }}

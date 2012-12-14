@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -8,13 +8,13 @@
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_forum_open', {'resourceId': forum.getId()}) }}">
+            <a href="{{ _path('claro_forum_open', {'resourceId': forum.getId()}) }}">
                 {{ forum.getName() }}
             </a>
         </li>
     </ul>
     <p>
-        <a href="{{ path('claro_forum_form_subject_creation', {'forumId': forum.getId()}) }}">
+        <a href="{{ _path('claro_forum_form_subject_creation', {'forumId': forum.getId()}) }}">
             <button class="btn">{{ 'new_subject'|trans({}, 'forum') }}</button>
         </a>
     </p>

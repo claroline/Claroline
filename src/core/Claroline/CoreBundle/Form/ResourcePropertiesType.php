@@ -10,12 +10,6 @@ class ResourcePropertiesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
-        $builder->add('shareType', 'choice', array(
-            'choices' => array(true => 'public', false => 'private'),
-            'multiple' => false,
-            'expanded' => false,
-            'label' => 'sharable'
-        ));
         $builder->add('userIcon', 'file', array('required' => false));
         $builder->add('creationDate',
             'date',
