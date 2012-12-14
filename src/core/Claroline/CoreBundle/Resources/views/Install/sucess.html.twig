@@ -8,21 +8,16 @@
            </ol>
             <p>  Progression</p>
             <div class="progress">
-              <div class="bar" style="width: 90%;"></div>
+              <div class="bar" style="width: 100%;"></div>
             </div>
     </div>
              <div class="span6">
-                 <h3>Etape 3 : Paramètre de l'administration</h3>
+                 <h3>Installation reussie</h3>
                   {%block data %}
-<form action="{{ path('claro_checkAdminForm') }}" method="post" >
-{{ form_widget(form) }}
-<input type="submit" value="suivant" />
-</form>
-<form action="{{ path('claro_showDbForm') }}" method="post" >
-
-<input type="submit" name="submit" value="retour" />
-</form>
-
+                   <div class="alert alert-success">
+                    <p> Installation réussie avec succès</p>
+                </div>
+                   <p> <a href="{{path('claro_index')}}" class="button"> Allez à l'accueil</a></p>
 {%endblock data %}
         </div>
             <div class="span2">
@@ -30,13 +25,17 @@
                 <div class="action">
                     Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.
                     </div>
+              
                 </div>
             <div class="span12">
-       <div class="alert alert-error">
+              
+                    {% if app.session.getFlashes() is defined %}
+                <div class="alert alert-error">
         {% for key, flash in app.session.getFlashes() %}
         {{ flash }} <br />
         {% endfor %}
     </div>
+                    {% endif %}
         </div>
   
    </div>
