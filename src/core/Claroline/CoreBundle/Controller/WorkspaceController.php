@@ -294,7 +294,7 @@ class WorkspaceController extends Controller
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
             array('workspace' => $workspace, 'role' => $role, 'form' => $form->createView())
-         );
+        );
     }
 
     /**
@@ -320,9 +320,9 @@ class WorkspaceController extends Controller
             return new RedirectResponse($this->generateUrl('claro_workspace_roles', array('workspaceId' => $workspaceId)));
         }
 
-         return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
+        return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
             array('workspace' => $workspace, 'role' => $role, 'form' => $form->createView())
-         );
+        );
     }
 
     /**

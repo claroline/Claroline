@@ -472,6 +472,9 @@
                 }
 
                 this.displayResources(event.directoryId, event.isPickerMode ? 'picker' : 'main', event.parameters);
+            },
+            'manage-rights': function(event){
+                this.manageRights(event.action, event.data, event.resourceId);
             }
         },
         initialize: function (parameters) {
@@ -532,7 +535,8 @@
                 var formSource = (
                     (type == 'create' && '/resource/form/' + resource.type) ||
                     (type == 'rename' && '/resource/rename/form/' + resource.id) ||
-                    (type == 'edit-properties' && '/resource/properties/form/' + resource.id));
+                    (type == 'edit-properties' && '/resource/properties/form/' + resource.id)) ||
+                    (type == 'manage-rights' && '/resource/'+resource.id+'/rights/form');
                 formSource || function () {throw new Error('Form source unknown for action "' + type + '"')}();
                 this.views['form'] || (this.views['form'] = new manager.Views.Form(this.dispatcher));
                 $.ajax({
@@ -633,8 +637,17 @@
         open: function (resourceType, resourceId) {
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId;
         },
-        manageRights: function (resourceId) {
-            alert('Rights of ' + resourceId + ' (not implemented yet)')
+        manageRights: function (formAction, formData, resourceId) {
+            $.ajax({
+                url: formAction,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function (){
+                    this.views['form'].close();
+                }
+            })
         },
         custom: function (action, resourceId) {
             alert('Custom action "' + action + '" on resource ' + resourceId + ' (not implemented yet)');

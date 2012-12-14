@@ -128,4 +128,62 @@ class ResourceRights
     {
         $this->canCopy = $canCopy;
     }
+
+    /**
+     * Sets every right to false
+     */
+    public function reset()
+    {
+        $this->canCopy = false;
+        $this->canDelete = false;
+        $this->canEdit = false;
+        $this->canOpen = false;
+        $this->canSee = false;
+    }
+
+    /**
+     * Compares the current permission with an array of permission
+     *
+     * @param type $array
+     *
+     * @return boolean
+     */
+    public function isEquals($rights)
+    {
+        foreach($this->getRights() as $key => $current){
+            if($current != $rights[$key]){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets an array with the current permissions
+     *
+     * @return array
+     */
+    public function getRights()
+    {
+        return array(
+            'canCopy' => $this->canCopy,
+            'canDelete' => $this->canDelete,
+            'canEdit' => $this->canEdit,
+            'canOpen' => $this->canOpen,
+            'canSee' => $this->canSee
+        );
+    }
+
+    /**
+     * Sets the current permission from an array
+     *
+     * @param type array
+     */
+    public function setRights($rights)
+    {
+        foreach($rights as $key => $value){
+            $this->$key = $value;
+        }
+    }
 }

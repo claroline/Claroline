@@ -6,8 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Resource\IconType;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
@@ -245,5 +244,42 @@ class Manager
         }
 
         $this->em->remove($resource);
+    }
+
+    /**
+     * Returns an array of ResourceRight for a resource in a workspace
+     *
+     * @param AbstractResource $resource
+     * @param AbstractWorkspace $workspace
+     *
+     * @return array
+     */
+    public function getRights(AbstractResource $resource)
+    {
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights');
+        $configs = $repo->getAllForResource($resource);
+        $baseConfigs = array();
+        $customConfigs = array();
+        $effectiveConfigs = array();
+
+        foreach($configs as $config){
+            ($config->getResource() != null) ? $customConfigs[] = $config: $baseConfigs[] = $config;
+        }
+
+        foreach($baseConfigs as $baseConfig){
+            $found = false;
+            $toAdd = null;
+            foreach ($customConfigs as $key => $customConfig){
+                if($customConfig->getRole() == $baseConfig->getRole()){
+                    $found = true;
+                    $toAdd = $key;
+
+                }
+            }
+
+            $found ? $effectiveConfigs[] = $customConfigs[$toAdd] : $effectiveConfigs[] = $baseConfig;
+        }
+
+        return $effectiveConfigs;
     }
 }
