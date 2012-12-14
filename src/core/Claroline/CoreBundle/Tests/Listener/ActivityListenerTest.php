@@ -20,7 +20,6 @@ class ActivityListenerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture(array('user'));
         $this->client->followRedirects();
-        $ds = DIRECTORY_SEPARATOR;
         $this->pwr = $this
             ->client
             ->getContainer()

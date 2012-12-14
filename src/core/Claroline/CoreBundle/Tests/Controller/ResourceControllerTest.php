@@ -515,6 +515,53 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertTrue($icon->isShortcut());
     }
 
+    public function testDisplayRightsForm()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $crawler = $this->client->request('GET', "/resource/{$file->id}/rights/form");
+        $this->assertEquals(3, count($crawler->filter('.row-rights')));
+    }
+
+    public function testSubmitRightsForm()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $file = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($file->id);
+        $resourceRights = $this->client->getContainer()->get('claroline.resource.manager')->getRights($file);
+        $this->assertEquals(3, count($resourceRights));
+
+        //changes keep the 1st $resourceRight and change the others
+
+        $this->client->request(
+          'POST',
+          "/resource/{$file->getId()}/rights/edit",
+           array(
+               "canSee-{$resourceRights[0]->getId()}" => true,
+               "canSee-{$resourceRights[1]->getId()}" => true,
+               "canDelete-{$resourceRights[1]->getId()}" => true,
+           )
+        );
+
+        $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
+        $resourceRights = $this->client->getContainer()->get('claroline.resource.manager')->getRights($file);
+        $this->assertEquals(3, count($resourceRights));
+        $this->assertEquals(5, count($newRights));
+
+        $this->client->request(
+          'POST',
+          "/resource/{$file->getId()}/rights/edit",
+           array(
+               "canSee-{$resourceRights[0]->getId()}" => true,
+               "canDelete-{$resourceRights[1]->getId()}" => true,
+           )
+        );
+
+        $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
+        $this->assertEquals(5, count($newRights));
+    }
+
     private function uploadFile($parentId, $name, $shareType = 1)
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
