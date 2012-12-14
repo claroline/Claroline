@@ -1,0 +1,15 @@
+parameters: paramètres
+step 1: Etape 1 Configuration requise
+minimum value: Valeur minimum
+of: sur
+current value: valeur actuelle
+permission: Permission lectures et écritures
+hint : hints and tips
+next: suivant
+back: retour
+folders: Dossiers
+hint 1: Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.
+server: serveur
+db name: Nom de la base de données
+username: Nom de l'utilisateur
+password: Mot de passe

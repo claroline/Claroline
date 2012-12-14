@@ -1,0 +1,15 @@
+parameters: Parameters
+step : Etape
+minimum value: minimum value
+of: of
+current value: current value
+permission: Can I read or write folders ?
+hint : hints and tips
+next: next
+back: back
+folders: folders
+hint 1: If your value are higher than the minimum requier that's mean your are on the right track.
+server: server
+db name: database name
+username: username
+password: password
