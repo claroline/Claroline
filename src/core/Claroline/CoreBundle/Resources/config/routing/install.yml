@@ -22,8 +22,12 @@ claro_checkAdminForm:
 
 claro_summary:
     pattern: /summary
-    defaults: { _controller: ClarolineCoreBundle:Install:summary }
+    defaults: { _controller: ClarolineCoreBundle:Install:summaryShow }
 claro_execute:
-    pattern: /summary
+    pattern: /execute
     defaults: { _controller: ClarolineCoreBundle:Install:execute }
+    requirements: { _method: post }
+claro_sucess:
+    pattern: /sucess
+    defaults: { _controller: ClarolineCoreBundle:Install:success }
     requirements: { _method: post }
