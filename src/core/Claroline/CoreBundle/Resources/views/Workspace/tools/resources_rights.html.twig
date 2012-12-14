@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+{% block section_content %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
+    </li>
+    <span class="divider"> / </span>
+    <li>
+        <a href="{{ path('claro_workspace_roles', {'workspaceId': workspace.getId()}) }}">{{ 'roles'|trans({}, 'platform') }}</a>
+    </li>
+    <span class="divider"> / </span>
+    <li>
+        <a href="#">{{ role.getTranslationKey|trans({}, 'platform') }}</a>
+    </li>
+</ul>
+<form novalidate="novalidate"
+      action="{{ path('claro_workspace_resources_rigths_edit', {'workspaceId':workspace.getId(), 'roleId':role.getId()}) }}"
+      method="post" {{ form_enctype(form) }}
+      id="resource-rename-form"
+      class="form-horizontal">
+   {{ form_errors(form) }}
+   {{ form_widget(form) }}
+   <input type="submit"/>
+</form>
+{% endblock %}

@@ -89,12 +89,13 @@
     </script>
 {% endblock %}
 {% block section_content %}
+    <a href="{{ path('claro_activity_show_player', {'activityId': activity.getId()}) }}" class="btn btn-secondary pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
     <h3>
         <b>{{ 'activity'|trans({}, 'resource') }} {{ activity.getName() }}</b>
     </h3>
     <div id="activity-instruction">
         <h4>{{ 'instructions'|trans({}, 'platform') }} :</h4>
-            {{ activity.getInstruction() }}
+            {{ activity.getInstructions() }}
     </div>
     <br>
 

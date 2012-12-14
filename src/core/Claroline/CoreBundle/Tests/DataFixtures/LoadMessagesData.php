@@ -26,7 +26,8 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
         return $this->container;
     }
 
-    public function __construct($usernames, $nbMessages){
+    public function __construct($usernames, $nbMessages)
+    {
         $this->usernames = $usernames;
         $this->nbMessages = $nbMessages;
     }

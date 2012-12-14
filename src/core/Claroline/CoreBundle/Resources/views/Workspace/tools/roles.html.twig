@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
+        </li>
+         <span class="divider"> / </span>
+        <li>
+            <a href="#">{{ 'roles'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th>{{ 'name'|trans({}, 'platform') }}</th>
+            <th>{{ 'resources_rights'|trans({}, 'platform') }}</th>
+        </tr>
+    {% for role in roles %}
+        <tr class="row-role">
+            <th>{{ role.getTranslationKey|trans({}, 'platform') }}</th>
+            <th><a href="{{ path('claro_workspace_resources_rights_form', {'workspaceId': workspace.getId(), 'roleId': role.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a></th>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

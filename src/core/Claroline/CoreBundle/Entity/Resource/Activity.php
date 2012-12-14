@@ -14,9 +14,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Activity extends AbstractResource
 {
     /**
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @ORM\Column(type="string", name="instruction")
      */
-    protected $instruction;
+    protected $instructions;
 
     /**
      * @ORM\OneToMany(
@@ -47,17 +48,17 @@ class Activity extends AbstractResource
      *
      * @return string
      */
-    public function getInstruction()
+    public function getInstructions()
     {
-        return $this->instruction;
+        return $this->instructions;
     }
 
     /**
      * Sets the instruction.
      */
-    public function setInstruction($instruction)
+    public function setInstructions($instructions)
     {
-        $this->instruction = $instruction;
+        $this->instructions = $instructions;
     }
 
     public function addResourceActivity(ResourceActivity $newResourceActivity)

@@ -34,7 +34,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/activity/{$activity->id}/add/resource/{$file->id}"
-            );
+        );
         $obj = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($obj));
         $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
@@ -53,17 +53,17 @@ class ActivityControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $repo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $file1 = $this->uploadFile($this->pwr->getId(), 'file1');
-        $file2= $this->uploadFile($this->pwr->getId(), 'file2');
+        $fileOne = $this->uploadFile($this->pwr->getId(), 'file1');
+        $fileTwo= $this->uploadFile($this->pwr->getId(), 'file2');
         $activity = $this->createActivity('name', 'instruction');
         $activityEntity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\Activity')->find($activity->id);
         $this->client->request(
             'POST',
-            "/activity/{$activity->id}/add/resource/{$file1->id}"
+            "/activity/{$activity->id}/add/resource/{$fileOne->id}"
         );
         $this->client->request(
             'POST',
-            "/activity/{$activity->id}/add/resource/{$file2->id}"
+            "/activity/{$activity->id}/add/resource/{$fileTwo->id}"
         );
 
        $resourceActivities = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->getResourcesActivityForActivity($activityEntity);
@@ -77,7 +77,7 @@ class ActivityControllerTest extends FunctionalTestCase
 
        $this->client->request(
            'GET', "/activity/{$activity->id}/set/sequence?ids[]={$ids[1]}&ids[]={$ids[0]}"
-           );
+       );
 
        $reverseActivities = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->getResourcesActivityForActivity($activityEntity);
 
@@ -95,7 +95,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/create/activity/{$this->pwr->getId()}",
-            array('activity_form' => array('name' => $name, 'instruction' => $instruction))
+            array('activity_form' => array('name' => $name, 'instructions' => $instruction))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());

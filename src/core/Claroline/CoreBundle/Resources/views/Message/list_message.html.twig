@@ -1,0 +1,12 @@
+{% for message in messages %}
+    <tr class="row-message">
+        <td>{{ message.getDate()|date('d-m-Y') }}</td>
+        <td>
+            {% for userMessage in message.getUserMessages() %}
+                {{ userMessage.getUser().getUsername() }}{% if not loop.last %}, {%endif %}
+            {% endfor %}
+        </td>
+        <td><a href="{{ path('claro_message_show', {'messageId': message.getId()}) }}">{{ message.getObject() }}</a></td>
+        <td><input class="chk-delete" value="{{ message.getId() }}" type="checkbox"></input></td>
+    </tr>
+{% endfor %}

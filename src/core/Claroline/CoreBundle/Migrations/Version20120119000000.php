@@ -39,6 +39,7 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceLinkTable($schema);
         $this->createActivityTable($schema);
         $this->createActivityResourcesTable($schema);
+        $this->createResourceRightsTable($schema);
 
     }
 
@@ -76,6 +77,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_resource_link');
         $schema->dropTable('claro_activity');
         $schema->dropTable('claro_resource_activity');
+        $schema->dropTable('claro_resource_rights');
     }
 
     private function createUserTable(Schema $schema)
@@ -253,7 +255,6 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('license_id', 'integer', array('notnull' => false));
-        $table->addColumn('share_type', 'integer', array('notnull' => false));
         $table->addColumn('created', 'datetime');
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
@@ -565,6 +566,37 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('resource_id', 'integer');
         $table->addColumn('activity_id', 'integer');
         $table->addColumn('sequence_order', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('activity_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
         $table->addUniqueIndex(array('activity_id', 'resource_id'));
     }
+
+    private function createResourceRightsTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_resource_rights');
+        $this->addId($table);
+        $table->addColumn('resource_id', 'integer', array('notnull' => false));
+        $table->addColumn('role_id', 'integer');
+        $table->addColumn('can_see', 'boolean');
+        $table->addColumn('can_delete', 'boolean');
+        $table->addColumn('can_open', 'boolean');
+        $table->addColumn('can_edit', 'boolean');
+        $table->addColumn('can_copy', 'boolean');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_role'), array('role_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+
+        $table->addUniqueIndex(array('resource_id', 'role_id'));
+    }
+
+
 }

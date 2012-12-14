@@ -17,7 +17,9 @@
 
 {% block layout %}
     <div id="wrapper">
-        {% render 'ClarolineCoreBundle:Layout:topBar' %}
+        {% if not is_path_mode %}
+            {% render 'ClarolineCoreBundle:Layout:topBar' %}
+        {% endif %}
         <div id="grid" class="container-fluid">
             {% block sectionHeader %}
                 <div class="row-fluid section-header">
@@ -30,7 +32,9 @@
         </div>
         <div class="modal hide"></div>
     </div>
-    {% render 'ClarolineCoreBundle:Layout:footer' %}
+    {% if not is_path_mode %}
+        {% render 'ClarolineCoreBundle:Layout:footer' %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
