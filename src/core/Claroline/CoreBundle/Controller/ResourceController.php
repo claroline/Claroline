@@ -578,7 +578,7 @@ class ResourceController extends Controller
         $configs = $this->get('claroline.resource.rights')->getRights($resource);
 
         if ($resource->getResourceType()->getName() == 'directory'){
-           return $this->render(
+            return $this->render(
                 'ClarolineCoreBundle:Resource:rights_form_directory.html.twig',
                 array('configs' => $configs, 'resource' => $resource)
             );
@@ -630,7 +630,7 @@ class ResourceController extends Controller
            foreach($resourceTypesIds as $id){
                 $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
                 $newConfig->addResourceType($rt);
-            }
+           }
 
             $em->persist($newConfig);
         } else {
