@@ -81,7 +81,7 @@ class RightsManager
 
     private function addMissingRights($rights)
     {
-        $expectedKeys = array('canSee', 'canOpen', 'canDelete', 'canEdit', 'canCopy');
+        $expectedKeys = array('canSee', 'canOpen', 'canDelete', 'canEdit', 'canCopy', 'canCreate');
         foreach($expectedKeys as $expected){
             if(!isset($rights[$expected])){
                 $rights[$expected] = false;

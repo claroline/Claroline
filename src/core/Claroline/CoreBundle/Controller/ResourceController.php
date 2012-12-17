@@ -589,10 +589,12 @@ class ResourceController extends Controller
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
         $configs = $this->get('claroline.resource.rights')->getRights($resource);
         $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
+        
         foreach($configs as $config){
             if(!isset($checks[$config->getId()])){
                 $stub = new ResourceRights();
                 $stub->reset();
+                $stub->setCanCreate($config->canCreate());
                 if($config->getResource() == null && $config->isEquals($stub->getRights()) == false){
                     $stub->setResource($resource);
                     $stub->setRole($config->getRole());

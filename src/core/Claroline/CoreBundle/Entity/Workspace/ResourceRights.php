@@ -54,6 +54,11 @@ class ResourceRights
      */
     protected $canCopy;
 
+    /**
+     * @ORM\Column(type="boolean", name="can_create")
+     */
+    protected $canCreate;
+
     public function getId()
     {
         return $this->id;
@@ -129,6 +134,16 @@ class ResourceRights
         $this->canCopy = $canCopy;
     }
 
+    public function canCreate()
+    {
+        return $this->canCreate;
+    }
+
+    public function setCanCreate($canCreate)
+    {
+        $this->canCreate = $canCreate;
+    }
+
     /**
      * Sets every right to false
      */
@@ -139,6 +154,7 @@ class ResourceRights
         $this->canEdit = false;
         $this->canOpen = false;
         $this->canSee = false;
+        $this->canCreate = false;
     }
 
     /**
@@ -171,7 +187,8 @@ class ResourceRights
             'canDelete' => $this->canDelete,
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
-            'canSee' => $this->canSee
+            'canSee' => $this->canSee,
+            'canCreate' => $this->canCreate
         );
     }
 
