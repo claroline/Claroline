@@ -252,6 +252,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
                "canSee-{$resourceRights[0]->getId()}" => true,
                "canSee-{$resourceRights[1]->getId()}" => true,
                "canDelete-{$resourceRights[1]->getId()}" => true,
+               "canCreate-{$resourceRights[2]->getId()}" => true,
            )
         );
 
@@ -259,14 +260,15 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
 
         $seeToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[0]->getId());
         $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[1]->getId());
-        $allToFalse = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[2]->getId());
+        $createToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[2]->getId());
 
         $this->assertTrue($seeToTrue->isEquals(array(
             'canSee' => true,
             'canDelete' => false,
             'canOpen' => false,
             'canEdit' => false,
-            'canCopy' => false
+            'canCopy' => false,
+            'canCreate' => false
         )));
 
         $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
@@ -274,15 +276,17 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canDelete' => true,
             'canOpen' => false,
             'canEdit' => false,
-            'canCopy' => false
+            'canCopy' => false,
+            'canCreate' => false
         )));
 
-        $this->assertTrue($allToFalse->isEquals(array(
+        $this->assertTrue($createToTrue->isEquals(array(
             'canSee' => false,
             'canDelete' => false,
             'canOpen' => false,
             'canEdit' => false,
-            'canCopy' => false
+            'canCopy' => false,
+            'canCreate' => true
         )));
     }
 

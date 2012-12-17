@@ -40,6 +40,7 @@ class Version20120119000000 extends BundleMigration
         $this->createActivityTable($schema);
         $this->createActivityResourcesTable($schema);
         $this->createResourceRightsTable($schema);
+        $this->createListTypeCreation($schema);
 
     }
 
@@ -78,6 +79,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_activity');
         $schema->dropTable('claro_resource_activity');
         $schema->dropTable('claro_resource_rights');
+        $schema->dropTable('claro_list_type_creation');
     }
 
     private function createUserTable(Schema $schema)
@@ -516,7 +518,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_plugin'), array('plugin_id'), array('id'), array('onDelete' => 'CASCADE')
         );
 
-         $this->storeTable($table);
+        $this->storeTable($table);
     }
 
     private function createAdminWidgetConfig(Schema $schema)
@@ -587,6 +589,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('can_open', 'boolean');
         $table->addColumn('can_edit', 'boolean');
         $table->addColumn('can_copy', 'boolean');
+        $table->addColumn('can_create', 'boolean');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'), array('resource_id'), array('id'), array('onDelete' => 'CASCADE')
@@ -596,7 +599,22 @@ class Version20120119000000 extends BundleMigration
         );
 
         $table->addUniqueIndex(array('resource_id', 'role_id'));
+
+        $this->storeTable($table);
     }
 
+    private function createListTypeCreation(Schema $schema)
+    {
+        $table = $schema->createTable('claro_list_type_creation');
+        $this->addId($table);
+        $table->addColumn('right_id', 'integer');
+        $table->addColumn('resource_type_id', 'integer');
 
+       $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_rights'), array('right_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+    }
 }
