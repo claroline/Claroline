@@ -575,7 +575,7 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $configs = $this->get('claroline.resource.manager')->getRights($resource);
+        $configs = $this->get('claroline.resource.rights')->getRights($resource);
 
         return $this->render(
             'ClarolineCoreBundle:Resource:rights_form.html.twig',
@@ -587,8 +587,8 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $configs = $this->get('claroline.resource.manager')->getRights($resource);
-        $checks = $this->setRightsRequest($this->get('request')->request->all());
+        $configs = $this->get('claroline.resource.rights')->getRights($resource);
+        $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
         foreach($configs as $config){
             if(!isset($checks[$config->getId()])){
                 $stub = new ResourceRights();
@@ -631,33 +631,6 @@ class ResourceController extends Controller
                 unlink($pathName);
             }
         }
-    }
-
-    private function setRightsRequest($checks)
-    {
-        $configs = array();
-        foreach(array_keys($checks) as $key){
-            $arr = explode('-', $key);
-            $configs[$arr[1]][$arr[0]] = true;
-        }
-
-        foreach($configs as $key => $config){
-            $configs[$key] = $this->addMissingRights($config);
-        }
-
-        return $configs;
-    }
-
-    private function addMissingRights($rights)
-    {
-        $expectedKeys = array('canSee', 'canOpen', 'canDelete', 'canEdit', 'canCopy');
-        foreach($expectedKeys as $expected){
-            if(!isset($rights[$expected])){
-                $rights[$expected] = false;
-            }
-        }
-
-        return $rights;
     }
 
     private function getResource($resource)

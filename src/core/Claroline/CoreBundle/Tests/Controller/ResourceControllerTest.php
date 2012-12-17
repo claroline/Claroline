@@ -529,7 +529,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $file = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($file->id);
-        $resourceRights = $this->client->getContainer()->get('claroline.resource.manager')->getRights($file);
+        $resourceRights = $this->client->getContainer()->get('claroline.resource.rights')->getRights($file);
         $this->assertEquals(3, count($resourceRights));
 
         //changes keep the 1st $resourceRight and change the others
@@ -545,7 +545,7 @@ class ResourceControllerTest extends FunctionalTestCase
         );
 
         $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
-        $resourceRights = $this->client->getContainer()->get('claroline.resource.manager')->getRights($file);
+        $resourceRights = $this->client->getContainer()->get('claroline.resource.rights')->getRights($file);
         $this->assertEquals(3, count($resourceRights));
         $this->assertEquals(5, count($newRights));
 

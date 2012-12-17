@@ -37,7 +37,8 @@ directory_form_shareType: Sharable
 display_options: Display options
 done_on: done on
 download: Download
-export: export
+edit: Edit
+export: Export
 fast_answer: Fast answer
 file: File
 file_form_file: File
@@ -158,11 +159,13 @@ resources_rights_form_canOpen: Open
 resources_rights_form_canEdit: Edit
 resources_rights_form_canCopy: Copy
 resources_rights_form_canShare: Share
+rights: Rights
 results: Results
 role: Role
 roles: Roles
 save: Save
 search: Search
+see: Voir
 send_mail: Send a mail
 send_message: Send a message
 settings: Settings

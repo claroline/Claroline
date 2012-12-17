@@ -79,7 +79,7 @@ class ResourceRights
         $this->resource = $resource;
     }
 
-    public function getCanSee()
+    public function canSee()
     {
         return $this->canSee;
     }
@@ -89,7 +89,7 @@ class ResourceRights
         $this->canSee = $canSee;
     }
 
-    public function getCanDelete()
+    public function canDelete()
     {
         return $this->canDelete;
     }
@@ -99,7 +99,7 @@ class ResourceRights
         $this->canDelete = $canDelete;
     }
 
-    public function getCanOpen()
+    public function canOpen()
     {
         return $this->canOpen;
     }
@@ -109,7 +109,7 @@ class ResourceRights
         $this->canOpen = $canOpen;
     }
 
-    public function getCanEdit()
+    public function canEdit()
     {
         return $this->canEdit;
     }
@@ -119,7 +119,7 @@ class ResourceRights
         $this->canEdit = $canEdit;
     }
 
-    public function getCanCopy()
+    public function canCopy()
     {
         return $this->canCopy;
     }
