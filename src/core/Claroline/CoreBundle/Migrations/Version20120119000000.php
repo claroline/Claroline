@@ -609,8 +609,9 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('right_id', 'integer');
         $table->addColumn('resource_type_id', 'integer');
+        $table->addUniqueIndex(array('resource_type_id', 'right_id'));
 
-       $table->addForeignKeyConstraint(
+        $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_rights'), array('right_id'), array('id'), array('onDelete' => 'CASCADE')
         );
         $table->addForeignKeyConstraint(

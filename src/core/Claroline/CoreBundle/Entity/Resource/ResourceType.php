@@ -95,12 +95,22 @@ class ResourceType
     protected $children;
 
     /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights", mappedBy="resourceTypes"
+     * )
+     * @ORM\JoinTable(name="claro_list_type_creation",
+     *      joinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="right_id", referencedColumnName="id")}
+     * )
+     */
+    protected $rights;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->abstractResources = new ArrayCollection();
-        $this->resourceInstances = new ArrayCollection();
         $this->metaTypes = new ArrayCollection();
         $this->customActions = new ArrayCollection();
     }
@@ -133,16 +143,6 @@ class ResourceType
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * Returns the resource instances having the resource type.
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getResourceInstances()
-    {
-        return $this->resourceInstances;
     }
 
     public function setBrowsable($isBrowsable)

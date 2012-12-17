@@ -125,3 +125,15 @@ claro_resource_right_edit:
    defaults: { _controller: ClarolineCoreBundle:Resource:editRights }
    options:
         expose: true
+
+claro_resource_right_creation_form:
+   pattern: /{resourceId}/role/{roleId}/right/creation/form
+   defaults: { _controller: ClarolineCoreBundle:Resource:rightCreationForm }
+   options:
+     expose: true
+
+claro_resource_rights_creation_edit:
+   pattern: /{resourceId}/role/{roleId}/right/creation/edit
+   defaults: { _controller: ClarolineCoreBundle:Resource:editCreationRights }
+   options:
+     expose: true
