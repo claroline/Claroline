@@ -535,13 +535,13 @@ class ResourceControllerTest extends FunctionalTestCase
         //changes keep the 1st $resourceRight and change the others
 
         $this->client->request(
-          'POST',
-          "/resource/{$file->getId()}/rights/edit",
-           array(
-               "canSee-{$resourceRights[0]->getId()}" => true,
-               "canSee-{$resourceRights[1]->getId()}" => true,
-               "canDelete-{$resourceRights[1]->getId()}" => true,
-           )
+            'POST',
+            "/resource/{$file->getId()}/rights/edit",
+            array(
+                 "canSee-{$resourceRights[0]->getId()}" => true,
+                 "canSee-{$resourceRights[1]->getId()}" => true,
+                 "canDelete-{$resourceRights[1]->getId()}" => true,
+             )
         );
 
         $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
@@ -550,12 +550,12 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(5, count($newRights));
 
         $this->client->request(
-          'POST',
-          "/resource/{$file->getId()}/rights/edit",
-           array(
-               "canSee-{$resourceRights[0]->getId()}" => true,
-               "canDelete-{$resourceRights[1]->getId()}" => true,
-           )
+            'POST',
+            "/resource/{$file->getId()}/rights/edit",
+            array(
+                "canSee-{$resourceRights[0]->getId()}" => true,
+                "canDelete-{$resourceRights[1]->getId()}" => true,
+            )
         );
 
         $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
