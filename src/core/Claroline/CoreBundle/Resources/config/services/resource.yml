@@ -16,6 +16,11 @@ services:
         arguments:
           - "@service_container"
 
+    claroline.resource.rights:
+        class: Claroline\CoreBundle\Library\Resource\RightsManager
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          
     claroline.resource.exporter:
         class: Claroline\CoreBundle\Library\Resource\Exporter
         arguments:
