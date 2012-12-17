@@ -369,6 +369,18 @@
                        data: new FormData(form),
                        resourceId: this.targetResourceId
                     });
+                },
+                'click a': function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: event.currentTarget.href,
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function(form){
+                           this.views['form'].render(form, $(event.currentTarget).attr('data-resource-id'), 'edit-rights-creation');
+                        }
+                    });
                 }
             },
             initialize: function (dispatcher) {
@@ -475,6 +487,10 @@
             },
             'manage-rights': function(event){
                 this.manageRights(event.action, event.data, event.resourceId);
+            },
+            'edit-rights-creation': function(event){
+                console.debug(event);
+                this.editCreationRights(event.action, event.data);
             }
         },
         initialize: function (parameters) {
@@ -657,6 +673,18 @@
             !this.parameters.isPickerOnly && (this.views.picker.subViews.actions.targetDirectoryId = this.views.main.currentDirectory.id);
             callback && (this.views.picker.subViews.actions.callback = callback);
             this.views.picker.$el.modal(action == 'open' ? 'show' : 'hide');
+        },
+        editCreationRights: function(action, formData) {
+            $.ajax({
+                url: action,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function (){
+                    this.views['form'].close();
+                }
+            })
         }
     };
 

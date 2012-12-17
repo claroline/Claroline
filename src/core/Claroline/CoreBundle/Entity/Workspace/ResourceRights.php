@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
@@ -58,6 +60,23 @@ class ResourceRights
      * @ORM\Column(type="boolean", name="can_create")
      */
     protected $canCreate;
+
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *      inversedBy="rights"
+     * )
+     * @ORM\JoinTable(name="claro_list_type_creation",
+     *      joinColumns={@ORM\JoinColumn(name="right_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")}
+     * )
+     */
+    protected $resourceTypes;
+
+    public function __construct()
+    {
+        $this->resourceTypes = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -202,5 +221,20 @@ class ResourceRights
         foreach($rights as $key => $value){
             $this->$key = $value;
         }
+    }
+
+    public function addResourceType(ResourceType $resourceType)
+    {
+        $this->resourceTypes->add($resourceType);
+    }
+
+    public function removeResourceType(ResourceType $resourceType)
+    {
+        $this->resourceTypes->removeElement($resourceType);
+    }
+
+    public function getResourceTypes()
+    {
+        return $this->resourceTypes;
     }
 }
