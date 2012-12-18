@@ -31,28 +31,20 @@ class InstallController extends Controller
 
     public function indexAction()
     {
-        $phpversion = phpversion();
-        $mysqlversion = mysqli_get_client_info();
-        if (chmod('../app/config/local', 0600)) {
-            if (chmod('../files', 0600))
-                if (chmod('../web', 0600)) {
-                    $ourFileHandle = fopen(self::PATH, 'w');
-                    fclose($ourFileHandle);
-                    $permission = 'ok';
-                }
 
-                else
-                    $permission .=' [web]';
-            else
-                $permission .= '[files]';
-        }
-        else
-            $permission = 'Verifier les permissions en écritures et lecture du dossier [app/config/local]';
+        $ourFileHandle = fopen(self::PATH, 'w');
+        fclose($ourFileHandle);
+        $permission = 'ok';
+
+        $permission = 'Verifier les permissions en écritures et lecture du dossier [app/config/local]';
 
         $config = array(
-            'php' => $phpversion,
-            'mysql' => $mysqlversion,
-            'chmod' => $permission
+            'php' => phpversion(),
+            'mysql' => mysqli_get_client_version(),
+            'chmod' => $permission,
+            'local' => (is_writable('../app/config/local') ? 'OK':'KO'),
+            'file' =>  (is_writable('../files') ? 'OK':'KO'),
+            'web' =>  (is_writable('../web') ? 'OK':'KO')
         );
 
         $formBuilder = $this->createFormBuilder();
@@ -96,6 +88,11 @@ class InstallController extends Controller
                     $this->get('session')->setFlash('erreure', 'Erreure lors de l ecriture des données');
                 echo" yaml failed";
             }
+            else{
+                 $this->get('session')->setFlash('erreure', 'Veuillez completer correctement le formulaire');
+                  return $this->render('ClarolineCoreBundle:Install:checkupDb.html.twig', array('form' => $form->createView(),));
+            }
+             
         }
     }
 
@@ -129,8 +126,7 @@ class InstallController extends Controller
             } else {
                 foreach ($error as $i => $message) {
                       $this->get('session')->setFlash($i,$message);
-                }
-              
+                }              
                 return $this->render('ClarolineCoreBundle:Install:checkAdmin.html.twig', array('form' => $form->createView(),));
             }
         }
