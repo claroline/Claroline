@@ -17,7 +17,17 @@
         <h3> Etape 2 : Configuration de la base de donnée </h3>
 
         <form action="{{ path('claro_checkDbForm') }}" method="post" >
-            {{ form_widget(form) }}
+           {# {{ form_widget(form) }} #}    
+                {{ form_label(form.dbHost, "Serveur") }}
+               {{ form_widget(form.dbHost) }} <em><span class="muted"> ex : localhost</span> <em>
+                {{ form_label(form.dbName, "Nom de la basse de données") }}
+               {{ form_widget(form.dbName) }} <em><span class="muted"> ex : Claroline</span> <em>
+                {{ form_label(form.dbUser, "Nom d'utilisateur") }}
+               {{ form_widget(form.dbUser) }} <em><span class="muted"> ex : root</span> <em>
+                {{ form_label(form.dbPassword, "Mot de passe") }}
+               {{ form_widget(form.dbPassword) }} <em><span class="muted"> ex : secret</span> <em>
+            <br />
+            {{ form_rest(form) }}       
             <input type="submit" name="submit" value="suivant" class="btn btn-primary"/>
             </form>
             <form action="{{ path('claro_setup') }}" method="post" >
@@ -29,7 +39,9 @@
         <div class="span2">
             <h3> <i class="icon-info-sign"></i> Astuces/Aides</h3>
             <div class="action">
-                Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.
+            <div class="well">Utilisez les informations fournies par votre hébergement internet </div> 
+            <div class="well">Si vous voulez utiliser Claronext en local, et que vous n'avez pas de mot de passe
+            laissez le champs vide</div> 
             </div>
         </div>
         <div class="span12">
@@ -41,6 +53,7 @@
         {% for key, flash in app.session.getFlashes() %}
         {{ flash }}
         {% endfor %}
+            {{ form_errors(form) }}
     </div>
 {% endblock %}
 

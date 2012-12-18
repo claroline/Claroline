@@ -12,7 +12,7 @@ class InstallType extends AbstractType {
         $builder
                 ->add('dbHost', 'text', array(
                     'label' => 'Serveur',
-                    'attr' => array('value' => 'localhost')))
+                    'attr' => array('placeholder' => 'localhost')))
                 ->add('dbName', 'text', array(
                     'label' => 'nom de la base de donnée'))
                 ->add('dbUser', 'text', array(
