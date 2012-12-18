@@ -268,13 +268,12 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function configureRolesAction($workspaceId)
+    public function configureRightsAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $roles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\roles.html.twig', array('workspace' => $workspace, 'roles' => $roles));
+        return $this->render('ClarolineCoreBundle:Workspace:tools\rights.html.twig', array('workspace' => $workspace));
     }
 
     /**
@@ -284,17 +283,15 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function resourcesRightsFormAction($workspaceId, $roleId)
+    public function resourcesRightsFormAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('role' => $role, 'resource' => null));
-        $form = $this->get('form.factory')->create(new ResourceRightsType(), $config);
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
-            array('workspace' => $workspace, 'role' => $role, 'form' => $form->createView())
-         );
+            array('workspace' => $workspace, 'configs' => $configs)
+        );
     }
 
     /**
@@ -304,25 +301,25 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function editResourcesRightsAction($workspaceId, $roleId)
+    public function editResourcesRightsAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+        $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('role' => $role, 'resource' => null));
-        $form = $this->get('form.factory')->create(new ResourceRightsType(), $config);
-        $form->bindRequest($this->getRequest());
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
+        $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
 
-        if ($form->isValid()) {
+        foreach($configs as $config){
+
+            $config->reset();
+            if(isset($checks[$config->getId()])){
+                $config->setRights($checks[$config->getId()]);
+            }
             $em->persist($config);
-            $em->flush();
-
-            return new RedirectResponse($this->generateUrl('claro_workspace_roles', array('workspaceId' => $workspaceId)));
         }
 
-         return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
-            array('workspace' => $workspace, 'role' => $role, 'form' => $form->createView())
-         );
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('claro_workspace_rights', array('workspaceId' => $workspaceId)));
     }
 
     /**

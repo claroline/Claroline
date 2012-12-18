@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
@@ -54,6 +56,28 @@ class ResourceRights
      */
     protected $canCopy;
 
+    /**
+     * @ORM\Column(type="boolean", name="can_create")
+     */
+    protected $canCreate;
+
+    /**
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *      inversedBy="rights"
+     * )
+     * @ORM\JoinTable(name="claro_list_type_creation",
+     *      joinColumns={@ORM\JoinColumn(name="right_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")}
+     * )
+     */
+    protected $resourceTypes;
+
+    public function __construct()
+    {
+        $this->resourceTypes = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -79,7 +103,7 @@ class ResourceRights
         $this->resource = $resource;
     }
 
-    public function getCanSee()
+    public function canSee()
     {
         return $this->canSee;
     }
@@ -89,7 +113,7 @@ class ResourceRights
         $this->canSee = $canSee;
     }
 
-    public function getCanDelete()
+    public function canDelete()
     {
         return $this->canDelete;
     }
@@ -99,7 +123,7 @@ class ResourceRights
         $this->canDelete = $canDelete;
     }
 
-    public function getCanOpen()
+    public function canOpen()
     {
         return $this->canOpen;
     }
@@ -109,7 +133,7 @@ class ResourceRights
         $this->canOpen = $canOpen;
     }
 
-    public function getCanEdit()
+    public function canEdit()
     {
         return $this->canEdit;
     }
@@ -119,7 +143,7 @@ class ResourceRights
         $this->canEdit = $canEdit;
     }
 
-    public function getCanCopy()
+    public function canCopy()
     {
         return $this->canCopy;
     }
@@ -127,5 +151,90 @@ class ResourceRights
     public function setCanCopy($canCopy)
     {
         $this->canCopy = $canCopy;
+    }
+
+    public function canCreate()
+    {
+        return $this->canCreate;
+    }
+
+    public function setCanCreate($canCreate)
+    {
+        $this->canCreate = $canCreate;
+    }
+
+    /**
+     * Sets every right to false
+     */
+    public function reset()
+    {
+        $this->canCopy = false;
+        $this->canDelete = false;
+        $this->canEdit = false;
+        $this->canOpen = false;
+        $this->canSee = false;
+        $this->canCreate = false;
+    }
+
+    /**
+     * Compares the current permission with an array of permission
+     *
+     * @param type $array
+     *
+     * @return boolean
+     */
+    public function isEquals($rights)
+    {
+        foreach($this->getRights() as $key => $current){
+            if($current != $rights[$key]){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets an array with the current permissions
+     *
+     * @return array
+     */
+    public function getRights()
+    {
+        return array(
+            'canCopy' => $this->canCopy,
+            'canDelete' => $this->canDelete,
+            'canEdit' => $this->canEdit,
+            'canOpen' => $this->canOpen,
+            'canSee' => $this->canSee,
+            'canCreate' => $this->canCreate
+        );
+    }
+
+    /**
+     * Sets the current permission from an array
+     *
+     * @param type array
+     */
+    public function setRights($rights)
+    {
+        foreach($rights as $key => $value){
+            $this->$key = $value;
+        }
+    }
+
+    public function addResourceType(ResourceType $resourceType)
+    {
+        $this->resourceTypes->add($resourceType);
+    }
+
+    public function removeResourceType(ResourceType $resourceType)
+    {
+        $this->resourceTypes->removeElement($resourceType);
+    }
+
+    public function getResourceTypes()
+    {
+        return $this->resourceTypes;
     }
 }

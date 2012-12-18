@@ -220,12 +220,12 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget-content')));
     }
 
-    public function testDisplayWsRolesProperties()
+    public function testDisplayWsRightssProperties()
     {
         $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/roles");
-        $this->assertEquals(3, count($crawler->filter('.row-role')));
+        $crawler = $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}/properties/rights");
+        $this->assertEquals(1, count($crawler->filter('#right-table')));
     }
 
     public function testDisplayResourceRightsForm()
@@ -233,8 +233,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/roles/{$workspace->getVisitorRole()->getId()}/resources/rights/form");
-        $this->assertEquals(1, count($crawler->filter('#resources_rights_form')));
+        $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/resources/rights/form");
+        $this->assertEquals(1, count($crawler->filter('#resource-rights-form')));
     }
 
     public function testEditResourceRights()
@@ -242,18 +242,52 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
 
         $this->client->request(
             'POST',
-            "/workspaces/{$workspace->getId()}/properties/roles/{$workspace->getVisitorRole()->getId()}/resources/rights/edit",
-            array('resources_rights_form' => array('canSee' => true, 'canDelete' => true, 'canOpen' => false, 'canEdit' => false, 'canCopy' => false))
+            "/workspaces/{$workspace->getId()}/properties/resources/rights/edit",
+            array(
+               "canSee-{$resourceRights[0]->getId()}" => true,
+               "canSee-{$resourceRights[1]->getId()}" => true,
+               "canDelete-{$resourceRights[1]->getId()}" => true,
+               "canCreate-{$resourceRights[2]->getId()}" => true,
+           )
         );
 
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('role' => $workspace->getVisitorRole(), 'resource' => null));
 
-        $this->assertTrue($config->getCanSee());
-        $this->assertTrue($config->getCanDelete());
+        $seeToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[0]->getId());
+        $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[1]->getId());
+        $createToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[2]->getId());
+
+        $this->assertTrue($seeToTrue->isEquals(array(
+            'canSee' => true,
+            'canDelete' => false,
+            'canOpen' => false,
+            'canEdit' => false,
+            'canCopy' => false,
+            'canCreate' => false
+        )));
+
+        $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
+            'canSee' => true,
+            'canDelete' => true,
+            'canOpen' => false,
+            'canEdit' => false,
+            'canCopy' => false,
+            'canCreate' => false
+        )));
+
+        $this->assertTrue($createToTrue->isEquals(array(
+            'canSee' => false,
+            'canDelete' => false,
+            'canOpen' => false,
+            'canEdit' => false,
+            'canCopy' => false,
+            'canCreate' => true
+        )));
     }
 
     private function registerStubPlugins(array $pluginFqcns)

@@ -28,7 +28,6 @@ class ActivityControllerTest extends FunctionalTestCase
     public function testAddThenRemoveResource()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $repo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $activity = $this->createActivity('name', 'instruction');
         $this->client->request(
@@ -52,7 +51,6 @@ class ActivityControllerTest extends FunctionalTestCase
     public function testSequenceOrder()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $repo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $fileOne = $this->uploadFile($this->pwr->getId(), 'file1');
         $fileTwo= $this->uploadFile($this->pwr->getId(), 'file2');
         $activity = $this->createActivity('name', 'instruction');
