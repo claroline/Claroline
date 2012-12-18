@@ -538,8 +538,8 @@ class ResourceControllerTest extends FunctionalTestCase
             'POST',
             "/resource/{$file->getId()}/rights/edit",
             array(
-                 "canSee-{$resourceRights[0]->getId()}" => true,
-                 "canSee-{$resourceRights[1]->getId()}" => true,
+                 "canView-{$resourceRights[0]->getId()}" => true,
+                 "canView-{$resourceRights[1]->getId()}" => true,
                  "canDelete-{$resourceRights[1]->getId()}" => true,
              )
         );
@@ -553,7 +553,7 @@ class ResourceControllerTest extends FunctionalTestCase
             'POST',
             "/resource/{$file->getId()}/rights/edit",
             array(
-                "canSee-{$resourceRights[0]->getId()}" => true,
+                "canView-{$resourceRights[0]->getId()}" => true,
                 "canDelete-{$resourceRights[1]->getId()}" => true,
             )
         );

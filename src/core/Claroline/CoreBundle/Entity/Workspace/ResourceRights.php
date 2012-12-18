@@ -34,7 +34,7 @@ class ResourceRights
     /**
      * @ORM\Column(type="boolean", name="can_see")
      */
-    protected $canSee;
+    protected $canView;
 
     /**
      * @ORM\Column(type="boolean", name="can_delete")
@@ -103,14 +103,14 @@ class ResourceRights
         $this->resource = $resource;
     }
 
-    public function canSee()
+    public function canView()
     {
-        return $this->canSee;
+        return $this->canView;
     }
 
-    public function setCanSee($canSee)
+    public function setcanView($canView)
     {
-        $this->canSee = $canSee;
+        $this->canView = $canView;
     }
 
     public function canDelete()
@@ -172,7 +172,7 @@ class ResourceRights
         $this->canDelete = false;
         $this->canEdit = false;
         $this->canOpen = false;
-        $this->canSee = false;
+        $this->canView = false;
         $this->canCreate = false;
     }
 
@@ -206,7 +206,7 @@ class ResourceRights
             'canDelete' => $this->canDelete,
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
-            'canSee' => $this->canSee,
+            'canView' => $this->canView,
             'canCreate' => $this->canCreate
         );
     }
@@ -241,8 +241,5 @@ class ResourceRights
     public function cleanResourceTypes()
     {
          $this->resourceTypes = new ArrayCollection();
-//        foreach ($this->resourceTypes as $resourceType){
-//            $this->resourceTypes->removeElement($resourceType);
-//        }
     }
 }
