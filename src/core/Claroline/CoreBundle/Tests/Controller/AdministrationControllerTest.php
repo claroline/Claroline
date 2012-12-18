@@ -27,7 +27,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->configHandler->eraseTestConfiguration();
     }
 
-    public function testAdminCanSeeGroups()
+    public function testAdmincanViewGroups()
     {
         $this->loadGroupFixture(array('group_a'));
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
@@ -50,7 +50,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
-    public function testAdminCanSeeUsersFromGroup()
+    public function testAdmincanViewUsersFromGroup()
     {
         $this->loadGroupFixture(array('group_a'));
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -285,7 +285,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertContains('plugin_options_plugin', $this->client->getResponse()->getContent());
     }
 
-    public function testAdminCanSeeWidgetParameters()
+    public function testAdmincanViewWidgetParameters()
     {
         $this->registerStubPlugins(array(
             'Valid\Simple\ValidSimple',

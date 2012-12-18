@@ -153,7 +153,7 @@ resource_properties_form_name: Name
 resource_properties_form_userIcon: Icon
 resources: Resources
 resources_rights: Resources rights
-resources_rights_form_canSee: See
+resources_rights_form_canView: See
 resources_rights_form_canDelete: Selete
 resources_rights_form_canOpen: Open
 resources_rights_form_canEdit: Edit
