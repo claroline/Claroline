@@ -37,6 +37,7 @@ directory_form_shareType: Redistribution
 display_options: Options d'affichage
 done_on: effectuée sur
 download: Télécharger
+edit: Modifier
 export: Exporter
 fast_answer: Réponse rapide
 file_form_file: Fichier
@@ -156,10 +157,12 @@ resources_rights_form_canEdit: Editer
 resources_rights_form_canCopy: Copier
 resources_rights_form_canShare: Partager
 results: Résultats
+rights: Droits
 role: Rôle
 roles: Rôles
 save: Sauvegarder
 search: Rechercher
+see: Voir
 send_mail: Envoyer un mail
 send_message: Envoyer un message
 settings: Paramètres
