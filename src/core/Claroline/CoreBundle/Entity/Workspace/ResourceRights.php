@@ -237,4 +237,12 @@ class ResourceRights
     {
         return $this->resourceTypes;
     }
+
+    public function cleanResourceTypes()
+    {
+         $this->resourceTypes = new ArrayCollection();
+//        foreach ($this->resourceTypes as $resourceType){
+//            $this->resourceTypes->removeElement($resourceType);
+//        }
+    }
 }
