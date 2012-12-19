@@ -34,15 +34,13 @@ system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
 system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
 system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=dev");
 
-//system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
-//system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
-//system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
-//system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
+system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
+system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
 
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
 system("php {$rootDirectory}/app/console claroline:user:create --admin John Doe admin admin");
 echo ("\nLoading demo fixtures...");
 system("php {$rootDirectory}/app/console claroline:fixture:demo");
-system("php {$rootDirectory}/app/console cache:clear"); //required for the translations from the plugins
-system("chmod -R 0777 {$rootDirectory}/app/logs");
-system("chmod -R 0777 {$rootDirectory}/app/cache");
+system("php {$rootDirectory}/app/console cache:clear");
