@@ -1,4 +1,4 @@
- {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
 {% block content %} 
 <div class="span3">
     <h3> Progression</h3>
@@ -17,7 +17,7 @@
         <h3> Etape 2 : Configuration de la base de donnée </h3>
 
         <form action="{{ path('claro_checkDbForm') }}" method="post" >
-           {# {{ form_widget(form) }} #}    
+           
                 {{ form_label(form.dbHost, "Serveur") }}
                {{ form_widget(form.dbHost) }} <em><span class="muted"> ex : localhost</span> <em>
                 {{ form_label(form.dbName, "Nom de la basse de données") }}
@@ -26,8 +26,12 @@
                {{ form_widget(form.dbUser) }} <em><span class="muted"> ex : root</span> <em>
                 {{ form_label(form.dbPassword, "Mot de passe") }}
                {{ form_widget(form.dbPassword) }} <em><span class="muted"> ex : secret</span> <em>
+                       {% if exist is defined %}
+            {{ form_label(form.exist, "voulez vous ecraser la base existante") }}{{ form_widget(form.exist)}}  
+                {% endif %}
             <br />
-            {{ form_rest(form) }}       
+            {{ form_rest(form) }}    
+            
             <input type="submit" name="submit" value="suivant" class="btn btn-primary"/>
             </form>
             <form action="{{ path('claro_setup') }}" method="post" >
@@ -44,16 +48,19 @@
             laissez le champs vide</div> 
             </div>
         </div>
+               {% if app.session.getFlashes() is defined %}
         <div class="span12">
-
-        </div>
-
-    </div>
-    <div class="alert alert-error">
+             <div class="alert alert-error">
         {% for key, flash in app.session.getFlashes() %}
         {{ flash }}
         {% endfor %}
             {{ form_errors(form) }}
     </div>
+                {% endif %}
+        </div>
+
+    </div>
+    
+   
 {% endblock %}
 

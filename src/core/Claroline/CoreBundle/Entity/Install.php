@@ -11,6 +11,8 @@ class Install
     private $dbName;
 
     private $dbPassword;
+    
+    private $exist;
 
     public function setDbHost($dbHost)
     {
@@ -50,4 +52,15 @@ class Install
     {
         return $this->dbPassword;
     }
+    
+    public function setExist( $exist)
+    {
+        $this->exist = $exist;
+    }
+
+    public function getExist()
+    {
+        return $this->exist;
+    }
+    
 }
