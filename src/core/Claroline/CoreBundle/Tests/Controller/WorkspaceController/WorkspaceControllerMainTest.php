@@ -13,7 +13,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    public function testWSCreatorCanSeeHisWorkspaces()
+    public function testWSCreatorcanViewHisWorkspaces()
     {
         $this->loadUserFixture(array('ws_creator'));
         $this->loadWorkspaceFixture(array('ws_a'));
@@ -23,7 +23,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
     }
 
-    public function testAdminCanSeeHisWorkspaces()
+    public function testAdmincanViewHisWorkspaces()
     {
         $this->loadUserFixture(array('admin'));
         $this->loadWorkspaceFixture(array('ws_e'));
@@ -58,7 +58,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
     }
 
-    public function testWSManagerCanSeeHisWS()
+    public function testWSManagercanViewHisWS()
     {
         $this->loadUserFixture(array('ws_creator'));
         $this->loadWorkspaceFixture(array('ws_a', 'ws_b', 'ws_c', 'ws_d'));
@@ -69,7 +69,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(1, $crawler->filter(".welcome-home")->count());
     }
 
-    public function testUserCanSeeWSList()
+    public function testUsercanViewWSList()
     {
         $this->loadUserFixture(array('user', 'admin'));
         $this->loadWorkspaceFixture(array('ws_e', 'ws_f'));
@@ -187,7 +187,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testManagerCanSeeWidgetProperties()
+    public function testManagercanViewWidgetProperties()
     {
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
         $this->loadUserFixture(array('user'));
@@ -249,8 +249,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'POST',
             "/workspaces/{$workspace->getId()}/properties/resources/rights/edit",
             array(
-               "canSee-{$resourceRights[0]->getId()}" => true,
-               "canSee-{$resourceRights[1]->getId()}" => true,
+               "canView-{$resourceRights[0]->getId()}" => true,
+               "canView-{$resourceRights[1]->getId()}" => true,
                "canDelete-{$resourceRights[1]->getId()}" => true,
                "canCreate-{$resourceRights[2]->getId()}" => true,
            )
@@ -263,7 +263,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $createToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[2]->getId());
 
         $this->assertTrue($seeToTrue->isEquals(array(
-            'canSee' => true,
+            'canView' => true,
             'canDelete' => false,
             'canOpen' => false,
             'canEdit' => false,
@@ -272,7 +272,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         )));
 
         $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
-            'canSee' => true,
+            'canView' => true,
             'canDelete' => true,
             'canOpen' => false,
             'canEdit' => false,
@@ -281,7 +281,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         )));
 
         $this->assertTrue($createToTrue->isEquals(array(
-            'canSee' => false,
+            'canView' => false,
             'canDelete' => false,
             'canOpen' => false,
             'canEdit' => false,

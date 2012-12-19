@@ -616,33 +616,45 @@ class ResourceController extends Controller
             $resourceTypesIds[] = $split[1];
         }
 
-        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $config = $this->get('claroline.resource.rights')->getRoleRights($role);
+        if(isset($resourceTypesIds)){
+            $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+            $config = $this->get('claroline.resource.rights')->getRoleRights($role);
 
-        if ($config->getResource() == null){
-           $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
-           $newConfig = new ResourceRights();
-           $newConfig->setRights($config->getRights());
-           $newConfig->setCanCreate(true);
-           $newConfig->setResource($resource);
-           $newConfig->setRole($config->getRole());
+            if ($config->getResource() == null){
+               $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+               $newConfig = new ResourceRights();
+               $newConfig->setRights($config->getRights());
+               $newConfig->setCanCreate(true);
+               $newConfig->setResource($resource);
+               $newConfig->setRole($config->getRole());
 
-           foreach($resourceTypesIds as $id){
-                $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
-                $newConfig->addResourceType($rt);
-           }
+               foreach($resourceTypesIds as $id){
+                    $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
+                    $newConfig->addResourceType($rt);
+               }
 
-            $em->persist($newConfig);
-        } else {
-
-            foreach($resourceTypesIds as $id){
-                $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
-                $config->addResourceType($rt);
+                $em->persist($newConfig);
+            } else {
+                $config->cleanResourceTypes();
+                $config->setCanCreate(true);
+                foreach($resourceTypesIds as $id){
+                    $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
+                    $config->addResourceType($rt);
+                }
+                $em->persist($config);
             }
-            $em->persist($config);
+        } else {
+            $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+            $config = $this->get('claroline.resource.rights')->getRoleRights($role);
+            if($config->getResource() !== null){
+                $config->setCanCreate(false);
+                $config->cleanResourceTypes();
+                $em->persist($config);
+            }
         }
 
         $em->flush();
+
         return new Response('success');
     }
 
