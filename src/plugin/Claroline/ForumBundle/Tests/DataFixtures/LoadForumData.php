@@ -19,6 +19,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
     private $forumName;
     private $nbMessages;
     private $nbSubjects;
+    private $parent;
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -30,12 +31,13 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         return $this->container;
     }
 
-    public function __construct($forumName, $username, $nbMessages, $nbSubjects)
+    public function __construct($forumName, $username, $nbMessages, $nbSubjects, $parent = null)
     {
         $this->forumName = $forumName;
         $this->username = $username;
         $this->nbMessages = $nbMessages;
         $this->nbSubjects = $nbSubjects;
+        $this->parent = $parent;
     }
 
     public function load(ObjectManager $manager)
@@ -43,10 +45,14 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $creator = $this->getContainer()->get('claroline.resource.manager');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
-        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
+        if ($this->parent == null){
+            $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
+        } else {
+            $root = $this->parent;
+        }
 
-        $collaborators = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($user->getPersonalWorkspace());
+        $collaborators = $em->getRepository('ClarolineCoreBundle:User')->getUsersOfWorkspace($root->getWorkspace());
         $maxOffset = count($collaborators);
         $this->log("collaborators found: ".count($collaborators));
         $maxOffset--;
