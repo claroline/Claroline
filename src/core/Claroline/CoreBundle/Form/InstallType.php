@@ -10,16 +10,23 @@ class InstallType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dbHost', 'text', array(
-                'label' => 'Serveur',
-                'attr' => array('value' => 'localhost')))
-            ->add('dbName', 'text', array(
-                'label' => 'nom de la base de donnée'))
-            ->add('dbUser', 'text', array(
-                'label' => 'nom d\'utilisateur'))
-            ->add('dbPassword', 'password', array(
-                'label' => 'mot de passe',
-                'required' => false));
+
+                ->add('dbHost', 'text', array(
+                    'label' => 'Serveur',
+                    'attr' => array('placeholder' => 'localhost')))
+                ->add('dbName', 'text', array(
+                    'label' => 'nom de la base de donnée'))
+                ->add('dbUser', 'text', array(
+                    'label' => 'nom d\'utilisateur'))
+                ->add('dbPassword', 'password', array(
+                    'label' => 'mot de passe',
+                    'required' => false))
+               ->add('exist','checkbox',array(
+                   'required'=>false,
+               ))     
+                    ;
+
+
     }
 
     public function getName()
