@@ -49,10 +49,10 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     private function createMainTeacher($manager)
     {
         $user = new User();
-        $user->setFirstName('a');
-        $user->setLastName('a');
-        $user->setUsername('a');
-        $user->setPlainPassword('a');
+        $user->setFirstName('Jane');
+        $user->setLastName('Doe');
+        $user->setUsername('teacher');
+        $user->setPlainPassword('teacher');
         $roleRepo = $manager->getRepository('Claroline\CoreBundle\Entity\Role');
         $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
         $user->addRole($wsCreatorRole);
@@ -118,10 +118,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 
         $accItems[] = $this->createActivity('Chapitre 1', $accDir, $user, array($accItems[0], $accItems[1]));
         $accItems[] = $this->createActivity('Chapitre 2', $accDir, $user, array($accItems[2], $accItems[3]));
-//        unset($accItems[0]);
-//        unset($accItems[1]);
-//        unset($accItems[2]);
-//        unset($accItems[3]);
+
         $this->createActivity('Activité principale', $this->getWorkspaceRoot($activityWs), $user, array(
             $accItems[4],
             $accItems[5],
@@ -227,5 +224,3 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         return $activity;
     }
 }
-
-
