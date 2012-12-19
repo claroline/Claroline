@@ -73,6 +73,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             array($largeIconsWebFolder.'res_folder.png', $relativeUrl.'res_folder.png', $typeIconType, 'directory'),
             array($largeIconsWebFolder.'res_text.png', $relativeUrl.'res_text.png', $completeIconMimeType, 'text/plain'),
             array($largeIconsWebFolder.'res_text.png', $relativeUrl.'res_text.png', $basicIconMimeType, 'text'),
+            array($largeIconsWebFolder.'res_text.png', $relativeUrl.'res_text.png', $typeIconType, 'text'),
             array($largeIconsWebFolder.'res_url.png', $relativeUrl.'res_url.png', $typeIconType, 'url'),
             array($largeIconsWebFolder.'res_exercice.png', $relativeUrl.'res_exercice.png', $typeIconType, 'exercice'),
             array($largeIconsWebFolder.'res_video.png', $relativeUrl.'res_video.png', $basicIconMimeType, 'video'),
