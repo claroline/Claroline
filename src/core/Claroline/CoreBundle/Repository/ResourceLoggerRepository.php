@@ -10,7 +10,7 @@ class ResourceLoggerRepository extends EntityRepository
     public function getLastLogs($user, $workspace = null)
     {
         $dql = "
-            SELECT rl FROM Claroline\CoreBundle\Entity\Logger\ResourceLogger rl
+            SELECT DISTINCT rl FROM Claroline\CoreBundle\Entity\Logger\ResourceLogger rl
             JOIN rl.workspace ws
             JOIN ws.roles r
             WHERE rl.workspace IN (
@@ -30,8 +30,6 @@ class ResourceLoggerRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setMaxResults(5);
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return $query->getResult();
     }
 }
