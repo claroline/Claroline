@@ -296,7 +296,7 @@ abstract class AbstractWorkspace
 
     /**
      * Creates a ResourceRights entity (will be used as the default one)
-     * @param boolean $canSee
+     * @param boolean $canView
      * @param boolean $canDelete
      * @param boolean $canOpen
      * @param boolean $canEdit
@@ -306,14 +306,14 @@ abstract class AbstractWorkspace
      *
      * @return ResourceRights
      */
-    private function createDefaultsResourcesRights($canSee, $canDelete, $canOpen, $canEdit, $canCopy, $canCreate)
+    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canCreate)
     {
         $resourceRight = new ResourceRights();
         $resourceRight->setCanCopy($canCopy);
         $resourceRight->setCanDelete($canDelete);
         $resourceRight->setCanEdit($canEdit);
         $resourceRight->setCanOpen($canOpen);
-        $resourceRight->setCanSee($canSee);
+        $resourceRight->setcanView($canView);
         $resourceRight->setCanCreate($canCreate);
 
         return $resourceRight;

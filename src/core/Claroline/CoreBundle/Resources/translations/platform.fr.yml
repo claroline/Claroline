@@ -150,7 +150,7 @@ resource_properties_form_name: Nom
 resource_properties_form_userIcon: Icône
 resources: Ressources
 resources_rights: Droits des ressources
-resources_rights_form_canSee: Voir
+resources_rights_form_canView: Voir
 resources_rights_form_canDelete: Supprimer
 resources_rights_form_canOpen: Ouvrir
 resources_rights_form_canEdit: Editer
