@@ -32,11 +32,14 @@
                     </div>
                 </div>
             <div class="span12">
+                 {% if app.session.getFlashes() is defined %}
        <div class="alert alert-error">
         {% for key, flash in app.session.getFlashes() %}
         {{ flash }} <br />
         {% endfor %}
+         {{ form_errors(form) }}
     </div>
+                    {%endif%}
         </div>
   
    </div>
