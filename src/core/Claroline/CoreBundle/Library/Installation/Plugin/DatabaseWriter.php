@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This class is used to save/delete a plugin an its possible dependencies (like
@@ -24,6 +25,7 @@ class DatabaseWriter
     private $em;
     private $yamlParser;
     private $im;
+    private $fileSystem;
     private $kernelRootDir;
 
     /**
@@ -38,12 +40,14 @@ class DatabaseWriter
         EntityManager $em,
         Yaml $yamlParser,
         IconCreator $im,
+        Filesystem $fileSystem,
         $kernelRootDir
     )
     {
         $this->em = $em;
         $this->yamlParser = $yamlParser;
         $this->im = $im;
+        $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernelRootDir;
     }
 
@@ -145,7 +149,7 @@ class DatabaseWriter
         }
     }
 
-    private function persistIcons($resource, $resourceType, $plugin)
+    private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
     {
         $resourceIcon = new ResourceIcon();
 
@@ -160,7 +164,13 @@ class DatabaseWriter
         $ds = DIRECTORY_SEPARATOR;
 
         if (isset($resource['icon'])) {
-            $resourceIcon->setIconLocation("{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
+            $webBundleDir = "{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles";
+            $webPluginDir = "{$webBundleDir}{$ds}{$plugin->getAssetsFolder()}";
+            $webPluginImgDir = "{$webPluginDir}{$ds}images";
+            $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
+            $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
+            $this->fileSystem->copy("{$plugin->getImgFolder()}{$ds}{$resource['icon']}", "{$webPluginIcoDir}{$ds}{$resource['icon']}");
+            $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
             $resourceIcon->setRelativeUrl("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
         } else {
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
@@ -192,7 +202,7 @@ class DatabaseWriter
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array ('class' => $resource['class']));
 
-        if(null == $resourceClass){
+        if (null == $resourceClass){
             $resourceType->setClass($resource['class']);
         } else {
             $resourceType->setParent($resourceClass);
