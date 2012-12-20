@@ -105,24 +105,4 @@ class AbstractWorkspaceTest extends FixtureTestCase
         $this->assertTrue(AbstractWorkspace::isCustomRole($customRole->getName()));
         $this->assertFalse(AbstractWorkspace::isCustomRole($dummyRole->getName()));
     }
-
-    public function testInitBaseRoleCreatesDefaultResourcesRightsAfterPersist()
-    {
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights');
-        $before = count($repo->findAll());
-        $workspace = new SimpleWorkspace();
-        $workspace->setName('ws');
-        $workspace->setCode('code');
-        $workspace->setPublic(true);
-        $workspace->setType(AbstractWorkspace::PERSONNAL);
-        $em->persist($workspace);
-        $em->flush();
-        $workspace->initBaseRoles();
-        $em->persist($workspace);
-        $em->flush();
-        $after = count($repo->findAll());
-
-        $this->assertEquals(3, ($after-$before));
-    }
 }

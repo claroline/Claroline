@@ -28,20 +28,16 @@ class ResourceVoter implements VoterInterface
             $call = "can" . ucfirst(strtolower($attributes[0]));
             $rr = new ResourceRights;
             if (method_exists($rr, $call)) {
+                //
                 $rights = $this->repository->getRights($token->getUser(), $object);
-
-                if (count($rights) == 0) {
+                if($rights == null){
                     return VoterInterface::ACCESS_DENIED;
                 }
 
                 if ($call === 'canCreate'){
-//                    var_dump($attributes);
-                    return VoterInterface::ACCESS_GRANTED;
-
-
+                    return $this->canCreate($token->getUser(), $object, $attributes[1]) ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
                 } else {
-                    (count($rights) == 1) ? $access = $rights[0]->$call(): $access = $rights[1]->$call();
-                    return $access ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+                    return $rights->$call() ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
                 }
             } else {
                 throw new \Exception("This permission doesn't exists");
@@ -59,5 +55,34 @@ class ResourceVoter implements VoterInterface
     public function supportsClass($class)
     {
         return true;
+    }
+
+    private function canCreate($user, $resource, $resourceType)
+    {
+        $rights = $rights = $this->repository->getRights($user, $resource);
+
+        return $this->findResourceRightResourceType($rights, $resourceType);
+    }
+
+    private function findResourceRightResourceType($right, $resourceType)
+    {
+        if($right->canCreate())
+        {
+            if (count($right->getResourceTypes()) == 0){
+                return true;
+            } else {
+                $resourceTypes = $right->getResourceTypes();
+
+                foreach($resourceTypes as $item){
+                    if($item->getName() == $resourceType){
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

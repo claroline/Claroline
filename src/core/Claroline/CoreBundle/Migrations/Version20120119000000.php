@@ -582,7 +582,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_rights');
         $this->addId($table);
-        $table->addColumn('resource_id', 'integer', array('notnull' => false));
+        $table->addColumn('resource_id', 'integer');
         $table->addColumn('role_id', 'integer');
         $table->addColumn('can_see', 'boolean');
         $table->addColumn('can_delete', 'boolean');

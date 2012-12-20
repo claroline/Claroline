@@ -108,7 +108,7 @@ class ResourceRights
         return $this->canView;
     }
 
-    public function setcanView($canView)
+    public function setCanView($canView)
     {
         $this->canView = $canView;
     }

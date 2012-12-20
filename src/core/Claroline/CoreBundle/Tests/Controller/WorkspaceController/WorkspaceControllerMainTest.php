@@ -243,7 +243,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
+        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
 
         $this->client->request(
             'POST',

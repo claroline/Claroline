@@ -49,7 +49,7 @@ class ResourceController extends Controller
     public function createAction($resourceType, $parentId)
     {
         $parent = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($parentId);
-        
+
         if (!$this->get('security.context')->isGranted(array('CREATE', $resourceType), $parent)) {
             throw new AccessDeniedException();
         }
@@ -581,7 +581,7 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $configs = $this->get('claroline.resource.rights')->getRights($resource);
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
         if ($resource->getResourceType()->getName() == 'directory'){
             return $this->render(
@@ -601,7 +601,7 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $config = $this->get('claroline.resource.rights')->getRoleRights($role);
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
 
         return $this->render(
@@ -622,37 +622,24 @@ class ResourceController extends Controller
             $resourceTypesIds[] = $split[1];
         }
 
-        if(isset($resourceTypesIds)){
+        if (isset($resourceTypesIds)) {
             $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-            $config = $this->get('claroline.resource.rights')->getRoleRights($role);
+            $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $role));
+            $config->cleanResourceTypes();
+            $config->setCanCreate(true);
 
-            if ($config->getResource() == null){
-               $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
-               $newConfig = new ResourceRights();
-               $newConfig->setRights($config->getRights());
-               $newConfig->setCanCreate(true);
-               $newConfig->setResource($resource);
-               $newConfig->setRole($config->getRole());
-
-               foreach($resourceTypesIds as $id){
-                    $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
-                    $newConfig->addResourceType($rt);
-               }
-
-                $em->persist($newConfig);
-            } else {
-                $config->cleanResourceTypes();
-                $config->setCanCreate(true);
-                foreach($resourceTypesIds as $id){
-                    $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
-                    $config->addResourceType($rt);
-                }
-                $em->persist($config);
+            foreach ($resourceTypesIds as $id) {
+                $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
+                $config->addResourceType($rt);
             }
+
+            $em->persist($config);
+
         } else {
             $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-            $config = $this->get('claroline.resource.rights')->getRoleRights($role);
-            if($config->getResource() !== null){
+            $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $role));
+
+            if ($config->getResource() !== null) {
                 $config->setCanCreate(false);
                 $config->cleanResourceTypes();
                 $em->persist($config);
@@ -668,33 +655,16 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $configs = $this->get('claroline.resource.rights')->getRights($resource);
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
         $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
-
+        
         foreach($configs as $config){
-            if(!isset($checks[$config->getId()])){
-                $stub = new ResourceRights();
-                $stub->reset();
-                if($config->getResource() == null && $config->isEquals($stub->getRights()) == false){
-                    $stub->setResource($resource);
-                    $stub->setRole($config->getRole());
-                    $em->persist($stub);
-                }
+            if(isset($checks[$config->getId()])){
+                $config->setRights($checks[$config->getId()]);
             } else {
-                if($config->getResource() == null){
-                    //create a new config if it's different
-                    if(!$config->isEquals($checks[$config->getId()])){
-                        $resourceRights = new ResourceRights;
-                        $resourceRights->setRights($checks[$config->getId()]);
-                        $resourceRights->setResource($resource);
-                        $resourceRights->setRole($config->getRole());
-                        $em->persist($resourceRights);
-                    }
-                } else {
-                    $config->setRights($checks[$config->getId()]);
-                    $em->persist($config);
-                }
+                $config->reset();
             }
+            $em->persist($config);
         }
 
         $em->flush();
