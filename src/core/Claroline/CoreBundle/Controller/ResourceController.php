@@ -48,6 +48,12 @@ class ResourceController extends Controller
      */
     public function createAction($resourceType, $parentId)
     {
+        $parent = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($parentId);
+        
+        if (!$this->get('security.context')->isGranted(array('CREATE', $resourceType), $parent)) {
+            throw new AccessDeniedException();
+        }
+
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create', $resourceType);
         $event = new CreateResourceEvent($resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
