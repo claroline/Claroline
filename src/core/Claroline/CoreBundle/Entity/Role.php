@@ -132,7 +132,7 @@ class Role implements RoleInterface
     protected $roleType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights", mappedBy="role", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights", mappedBy="role")
      */
     protected $resourcesRightsWorkspaces;
 

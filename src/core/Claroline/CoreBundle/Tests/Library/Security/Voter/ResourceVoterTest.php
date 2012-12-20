@@ -11,7 +11,7 @@ class ResourceVoterTest extends FunctionalTestCase
         parent::setUp();
         $this->loadUserFixture();
     }
-    
+
     public function testNonWorkspaceMemberCannotAccessWorkspaceResources()
     {
         $em = $this->getEntityManager();
@@ -31,7 +31,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
         $manager = $this->getFixtureReference('user/ws_creator');
         $user = $this->getFixtureReference('user/user');
-        $user->addRole($manager->getPersonalWorkspace()->getVisitorRole());
+        $user->addRole($manager->getPersonalWorkspace()->getCollaboratorRole());
         $em->persist($user);
         $em->flush();
 

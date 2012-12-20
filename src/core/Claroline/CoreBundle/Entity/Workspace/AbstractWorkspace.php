@@ -123,9 +123,9 @@ abstract class AbstractWorkspace
             }
         }
 
-        $visitorRole = $this->doAddBaseRole(self::$visitorPrefix, $this->createDefaultsResourcesRights(true, false, false, false, false, false));
-        $collaboratorRole = $this->doAddBaseRole(self::$collaboratorPrefix, $this->createDefaultsResourcesRights(true, false, true, false, false, false), $visitorRole);
-        $this->doAddBaseRole(self::$managerPrefix, $this->createDefaultsResourcesRights(true, true, true, true, true, true), $collaboratorRole);
+        $visitorRole = $this->doAddBaseRole(self::$visitorPrefix);
+        $collaboratorRole = $this->doAddBaseRole(self::$collaboratorPrefix, $visitorRole);
+        $this->doAddBaseRole(self::$managerPrefix, $collaboratorRole);
     }
 
     public function getVisitorRole()
@@ -241,15 +241,13 @@ abstract class AbstractWorkspace
         }
     }
 
-    private function doAddBaseRole($prefix, $rsw, $parent = null)
+    private function doAddBaseRole($prefix, $parent = null)
     {
         $baseRole = new Role();
         $baseRole->setWorkspace($this);
         $baseRole->setName("{$prefix}_{$this->getId()}");
         $baseRole->setParent($parent);
         $baseRole->setRoleType(Role::WS_ROLE);
-        $baseRole->addResourceRights($rsw);
-        $rsw->setRole($baseRole);
         $this->roles->add($baseRole);
 
         return $baseRole;
@@ -292,30 +290,5 @@ abstract class AbstractWorkspace
     public function getCode()
     {
         return $this->code;
-    }
-
-    /**
-     * Creates a ResourceRights entity (will be used as the default one)
-     * @param boolean $canView
-     * @param boolean $canDelete
-     * @param boolean $canOpen
-     * @param boolean $canEdit
-     * @param boolean $canCopy
-     * @param boolean $canShare
-     * @param boolean $canCreate
-     *
-     * @return ResourceRights
-     */
-    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canCreate)
-    {
-        $resourceRight = new ResourceRights();
-        $resourceRight->setCanCopy($canCopy);
-        $resourceRight->setCanDelete($canDelete);
-        $resourceRight->setCanEdit($canEdit);
-        $resourceRight->setCanOpen($canOpen);
-        $resourceRight->setcanView($canView);
-        $resourceRight->setCanCreate($canCreate);
-
-        return $resourceRight;
     }
 }

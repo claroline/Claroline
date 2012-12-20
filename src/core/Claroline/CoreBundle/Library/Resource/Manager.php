@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
@@ -87,8 +88,8 @@ class Manager
             }
 
             $this->em->persist($resource);
+            $this->setResourceRights($parent, $resource);
             $this->em->flush();
-
 
             $event = new ResourceLoggerEvent(
                 $resource,
@@ -194,6 +195,7 @@ class Manager
         }
 
         $this->em->persist($copy);
+        $this->setResourceRights($parent, $copy);
         $this->em->flush();
 
         return $copy;
@@ -243,5 +245,28 @@ class Manager
         }
 
         $this->em->remove($resource);
+    }
+
+    private function setResourceRights($parent, $resource)
+    {
+        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $parent));
+        foreach($resourceRights as $resourceRight){
+            $rs = new ResourceRights();
+            $rs->setRole($resourceRight->getRole());
+            $rs->setResource($resource);
+            $rs->setRights($resourceRight->getRights());
+            //creation rights
+            $resourceTypes = $resourceRight->getResourceTypes();
+
+            if($resource->getResourceType()->getName() == 'directory'){
+                foreach($resourceTypes as $resourceType){
+                    $rs->addResourceType($resourceType);
+                }
+            }
+
+            $this->em->persist($rs);
+        }
+
+        $this->em->flush();
     }
 }
