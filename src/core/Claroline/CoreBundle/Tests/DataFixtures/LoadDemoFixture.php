@@ -17,6 +17,7 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 
 class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
@@ -150,7 +151,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $file = new File();
         $extension = pathinfo($filepath, PATHINFO_EXTENSION);
         $size = filesize($filepath);
-        $mimeType = mime_content_type($filepath);
+        $mimeType = MimeTypeGuesser::getInstance()->guess($filepath);
         $hashName = $this->getContainer()->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
         copy($filepath, "{$this->getContainer()->getParameter('claroline.files.directory')}{$ds}{$hashName}");
         $file->setSize($size);
