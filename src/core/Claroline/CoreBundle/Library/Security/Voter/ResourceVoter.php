@@ -35,7 +35,10 @@ class ResourceVoter implements VoterInterface
                 }
 
                 if ($call === 'canCreate'){
-                    return VoterInterface::ACCESS_ABSTAIN;
+//                    var_dump($attributes);
+                    return VoterInterface::ACCESS_GRANTED;
+
+
                 } else {
                     (count($rights) == 1) ? $access = $rights[0]->$call(): $access = $rights[1]->$call();
                     return $access ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
