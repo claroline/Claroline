@@ -52,7 +52,7 @@ class PlatformInstallCommand extends ContainerAwareCommand
                     ? $coreBundleDirectory.'/Tests/DataFixtures/Required'
                     : $coreBundleDirectory.'/DataFixtures';
                 $output->writeln("Loading {$environment} fixtures...");
-                $fixtureCommand = $this->getApplication()->find('doctrine:fixture:load');
+                $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
                 $fixtureInput = new ArrayInput(array(
                     'command' => 'doctrine:fixtures:load',
                     '--fixtures' => $fixturesPath,

@@ -12,12 +12,14 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
     private $nbUsers;
     private $class;
     private $username;
+    private $ws;
 
-    public function __construct($nbUsers, $class, $username)
+    public function __construct($nbUsers, $class, $username, $ws = null)
     {
         $this->nbUsers = $nbUsers;
         $this->class = strtolower($class);
         $this->username = $username;
+        $this->ws = $ws;
     }
 
     public function setContainer(ContainerInterface $container = null)
@@ -34,8 +36,19 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
     {
         $i = 0;
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
-        $workspace = $user->getPersonalWorkspace();
+        if ($this->username !== null){
+            $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
+            if ($user == null) {
+                throw new \Exception("Cannot load entities in a non existing user personal workspace: user {$username} does not exists");
+            }
+            $workspace = $user->getPersonalWorkspace();
+        } else {
+            if ($this->ws !== null) {
+                $workspace = $this->ws;
+            } else {
+                throw new \Exception("Cannot load entities in an non existing workspace");
+            }
+        }
         $collaboratorRole = $workspace->getCollaboratorRole();
         $this->log('role '.$collaboratorRole->getRole());
 
@@ -48,7 +61,6 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
             $this->clean($collaboratorRole, $manager);
             $this->log("done");
             $entities = null;
-//            return;
         }
 
         $this->log("entities :". count($entities));
@@ -69,7 +81,7 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
 
         $manager->flush();
 
-       $this->log(count($user->getPersonalWorkspace()->getCollaboratorRole()->getUsers())." collaborators added to user {$user->getUsername()}");
+//        $this->log(count($user->getPersonalWorkspace()->getCollaboratorRole()->getUsers())." collaborators added to user {$user->getUsername()}");
     }
 
     //may cause infinite loop due to the lack of optimization.
@@ -89,7 +101,7 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
             $om->persist($entity);
 //            unset($entities[$offset]);
 //            $entities = array_values($entities);
-            $this->log(count($collaboratorRole->getUsers())." collaborators added ");
+//            $this->log(count($collaboratorRole->getUsers())." collaborators added ");
         }
     }
 
