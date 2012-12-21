@@ -26,7 +26,7 @@ refreshFile("{$rootDirectory}/app/logs/test.log");
 
 require_once __DIR__.'/delete_files';
 
-//system("php {$rootDirectory}/composer.phar install");
+system("php {$rootDirectory}/composer.phar install");
 system("php {$rootDirectory}/app/console claroline:themes:compile");
 
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
@@ -34,10 +34,10 @@ system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
 system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
 system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=dev");
 
-//system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
-//system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
-//system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
-//system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
+system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
+system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
+system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
 
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
 system("php {$rootDirectory}/app/console claroline:user:create --admin John Doe admin admin");

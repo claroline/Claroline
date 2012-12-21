@@ -106,15 +106,22 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
      * @return an array of arrays or entities
      */
-    public function listChildrenResourceInstances(AbstractResource $parent, ResourceType $resourceType, $asArray = false)
+    public function listChildrenResourceInstances(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
                 . " FROM " . self::FROM_RESOURCES
-                . " WHERE rt.name = :rt_name
-                    AND (ar.path LIKE :pathlike AND ar.path <> :path)";
+                . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
+
+        if ($resourceType !== null){
+            $dql.= "AND rt.name = :rt_name";
+        }
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('rt_name', $resourceType->getName());
+
+        if ($resourceType !== null){
+            $query->setParameter('rt_name', $resourceType->getName());
+        }
+        
         $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 
