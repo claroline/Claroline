@@ -20,7 +20,7 @@ class ResourceActivity
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", inversedBy="resourceActivity")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", inversedBy="resourcesActivities")
      */
     private $activity;
 

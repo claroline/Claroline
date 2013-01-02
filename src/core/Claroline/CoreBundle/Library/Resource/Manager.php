@@ -247,9 +247,16 @@ class Manager
         $this->em->remove($resource);
     }
 
-    private function setResourceRights($parent, $resource)
+    /**
+     * Copy the resource rights from $old to $resource.
+     *
+     * @param AbstractResource $old
+     * @param AbstractResource $resource
+     */
+    public function setResourceRights($old, $resource)
     {
-        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $parent));
+        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $old));
+
         foreach($resourceRights as $resourceRight){
             $rs = new ResourceRights();
             $rs->setRole($resourceRight->getRole());

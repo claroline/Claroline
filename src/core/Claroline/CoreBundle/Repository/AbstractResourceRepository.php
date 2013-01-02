@@ -70,40 +70,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
-     * Returns all resources owned by the user.
-     * @param User $user Owner of the resources.
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
-     * @param int $offset Skip all results before offset.
-     * @param int $numrows Maximum number of rows to return.
-     * @param int ResourceType $resourceType Resource type to filter on.
-     * @return an array of arrays or entities
-     */
-    public function listResourcesForUser(User $user, $asArray = false, $offset = null, $numrows = null, ResourceType $resourceType = null)
-    {
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                . " FROM " . self::FROM_RESOURCES
-                . " WHERE " . self::WHERECONDITION_USER_WORKSPACE;
-        if ($resourceType === null) {
-            $dql.="AND rt.name != 'directory'";
-        } else {
-            $dql.="AND rt.name = :rt_name";
-        }
-        $dql .= " ORDER BY ar.path ";
-
-        $query = $this->_em->createQuery($dql);
-        if ($resourceType !== null) {
-            $query->setParameter('rt_name', $resourceType->getName());
-        }
-        $query->setParameter('u_id', $user->getId());
-
-        return $this->executeQuery($query, $asArray, $offset, $numrows);
-    }
-
-    /**
      * Returns all resources under parent. Returns a list of entities or an array if requested.
      * @param AbstractResource $parent Parent of children that we request.
      * @param int ResourceType $resourceType Resource type to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
      * @return an array of arrays or entities
      */
     public function listChildrenResourceInstances(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
@@ -121,7 +92,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         if ($resourceType !== null){
             $query->setParameter('rt_name', $resourceType->getName());
         }
-        
+
         $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 
@@ -134,23 +105,55 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @param int $resourceTypeId ResourceType ID to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
      * @param boolean $isVisible if true, returns only resources that are visible.
+     * @param User $user the current user
+     *
      * @return an array of arrays or entities
      */
-    public function listDirectChildrenResources($parentId, $resourceTypeId = 0, $asArray = false, $isVisible = true)
+    public function listDirectChildrenResources($parentId, $resourceTypeId = 0, $asArray = false, $isVisible = true, User $user = null)
     {
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                . " FROM " . self::FROM_RESOURCES
-                . " WHERE rt.isVisible = :rt_isvisible
-            AND ar.parent = :ar_parentid";
+        $dql = "SELECT DISTINCT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+                . " FROM " . self::FROM_RESOURCES;
+
+        $isAdmin = false;
+
+        if ($user != null){
+            foreach($user->getRoles() as $role){
+               if($role == 'ROLE_ADMIN'){
+                   $isAdmin = true;
+               }
+            }
+        }
+
+        if ($user != null && $isAdmin == false){
+            $dql .= "
+                JOIN ar.rights arRights
+                JOIN arRights.role rightRole WITH rightRole IN (
+                    SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
+                    JOIN currentUserRole.users currentUser
+                    JOIN currentUserRole.workspace currentWorkspace
+                    WHERE currentUser.id = {$user->getId()}
+                )";
+        }
+
+        $dql .= "WHERE ar.parent = :ar_parentid
+                AND rt.isVisible = :rt_isvisible";
+
+        if ($user != null && $isAdmin == false){
+            $dql .= " AND arRights.canView = 1";
+        }
+
         if ($resourceTypeId != 0) {
             $dql .= " AND rt.id = :rt_id";
         }
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ar_parentid', $parentId);
         $query->setParameter('rt_isvisible', $isVisible);
+
         if ($resourceTypeId != 0) {
             $query->setParameter('rt_id', $resourceTypeId);
         }
+
         return $this->executeQuery($query, $asArray);
     }
 
@@ -172,28 +175,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query->setParameter('u_id', $user->getId());
 
         return $this->executeQuery($query, $asArray);
-    }
-
-    /**
-     * Returns the number of non directory resources for a user.
-     * @param User $user Owner of the resources.
-     * @return number
-     */
-    public function countResourceInstancesForUser(User $user)
-    {
-        $dql = "SELECT count(ri.id)
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceInstance ri
-                    JOIN ri.abstractResource ar
-                    JOIN ar.resourceType rt
-                WHERE rt.name != :rt_name"
-                . " AND " . self::WHERECONDITION_USER_WORKSPACE
-                . " ORDER BY ri.path";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('rt_name', 'directory');
-        $query->setParameter('u_id', $user->getId());
-
-        return $query->getSingleScalarResult();
     }
 
     /**
@@ -231,45 +212,48 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function listResourcesForUserWithFilter($criterias, User $user, $asArray = false)
     {
+        $isAdmin = false;
+
+        if ($user != null){
+            foreach($user->getRoles() as $role){
+               if($role == 'ROLE_ADMIN'){
+                   $isAdmin = true;
+               }
+            }
+        }
+
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                . " FROM " . self::FROM_RESOURCES
-                . " WHERE rt.isVisible=1"
+                . " FROM " . self::FROM_RESOURCES;
+
+        if ($isAdmin == false){
+            $dql .= "
+                JOIN ar.rights arRights
+                JOIN arRights.role rightRole WITH rightRole IN (
+                    SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
+                    JOIN currentUserRole.users currentUser
+                    JOIN currentUserRole.workspace currentWorkspace
+                    WHERE currentUser.id = {$user->getId()}
+                )";
+        }
+
+        $dql .= " WHERE rt.isVisible=1"
                 . " AND " . self::WHERECONDITION_USER_WORKSPACE;
+
+        if ($user != null && $isAdmin == false){
+            $dql .= " AND arRights.canView = 1";
+        }
 
         foreach ($criterias as $key => $value) {
             $methodName = 'build' . ucfirst($key) . 'Filter';
             $dql .= $this->$methodName($key, $value);
         }
+
         $dql .= " ORDER BY ar.path";
 
         $query = $this->_em->createQuery($dql);
         $this->bindFilter($query, $criterias, $user);
 
         return $this->executeQuery($query, $asArray);
-    }
-
-    /**
-     * Returns number of resources owned by the user and filtered with given criterias.
-     * @param Array $criterias Array of criterias to use to build the filter.
-     * @param User $user Owner of the resources.
-     * @return int
-     */
-    public function countResourceInstancesForUserWithFilter($criterias, User $user)
-    {
-        $dql = "SELECT count(ri.id)"
-                . " FROM " . self::FROM_RESOURCES
-                . " WHERE rt.isVisible = 1"
-                . " AND " . self::WHERECONDITION_USER_WORKSPACE;
-
-        foreach ($criterias as $key => $value) {
-            $methodName = 'build' . ucfirst($key) . 'Filter';
-            $dql .= $this->$methodName($key, $value);
-        }
-
-        $query = $this->_em->createQuery($dql);
-        $this->bindFilter($query, $criterias, $user);
-
-        return $query->getSingleScalarResult();
     }
 
     /**

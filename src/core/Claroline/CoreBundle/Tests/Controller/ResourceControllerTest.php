@@ -14,7 +14,7 @@ class ResourceControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user'));
+        $this->loadUserFixture(array('user', 'admin'));
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->originalPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
@@ -299,15 +299,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = $this->uploadFile($firstDir->id, 'file');
         $this->client->request('GET', "/resource/parents/{$file->id}");
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
-    public function testEveryUserInstances()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createBigTree($this->pwr->getId());
-        $this->client->request('GET', '/resource/user/instances/all');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
     }
 
     public function testDelete()
@@ -652,6 +643,28 @@ class ResourceControllerTest extends FunctionalTestCase
             ->findOneBy(array('resource' => $dir->id));
 
        $this->assertFalse($config->canCreate());
+    }
+
+    public function testChildrenAction()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($jsonResponse));
+        $this->client->request(
+            'POST',
+            "/resource/{$file->id}/rights/edit",
+            array (
+            )
+        );
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($jsonResponse));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($jsonResponse));
     }
 
     private function uploadFile($parentId, $name)
