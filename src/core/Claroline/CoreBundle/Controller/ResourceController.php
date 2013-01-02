@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
@@ -398,12 +399,7 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource = $this->getResource($repo->find($resourceId));
-
-        if (!$this->get('security.context')->isGranted('VIEW', $resource)) {
-            throw new AccessDeniedException();
-        }
-
-        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true);
+        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true, true, $this->get('security.context')->getToken()->getUser());
         $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -431,25 +427,6 @@ class ResourceController extends Controller
             $parents = $repo->listAncestors($resource);
             $response->setContent(json_encode($parents));
         }
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of a user instances.
-     *
-     * @return Response
-     */
-    public function userEveryInstancesAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $results = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->listResourcesForUser($user, true);
-
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
@@ -567,6 +544,7 @@ class ResourceController extends Controller
             $em->persist($shortcut);
             $em->flush();
             $em->refresh($parent);
+            $this->get('claroline.resource.manager')->setResourceRights($resource, $shortcut);
             $links[] = $converter->toStdClass($shortcut);
         }
 
