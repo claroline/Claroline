@@ -543,7 +543,8 @@ class ResourceControllerTest extends FunctionalTestCase
             'canDelete' => false,
             'canEdit' => false,
             'canOpen' => false,
-            'canCreate' => false
+            'canCreate' => false,
+            'canExport' => false
         )));
 
         $this->assertTrue($resourceRights[1]->isEquals(array(
@@ -552,7 +553,8 @@ class ResourceControllerTest extends FunctionalTestCase
             'canDelete' => true,
             'canEdit' => false,
             'canOpen' => false,
-            'canCreate' => false
+            'canCreate' => false,
+            'canExport' => false
         )));
 
         $this->assertTrue($resourceRights[2]->isEquals(array(
@@ -561,7 +563,8 @@ class ResourceControllerTest extends FunctionalTestCase
             'canDelete' => false,
             'canEdit' => false,
             'canOpen' => false,
-            'canCreate' => false
+            'canCreate' => false,
+            'canExport' => false
         )));
     }
 

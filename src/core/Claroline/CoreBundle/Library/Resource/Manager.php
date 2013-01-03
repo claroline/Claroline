@@ -89,7 +89,6 @@ class Manager
 
             $this->em->persist($resource);
             $this->setResourceRights($parent, $resource);
-            $this->em->flush();
 
             $event = new ResourceLoggerEvent(
                 $resource,
@@ -115,8 +114,16 @@ class Manager
         $child->setParent($parent);
         $rename = $this->ut->getUniqueName($child, $parent);
         $child->setName($rename);
+        $rights = $child->getRights();
+
+        foreach($rights as $right){
+            $this->em->remove($right);
+        }
+
         try {
             $this->em->flush();
+            $this->setResourceRights($parent, $child);
+
             $event = new ResourceLoggerEvent(
                 $child,
                 ResourceLoggerEvent::MOVE_ACTION
@@ -151,6 +158,7 @@ class Manager
                 $this->deleteDirectory($resource);
             }
         }
+        
         $this->em->flush();
     }
 

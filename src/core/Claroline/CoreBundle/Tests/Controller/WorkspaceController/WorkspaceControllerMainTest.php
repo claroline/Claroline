@@ -269,7 +269,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canOpen' => false,
             'canEdit' => false,
             'canCopy' => false,
-            'canCreate' => false
+            'canCreate' => false,
+            'canExport' => false
         )));
 
         $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
@@ -278,7 +279,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canOpen' => false,
             'canEdit' => false,
             'canCopy' => false,
-            'canCreate' => false
+            'canCreate' => false,
+            'canExport' => false
         )));
 
         $this->assertTrue($createToTrue->isEquals(array(
@@ -287,7 +289,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canOpen' => false,
             'canEdit' => false,
             'canCopy' => false,
-            'canCreate' => true
+            'canCreate' => true,
+            'canExport' => false
         )));
     }
 

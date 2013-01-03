@@ -9,7 +9,6 @@ use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ForumController

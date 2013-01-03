@@ -34,6 +34,8 @@ security:
 
     acl:
         connection: default
+        voter:
+          allow_if_object_identity_unavailable: false
 
     access_decision_manager:
         allow_if_all_abstain: false

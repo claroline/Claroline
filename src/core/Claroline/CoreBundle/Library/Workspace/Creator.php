@@ -52,9 +52,9 @@ class Creator
         $this->entityManager->persist($rootDir);
 //        $this->entityManager->flush();
 
-        $this->createDefaultsResourcesRights(true, true, true, true, true, true, $workspace->getManagerRole(), $rootDir);
-        $this->createDefaultsResourcesRights(true, false, true, false, false, false, $workspace->getCollaboratorRole(), $rootDir);
-        $this->createDefaultsResourcesRights(false, false, false, false, false, false, $workspace->getVisitorRole(), $rootDir);
+        $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $workspace->getManagerRole(), $rootDir);
+        $this->createDefaultsResourcesRights(true, false, true, false, false, false, true, $workspace->getCollaboratorRole(), $rootDir);
+        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $workspace->getVisitorRole(), $rootDir);
 
         if (null !== $manager) {
             $manager->addRole($workspace->getManagerRole());
@@ -83,7 +83,7 @@ class Creator
      *
      * @return ResourceRights
      */
-    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canCreate, $role, $resource)
+    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canCreate, $canExport, $role, $resource)
     {
 
         $resourceRight = new ResourceRights();
@@ -94,6 +94,7 @@ class Creator
         $resourceRight->setCanOpen($canOpen);
         $resourceRight->setCanView($canView);
         $resourceRight->setCanCreate($canCreate);
+        $resourceRight->setCanExport($canExport);
         $resourceRight->setRole($role);
         $resourceRight->setResource($resource);
 

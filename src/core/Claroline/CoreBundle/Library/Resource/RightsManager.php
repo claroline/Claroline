@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Library\Resource;
 
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Role;
 
 class RightsManager
 {
@@ -46,7 +44,8 @@ class RightsManager
 
     private function addMissingRights($rights)
     {
-        $expectedKeys = array('canView', 'canOpen', 'canDelete', 'canEdit', 'canCopy', 'canCreate');
+        $expectedKeys = array('canView', 'canOpen', 'canDelete', 'canEdit', 'canCopy', 'canCreate', 'canExport');
+
         foreach($expectedKeys as $expected){
             if(!isset($rights[$expected])){
                 $rights[$expected] = false;

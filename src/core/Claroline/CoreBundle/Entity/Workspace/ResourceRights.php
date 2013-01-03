@@ -27,7 +27,7 @@ class ResourceRights
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="rights")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="rights", cascade={"persist"})
      */
     private $resource;
 
@@ -60,6 +60,11 @@ class ResourceRights
      * @ORM\Column(type="boolean", name="can_create")
      */
     protected $canCreate;
+
+    /**
+     * @ORM\Column(type="boolean", name="can_export")
+     */
+    protected $canExport;
 
     /**
      * @ORM\ManyToMany(
@@ -163,6 +168,16 @@ class ResourceRights
         $this->canCreate = $canCreate;
     }
 
+    public function setCanExport($canExport)
+    {
+        $this->canExport = $canExport;
+    }
+
+    public function canExport()
+    {
+        return $this->canExport;
+    }
+
     /**
      * Sets every right to false
      */
@@ -174,6 +189,7 @@ class ResourceRights
         $this->canOpen = false;
         $this->canView = false;
         $this->canCreate = false;
+        $this->canExport = false;
     }
 
     /**
@@ -207,7 +223,8 @@ class ResourceRights
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
             'canView' => $this->canView,
-            'canCreate' => $this->canCreate
+            'canCreate' => $this->canCreate,
+            'canExport' => $this->canExport
         );
     }
 
