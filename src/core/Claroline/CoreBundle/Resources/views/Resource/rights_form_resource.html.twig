@@ -8,6 +8,7 @@
             <th>{{ 'open'|trans({},'platform') }}</th>
             <th>{{ 'edit'|trans({},'platform') }}</th>
             <th>{{ 'copy'|trans({},'platform') }}</th>
+            <th>{{ 'export'|trans({},'platform') }}</th>
         </tr>
         {% for config in configs %}
         <tr class="row-rights">
@@ -17,6 +18,7 @@
             <td><input name="canOpen-{{ config.getId() }}" id="can-open-{{ config.getId() }}" type="checkbox" value="1" {% if config.canOpen() %} checked {% endif %}></td>
             <td><input name="canEdit-{{ config.getId() }}" id="can-edit-{{ config.getId() }}" type="checkbox" value="1" {% if config.canEdit() %} checked {% endif %}></td>
             <td><input name="canCopy-{{ config.getId() }}" id="can-copy-{{ config.getId() }}" type="checkbox" value="1" {% if config.canCopy() %} checked {% endif %}></td>
+            <td><input name="canExport-{{ config.getId() }}" id="can-export-{{ config.getId() }}" type="checkbox" value="1" {% if config.canExport() %} checked {% endif %}></td>
         </tr>
         {% endfor %}
     </table>
