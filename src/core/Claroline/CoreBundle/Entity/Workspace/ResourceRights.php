@@ -57,11 +57,6 @@ class ResourceRights
     protected $canCopy;
 
     /**
-     * @ORM\Column(type="boolean", name="can_create")
-     */
-    protected $canCreate;
-
-    /**
      * @ORM\Column(type="boolean", name="can_export")
      */
     protected $canExport;
@@ -158,16 +153,6 @@ class ResourceRights
         $this->canCopy = $canCopy;
     }
 
-    public function canCreate()
-    {
-        return $this->canCreate;
-    }
-
-    public function setCanCreate($canCreate)
-    {
-        $this->canCreate = $canCreate;
-    }
-
     public function setCanExport($canExport)
     {
         $this->canExport = $canExport;
@@ -188,7 +173,6 @@ class ResourceRights
         $this->canEdit = false;
         $this->canOpen = false;
         $this->canView = false;
-        $this->canCreate = false;
         $this->canExport = false;
     }
 
@@ -223,7 +207,6 @@ class ResourceRights
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
             'canView' => $this->canView,
-            'canCreate' => $this->canCreate,
             'canExport' => $this->canExport
         );
     }

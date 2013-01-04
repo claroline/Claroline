@@ -53,7 +53,7 @@ class Creator
 //        $this->entityManager->flush();
 
         $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $workspace->getManagerRole(), $rootDir);
-        $this->createDefaultsResourcesRights(true, false, true, false, false, false, true, $workspace->getCollaboratorRole(), $rootDir);
+        $this->createDefaultsResourcesRights(true, false, true, false, false, true, false, $workspace->getCollaboratorRole(), $rootDir);
         $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $workspace->getVisitorRole(), $rootDir);
 
         if (null !== $manager) {
@@ -78,14 +78,13 @@ class Creator
      * @param boolean $canOpen
      * @param boolean $canEdit
      * @param boolean $canCopy
-     * @param boolean $canShare
+     * @param boolean $canExport
      * @param boolean $canCreate
      *
      * @return ResourceRights
      */
-    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canCreate, $canExport, $role, $resource)
+    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canExport, $canCreate, $role, $resource)
     {
-
         $resourceRight = new ResourceRights();
 
         $resourceRight->setCanCopy($canCopy);
@@ -93,10 +92,17 @@ class Creator
         $resourceRight->setCanEdit($canEdit);
         $resourceRight->setCanOpen($canOpen);
         $resourceRight->setCanView($canView);
-        $resourceRight->setCanCreate($canCreate);
         $resourceRight->setCanExport($canExport);
         $resourceRight->setRole($role);
         $resourceRight->setResource($resource);
+
+        if($canCreate){
+            $resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
+
+            foreach($resourceTypes as $resourceType){
+                $resourceRight->addResourceType($resourceType);
+            }
+        }
 
         $this->entityManager->persist($resourceRight);
 

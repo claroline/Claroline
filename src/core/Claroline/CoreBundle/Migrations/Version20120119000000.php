@@ -589,7 +589,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('can_open', 'boolean');
         $table->addColumn('can_edit', 'boolean');
         $table->addColumn('can_copy', 'boolean');
-        $table->addColumn('can_create', 'boolean');
         $table->addColumn('can_export', 'boolean');
 
         $table->addForeignKeyConstraint(

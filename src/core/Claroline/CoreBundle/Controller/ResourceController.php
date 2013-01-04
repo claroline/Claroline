@@ -860,7 +860,6 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
-        $config->setCanCreate(true);
 
         foreach ($resourceTypesIds as $id) {
             $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
@@ -879,7 +878,6 @@ class ResourceController extends Controller
     private function resetCreationPermissionForResource($resourceId, $roleId)
     {
         $config = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $roleId));
-        $config->setCanCreate(false);
         $config->cleanResourceTypes();
         $this->get('doctrine.orm.entity_manager')->persist($config);
     }

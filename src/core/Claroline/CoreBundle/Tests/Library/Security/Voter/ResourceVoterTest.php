@@ -100,8 +100,8 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory'))));
 
         $this->logUser($this->manager);
-        $fileType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'file'));
-        $this->rootRights->addResourceType($fileType);
+        $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
+        $this->rootRights->removeResourceType($directoryType);
         $em->persist($this->rootRights);
         $em->flush();
         $this->assertFalse($this->getSecurityContext()->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory'))));

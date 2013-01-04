@@ -132,17 +132,11 @@ class ResourceVoter implements VoterInterface
 
     private function canCreate($rights, $resourceType)
     {
-        if ($rights->canCreate()) {
-            if (count($rights->getResourceTypes()) == 0) {
-                return true;
-            } else {
+        $resourceTypes = $rights->getResourceTypes();
 
-                $resourceTypes = $rights->getResourceTypes();
-                foreach ($resourceTypes as $item) {
-                    if ($item->getName() == $resourceType) {
-                        return true;
-                    }
-                }
+        foreach ($resourceTypes as $item) {
+            if ($item->getName() == $resourceType) {
+                return true;
             }
         }
 

@@ -605,7 +605,6 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
             ->findOneBy(array('resource' => $dir->id, 'role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
 
-        $this->assertTrue($config->canCreate());
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(2, count($permCreate));
 
@@ -627,25 +626,8 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
             ->findOneBy(array('resource' => $dir->id, 'role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
 
-        $this->assertTrue($config->canCreate());
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(3, count($permCreate));
-
-        //removing perm also remove the canCreate right
-        $this->client->request(
-            'POST',
-            "/resource/{$dir->id}/role/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()->getId()}/right/creation/edit",
-            array()
-        );
-
-       $config = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findOneBy(array('resource' => $dir->id));
-
-       $this->assertFalse($config->canCreate());
     }
 
     public function testChildrenAction()
