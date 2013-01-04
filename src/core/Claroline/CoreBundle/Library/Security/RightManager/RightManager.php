@@ -177,7 +177,7 @@ class RightManager implements RightManagerInterface
             $acl = $this->aclProvider->findAcl($oid);
         } catch (AclNotFoundException $ex) {
             unset($ex);
-            $acl = $this->aclProvider->createAcl($oid); //needed for class acl
+            $acl = $this->aclProvider->createAcl($oid);
         }
 
         return $acl;
