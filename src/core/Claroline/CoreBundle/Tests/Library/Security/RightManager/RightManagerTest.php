@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Security\RightManager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\Stub\Entity\TestEntity\FirstEntity;
 use Claroline\CoreBundle\Library\Security\SecurityException;
@@ -291,10 +292,13 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
     }
 
-    public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstance()
+    public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstanceAssociatedWithAnAcl()
     {
         $jane = $this->getFixtureReference('user/user');
         $entity = $this->createEntity();
+        $this->client->getContainer()
+            ->get('security.acl.provider')
+            ->createAcl(ObjectIdentity::fromDomainObject($entity));
         $fqcn = get_class($entity);
         $classIdentity = ClassIdentity::fromDomainClass($fqcn);
 
