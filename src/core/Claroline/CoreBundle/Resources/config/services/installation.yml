@@ -92,6 +92,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@symfony.yaml"
             - "@claroline.resource.icon_creator"
+            - "@filesystem"
             - %kernel.root_dir%
 
     # symfony class used as service argument

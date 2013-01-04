@@ -234,6 +234,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/resources/rights/form");
+        var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($crawler->filter('#resource-rights-form')));
     }
 
@@ -243,7 +244,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
+        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
 
         $this->client->request(
             'POST',
@@ -268,7 +270,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canOpen' => false,
             'canEdit' => false,
             'canCopy' => false,
-            'canCreate' => false
+            'canExport' => false
         )));
 
         $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
@@ -277,7 +279,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canOpen' => false,
             'canEdit' => false,
             'canCopy' => false,
-            'canCreate' => false
+            'canExport' => false
         )));
 
         $this->assertTrue($createToTrue->isEquals(array(
@@ -286,7 +288,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'canOpen' => false,
             'canEdit' => false,
             'canCopy' => false,
-            'canCreate' => true
+            'canExport' => false
         )));
     }
 

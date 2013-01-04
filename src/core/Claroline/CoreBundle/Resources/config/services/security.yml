@@ -8,6 +8,7 @@ services:
         class: Claroline\CoreBundle\Library\Security\Voter\ResourceVoter
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@translator"
         tags:
             -  { name: security.voter }
 

@@ -36,7 +36,7 @@ class PluginInstallFixturesCommand extends ContainerAwareCommand
                 $fixturesPath = $kernel->getRootDir() . "/../src/plugin/{$vendor}/{$bundle}/DataFixtures";
                 if($this->isEmptyDir($fixturesPath)){
                     $output->writeln("Loading {$environment} fixtures...");
-                    $fixtureCommand = $this->getApplication()->find('doctrine:fixture:load');
+                    $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
                     $fixtureInput = new ArrayInput(array(
                             'command' => 'doctrine:fixtures:load',
                             '--fixtures' => $fixturesPath,

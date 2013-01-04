@@ -9,9 +9,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
@@ -48,6 +48,14 @@ class ResourceController extends Controller
      */
     public function createAction($resourceType, $parentId)
     {
+        $parent = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($parentId);
+        $collection = new ResourceCollection(array($parent));
+        $collection->setAttributes(array('type' => $resourceType));
+
+        if (!$this->get('security.context')->isGranted('CREATE', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create', $resourceType);
         $event = new CreateResourceEvent($resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -82,9 +90,14 @@ class ResourceController extends Controller
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
 
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         //If it's a link, the resource will be its target.
         $resource = $this->getResource($resource);
-
         $event = new OpenResourceEvent($resource);
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('open', $resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -110,13 +123,22 @@ class ResourceController extends Controller
     {
         $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
+        $collection = new ResourceCollection();
 
-        foreach ($ids as $id) {
-            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-                ->find($id);
-            if ($resource !== null){
-                $this->get('claroline.resource.manager')->delete($resource);
+        foreach($ids as $id){
+            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+
+            if($resource != null){
+                $collection->addResource($resource);
             }
+        }
+
+        if (!$this->get('security.context')->isGranted('DELETE', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
+        foreach ($collection->getResources() as $resource) {
+            $this->get('claroline.resource.manager')->delete($resource);
         }
 
         return new Response('Resource deleted', 204);
@@ -135,6 +157,13 @@ class ResourceController extends Controller
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
+
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $form = $this->createForm(new ResourceNameType(), $resource);
 
         return $this->render(
@@ -156,6 +185,13 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
+
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $form = $this->createForm(new ResourceNameType(), $resource);
         $form->bindRequest($request);
 
@@ -187,6 +223,13 @@ class ResourceController extends Controller
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
+
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
@@ -207,6 +250,13 @@ class ResourceController extends Controller
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
+
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
         $form->bindRequest($request);
 
@@ -266,7 +316,26 @@ class ResourceController extends Controller
         $converter = $this->get('claroline.utilities.entity_converter');
         $movedResources = array();
 
+        $collection = new ResourceCollection();
+
         foreach ($ids as $id) {
+            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+
+            if ($resource != null) {
+                $collection->addResource($resource);
+            }
+        }
+
+        $collection->addAttribute('parent', $newParent);
+
+        if (!$this->get('security.context')->isGranted('MOVE', $collection)) {
+            foreach ($collection->getResources() as $resource) {
+                throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+            }
+        }
+
+        foreach ($ids as $id) {
+
             $resource = $resourceRepo->find($id);
 
             if ($resource != null) {
@@ -299,6 +368,13 @@ class ResourceController extends Controller
     {
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName($action, $resourceType);
         $resource = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
+
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $event = new CustomActionResourceEvent($resource);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
@@ -326,6 +402,21 @@ class ResourceController extends Controller
     public function exportAction()
     {
         $ids = $this->container->get('request')->query->get('ids', array());
+
+        $collection = new ResourceCollection();
+
+        foreach ($ids as $id) {
+            $resource = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+
+            if ($resource != null) {
+                $collection->addResource($resource);
+            }
+        }
+
+        if (!$this->get('security.context')->isGranted('EXPORT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $file = $this->get('claroline.resource.exporter')->exportResources($ids);
         $response = new StreamedResponse();
 
@@ -393,12 +484,7 @@ class ResourceController extends Controller
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource = $this->getResource($repo->find($resourceId));
-
-        if (!$this->get('security.context')->isGranted('VIEW', $resource)) {
-            throw new AccessDeniedException();
-        }
-
-        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true);
+        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true, true, $this->get('security.context')->getToken()->getUser());
         $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -426,25 +512,6 @@ class ResourceController extends Controller
             $parents = $repo->listAncestors($resource);
             $response->setContent(json_encode($parents));
         }
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of a user instances.
-     *
-     * @return Response
-     */
-    public function userEveryInstancesAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $results = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->listResourcesForUser($user, true);
-
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
@@ -482,16 +549,29 @@ class ResourceController extends Controller
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceDestinationId);
         $converter = $this->get('claroline.utilities.entity_converter');
         $newNodes = array();
+        $resources = array();
 
         foreach ($ids as $id) {
-            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+            $resource = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
+
             if ($resource != null) {
-                $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
-                $em->persist($newNode);
-                $em->flush();
-                $em->refresh($parent);
-                $newNodes[] = $converter->toStdClass($newNode);
+                $resources[] = $resource;
             }
+        }
+
+        $collection = new ResourceCollection($resources);
+        $collection->addAttribute('parent', $parent);
+
+        if (!$this->get('security.context')->isGranted('COPY', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
+        foreach ($resources as $resource) {
+            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+            $em->persist($newNode);
+            $em->flush();
+            $em->refresh($parent);
+            $newNodes[] = $converter->toStdClass($newNode);
         }
 
         $response = new Response(json_encode($newNodes));
@@ -562,6 +642,7 @@ class ResourceController extends Controller
             $em->persist($shortcut);
             $em->flush();
             $em->refresh($parent);
+            $this->get('claroline.resource.manager')->setResourceRights($resource, $shortcut);
             $links[] = $converter->toStdClass($shortcut);
         }
 
@@ -575,7 +656,13 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $configs = $this->get('claroline.resource.rights')->getRights($resource);
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
         if ($resource->getResourceType()->getName() == 'directory'){
             return $this->render(
@@ -594,8 +681,15 @@ class ResourceController extends Controller
     public function rightCreationFormAction($resourceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $config = $this->get('claroline.resource.rights')->getRoleRights($role);
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
 
         return $this->render(
@@ -606,50 +700,49 @@ class ResourceController extends Controller
 
     public function editCreationRightsAction($resourceId, $roleId)
     {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
         $request = $this->get('request');
         $array = $request->request->all();
+
+        if(isset($array['isRecursive'])){
+            $isRecursive = true;
+            unset($array['isRecursive']);
+        } else {
+            $isRecursive = false;
+        }
         $keys = array_keys($array);
-        $em = $this->get('doctrine.orm.entity_manager');
 
         foreach ($keys as $key){
             $split = explode('-', $key);
             $resourceTypesIds[] = $split[1];
         }
 
-        if(isset($resourceTypesIds)){
-            $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-            $config = $this->get('claroline.resource.rights')->getRoleRights($role);
+        if (isset($resourceTypesIds)) {
 
-            if ($config->getResource() == null){
-               $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
-               $newConfig = new ResourceRights();
-               $newConfig->setRights($config->getRights());
-               $newConfig->setCanCreate(true);
-               $newConfig->setResource($resource);
-               $newConfig->setRole($config->getRole());
-
-               foreach($resourceTypesIds as $id){
-                    $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
-                    $newConfig->addResourceType($rt);
-               }
-
-                $em->persist($newConfig);
-            } else {
-                $config->cleanResourceTypes();
-                $config->setCanCreate(true);
-                foreach($resourceTypesIds as $id){
-                    $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
-                    $config->addResourceType($rt);
+            $this->setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId);
+            if ($isRecursive){
+                $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
+                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
+                foreach($resources as $resource){
+                     $this->setCreationPermissionForResource($resources, $resourceTypesIds, $roleId);
                 }
-                $em->persist($config);
             }
+
         } else {
-            $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-            $config = $this->get('claroline.resource.rights')->getRoleRights($role);
-            if($config->getResource() !== null){
-                $config->setCanCreate(false);
-                $config->cleanResourceTypes();
-                $em->persist($config);
+            $this->resetCreationPermissionForResource($resourceId, $roleId);
+            if ($isRecursive) {
+                $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
+                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
+                foreach ($resources as $resource) {
+                    $this->resetCreationPermissionForResource($resources, $roleId);
+                }
             }
         }
 
@@ -662,30 +755,45 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $configs = $this->get('claroline.resource.rights')->getRights($resource);
-        $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
+        $collection = new ResourceCollection(array($resource));
+
+        if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+        }
+
+        $parameters = $this->get('request')->request->all();
+
+        if(isset($parameters['isRecursive'])){
+            $isRecursive = true;
+            unset($parameters['isRecursive']);
+        } else {
+            $isRecursive = false;
+        }
+
+        $checks = $this->get('claroline.resource.rights')->setRightsRequest($parameters);
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
         foreach($configs as $config){
-            if(!isset($checks[$config->getId()])){
-                $stub = new ResourceRights();
-                $stub->reset();
-                if($config->getResource() == null && $config->isEquals($stub->getRights()) == false){
-                    $stub->setResource($resource);
-                    $stub->setRole($config->getRole());
-                    $em->persist($stub);
-                }
+            if(isset($checks[$config->getId()])){
+                $config->setRights($checks[$config->getId()]);
             } else {
-                if($config->getResource() == null){
-                    //create a new config if it's different
-                    if(!$config->isEquals($checks[$config->getId()])){
-                        $resourceRights = new ResourceRights;
-                        $resourceRights->setRights($checks[$config->getId()]);
-                        $resourceRights->setResource($resource);
-                        $resourceRights->setRole($config->getRole());
-                        $em->persist($resourceRights);
+                $config->reset();
+            }
+            $em->persist($config);
+        }
+
+        if($isRecursive){
+            $resources =  $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource);
+            foreach ($resources as $resource){
+                $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
+
+                foreach($configs as $config){
+                    $key = $this->findKeyForConfig($checks, $config);
+                    if ($key !== null){
+                        $config->setRights($checks[$key]);
+                    } else {
+                        $config->reset();
                     }
-                } else {
-                    $config->setRights($checks[$config->getId()]);
                     $em->persist($config);
                 }
             }
@@ -716,5 +824,61 @@ class ResourceController extends Controller
         }
 
         return $resource;
+    }
+
+    /**
+     * Find the correct key to use in the $checks array for a ResourceRights entity.
+     *
+     * @param array $checks
+     * @param ResourceRight $config
+     *
+     * @return null|integer
+     */
+    private function findKeyForConfig($checks, $config)
+    {
+        $keys = array_keys($checks);
+        foreach ($keys as $key){
+            $baseConfig = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($key);
+            $role = $baseConfig->getRole();
+            if($config->getRole() == $role){
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the resource creation permission for a resource and a role.
+     *
+     * @param integer|AbstractResource $resource
+     * @param array $resourceTypesIds
+     * @param integer|Role $role
+     */
+    private function setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $roleId));
+        $config->cleanResourceTypes();
+
+        foreach ($resourceTypesIds as $id) {
+            $rt = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->find($id);
+            $config->addResourceType($rt);
+        }
+
+        $em->persist($config);
+    }
+
+    /**
+     * Reset the creation permission for a resource and a role.
+     *
+     * @param integer|AbstractResource $resource
+     * @param integer|Role $role
+     */
+    private function resetCreationPermissionForResource($resourceId, $roleId)
+    {
+        $config = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $roleId));
+        $config->cleanResourceTypes();
+        $this->get('doctrine.orm.entity_manager')->persist($config);
     }
 }

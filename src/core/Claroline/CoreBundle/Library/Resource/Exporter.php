@@ -53,7 +53,7 @@ class Exporter
             if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $resource = $resource->getResource();
             }
-            
+
             if ($resource->getResourceType()->getName() != 'directory') {
 
                 $eventName = $this->ut->normalizeEventName('export', $resource->getResourceType()->getName());

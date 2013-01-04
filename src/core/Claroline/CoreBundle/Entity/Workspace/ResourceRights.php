@@ -27,7 +27,7 @@ class ResourceRights
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="rights", cascade={"persist"})
      */
     private $resource;
 
@@ -57,9 +57,9 @@ class ResourceRights
     protected $canCopy;
 
     /**
-     * @ORM\Column(type="boolean", name="can_create")
+     * @ORM\Column(type="boolean", name="can_export")
      */
-    protected $canCreate;
+    protected $canExport;
 
     /**
      * @ORM\ManyToMany(
@@ -108,7 +108,7 @@ class ResourceRights
         return $this->canView;
     }
 
-    public function setcanView($canView)
+    public function setCanView($canView)
     {
         $this->canView = $canView;
     }
@@ -153,14 +153,14 @@ class ResourceRights
         $this->canCopy = $canCopy;
     }
 
-    public function canCreate()
+    public function setCanExport($canExport)
     {
-        return $this->canCreate;
+        $this->canExport = $canExport;
     }
 
-    public function setCanCreate($canCreate)
+    public function canExport()
     {
-        $this->canCreate = $canCreate;
+        return $this->canExport;
     }
 
     /**
@@ -173,7 +173,7 @@ class ResourceRights
         $this->canEdit = false;
         $this->canOpen = false;
         $this->canView = false;
-        $this->canCreate = false;
+        $this->canExport = false;
     }
 
     /**
@@ -207,7 +207,7 @@ class ResourceRights
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
             'canView' => $this->canView,
-            'canCreate' => $this->canCreate
+            'canExport' => $this->canExport
         );
     }
 

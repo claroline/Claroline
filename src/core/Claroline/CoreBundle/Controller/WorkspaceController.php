@@ -287,7 +287,8 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspaceId, 'parent' => null));
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
@@ -305,12 +306,13 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getDefaultForWorkspace($workspace);
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
         $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
 
         foreach($configs as $config){
-
             $config->reset();
+
             if(isset($checks[$config->getId()])){
                 $config->setRights($checks[$config->getId()]);
             }
