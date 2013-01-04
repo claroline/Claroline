@@ -258,4 +258,16 @@ class MessageController extends Controller
             'ClarolineCoreBundle:Message:list_user_removed_message.html.twig', array('userMessages' => $userMessages)
         );
     }
+
+    public function markAsReadAction($userMessageId){
+
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')->find($userMessageId);
+        $userMessage->markAsRead();
+        $em->persist($userMessage);
+        $em->flush();
+
+        return new Response('success', 203);
+    }
 }
