@@ -94,23 +94,21 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()->isGranted(array('CREATE', 'directory'), new ResourceCollection(array($this->root))));
+        $this->assertTrue($this->getSecurityContext()->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory'))));
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()->isGranted(array('CREATE', 'directory'), new ResourceCollection(array($this->root))));
+        $this->assertFalse($this->getSecurityContext()->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory'))));
 
         $this->logUser($this->manager);
         $fileType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'file'));
-        //No resource types means all permissions. It'll be changed later
         $this->rootRights->addResourceType($fileType);
         $em->persist($this->rootRights);
         $em->flush();
-        $this->assertFalse($this->getSecurityContext()->isGranted(array('CREATE', 'directory'), new ResourceCollection(array($this->root))));
+        $this->assertFalse($this->getSecurityContext()->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory'))));
     }
 
     public function testCopyResource()
     {
-        $this->markTestSkipped('Waiting the RoleVoterFix');
         $em = $this->getEntityManager();
 
         $resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
@@ -119,10 +117,10 @@ class ResourceVoterTest extends FunctionalTestCase
         $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', null, $this->manager);
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()->isGranted(array('COPY', $this->root), new ResourceCollection(array($directory))));
+        $this->assertTrue($this->getSecurityContext()->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root))));
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()->isGranted(array('COPY', $this->root), new ResourceCollection(array($directory))));
+        $this->assertFalse($this->getSecurityContext()->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root))));
     }
 
     public function testMoveResource()

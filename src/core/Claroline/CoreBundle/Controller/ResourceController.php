@@ -50,8 +50,9 @@ class ResourceController extends Controller
     {
         $parent = $this->getDoctrine()->getEntityManager()->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($parentId);
         $collection = new ResourceCollection(array($parent));
+        $collection->setAttributes(array('type' => $resourceType));
 
-        if (!$this->get('security.context')->isGranted(array('CREATE', $resourceType), $collection)) {
+        if (!$this->get('security.context')->isGranted('CREATE', $collection)) {
             throw new AccessDeniedException(var_dump($collection->getErrors()));
         }
 
@@ -325,9 +326,9 @@ class ResourceController extends Controller
             }
         }
 
-        $this->get('security.context')->isGranted(array('MOVE', $newParent), $collection);
+        $collection->addAttribute('parent', $newParent);
 
-        if (!$this->get('security.context')->isGranted(array('MOVE', $newParent), $collection)) {
+        if (!$this->get('security.context')->isGranted('MOVE', $collection)) {
             foreach ($collection->getResources() as $resource) {
                 throw new AccessDeniedException(var_dump($collection->getErrors()));
             }
@@ -559,8 +560,9 @@ class ResourceController extends Controller
         }
 
         $collection = new ResourceCollection($resources);
+        $collection->addAttribute('parent', $parent);
 
-        if (!$this->get('security.context')->isGranted(array('COPY', $parent), $collection)) {
+        if (!$this->get('security.context')->isGranted('COPY', $collection)) {
             throw new AccessDeniedException(var_dump($collection->getErrors()));
         }
 

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Doctrine\ORM\EntityManager;
@@ -15,28 +16,36 @@ class ResourceVoter implements VoterInterface
 {
     private $em;
     private $repository;
+    private $translator;
+    private $validAttributes;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Translator $translator)
     {
         $this->em = $em;
         $this->repository = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights');
+        $this->translator = $translator;
+        $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
+        if (!in_array($attributes[0], $this->validAttributes)){
+            return VoterInterface::ACCESS_ABSTAIN;
+        }
 
         if ($object instanceof ResourceCollection){
             $errors = array();
 
             if ($attributes[0] == 'CREATE') {
+                //there should be one one resource every time (you only create resource one at a time in a single directory
                 foreach ($object->getResources() as $resource) {
                     $rights = $this->repository->getRights($token->getUser(), $resource);
 
                     if ($rights == null) {
-                        $errors[] = "[CREATE]: Access denied for resource {$resource->getPathForDisplay()}: no role found.";
+                        $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $resource->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($object->getAttribute('type')), array(), 'resource')), 'platform');
                     } else {
-                        if (!$this->canCreate($rights, $attributes[1])) {
-                            $errors[] = "[CREATE] Can not create {$attributes[1]} in {$resource->getPathForDisplay()}: Access denied.";
+                        if (!$this->canCreate($rights, $object->getAttribute('type'))) {
+                            $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $resource->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($object->getAttribute('type')), array(), 'resource')), 'platform');
                         }
                     }
                 }
@@ -44,64 +53,57 @@ class ResourceVoter implements VoterInterface
 
             if ($attributes[0] == 'MOVE'){
 
-                foreach($object->getResources() as $resource){
+                $parentRights = $this->repository->getRights($token->getUser(), $object->getAttribute('parent'));
 
-                    $rights = $this->repository->getRights($token->getUser(), $resource);
-                    $parentRights = $this->repository->getRights($token->getUser(), $attributes[1]);
-
-                    if ($parentRights == null) {
-                        $errors[] = "[CREATE]: Access denied for resource {$resource->getPathForDisplay()}: no role found.";
-                    } else {
+                if ($parentRights == null) {
+                    $errors[] = $this->translator->trans('resource_creation_denied', array('%path%' => $object->getAttribute('parent')->getPathForDisplay()), 'platform');
+                } else {
+                    foreach($object->getResources() as $resource){
                         if (!$this->canCreate($parentRights, $resource->getResourceType()->getName())) {
-                            $errors[] = "[CREATE] Can not create {$resource->getResourceType()->getName()} in {$attributes[1]->getPathForDisplay()}: Access denied.";
+                             $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $object->getAttribute('parent')->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($resource->getResourceType()->getName()), array(), 'resource')), 'platform');
                         }
-                    }
 
-                    if(!$rights->canCopy()){
-                        $errors[] = "[MOVE]: Can not copy {$resource->getPathForDisplay()}: Access denied.";
-                    }
+                        $rights = $this->repository->getRights($token->getUser(), $resource);
 
-                    if(!$rights->canDelete()){
-                        $errors[] = "[MOVE]: Can not delete {$resource->getPathForDisplay()}: Access denied.";
+                        if(!$rights->canCopy()){
+                            $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => 'COPY'), 'platform');
+                        }
+
+                        if(!$rights->canDelete()){
+                            $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => 'DELETE'), 'platform');
+                        }
                     }
                 }
             }
 
             if ($attributes[0] == 'COPY') {
 
-                foreach ($object->getResources() as $resource) {
+                $parentRights = $this->repository->getRights($token->getUser(), $object->getAttribute('parent'));
 
-                    $rights = $this->repository->getRights($token->getUser(), $resource);
-                    
-                    $parentRights = $this->repository->getRights($token->getUser(), $attributes[1]);
-
-                    if ($parentRights == null) {
-                        $errors[] = "[CREATE]: Access denied for resource {$resource->getPathForDisplay()}: no role found.";
-                    } else {
+                if ($parentRights == null) {
+                    $errors[] = $this->translator->trans('resource_creation_denied', array('%path%' => $object->getAttribute('parent')->getPathForDisplay()), 'platform');
+                } else {
+                    foreach ($object->getResources() as $resource) {
                         if (!$this->canCreate($parentRights, $resource->getResourceType()->getName())) {
-                            $errors[] = "[CREATE] Can not create {$resource->getResourceType()->getName()} in {$attributes[1]->getPathForDisplay()}: Access denied.";
+                            $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $object->getAttribute('parent')->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($resource->getResourceType()->getName()), array(), 'resource')), 'platform');
                         }
                     }
-/*
-                    if(!$rights->canCopy()){
-                        $errors[] = "[COPY]: Can not copy {$resource->getPathForDisplay()}: Access denied.";
-                    }*/
                 }
             }
 
             $call = "can" . ucfirst(strtolower($attributes[0]));
             $action = strtoupper($attributes[0]);
             $rr = new ResourceRights;
+
             if (method_exists($rr, $call)) {
                 foreach ($object->getResources() as $resource) {
                     $rights = $this->repository->getRights($token->getUser(), $resource);
 
                     if($rights == null){
-
-                        $errors[] = "[{$action}]: Access denied for resource {$resource->getPathForDisplay()}: no role found.";
+                        $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => $action), 'platform');
                     } else {
                         if (!$rights->$call()){
-                            $errors[] = "[{$action}]: Access denied for resource {$resource->getPathForDisplay()}: user {$token->getUser()->getUserName()} doesn't have the permission {$attributes[0]}";
+                            $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => $action), 'platform');
                         }
                     }
                 }
