@@ -211,3 +211,6 @@ workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: Espaces d'activités
 ws_creator: Créateur d'espaces
+resource_creation_wrong_type: "Vous n'avez pas la permission de créer un(e) %type% dans le répertoire '%path%': accès refusé."
+resource_creation_denied: "Vous n'avez pas la permission de créer une ressource dans le répertoire '%path': accès refusé."
+resource_action_denied_message: "L'action %action% n'a pas pu être exécutée sur la resource '%path%': accès refusé."
