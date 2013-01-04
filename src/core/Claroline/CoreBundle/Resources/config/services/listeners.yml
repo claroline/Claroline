@@ -8,14 +8,6 @@ services:
             - { name: doctrine.event_subscriber, event: prePersist}
             - { name: doctrine.event_subscriber, event: preUpdate}
 
-    claroline.listener.acl_persister:
-        class: Claroline\CoreBundle\Listener\AclPersister
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: doctrine.event_subscriber, event: preRemove}
-            - { name: doctrine.event_subscriber, event: postPersist}
-
     claroline.listener.locale_setter:
         class: Claroline\CoreBundle\Listener\LocaleSetter
         arguments: ["@claroline.config.platform_config_handler"]
