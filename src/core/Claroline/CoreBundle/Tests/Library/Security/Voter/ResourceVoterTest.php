@@ -121,10 +121,47 @@ class ResourceVoterTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/user'));
         $this->assertFalse($this->getSecurityContext()->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root))));
+
+        $this->logUser($this->manager);
+        $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
+        $this->rootRights->removeResourceType($directoryType);
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getRights($this->manager, $directory);
+        $directoryRights->setCanCopy(false);
+        $em->persist($this->rootRights);
+        $em->persist($directoryRights);
+        $em->flush();
+        $collection = new ResourceCollection(array($directory), array('parent' => $this->root));
+        $this->assertFalse($this->getSecurityContext()->isGranted('COPY', $collection));
+        $this->assertEquals(2, count($collection->getErrors()));
     }
 
     public function testMoveResource()
     {
-        $this->markTestSkipped('Waiting the RoleVoterFix');
+        $em = $this->getEntityManager();
+
+        $resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
+        $directory = new Directory();
+        $directory->setName('NEWDIR');
+        $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', null, $this->manager);
+
+        $this->logUser($this->manager);
+        $this->assertTrue($this->getSecurityContext()->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root))));
+
+        $this->logUser($this->getFixtureReference('user/user'));
+        $this->assertFalse($this->getSecurityContext()->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root))));
+
+        $this->logUser($this->manager);
+        $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
+        $this->rootRights->removeResourceType($directoryType);
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getRights($this->manager, $directory);
+        $directoryRights->setCanCopy(false);
+        $directoryRights->setCanDelete(false);
+        $em->persist($this->rootRights);
+        $em->persist($directoryRights);
+
+        $em->flush();
+        $collection = new ResourceCollection(array($directory), array('parent' => $this->root));
+        $this->assertFalse($this->getSecurityContext()->isGranted('MOVE', $collection));
+        $this->assertEquals(3, count($collection->getErrors()));
     }
 }
