@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
@@ -87,8 +88,7 @@ class Manager
             }
 
             $this->em->persist($resource);
-            $this->em->flush();
-
+            $this->setResourceRights($parent, $resource);
 
             $event = new ResourceLoggerEvent(
                 $resource,
@@ -114,8 +114,16 @@ class Manager
         $child->setParent($parent);
         $rename = $this->ut->getUniqueName($child, $parent);
         $child->setName($rename);
+        $rights = $child->getRights();
+
+        foreach($rights as $right){
+            $this->em->remove($right);
+        }
+
         try {
             $this->em->flush();
+            $this->setResourceRights($parent, $child);
+
             $event = new ResourceLoggerEvent(
                 $child,
                 ResourceLoggerEvent::MOVE_ACTION
@@ -150,6 +158,7 @@ class Manager
                 $this->deleteDirectory($resource);
             }
         }
+        
         $this->em->flush();
     }
 
@@ -194,6 +203,7 @@ class Manager
         }
 
         $this->em->persist($copy);
+        $this->setResourceRights($parent, $copy);
         $this->em->flush();
 
         return $copy;
@@ -243,5 +253,35 @@ class Manager
         }
 
         $this->em->remove($resource);
+    }
+
+    /**
+     * Copy the resource rights from $old to $resource.
+     *
+     * @param AbstractResource $old
+     * @param AbstractResource $resource
+     */
+    public function setResourceRights($old, $resource)
+    {
+        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $old));
+
+        foreach($resourceRights as $resourceRight){
+            $rs = new ResourceRights();
+            $rs->setRole($resourceRight->getRole());
+            $rs->setResource($resource);
+            $rs->setRights($resourceRight->getRights());
+            //creation rights
+            $resourceTypes = $resourceRight->getResourceTypes();
+
+            if($resource->getResourceType()->getName() == 'directory'){
+                foreach($resourceTypes as $resourceType){
+                    $rs->addResourceType($resourceType);
+                }
+            }
+
+            $this->em->persist($rs);
+        }
+
+        $this->em->flush();
     }
 }

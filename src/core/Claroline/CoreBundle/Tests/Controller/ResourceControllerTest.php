@@ -14,7 +14,7 @@ class ResourceControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user'));
+        $this->loadUserFixture(array('user', 'admin'));
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->originalPath = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
@@ -301,15 +301,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent())));
     }
 
-    public function testEveryUserInstances()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createBigTree($this->pwr->getId());
-        $this->client->request('GET', '/resource/user/instances/all');
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(3, count($jsonResponse));
-    }
-
     public function testDelete()
     {
         $this->logUser($this->getFixtureReference('user/user'));
@@ -529,7 +520,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $file = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($file->id);
-        $resourceRights = $this->client->getContainer()->get('claroline.resource.rights')->getRights($file);
+        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $file));
         $this->assertEquals(3, count($resourceRights));
 
         //changes keep the 1st $resourceRight and change the others
@@ -544,22 +535,37 @@ class ResourceControllerTest extends FunctionalTestCase
              )
         );
 
-        $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
-        $resourceRights = $this->client->getContainer()->get('claroline.resource.rights')->getRights($file);
+        $resourceRights = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $file));
         $this->assertEquals(3, count($resourceRights));
-        $this->assertEquals(5, count($newRights));
+        $this->assertTrue($resourceRights[0]->isEquals(array(
+            'canView' => true,
+            'canCopy' => false,
+            'canDelete' => false,
+            'canEdit' => false,
+            'canOpen' => false,
+            'canCreate' => false,
+            'canExport' => false
+        )));
 
-        $this->client->request(
-            'POST',
-            "/resource/{$file->getId()}/rights/edit",
-            array(
-                "canView-{$resourceRights[0]->getId()}" => true,
-                "canDelete-{$resourceRights[1]->getId()}" => true,
-            )
-        );
+        $this->assertTrue($resourceRights[1]->isEquals(array(
+            'canView' => true,
+            'canCopy' => false,
+            'canDelete' => true,
+            'canEdit' => false,
+            'canOpen' => false,
+            'canCreate' => false,
+            'canExport' => false
+        )));
 
-        $newRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getAllForResource($file);
-        $this->assertEquals(5, count($newRights));
+        $this->assertTrue($resourceRights[2]->isEquals(array(
+            'canView' => false,
+            'canCopy' => false,
+            'canDelete' => false,
+            'canEdit' => false,
+            'canOpen' => false,
+            'canCreate' => false,
+            'canExport' => false
+        )));
     }
 
     public function testDisplayCreationRightForm()
@@ -592,23 +598,13 @@ class ResourceControllerTest extends FunctionalTestCase
         );
 
         //checks if the creation right is set to true now
-        $configs = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findBy(array('role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
-
-        $this->assertEquals(2, count($configs));
-
         $config = $this
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findOneBy(array('resource' => $dir->id));
+            ->findOneBy(array('resource' => $dir->id, 'role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
 
-        $this->assertTrue($config->canCreate());
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(2, count($permCreate));
 
@@ -623,41 +619,37 @@ class ResourceControllerTest extends FunctionalTestCase
             )
         );
 
-        $configs = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findBy(array('role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
-
-        $this->assertEquals(2, count($configs));
-
         $config = $this
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findOneBy(array('resource' => $dir->id));
+            ->findOneBy(array('resource' => $dir->id, 'role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
 
-        $this->assertTrue($config->canCreate());
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(3, count($permCreate));
+    }
 
-        //removing perm also remove the canCreate right
+    public function testChildrenAction()
+    {
+        $this->logUser($this->getFixtureReference('user/user'));
+        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($jsonResponse));
         $this->client->request(
             'POST',
-            "/resource/{$dir->id}/role/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()->getId()}/right/creation/edit",
-            array()
+            "/resource/{$file->id}/rights/edit",
+            array (
+            )
         );
-
-       $config = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findOneBy(array('resource' => $dir->id));
-
-       $this->assertFalse($config->canCreate());
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($jsonResponse));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $jsonResponse = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($jsonResponse));
     }
 
     private function uploadFile($parentId, $name)

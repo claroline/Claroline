@@ -140,6 +140,14 @@ abstract class AbstractResource
     */
     protected $path;
 
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights",
+     *      mappedBy="resource"
+     * )
+     */
+    protected $rights;
+
     //the user icon
     protected $userIcon;
 
@@ -417,5 +425,8 @@ abstract class AbstractResource
         return $this->shortcuts;
     }
 
-
+    public function getRights()
+    {
+        return $this->rights;
+    }
 }

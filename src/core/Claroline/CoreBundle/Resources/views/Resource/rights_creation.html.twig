@@ -13,21 +13,19 @@
             {% for config in configs %}
                 <td>
                     <input name="create-{{ resourceType.getId() }}" type="checkbox" value="1"
-                       {% if config.canCreate() %}
-                           {% for createType in config.getResourceTypes() %}
-                                {% if createType.getName() == resourceType.getName() %}
-                                    checked
-                                {% endif %}
-                           {% endfor %}
-                           {% if config.resourceTypes|length == 0 %}
+                       {% for createType in config.getResourceTypes() %}
+                            {% if createType.getName() == resourceType.getName() %}
                                 checked
-                           {% endif %}
-                       {% endif %}>
+                            {% endif %}
+                       {% endfor %}
+                    >
                 </td>
             {% endfor %}
         </tr>
         {% endfor %}
     </table>
+    <input name="isRecursive" type="checkbox" value="1"> {{ 'recursive'|trans({}, 'platform')}}</input>
+    <br/>
     <input type="submit" value="submit"/>
 </form>
 

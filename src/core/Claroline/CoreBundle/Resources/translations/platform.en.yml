@@ -214,3 +214,6 @@ workspace_tools: Tools
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: Workspace creator
+resource_creation_wrong_type: "You don't have the permission to create a(n) %type% in the directory '%path%': access denied"
+resource_creation_denied: "You don't have the permission to create in the directory '%path': access denied"
+resource_action_denied_message: "The action %action% couldn't be done on '%path%': acces denied."

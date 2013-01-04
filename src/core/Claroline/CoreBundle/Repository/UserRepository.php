@@ -47,6 +47,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
+
         if (!$this->supportsClass($class)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
@@ -64,6 +65,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         //Deep doctrine sorcery goes here.
         //This will help doctrine to not make 1 request by role.
+
         $dql = "SELECT r, ws FROM Claroline\CoreBundle\Entity\Role r
             LEFT JOIN r.users users WITH users IN (SELECT u from Claroline\CoreBundle\Entity\User u where u.id = {$user->getId()})
             LEFT JOIN r.workspace ws";
