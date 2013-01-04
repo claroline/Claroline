@@ -66,4 +66,15 @@ class ResourceCollection
     {
         unset($this->attributes[$key]);
     }
+
+    public function getErrorsForDisplay()
+    {
+        $content = '';
+
+        foreach($this->errors as $error){
+            $content.="<p>{$error}</p>";
+        }
+
+        return $content;
+    }
 }
