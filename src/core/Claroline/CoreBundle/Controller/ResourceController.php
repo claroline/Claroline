@@ -53,7 +53,7 @@ class ResourceController extends Controller
         $collection->setAttributes(array('type' => $resourceType));
 
         if (!$this->get('security.context')->isGranted('CREATE', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create', $resourceType);
@@ -93,7 +93,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         //If it's a link, the resource will be its target.
@@ -134,7 +134,7 @@ class ResourceController extends Controller
         }
 
         if (!$this->get('security.context')->isGranted('DELETE', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         foreach ($collection->getResources() as $resource) {
@@ -161,7 +161,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourceNameType(), $resource);
@@ -189,7 +189,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourceNameType(), $resource);
@@ -227,7 +227,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
@@ -254,7 +254,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
@@ -330,7 +330,7 @@ class ResourceController extends Controller
 
         if (!$this->get('security.context')->isGranted('MOVE', $collection)) {
             foreach ($collection->getResources() as $resource) {
-                throw new AccessDeniedException(var_dump($collection->getErrors()));
+                throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
             }
         }
 
@@ -372,7 +372,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $event = new CustomActionResourceEvent($resource);
@@ -414,7 +414,7 @@ class ResourceController extends Controller
         }
 
         if (!$this->get('security.context')->isGranted('EXPORT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $file = $this->get('claroline.resource.exporter')->exportResources($ids);
@@ -563,7 +563,7 @@ class ResourceController extends Controller
         $collection->addAttribute('parent', $parent);
 
         if (!$this->get('security.context')->isGranted('COPY', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         foreach ($resources as $resource) {
@@ -659,7 +659,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
@@ -685,7 +685,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
@@ -705,7 +705,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $request = $this->get('request');
@@ -758,7 +758,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $parameters = $this->get('request')->request->all();
