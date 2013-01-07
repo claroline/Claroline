@@ -483,8 +483,9 @@ class ResourceController extends Controller
         }
 
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $resource = $this->getResource($repo->find($resourceId));
-        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true, true, $this->get('security.context')->getToken()->getUser());
+        $resource = $repo->find($resourceId);
+        $resource = $this->getResource($resource);
+        $results = $repo->children($resource->getId(), $resourceTypeId, true, true, $this->get('security.context')->getToken()->getUser());
         $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -512,25 +513,6 @@ class ResourceController extends Controller
             $parents = $repo->listAncestors($resource);
             $response->setContent(json_encode($parents));
         }
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of the resources of a defined type for the current user.
-     *
-     * @param integer $resourceTypeId
-     * @param integer $rootId
-     */
-    public function resourceListAction($resourceTypeId, $rootId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
-        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($rootId);
-        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($root, $resourceType, true);
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
@@ -729,7 +711,7 @@ class ResourceController extends Controller
             $this->setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId);
             if ($isRecursive){
                 $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
-                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
+                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource, $dirType);
                 foreach($resources as $resource){
                      $this->setCreationPermissionForResource($resources, $resourceTypesIds, $roleId);
                 }
@@ -739,7 +721,7 @@ class ResourceController extends Controller
             $this->resetCreationPermissionForResource($resourceId, $roleId);
             if ($isRecursive) {
                 $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
-                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
+                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource, $dirType);
                 foreach ($resources as $resource) {
                     $this->resetCreationPermissionForResource($resources, $roleId);
                 }
@@ -783,7 +765,7 @@ class ResourceController extends Controller
         }
 
         if($isRecursive){
-            $resources =  $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource);
+            $resources =  $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource);
             foreach ($resources as $resource){
                 $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 

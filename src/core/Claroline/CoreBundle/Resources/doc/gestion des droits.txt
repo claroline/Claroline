@@ -96,7 +96,7 @@ Système actuel:
 
 Quand on ouvre une ressource dans l'activité, on passe par la méthode OpenAction du controller.
 Si la ressource se situe dans un workspace dans lequel l'utilisateur n'a aucun droit, il n'aura pas accès à la ressource.
-Est-ce un problème ?
+Est-ce un problème ? Même principe pour un lien (vu que lorsqu'on clique sur un lien on ouvre la cible).
 
 S'il s'agit simplement de séquencer les ressources, on peut leur mettre le droit VIEW a false pour les élèves en gardant
 le droit OPEN a true. Les élèves ne pourront pas voir les ressources dans le gestionnaire de ressource (il peuvent toujours les ouvrir
@@ -120,3 +120,7 @@ Que se passe-t-il si par exemple, un manager du workspace décide que les resour
 Plus personne (excepté l'admin tout puissant) ne pourra les voir.
 Idem s'il retire les droits d'éditions a tout le monde. Il ne sera plus possible de rechanger les droits de cette resource, sauf pour
 l'admin évidemment.
+
+7) Interface pour la création des liens ?
+Actuellement: créer un nouveau lien => resource picker => pick.
+Alternative: bouton créer un lien dans le menu de la ressource.
