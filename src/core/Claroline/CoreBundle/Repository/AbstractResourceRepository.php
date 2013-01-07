@@ -27,15 +27,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
     const SELECT_FOR_ARRAY = "
             ar.id as id,
             ar.name as name,
-            ar.creationDate as created,
-            ar.updated as updated,
             ar.path as path,
-            ar.lvl as lvl,
             IDENTITY(ar.parent) as parent_id,
-            IDENTITY(ar.workspace) as workspace_id,
-            aru.id as creator_id,
             aru.username as creator_username,
-            rt.id as resource_type_id,
             rt.name as type,
             rt.isBrowsable as is_browsable,
             ic.relativeUrl as large_icon ";
@@ -102,7 +96,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns all direct resources under parent. Returns a list of entities or an array if requested.
-     * 
+     *
      * @param int $parentId Parent ID of children that we request.
      * @param int $resourceTypeId ResourceType ID to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
@@ -444,6 +438,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
             // Add a field "pathfordisplay" in each entity (as array) of the given array.
             foreach ($res as &$r) {
                 $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
+                unset($r['path']);
+//                unset($r['parent_id']);
             }
         } else {
             $res = $query->getResult();
