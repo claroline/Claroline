@@ -71,13 +71,14 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns all resources under parent. Returns a list of entities or an array if requested.
+     *
      * @param AbstractResource $parent Parent of children that we request.
      * @param int ResourceType $resourceType Resource type to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
      *
      * @return an array of arrays or entities
      */
-    public function listChildrenResourceInstances(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
+    public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
                 . " FROM " . self::FROM_RESOURCES
@@ -101,6 +102,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns all direct resources under parent. Returns a list of entities or an array if requested.
+     * 
      * @param int $parentId Parent ID of children that we request.
      * @param int $resourceTypeId ResourceType ID to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
@@ -109,7 +111,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function listDirectChildrenResources($parentId, $resourceTypeId = 0, $asArray = false, $isVisible = true, User $user = null)
+    public function children($parentId, $resourceTypeId = 0, $asArray = false, $isVisible = true, User $user = null)
     {
         $dql = "SELECT DISTINCT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
                 . " FROM " . self::FROM_RESOURCES;

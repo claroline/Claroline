@@ -162,21 +162,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals($jsonResponse[0]->workspace_id, $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
     }
 
-    public function testResourceListAction()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createTree($this->pwr->getId());
-        $fileId = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('name' => 'file'))
-            ->getId();
-        $this->client->request('GET', "/resource/list/{$fileId}/{$this->pwr->getId()}");
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($jsonResponse));
-    }
-
     public function testGetEveryInstancesIdsFromExportArray()
     {
         $this->logUser($this->getFixtureReference('user/user'));
