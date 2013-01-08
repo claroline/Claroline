@@ -97,20 +97,37 @@
                 </div>
 
             {% else %}
-
-                {# Not connected #}
-                <div class="nav-collapse">
-                    <ul class="nav pull-right">
-                    {% if register_target is not null %}
-                        <li><a id="link-registration" href="{{ path(register_target) }}">
-                            {{ 'register'|trans({}, 'platform') }}
+                <div class="btn-group pull-right">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon-user"></i>  {{ 'anonymous'|trans({}, 'platform') }} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% if register_target is not null %}
+                            <li><a id="link-registration" href="{{ path(register_target) }}">
+                                {{ 'register'|trans({}, 'platform') }}
+                            </a></li>
+                        {% endif %}
+                        <li><a href="{{ path(login_target) }}" id="link-login">
+                            {{ 'login'|trans({}, 'platform') }}
                         </a></li>
-                    {% endif %}
-                    <li><a href="{{ path(login_target) }}" id="link-login">
-                        {{ 'login'|trans({}, 'platform') }}
-                    </a></li>
+                    </ul>
                 </div>
-
+                <div class="btn-group pull-right">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        {{ 'workspaces'|trans({}, 'platform') }}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for workspace in workspaces %}
+                            <li>
+                                <a href="{{path('claro_workspace_home', {'workspaceId': workspace.getId()})}}" id="link-workspace-{{ workspace.getId() }}">
+                                    {{ workspace.getName() }}
+                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
 
             {% if connected %}
