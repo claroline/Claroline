@@ -56,7 +56,7 @@ rôles et les utilisateurs qui y sont associés.
 Par défaut les rôles d'un workspace sont "visiteur du ws X", "collaborateur du ws X", "administrateur du ws X"
 Un utilisateur qui possède un de ces rôles aura dont accès au workspace. Il est possible dans la gestion des droits d'une ressource
 de modifier les permissions que possède un de ces rôles.
-Lorsque l'on ouvre un lien, quel contexte sera gardé ? le contexte du lien ? le contexte de la cibile ? un truc hybride (à définir).
+Lorsque l'on ouvre un lien, quel contexte sera gardé ? le contexte du lien ? le contexte de la cible ? un truc hybride (à définir).
 C'est important car le contexte définit les droits des utilisateurs.
 
 Ex:
@@ -70,7 +70,10 @@ On garde le contexte du lien:
 - J'ouvre le lien
 - Comme je peux ouvrir le lien, j'ai accès à la ressource meme si elle est bloquée dans le contexte de la cible.
 - Si la cible redéfini sa propre gestion de droits (ex un forum) elle n'est (a priori) pas consciente des liens et
-les utilisateurs venant d'ailleurs n'auront de tout façon aucun droits.
+les utilisateurs venant d'ailleurs n'auront de tout façon aucun droits (enfin elle pourrait).
+
+~ Sinon on fait un genre de combinaison entre les droits du liens et de la cible ?
+Actuellement les droits du liens (quand on le crée) sont les droits par de la resource parent.
 
 Une début de solution ?:
 Lorsqu'on fait un lien sur une cible, un duplique les tables des droits de la cible... pour les rôle de la source.
@@ -120,6 +123,8 @@ Que se passe-t-il si par exemple, un manager du workspace décide que les resour
 Plus personne (excepté l'admin tout puissant) ne pourra les voir.
 Idem s'il retire les droits d'éditions a tout le monde. Il ne sera plus possible de rechanger les droits de cette resource, sauf pour
 l'admin évidemment.
+
+Combinaison de droits ? Bouger/Copier
 
 7) Interface pour la création des liens ?
 Actuellement: créer un nouveau lien => resource picker => pick.
