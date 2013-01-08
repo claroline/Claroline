@@ -45,10 +45,10 @@ class Manager
     /**
      * Creates a resource. If instanceParentId is null, added to the root.
      *
-     * @param integer          $parentInstanceId
-     * @param integer          $workspaceId
-     * @param AbstractResource $object
-     * @param boolean          $instance the return type
+     * @param integer          $parentId
+     * @param string           $resouceType
+     * @param AbstractResource $resource
+     * @param User             $user
      *
      * @return  Abstractesource
      *
@@ -62,44 +62,39 @@ class Manager
             $user = $this->sc->getToken()->getUser();
         }
 
-        if (null !== $resource) {
+        $resource->setCreator($user);
+        $parent = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($parentId);
 
-            $resource->setCreator($user);
-            $parent = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-                ->find($parentId);
+        $resource->setParent($parent);
+        $resource->setResourceType($resourceType);
+        $resource->setWorkspace($parent->getWorkspace());
+        $rename = $this->ut->getUniqueName($resource, $parent);
+        $resource->setName($rename);
+        $resource->setCreator($user);
 
-            $resource->setParent($parent);
-            $resource->setResourceType($resourceType);
-            $resource->setWorkspace($parent->getWorkspace());
-            $rename = $this->ut->getUniqueName($resource, $parent);
-            $resource->setName($rename);
-            $resource->setCreator($user);
+        if ($resource->getUserIcon() == null){
+            $resource = $this->ic->setResourceIcon($resource, $mimeType);
 
-            if ($resource->getUserIcon() == null){
-                $resource = $this->ic->setResourceIcon($resource, $mimeType);
-
-            } else {
-                //upload the icon
-                $iconFile = $resource->getUserIcon();
-                $icon = $this->ic->createCustomIcon($iconFile);
-                $this->em->persist($icon);
-                $resource->setIcon($icon);
-            }
-
-            $this->em->persist($resource);
-            $this->setResourceRights($parent, $resource);
-
-            $event = new ResourceLoggerEvent(
-                $resource,
-                ResourceLoggerEvent::CREATE_ACTION
-            );
-            $this->ed->dispatch('log_resource', $event);
-
-            return $resource;
+        } else {
+            //upload the icon
+            $iconFile = $resource->getUserIcon();
+            $icon = $this->ic->createCustomIcon($iconFile);
+            $this->em->persist($icon);
+            $resource->setIcon($icon);
         }
 
-        throw \Exception("failed to create resource");
+        $this->em->persist($resource);
+        $this->setResourceRights($parent, $resource);
+
+        $event = new ResourceLoggerEvent(
+            $resource,
+            ResourceLoggerEvent::CREATE_ACTION
+        );
+        $this->ed->dispatch('log_resource', $event);
+
+        return $resource;
     }
 
     /**
@@ -158,7 +153,7 @@ class Manager
                 $this->deleteDirectory($resource);
             }
         }
-        
+
         $this->em->flush();
     }
 
@@ -264,7 +259,6 @@ class Manager
     public function setResourceRights($old, $resource)
     {
         $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $old));
-
         foreach($resourceRights as $resourceRight){
             $rs = new ResourceRights();
             $rs->setRole($resourceRight->getRole());

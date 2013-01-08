@@ -72,7 +72,7 @@ class ResourceController extends Controller
             }
 
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
+            $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
         } else {
             if($event->getErrorFormContent() != null){
                 $response->setContent($event->getErrorFormContent());
@@ -313,7 +313,6 @@ class ResourceController extends Controller
         $resourceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
         $resourceManager = $this->get('claroline.resource.manager');
-        $converter = $this->get('claroline.utilities.entity_converter');
         $movedResources = array();
 
         $collection = new ResourceCollection();
@@ -341,7 +340,7 @@ class ResourceController extends Controller
             if ($resource != null) {
                 try {
                      $movedResource = $resourceManager->move($resource, $newParent);
-                     $movedResources[] = $converter->toStdClass($movedResource);
+                     $movedResources[] = $this->get('claroline.resource.converter')->toArray($movedResource, $this->get('security.context')->getToken()->getUser());
                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
                      throw new \RuntimeException('Cannot move a resource into itself');
                 }
@@ -462,7 +461,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $response = new Response($this->get('claroline.resource.converter')->ResourceToJson($root));
+        $response = new Response($this->get('claroline.resource.converter')->toJson($root, $this->get('security.context')->getToken()->getUser()));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -485,7 +484,7 @@ class ResourceController extends Controller
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource = $repo->find($resourceId);
         $resource = $this->getResource($resource);
-        $results = $repo->children($resource->getId(), $resourceTypeId, true, true, $this->get('security.context')->getToken()->getUser());
+        $results = $repo->children($resource->getId(), $this->get('security.context')->getToken()->getUser(), $resourceTypeId, true, true);
         $content = json_encode($results);
         $response = new Response($content);
         $response->headers->set('Content-Type', 'application/json');
@@ -529,7 +528,6 @@ class ResourceController extends Controller
         $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceDestinationId);
-        $converter = $this->get('claroline.utilities.entity_converter');
         $newNodes = array();
         $resources = array();
 
@@ -553,7 +551,7 @@ class ResourceController extends Controller
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
-            $newNodes[] = $converter->toStdClass($newNode);
+            $newNodes[] = $this->get('claroline.resource.converter')->toArray($newNode, $this->get('security.context')->getToken()->getUser());
         }
 
         $response = new Response(json_encode($newNodes));
@@ -601,7 +599,6 @@ class ResourceController extends Controller
         $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $ids = $this->container->get('request')->query->get('ids', array());
         $parent = $repo->find($newParentId);
-        $converter = $this->get('claroline.utilities.entity_converter');
 
         foreach($ids as $resourceId){
             $resource = $repo->find($resourceId);
@@ -624,8 +621,9 @@ class ResourceController extends Controller
             $em->persist($shortcut);
             $em->flush();
             $em->refresh($parent);
-            $this->get('claroline.resource.manager')->setResourceRights($resource, $shortcut);
-            $links[] = $converter->toStdClass($shortcut);
+            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
+
+            $links[] = $this->get('claroline.resource.converter')->toArray($shortcut, $this->get('security.context')->getToken()->getUser());
         }
 
         $response = new Response(json_encode($links));
@@ -730,7 +728,11 @@ class ResourceController extends Controller
 
         $em->flush();
 
-        return new Response('success');
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
+
+        return $response;
     }
 
     public function editRightsAction($resourceId)
@@ -782,6 +784,8 @@ class ResourceController extends Controller
         }
 
         $em->flush();
+
+        $json = $resource;
 
         return new Response('success');
     }

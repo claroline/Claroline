@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\User;
 
 class Converter
 {
@@ -15,7 +16,7 @@ class Converter
         $this->em = $em;
     }
 
-    public function resourceToArray(AbstractResource $resource)
+    public function toArray(AbstractResource $resource, User $user)
     {
         $resourceArray = array();
         $resourceArray['id'] = $resource->getId();
@@ -26,15 +27,31 @@ class Converter
         $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
         $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $resource->getPathForDisplay();
-        $array = array();
-        $array[0] = $resourceArray;
 
-        return $array;
+        $isAdmin = false;
+        foreach($user->getRoles() as $role){
+           if($role == 'ROLE_ADMIN'){
+               $isAdmin = true;
+           }
+        }
+
+        if($isAdmin){
+            $resourceArray['can_export'] = true;
+            $resourceArray['can_edit'] = true;
+            $resourceArray['can_delete'] = true;
+        } else {
+            $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')->getRights($user, $resource);
+            $resourceArray['can_export'] = $rights->canExport();
+            $resourceArray['can_edit'] = $rights->canEdit();
+            $resourceArray['can_delete'] = $rights->canDelete();
+        }
+
+        return $resourceArray;
     }
 
-    public function ResourceToJson(AbstractResource $resource)
+    public function toJson(AbstractResource $resource, User $user)
     {
-        $phpArray = $this->resourceToArray($resource);
+        $phpArray[0] = $this->toArray($resource, $user);
         $json = json_encode($phpArray);
 
         return $json;
