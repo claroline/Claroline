@@ -22,13 +22,7 @@ security:
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/workspace/new, roles: ROLE_WS_CREATOR }
-        - { path: ^/workspace, roles: ROLE_USER }
         - { path: ^/desktop, roles: ROLE_USER }
-        - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/resource, roles: ROLE_USER }
-        - { path: ^/file, roles: ROLE_USER }
-        - { path: ^/forum, roles: ROLE_USER }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
 

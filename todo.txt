@@ -2,5 +2,17 @@ Option de config pour voir la liste des workspace
 Option pour voir la liste des ws personnels
 L'admin voit tjrs tous les workspaces
 resourceRepository->find($resourceId) => une requête pour chaque ancêtres (wtf !)
-ResourceRepository => virer les asArray
-Retirer entityConverter ?
+
+~
+Si anonyme
+Espace d'activité => cours accès anonyme
+Nom personne => annonyme ~> connexion ~> inscription
+
+~
+Pas
+
+ROLE_ANONYME
+dans role
+~
+
+
