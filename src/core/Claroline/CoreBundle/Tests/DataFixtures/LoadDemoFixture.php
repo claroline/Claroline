@@ -158,7 +158,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $file->setName($name);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);
-        $file = $manager->create($file, $parent->getId(), 'file', $mimeType, $user);
+        $file = $manager->create($file, $parent->getId(), 'file', $user);
 
         return $file;
     }
@@ -177,7 +177,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $text->setName($name);
         $em->persist($text);
         $revision->setText($text);
-        $this->getContainer()->get('claroline.resource.manager')->create($text, $parent->getId(), 'text', null, $user);
+        $this->getContainer()->get('claroline.resource.manager')->create($text, $parent->getId(), 'text', $user);
 
         return $text;
     }
@@ -187,7 +187,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $manager = $this->getContainer()->get('claroline.resource.manager');
         $directory = new Directory();
         $directory->setName($name);
-        $dir = $manager->create($directory, $parent->getId(), 'directory', null, $user);
+        $dir = $manager->create($directory, $parent->getId(), 'directory', $user);
 
         return $dir;
     }
@@ -205,7 +205,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $activity = new Activity();
         $activity->setName($name);
         $activity->setInstructions($this->getContainer()->get('claroline.utilities.lipsum_generator')->generateLipsum(300));
-        $activity = $this->getContainer()->get('claroline.resource.manager')->create($activity, $parent->getId(), 'activity', null, $user);
+        $activity = $this->getContainer()->get('claroline.resource.manager')->create($activity, $parent->getId(), 'activity', $user);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $i = 0;
 

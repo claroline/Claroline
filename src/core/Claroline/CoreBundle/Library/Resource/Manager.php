@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
@@ -54,11 +55,11 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentId, $resourceType, $mimeType = null, $user = null)
+    public function create(AbstractResource $resource, $parentId, $resourceType, $user = null)
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => $resourceType));
 
-        if($user == null){
+        if ($user == null){
             $user = $this->sc->getToken()->getUser();
         }
 
@@ -75,7 +76,11 @@ class Manager
         $resource->setCreator($user);
 
         if ($resource->getUserIcon() == null){
-            $resource = $this->ic->setResourceIcon($resource, $mimeType);
+            if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\File){
+                $resource = $this->ic->setResourceIcon($resource, $resource->getMimeType());
+            } else {
+                $resource = $this->ic->setResourceIcon($resource, null);
+            }
 
         } else {
             //upload the icon
