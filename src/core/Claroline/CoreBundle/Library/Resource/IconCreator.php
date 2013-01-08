@@ -134,7 +134,7 @@ class IconCreator
     public function getFileIcon($resource, $mimeType, $isFixture)
     {
         if ($mimeType === null) {
-            throw new \InvalidArgumentException("No mimeType specified for the file icon : {$resource->getId()}");
+            throw new \InvalidArgumentException("No mimeType specified for the file icon : {$resource->getPathForDisplay()}");
         }
 
         $mimeElements = explode('/', $mimeType);
