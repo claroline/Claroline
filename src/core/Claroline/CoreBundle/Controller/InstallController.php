@@ -307,10 +307,8 @@ class InstallController extends Controller
 
         $fixtures = $loader->getFixtures();
         if (!$fixtures) {
-            //TODO: FIXME
-            $paths = 'FIXME';
             throw new InvalidArgumentException(
-                sprintf('Could not find any fixtures to load in: %s', "\n\n- " . implode("\n- ", $paths))
+                sprintf('Could not find any fixtures to load in: %s', "\n\n- " . implode("\n- ", $path))
             );
         }
         $purger = new ORMPurger($em);
