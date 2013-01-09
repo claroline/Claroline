@@ -5,8 +5,8 @@
         {% if resourceTypes|length > 0 %}
             <button class="create btn" {% if isCreateAllowed == false %} disabled="disabled" {% endif %} >{{ 'create'|trans({}, 'platform') }} :</button>
             <select class="input-medium">
-                {% for resourceType, attributes in resourceTypes %}
-                    <option value="{{ resourceType }}">{{ attributes.name }}</option>
+                {% for resourceType, name in creatableTypes %}
+                    <option value="{{ resourceType }}">{{ name }}</option>
                 {% endfor %}
             </select>
         {% endif %}

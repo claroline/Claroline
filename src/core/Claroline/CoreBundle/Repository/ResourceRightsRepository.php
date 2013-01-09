@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 
@@ -19,7 +18,6 @@ class ResourceRightsRepository extends EntityRepository
      */
     public function getRights(User $user, AbstractResource $resource)
     {
-
         $dql = "
             SELECT DISTINCT rrw FROM Claroline\CoreBundle\Entity\Workspace\ResourceRights rrw
             JOIN rrw.role role WITH role IN
