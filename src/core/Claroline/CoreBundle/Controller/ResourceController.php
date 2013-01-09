@@ -485,7 +485,7 @@ class ResourceController extends Controller
                 $translator = $this->get('translator');
 
                 foreach ($types as $type) {
-                    $creatableTypes[$type->getName()] = $translator->trans($type->getName(), [], 'resource');
+                    $creatableTypes[$type->getName()] = $translator->trans($type->getName(), array(), 'resource');
                 }
             }
         }
