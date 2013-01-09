@@ -114,7 +114,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
         $directory = new Directory();
         $directory->setName('NEWDIR');
-        $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', null, $this->manager);
+        $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', $this->manager);
 
         $this->logUser($this->manager);
         $this->assertTrue($this->getSecurityContext()->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root))));
@@ -142,7 +142,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
         $directory = new Directory();
         $directory->setName('NEWDIR');
-        $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', null, $this->manager);
+        $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', $this->manager);
 
         $this->logUser($this->manager);
         $this->assertTrue($this->getSecurityContext()->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root))));

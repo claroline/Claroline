@@ -708,6 +708,12 @@
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
         manager.Controller.initialize(parameters);
+        $('body').ajaxError(function(event, jqXHR, thrownError){
+            console.debug(jqXHR);
+            console.debug(event);
+            console.debug(thrownError);
+            alert(jqXHR.responseText);
+        });
     };
 
     /**

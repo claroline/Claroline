@@ -155,22 +155,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/root/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
-        $this->assertEquals($jsonResponse[0]->workspace_id, $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
-    }
-
-    public function testResourceListAction()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $this->createTree($this->pwr->getId());
-        $fileId = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findOneBy(array('name' => 'file'))
-            ->getId();
-        $this->client->request('GET', "/resource/list/{$fileId}/{$this->pwr->getId()}");
-        $jsonResponse = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(2, count($jsonResponse));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $this->assertEquals($em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($jsonResponse[0]->id)->getWorkspace()->getId(), $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId());
     }
 
     public function testGetEveryInstancesIdsFromExportArray()
@@ -690,7 +676,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $file->setHashName($name);
         $file->setMimeType('text/html');
         $manager = $this->client->getContainer()->get('claroline.resource.manager');
-        $manager->create($file, $parentId, 'file', 'text/html', $user);
+        $manager->create($file, $parentId, 'file', $user);
 
         return $file;
     }
@@ -700,7 +686,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $directory = new Directory();
         $directory->setName($name);
         $manager = $this->client->getContainer()->get('claroline.resource.manager');
-        $manager->create($directory, $parentId, 'directory', null, $user);
+        $manager->create($directory, $parentId, 'directory', $user);
 
         return $directory;
     }
