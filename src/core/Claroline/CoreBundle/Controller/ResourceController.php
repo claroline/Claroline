@@ -162,7 +162,8 @@ class ResourceController extends Controller
         $form = $this->createForm(new ResourceNameType(), $resource);
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:rename_form.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -199,7 +200,8 @@ class ResourceController extends Controller
         }
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:rename_form.html.twig', array('resourceId' => $resourceId, 'form' => $form->createView())
+            'ClarolineCoreBundle:Resource:rename_form.html.twig',
+            array('resourceId' => $resourceId, 'form' => $form->createView())
         );
     }
 
@@ -226,7 +228,8 @@ class ResourceController extends Controller
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:form_properties.html.twig', array('form' => $form->createView())
+            'ClarolineCoreBundle:Resource:form_properties.html.twig',
+            array('form' => $form->createView())
         );
     }
 
@@ -287,7 +290,8 @@ class ResourceController extends Controller
         }
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:form_properties.html.twig', array('resourceId' => $resourceId, 'form' => $form->createView())
+            'ClarolineCoreBundle:Resource:form_properties.html.twig',
+            array('resourceId' => $resourceId, 'form' => $form->createView())
         );
     }
 
@@ -377,10 +381,7 @@ class ResourceController extends Controller
         }
 
         $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $logevent = new ResourceLoggerEvent(
-                $ri,
-                $action
-        );
+        $logevent = new ResourceLoggerEvent($ri, $action);
         $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
         return $event->getResponse();
@@ -630,13 +631,15 @@ class ResourceController extends Controller
 
         if ($resource->getResourceType()->getName() == 'directory') {
             return $this->render(
-                    'ClarolineCoreBundle:Resource:rights_form_directory.html.twig', array('configs' => $configs, 'resource' => $resource)
-            );
-        } else {
-            return $this->render(
-                    'ClarolineCoreBundle:Resource:rights_form_resource.html.twig', array('configs' => $configs, 'resource' => $resource)
+                'ClarolineCoreBundle:Resource:rights_form_directory.html.twig',
+                array('configs' => $configs, 'resource' => $resource)
             );
         }
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:rights_form_resource.html.twig',
+            array('configs' => $configs, 'resource' => $resource)
+        );
     }
 
     public function rightCreationFormAction($resourceId, $roleId)
@@ -654,7 +657,8 @@ class ResourceController extends Controller
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
 
         return $this->render(
-                'ClarolineCoreBundle:Resource:rights_creation.html.twig', array('configs' => array($config), 'resourceTypes' => $resourceTypes, 'resourceId' => $resourceId, 'roleId' => $roleId)
+            'ClarolineCoreBundle:Resource:rights_creation.html.twig',
+            array('configs' => array($config), 'resourceTypes' => $resourceTypes, 'resourceId' => $resourceId, 'roleId' => $roleId)
         );
     }
 
