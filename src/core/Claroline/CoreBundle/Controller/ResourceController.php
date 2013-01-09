@@ -55,7 +55,7 @@ class ResourceController extends Controller
         $collection->setAttributes(array('type' => $resourceType));
 
         if (!$this->get('security.context')->isGranted('CREATE', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $eventName = $this->get('claroline.resource.utilities')->normalizeEventName('create', $resourceType);
@@ -65,16 +65,9 @@ class ResourceController extends Controller
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
             $manager = $this->get('claroline.resource.manager');
-
-            if ($resourceType === 'file') {
-                $mimeType = $resource->getMimeType();
-                $resource = $manager->create($resource, $parentId, $resourceType, $mimeType);
-            } else {
-                $resource = $manager->create($resource, $parentId, $resourceType);
-            }
-
+            $resource = $manager->create($resource, $parentId, $resourceType);
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
+            $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
         } else {
             if ($event->getErrorFormContent() != null) {
                 $response->setContent($event->getErrorFormContent());
@@ -95,7 +88,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         //If it's a link, the resource will be its target.
@@ -136,7 +129,7 @@ class ResourceController extends Controller
         }
 
         if (!$this->get('security.context')->isGranted('DELETE', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         foreach ($collection->getResources() as $resource) {
@@ -163,7 +156,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourceNameType(), $resource);
@@ -190,7 +183,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourceNameType(), $resource);
@@ -227,7 +220,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
@@ -253,7 +246,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
@@ -311,7 +304,6 @@ class ResourceController extends Controller
         $resourceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
         $resourceManager = $this->get('claroline.resource.manager');
-        $converter = $this->get('claroline.utilities.entity_converter');
         $movedResources = array();
 
         $collection = new ResourceCollection();
@@ -328,18 +320,20 @@ class ResourceController extends Controller
 
         if (!$this->get('security.context')->isGranted('MOVE', $collection)) {
             foreach ($collection->getResources() as $resource) {
-                throw new AccessDeniedException(var_dump($collection->getErrors()));
+                throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
             }
         }
 
         foreach ($ids as $id) {
-
             $resource = $resourceRepo->find($id);
 
             if ($resource != null) {
                 try {
                     $movedResource = $resourceManager->move($resource, $newParent);
-                    $movedResources[] = $converter->toStdClass($movedResource);
+                    $movedResources[] = $this->get('claroline.resource.converter')->toArray(
+                        $movedResource,
+                        $this->get('security.context')->getToken()->getUser()
+                    );
                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
                     throw new \RuntimeException('Cannot move a resource into itself');
                 }
@@ -370,7 +364,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $event = new CustomActionResourceEvent($resource);
@@ -412,7 +406,7 @@ class ResourceController extends Controller
         }
 
         if (!$this->get('security.context')->isGranted('EXPORT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $file = $this->get('claroline.resource.exporter')->exportResources($ids);
@@ -442,7 +436,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $response = new Response($this->get('claroline.resource.converter')->ResourceToJson($root));
+        $response = new Response($this->get('claroline.resource.converter')->toJson($root, $this->get('security.context')->getToken()->getUser()));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -483,7 +477,7 @@ class ResourceController extends Controller
             }
 
             $path = $resourceRepo->listAncestors($directory);
-            $resources = $resourceRepo->listDirectChildrenResources($directory->getId() , 0, true, true, $user);
+            $resources = $resourceRepo->children($directory->getId(), $user, 0, true, true);
             $userRights = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')
                 ->getRights($user, $directory);
 
@@ -507,25 +501,6 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the resources of a defined type for the current user.
-     *
-     * @param integer $resourceTypeId
-     * @param integer $rootId
-     */
-    public function resourceListAction($resourceTypeId, $rootId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resourceType = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->find($resourceTypeId);
-        $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($rootId);
-        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($root, $resourceType, true);
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
      * Adds multiple resource resource to a workspace.
      *
      * @param integer $resourceDestinationId
@@ -537,7 +512,6 @@ class ResourceController extends Controller
         $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
         $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceDestinationId);
-        $converter = $this->get('claroline.utilities.entity_converter');
         $newNodes = array();
         $resources = array();
 
@@ -553,7 +527,7 @@ class ResourceController extends Controller
         $collection->addAttribute('parent', $parent);
 
         if (!$this->get('security.context')->isGranted('COPY', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         foreach ($resources as $resource) {
@@ -561,7 +535,7 @@ class ResourceController extends Controller
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
-            $newNodes[] = $converter->toStdClass($newNode);
+            $newNodes[] = $this->get('claroline.resource.converter')->toArray($newNode, $this->get('security.context')->getToken()->getUser());
         }
 
         $response = new Response(json_encode($newNodes));
@@ -609,7 +583,6 @@ class ResourceController extends Controller
         $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $ids = $this->container->get('request')->query->get('ids', array());
         $parent = $repo->find($newParentId);
-        $converter = $this->get('claroline.utilities.entity_converter');
 
         foreach ($ids as $resourceId) {
             $resource = $repo->find($resourceId);
@@ -632,8 +605,9 @@ class ResourceController extends Controller
             $em->persist($shortcut);
             $em->flush();
             $em->refresh($parent);
-            $this->get('claroline.resource.manager')->setResourceRights($resource, $shortcut);
-            $links[] = $converter->toStdClass($shortcut);
+            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
+
+            $links[] = $this->get('claroline.resource.converter')->toArray($shortcut, $this->get('security.context')->getToken()->getUser());
         }
 
         $response = new Response(json_encode($links));
@@ -649,7 +623,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
@@ -672,7 +646,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
@@ -691,7 +665,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $request = $this->get('request');
@@ -711,20 +685,23 @@ class ResourceController extends Controller
         }
 
         if (isset($resourceTypesIds)) {
-
             $this->setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId);
+
             if ($isRecursive) {
                 $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
-                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
+                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource, $dirType);
+
                 foreach ($resources as $resource) {
-                    $this->setCreationPermissionForResource($resources, $resourceTypesIds, $roleId);
+                     $this->setCreationPermissionForResource($resources, $resourceTypesIds, $roleId);
                 }
             }
         } else {
             $this->resetCreationPermissionForResource($resourceId, $roleId);
+
             if ($isRecursive) {
                 $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
-                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
+                $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource, $dirType);
+
                 foreach ($resources as $resource) {
                     $this->resetCreationPermissionForResource($resources, $roleId);
                 }
@@ -733,7 +710,11 @@ class ResourceController extends Controller
 
         $em->flush();
 
-        return new Response('success');
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
+
+        return $response;
     }
 
     public function editRightsAction($resourceId)
@@ -743,7 +724,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrors()));
+            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
         $parameters = $this->get('request')->request->all();
@@ -768,7 +749,8 @@ class ResourceController extends Controller
         }
 
         if ($isRecursive) {
-            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource);
+            $resources =  $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource);
+
             foreach ($resources as $resource) {
                 $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
@@ -785,6 +767,8 @@ class ResourceController extends Controller
         }
 
         $em->flush();
+
+        $json = $resource;
 
         return new Response('success');
     }

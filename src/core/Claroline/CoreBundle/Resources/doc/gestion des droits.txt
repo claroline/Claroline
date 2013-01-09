@@ -1,0 +1,131 @@
+1) Stockage:
+
+Les droits sur les ressources sont stockés dans l'entité Workspace\ResourceRights.
+Cette table possède un lien vers une ressource et un lien vers un rôle (une série de permission par ressource et par rôle).
+Les permissions pouvant être mise à true/false sont: COPY, DELETE, EDIT, OPEN, VIEW.
+
+Cette table possède également une relation N-N avec la table des types de ressources.
+Les enregistrement de la table intermédiaire de cette relation indiquement les types de ressources que l'ont peut rajouter à l'intérieur.
+
+2) Voter:
+
+C'est un voter (ResourceVoter) qui va décider si un utilisateur peut ou non effectuer une action sur une ressource.
+Il est appellé lorsqu'on utilise l'instruction "$this->get('security.context')->isGranted($action, $object);"
+
+Actuellement, les actions possibles sont 'MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN'
+
+Le paramètre $object est en fait un objet de la classe ResourceCollection.
+
+Cet $object peut également prendre des paramètres (setParameters).
+Actuellement ces paramètres sont sous la forme d'une array dont les clefs sont 'parent' et 'type'.
+
+- type représente le nom du type de ressource.
+- parent est l'entité parente dans certains cas.
+
+Ils ne sont obligatoire que de les cas suivants:
+
+CREATE => type
+MOVE => parent (le nouveau)
+COPY => parent (le nouveau)
+
+3) Création:
+
+Les insert dans la table de droits se font pour la première fois dans lors de la création du workspace (workspace.creator) puisque
+la répertoire racine sera créé à ce moment.
+Les droits par défaut y sont actuellement inscrit en dur.
+
+Lors de la création d'une ressource, les droits de la resource père (le père existera toujours puisqu'une ressource
+est toujours dans un workspace qui aura toujours une racine) sont copiés pour la ressource fille.
+Même chose lorsqu'une ressource est bougée ou copiée. En fait lorsqu'on effectue une opération sur une ressource qui peut modifier/créer son père,
+elle en reprends les droits.
+
+4) Visibilité:
+
+Les ressources sont visibiles dans le gestionnaire de ressource si leur boolean canView est mit à true.
+Les méthode getChildren() et filter() de AbstractResourceRepository sont capables de tenir compte de ce paramètre
+et ne renvoyer que la liste de ressources visibles pour un utilisateur donné.
+
+5) Contexte (et problèmes de liens)
+
+Questions:
+
+Quel est le contexte lorsque l'on clique sur le lien ?
+
+Le contexte d'une ressource est le cours (workspace) dans lequel elle se situe. En fonction du workspace, on va trouver différents
+rôles et les utilisateurs qui y sont associés.
+Par défaut les rôles d'un workspace sont "visiteur du ws X", "collaborateur du ws X", "administrateur du ws X"
+Un utilisateur qui possède un de ces rôles aura dont accès au workspace. Il est possible dans la gestion des droits d'une ressource
+de modifier les permissions que possède un de ces rôles.
+Lorsque l'on ouvre un lien, quel contexte sera gardé ? le contexte du lien ? le contexte de la cible ? un truc hybride (à définir).
+C'est important car le contexte définit les droits des utilisateurs.
+
+Ex:
+On garde le contexte de la cible:
+- Je fais un lien vers ma cible depuis un autre workspace
+- J'ouvre le lien
+- Je suis bloqué car je n'ai pas accès au workspace (et donc aucun des rôles de ce dernier).
+
+On garde le contexte du lien:
+- Je fais un liens vers ma cible depuis un autre workspace
+- J'ouvre le lien
+- Comme je peux ouvrir le lien, j'ai accès à la ressource meme si elle est bloquée dans le contexte de la cible.
+- Si la cible redéfini sa propre gestion de droits (ex un forum) elle n'est (a priori) pas consciente des liens et
+les utilisateurs venant d'ailleurs n'auront de tout façon aucun droits (enfin elle pourrait).
+
+~ Sinon on fait un genre de combinaison entre les droits du liens et de la cible ?
+Actuellement les droits du liens (quand on le crée) sont les droits par de la resource parent.
+
+Une début de solution ?:
+Lorsqu'on fait un lien sur une cible, un duplique les tables des droits de la cible... pour les rôle de la source.
+ex
+role resource canOpen
+userws1 1 false
+adminws1 1 true
+userws2 1 false
+adminws2 1 true
+
+Alors qu'en temps normal (sans lien) les seuls roles qu'on trouvera dans la table intermédiaire sont les roles du workspace de la ressource
+qui y est liée.
+
+On garde le contexte de la cible mais on y ajoute les permissions de la source (car pas de permissions = pas d'accès).
+
+Problème ?
+Que se passe-t-il si on rajoute/retire un utilisateur dans le workspace source ? Des évènements qu'on lance et
+alertent de ce qui se passe ?
+
+5) Ressources d'activité:
+
+Système actuel:
+
+Quand on ouvre une ressource dans l'activité, on passe par la méthode OpenAction du controller.
+Si la ressource se situe dans un workspace dans lequel l'utilisateur n'a aucun droit, il n'aura pas accès à la ressource.
+Est-ce un problème ? Même principe pour un lien (vu que lorsqu'on clique sur un lien on ouvre la cible).
+
+S'il s'agit simplement de séquencer les ressources, on peut leur mettre le droit VIEW a false pour les élèves en gardant
+le droit OPEN a true. Les élèves ne pourront pas voir les ressources dans le gestionnaire de ressource (il peuvent toujours les ouvrir
+s'ils connaissent l'url) mais les verront dans le player d'activité (et pourront les ouvrir). Le voter répondre true dans ce cas là puisque
+lorsqu'on na.
+
+Sinon on peut éventuellement définir une nouvelle action (en plus de COPY, OPEN, ...). Par ex ACTIVITY.
+La logique pour ouvrir l'activité serait différente (Sur base de quoi ? Actuellement il y a une table intermédiaire entre l'activité et la ressource
+qui contient le numéro de séquence de la ressource. Comment savoir "ou l'utilisitateur en est ?") et ne passerait pas par OpenAction du controller.
+
+Problèmes: contexte de la ressource ? si la ressource possède une gestion des droits spécifiques et que les utilisateurs
+qui effectuent l'activité ne se trouvent pas dans ces tables, il n'auront pas accès à certaines fonctions de la ressource.
+
+6) Problèmes divers:
+
+Définition des permissions par défaut du workspace ?
+
+Pour le moment elles sont en dur, mais on pourrait avoir différent template de workspace avec différentes permissions par défaut.
+
+Que se passe-t-il si par exemple, un manager du workspace décide que les resources de son workspace ne sont plus visibles...
+Plus personne (excepté l'admin tout puissant) ne pourra les voir.
+Idem s'il retire les droits d'éditions a tout le monde. Il ne sera plus possible de rechanger les droits de cette resource, sauf pour
+l'admin évidemment.
+
+Combinaison de droits ? Bouger/Copier
+
+7) Interface pour la création des liens ?
+Actuellement: créer un nouveau lien => resource picker => pick.
+Alternative: bouton créer un lien dans le menu de la ressource.

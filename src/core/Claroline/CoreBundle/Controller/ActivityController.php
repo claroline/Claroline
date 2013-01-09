@@ -28,7 +28,7 @@ class ActivityController extends Controller
         $em->flush();
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
+        $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
 
         return $response;
     }
