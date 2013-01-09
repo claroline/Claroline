@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use \Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -9,6 +10,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -74,7 +76,7 @@ class ResourceController extends Controller
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent($this->get('claroline.resource.converter')->ResourceToJson($resource));
         } else {
-            if($event->getErrorFormContent() != null){
+            if ($event->getErrorFormContent() != null) {
                 $response->setContent($event->getErrorFormContent());
             } else {
                 throw new \Exception('creation failed');
@@ -125,10 +127,10 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $collection = new ResourceCollection();
 
-        foreach($ids as $id){
+        foreach ($ids as $id) {
             $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($id);
 
-            if($resource != null){
+            if ($resource != null) {
                 $collection->addResource($resource);
             }
         }
@@ -144,13 +146,13 @@ class ResourceController extends Controller
         return new Response('Resource deleted', 204);
     }
 
-   /**
-    * Displays the form allowing to rename a resource.
-    *
-    * @param integer $resourceId
-    *
-    * @return Response
-    */
+    /**
+     * Displays the form allowing to rename a resource.
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
     public function renameFormAction($resourceId)
     {
         $resource = $this->getDoctrine()
@@ -167,18 +169,17 @@ class ResourceController extends Controller
         $form = $this->createForm(new ResourceNameType(), $resource);
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('form' => $form->createView())
+                'ClarolineCoreBundle:Resource:rename_form.html.twig', array('form' => $form->createView())
         );
     }
 
     /**
-    * Renames a resource.
-    *
-    * @param integer $resourceId
-    *
-    * @return Response
-    */
+     * Renames a resource.
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
     public function renameAction($resourceId)
     {
         $request = $this->get('request');
@@ -205,8 +206,7 @@ class ResourceController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
+                'ClarolineCoreBundle:Resource:rename_form.html.twig', array('resourceId' => $resourceId, 'form' => $form->createView())
         );
     }
 
@@ -233,8 +233,7 @@ class ResourceController extends Controller
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:form_properties.html.twig',
-            array('form' => $form->createView())
+                'ClarolineCoreBundle:Resource:form_properties.html.twig', array('form' => $form->createView())
         );
     }
 
@@ -260,9 +259,9 @@ class ResourceController extends Controller
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
         $form->bindRequest($request);
 
-        if ($form->isValid()){
-           $data = $form->getData();
-           $file = $data->getUserIcon();
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $file = $data->getUserIcon();
 
             if ($file !== null) {
                 $this->removeOldIcon($resource);
@@ -270,33 +269,32 @@ class ResourceController extends Controller
                 $icon = $manager->createCustomIcon($file);
                 $em->persist($icon);
 
-                if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
+                if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                     $icon = $icon->getShortcutIcon();
                 }
 
                 $resource->setIcon($icon);
             }
 
-           $resource->setName($data->getName());
-           $em->persist($resource);
-           $em->flush();
-           $content = "{";
-           if (isset($icon)) {
-               $content.='"icon": "'.$icon->getRelativeUrl().'"';
-           } else {
-               $content.='"icon": "'.$resource->getIcon()->getRelativeUrl().'"';
-           }
-           $content.=', "name": "'.$resource->getName().'"';
-           $content.='}';
-           $response = new Response($content);
-           $response->headers->set('Content-Type', 'application/json');
+            $resource->setName($data->getName());
+            $em->persist($resource);
+            $em->flush();
+            $content = "{";
+            if (isset($icon)) {
+                $content.='"icon": "' . $icon->getRelativeUrl() . '"';
+            } else {
+                $content.='"icon": "' . $resource->getIcon()->getRelativeUrl() . '"';
+            }
+            $content.=', "name": "' . $resource->getName() . '"';
+            $content.='}';
+            $response = new Response($content);
+            $response->headers->set('Content-Type', 'application/json');
 
-           return $response;
+            return $response;
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:form_properties.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
+                'ClarolineCoreBundle:Resource:form_properties.html.twig', array('resourceId' => $resourceId, 'form' => $form->createView())
         );
     }
 
@@ -340,10 +338,10 @@ class ResourceController extends Controller
 
             if ($resource != null) {
                 try {
-                     $movedResource = $resourceManager->move($resource, $newParent);
-                     $movedResources[] = $converter->toStdClass($movedResource);
+                    $movedResource = $resourceManager->move($resource, $newParent);
+                    $movedResources[] = $converter->toStdClass($movedResource);
                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                     throw new \RuntimeException('Cannot move a resource into itself');
+                    throw new \RuntimeException('Cannot move a resource into itself');
                 }
             }
         }
@@ -386,8 +384,8 @@ class ResourceController extends Controller
 
         $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
         $logevent = new ResourceLoggerEvent(
-            $ri,
-            $action
+                $ri,
+                $action
         );
         $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
@@ -420,33 +418,15 @@ class ResourceController extends Controller
         $file = $this->get('claroline.resource.exporter')->exportResources($ids);
         $response = new StreamedResponse();
 
-        $response->setCallBack(function() use($file){
-            readfile($file);
-        });
+        $response->setCallBack(function() use($file) {
+                readfile($file);
+            });
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=archive');
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Connection', 'close');
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of the root resources of every workspace whom
-     * the current user is a member.
-     *
-     * @return Response
-     */
-    public function rootsAction()
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $results = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listRootsForUser($user, true);
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
@@ -469,49 +449,59 @@ class ResourceController extends Controller
     }
 
     /**
-     * Returns a json representation of the children of a resource instance.
+     * Returns a json representation of a directory, containing the following items :
+     * - The path of the directory
+     * - The resource types the user is allowed to create in the directory
+     * - The immediate children resources of the directory which are visible for the user
      *
-     * @param integer $instanceId
-     * @param integer $type
+     * If the directory id is '0', a pseudo-directory containing the root directories
+     * of the workspaces whose the user is a member is returned.
+     * If the directory id is a shortcut id, the directory targeted by the shortcut
+     * is returned.
      *
-     * @return Response
+     * @param integer $directoryId
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws Exception if the id doesnt't match any existing directory
      */
-    public function childrenAction($resourceId, $resourceTypeId)
+    public function openDirectoryAction($directoryId)
     {
-        if ($resourceId == 0) {
-            return $this->rootsAction();
-        }
+        $path = array();
+        $creatableTypes = array();
+        $resources = array();
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $resourceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $directoryId = (integer)$directoryId;
 
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $resource = $this->getResource($repo->find($resourceId));
-        $results = $repo->listDirectChildrenResources($resource->getId(), $resourceTypeId, true, true, $this->get('security.context')->getToken()->getUser());
-        $content = json_encode($results);
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * Returns a json representation of the parents of a resource instance.
-     *
-     * @param integer $instanceId
-     *
-     * @return Response
-     */
-    public function parentsAction($resourceId)
-    {
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        if (0 == $resourceId) {
-            $response->setContent('[]');
+        if ($directoryId === 0) {
+            $resources = $resourceRepo->listRootsForUser($user, true);
         } else {
-            $repo = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-            $resource = $repo->find($resourceId);
-            $parents = $repo->listAncestors($resource);
-            $response->setContent(json_encode($parents));
+            $directory = $this->getResource($resourceRepo->find($directoryId));
+
+            if (null === $directory || !$directory instanceof Directory) {
+                throw new Exception("Cannot find any directory with id '{$directoryId}'");
+            }
+
+            $path = $resourceRepo->listAncestors($directory);
+            $resources = $resourceRepo->listDirectChildrenResources($directory->getId() , 0, true, true, $user);
+            $userRights = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')
+                ->getRights($user, $directory);
+
+            if (null !== $userRights && 0 !== count($types = $userRights->getResourceTypes())) {
+                $translator = $this->get('translator');
+
+                foreach ($types as $type) {
+                    $creatableTypes[$type->getName()] = $translator->trans($type->getName(), [], 'resource');
+                }
+            }
         }
+
+        $response = new Response(json_encode(array(
+            'path' => $path,
+            'creatableTypes' => $creatableTypes,
+            'resources' => $resources
+        )));
+        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
@@ -621,7 +611,7 @@ class ResourceController extends Controller
         $parent = $repo->find($newParentId);
         $converter = $this->get('claroline.utilities.entity_converter');
 
-        foreach($ids as $resourceId){
+        foreach ($ids as $resourceId) {
             $resource = $repo->find($resourceId);
             $shortcut = new ResourceShortcut();
             $shortcut->setParent($parent);
@@ -633,10 +623,10 @@ class ResourceController extends Controller
             $shortcut->setWorkspace($parent->getWorkspace());
             $shortcut->setResourceType($resource->getResourceType());
 
-            if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'){
-                 $shortcut->setResource($resource);
+            if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                $shortcut->setResource($resource);
             } else {
-                 $shortcut->setResource($resource->getResource());
+                $shortcut->setResource($resource->getResource());
             }
 
             $em->persist($shortcut);
@@ -664,16 +654,13 @@ class ResourceController extends Controller
 
         $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
-        if ($resource->getResourceType()->getName() == 'directory'){
+        if ($resource->getResourceType()->getName() == 'directory') {
             return $this->render(
-                'ClarolineCoreBundle:Resource:rights_form_directory.html.twig',
-                array('configs' => $configs, 'resource' => $resource)
+                    'ClarolineCoreBundle:Resource:rights_form_directory.html.twig', array('configs' => $configs, 'resource' => $resource)
             );
-
         } else {
             return $this->render(
-                'ClarolineCoreBundle:Resource:rights_form_resource.html.twig',
-                array('configs' => $configs, 'resource' => $resource)
+                    'ClarolineCoreBundle:Resource:rights_form_resource.html.twig', array('configs' => $configs, 'resource' => $resource)
             );
         }
     }
@@ -689,12 +676,11 @@ class ResourceController extends Controller
         }
 
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $role));
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:rights_creation.html.twig',
-            array('configs' => array($config), 'resourceTypes' => $resourceTypes, 'resourceId' => $resourceId, 'roleId' => $roleId)
+                'ClarolineCoreBundle:Resource:rights_creation.html.twig', array('configs' => array($config), 'resourceTypes' => $resourceTypes, 'resourceId' => $resourceId, 'roleId' => $roleId)
         );
     }
 
@@ -711,7 +697,7 @@ class ResourceController extends Controller
         $request = $this->get('request');
         $array = $request->request->all();
 
-        if(isset($array['isRecursive'])){
+        if (isset($array['isRecursive'])) {
             $isRecursive = true;
             unset($array['isRecursive']);
         } else {
@@ -719,7 +705,7 @@ class ResourceController extends Controller
         }
         $keys = array_keys($array);
 
-        foreach ($keys as $key){
+        foreach ($keys as $key) {
             $split = explode('-', $key);
             $resourceTypesIds[] = $split[1];
         }
@@ -727,14 +713,13 @@ class ResourceController extends Controller
         if (isset($resourceTypesIds)) {
 
             $this->setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId);
-            if ($isRecursive){
+            if ($isRecursive) {
                 $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
                 $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource, $dirType);
-                foreach($resources as $resource){
-                     $this->setCreationPermissionForResource($resources, $resourceTypesIds, $roleId);
+                foreach ($resources as $resource) {
+                    $this->setCreationPermissionForResource($resources, $resourceTypesIds, $roleId);
                 }
             }
-
         } else {
             $this->resetCreationPermissionForResource($resourceId, $roleId);
             if ($isRecursive) {
@@ -763,7 +748,7 @@ class ResourceController extends Controller
 
         $parameters = $this->get('request')->request->all();
 
-        if(isset($parameters['isRecursive'])){
+        if (isset($parameters['isRecursive'])) {
             $isRecursive = true;
             unset($parameters['isRecursive']);
         } else {
@@ -773,8 +758,8 @@ class ResourceController extends Controller
         $checks = $this->get('claroline.resource.rights')->setRightsRequest($parameters);
         $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
-        foreach($configs as $config){
-            if(isset($checks[$config->getId()])){
+        foreach ($configs as $config) {
+            if (isset($checks[$config->getId()])) {
                 $config->setRights($checks[$config->getId()]);
             } else {
                 $config->reset();
@@ -782,14 +767,14 @@ class ResourceController extends Controller
             $em->persist($config);
         }
 
-        if($isRecursive){
-            $resources =  $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource);
-            foreach ($resources as $resource){
+        if ($isRecursive) {
+            $resources = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->listChildrenResourceInstances($resource);
+            foreach ($resources as $resource) {
                 $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
 
-                foreach($configs as $config){
+                foreach ($configs as $config) {
                     $key = $this->findKeyForConfig($checks, $config);
-                    if ($key !== null){
+                    if ($key !== null) {
                         $config->setRights($checks[$key]);
                     } else {
                         $config->reset();
@@ -810,7 +795,7 @@ class ResourceController extends Controller
 
         if ($icon->getIconType()->getIconType() == IconType::CUSTOM_ICON) {
             $pathName = $this->container->getParameter('claroline.thumbnails.directory')
-                . DIRECTORY_SEPARATOR.$icon->getIconLocation();
+                . DIRECTORY_SEPARATOR . $icon->getIconLocation();
             if (file_exists($pathName)) {
                 unlink($pathName);
             }
@@ -837,10 +822,10 @@ class ResourceController extends Controller
     private function findKeyForConfig($checks, $config)
     {
         $keys = array_keys($checks);
-        foreach ($keys as $key){
+        foreach ($keys as $key) {
             $baseConfig = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($key);
             $role = $baseConfig->getRole();
-            if($config->getRole() == $role){
+            if ($config->getRole() == $role) {
                 return $key;
             }
         }
@@ -858,7 +843,7 @@ class ResourceController extends Controller
     private function setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $roleId));
+        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
 
         foreach ($resourceTypesIds as $id) {
@@ -877,8 +862,9 @@ class ResourceController extends Controller
      */
     private function resetCreationPermissionForResource($resourceId, $roleId)
     {
-        $config = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array ('resource' => $resourceId, 'role' => $roleId));
+        $config = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
         $this->get('doctrine.orm.entity_manager')->persist($config);
     }
+
 }

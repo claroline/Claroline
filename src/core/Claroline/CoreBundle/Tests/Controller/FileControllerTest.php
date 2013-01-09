@@ -44,9 +44,10 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->uploadFile($this->pwr->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
-        $dir = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(1, count($dir));
+        $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(1, count($dir->resources));
         $this->assertEquals(1, count($this->getUploadedFiles()));
     }
 
@@ -55,9 +56,10 @@ class FileControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $node = $this->uploadFile($this->pwr->getId(), 'text.txt');
         $this->client->request('GET', "/resource/delete?ids[]={$node->id}");
-        $this->client->request('POST', "/resource/children/{$this->pwr->getId()}");
-        $file = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(0, count($file));
+        $this->client->request('POST', "/resource/directory/{$this->pwr->getId()}");
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(0, count($dir->resources));
         $this->assertEquals(0, count($this->getUploadedFiles()));
     }
 
