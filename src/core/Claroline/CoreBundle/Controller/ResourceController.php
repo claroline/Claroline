@@ -586,6 +586,7 @@ class ResourceController extends Controller
         return $response;
     }
 
+    //todo doc
     public function createShortcutAction($newParentId)
     {
         $em = $this->get('doctrine.orm.entity_manager');

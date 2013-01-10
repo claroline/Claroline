@@ -14,19 +14,19 @@ class Configuration
     private $workspaceName;
     private $workspaceCode;
     private $isPublic;
+    private $type;
     private $visitorTranslationKey;
     private $collaboratorTranslationKey;
     private $managerTranslationKey;
-    private $type;
 
     public function __construct()
     {
         $this->workspaceType = self::TYPE_SIMPLE;
         $this->isPublic = true;
+        $this->type = AbstractWorkspace::STANDARD;
         $this->visitorTranslationKey = 'visitor';
         $this->collaboratorTranslationKey = 'collaborator';
         $this->managerTranslationKey = 'manager';
-        $this->type = AbstractWorkspace::STANDARD;
     }
 
     public static function fromTemplate($templateFile)
@@ -64,6 +64,16 @@ class Configuration
         return $this->isPublic;
     }
 
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
     public function setVisitorTranslationKey($key)
     {
         $this->visitorTranslationKey = $key;
@@ -92,16 +102,6 @@ class Configuration
     public function getManagerTranslationKey()
     {
         return $this->managerTranslationKey;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
     }
 
     public function check()

@@ -53,19 +53,7 @@ class RegistrationController extends Controller
             $userRole = $em->getRepository('Claroline\CoreBundle\Entity\Role')
                 ->findOneByName(PlatformRoles::USER);
             $user->addRole($userRole);
-            $em->persist($user);
-            $config = new Configuration();
-            $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $personalWorkspaceName = $this->get('translator')->trans('personal_workspace', array(), 'platform');
-            $config->setWorkspaceName($personalWorkspaceName);
-            $config->setWorkspaceCode($user->getUsername());
-            $wsCreator = $this->get('claroline.workspace.creator');
-            $workspace = $wsCreator->createWorkspace($config, $user);
-            $workspace->setType(AbstractWorkspace::STANDARD);
-            $user->addRole($workspace->getManagerRole());
-            $user->setPersonalWorkspace($workspace);
-            $em->persist($workspace);
-            $em->flush();
+            $user = $this->container->get('claroline.user.creator')->create($user);
 
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->getRequest()->getSession()->getFlashBag()->add('success', $msg);

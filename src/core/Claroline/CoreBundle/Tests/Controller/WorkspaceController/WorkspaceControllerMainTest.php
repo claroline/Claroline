@@ -234,7 +234,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/resources/rights/form");
-        var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($crawler->filter('#resource-rights-form')));
     }
 

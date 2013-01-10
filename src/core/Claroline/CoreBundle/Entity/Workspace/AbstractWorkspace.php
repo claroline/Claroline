@@ -51,23 +51,17 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
-     * @ORM\OneToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\Role",
-     *  mappedBy="workspace",
-     *  cascade={"persist"}
-     * )
-     */
-    protected $roles;
-
-    /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="workspace")
      */
-    protected $resources;
 
-    protected static $visitorPrefix = 'ROLE_WS_VISITOR';
-    protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
-    protected static $managerPrefix = 'ROLE_WS_MANAGER';
-    protected static $customPrefix = 'ROLE_WS_CUSTOM';
+    protected $resources;
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceRights",
+     *      mappedBy="workspace"
+     * )
+     */
+    protected $rights;
 
     const PERSONNAL = 0;
     const STANDARD = 1;
@@ -105,168 +99,6 @@ abstract class AbstractWorkspace
         return $this->isPublic;
     }
 
-    /**
-     * Creates the three workspace base roles (visitor, collaborator, manager)
-     * and attaches them to the workspace instance. As the workspace role names
-     * require the workspace to have a valid identifier, this method can't be used
-     * on a workspace instance that has never been flushed.
-     *
-     * @throw RuntimeException if the workspace has no valid id
-     */
-    public function initBaseRoles()
-    {
-        $this->checkIdCondition();
-
-        foreach ($this->roles as $storedRole) {
-            if (self::isBaseRole($storedRole->getName())) {
-                throw new RuntimeException('Base workspace roles are already set.');
-            }
-        }
-
-        $visitorRole = $this->doAddBaseRole(self::$visitorPrefix);
-        $collaboratorRole = $this->doAddBaseRole(self::$collaboratorPrefix, $visitorRole);
-        $this->doAddBaseRole(self::$managerPrefix, $collaboratorRole);
-    }
-
-    public function getVisitorRole()
-    {
-        return $this->doGetBaseRole(self::$visitorPrefix);
-    }
-
-    public function getCollaboratorRole()
-    {
-        return $this->doGetBaseRole(self::$collaboratorPrefix);
-    }
-
-    public function getManagerRole()
-    {
-        return $this->doGetBaseRole(self::$managerPrefix);
-    }
-
-    /**
-     * Returns the custom roles attached to the workspace instance. Note that
-     * the returned collection is not the actual entity's role collection, so
-     * using add/remove operations on it won't affect the entity's realtionships
-     * (use addCustomRole and removeCustomRole to achieve that goal).
-     *
-     * @return ArrayCollection[WorkspaceRole]
-     */
-    public function getCustomRoles()
-    {
-        $customRoles = new ArrayCollection();
-
-        foreach ($this->roles as $role) {
-            if (self::isCustomRole($role->getName())) {
-                $customRoles[] = $role;
-            }
-        }
-
-        return $customRoles;
-    }
-
-    /**
-     * Adds a custom role to the workspace's role collection. If the role doesn't have
-     * a name or if the workspace doesn't have a valid identifier (i.e. hasn't been
-     * flushed yet), an exception will be thrown.
-     *
-     * @param Role $role
-     * @throw RuntimeException if the workspace has no id or if the role has no name
-     */
-    public function addCustomRole(Role $role)
-    {
-        $this->checkIdCondition();
-
-        if ($this->roles->contains($role)) {
-            return;
-        }
-
-        $workspace = $role->getWorkspace();
-
-        if (!$workspace instanceof AbstractWorkspace) {
-            $role->setWorkspace($this);
-        } else {
-            if ($workspace !== $this) {
-                throw new RuntimeException(
-                    'Workspace roles are bound to only one workspace and cannot '
-                    . 'be associated with another workspace.'
-                );
-            }
-        }
-
-        $roleName = $role->getName();
-
-        if (!is_string($roleName) || 0 == strlen($roleName)) {
-            throw new RuntimeException('Workspace role must have a valid name.');
-        }
-
-        $newRoleName = self::$customPrefix . "_{$this->getId()}_{$roleName}";
-        $role->setName($newRoleName);
-        $this->roles->add($role);
-    }
-
-    public function removeCustomRole(Role $role)
-    {
-        if (0 === strpos($role->getName(), self::$customPrefix . "_{$this->getId()}_")) {
-            $this->roles->removeElement($role);
-        }
-    }
-
-    public static function isBaseRole($roleName)
-    {
-        if (0 === strpos($roleName, self::$visitorPrefix)
-            || 0 === strpos($roleName, self::$collaboratorPrefix)
-            || 0 === strpos($roleName, self::$managerPrefix)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function isCustomRole($roleName)
-    {
-        if (0 === strpos($roleName, self::$customPrefix)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function checkIdCondition()
-    {
-        if (null === $this->id) {
-            throw new RuntimeException(
-                'Workspace must be flushed and have a valid id '
-                . 'before associating roles to it.'
-            );
-        }
-    }
-
-    private function doAddBaseRole($prefix, $parent = null)
-    {
-        $baseRole = new Role();
-        $baseRole->setWorkspace($this);
-        $baseRole->setName("{$prefix}_{$this->getId()}");
-        $baseRole->setParent($parent);
-        $baseRole->setRoleType(Role::WS_ROLE);
-        $this->roles->add($baseRole);
-
-        return $baseRole;
-    }
-
-    private function doGetBaseRole($prefix)
-    {
-        foreach ($this->roles as $role) {
-            if (0 === strpos($role->getName(), $prefix)) {
-                return $role;
-            }
-        }
-    }
-
-    public function getWorkspaceRoles()
-    {
-        return $this->roles;
-    }
-
     public function getResources()
     {
         return $this->resources;
@@ -290,5 +122,10 @@ abstract class AbstractWorkspace
     public function getCode()
     {
         return $this->code;
+    }
+
+    public function getRights()
+    {
+        return $this->rights;
     }
 }

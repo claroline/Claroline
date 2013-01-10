@@ -2,22 +2,25 @@
 
 namespace Claroline\CoreBundle\Library\Workspace;
 
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceRights;
 
 class Creator
 {
     private $entityManager;
     private $rightManager;
+    private $roleRepo;
 
     public function __construct(EntityManager $em, RightManager $rm)
     {
         $this->entityManager = $em;
         $this->rightManager = $rm;
+        $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
     }
 
     public function createWorkspace(Configuration $config, User $manager)
@@ -32,11 +35,8 @@ class Creator
         $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
         $this->entityManager->flush();
-        $workspace->initBaseRoles();
-        $workspace->getVisitorRole()->setTranslationKey($config->getVisitorTranslationKey());
-        $workspace->getCollaboratorRole()->setTranslationKey($config->getCollaboratorTranslationKey());
-        $workspace->getManagerRole()->setTranslationKey($config->getManagerTranslationKey());
-        $this->entityManager->persist($workspace);
+        $this->initBaseRoles($workspace, $config);
+
         $rootDir = new Directory();
         $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rootDir->setCreator($manager);
@@ -52,16 +52,19 @@ class Creator
         $this->entityManager->persist($rootDir);
 //        $this->entityManager->flush();
 
-        $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $workspace->getManagerRole(), $rootDir);
-        $this->createDefaultsResourcesRights(true, false, true, false, false, true, false, $workspace->getCollaboratorRole(), $rootDir);
-        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $workspace->getVisitorRole(), $rootDir);
+        //default resource rights
+        $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $this->roleRepo->getManagerRole($workspace), $rootDir);
+        $this->createDefaultsResourcesRights(true, false, true, false, false, true, false, $this->roleRepo->getCollaboratorRole($workspace), $rootDir);
+        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->getVisitorRole($workspace), $rootDir);
 
-        if (null !== $manager) {
-            $manager->addRole($workspace->getManagerRole());
-            $this->rightManager->addRight($workspace, $manager, MaskBuilder::MASK_OWNER);
-        }
+        //default workspace rights
+        $this->createDefaultsWorkspaceRights(true, true, true, true, $this->roleRepo->getManagerRole($workspace), $workspace);
+        $this->createDefaultsWorkspaceRights(true, false, false, false, $this->roleRepo->getCollaboratorRole($workspace), $workspace);
+        $this->createDefaultsWorkspaceRights(true, false, false, false, $this->roleRepo->getVisitorRole($workspace), $workspace);
+        $this->createDefaultsWorkspaceRights(false, false, false, false, $this->roleRepo->findOneBy(array ('name' => 'ROLE_ANONYMOUS')), $workspace);
 
-//      $this->entityManager->flush();
+        $manager->addRole($this->roleRepo->getManagerRole($workspace));
+        $this->entityManager->persist( $manager);
         $this->entityManager->flush();
 //        $this->entityManager->detach($rootDir);
         //for some reason, it broke the test suite... and that's all.
@@ -108,4 +111,39 @@ class Creator
 
         return $resourceRight;
     }
+
+    private function createDefaultsWorkspaceRights($canView, $canManage, $canEdit, $canDelete, $role, $workspace)
+    {
+        $workspaceRight = new WorkspaceRights();
+        $workspaceRight->setCanView($canView);
+        $workspaceRight->setCanManage($canManage);
+        $workspaceRight->setCanEdit($canEdit);
+        $workspaceRight->setCanDelete($canDelete);
+        $workspaceRight->setRole($role);
+        $workspaceRight->setWorkspace($workspace);
+
+        $this->entityManager->persist($workspaceRight);
+    }
+
+     private function initBaseRoles($workspace, Configuration $config)
+     {
+         $this->createRole('VISITOR', $workspace, $config->getVisitorTranslationKey());
+         $this->createRole('COLLABORATOR', $workspace, $config->getCollaboratorTranslationKey());
+         $this->createRole('MANAGER', $workspace, $config->getManagerTranslationKey());
+
+         $this->entityManager->flush();
+     }
+
+     private function createRole($baseName, $workspace, $translationKey)
+     {
+        $baseRole = new Role();
+        $baseRole->setName('ROLE_WS_'.$baseName.'_'.$workspace->getId());
+        $baseRole->setParent(null);
+        $baseRole->setRoleType(Role::WS_ROLE);
+        $baseRole->setTranslationKey($translationKey);
+
+        $this->entityManager->persist($baseRole);
+
+        return $baseRole;
+     }
 }
