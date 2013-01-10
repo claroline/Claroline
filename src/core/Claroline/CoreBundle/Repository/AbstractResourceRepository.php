@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Repository\Exception\NoDirectoryException;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Doctrine\ORM\AbstractQuery;
 
@@ -21,7 +23,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
     //      to get "ar" information.
     //      That's also the reason why we do not use
     //      the "MaterializedPathRepository->getChildren" method.
-
     const SELECT_FOR_ENTITIES = "ar";
 
     /** SELECT DQL part to get array. Please add any required field here. */
@@ -77,16 +78,16 @@ class AbstractResourceRepository extends MaterializedPathRepository
     public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                . " FROM " . self::FROM_RESOURCES
-                . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
+            . " FROM " . self::FROM_RESOURCES
+            . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
 
-        if ($resourceType !== null){
+        if ($resourceType !== null) {
             $dql.= "AND rt.name = :rt_name";
         }
 
         $query = $this->_em->createQuery($dql);
 
-        if ($resourceType !== null){
+        if ($resourceType !== null) {
             $query->setParameter('rt_name', $resourceType->getName());
         }
 
@@ -114,32 +115,30 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $dql = "SELECT DISTINCT ";
         $isAdmin = false;
 
-       foreach($user->getRoles() as $role){
-           if($role == 'ROLE_ADMIN'){
-               $isAdmin = true;
-           }
+        foreach ($user->getRoles() as $role) {
+            if ($role == 'ROLE_ADMIN') {
+                $isAdmin = true;
+            }
         }
 
-        if($asArray){
-            $dql.=  self::SELECT_FOR_ARRAY;
+        if ($asArray) {
+            $dql.= self::SELECT_FOR_ARRAY;
 
-            if(!$isAdmin){
+            if (!$isAdmin) {
                 $dql.= ' , arRights.canExport as can_export, arRights.canDelete as can_delete, arRights.canEdit as can_edit';
             }
-
         } else {
-            if(!$isAdmin){
-                $dql.= self::SELECT_FOR_ENTITIES. ', arRights';
+            if (!$isAdmin) {
+                $dql.= self::SELECT_FOR_ENTITIES . ', arRights';
             } else {
                 //maybe sets every rights should be set to true
                 $dql.= self::SELECT_FOR_ENTITIES;
             }
         }
 
-       $dql.= " FROM " . self::FROM_RESOURCES;
+        $dql.= " FROM " . self::FROM_RESOURCES;
 
-
-        if ($isAdmin == false){
+        if ($isAdmin === false) {
             $dql .= "
                 LEFT JOIN ar.rights arRights
                 JOIN arRights.role rightRole WITH rightRole IN (
@@ -152,11 +151,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $dql .= "WHERE ar.parent = :ar_parentid
                 AND rt.isVisible = :rt_isvisible";
 
-        if ($isAdmin == false){
+        if ($isAdmin === false) {
             $dql .= " AND arRights.canView = 1";
         }
 
-        if ($resourceTypeId != 0) {
+        if ($resourceTypeId !== 0) {
             $dql .= " AND rt.id = :rt_id";
         }
 
@@ -164,16 +163,18 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query->setParameter('ar_parentid', $parentId);
         $query->setParameter('rt_isvisible', $isVisible);
 
-        if ($resourceTypeId != 0) {
+        if ($resourceTypeId !== 0) {
             $query->setParameter('rt_id', $resourceTypeId);
         }
 
         $results = array();
-        if(!$isAdmin){
+
+        if (!$isAdmin) {
             $results = $this->executeQuery($query, $asArray);
         } else {
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
-            foreach($items as $key => $item){
+
+            foreach ($items as $key => $item) {
                 $item[$key]['can_export'] = true;
                 $item[$key]['can_edit'] = true;
                 $item[$key]['can_delete'] = true;
@@ -193,10 +194,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
     public function listRootsForUser(User $user, $asArray = false)
     {
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                . " FROM " . self::FROM_RESOURCES
-                . " WHERE ar.parent IS NULL"
-                . " AND " . self::WHERECONDITION_USER_WORKSPACE
-                . " ORDER BY ar.path";
+            . " FROM " . self::FROM_RESOURCES
+            . " WHERE ar.parent IS NULL"
+            . " AND " . self::WHERECONDITION_USER_WORKSPACE
+            . " ORDER BY ar.path";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('u_id', $user->getId());
@@ -241,18 +242,18 @@ class AbstractResourceRepository extends MaterializedPathRepository
     {
         $isAdmin = false;
 
-        if ($user != null){
-            foreach($user->getRoles() as $role){
-               if($role == 'ROLE_ADMIN'){
-                   $isAdmin = true;
-               }
+        if ($user !== null) {
+            foreach ($user->getRoles() as $role) {
+                if ($role === 'ROLE_ADMIN') {
+                    $isAdmin = true;
+                }
             }
         }
 
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
-                . " FROM " . self::FROM_RESOURCES;
+            . " FROM " . self::FROM_RESOURCES;
 
-        if ($isAdmin == false){
+        if ($isAdmin === false) {
             $dql .= "
                 JOIN ar.rights arRights
                 JOIN arRights.role rightRole WITH rightRole IN (
@@ -263,9 +264,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         $dql .= " WHERE rt.isVisible=1"
-                . " AND " . self::WHERECONDITION_USER_WORKSPACE;
+            . " AND " . self::WHERECONDITION_USER_WORKSPACE;
 
-        if ($user != null && $isAdmin == false){
+        if ($user !== null && $isAdmin === false) {
             $dql .= " AND arRights.canView = 1";
         }
 

@@ -18,7 +18,6 @@ class ResourceRightsRepository extends EntityRepository
      */
     public function getRights(User $user, AbstractResource $resource)
     {
-
         $dql = "
             SELECT DISTINCT rrw FROM Claroline\CoreBundle\Entity\Workspace\ResourceRights rrw
             JOIN rrw.role role WITH role IN

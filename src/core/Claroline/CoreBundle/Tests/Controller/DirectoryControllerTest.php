@@ -42,9 +42,10 @@ class DirectoryControllerTest extends FunctionalTestCase
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
         $this->addResource($rootDir, $this->pwr->getId(), 'directory');
-        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($dir));
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(1, count($dir->resources));
     }
 
     public function testUserCanCreateSubResource()
@@ -59,9 +60,10 @@ class DirectoryControllerTest extends FunctionalTestCase
         $object->setMimeType('Mime/Type');
         $object->setHashName('hashName');
         $this->addResource($object, $dirRi->getId(), 'file');
-        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($dir));
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(1, count($dir->resources));
     }
 
     public function testUserCanRemoveDirectoryAndItsContent()
@@ -73,13 +75,15 @@ class DirectoryControllerTest extends FunctionalTestCase
         $object = new Directory();
         $object->setName('child_dir');
         $this->addResource($object, $dirRi->getId(), 'directory');
-        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
-        $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($dir));
+        $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('resources', $response);
+        $this->assertEquals(1, count($response->resources));
         $this->client->request('GET', "/resource/delete?ids[]={$dirRi->getId()}");
-        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
+        $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(0, count($dir));
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(0, count($dir->resources));
     }
 
     private function cleanDirectory($dir)

@@ -76,7 +76,7 @@ class Manager
         $resource->setCreator($user);
 
         if ($resource->getUserIcon() == null){
-            if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\File){
+            if ($resource instanceof File){
                 $resource = $this->ic->setResourceIcon($resource, $resource->getMimeType());
             } else {
                 $resource = $this->ic->setResourceIcon($resource, null);
