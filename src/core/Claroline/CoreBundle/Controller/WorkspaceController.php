@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
-use Claroline\CoreBundle\Form\ResourceRightsType;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 
 /**
@@ -142,7 +141,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
-        if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$workspaceId}", $workspace)) {
+        if (false === $this->get('security.context')->isGranted("DELETE", $workspace)) {
             throw new AccessDeniedHttpException();
         }
 
@@ -165,7 +164,11 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+
+        if(!$this->get('security.context')->isGranted('VIEW', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:home.html.twig',
@@ -186,7 +189,12 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+
+        if (!$this->get('security.context')->isGranted('VIEW', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($workspace)
             ->getId();
@@ -240,6 +248,11 @@ class WorkspaceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
+        if(!$this->get('security.context')->isGranted('EDIT', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         return $this->render('ClarolineCoreBundle:Workspace:tools\properties.html.twig', array('workspace' => $workspace));
     }
 
@@ -254,6 +267,12 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        if(!$this->get('security.context')->isGranted('EDIT', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
@@ -270,6 +289,8 @@ class WorkspaceController extends Controller
      */
     public function configureRightsAction($workspaceId)
     {
+        //CURRENTLY OUTDATED
+        //TODO: UPDATE THIS
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
@@ -285,6 +306,8 @@ class WorkspaceController extends Controller
      */
     public function resourcesRightsFormAction($workspaceId)
     {
+        //CURRENTLY OUTDATED
+        //TODO: UPDATE THIS
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspaceId, 'parent' => null));
@@ -304,6 +327,8 @@ class WorkspaceController extends Controller
      */
     public function editResourcesRightsAction($workspaceId)
     {
+        //CURRENTLY OUTDATED
+        //TODO: UPDATE THIS
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
@@ -337,6 +362,12 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('EDIT', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
 
         $displayConfig = $em
@@ -375,6 +406,12 @@ class WorkspaceController extends Controller
     {
          $em = $this->get('doctrine.orm.entity_manager');
          $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+         if (!$this->get('security.context')->isGranted('EDIT', $workspace))
+         {
+             throw new AccessDeniedHttpException();
+         }
+
          $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
          $event = new ConfigureWidgetWorkspaceEvent($workspace);
          $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
@@ -386,24 +423,5 @@ class WorkspaceController extends Controller
          } else {
              throw new \Exception("event $eventName didn't return any Response");
          }
-    }
-
-    /*******************/
-    /* PRIVATE METHODS */
-    /*******************/
-
-    private function checkRegistration($workspace)
-    {
-        $authorization = false;
-
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            if ($this->get('security.context')->isGranted($role->getName())) {
-                $authorization = true;
-            }
-        }
-
-        if ($authorization === false) {
-            throw new AccessDeniedHttpException();
-        }
     }
 }

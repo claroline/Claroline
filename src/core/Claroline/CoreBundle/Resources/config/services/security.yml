@@ -4,8 +4,17 @@ services:
         class: Claroline\CoreBundle\Library\Security\Voter\AdministratorVoter
         tags:
             -  { name: security.voter }
+
     claroline.security.resource_voter:
         class: Claroline\CoreBundle\Library\Security\Voter\ResourceVoter
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@translator"
+        tags:
+            -  { name: security.voter }
+
+    claroline.security.workspace_voter:
+        class: Claroline\CoreBundle\Library\Security\Voter\WorkspaceVoter
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@translator"

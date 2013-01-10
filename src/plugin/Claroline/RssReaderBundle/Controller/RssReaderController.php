@@ -52,6 +52,17 @@ class RssReaderController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $rssConfig = $em->getRepository('Claroline\RssReaderBundle\Entity\Config')->find($configId);
+
+        if ($rssConfig->getWorkspace() !== null) {
+            if (!$this->get('security.context')->isGranted('EDIT', $rssConfig->getWorkspace())) {
+                throw new AccessDeniedHttpException();
+            }
+        } else {
+            if (!$this->get('security.context')->isGranted('ROLE_ADMIN', $rssConfig->getWorkspace())) {
+                throw new AccessDeniedHttpException();
+            }
+        }
+
         $form = $this->get('form.factory')->create(new ConfigType(), $rssConfig);
         $form->bindRequest($this->get('request'));
 

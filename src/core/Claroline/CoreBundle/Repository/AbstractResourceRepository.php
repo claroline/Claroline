@@ -46,7 +46,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
     const WHERECONDITION_USER_WORKSPACE = "
             ar.workspace IN
             ( SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
-                JOIN aw.roles r JOIN r.users u WHERE u.id = :u_id ) ";
+                JOIN aw.rights workspace_rights
+                JOIN workspace_rights.role r JOIN r.users u WHERE u.id = :u_id ) ";
 
     /**
      * Returns the root resource of the workspace
@@ -144,7 +145,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 JOIN arRights.role rightRole WITH rightRole IN (
                     SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
                     JOIN currentUserRole.users currentUser
-                    JOIN currentUserRole.workspace currentWorkspace
                     WHERE currentUser.id = {$user->getId()}
                 )";
         }
@@ -258,7 +258,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 JOIN arRights.role rightRole WITH rightRole IN (
                     SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
                     JOIN currentUserRole.users currentUser
-                    JOIN currentUserRole.workspace currentWorkspace
                     WHERE currentUser.id = {$user->getId()}
                 )";
         }

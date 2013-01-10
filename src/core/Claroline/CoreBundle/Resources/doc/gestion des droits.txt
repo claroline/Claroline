@@ -5,7 +5,7 @@ Cette table possède un lien vers une ressource et un lien vers un rôle (une s�
 Les permissions pouvant être mise à true/false sont: COPY, DELETE, EDIT, OPEN, VIEW.
 
 Cette table possède également une relation N-N avec la table des types de ressources.
-Les enregistrement de la table intermédiaire de cette relation indiquement les types de ressources que l'ont peut rajouter à l'intérieur.
+Les enregistrement de la table intermédiaire de cette relation indiquent les types de ressources que l'ont peut rajouter à l'intérieur.
 
 2) Voter:
 
@@ -129,3 +129,42 @@ Combinaison de droits ? Bouger/Copier
 7) Interface pour la création des liens ?
 Actuellement: créer un nouveau lien => resource picker => pick.
 Alternative: bouton créer un lien dans le menu de la ressource.
+
+8) Systeme de permissions pour le ws identique (utilisateurs anonyme).
+
+Quand on crée un workspace, on va créer certains roles prédéfini et remplir une table intermédiaire qui fait le lien entre un role et un
+workspace et qui contient les permissions.
+On en profite pour faire un lien entre le workspace créé et le ROLE_ANONYMOUS en mettant toute les permissions à false.
+
+Quid des groupes ?
+Si un utilisateur se trouve dans un groupe et que le groupe est inscrit au workspace.
+Si l'utilisateur est également inscrit au workspace.
+
+Il va se retrouver avec 2 roles qui concernent le workspace (individuellement et via les groupes).
+Quels permissions utiliser ?
+
+//réunion
+~
+
+Browser dans une resource externe.
+Droits sur le pas l'espace de la cible... faudra trouver une solution.
+Retirer le lien du workspace vers la ressource ? Revenir au schéma d'avant.
+Revenir à ResourceInstance ? Non => faire un truc hybride ~.
+Certaines ressouces peuvent ne pas être liée à un workspace.
+2 types de ressources différents.
+Notion de document partageable entre workspace (parce qu'ils n'ont pas de contexte).
+P. M. = product owner
+
+.·.·.·.·.·.·.·.·.·
+
+???????????????????????????????????????????????????????????????????????????
+
+Implémentation du système de droit ?
+Liste des histoires déjà écrites.
+
+//~
+
+~ Dans certains contexte de utilisateurs sont super utilisateurs. Genre le super utilisateur dans un workspace.
+2 types de ressources différents.
+
+

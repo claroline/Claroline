@@ -23,12 +23,12 @@ class ResourceRightsRepository extends EntityRepository
             SELECT DISTINCT rrw FROM Claroline\CoreBundle\Entity\Workspace\ResourceRights rrw
             JOIN rrw.role role WITH role IN
                 (SELECT userrole FROM Claroline\CoreBundle\Entity\Role userrole
-                JOIN userrole.workspace ws
+                JOIN userrole.workspaceRights workspaceRights
+                JOIN workspaceRights.workspace ws
                 JOIN ws.resources res
                 JOIN userrole.users u
                 WHERE res.id = {$resource->getId()}
                 AND u.id = {$user->getId()}
-
             )
             JOIN rrw.resource resource
             WHERE resource.id = {$resource->getId()}

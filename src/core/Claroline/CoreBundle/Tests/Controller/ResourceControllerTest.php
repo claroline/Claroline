@@ -557,14 +557,16 @@ class ResourceControllerTest extends FunctionalTestCase
     public function testDisplayCreationRightForm()
     {
         $this->logUser($this->getFixtureReference('user/user'));
+        $collaboratorRole = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $dir = $this->createDirectory($this->pwr->getId(), 'dir');
-        $crawler = $this->client->request('GET', "/resource/{$dir->id}/role/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()->getId()}/right/creation/form");
+        $crawler = $this->client->request('GET', "/resource/{$dir->id}/role/{$collaboratorRole->getId()}/right/creation/form");
         $this->assertEquals(1, count($crawler->filter('#form-resource-creation-rights')));
     }
 
     public function testSubmitRightsCreationForm()
     {
         $this->logUser($this->getFixtureReference('user/user'));
+        $collaboratorRole = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $dir = $this->createDirectory($this->pwr->getId(), 'dir');
         $resourceTypes = $this
             ->client
@@ -576,7 +578,7 @@ class ResourceControllerTest extends FunctionalTestCase
         //Creating new ResourceRight from the default one
         $this->client->request(
             'POST',
-            "/resource/{$dir->id}/role/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()->getId()}/right/creation/edit",
+            "/resource/{$dir->id}/role/{$collaboratorRole->getId()}/right/creation/edit",
             array(
                 "create-{$resourceTypes[0]->getId()}" => true,
                 "create-{$resourceTypes[1]->getId()}" => true,
@@ -589,7 +591,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findOneBy(array('resource' => $dir->id, 'role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
+            ->findOneBy(array('resource' => $dir->id, 'role' => $collaboratorRole));
 
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(2, count($permCreate));
@@ -597,7 +599,7 @@ class ResourceControllerTest extends FunctionalTestCase
         //updating the new right
         $this->client->request(
             'POST',
-            "/resource/{$dir->id}/role/{$this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()->getId()}/right/creation/edit",
+            "/resource/{$dir->id}/role/{$collaboratorRole->getId()}/right/creation/edit",
             array(
                 "create-{$resourceTypes[1]->getId()}" => true,
                 "create-{$resourceTypes[2]->getId()}" => true,
@@ -610,7 +612,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
-            ->findOneBy(array('resource' => $dir->id, 'role' => $this->getFixtureReference('user/user')->getPersonalWorkspace()->getCollaboratorRole()));
+            ->findOneBy(array('resource' => $dir->id, 'role' => $collaboratorRole));
 
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(3, count($permCreate));
