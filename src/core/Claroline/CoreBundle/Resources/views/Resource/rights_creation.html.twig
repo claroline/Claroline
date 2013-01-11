@@ -24,9 +24,12 @@
         </tr>
         {% endfor %}
     </table>
-    <input name="isRecursive" type="checkbox" value="1"> {{ 'recursive'|trans({}, 'platform')}}</input>
-    <br/>
-    <input type="submit" value="submit"/>
+    <div class="control-group">
+        <div class="controls">
+            <input name="isRecursive" type="checkbox" value="1"> {{ 'recursive_dir_action'|trans({}, 'platform')}}</input>
+        </div>
+    </div>
+    <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
 </form>
 
 {% endblock %}
