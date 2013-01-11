@@ -90,7 +90,7 @@ claro_resource_copy:
         expose: true
 
 claro_resource_filter:
-    pattern: /filter
+    pattern: /filter/{directoryId}
     defaults: { _controller: ClarolineCoreBundle:Resource:filter }
     options:
         expose: true

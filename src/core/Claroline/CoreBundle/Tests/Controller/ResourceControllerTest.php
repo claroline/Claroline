@@ -227,6 +227,10 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("return any Response")')));
     }
 
+    /**
+     * @todo Unskip this test, taking changes to the filter action into account
+     * @todo Test the exception if the directory id parameter doesn't match any directory
+     */
     public function testFilters()
     {
         $this->markTestSkipped();
