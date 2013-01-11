@@ -105,6 +105,7 @@ no_search_results: Your search hasn't returned any result.
 note: Note
 ok: Ok
 open: Open
+options: Options
 owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
@@ -133,6 +134,7 @@ profile_form_plainPassword_second: Verification
 profile_form_username: Username
 properties: Properties
 public: Public
+recursive_dir_action: Apply to the contents of the directory and its subdirectories
 register: Register
 registered_groups: Registered groups
 registered_users: Registered users
