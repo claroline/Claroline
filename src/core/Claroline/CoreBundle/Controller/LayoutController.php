@@ -64,6 +64,11 @@ class LayoutController extends Controller
             (count($unreadMessages) == 0) ? $alertMsg = false: $alertMsg = true;
 
         } else {
+
+            $workspaces = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+                ->getVisibleWorkspaceForAnonymous();
+            
             $configHandler = $this->get('claroline.config.platform_config_handler');
 
             if (true === $configHandler->getParameter('allow_self_registration')) {
