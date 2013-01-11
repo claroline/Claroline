@@ -52,5 +52,9 @@ class WorkspaceRightsRepository extends EntityRepository
             JOIN wsr.role role
             JOIN wsr.workspace workspace
             WHERE workspace.id = {$workspace->getId()}";
+
+       $query = $this->_em->createQuery($dql);
+
+       return $query->getSingleResult();
     }
 }

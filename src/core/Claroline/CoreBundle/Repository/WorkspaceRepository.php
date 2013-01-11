@@ -52,4 +52,18 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function getVisibleWorkspaceForAnonymous()
+    {
+        $dql = "
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.rights wr
+            JOIN wr.role r
+            WHERE r.name LIKE 'ROLE_ANONYMOUS'
+            AND wr.canView = 1";
+
+            $query = $this->_em->createQuery($dql);
+
+            return $query->getResult();
+    }
 }
