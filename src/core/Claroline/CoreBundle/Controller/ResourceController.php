@@ -546,13 +546,12 @@ class ResourceController extends Controller
     }
 
     /**
-     * Renders the searched resource list.
+     * Returns a json representation of a resource search result.
      *
-     * @todo Add the (icon) "mimeType" filter (see ResourceInstanceRepository)
-     *
+     * @param integer $directoryId The id of the directory from which the search was started
      * @return Response
      */
-    public function filterAction()
+    public function filterAction($directoryId)
     {
         $queryParameters = $this->container->get('request')->query->all();
         $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
@@ -568,11 +567,27 @@ class ResourceController extends Controller
         }
 
         isset($criteria['roots']) || $criteria['roots'] = array();
+        $resourceRepo = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $directoryId = (integer)$directoryId;
+        $path = array();
+
+        if ($directoryId !== 0) {
+            $directory = $this->getResource($resourceRepo->find($directoryId));
+
+            if (null === $directory || !$directory instanceof Directory) {
+                throw new Exception("Cannot find any directory with id '{$directoryId}'");
+            }
+
+            $path = $resourceRepo->listAncestors($directory);
+        }
+
         $user = $this->get('security.context')->getToken()->getUser();
-        $results = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->listResourcesForUserWithFilter($criteria, $user, true);
-        $response = new Response(json_encode($results));
+        $resources = $resourceRepo->listResourcesForUserWithFilter($criteria, $user, true);
+        $response = new Response(json_encode(array(
+            'resources' => $resources,
+            'path' => $path
+        )));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
