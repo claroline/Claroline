@@ -14,10 +14,11 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->loadUserFixture(array('user', 'ws_creator'));
         $this->manager = $this->getFixtureReference('user/ws_creator');
         $em = $this->getEntityManager();
+        $this->roleWsManager = $em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_WS_MANAGER_'.$this->manager->getPersonalWorkspace()->getId()));
         $this->root = $em
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($this->manager->getPersonalWorkspace());
-        $this->rootRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getRights($this->manager, $this->root);
+        $this->rootRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $this->root, 'role' => $this->roleWsManager));
     }
 
     public function testOpenResource()
@@ -125,7 +126,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->logUser($this->manager);
         $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
         $this->rootRights->removeResourceType($directoryType);
-        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getRights($this->manager, $directory);
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
         $directoryRights->setCanCopy(false);
         $em->persist($this->rootRights);
         $em->persist($directoryRights);
@@ -153,7 +154,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->logUser($this->manager);
         $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
         $this->rootRights->removeResourceType($directoryType);
-        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getRights($this->manager, $directory);
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
         $directoryRights->setCanCopy(false);
         $directoryRights->setCanDelete(false);
         $em->persist($this->rootRights);

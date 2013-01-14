@@ -4,19 +4,22 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Security\RightsManager;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class Converter
 {
     /* @var EntityManager */
     private $em;
+    private $rm;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, RightsManager $rm)
     {
         $this->em = $em;
+        $this->rm = $rm;
     }
 
-    public function toArray(AbstractResource $resource, User $user)
+    public function toArray(AbstractResource $resource, TokenInterface $token)
     {
         $resourceArray = array();
         $resourceArray['id'] = $resource->getId();
@@ -29,10 +32,12 @@ class Converter
         $resourceArray['path_for_display'] = $resource->getPathForDisplay();
 
         $isAdmin = false;
-        foreach($user->getRoles() as $role){
-           if($role == 'ROLE_ADMIN'){
-               $isAdmin = true;
-           }
+
+        $roles = $this->rm->getRoles($token);
+        foreach($roles as $role){
+            if($role === 'ROLE_ADMIN'){
+                $isAdmin = true;
+            }
         }
 
         if($isAdmin){
@@ -40,18 +45,18 @@ class Converter
             $resourceArray['can_edit'] = true;
             $resourceArray['can_delete'] = true;
         } else {
-            $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')->getRights($user, $resource);
-            $resourceArray['can_export'] = $rights->canExport();
-            $resourceArray['can_edit'] = $rights->canEdit();
-            $resourceArray['can_delete'] = $rights->canDelete();
+            $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')->getRights($roles, $resource);
+            $resourceArray['can_export'] = $rights['canExport'];
+            $resourceArray['can_edit'] = $rights['canEdit'];
+            $resourceArray['can_delete'] = $rights['canDelete'];
         }
 
         return $resourceArray;
     }
 
-    public function toJson(AbstractResource $resource, User $user)
+    public function toJson(AbstractResource $resource, TokenInterface $token)
     {
-        $phpArray[0] = $this->toArray($resource, $user);
+        $phpArray[0] = $this->toArray($resource, $token);
         $json = json_encode($phpArray);
 
         return $json;

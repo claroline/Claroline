@@ -489,7 +489,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $crawler = $this->client->request('GET', "/resource/{$file->id}/rights/form");
-        $this->assertEquals(3, count($crawler->filter('.row-rights')));
+        $this->assertEquals(4, count($crawler->filter('.row-rights')));
     }
 
     public function testSubmitRightsForm()
@@ -499,7 +499,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $file = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($file->id);
         $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $file));
-        $this->assertEquals(3, count($resourceRights));
+        $this->assertEquals(4, count($resourceRights));
 
         //changes keep the 1st $resourceRight and change the others
 
@@ -514,7 +514,7 @@ class ResourceControllerTest extends FunctionalTestCase
         );
 
         $resourceRights = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $file));
-        $this->assertEquals(3, count($resourceRights));
+        $this->assertEquals(4, count($resourceRights));
         $this->assertTrue($resourceRights[0]->isEquals(array(
             'canView' => true,
             'canCopy' => false,
@@ -709,6 +709,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST', "/resource/create/directory/{$parentId}", array('directory_form' => array('name' => $name))
         );
+
         $obj = json_decode($this->client->getResponse()->getContent());
 
         return $obj[0];

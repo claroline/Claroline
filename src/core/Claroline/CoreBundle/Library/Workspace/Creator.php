@@ -56,6 +56,7 @@ class Creator
         $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $this->roleRepo->getManagerRole($workspace), $rootDir);
         $this->createDefaultsResourcesRights(true, false, true, false, false, true, false, $this->roleRepo->getCollaboratorRole($workspace), $rootDir);
         $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->getVisitorRole($workspace), $rootDir);
+        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->findOneBy(array ('name' => 'ROLE_ANONYMOUS')), $rootDir);
 
         //default workspace rights
         $this->createDefaultsWorkspaceRights(true, true, true, true, $this->roleRepo->getManagerRole($workspace), $workspace);

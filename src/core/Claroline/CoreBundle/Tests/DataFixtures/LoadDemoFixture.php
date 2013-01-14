@@ -131,6 +131,9 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         ));
     }
 
+
+
+
     private function createWorkspace($name, $user, $code)
     {
         $config = new Configuration();

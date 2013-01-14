@@ -74,15 +74,15 @@ claro_workspace_rights:
   requirements:
     _method: GET
 
-claro_workspace_resources_rights_form:
-  pattern: /{workspaceId}/properties/resources/rights/form
-  defaults: { _controller: ClarolineCoreBundle:Workspace:resourcesRightsForm }
+claro_workspace_workspace_rights_form:
+  pattern: /{workspaceId}/properties/workspace/rights/form
+  defaults: { _controller: ClarolineCoreBundle:Workspace:workspaceRightsForm }
   requirements:
     _method: GET
 
-claro_workspace_resources_rigths_edit:
-  pattern: /{workspaceId}/properties/resources/rights/edit
-  defaults: { _controller: ClarolineCoreBundle:Workspace:editResourcesRights }
+claro_workspace_workspace_rigths_edit:
+  pattern: /{workspaceId}/properties/workspace/rights/edit
+  defaults: { _controller: ClarolineCoreBundle:Workspace:editWorkspaceRights }
   requirements:
     _method: POST
 

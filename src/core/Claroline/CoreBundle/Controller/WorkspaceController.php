@@ -289,8 +289,6 @@ class WorkspaceController extends Controller
      */
     public function configureRightsAction($workspaceId)
     {
-        //CURRENTLY OUTDATED
-        //TODO: UPDATE THIS
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
@@ -304,16 +302,13 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function resourcesRightsFormAction($workspaceId)
+    public function workspaceRightsFormAction($workspaceId)
     {
-        //CURRENTLY OUTDATED
-        //TODO: UPDATE THIS
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspaceId, 'parent' => null));
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\workspaceRights')->findBy(array('workspace' => $workspaceId));
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
+        return $this->render('ClarolineCoreBundle:Workspace:tools\workspace_rights.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
     }
@@ -325,21 +320,28 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function editResourcesRightsAction($workspaceId)
+    public function editWorkspaceRightsAction($workspaceId)
     {
-        //CURRENTLY OUTDATED
-        //TODO: UPDATE THIS
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
-        $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
+        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->findBy(array('workspace' => $workspaceId));
+        $checks = $this->get('claroline.security.utilities')->setRightsRequest($this->get('request')->request->all(), 'workspace');
 
         foreach($configs as $config){
             $config->reset();
 
             if(isset($checks[$config->getId()])){
                 $config->setRights($checks[$config->getId()]);
+                if ($config->getRole()->getName() == 'ROLE_ANONYMOUS'){
+                    //if anonymous can see a a workspace, he also can see the root
+                    if ($checks[$config->getId()]['canView'] === true){
+                        $ws = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+                        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->getRootForWorkspace($ws);
+                        $role = $em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
+                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $root, 'role' => $role));
+                        $resourceRight->setCanView(true);
+                        $em->persist($resourceRight);
+                    }
+                }
             }
             $em->persist($config);
         }
