@@ -10,7 +10,7 @@
         </li>
         {% else %}
         <li>
-            <a id="item-{{ item.step }}" class="activity-step" href="{{ path('claro_resource_open',{'resourceType': item.resource.getResourceType().getName(), 'resourceId': item.resource.getId()}) }}?_mode=path">
+            <a id="item-{{ item.step }}" class="activity-step" data-is-passed="false" href="{{ path('claro_resource_open',{'resourceType': item.resource.getResourceType().getName(), 'resourceId': item.resource.getId()}) }}?_mode=path">
                 {{ item.resource.getName() }}
             </a>
         </li>
