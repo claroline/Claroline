@@ -37,6 +37,13 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 
     public function load(ObjectManager $manager = null)
     {
+        // TODO : following lines were added quickly -- we must cannot suppose the admin exists...
+        $admin = $manager->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => 'admin'));
+        $adminWorkspace = $admin->getPersonalWorkspace();
+        $rootWorkspaceAdmin = $this->getWorkspaceRoot($adminWorkspace);
+        $dir = $this->createDirectory('Documents', $rootWorkspaceAdmin, $admin);
+        $this->createFile('file.txt', $dir, $admin, 'file.txt');
+
         $user = $this->createMainTeacher($manager);
         $this->loadFixture(new LoadUsersData(30, 'user'));
         $this->loadFixture(new LoadUsersData(10, 'ws_creator'));
@@ -109,7 +116,6 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $accDir = $this->createDirectory('Activities', $dir, $user);
         $dir = $this->createDirectory('Images et vidéos', $this->getWorkspaceRoot($user->getPersonalWorkspace()), $user);
         $accItems[] = $this->createFile('big_buck_bunny_480.webm', $dir, $user, 'bigbuck.webm');
-        $accItems[] = $this->createFile('water.mp4', $dir, $user, 'water.mp4');
         $accItems[] = $this->createFile('wallpaper.jpg', $dir, $user, 'wallpaper.jpg');
 
         //create an Activity
@@ -126,8 +132,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
             $accItems[6],
             $accItems[7],
             $accItems[8],
-            $accItems[9],
-            $accItems[10]
+            $accItems[9]
         ));
     }
 

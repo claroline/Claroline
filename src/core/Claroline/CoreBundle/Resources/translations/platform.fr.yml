@@ -103,8 +103,10 @@ manager: Gestionnaire
 name: Nom
 no_search_results: Votre recherche n'a retourné aucun résultat.
 note: Note
+object: Objet
 ok: Ok
 open: Ouvrir
+options: Options
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
@@ -133,6 +135,7 @@ profile_form_plainPassword_second: Vérification
 profile_form_username: Nom d'utilisateur
 properties: Propriétés
 public: Publique
+recursive_dir_action: Appliquer au contenu du répertoire et aux sous-répertoires
 register: Inscription
 registered_groups: Groupes enregistrés
 registered_users: Utilisateurs enregistrés
