@@ -116,7 +116,6 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $accDir = $this->createDirectory('Activities', $dir, $user);
         $dir = $this->createDirectory('Images et vidéos', $this->getWorkspaceRoot($user->getPersonalWorkspace()), $user);
         $accItems[] = $this->createFile('big_buck_bunny_480.webm', $dir, $user, 'bigbuck.webm');
-        $accItems[] = $this->createFile('water.mp4', $dir, $user, 'water.mp4');
         $accItems[] = $this->createFile('wallpaper.jpg', $dir, $user, 'wallpaper.jpg');
 
         //create an Activity
