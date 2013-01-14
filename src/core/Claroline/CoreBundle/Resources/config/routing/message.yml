@@ -73,3 +73,9 @@ claro_message_delete_to:
     defaults: { _controller: ClarolineCoreBundle:Message:deleteToUser }
     options:
       expose: true
+
+claro_message_mark_as_read:
+    pattern: /mark_as_read/{userMessageId}
+    defaults: { _controller: ClarolineCoreBundle:Message:markAsRead }
+    options:
+      expose: true

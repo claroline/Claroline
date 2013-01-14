@@ -19,21 +19,51 @@
         </a>
         <ul class="dropdown-menu" role="menu">
             <li>
-                <a class="resource-menu-action" data-action="rename" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
-                    {{ 'rename'|trans({}, 'platform') }}
-                </a>
-                <a class="resource-menu-action" data-action="download" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
-                    {{ 'download'|trans({}, 'platform') }}
-                </a>
-                <a class="resource-menu-action" data-action="delete" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
-                    {{ 'delete'|trans({}, 'platform') }}
-                </a>
-                <a class="resource-menu-action" data-action="manage-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
-                    {{ 'manage_rights'|trans({}, 'platform') }}
-                </a>
-                <a class="resource-menu-action" data-action="edit-properties" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
-                    {{ 'properties'|trans({}, 'platform') }}
-                </a>
+                {% if resource.can_edit == true %}
+                    <a class="resource-menu-action" data-action="rename" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        {{ 'rename'|trans({}, 'platform') }}
+                    </a>
+                {% else %}
+                    <a class="dropdown-menu-item-disabled">
+                        {{ 'rename'|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
+                {% if resource.can_export == true %}
+                    <a class="resource-menu-action" data-action="download" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        {{ 'download'|trans({}, 'platform') }}
+                    </a>
+                {% else %}
+                    <a class="dropdown-menu-item-disabled">
+                        {{ 'download'|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
+                {% if resource.can_delete == true %}
+                    <a class="resource-menu-action" data-action="delete" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        {{ 'delete'|trans({}, 'platform') }}
+                    </a>
+                {% else %}
+                    <a class="dropdown-menu-item-disabled">
+                        {{ 'delete'|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
+                {% if resource.can_edit == true %}
+                    <a class="resource-menu-action" data-action="manage-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        {{ 'manage_rights'|trans({}, 'platform') }}
+                    </a>
+                {% else %}
+                    <a class="dropdown-menu-item-disabled">
+                        {{ 'manage_rights'|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
+                {% if resource.can_edit == true %}
+                    <a class="resource-menu-action" data-action="edit-properties" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        {{ 'properties'|trans({}, 'platform') }}
+                    </a>
+                {% else %}
+                    <a class="dropdown-menu-item-disabled">
+                        {{ 'properties'|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
             </li>
             {% if customActions|length > 0 %}
             <li class="divider"></li>

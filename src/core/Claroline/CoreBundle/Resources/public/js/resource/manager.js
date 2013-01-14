@@ -24,10 +24,10 @@
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
             },
-            render: function (resources, path, isSearchMode) {
+            render: function (resources, path, creatableTypes, isSearchMode) {
                 this.currentDirectory = _.last(path);
                 this.subViews.breadcrumbs.render(path);
-                this.subViews.actions.render(this.currentDirectory, isSearchMode);
+                this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
                 this.subViews.areAppended || this.wrapper.append(
                     this.subViews.breadcrumbs.el,
@@ -173,7 +173,7 @@
                 this.isCutMode = isCutMode;
                 this.setButtonEnabledState(this.$('button.paste'), isReadyToPaste && !this.isSearchMode);
             },
-            render: function (directory, isSearchMode) {
+            render: function (directory, creatableTypes, isSearchMode) {
                 this.currentDirectory = directory;
                 isSearchMode && !this.isSearchMode
                     && (this.checkedResources.resources = {})
@@ -181,9 +181,10 @@
                 this.isSearchMode = isSearchMode;
                 this.filters && (this.filters.currentDirectory = directory);
                 var parameters = _.extend({}, this.parameters);
+                parameters.creatableTypes = creatableTypes;
                 parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode&& directory.id != 0;
                 parameters.isCreateAllowed = parameters.isAddAllowed =
-                    !(directory.id == 0 || (!this.parameters.isPickerMode && this.isSearchMode));
+                    !(directory.id == 0 || (!this.parameters.isPickerMode && this.isSearchMode) || _.size(creatableTypes) === 0);
                 $(this.el).html(Twig.render(resource_actions_template, parameters));
             }
         }),
@@ -489,7 +490,6 @@
                 this.manageRights(event.action, event.data, event.resourceId);
             },
             'edit-rights-creation': function(event){
-                console.debug(event);
                 this.editCreationRights(event.action, event.data);
             }
         },
@@ -522,19 +522,15 @@
             view = view && view == 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
             $.ajax({
-                url: this.parameters.appPath + '/resource/' + (isSearchMode ? 'filter' : 'children/' + directoryId),
+                url: this.parameters.appPath + '/resource/' + (isSearchMode ? 'filter' : 'directory') + '/' + directoryId,
                 data: searchParameters || {},
-                success: function (resources) {
-                    $.ajax({
-                        url: this.parameters.appPath + '/resource/parents/' + directoryId,
-                        success: function (path) {
-                            (this.parameters.directoryId == 0 || view == 'picker') && path.unshift({id: 0});
-                            this.views[view].render(resources, path, isSearchMode);
-                            this.views[view].isAppended ||
-                                this.parameters.parentElement.append(this.views[view].el)
-                                && (this.views[view].isAppended = true);
-                        }
-                    });
+                success: function (data) {
+                    isSearchMode && (data.creatableTypes = {});
+                    (this.parameters.directoryId == 0 || view == 'picker') && data.path.unshift({id: 0});
+                    this.views[view].render(data.resources, data.path, data.creatableTypes, isSearchMode);
+                    this.views[view].isAppended ||
+                        this.parameters.parentElement.append(this.views[view].el)
+                        && (this.views[view].isAppended = true);
                 }
             });
         },

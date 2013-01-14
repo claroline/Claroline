@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
@@ -45,61 +46,60 @@ class Manager
     /**
      * Creates a resource. If instanceParentId is null, added to the root.
      *
-     * @param integer          $parentInstanceId
-     * @param integer          $workspaceId
-     * @param AbstractResource $object
-     * @param boolean          $instance the return type
+     * @param integer          $parentId
+     * @param string           $resouceType
+     * @param AbstractResource $resource
+     * @param User             $user
      *
      * @return  Abstractesource
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentId, $resourceType, $mimeType = null, $user = null)
+    public function create(AbstractResource $resource, $parentId, $resourceType, $user = null)
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => $resourceType));
 
-        if($user == null){
+        if ($user == null){
             $user = $this->sc->getToken()->getUser();
         }
 
-        if (null !== $resource) {
+        $resource->setCreator($user);
+        $parent = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->find($parentId);
 
-            $resource->setCreator($user);
-            $parent = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-                ->find($parentId);
+        $resource->setParent($parent);
+        $resource->setResourceType($resourceType);
+        $resource->setWorkspace($parent->getWorkspace());
+        $rename = $this->ut->getUniqueName($resource, $parent);
+        $resource->setName($rename);
+        $resource->setCreator($user);
 
-            $resource->setParent($parent);
-            $resource->setResourceType($resourceType);
-            $resource->setWorkspace($parent->getWorkspace());
-            $rename = $this->ut->getUniqueName($resource, $parent);
-            $resource->setName($rename);
-            $resource->setCreator($user);
-
-            if ($resource->getUserIcon() == null){
-                $resource = $this->ic->setResourceIcon($resource, $mimeType);
-
+        if ($resource->getUserIcon() == null){
+            if ($resource instanceof File){
+                $resource = $this->ic->setResourceIcon($resource, $resource->getMimeType());
             } else {
-                //upload the icon
-                $iconFile = $resource->getUserIcon();
-                $icon = $this->ic->createCustomIcon($iconFile);
-                $this->em->persist($icon);
-                $resource->setIcon($icon);
+                $resource = $this->ic->setResourceIcon($resource, null);
             }
 
-            $this->em->persist($resource);
-            $this->setResourceRights($parent, $resource);
-
-            $event = new ResourceLoggerEvent(
-                $resource,
-                ResourceLoggerEvent::CREATE_ACTION
-            );
-            $this->ed->dispatch('log_resource', $event);
-
-            return $resource;
+        } else {
+            //upload the icon
+            $iconFile = $resource->getUserIcon();
+            $icon = $this->ic->createCustomIcon($iconFile);
+            $this->em->persist($icon);
+            $resource->setIcon($icon);
         }
 
-        throw \Exception("failed to create resource");
+        $this->em->persist($resource);
+        $this->setResourceRights($parent, $resource);
+
+        $event = new ResourceLoggerEvent(
+            $resource,
+            ResourceLoggerEvent::CREATE_ACTION
+        );
+        $this->ed->dispatch('log_resource', $event);
+
+        return $resource;
     }
 
     /**
@@ -158,7 +158,7 @@ class Manager
                 $this->deleteDirectory($resource);
             }
         }
-        
+
         $this->em->flush();
     }
 
@@ -264,7 +264,6 @@ class Manager
     public function setResourceRights($old, $resource)
     {
         $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $old));
-
         foreach($resourceRights as $resourceRight){
             $rs = new ResourceRights();
             $rs->setRole($resourceRight->getRole());

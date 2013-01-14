@@ -53,9 +53,10 @@ class ActivityListenerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $this->createActivity('name', 'instruction');
-        $this->client->request('GET', "/resource/children/{$this->pwr->getId()}");
-        $dir = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(1, count($dir));
+        $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(1, count($dir->resources));
     }
 
     private function createActivity($name, $instruction)
