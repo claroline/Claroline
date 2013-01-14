@@ -101,3 +101,29 @@ claro_workspace_widget_configuration:
     _method: GET
   options:
     expose: true
+
+claro_workspace_agenda:
+  pattern: /{workspaceId}/agenda
+  defaults: { _controller: ClarolineCoreBundle:Calendar:index }
+  
+claro_workspace_agenda_add_date:
+  pattern: /{workspaceId}/agenda/add
+  defaults: { _controller: ClarolineCoreBundle:Calendar:addDate }
+  requirements:
+    _method: POST
+    
+claro_workspace_agenda_show:
+  pattern: /{workspaceId}/agenda/show
+  defaults: { _controller: ClarolineCoreBundle:Calendar:show }
+  requirements:
+    _method: GET
+    
+claro_workspace_agenda_move:
+  pattern: /{workspaceId}/agenda/move
+  defaults: { _controller: ClarolineCoreBundle:Calendar:move }
+  requirements:
+    _method: POST
+
+
+
+

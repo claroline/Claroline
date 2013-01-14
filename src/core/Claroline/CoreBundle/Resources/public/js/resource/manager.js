@@ -490,7 +490,6 @@
                 this.manageRights(event.action, event.data, event.resourceId);
             },
             'edit-rights-creation': function(event){
-                console.debug(event);
                 this.editCreationRights(event.action, event.data);
             }
         },
@@ -523,11 +522,12 @@
             view = view && view == 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
             $.ajax({
-                url: this.parameters.appPath + '/resource/' + (isSearchMode ? 'filter' : 'directory/' + directoryId),
+                url: this.parameters.appPath + '/resource/' + (isSearchMode ? 'filter' : 'directory') + '/' + directoryId,
                 data: searchParameters || {},
-                success: function (directory) {
-                    (this.parameters.directoryId == 0 || view == 'picker') && directory.path.unshift({id: 0});
-                    this.views[view].render(directory.resources, directory.path, directory.creatableTypes, isSearchMode);
+                success: function (data) {
+                    isSearchMode && (data.creatableTypes = {});
+                    (this.parameters.directoryId == 0 || view == 'picker') && data.path.unshift({id: 0});
+                    this.views[view].render(data.resources, data.path, data.creatableTypes, isSearchMode);
                     this.views[view].isAppended ||
                         this.parameters.parentElement.append(this.views[view].el)
                         && (this.views[view].isAppended = true);
