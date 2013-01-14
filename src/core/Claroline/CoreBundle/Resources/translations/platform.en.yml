@@ -103,6 +103,7 @@ my_workspaces: My workspaces
 name: Name
 no_search_results: Your search hasn't returned any result.
 note: Note
+object: Object
 ok: Ok
 open: Open
 options: Options

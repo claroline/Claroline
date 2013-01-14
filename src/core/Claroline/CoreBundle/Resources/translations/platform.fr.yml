@@ -103,6 +103,7 @@ manager: Gestionnaire
 name: Nom
 no_search_results: Votre recherche n'a retourné aucun résultat.
 note: Note
+object: Objet
 ok: Ok
 open: Ouvrir
 options: Options
