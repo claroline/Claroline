@@ -37,6 +37,13 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 
     public function load(ObjectManager $manager = null)
     {
+        // TODO : following lines were added quickly -- we must cannot suppose the admin exists...
+        $admin = $manager->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => 'admin'));
+        $adminWorkspace = $admin->getPersonalWorkspace();
+        $rootWorkspaceAdmin = $this->getWorkspaceRoot($adminWorkspace);
+        $dir = $this->createDirectory('Documents', $rootWorkspaceAdmin, $admin);
+        $this->createFile('file.txt', $dir, $admin, 'file.txt');
+
         $user = $this->createMainTeacher($manager);
         $this->loadFixture(new LoadUsersData(30, 'user'));
         $this->loadFixture(new LoadUsersData(10, 'ws_creator'));
