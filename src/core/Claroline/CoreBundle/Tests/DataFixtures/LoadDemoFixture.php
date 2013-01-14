@@ -132,8 +132,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
             $accItems[6],
             $accItems[7],
             $accItems[8],
-            $accItems[9],
-            $accItems[10]
+            $accItems[9]
         ));
     }
 
