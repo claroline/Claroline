@@ -23,9 +23,10 @@
     var loadRightFrame = function(item){
         currentItem = item;
 
-        if ($('#item-'+item).attr('class') == 'activity-step' && $('#item-'+item).css('font-weight') == 400){
+        if ($('#item-'+item).attr('class') == 'activity-step' && $('#item-'+item).attr('data-is-passed') == 'false'){
              currentStep++;
              $('#progress-bar').html(currentStep+'/'+totalSteps);
+             $('#item-'+item).attr('data-is-passed', 'true');
         }
 
         $('#item-'+item).css('font-weight', 'bold');
