@@ -262,7 +262,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('created', 'datetime');
         $table->addColumn('updated', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
-        $table->addColumn('user_id', 'integer', array('notnull' => false));
+        $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('icon_id', 'integer', array('notnull' => true));
         $table->addColumn('path', 'string', array('length' => 1000, 'notnull' => false));
         $table->addColumn('name', 'string');
@@ -284,7 +284,6 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource_icon'), array('icon_id'), array('id'), array('onDelete' => 'CASCADE')
         );
-
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
@@ -497,10 +496,10 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('date_log', 'datetime');
 
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'), array('creator_id'), array('id')
+            $this->getStoredTable('claro_user'), array('creator_id'), array('id'), array('onDelete' => 'SET NULL')
         );
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'), array('updator_id'), array('id')
+            $this->getStoredTable('claro_user'), array('updator_id'), array('id'), array('onDelete' => 'SET NULL')
         );
 
         $this->storeTable($table);

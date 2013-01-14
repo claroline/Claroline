@@ -40,11 +40,15 @@ claro_resource_custom:
     options:
         expose: true
 
-claro_resource_roots:
-    pattern: /roots
-    defaults: { _controller: ClarolineCoreBundle:Resource:roots }
-    options:
-        expose: true
+
+
+#claro_resource_roots:
+#    pattern: /roots
+#    defaults: { _controller: ClarolineCoreBundle:Resource:roots }
+#    options:
+#        expose: true
+
+
 
 claro_resource_root:
     pattern: /root/{workspaceId}
@@ -52,23 +56,32 @@ claro_resource_root:
     options:
         expose: true
 
-claro_resource_children:
-    pattern: children/{resourceId}/{resourceTypeId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:children, resourceId: 0, resourceTypeId: 0}
+
+
+
+claro_resource_directory:
+    pattern: directory/{directoryId}
+    defaults: { _controller: ClarolineCoreBundle:Resource:openDirectory, resourceId: 0}
     options:
         expose: true
 
-claro_resource_parents:
-     pattern: parents/{resourceId}
-     defaults: { _controller: ClarolineCoreBundle:Resource:parents }
-     options:
-        expose: true
 
-claro_resources_list:
-    pattern: list/{resourceTypeId}/{rootId}
-    defaults: { _controller: ClarolineCoreBundle:Resource:resourceList }
-    options:
-       expose: true
+#claro_resource_children:
+#    pattern: children/{resourceId}/{resourceTypeId}
+#    defaults: { _controller: ClarolineCoreBundle:Resource:children, resourceId: 0, resourceTypeId: 0}
+#    options:
+#        expose: true
+#
+#claro_resource_parents:
+#     pattern: parents/{resourceId}
+#     defaults: { _controller: ClarolineCoreBundle:Resource:parents }
+#     options:
+#        expose: true
+
+
+
+
+
 
 claro_resource_copy:
     pattern: /copy/{resourceDestinationId}
@@ -77,7 +90,7 @@ claro_resource_copy:
         expose: true
 
 claro_resource_filter:
-    pattern: /filter
+    pattern: /filter/{directoryId}
     defaults: { _controller: ClarolineCoreBundle:Resource:filter }
     options:
         expose: true

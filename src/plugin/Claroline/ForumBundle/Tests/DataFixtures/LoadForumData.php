@@ -58,7 +58,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $maxOffset--;
         $forum = new Forum();
         $forum->setName($this->forumName);
-        $forum = $creator->create($forum, $root->getId(), 'claroline_forum', null, $user);
+        $forum = $creator->create($forum, $root->getId(), 'claroline_forum', $user);
         $this->log("forum {$forum->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
@@ -69,7 +69,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject->setTitle($title);
             $subject->setCreator($user);
             $this->log("subject $title created");
-            $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', null, $user);
+            $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', $user);
 
             $entityToBeDetached = array();
             for ($j=0; $j<$this->nbMessages; $j++){
@@ -79,7 +79,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $message->setName('tmp-'.microtime());
                 $message->setCreator($sender);
                 $message->setContent($this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true));
-                $inst = $creator->create($message, $subject->getId(), 'claroline_message', null, $sender);
+                $inst = $creator->create($message, $subject->getId(), 'claroline_message', $sender);
                 $entityToBeDetached[] = $message;
                 $entityToBeDetached[] = $inst;
             }

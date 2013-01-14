@@ -58,6 +58,20 @@
         $('#validation-box-body').html('delete');
     });
 
+    $('.mark-as-read').live('click', function(e){
+        e.preventDefault();
+        console.debug($(e.target).attr('href'));
+        Claroline.Utilities.ajax({
+            type: 'GET',
+            url: $(e.target).attr('href'),
+            success: function(){
+               $(e.target).css('color', 'green');
+               $(e.target).attr('class', 'icon-ok-sign');
+            }
+        })
+    });
+
+
     $('#modal-valid-button').click(function(){
         var parameters = {
         }
