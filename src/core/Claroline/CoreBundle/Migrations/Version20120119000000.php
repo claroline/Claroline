@@ -494,10 +494,10 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('date_log', 'datetime');
 
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'), array('creator_id'), array('id')
+            $this->getStoredTable('claro_user'), array('creator_id'), array('id'), array('onDelete' => 'SET NULL')
         );
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'), array('updator_id'), array('id')
+            $this->getStoredTable('claro_user'), array('updator_id'), array('id'), array('onDelete' => 'SET NULL')
         );
 
         $this->storeTable($table);
