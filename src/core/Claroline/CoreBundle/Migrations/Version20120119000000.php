@@ -41,6 +41,7 @@ class Version20120119000000 extends BundleMigration
         $this->createActivityResourcesTable($schema);
         $this->createResourceRightsTable($schema);
         $this->createListTypeCreation($schema);
+        $this->createEventTable($schema);
 
     }
 
@@ -80,6 +81,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_resource_activity');
         $schema->dropTable('claro_resource_rights');
         $schema->dropTable('claro_list_type_creation');
+        $schema->dropTable('claro_event');
     }
 
     private function createUserTable(Schema $schema)
@@ -617,5 +619,26 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'CASCADE')
         );
+    }
+    
+    private function createEventTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_event');
+        $this->addId($table);
+        $table->addColumn('title', 'string', array('notnull' => true, 'length' => 50));
+        $table->addColumn('start', 'integer', array('notnull' => true));
+        $table->addColumn('end', 'integer', array('notnull' => false));
+        $table->addColumn('description', 'string', array('notnull' => false, 'length' => 255));
+        $table->addColumn('workspace_id', 'integer', array('notnull' => true));
+        $table->addColumn('user_id', 'integer', array('notnull' => true));
+        
+         $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+         
+         $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+         
     }
 }
