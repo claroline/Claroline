@@ -12,7 +12,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         parent::setUp();
         $this->client->followRedirects();
     }
-
+/*
     public function testWSCreatorcanViewHisWorkspaces()
     {
         $this->loadUserFixture(array('ws_creator'));
@@ -228,14 +228,14 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('#right-table')));
     }
 
-    public function testDisplayResourceRightsForm()
+    public function testDisplayWorkspaceRightsForm()
     {
         $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/resources/rights/form");
-        $this->assertEquals(1, count($crawler->filter('#resource-rights-form')));
-    }
+        $crawler = $this->client->request('GET', "/workspaces/{$workspace->getId()}/properties/workspace/rights/form");
+        $this->assertEquals(1, count($crawler->filter('#workspace-rights-form')));
+    }*/
 
     public function testEditResourceRights()
     {
@@ -243,51 +243,35 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
-        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
+
+        $workspaceRights = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->findBy(array('workspace' => $workspace));
 
         $this->client->request(
             'POST',
-            "/workspaces/{$workspace->getId()}/properties/resources/rights/edit",
+            "/workspaces/{$workspace->getId()}/properties/workspace/rights/edit",
             array(
-               "canView-{$resourceRights[0]->getId()}" => true,
-               "canView-{$resourceRights[1]->getId()}" => true,
-               "canDelete-{$resourceRights[1]->getId()}" => true,
-               "canCreate-{$resourceRights[2]->getId()}" => true,
+               "canView-{$workspaceRights[0]->getId()}" => true,
+               "canView-{$workspaceRights[1]->getId()}" => true,
+               "canDelete-{$workspaceRights[1]->getId()}" => true,
            )
         );
 
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-
-        $seeToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[0]->getId());
-        $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[1]->getId());
-        $createToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($resourceRights[2]->getId());
+        $seeToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->find($workspaceRights[0]->getId());
+        $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->find($workspaceRights[1]->getId());
 
         $this->assertTrue($seeToTrue->isEquals(array(
             'canView' => true,
             'canDelete' => false,
-            'canOpen' => false,
             'canEdit' => false,
-            'canCopy' => false,
-            'canExport' => false
+            'canManage' => false,
         )));
 
         $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
             'canView' => true,
             'canDelete' => true,
-            'canOpen' => false,
             'canEdit' => false,
-            'canCopy' => false,
-            'canExport' => false
-        )));
-
-        $this->assertTrue($createToTrue->isEquals(array(
-            'canView' => false,
-            'canDelete' => false,
-            'canOpen' => false,
-            'canEdit' => false,
-            'canCopy' => false,
-            'canExport' => false
+            'canManage' => false
         )));
     }
 

@@ -16,7 +16,6 @@ Vérifier qu'on peut pas s"inscrire 2x à un ws (registered action + liste des p
 =======================================
 
 Entity ResourceLogger => ResourceLog
-LoadEntitiesInWorkspace fixture
 Mutiple droits dans un workspace... et finalement... on affiche lequel (si je suis admin + collaborateur, il n'en faut qu'un)
 Tests sur le nouveau système de droits
 Créer un système hybride de gestion de ressource (entre celui actuel et celui avec des instances).
@@ -24,3 +23,26 @@ Tester la création de workspace et le voter pour le workspace.
 Implémentation du voter pour le workspace.
 ResourceRightsRepository: avec des max et tenir compte des grp
 WorkspaceRightsRepository: tenir compte des grps
+~
+Formulaire de droits pour les ressources
+~
+dql group/user WITH xxx IN ...
+
+TERMINER CLARONEXT
+
+=====================================
+
+Gestion des ressources. Si on repasse par les instances...
+
+Sur quoi portent les droits ? La ressource ou l'instance ?
+
+Si c'est "un peu des 2" il faut définir les règles.
+
+
+======================================
+
+par défaut: ne pas verouiller les widgets
+
+=====================================
+
+Icon creator pas uniquement les pngs

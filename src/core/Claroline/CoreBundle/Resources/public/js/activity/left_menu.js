@@ -23,8 +23,10 @@
     var loadRightFrame = function(item){
         currentItem = item;
 
+        alert(currentStep);
         if ($('#item-'+item).attr('class') == 'activity-step' && $('#item-'+item).css('font-weight') == 400){
              currentStep++;
+             alert(currentStep);
              $('#progress-bar').html(currentStep+'/'+totalSteps);
         }
 

@@ -16,8 +16,11 @@ class WorkspaceRightsRepository extends EntityRepository
      *
      * @return type
      */
-    public function getRights(User $user, AbstractWorkspace $workspace)
+    public function getRights($roles, AbstractWorkspace $workspace)
     {
+        if(count($roles) == 0){
+            throw new \RuntimeException("The role array cannot be empty for the getRights method in the ResourceRightRepository");
+        }
 
         $dql = "
             SELECT
@@ -31,27 +34,20 @@ class WorkspaceRightsRepository extends EntityRepository
             JOIN wsr.workspace workspace
             LEFT JOIN role.users user
 
-            WHERE workspace.id = {$workspace->getId()}
-            AND user.id = {$user->getId()}
-            ORDER BY wsr.id";
+            WHERE ";
 
-       $query = $this->_em->createQuery($dql);
 
-       return $query->getSingleResult();
-    }
+        $i=0;
 
-    public function getAnonymousRights(AbstractWorkspace $workspace)
-    {
-        $dql = "
-            SELECT
-                MAX(wsr.canView) as canView,
-                MAX(wsr.canEdit) as canEdit,
-                MAX(wsr.canManage) as canManage,
-                MAX(wsr.canDelete) as canDelete
-            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRights wsr
-            JOIN wsr.role role
-            JOIN wsr.workspace workspace
-            WHERE workspace.id = {$workspace->getId()}";
+        foreach($roles as $role){
+            if($i!=0){
+                $dql.= " OR workspace.id = {$workspace->getId()} AND role.name LIKE '{$role}'";
+            } else {
+                $dql.= " workspace.id = {$workspace->getId()} AND role.name LIKE '{$role}'";
+                $i++;
+            }
+        }
+
 
        $query = $this->_em->createQuery($dql);
 
