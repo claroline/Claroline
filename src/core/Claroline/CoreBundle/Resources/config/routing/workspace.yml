@@ -111,6 +111,18 @@ claro_workspace_agenda_add_date:
   defaults: { _controller: ClarolineCoreBundle:Calendar:addDate }
   requirements:
     _method: POST
+    
+claro_workspace_agenda_show:
+  pattern: /{workspaceId}/agenda/show
+  defaults: { _controller: ClarolineCoreBundle:Calendar:show }
+  requirements:
+    _method: GET
+    
+claro_workspace_agenda_move:
+  pattern: /{workspaceId}/agenda/move
+  defaults: { _controller: ClarolineCoreBundle:Calendar:move }
+  requirements:
+    _method: POST
 
 
 
