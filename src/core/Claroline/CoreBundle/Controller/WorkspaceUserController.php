@@ -121,6 +121,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
+        // TODO: quick fix (force doctrine to reload only the concerned roles -- otherwise all the roles loaded by the security context are returned)
+        $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->searchRegisteredUsersOfWorkspace($workspaceId, $search, $offset, self::NUMBER_USER_PER_ITERATION);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -146,6 +148,8 @@ class WorkspaceUserController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
+        // TODO: quick fix (force doctrine to reload only the concerned roles -- otherwise all the roles loaded by the security context are returned)
+        $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->searchUnregisteredUsersOfWorkspace($search, $workspace, $offset, self::NUMBER_USER_PER_ITERATION);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -204,6 +208,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
+        // TODO: quick fix (force doctrine to reload only the concerned roles -- otherwise all the roles loaded by the security context are returned)
+        $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->registeredUsersOfWorkspace($workspaceId, $offset, self::NUMBER_USER_PER_ITERATION);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));
@@ -230,6 +236,8 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
+        // TODO: quick fix (force doctrine to reload only the concerned roles -- otherwise all the roles loaded by the security context are returned)
+        $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')->unregisteredUsersOfWorkspace($workspace, $offset, self::NUMBER_USER_PER_ITERATION);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView("ClarolineCoreBundle:Administration:user_list.json.twig", array('users' => $users));

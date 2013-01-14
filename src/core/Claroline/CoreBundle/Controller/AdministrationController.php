@@ -119,6 +119,8 @@ class AdministrationController extends Controller
     public function usersAction($offset, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        // TODO: quick fix (force doctrine to reload only the concerned roles -- otherwise all the roles loaded by the security context are returned)
+        $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->users($offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
         $users = $this->paginatorToArray($paginatorUsers);
 
@@ -146,6 +148,8 @@ class AdministrationController extends Controller
     public function searchUsersAction($offset, $search, $format)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        // TODO: quick fix (force doctrine to reload only the concerned roles -- otherwise all the roles loaded by the security context are returned)
+        $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')->searchUsers($search, $offset, self::USER_PER_PAGE, \Claroline\CoreBundle\Repository\UserRepository::PLATEFORM_ROLE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
