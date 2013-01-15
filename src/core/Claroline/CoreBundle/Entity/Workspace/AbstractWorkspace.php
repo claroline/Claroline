@@ -57,7 +57,7 @@ abstract class AbstractWorkspace
     protected $resources;
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceRights",
+     *      targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
      *      mappedBy="workspace"
      * )
      */

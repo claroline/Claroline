@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -126,12 +126,12 @@ class Role implements RoleInterface
     protected $roleType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights", mappedBy="role")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights", mappedBy="role")
      */
     protected $resourceRights;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceRights", mappedBy="role")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights", mappedBy="role")
      */
     protected $workspaceRights;
 

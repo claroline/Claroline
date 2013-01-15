@@ -311,7 +311,7 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\workspaceRights')->findBy(array('workspace' => $workspaceId));
+        $configs = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->findBy(array('workspace' => $workspaceId));
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\workspace_rights.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
@@ -328,7 +328,7 @@ class WorkspaceController extends Controller
     public function editWorkspaceRightsAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->findBy(array('workspace' => $workspaceId));
+        $configs = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->findBy(array('workspace' => $workspaceId));
         $checks = $this->get('claroline.security.utilities')->setRightsRequest($this->get('request')->request->all(), 'workspace');
 
         foreach($configs as $config){
@@ -342,7 +342,7 @@ class WorkspaceController extends Controller
                         $ws = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
                         $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->getRootForWorkspace($ws);
                         $role = $em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $root, 'role' => $role));
+                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $root, 'role' => $role));
                         $resourceRight->setCanView(true);
                         $em->persist($resourceRight);
                     }

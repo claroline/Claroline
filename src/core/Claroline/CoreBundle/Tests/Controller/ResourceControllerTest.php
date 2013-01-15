@@ -502,7 +502,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $file = $this->uploadFile($this->pwr->getId(), 'file');
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $file = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($file->id);
-        $resourceRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $file));
+        $resourceRights = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $file));
         $this->assertEquals(4, count($resourceRights));
 
         //changes keep the 1st $resourceRight and change the others
@@ -517,7 +517,7 @@ class ResourceControllerTest extends FunctionalTestCase
              )
         );
 
-        $resourceRights = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $file));
+        $resourceRights = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $file));
         $this->assertEquals(4, count($resourceRights));
         $this->assertTrue($resourceRights[0]->isEquals(array(
             'canView' => true,
@@ -586,7 +586,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findOneBy(array('resource' => $dir->id, 'role' => $collaboratorRole));
 
         $permCreate = $config->getResourceTypes();
@@ -607,7 +607,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findOneBy(array('resource' => $dir->id, 'role' => $collaboratorRole));
 
         $permCreate = $config->getResourceTypes();

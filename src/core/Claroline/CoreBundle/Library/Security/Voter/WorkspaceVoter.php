@@ -58,7 +58,7 @@ class WorkspaceVoter implements VoterInterface
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
 
-        $rights = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->getRights($this->rm->getRoles($token), $workspace);
+        $rights = $this->em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->getRights($this->rm->getRoles($token), $workspace);
         $permission = 'can'.ucfirst(strtolower($action));
 
         return $rights[$permission];

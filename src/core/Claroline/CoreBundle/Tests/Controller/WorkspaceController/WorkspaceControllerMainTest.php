@@ -244,7 +244,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
 
-        $workspaceRights = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->findBy(array('workspace' => $workspace));
+        $workspaceRights = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->findBy(array('workspace' => $workspace));
 
         $this->client->request(
             'POST',
@@ -257,8 +257,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         );
 
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $seeToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->find($workspaceRights[0]->getId());
-        $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRights')->find($workspaceRights[1]->getId());
+        $seeToTrue = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->find($workspaceRights[0]->getId());
+        $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->find($workspaceRights[1]->getId());
 
         $this->assertTrue($seeToTrue->isEquals(array(
             'canView' => true,

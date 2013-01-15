@@ -30,7 +30,7 @@ class ResourceRightsRepository extends EntityRepository
                 MAX (rrw.canCopy) as canCopy,
                 MAX (rrw.canExport) as canExport
 
-            FROM Claroline\CoreBundle\Entity\Workspace\ResourceRights rrw
+            FROM Claroline\CoreBundle\Entity\Rights\ResourceRights rrw
             JOIN rrw.role role
             JOIN rrw.resource resource
             WHERE  ";
