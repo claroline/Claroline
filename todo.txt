@@ -17,8 +17,6 @@ Droits => thrs le plus élevé
 Tests sur le nouveau système de droits
 Créer un système hybride de gestion de ressource (entre celui actuel et celui avec des instances).
 Tester la création de workspace et le voter pour le workspace.
-~
-dql group/user WITH xxx IN ...
 
 TERMINER CLARONEXT
 
@@ -44,5 +42,3 @@ Comment est stocké l'arborescence ? arborescence d'instance ou de fichier ?
 
 Recherche~ si on possède un grp qui a les permissions de voir... => la recherche doit prendre en compte les rôles
 Icon creator pas uniquement les pngs
-
-Widgets anonyme
