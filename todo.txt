@@ -3,15 +3,10 @@ Option pour voir la liste des ws personnels
 L'admin voit tjrs tous les workspaces
 ResourceRepository->find($resourceId) => une requête pour chaque ancêtres (wtf !) // on va changer le gestionnaire de ressource.
 Widget optimization
-Simplifier la config des plugins (genre rssReaderBundle: trop complexe)
-~
-Gestion des roles multiples lors du isGranted si l'utilisateur à plusieurs roles au sein du meme workspace
-~
 Vérifier qu'on peut pas s"inscrire 2x à un ws (registered action + liste des personnes non inscrite) + tests
 
 =======================================
 
-Entity ResourceLogger => ResourceLog
 Mutiple droits dans un workspace... et finalement... on affiche lequel (si je suis admin + collaborateur, il n'en faut qu'un)
 Droits => thrs le plus élevé
 Tests sur le nouveau système de droits
@@ -41,4 +36,3 @@ Comment est stocké l'arborescence ? arborescence d'instance ou de fichier ?
 =====================================
 
 Recherche~ si on possède un grp qui a les permissions de voir... => la recherche doit prendre en compte les rôles
-Icon creator pas uniquement les pngs

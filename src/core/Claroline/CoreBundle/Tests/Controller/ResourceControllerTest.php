@@ -323,9 +323,9 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->markTestSkipped('not custom action defined yet');
         $this->logUser($this->getFixtureReference('user/user'));
         $file = $this->uploadFile($this->pwr->getId(), 'txt.txt');
-        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->client->request('GET', "/resource/custom/file/open/{$file->id}");
-        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->assertEquals(1, count($postEvents)-count($preEvents));
     }
 
@@ -333,18 +333,18 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $file = $this->uploadFile($this->pwr->getId(), 'txt.txt');
-        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->client->request('GET', "/resource/open/file/{$file->id}");
-        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->assertEquals(1, count($postEvents)-count($preEvents));
     }
 
     public function testCreateActionLogsEvent()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->uploadFile($this->pwr->getId(), 'txt.txt');
-        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
@@ -358,11 +358,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(2, count($dir->resources));
-        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->client->request(
             'GET', "/resource/delete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
         );
-        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->assertEquals(2, count($postEvents) - count($preEvents));
     }
 
@@ -372,11 +372,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $theBigTree = $this->createBigTree($this->pwr->getId());
         $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
         $theContainer = $this->createDirectory($this->pwr->getId(), 'container');
-        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->client->request(
             'GET', "/resource/move/{$theContainer->id}?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}"
         );
-        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->assertEquals(2, count($postEvents) - count($preEvents));
     }
 
@@ -385,11 +385,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $theBigTree = $this->createBigTree($this->pwr->getId());
         $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
-        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $preEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         ob_start();
         $this->client->request('GET', "/resource/export?ids[]={$theBigTree[0]->id}&ids[]={$theLoneFile->id}");
         ob_clean();
-        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLogger')->findAll();
+        $postEvents = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Logger\ResourceLog')->findAll();
         $this->assertEquals(5, count($postEvents) - count($preEvents));
     }
 

@@ -6,10 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceLoggerRepository")
- * @ORM\Table(name="claro_resource_logger")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceLogRepository")
+ * @ORM\Table(name="claro_resource_log")
  */
-class ResourceLogger
+class ResourceLog
 {
     /**
      * @ORM\Id
