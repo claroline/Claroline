@@ -220,16 +220,21 @@ class WorkspaceController extends Controller
      */
     public function widgetsAction($workspaceId)
     {
-        $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $responsesString = '';
 
-        foreach ($configs as $config){
-            if($config->isVisible()){
-                $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
-                $event = new DisplayWidgetEvent($workspace);
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+        if ($this->get('security.context')->getToken()->getUser() !== 'anon.'){
+
+            $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
+            $em = $this->getDoctrine()->getEntityManager();
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+            foreach ($configs as $config){
+                if($config->isVisible()){
+                    $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
+                    $event = new DisplayWidgetEvent($workspace);
+                    $this->get('event_dispatcher')->dispatch($eventName, $event);
+                    $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                }
             }
         }
 
