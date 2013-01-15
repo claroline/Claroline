@@ -35,7 +35,7 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
 
             $wWidgetConfig = new DisplayConfig();
             $wWidgetConfig->setWidget($widget);
-            $wWidgetConfig->setLock(true);
+            $wWidgetConfig->setLock(false);
             $wWidgetConfig->setVisible(true);
             $wWidgetConfig->setParent(null);
             $wWidgetConfig->setDesktop(false);
@@ -43,10 +43,11 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
 
             $dWidgetConfig = new DisplayConfig();
             $dWidgetConfig->setWidget($widget);
-            $dWidgetConfig->setLock(true);
+            $dWidgetConfig->setLock(false);
             $dWidgetConfig->setVisible(true);
             $wWidgetConfig->setParent(null);
             $dWidgetConfig->setDesktop(true);
+
             $manager->persist($dWidgetConfig);
         }
 
