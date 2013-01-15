@@ -45,7 +45,7 @@ class Converter
             $resourceArray['can_edit'] = true;
             $resourceArray['can_delete'] = true;
         } else {
-            $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')->getRights($roles, $resource);
+            $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Rights\ResourceRights')->getRights($roles, $resource);
             $resourceArray['can_export'] = $rights['canExport'];
             $resourceArray['can_edit'] = $rights['canEdit'];
             $resourceArray['can_delete'] = $rights['canDelete'];

@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Library\Security\RightsManager;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -26,7 +26,7 @@ class ResourceVoter implements VoterInterface
     public function __construct(EntityManager $em, Translator $translator, RightsManager $rightsManager)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights');
+        $this->repository = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights');
         $this->translator = $translator;
         $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
         $this->rm = $rightsManager;
@@ -157,7 +157,7 @@ class ResourceVoter implements VoterInterface
      */
     private function canDo(AbstractResource $resource, TokenInterface $token, $action)
     {
-        $rights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->getRights($this->rm->getRoles($token), $resource);
+        $rights = $this->em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->getRights($this->rm->getRoles($token), $resource);
         $permission = 'can'.ucfirst(strtolower($action));
 
         return $rights[$permission];

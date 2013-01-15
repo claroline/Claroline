@@ -18,7 +18,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->root = $em
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($this->manager->getPersonalWorkspace());
-        $this->rootRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $this->root, 'role' => $this->roleWsManager));
+        $this->rootRights = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $this->root, 'role' => $this->roleWsManager));
     }
 
     public function testOpenResource()
@@ -126,7 +126,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->logUser($this->manager);
         $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
         $this->rootRights->removeResourceType($directoryType);
-        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
         $directoryRights->setCanCopy(false);
         $em->persist($this->rootRights);
         $em->persist($directoryRights);
@@ -154,7 +154,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->logUser($this->manager);
         $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => 'directory'));
         $this->rootRights->removeResourceType($directoryType);
-        $directoryRights = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
         $directoryRights->setCanCopy(false);
         $directoryRights->setCanDelete(false);
         $em->persist($this->rootRights);

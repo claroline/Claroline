@@ -7,8 +7,8 @@ use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\WorkspaceRights;
 
 class Creator
 {

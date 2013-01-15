@@ -8,7 +8,7 @@ use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
@@ -263,7 +263,7 @@ class Manager
      */
     public function setResourceRights($old, $resource)
     {
-        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $old));
+        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $old));
         foreach($resourceRights as $resourceRight){
             $rs = new ResourceRights();
             $rs->setRole($resourceRight->getRole());
