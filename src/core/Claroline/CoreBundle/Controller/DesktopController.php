@@ -144,5 +144,4 @@ class DesktopController extends Controller
              throw new \Exception("event $eventName didn't return any Response");
          }
     }
-
 }
