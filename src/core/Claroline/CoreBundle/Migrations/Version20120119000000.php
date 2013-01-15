@@ -33,7 +33,7 @@ class Version20120119000000 extends BundleMigration
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
-        $this->createResourceLoggerTable($schema);
+        $this->createResourceLogTable($schema);
         $this->createWidgetTable($schema);
         $this->createAdminWidgetConfig($schema);
         $this->createResourceLinkTable($schema);
@@ -73,7 +73,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_meta_type');
         $schema->dropTable('claro_meta_type_resource_type');
         $schema->dropTable('claro_resource_type_custom_action');
-        $schema->dropTable('claro_resource_logger');
+        $schema->dropTable('claro_resource_log');
         $schema->dropTable('claro_widget');
         $schema->dropTable('claro_widget_dispay');
         $schema->dropTable('claro_resource_link');
@@ -477,9 +477,9 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    private function createResourceLoggerTable(Schema $schema)
+    private function createResourceLogTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_resource_logger');
+        $table = $schema->createTable('claro_resource_log');
         $this->addId($table);
         $table->addColumn('resource_id', 'integer', array('notnull' => false));
         $table->addColumn('path', 'string');

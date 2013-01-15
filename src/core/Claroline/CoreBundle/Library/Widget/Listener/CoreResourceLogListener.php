@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 
-class CoreResourceLoggerListener extends ContainerAware
+class CoreResourceLogListener extends ContainerAware
 {
     public function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {
@@ -23,7 +23,7 @@ class CoreResourceLoggerListener extends ContainerAware
     private function renderForWorkspace($workspace)
     {
         $logs = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLogger')->getLastLogs($this->container->get('security.context')->getToken()->getUser(), $workspace);
+            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLog')->getLastLogs($this->container->get('security.context')->getToken()->getUser(), $workspace);
 
         return $this->container->get('templating')->render('ClarolineCoreBundle:Widget:resource_events.html.twig', array('logs' => $logs));
     }
@@ -31,7 +31,7 @@ class CoreResourceLoggerListener extends ContainerAware
     private function renderForDesktop()
     {
         $logs = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLogger')->getLastLogs($this->container->get('security.context')->getToken()->getUser());
+            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLog')->getLastLogs($this->container->get('security.context')->getToken()->getUser());
         
         return $this->container->get('templating')->render('ClarolineCoreBundle:Widget:resource_events.html.twig', array('logs' => $logs));
     }

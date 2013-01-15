@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
 use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 
 class ResourceController extends Controller
@@ -103,7 +103,7 @@ class ResourceController extends Controller
             );
         }
 
-        $logEvent = new ResourceLoggerEvent($resource, 'open');
+        $logEvent = new ResourceLogEvent($resource, 'open');
         $this->get('event_dispatcher')->dispatch('log_resource', $logEvent);
 
         return $event->getResponse();
@@ -381,7 +381,7 @@ class ResourceController extends Controller
         }
 
         $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $logevent = new ResourceLoggerEvent($ri, $action);
+        $logevent = new ResourceLogEvent($ri, $action);
         $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
         return $event->getResponse();

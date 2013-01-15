@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
 
 class Exporter
 {
@@ -69,9 +69,9 @@ class Exporter
             } else {
                 $archive->addEmptyDir($this->getRelativePath($currentDir, $resource). $resource->getName());
             }
-            $event = new ResourceLoggerEvent(
+            $event = new ResourceLogEvent(
                 $resource,
-                ResourceLoggerEvent::EXPORT_ACTION
+                ResourceLogEvent::EXPORT_ACTION
             );
             $this->ed->dispatch('log_resource', $event);
         }
