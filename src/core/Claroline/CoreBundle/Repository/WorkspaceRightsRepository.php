@@ -25,7 +25,6 @@ class WorkspaceRightsRepository extends EntityRepository
             SELECT
                 MAX(wsr.canView) as canView,
                 MAX(wsr.canEdit) as canEdit,
-                MAX(wsr.canManage) as canManage,
                 MAX(wsr.canDelete) as canDelete
             FROM Claroline\CoreBundle\Entity\Rights\WorkspaceRights wsr
             JOIN wsr.role role

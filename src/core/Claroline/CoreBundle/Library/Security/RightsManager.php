@@ -24,7 +24,7 @@ class RightsManager
         $this->em = $em;
         $this->expectedTypeOfRight = array('workspace', 'resource');
         $this->expectedKeysForResource = array('canView', 'canOpen', 'canDelete', 'canEdit', 'canCopy', 'canCreate', 'canExport');
-        $this->expectedKeysForWorkspace = array('canView', 'canDelete', 'canEdit', 'canManage');
+        $this->expectedKeysForWorkspace = array('canView', 'canDelete', 'canEdit');
     }
 
     /**
