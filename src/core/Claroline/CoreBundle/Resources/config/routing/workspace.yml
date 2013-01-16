@@ -106,9 +106,9 @@ claro_workspace_agenda:
   pattern: /{workspaceId}/agenda
   defaults: { _controller: ClarolineCoreBundle:Calendar:index }
   
-claro_workspace_agenda_add_date:
+claro_workspace_agenda_add_event:
   pattern: /{workspaceId}/agenda/add
-  defaults: { _controller: ClarolineCoreBundle:Calendar:addDate }
+  defaults: { _controller: ClarolineCoreBundle:Calendar:addEvent }
   requirements:
     _method: POST
     
