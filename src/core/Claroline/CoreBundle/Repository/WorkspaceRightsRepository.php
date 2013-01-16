@@ -4,22 +4,21 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\User;
 
 class WorkspaceRightsRepository extends EntityRepository
 {
     /**
-     * Gets the workspace rights of a user !
+     * Returns the sum of workspace rights granted to a collection of roles.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param array[string] $roles An array of role names
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace The workspace to be tested
      *
-     * @return type
+     * @return array
      */
-    public function getRights($roles, AbstractWorkspace $workspace)
+    public function getRights(array $roles, AbstractWorkspace $workspace)
     {
-        if(count($roles) == 0){
-            throw new \RuntimeException("The role array cannot be empty for the getRights method in the ResourceRightRepository");
+        if (null === $firstRole = array_shift($roles)) {
+            throw new \RuntimeException('The roles array cannot be empty');
         }
 
         $dql = "
@@ -29,28 +28,18 @@ class WorkspaceRightsRepository extends EntityRepository
                 MAX(wsr.canManage) as canManage,
                 MAX(wsr.canDelete) as canDelete
             FROM Claroline\CoreBundle\Entity\Rights\WorkspaceRights wsr
-
             JOIN wsr.role role
             JOIN wsr.workspace workspace
             LEFT JOIN role.users user
+            WHERE workspace.id = {$workspace->getId()} AND role.name = '{$firstRole}'
+        ";
 
-            WHERE ";
-
-
-        $i=0;
-
-        foreach($roles as $role){
-            if($i!=0){
-                $dql.= " OR workspace.id = {$workspace->getId()} AND role.name LIKE '{$role}'";
-            } else {
-                $dql.= " workspace.id = {$workspace->getId()} AND role.name LIKE '{$role}'";
-                $i++;
-            }
+        foreach ($roles as $role) {
+            $dql.= " OR workspace.id = {$workspace->getId()} AND role.name = '{$role}'";
         }
 
-
-       $query = $this->_em->createQuery($dql);
-
-       return $query->getSingleResult();
+        return $this->_em
+            ->createQuery($dql)
+            ->getSingleResult();
     }
 }
