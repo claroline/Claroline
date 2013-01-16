@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Security;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class RightsManager
+class Utilities
 {
     /** @var EntityManager */
     private $em;
