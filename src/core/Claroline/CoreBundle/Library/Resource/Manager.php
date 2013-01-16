@@ -76,12 +76,7 @@ class Manager
         $resource->setCreator($user);
 
         if ($resource->getUserIcon() == null){
-            if ($resource instanceof File){
-                $resource = $this->ic->setResourceIcon($resource, $resource->getMimeType());
-            } else {
-                $resource = $this->ic->setResourceIcon($resource, null);
-            }
-
+                $resource = $this->ic->setResourceIcon($resource);
         } else {
             //upload the icon
             $iconFile = $resource->getUserIcon();

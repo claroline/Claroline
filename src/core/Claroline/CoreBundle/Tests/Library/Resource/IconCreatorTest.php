@@ -9,8 +9,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class IconCreatorTest extends FixtureTestCase
 {
-    private $videoPath;
-    private $imagePath;
     private $thumbDir;
     private $iconCreator;
     private $fileType;
@@ -25,17 +23,25 @@ class IconCreatorTest extends FixtureTestCase
             $this->areLoaded = true;
         }
 
-        $this->videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.mp4";
+        $videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.mp4";
         $copyVideoPath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}video.mp4";
-        copy($this->videoPath, $copyVideoPath);
+        copy($videoPath, $copyVideoPath);
 
-        $this->imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.jpg";
+        $videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.unknownExtension";
+        $copyVideoPath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}video.unknownExtension";
+        copy($videoPath, $copyVideoPath);
+
+        $imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.jpg";
         $copyImagePath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}image.jpg";
-        copy($this->imagePath, $copyImagePath);
+        copy($imagePath, $copyImagePath);
 
-        $this->textPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}text.txt";
+        $imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.unknownExtension";
+        $copyImagePath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}image.unknownExtension";
+        copy($imagePath, $copyImagePath);
+
+        $textPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}text.txt";
         $copyTestPath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}text.txt";
-        copy($this->textPath, $copyTestPath);
+        copy($textPath, $copyTestPath);
 
         $this->thumbDir = $this->client->getContainer()->getParameter('claroline.thumbnails.directory');
         $this->iconCreator = $this->client->getContainer()->get('claroline.resource.icon_creator');
@@ -56,7 +62,7 @@ class IconCreatorTest extends FixtureTestCase
 
     public function testFileWithoutMimeThrowsAnException()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('RuntimeException');
         $file = new File();
         $file->setResourceType($this->fileType);
         $this->iconCreator->setResourceIcon($file);
@@ -68,7 +74,8 @@ class IconCreatorTest extends FixtureTestCase
         $file = new File();
         $file->setResourceType($this->fileType);
         $file->setHashName('video.mp4');
-        $file = $this->iconCreator->setResourceIcon($file, 'video/mp4');
+        $file->setMimeType('video/mp4');
+        $file = $this->iconCreator->setResourceIcon($file);
 
         if ($this->areLoaded) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
@@ -87,7 +94,8 @@ class IconCreatorTest extends FixtureTestCase
         $file = new File();
         $file->setResourceType($this->fileType);
         $file->setHashName('image.jpg');
-        $this->iconCreator->setResourceIcon($file, 'image/jpg');
+        $file->setMimeType('image/jpg');
+        $this->iconCreator->setResourceIcon($file);
 
         if (extension_loaded('gd')) {
             $thumbs = $this->getUploadedFiles($this->thumbDir);
@@ -96,7 +104,7 @@ class IconCreatorTest extends FixtureTestCase
             $name = $file->getIcon()->getIconLocation();
             $this->assertEquals('bundles/clarolinecore/images/resources/large/res_image.jpg', $name);
         }
-        
+
         ob_end_clean();
     }
 
@@ -104,8 +112,9 @@ class IconCreatorTest extends FixtureTestCase
     {
         $file = new File();
         $file->setResourceType($this->fileType);
-        $file->setHashName('video.mp4');
-        $file = $this->iconCreator->setResourceIcon($file, 'video/ThatOneDoesntExists');
+        $file->setHashName('video.unknownExtension');
+        $file->setMimeType('video/ThatOneDoesntExists');
+        $file = $this->iconCreator->setResourceIcon($file);
         $name = $file->getIcon()->getRelativeUrl();
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_video.png', $name);
     }
@@ -114,8 +123,9 @@ class IconCreatorTest extends FixtureTestCase
     {
         $file = new File();
         $file->setResourceType($this->fileType);
-        $file->setHashName('image.jpg');
-        $file = $this->iconCreator->setResourceIcon($file, 'image/ThatOneDoesntExists');
+        $file->setHashName('image.unknownExtension');
+        $file->setMimeType('image/ThatOneDoesntExists');
+        $file = $this->iconCreator->setResourceIcon($file);
         $name = $file->getIcon()->getRelativeUrl();
         //no res_image yet
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_image.png', $name);
@@ -126,7 +136,8 @@ class IconCreatorTest extends FixtureTestCase
         $file = new File();
         $file->setResourceType($this->fileType);
         $file->setHashName('text.txt');
-        $file = $this->iconCreator->setResourceIcon($file, 'text/plain');
+        $file->setMimeType('text/plain');
+        $file = $this->iconCreator->setResourceIcon($file);
         $name = $file->getIcon()->getRelativeUrl();
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_text.png', $name);
     }
@@ -135,8 +146,9 @@ class IconCreatorTest extends FixtureTestCase
     {
         $file = new File();
         $file->setResourceType($this->fileType);
-        $file->setHashName('text.txt');
-        $file = $this->iconCreator->setResourceIcon($file, 'INeverSaw/ThatMimeType');
+        $file->setHashName('text.unknownMimeTypeIsBeautifull');
+        $file->setMimeType('INeverSaw/ThatMimeType');
+        $file = $this->iconCreator->setResourceIcon($file);
         $name = $file->getIcon()->getRelativeUrl();
         $this->assertEquals('bundles/clarolinecore/images/resources/icons/res_file.png', $name);
     }

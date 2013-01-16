@@ -3,11 +3,13 @@
 namespace Claroline\CoreBundle\Library\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\File as ResourceFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 class IconCreator
 {
@@ -32,17 +34,21 @@ class IconCreator
     }
 
     /**
+     * Create an thumbnail from a file (video or image) wich will be resized and displayed as a resource icon.
      *
-     * @param string $originalPath
-     * @param string $destinationPath
-     * @param integer $newWidth
-     * @param integer $newHeight
-     * @param string $mimeExtension
-     * @param string $baseMime
-     * @return null
+     * @param string  $originalPath    the path of the orignal image or video
+     * @param string  $destinationPath the path were the thumbnail will be copied
+     * @param integer $newWidth        the width of the thumbnail
+     * @param integer $newHeight       the width of the thumbnail
+     *
+     * @return string|null
      */
-    private function createThumbNail($originalPath, $destinationPath, $newWidth, $newHeight, $mimeExtension, $baseMime)
+    private function createThumbNail($originalPath, $destinationPath, $newWidth, $newHeight)
     {
+        $mimeElements = explode('/', MimeTypeGuesser::getInstance()->guess($originalPath));
+        $baseMime = $mimeElements[0];
+        $mimeExtension = $mimeElements[1];
+
         if ($this->hasGdExtension) {
             if ($baseMime == 'image' && function_exists($funcname = "imagecreatefrom{$mimeExtension}")) {
                 $srcImg = $funcname($originalPath);
@@ -66,7 +72,7 @@ class IconCreator
                 return null;
             }
 
-            $this->getFormatedImg($newWidth, $newHeight, $srcImg, $destinationPath);
+            $this->resize($newWidth, $newHeight, $srcImg, $destinationPath);
             imagedestroy($srcImg);
 
             return $destinationPath;
@@ -76,14 +82,14 @@ class IconCreator
     }
 
     /**
-     * Resize an image.
+     * Create a copy of a resized image according to the parameters.
      *
-     * @param string $newWidth
-     * @param string $newHeight
-     * @param string $srcImg
-     * @param string $filename
+     * @param string $newWidth  the new width
+     * @param string $newHeight the new heigth
+     * @param string $srcImg    the path of the source
+     * @param string $filename  the path of the copy
      */
-    private function getFormatedImg($newWidth, $newHeight, $srcImg, $filename)
+    private function resize($newWidth, $newHeight, $srcImg, $filename)
     {
         $oldX = imagesx($srcImg);
         $oldY = imagesy($srcImg);
@@ -138,19 +144,21 @@ class IconCreator
      * before firing this.
      *
      * @param AbstractResource $resource
-     * @param string           $name (required if it's a file)
      * @param boolean          $isFixture (for testing purpose)
      *
      * @return AbstractResource
      */
-    public function setResourceIcon(AbstractResource $resource, $mimeType = null, $isFixture = false)
+    public function setResourceIcon(AbstractResource $resource, $isFixture = false)
     {
         $type = $resource->getResourceType();
 
         if ($type->getName() !== 'file') {
             $icon = $this->getTypeIcon($type);
         } else {
-            $icon = $this->getFileIcon($resource, $mimeType, $isFixture);
+            if ($resource->getMimeType() === null){
+                throw new \RuntimeException("The entity {$resource->getName()} as no mime type set");
+            }
+            $icon = $this->getFileIcon($resource, $isFixture);
         }
 
         $resource->setIcon($icon);
@@ -161,28 +169,23 @@ class IconCreator
     /**
      * Create (if possible) and returns an icon for a file.
      *
-     * @param AbstractResource $resource
-     * @param string $mimeType
+     * @param File    $resource  the file
      * @param boolean $isFixture
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      *
      * @throws \InvalidArgumentException
      */
-    public function getFileIcon(AbstractResource $resource, $mimeType, $isFixture)
+    public function getFileIcon(ResourceFile $resource, $isFixture)
     {
-        if ($mimeType === null) {
-            throw new \InvalidArgumentException("No mimeType specified for the file icon : {$resource->getPathForDisplay()}");
-        }
-
-        $mimeElements = explode('/', $mimeType);
+        $mimeElements = explode('/', $resource->getMimeType());
 
         // if video or img => generate the thumbnail, otherwise find an existing one.
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image') && $isFixture == false) {
 //               throw new \Exception('gogogo');
             $originalPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
             $newPath = $this->container->getParameter('claroline.thumbnails.directory') . DIRECTORY_SEPARATOR . $this->container->get('claroline.resource.utilities')->generateGuid().".png";
-            $thumbnailPath = $this->createThumbNail($originalPath, $newPath, 100, 100, $mimeElements[1], $mimeElements[0]);
+            $thumbnailPath = $this->createThumbNail($originalPath, $newPath, 100, 100);
 
             if ($thumbnailPath !== null) {
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
@@ -204,7 +207,7 @@ class IconCreator
             }
         }
 
-        return $this->searchFileIcon($mimeType);
+        return $this->searchFileIcon($resource->getMimeType());
     }
 
     /**
@@ -212,7 +215,7 @@ class IconCreator
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      *
-     * @return  @return  \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon the resource type
      */
     public function getTypeIcon(ResourceType $type)
     {
@@ -253,7 +256,7 @@ class IconCreator
     }
 
     /**
-     * Creates a short cut Icon for an existing icon.
+     * Creates the shortcut icon for an existing icon.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
      *
@@ -296,7 +299,8 @@ class IconCreator
     }
 
     /**
-     * Creates a custom icon entity from a File (wich should contain an image).
+     * Creates a custom ResourceIcon entity from a File (wich should contain an image).
+     * (for instance if the thumbnail of a resource is changed)
      *
      * @param UploadedFile $file
      *
