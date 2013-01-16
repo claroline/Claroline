@@ -19,6 +19,15 @@ class Converter
         $this->ut = $ut;
     }
 
+    /**
+     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
+     * a json response)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
     public function toArray(AbstractResource $resource, TokenInterface $token)
     {
         $resourceArray = array();
@@ -55,6 +64,14 @@ class Converter
         return $resourceArray;
     }
 
+    /**
+     * Convert a ressource into an json string (mainly used to be sent to the manager.js)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
     public function toJson(AbstractResource $resource, TokenInterface $token)
     {
         $phpArray[0] = $this->toArray($resource, $token);

@@ -148,7 +148,8 @@ abstract class AbstractResource
      */
     protected $rights;
 
-    //the user icon
+    //The user icon.
+    //Used by some forms.
     protected $userIcon;
 
     /**
@@ -397,6 +398,7 @@ abstract class AbstractResource
 
     /**
      * Gets the user icon.
+     *
      * @return file
      */
     public function getUserIcon()

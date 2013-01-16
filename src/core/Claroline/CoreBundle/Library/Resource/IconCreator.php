@@ -2,11 +2,12 @@
 
 namespace Claroline\CoreBundle\Library\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class IconCreator
 {
@@ -30,22 +31,31 @@ class IconCreator
         $this->em = $container->get('doctrine.orm.entity_manager');
     }
 
-    //the end could be refactored: what does imagedestroy should do ? is everything clean ?
-    private function createThumbNail($name, $destinationPath, $newWidth, $newHeight, $mimeExtension, $baseMime)
+    /**
+     *
+     * @param string $originalPath
+     * @param string $destinationPath
+     * @param integer $newWidth
+     * @param integer $newHeight
+     * @param string $mimeExtension
+     * @param string $baseMime
+     * @return null
+     */
+    private function createThumbNail($originalPath, $destinationPath, $newWidth, $newHeight, $mimeExtension, $baseMime)
     {
         if ($this->hasGdExtension) {
             if ($baseMime == 'image' && function_exists($funcname = "imagecreatefrom{$mimeExtension}")) {
-                $srcImg = $funcname($name);
+                $srcImg = $funcname($originalPath);
             } else {
                 switch ($mimeExtension) {
                     case 'jpg':
-                        $srcImg = imagecreatefromjpeg($name);
+                        $srcImg = imagecreatefromjpeg($originalPath);
                         break;
                     case 'mov':
-                        $srcImg = $this->createMpegGDI($name);
+                        $srcImg = $this->createMpegGDI($originalPath);
                         break;
                     case 'mp4':
-                        $srcImg = $this->createMpegGDI($name);
+                        $srcImg = $this->createMpegGDI($originalPath);
                         break;
                     default:
                         return null;
@@ -65,6 +75,14 @@ class IconCreator
         return null;
     }
 
+    /**
+     * Resize an image.
+     *
+     * @param string $newWidth
+     * @param string $newHeight
+     * @param string $srcImg
+     * @param string $filename
+     */
     private function getFormatedImg($newWidth, $newHeight, $srcImg, $filename)
     {
         $oldX = imagesx($srcImg);
@@ -93,12 +111,19 @@ class IconCreator
         imagedestroy($dstImg);
     }
 
-    private function createMpegGDI($name)
+    /**
+     * Create an mpeg image from a video.
+     *
+     * @param string $originalPath
+     *
+     * @return string
+     */
+    private function createMpegGDI($originalPath)
     {
         $image = null;
 
         if ($this->hasFfmpegExtension) {
-            $media = new \ffmpeg_movie($name);
+            $media = new \ffmpeg_movie($originalPath);
             $frameCount = $media->getFrameCount();
             $frame = $media->getFrame(round($frameCount / 2));
             $image = $frame->toGDImage();
@@ -113,8 +138,10 @@ class IconCreator
      * before firing this.
      *
      * @param AbstractResource $resource
-     * @param string $name (required if it's a file)
-     * @param isFixture (for testing purpose)
+     * @param string           $name (required if it's a file)
+     * @param boolean          $isFixture (for testing purpose)
+     *
+     * @return AbstractResource
      */
     public function setResourceIcon(AbstractResource $resource, $mimeType = null, $isFixture = false)
     {
@@ -131,7 +158,18 @@ class IconCreator
         return $resource;
     }
 
-    public function getFileIcon($resource, $mimeType, $isFixture)
+    /**
+     * Create (if possible) and returns an icon for a file.
+     *
+     * @param AbstractResource $resource
+     * @param string $mimeType
+     * @param boolean $isFixture
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function getFileIcon(AbstractResource $resource, $mimeType, $isFixture)
     {
         if ($mimeType === null) {
             throw new \InvalidArgumentException("No mimeType specified for the file icon : {$resource->getPathForDisplay()}");
@@ -169,6 +207,13 @@ class IconCreator
         return $this->searchFileIcon($mimeType);
     }
 
+    /**
+     * Returns the icon for the specified ResourceType.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     *
+     * @return  @return  \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     */
     public function getTypeIcon(ResourceType $type)
     {
         $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
@@ -181,6 +226,14 @@ class IconCreator
         return $icon;
     }
 
+    /**
+     * Return the icon of a specified mimeType.
+     * The most specific icon for the mime type will be returned.
+     *
+     * @param string $mimeType
+     *
+     * @return  \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     */
     public function searchFileIcon($mimeType)
     {
         $mimeElements = explode('/', $mimeType);
@@ -199,6 +252,15 @@ class IconCreator
         return $icon;
     }
 
+    /**
+     * Creates a short cut Icon for an existing icon.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     *
+     * @throws \RuntimeException
+     */
     public function createShortcutIcon(ResourceIcon $icon)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -233,7 +295,14 @@ class IconCreator
         return $shortcutIcon;
     }
 
-    public function createCustomIcon($file)
+    /**
+     * Creates a custom icon entity from a File (wich should contain an image).
+     *
+     * @param UploadedFile $file
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     */
+    public function createCustomIcon(UploadedFile $file)
     {
         $ds = DIRECTORY_SEPARATOR;
         $iconName = $file->getClientOriginalName();;
