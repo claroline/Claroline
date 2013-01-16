@@ -15,6 +15,7 @@ class DesktopController extends Controller
 {
     /**
      * Displays the desktop index.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
@@ -35,6 +36,7 @@ class DesktopController extends Controller
 
     /**
      * Displays the Perso desktop tab.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function persoAction()
@@ -59,7 +61,8 @@ class DesktopController extends Controller
     }
 
     /**
-     * Display registered widgets
+     * Display registered widgets.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function widgetsAction()
@@ -79,11 +82,21 @@ class DesktopController extends Controller
         return $this->render('ClarolineCoreBundle:Widget:widgets.html.twig', array('widgets' => $responsesString));
     }
 
+    /**
+     * Display the user parameters page for its desktop.
+     *
+     * @return Response
+     */
     public function desktopUserParametersAction()
     {
         return $this->render('ClarolineCoreBundle:Desktop:user_parameters.html.twig');
     }
 
+    /**
+     * Display the widget configuration page.
+     *
+     * @return Response
+     */
     public function widgetPropertiesAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
@@ -92,6 +105,13 @@ class DesktopController extends Controller
         return $this->render('ClarolineCoreBundle:Desktop:widget_properties.html.twig', array('configs' => $configs, 'user' => $user));
     }
 
+    /**
+     * Invert the visibility boolean for a widget for the current user.
+     *
+     * @param integer $widgetId        the widget id
+     * @param integer $displayConfigId the display config id (the configuration entity for widgets)
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function invertVisibleUserWidgetAction($widgetId, $displayConfigId)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -123,9 +143,9 @@ class DesktopController extends Controller
     }
 
     /**
-     * Throws a ConfigureWidgetEvent
+     * Asks a widget to display its configuration page.
      *
-     * @param integer $widgetId
+     * @param integer $widgetId the widget id
      *
      * @return Response
      */

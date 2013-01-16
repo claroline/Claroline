@@ -71,7 +71,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Renders the workspace creation form
+     * Renders the workspace creation form.
      *
      * @return Response
      */
@@ -214,7 +214,9 @@ class WorkspaceController extends Controller
     //todo dql for this
 
     /**
-     * Display registered widgets
+     * Display registered widgets.
+     *
+     * @param $workspaceId the workspace id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -242,7 +244,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Renders the workspace properties page
+     * Renders the workspace properties page.
      *
      * @param integer $workspaceId
      *
@@ -319,7 +321,8 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Edit the resources permissions
+     * Edit the resources permissions. It handles to form displayed by the workspaceRightsFormAction method.
+     * The handling is a bit weird because the form wasn't created with the Symfony2 form component.
      *
      * @param integer $workspaceId
      *
@@ -357,11 +360,12 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * If the option doens't exist in the database yet, it's created here.
+     * Invert the visibility boolean of a widget in the specified workspace.
+     * If the DisplayConfig entity for the workspace doesn't exist in the database yet, it's created here.
      *
      * @param integer $workspaceId
      * @param integer $widgetId
-     * @param integer $displayConfigId (the displayConfig defined by the administrator)
+     * @param integer $displayConfigId (the displayConfig defined by the administrator: it's the configuration entity for widgets)
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -402,7 +406,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Throws a ConfigureWidgetEvent
+     * Asks a widget to render its configuration page for a workspace.
      *
      * @param integer $workspaceId
      * @param integer $widgetId

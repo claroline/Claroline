@@ -4,13 +4,13 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
-use Claroline\CoreBundle\Form\TextType;
-use Claroline\CoreBundle\Entity\User;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
+ * This is more or less a test because it's hard to keep the diff between 2 html files and doesn't really
+ * work properly for now. It's also untested.
+ *
  */
 class TextController extends Controller
 {
@@ -64,7 +64,7 @@ class TextController extends Controller
     }
 
     /**
-     * wraps the diff between 2 texts with HTML.
+     * Wraps the diff between 2 texts with HTML.
      *
      * @param string $old
      * @param string $new
@@ -89,7 +89,7 @@ class TextController extends Controller
     }
 
     /**
-     * Test method
+     * Test method.
      *
      * @param string $txt
      *
@@ -115,7 +115,7 @@ class TextController extends Controller
     }
 
     /**
-     * Test method
+     * Test method.
      *
      * @param string $txt
      *
@@ -186,12 +186,27 @@ class TextController extends Controller
         );
     }
 
+    /**
+     * Displays the text edition form.
+     *
+     * @param integer $textId
+     *
+     * @return Response
+     */
     public function editFormAction($textId)
     {
         $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
+
         return $this->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $textId, 'workspace' => $text->getWorkspace()));
     }
 
+    /**
+     * Handles the text edition form submission.
+     *
+     * @param integer $textId
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function editAction($textId)
     {
 

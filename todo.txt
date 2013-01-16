@@ -36,3 +36,5 @@ Comment est stocké l'arborescence ? arborescence d'instance ou de fichier ?
 =====================================
 
 Recherche~ si on possède un grp qui a les permissions de voir... => la recherche doit prendre en compte les rôles
+
+Ordre des messages
