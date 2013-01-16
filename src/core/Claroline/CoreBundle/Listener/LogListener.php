@@ -3,15 +3,15 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
-use Claroline\CoreBundle\Entity\Logger\ResourceLogger;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
+use Claroline\CoreBundle\Entity\Logger\ResourceLog;
 
-class LoggerListener extends ContainerAware
+class LogListener extends ContainerAware
 {
-    public function onLogResource(ResourceLoggerEvent $event)
+    public function onLogResource(ResourceLogEvent $event)
     {
-        $rs = new ResourceLogger();
-        if ($event->getAction() !== ResourceLoggerEvent::DELETE_ACTION){
+        $rs = new ResourceLog();
+        if ($event->getAction() !== ResourceLogEvent::DELETE_ACTION){
             $rs->setResource($event->getResource());
         }
 

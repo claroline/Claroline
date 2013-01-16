@@ -72,14 +72,14 @@ services:
             - { name: kernel.event_listener, event: delete_activity, method: onDelete }
 
     claroline.listener.logger:
-        class: Claroline\CoreBundle\Listener\LoggerListener
+        class: Claroline\CoreBundle\Listener\LogListener
         calls:
            - [setContainer, ["@service_container"]]
         tags:
            - { name: kernel.event_listener, event: log_resource, method: onLogResource }
 
     claroline.listener.core_resource_logger:
-      class: Claroline\CoreBundle\Library\Widget\Listener\CoreResourceLoggerListener
+      class: Claroline\CoreBundle\Library\Widget\Listener\CoreResourceLogListener
       calls:
         - [setContainer, ["@service_container"]]
       tags:

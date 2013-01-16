@@ -10,9 +10,10 @@ class WorkspaceRepository extends EntityRepository
     public function getWorkspacesOfUser(User $user)
     {
         $dql = "
-            SELECT w, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles wr
-            JOIN wr.users u
+            SELECT w, r, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.rights wr
+            JOIN wr.role r
+            JOIN r.users u
             WHERE u.id = :userId
         ";
         $query = $this->_em->createQuery($dql);
@@ -24,8 +25,10 @@ class WorkspaceRepository extends EntityRepository
     public function getNonPersonnalWS()
     {
         $dql = "
-            SELECT w, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles wr
+            SELECT w, r, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.rights wr
+            JOIN wr.role r
+            JOIN r.users u
             WHERE w.type != 0
         ";
 
@@ -37,13 +40,30 @@ class WorkspaceRepository extends EntityRepository
     public function getAllWsOfUser(User $user)
     {
         $dql = "
-            SELECT w, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles wr JOIN wr.users u WHERE u.id = :userId
+            SELECT w, r, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.rights wr
+            JOIN wr.role r
+            JOIN r.users u
+            WHERE u.id = :userId
             ";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
+    }
+
+    public function getVisibleWorkspaceForAnonymous()
+    {
+        $dql = "
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.rights wr
+            JOIN wr.role r
+            WHERE r.name LIKE 'ROLE_ANONYMOUS'
+            AND wr.canView = 1";
+
+            $query = $this->_em->createQuery($dql);
+
+            return $query->getResult();
     }
 }

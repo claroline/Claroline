@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class ResourceLoggerRepository extends EntityRepository
+class ResourceLogRepository extends EntityRepository
 {
     public function getLastLogs($user, $workspace = null)
     {
@@ -13,14 +13,16 @@ class ResourceLoggerRepository extends EntityRepository
         //partial object do not work (yet)
 
         $dql = "
-            SELECT DISTINCT rl, res, rt FROM Claroline\CoreBundle\Entity\Logger\ResourceLogger rl
+            SELECT DISTINCT rl, res, rt FROM Claroline\CoreBundle\Entity\Logger\ResourceLog rl
             JOIN rl.workspace ws
             JOIN rl.resource res
             JOIN res.resourceType rt
-            JOIN ws.roles r
+            JOIN ws.rights workspaceRights
+            JOIN workspaceRights.role r
             WHERE rl.workspace IN (
                 SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                JOIN w.roles wr
+                JOIN w.rights rights
+                JOIN rights.role wr
                 JOIN wr.users ur
                 WHERE ur.id = {$user->getId()}
             )";

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Workspace;
+namespace Claroline\CoreBundle\Entity\Rights;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
@@ -22,7 +22,7 @@ class ResourceRights
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", inversedBy="resourcesRightsWorkspaces")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", inversedBy="resourcesRights")
      */
     private $role;
 

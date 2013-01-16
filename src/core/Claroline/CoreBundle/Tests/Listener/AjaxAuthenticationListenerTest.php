@@ -16,6 +16,8 @@ class AjaxAuthenticationListenerTest extends FunctionalTestCase
 
     public function testAjaxAuthenticationListenerExceptionThrowsError()
     {
+        $this->markTestSkipped('No firewall anymore');
+        
         $this->client->request(
             'GET',
             "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered",

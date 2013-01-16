@@ -4,11 +4,22 @@ services:
         class: Claroline\CoreBundle\Library\Security\Voter\AdministratorVoter
         tags:
             -  { name: security.voter }
+
     claroline.security.resource_voter:
         class: Claroline\CoreBundle\Library\Security\Voter\ResourceVoter
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@translator"
+            - "@claroline.security.utilities"
+        tags:
+            -  { name: security.voter }
+
+    claroline.security.workspace_voter:
+        class: Claroline\CoreBundle\Library\Security\Voter\WorkspaceVoter
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@translator"
+            - "@claroline.security.utilities"
         tags:
             -  { name: security.voter }
 
@@ -46,3 +57,8 @@ services:
         class: Claroline\CoreBundle\Library\Security\RightManager\RestrictedOwnerRightManager
         arguments:
             - "@claroline.security.right_manager"
+
+    claroline.security.utilities:
+        class: Claroline\CoreBundle\Library\Security\RightsManager
+        arguments:
+          - "@doctrine.orm.entity_manager"

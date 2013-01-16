@@ -96,7 +96,7 @@ class ResourceType
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights", mappedBy="resourceTypes"
+     *      targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights", mappedBy="resourceTypes"
      * )
      * @ORM\JoinTable(name="claro_list_type_creation",
      *      joinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")},

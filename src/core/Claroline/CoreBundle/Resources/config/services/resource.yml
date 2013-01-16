@@ -16,11 +16,6 @@ services:
         arguments:
           - "@service_container"
 
-    claroline.resource.rights:
-        class: Claroline\CoreBundle\Library\Resource\RightsManager
-        arguments:
-          - "@doctrine.orm.entity_manager"
-          
     claroline.resource.exporter:
         class: Claroline\CoreBundle\Library\Resource\Exporter
         arguments:
@@ -39,6 +34,7 @@ services:
          class: Claroline\CoreBundle\Library\Resource\Converter
          arguments:
            - "@doctrine.orm.entity_manager"
+           - "@claroline.security.utilities"
 
     claroline.resource.mode_extension:
         class: Claroline\CoreBundle\Library\Twig\ResourceModeExtension

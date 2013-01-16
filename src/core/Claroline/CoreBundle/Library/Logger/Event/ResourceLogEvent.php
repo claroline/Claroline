@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Logger\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class ResourceLoggerEvent extends Event
+class ResourceLogEvent extends Event
 {
     private $resource;
     private $action;
