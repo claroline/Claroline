@@ -63,6 +63,14 @@ abstract class AbstractWorkspace
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="workspace")
      */
     protected $resources;
+    /**
+     * @ORM\OneToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\Workspace\Event",
+     *  mappedBy="workspace",
+     *  cascade={"persist"}
+     * )
+     */
+    protected $events;
 
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -104,8 +112,13 @@ abstract class AbstractWorkspace
     {
         return $this->isPublic;
     }
+    
+    public function getEvents()
+    {
+        return $this->events;
+    }
 
-    /**
+        /**
      * Creates the three workspace base roles (visitor, collaborator, manager)
      * and attaches them to the workspace instance. As the workspace role names
      * require the workspace to have a valid identifier, this method can't be used
