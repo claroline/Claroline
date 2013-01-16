@@ -66,8 +66,8 @@ class WorkspaceUserController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkIfAdmin($workspace);
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
-        $role = $em->getRepository('ClarolineCoreBundle:User')->getRoleOfWorkspace($userId, $workspaceId);
-        $defaultData = array('role' => $role[0]);
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->getEntityRoleForWorkspace($user, $workspace);
+        $defaultData = array('role' => $role);
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role', 'entity', array(
@@ -75,24 +75,30 @@ class WorkspaceUserController extends Controller
                 'property' => 'translationKey',
                 'query_builder' => function(EntityRepository $er) use ($workspaceId) {
                     return $er->createQueryBuilder('wr')
-                        ->add('where', "wr.workspace = {$workspaceId}");
+                        ->select('role')
+                        ->from('Claroline\CoreBundle\Entity\Role', 'role')
+                        ->leftJoin('role.workspaceRights', 'rights')
+                        ->leftJoin('rights.workspace', 'workspace')
+                        ->where('workspace.id = :workspaceId')
+                        ->andWhere("role.name != 'ROLE_ANONYMOUS'")
+                        ->setParameter('workspaceId', $workspaceId);
                 }
             ))
             ->getForm();
 
         if ($this->getRequest()->getMethod() == 'POST') {
-            $form->bind($this->getRequest());
-            $data = $form->getData();
-            $newRole = $data['role'];
+            $request = $this->getRequest();
+            $parameters = $request->request->all();
+            //cannot bind request: why ?
+            $newRole = $em->getRepository('ClarolineCoreBundle:Role')->find($parameters['form']['role']);
 
-            //verifications: his role cannot be changed
-            if ($newRole->getId() != $workspace->getManagerRole()->getId()){
+            if ($newRole->getId() != $em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getId()){
                 $userIds = array($userId);
                 $parameters['userIds'] = $userIds;
                 $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
             }
 
-            $user->removeRole($role[0], false);
+            $user->removeRole($role);
             $user->addRole($newRole);
             $em->persist($user);
             $em->flush();
@@ -169,6 +175,7 @@ class WorkspaceUserController extends Controller
      */
     //todo: detach($user)
     //todo: flush outsite the loop
+    //todo: check is the user isn't already registered
     public function addUsersAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
@@ -182,7 +189,7 @@ class WorkspaceUserController extends Controller
             foreach ($params['userIds'] as $userId) {
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
                 $users[] = $user;
-                $user->addRole($workspace->getCollaboratorRole());
+                $user->addRole($em->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($workspace));
                 $em->flush();
             }
 
@@ -261,7 +268,7 @@ class WorkspaceUserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkIfAdmin($workspace);
-        $roles = $workspace->getWorkspaceRoles();
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
         $params = $this->get('request')->query->all();
         $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
@@ -298,7 +305,7 @@ class WorkspaceUserController extends Controller
                     if ($workspace == $user->getPersonalWorkspace()) {
                         throw new LogicException("You can't remove the original manager from a personal workspace");
                     }
-                    if ($user->hasRole($workspace->getManagerRole()->getName())) {
+                    if ($user->hasRole($em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getName())) {
                         $countRemovedManagers++;
                     }
                 }
@@ -306,7 +313,7 @@ class WorkspaceUserController extends Controller
         }
 
 
-        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')->getUsersOfWorkspace($workspace, $workspace->getManagerRole(), true);
+        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')->getUsersOfWorkspace($workspace, $em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace), true);
         $countUserManagers = count($userManagers);
 
         if ($countRemovedManagers >= $countUserManagers) {
@@ -316,22 +323,15 @@ class WorkspaceUserController extends Controller
 
     private function checkRegistration($workspace)
     {
-        $authorization = false;
-
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            if ($this->get('security.context')->isGranted($role->getName())) {
-                $authorization = true;
-            }
-        }
-
-        if ($authorization === false) {
+        if(!$this->get('security.context')->isGranted('VIEW', $workspace))
+        {
             throw new AccessDeniedHttpException();
         }
     }
 
     private function checkIfAdmin($workspace)
     {
-        if (!$this->get('security.context')->isGranted($workspace->getManagerRole()->getName())) {
+        if (!$this->get('security.context')->isGranted($this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getName())) {
             throw new AccessDeniedHttpException();
         }
     }

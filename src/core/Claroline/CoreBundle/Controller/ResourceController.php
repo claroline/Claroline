@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
 use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 
 class ResourceController extends Controller
@@ -67,7 +67,7 @@ class ResourceController extends Controller
             $manager = $this->get('claroline.resource.manager');
             $resource = $manager->create($resource, $parentId, $resourceType);
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
+            $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()));
         } else {
             if ($event->getErrorFormContent() != null) {
                 $response->setContent($event->getErrorFormContent());
@@ -103,7 +103,7 @@ class ResourceController extends Controller
             );
         }
 
-        $logEvent = new ResourceLoggerEvent($resource, 'open');
+        $logEvent = new ResourceLogEvent($resource, 'open');
         $this->get('event_dispatcher')->dispatch('log_resource', $logEvent);
 
         return $event->getResponse();
@@ -336,7 +336,7 @@ class ResourceController extends Controller
                     $movedResource = $resourceManager->move($resource, $newParent);
                     $movedResources[] = $this->get('claroline.resource.converter')->toArray(
                         $movedResource,
-                        $this->get('security.context')->getToken()->getUser()
+                        $this->get('security.context')->getToken()
                     );
                 } catch (\Gedmo\Exception\UnexpectedValueException $e) {
                     throw new \RuntimeException('Cannot move a resource into itself');
@@ -381,7 +381,7 @@ class ResourceController extends Controller
         }
 
         $ri = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($resourceId);
-        $logevent = new ResourceLoggerEvent($ri, $action);
+        $logevent = new ResourceLogEvent($ri, $action);
         $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
         return $event->getResponse();
@@ -437,7 +437,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
         $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->findOneBy(array('parent' => null, 'workspace' => $workspace->getId()));
-        $response = new Response($this->get('claroline.resource.converter')->toJson($root, $this->get('security.context')->getToken()->getUser()));
+        $response = new Response($this->get('claroline.resource.converter')->toJson($root, $this->get('security.context')->getToken()));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -468,6 +468,8 @@ class ResourceController extends Controller
         $resourceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $directoryId = (integer)$directoryId;
 
+        $currentRoles = $this->get('claroline.security.utilities')->getRoles($this->get('security.context')->getToken());
+
         if ($directoryId === 0) {
             $resources = $resourceRepo->listRootsForUser($user, true);
         } else {
@@ -478,15 +480,16 @@ class ResourceController extends Controller
             }
 
             $path = $resourceRepo->listAncestors($directory);
-            $resources = $resourceRepo->children($directory->getId(), $user, 0, true, true);
-            $userRights = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\ResourceRights')
-                ->getRights($user, $directory);
+            $resources = $resourceRepo->children($directory->getId(), $currentRoles, 0, true, true);
 
-            if (null !== $userRights && 0 !== count($types = $userRights->getResourceTypes())) {
+            $creationRights = $em->getRepository('Claroline\CoreBundle\Entity\Rights\ResourceRights')
+                ->getCreationRights($currentRoles, $directory);
+
+            if (count($creationRights)!=0) {
                 $translator = $this->get('translator');
 
-                foreach ($types as $type) {
-                    $creatableTypes[$type->getName()] = $translator->trans($type->getName(), array(), 'resource');
+                foreach ($creationRights as $type) {
+                    $creatableTypes[$type['name']] = $translator->trans($type['name'], array(), 'resource');
                 }
             }
         }
@@ -496,6 +499,7 @@ class ResourceController extends Controller
             'creatableTypes' => $creatableTypes,
             'resources' => $resources
         )));
+
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -536,7 +540,7 @@ class ResourceController extends Controller
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
-            $newNodes[] = $this->get('claroline.resource.converter')->toArray($newNode, $this->get('security.context')->getToken()->getUser());
+            $newNodes[] = $this->get('claroline.resource.converter')->toArray($newNode, $this->get('security.context')->getToken());
         }
 
         $response = new Response(json_encode($newNodes));
@@ -593,6 +597,7 @@ class ResourceController extends Controller
         return $response;
     }
 
+    //todo doc
     public function createShortcutAction($newParentId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -623,7 +628,7 @@ class ResourceController extends Controller
             $em->refresh($parent);
             $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
 
-            $links[] = $this->get('claroline.resource.converter')->toArray($shortcut, $this->get('security.context')->getToken()->getUser());
+            $links[] = $this->get('claroline.resource.converter')->toArray($shortcut, $this->get('security.context')->getToken());
         }
 
         $response = new Response(json_encode($links));
@@ -642,7 +647,7 @@ class ResourceController extends Controller
             throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
         }
 
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
+        $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $resource));
 
         if ($resource->getResourceType()->getName() == 'directory') {
             return $this->render(
@@ -668,7 +673,7 @@ class ResourceController extends Controller
         }
 
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $role));
+        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
 
         return $this->render(
@@ -731,7 +736,7 @@ class ResourceController extends Controller
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()->getUser()));
+        $response->setContent($this->get('claroline.resource.converter')->toJson($resource, $this->get('security.context')->getToken()));
 
         return $response;
     }
@@ -755,8 +760,8 @@ class ResourceController extends Controller
             $isRecursive = false;
         }
 
-        $checks = $this->get('claroline.resource.rights')->setRightsRequest($parameters);
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
+        $checks = $this->get('claroline.security.utilities')->setRightsRequest($parameters, 'resource');
+        $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $resource));
 
         foreach ($configs as $config) {
             if (isset($checks[$config->getId()])) {
@@ -771,7 +776,7 @@ class ResourceController extends Controller
             $resources =  $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getDescendant($resource);
 
             foreach ($resources as $resource) {
-                $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $resource));
+                $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $resource));
 
                 foreach ($configs as $config) {
                     $key = $this->findKeyForConfig($checks, $config);
@@ -826,7 +831,7 @@ class ResourceController extends Controller
     {
         $keys = array_keys($checks);
         foreach ($keys as $key) {
-            $baseConfig = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->find($key);
+            $baseConfig = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->find($key);
             $role = $baseConfig->getRole();
             if ($config->getRole() == $role) {
                 return $key;
@@ -846,7 +851,7 @@ class ResourceController extends Controller
     private function setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
+        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
 
         foreach ($resourceTypesIds as $id) {
@@ -865,7 +870,7 @@ class ResourceController extends Controller
      */
     private function resetCreationPermissionForResource($resourceId, $roleId)
     {
-        $config = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
+        $config = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
         $this->get('doctrine.orm.entity_manager')->persist($config);
     }

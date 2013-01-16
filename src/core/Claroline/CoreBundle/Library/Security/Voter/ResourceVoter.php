@@ -5,8 +5,11 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Translation\Translator;
+use Claroline\CoreBundle\Library\Security\RightsManager;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -18,13 +21,15 @@ class ResourceVoter implements VoterInterface
     private $repository;
     private $translator;
     private $validAttributes;
+    private $rm;
 
-    public function __construct(EntityManager $em, Translator $translator)
+    public function __construct(EntityManager $em, Translator $translator, RightsManager $rightsManager)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights');
+        $this->repository = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights');
         $this->translator = $translator;
         $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
+        $this->rm = $rightsManager;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -39,12 +44,12 @@ class ResourceVoter implements VoterInterface
             if ($attributes[0] == 'CREATE') {
                 //there should be one one resource every time (you only create resource one at a time in a single directory
                 foreach ($object->getResources() as $resource) {
-                    $rights = $this->repository->getRights($token->getUser(), $resource);
+                    $rightsCreation = $this->repository->getCreationRights($this->rm->getRoles($token), $resource);
 
-                    if ($rights == null) {
+                    if (count($rightsCreation) == 0) {
                         $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $resource->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($object->getAttribute('type')), array(), 'resource')), 'platform');
                     } else {
-                        if (!$this->canCreate($rights, $object->getAttribute('type'))) {
+                        if (!$this->canCreate($rightsCreation, $object->getAttribute('type'))) {
                             $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $resource->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($object->getAttribute('type')), array(), 'resource')), 'platform');
                         }
                     }
@@ -53,23 +58,23 @@ class ResourceVoter implements VoterInterface
 
             if ($attributes[0] == 'MOVE'){
 
-                $parentRights = $this->repository->getRights($token->getUser(), $object->getAttribute('parent'));
+                $rightsCreation = $this->repository->getCreationRights($this->rm->getRoles($token), $object->getAttribute('parent'));
 
-                if ($parentRights == null) {
+                if (count($rightsCreation) == 0) {
                     $errors[] = $this->translator->trans('resource_creation_denied', array('%path%' => $object->getAttribute('parent')->getPathForDisplay()), 'platform');
                 } else {
                     foreach($object->getResources() as $resource){
-                        if (!$this->canCreate($parentRights, $resource->getResourceType()->getName())) {
+                        if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
                              $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $object->getAttribute('parent')->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($resource->getResourceType()->getName()), array(), 'resource')), 'platform');
                         }
 
-                        $rights = $this->repository->getRights($token->getUser(), $resource);
+                        $rights = $this->repository->getRights($this->rm->getRoles($token), $resource);
 
-                        if(!$rights->canCopy()){
+                        if(!$rights['canCopy']){
                             $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => 'COPY'), 'platform');
                         }
 
-                        if(!$rights->canDelete()){
+                        if(!$rights['canDelete']){
                             $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => 'DELETE'), 'platform');
                         }
                     }
@@ -78,13 +83,13 @@ class ResourceVoter implements VoterInterface
 
             if ($attributes[0] == 'COPY') {
 
-                $parentRights = $this->repository->getRights($token->getUser(), $object->getAttribute('parent'));
+                $rightsCreation = $this->repository->getCreationRights($this->rm->getRoles($token), $object->getAttribute('parent'));
 
-                if ($parentRights == null) {
+                if (count($rightsCreation) == 0) {
                     $errors[] = $this->translator->trans('resource_creation_denied', array('%path%' => $object->getAttribute('parent')->getPathForDisplay()), 'platform');
                 } else {
                     foreach ($object->getResources() as $resource) {
-                        if (!$this->canCreate($parentRights, $resource->getResourceType()->getName())) {
+                        if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
                             $errors[] = $this->translator->trans('resource_creation_wrong_type', array('%path%' => $object->getAttribute('parent')->getPathForDisplay(), '%type%' => $this->translator->trans(strtolower($resource->getResourceType()->getName()), array(), 'resource')), 'platform');
                         }
                     }
@@ -97,12 +102,12 @@ class ResourceVoter implements VoterInterface
 
             if (method_exists($rr, $call)) {
                 foreach ($object->getResources() as $resource) {
-                    $rights = $this->repository->getRights($token->getUser(), $resource);
+                    $rights = $this->repository->getRights($this->rm->getRoles($token), $resource);
 
                     if($rights == null){
                         $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => $action), 'platform');
                     } else {
-                        if (!$rights->$call()){
+                        if (!$this->canDo($resource, $token, $action)){
                             $errors[] = $this->translator->trans('resource_action_denied_message', array('%path%' => $resource->getPathForDisplay(), '%action%' => $action), 'platform');
                         }
                     }
@@ -130,16 +135,31 @@ class ResourceVoter implements VoterInterface
         return true;
     }
 
-    private function canCreate($rights, $resourceType)
+    private function canCreate($rightsCreation, $resourceType)
     {
-        $resourceTypes = $rights->getResourceTypes();
-
-        foreach ($resourceTypes as $item) {
-            if ($item->getName() == $resourceType) {
+        foreach ($rightsCreation as $item) {
+            if ($item['name'] == $resourceType) {
                 return true;
             }
         }
 
         return false;
+    }
+
+
+    /**
+     *
+     * @param AbstractResource $resource
+     * @param TokenInterface $token
+     * @param string $action
+     *
+     * @return boolean
+     */
+    private function canDo(AbstractResource $resource, TokenInterface $token, $action)
+    {
+        $rights = $this->em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->getRights($this->rm->getRoles($token), $resource);
+        $permission = 'can'.ucfirst(strtolower($action));
+
+        return $rights[$permission];
     }
 }

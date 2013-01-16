@@ -66,3 +66,6 @@ stof_doctrine_extensions:
         default:
             tree: true   # listeners are not enabled by default
             timestampable: true
+
+parameters:
+  security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener

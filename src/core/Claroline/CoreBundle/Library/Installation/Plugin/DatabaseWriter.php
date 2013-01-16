@@ -236,14 +236,14 @@ class DatabaseWriter
 
         $wWidgetConfig = new DisplayConfig();
         $wWidgetConfig->setWidget($widgetEntity);
-        $wWidgetConfig->setLock(true);
+        $wWidgetConfig->setLock(false);
         $wWidgetConfig->setVisible(true);
         $wWidgetConfig->setParent(null);
         $wWidgetConfig->setDesktop(false);
 
         $dWidgetConfig = new DisplayConfig();
         $dWidgetConfig->setWidget($widgetEntity);
-        $dWidgetConfig->setLock(true);
+        $dWidgetConfig->setLock(false);
         $dWidgetConfig->setVisible(true);
         $dWidgetConfig->setParent(null);
         $dWidgetConfig->setDesktop(true);

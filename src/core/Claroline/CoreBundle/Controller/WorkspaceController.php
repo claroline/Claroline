@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
-use Claroline\CoreBundle\Form\ResourceRightsType;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 
 /**
@@ -142,7 +141,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
-        if (false === $this->get('security.context')->isGranted("ROLE_WS_MANAGER_{$workspaceId}", $workspace)) {
+        if (false === $this->get('security.context')->isGranted("DELETE", $workspace)) {
             throw new AccessDeniedHttpException();
         }
 
@@ -165,7 +164,11 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+
+        if(!$this->get('security.context')->isGranted('VIEW', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:home.html.twig',
@@ -186,7 +189,12 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+
+        if (!$this->get('security.context')->isGranted('VIEW', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->getRootForWorkspace($workspace)
             ->getId();
@@ -212,16 +220,21 @@ class WorkspaceController extends Controller
      */
     public function widgetsAction($workspaceId)
     {
-        $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $responsesString = '';
 
-        foreach ($configs as $config){
-            if($config->isVisible()){
-                $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
-                $event = new DisplayWidgetEvent($workspace);
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+        if ($this->get('security.context')->getToken()->getUser() !== 'anon.'){
+
+            $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
+            $em = $this->getDoctrine()->getEntityManager();
+            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+            foreach ($configs as $config){
+                if($config->isVisible()){
+                    $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
+                    $event = new DisplayWidgetEvent($workspace);
+                    $this->get('event_dispatcher')->dispatch($eventName, $event);
+                    $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                }
             }
         }
 
@@ -240,6 +253,11 @@ class WorkspaceController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
+        if(!$this->get('security.context')->isGranted('EDIT', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         return $this->render('ClarolineCoreBundle:Workspace:tools\properties.html.twig', array('workspace' => $workspace));
     }
 
@@ -254,6 +272,12 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        if(!$this->get('security.context')->isGranted('EDIT', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         $configs = $this->get('claroline.widget.manager')->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render('ClarolineCoreBundle:Workspace:tools\widget_properties.html.twig',
@@ -283,14 +307,13 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function resourcesRightsFormAction($workspaceId)
+    public function workspaceRightsFormAction($workspaceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspaceId, 'parent' => null));
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
+        $configs = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->findBy(array('workspace' => $workspaceId));
 
-        return $this->render('ClarolineCoreBundle:Workspace:tools\resources_rights.html.twig',
+        return $this->render('ClarolineCoreBundle:Workspace:tools\workspace_rights.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
     }
@@ -302,19 +325,28 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function editResourcesRightsAction($workspaceId)
+    public function editWorkspaceRightsAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
-        $configs = $em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $root));
-        $checks = $this->get('claroline.resource.rights')->setRightsRequest($this->get('request')->request->all());
+        $configs = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->findBy(array('workspace' => $workspaceId));
+        $checks = $this->get('claroline.security.utilities')->setRightsRequest($this->get('request')->request->all(), 'workspace');
 
         foreach($configs as $config){
             $config->reset();
 
             if(isset($checks[$config->getId()])){
                 $config->setRights($checks[$config->getId()]);
+                if ($config->getRole()->getName() == 'ROLE_ANONYMOUS'){
+                    //if anonymous can see a a workspace, he also can see the root
+                    if ($checks[$config->getId()]['canView'] === true){
+                        $ws = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+                        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->getRootForWorkspace($ws);
+                        $role = $em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
+                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findOneBy(array('resource' => $root, 'role' => $role));
+                        $resourceRight->setCanView(true);
+                        $em->persist($resourceRight);
+                    }
+                }
             }
             $em->persist($config);
         }
@@ -337,6 +369,12 @@ class WorkspaceController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('EDIT', $workspace))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
 
         $displayConfig = $em
@@ -375,6 +413,12 @@ class WorkspaceController extends Controller
     {
          $em = $this->get('doctrine.orm.entity_manager');
          $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+         if (!$this->get('security.context')->isGranted('EDIT', $workspace))
+         {
+             throw new AccessDeniedHttpException();
+         }
+
          $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
          $event = new ConfigureWidgetWorkspaceEvent($workspace);
          $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
@@ -386,24 +430,5 @@ class WorkspaceController extends Controller
          } else {
              throw new \Exception("event $eventName didn't return any Response");
          }
-    }
-
-    /*******************/
-    /* PRIVATE METHODS */
-    /*******************/
-
-    private function checkRegistration($workspace)
-    {
-        $authorization = false;
-
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            if ($this->get('security.context')->isGranted($role->getName())) {
-                $authorization = true;
-            }
-        }
-
-        if ($authorization === false) {
-            throw new AccessDeniedHttpException();
-        }
     }
 }

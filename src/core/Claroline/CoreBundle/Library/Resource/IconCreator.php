@@ -206,7 +206,11 @@ class IconCreator
         $extension = pathinfo($icon->getIconLocation(), PATHINFO_EXTENSION);
         $stampPath = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
 
-        $im = imagecreatefrompng($basepath);
+        if (function_exists($funcname = "imagecreatefrom{$extension}")) {
+            $im = $funcname($basepath);
+        } else {
+            throw new \RuntimeException("Couldn't create a image from {$basepath}");
+        }
         $stamp = imagecreatefrompng($stampPath);
         imagesavealpha($im, true);
         imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));

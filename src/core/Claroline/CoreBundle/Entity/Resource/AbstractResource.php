@@ -142,7 +142,7 @@ abstract class AbstractResource
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights",
+     *      targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
      *      mappedBy="resource"
      * )
      */

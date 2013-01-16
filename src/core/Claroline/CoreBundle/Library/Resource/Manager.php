@@ -8,10 +8,10 @@ use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLoggerEvent;
+use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
 
 class Manager
 {
@@ -93,9 +93,9 @@ class Manager
         $this->em->persist($resource);
         $this->setResourceRights($parent, $resource);
 
-        $event = new ResourceLoggerEvent(
+        $event = new ResourceLogEvent(
             $resource,
-            ResourceLoggerEvent::CREATE_ACTION
+            ResourceLogEvent::CREATE_ACTION
         );
         $this->ed->dispatch('log_resource', $event);
 
@@ -124,9 +124,9 @@ class Manager
             $this->em->flush();
             $this->setResourceRights($parent, $child);
 
-            $event = new ResourceLoggerEvent(
+            $event = new ResourceLogEvent(
                 $child,
-                ResourceLoggerEvent::MOVE_ACTION
+                ResourceLogEvent::MOVE_ACTION
             );
             $this->ed->dispatch('log_resource', $event);
 
@@ -194,9 +194,9 @@ class Manager
                 }
             }
 
-            $logevent = new ResourceLoggerEvent(
+            $logevent = new ResourceLogEvent(
                 $resource,
-                ResourceLoggerEvent::COPY_ACTION
+                ResourceLogEvent::COPY_ACTION
             );
 
             $this->ed->dispatch('log_resource', $logevent);
@@ -263,7 +263,7 @@ class Manager
      */
     public function setResourceRights($old, $resource)
     {
-        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Workspace\ResourceRights')->findBy(array('resource' => $old));
+        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $old));
         foreach($resourceRights as $resourceRight){
             $rs = new ResourceRights();
             $rs->setRole($resourceRight->getRole());

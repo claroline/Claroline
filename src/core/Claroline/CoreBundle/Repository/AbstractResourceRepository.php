@@ -47,7 +47,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
     const WHERECONDITION_USER_WORKSPACE = "
             ar.workspace IN
             ( SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
-                JOIN aw.roles r JOIN r.users u WHERE u.id = :u_id ) ";
+                JOIN aw.rights workspace_rights
+                JOIN workspace_rights.role r JOIN r.users u WHERE u.id = :u_id ) ";
 
     /**
      * Returns the root resource of the workspace
@@ -105,67 +106,26 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @param int $resourceTypeId ResourceType ID to filter on.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
      * @param boolean $isVisible if true, returns only resources that are visible.
-     * @param User $user the current user
+     * @param array roles an array of role (string)
      *
      * @return an array of arrays or entities
      */
-    public function children($parentId, User $user, $resourceTypeId = 0, $asArray = false, $isVisible = true)
+    public function children($parentId, $roles, $resourceTypeId = 0, $asArray = true, $isVisible = true)
     {
-        $dql = "SELECT DISTINCT ";
         $isAdmin = false;
 
-        foreach ($user->getRoles() as $role) {
-            if ($role == 'ROLE_ADMIN') {
+        foreach ($roles as $role) {
+            if ($role === 'ROLE_ADMIN') {
                 $isAdmin = true;
             }
         }
 
-        if ($asArray) {
-            $dql.= self::SELECT_FOR_ARRAY;
-
-            if (!$isAdmin) {
-                $dql.= ' , arRights.canExport as can_export, arRights.canDelete as can_delete, arRights.canEdit as can_edit';
-            }
+        if($isAdmin){
+            $query = $this->buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible);
         } else {
-            if (!$isAdmin) {
-                $dql.= self::SELECT_FOR_ENTITIES . ', arRights';
-            } else {
-                //maybe sets every rights should be set to true
-                $dql.= self::SELECT_FOR_ENTITIES;
-            }
+            $query = $this->buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId);
         }
 
-        $dql.= " FROM " . self::FROM_RESOURCES;
-
-        if ($isAdmin === false) {
-            $dql .= "
-                LEFT JOIN ar.rights arRights
-                JOIN arRights.role rightRole WITH rightRole IN (
-                    SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
-                    JOIN currentUserRole.users currentUser
-                    JOIN currentUserRole.workspace currentWorkspace
-                    WHERE currentUser.id = {$user->getId()}
-                )";
-        }
-
-        $dql .= "WHERE ar.parent = :ar_parentid
-                AND rt.isVisible = :rt_isvisible";
-
-        if ($isAdmin === false) {
-            $dql .= " AND arRights.canView = 1";
-        }
-
-        if ($resourceTypeId !== 0) {
-            $dql .= " AND rt.id = :rt_id";
-        }
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('ar_parentid', $parentId);
-        $query->setParameter('rt_isvisible', $isVisible);
-
-        if ($resourceTypeId !== 0) {
-            $query->setParameter('rt_id', $resourceTypeId);
-        }
 
         $results = array();
 
@@ -185,6 +145,65 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $results;
     }
 
+    private function buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible)
+    {
+        $dql = "SELECT DISTINCT". ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+           . " FROM " . self::FROM_RESOURCES
+           . " WHERE ar.parent = :ar_parentid
+               AND rt.isVisible = :rt_isvisible";
+
+        if ($resourceTypeId !== 0) {
+            $dql .= " AND rt.id = :rt_id";
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ar_parentid', $parentId);
+        $query->setParameter('rt_isvisible', $isVisible);
+
+        if ($resourceTypeId !== 0) {
+            $query->setParameter('rt_id', $resourceTypeId);
+        }
+
+        return $query;
+    }
+
+    private function buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId, $asArray = true, $isVisible = true)
+    {
+         $dql = "SELECT DISTINCT". self::SELECT_FOR_ARRAY. ", MAX (arRights.canExport) as can_export, MAX (arRights.canDelete) as can_delete, MAX (arRights.canEdit) as can_edit"
+             ." FROM ". self::FROM_RESOURCES
+             ." LEFT JOIN ar.rights arRights
+                JOIN arRights.role rightRole
+                WHERE ";
+
+        if ($resourceTypeId !== 0) {
+            $condition .= " AND rt.id = :rt_id";
+        }
+
+        $i = 0;
+        foreach($roles as $role){
+            $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}' AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
+
+            if($i!=0){
+                $dql.= " OR ".$condition;
+            } else {
+                $dql.= $condition;
+                $i++;
+            }
+        }
+
+        $dql.= "GROUP BY ar.id";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ar_parentid', $parentId);
+        $query->setParameter('rt_isvisible', $isVisible);
+
+        if ($resourceTypeId !== 0) {
+            $query->setParameter('rt_id', $resourceTypeId);
+        }
+
+        return $query;
+    }
+
     /**
      * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
      * @param User $user Owner of the resources.
@@ -193,7 +212,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function listRootsForUser(User $user, $asArray = false)
     {
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = "SELECT " . self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES
             . " WHERE ar.parent IS NULL"
             . " AND " . self::WHERECONDITION_USER_WORKSPACE
@@ -234,21 +253,26 @@ class AbstractResourceRepository extends MaterializedPathRepository
     /**
      * Returns all resources owned by the user and filtered with given criterias.
      * @param Array $criterias Array of criterias to use to build the filter.
-     * @param User $user Owner of the resources.
+     * @param $roles as array of role (string)
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
      * @return an array of arrays or entities
      */
-    public function listResourcesForUserWithFilter($criterias, User $user, $asArray = false)
+    public function listResourcesForUserWithFilter($criterias, $user, $asArray = false)
     {
         $isAdmin = false;
+        $isAnonymous = false;
 
-        if ($user !== null) {
-            foreach ($user->getRoles() as $role) {
-                if ($role === 'ROLE_ADMIN') {
-                    $isAdmin = true;
-                }
-            }
-        }
+//        foreach ($roles as $role) {
+//            if ($role === 'ROLE_ADMIN') {
+//                $isAdmin = true;
+//            } else {
+//                if ($role === 'ROLE_ANONYMOUS'){
+//                    $isAnonymous = true;
+//                }
+//            }
+//        }
+
+        $isAdmin = false;
 
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
             . " FROM " . self::FROM_RESOURCES;
@@ -259,7 +283,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 JOIN arRights.role rightRole WITH rightRole IN (
                     SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
                     JOIN currentUserRole.users currentUser
-                    JOIN currentUserRole.workspace currentWorkspace
                     WHERE currentUser.id = {$user->getId()}
                 )";
         }

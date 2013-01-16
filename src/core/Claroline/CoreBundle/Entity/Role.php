@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\ResourceRights;
+use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -120,26 +120,25 @@ class Role implements RoleInterface
      */
     protected $groups;
 
-   /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
-    * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
-    */
-    protected $workspace;
-
     /**
      * @ORM\Column(name="role_type", type="integer")
      */
     protected $roleType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\ResourceRights", mappedBy="role")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights", mappedBy="role")
      */
-    protected $resourcesRightsWorkspaces;
+    protected $resourceRights;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights", mappedBy="role")
+     */
+    protected $workspaceRights;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->resourcesRightsWorkspaces = new ArrayCollection();
+        $this->resourceRights = new ArrayCollection();
     }
 
     public function getId()
@@ -241,29 +240,6 @@ class Role implements RoleInterface
         }
     }
 
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-   /**
-    * Binds the role to a workspace instance. This method is aimed to be used
-    * by the AbstractWorkspace role setters.
-    *
-    * @param AbstractWorkspace $workspace
-    */
-    public function setWorkspace(AbstractWorkspace $workspace)
-    {
-        $ws = $this->getWorkspace();
-
-        if (null !== $ws) {
-            throw new RuntimeException(
-                "This role is already bound to workspace '{$ws->getName()}'"
-            );
-        }
-
-        $this->workspace = $workspace;
-    }
 
     public function setRoleType($roleType)
     {
@@ -277,11 +253,11 @@ class Role implements RoleInterface
 
     public function addResourceRights(ResourceRights $rsw)
     {
-        $this->resourcesRightsWorkspaces->add($rsw);
+        $this->resourceRights->add($rsw);
     }
 
     public function getResourceRights()
     {
-        return $this->resourcesRightsWorkspaces;
+        return $this->resourceRights;
     }
 }

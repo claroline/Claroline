@@ -4,7 +4,9 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\Event;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 Class CalendarController extends Controller
 {
@@ -14,7 +16,7 @@ Class CalendarController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkUserIsAllowed('VIEW', $workspace);
 
         $event = new Event();
         $formBuilder = $this->createFormBuilder($event);
@@ -34,8 +36,11 @@ Class CalendarController extends Controller
         );
     }
 
-    public function addDateAction($workspaceId)
+    public function addEventAction($workspaceId)
     {
+        $em = $this->getDoctrine()->getManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('EDIT', $workspace);
         $event = new Event();
         $formBuilder = $this->createFormBuilder($event);
         $formBuilder->add('title', 'text')
@@ -57,38 +62,36 @@ Class CalendarController extends Controller
                 $event->setStart(new \DateTime($date[0]));
                 // the end date has to be bigger
                 if ($event->getStart() < $event->getEnd()) {
-                    $em = $this->getDoctrine()->getManager();
-                    $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
                     $event->setWorkspace($workspace);
                     $event->setUser($this->get('security.context')->getToken()->getUser());
                     $em->persist($event);
                     $em->flush();
-                    $return = array(
-                        "responseCode" => 200,
-                        "greeting" => "ok",
-                        "title" => $event->getTitle(),
-                        "start" => date('Y-m-d', $event->getStart()),
-                        "end" => date('Y-m-d', $event->getEnd())
+                    $content = array(
+                        'responseCode' => 200,
+                        'greeting' => 'ok',
+                        'title' => $event->getTitle(),
+                        'start' => date('Y-m-d', $event->getStart()),
+                        'end' => date('Y-m-d', $event->getEnd())
                     );
                 } else {
-                    $return = array("responseCode" => 400, "greeting" => " start date is bigger than end date ");
+                    $content = array('responseCode' => 400, 'greeting' => ' start date is bigger than end date ');
                 }
             } else {
-                $return = array("responseCode" => 400, "greeting" => "not valid");
+                $content = array('responseCode' => 400, 'greeting' => 'not valid');
             }
         }
-        else
-            $return = array("responseCode" => 400, "greeting" => "no post");
-
-        $return = json_encode($return); //jscon encode the array
+        else {
+            $content = array('responseCode' => 400, 'greeting' => 'no post');
+        }
         
-        return new Response($return, 200, array('Content-Type' => 'application/json')); //make sure it has the correct content type
+        return new Response(json_encode($content), 200, array('Content-Type' => 'application/json'));
     }
 
     public function showAction($workspaceId)
     {
-         $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('VIEW', $workspace);
         $listEvents = $workspace->getEvents();
         $data = array();
         
@@ -105,11 +108,13 @@ Class CalendarController extends Controller
         );
     }
 
-    public function moveAction()
+    public function moveAction($workspaceId)
     {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('EDIT', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
-        $em = $this->getDoctrine()->getEntityManager();
         $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
         $event = $repository->find($postData['id']);
         // timestamp 1h = 3600
@@ -122,23 +127,17 @@ Class CalendarController extends Controller
         $event->setEnd($dateEnd);
         $em->flush();
 
-        $return = json_encode(array("responseCode" => 200, "greeting" => "ok")); //jscon encode the array
-        
         return new Response(
-            json_encode(array("responseCode" => 200, "greeting" => "ok")), 
+            json_encode(array('responseCode' => 200, 'greeting' => 'ok')), 
             200, 
             array('Content-Type' => 'application/json')
         );
     }
 
-    private function checkRegistration($workspace)
+    private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
-        foreach ($workspace->getWorkspaceRoles() as $role) {
-            if ($this->get('security.context')->isGranted($role->getName())) {
-                return true;
-            }
+        if (!$this->get('security.context')->isGranted($permission, $workspace)) {
+            throw new AccessDeniedHttpException();
         }
-
-        throw new AccessDeniedHttpException();
     }
 }

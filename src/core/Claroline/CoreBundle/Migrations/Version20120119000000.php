@@ -33,16 +33,16 @@ class Version20120119000000 extends BundleMigration
         $this->createMetaTypeResourceTypeTable($schema);
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
-        $this->createResourceLoggerTable($schema);
+        $this->createResourceLogTable($schema);
         $this->createWidgetTable($schema);
         $this->createAdminWidgetConfig($schema);
         $this->createResourceLinkTable($schema);
         $this->createActivityTable($schema);
         $this->createActivityResourcesTable($schema);
         $this->createResourceRightsTable($schema);
-        $this->createListTypeCreation($schema);
+        $this->createListTypeCreationTable($schema);
+        $this->createWorkspaceRightsTable($schema);
         $this->createEventTable($schema);
-
     }
 
     public function down(Schema $schema)
@@ -73,13 +73,14 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_meta_type');
         $schema->dropTable('claro_meta_type_resource_type');
         $schema->dropTable('claro_resource_type_custom_action');
-        $schema->dropTable('claro_resource_logger');
+        $schema->dropTable('claro_resource_log');
         $schema->dropTable('claro_widget');
         $schema->dropTable('claro_widget_dispay');
         $schema->dropTable('claro_resource_link');
         $schema->dropTable('claro_activity');
         $schema->dropTable('claro_resource_activity');
         $schema->dropTable('claro_resource_rights');
+        $schema->dropTable('claro_workspace_rights');
         $schema->dropTable('claro_list_type_creation');
         $schema->dropTable('claro_event');
     }
@@ -177,7 +178,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
-        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('lft', 'integer', array('notnull' => true));
         $table->addColumn('rgt', 'integer', array('notnull' => true));
         $table->addColumn('lvl', 'integer', array('notnull' => true));
@@ -185,9 +185,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('role_type', 'integer', array('notnull' => false));
 
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
-        );
         $table->addUniqueIndex(array('name'));
 
         $this->storeTable($table);
@@ -480,9 +477,9 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    private function createResourceLoggerTable(Schema $schema)
+    private function createResourceLogTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_resource_logger');
+        $table = $schema->createTable('claro_resource_log');
         $this->addId($table);
         $table->addColumn('resource_id', 'integer', array('notnull' => false));
         $table->addColumn('path', 'string');
@@ -604,7 +601,7 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    private function createListTypeCreation(Schema $schema)
+    private function createListTypeCreationTable(Schema $schema)
     {
         $table = $schema->createTable('claro_list_type_creation');
         $this->addId($table);
@@ -619,7 +616,30 @@ class Version20120119000000 extends BundleMigration
             $schema->getTable('claro_resource_type'), array('resource_type_id'), array('id'), array('onDelete' => 'CASCADE')
         );
     }
-    
+
+    private function createWorkspaceRightsTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_rights');
+        $this->addId($table);
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('role_id', 'integer');
+        $table->addColumn('can_view', 'boolean');
+        $table->addColumn('can_manage', 'boolean');
+        $table->addColumn('can_edit', 'boolean');
+        $table->addColumn('can_delete', 'boolean');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_role'), array('role_id'), array('id'), array('onDelete' => 'CASCADE')
+        );
+
+        $table->addUniqueIndex(array('workspace_id', 'role_id'));
+
+        $this->storeTable($table);
+    }
+
     private function createEventTable(Schema $schema)
     {
         $table = $schema->createTable('claro_event');
@@ -630,14 +650,13 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('description', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
-        
+
          $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'), array('workspace_id'), array('id'), array('onDelete' => 'CASCADE')
         );
-         
+
          $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'), array('user_id'), array('id'), array('onDelete' => 'CASCADE')
         );
-         
     }
 }

@@ -38,10 +38,10 @@ class CreatorTest extends FunctionalTestCase
 
         $this->assertEquals(Configuration::TYPE_SIMPLE, get_class($workspace));
         $this->assertEquals('Workspace Foo', $workspace->getName());
-        $this->assertTrue($workspace->isPublic());
-        $this->assertEquals('visitor', $workspace->getVisitorRole()->getTranslationKey());
-        $this->assertEquals('collaborator', $workspace->getCollaboratorRole()->getTranslationKey());
-        $this->assertEquals('manager', $workspace->getManagerRole()->getTranslationKey());
+        $roleRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role');
+        $this->assertEquals('visitor', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
+        $this->assertEquals('collaborator', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
+        $this->assertEquals('manager', $roleRepo->getManagerRole($workspace)->getTranslationKey());
     }
 
     public function testWorkspaceCanBeCreatedWithCustomParameters()
@@ -60,25 +60,10 @@ class CreatorTest extends FunctionalTestCase
 
         $this->assertEquals(Configuration::TYPE_AGGREGATOR, get_class($workspace));
         $this->assertEquals('Workspace Bar', $workspace->getName());
-        $this->assertTrue($workspace->isPublic());
-        $this->assertEquals('Guest', $workspace->getVisitorRole()->getTranslationKey());
-        $this->assertEquals('Student', $workspace->getCollaboratorRole()->getTranslationKey());
-        $this->assertEquals('Professor', $workspace->getManagerRole()->getTranslationKey());
-    }
-
-    public function testWorkspaceCanBeCreatedWithAnUserAsManagerAndOwnerOfTheWorkspace()
-    {
-        $manager = $this->getFixtureReference('user/user');
-
-        $config = new Configuration();
-        $config->setWorkspaceName('Workspace Test');
-        $config->setWorkspaceCode('WTEST');
-
-        $workspace = $this->creator->createWorkspace($config, $manager);
-        $this->logUser($manager);
-
-        $this->assertTrue($this->getSecurityContext()->isGranted('OWNER', $workspace));
-        $this->assertTrue($this->getSecurityContext()->isGranted($workspace->getManagerRole()->getName()));
+        $roleRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role');
+        $this->assertEquals('Guest', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
+        $this->assertEquals('Student', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
+        $this->assertEquals('Professor', $roleRepo->getManagerRole($workspace)->getTranslationKey());
     }
 
     public function invalidConfigProvider()

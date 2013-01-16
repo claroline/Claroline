@@ -78,9 +78,10 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->loadUserFixture(array('user', 'ws_creator'));
         $this->loadWorkspaceFixture(array('ws_a'));
         $this->logUser($this->getFixtureReference('user/user'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request('PUT', "/workspaces/{$pwu->getId()}/add/user?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}");
-        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getManagerRole()->getId())));
+        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId())));
         $crawler = $this->client->request('DELETE', "/workspaces/{$pwu->getId()}/users?userIds[]={$this->getFixtureReference('user/user')->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
@@ -95,11 +96,12 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         $this->loadUserFixture(array('user', 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/user'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request('PUT', "/workspaces/{$pwu->getId()}/add/user?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->client->request('GET', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $pwu->getManagerRole()->getId())));
+        $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($pwu)->getId())));
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->client->request(
             'GET', "/workspaces/{$pwu->getId()}/users/0/registered", array(), array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -119,11 +121,12 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         $this->loadUserFixture(array('user', 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->request('PUT', "/workspaces/{$this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId()}/user/{$this->getFixtureReference('user/user')->getId()}");
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/{$this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-        $this->client->request('POST', "/workspaces/{$this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getVisitorRole()->getId())));
+        $this->client->request('POST', "/workspaces/{$this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')->getVisitorRole($this->getFixtureReference('user/ws_creator')->getPersonalWorkspace())->getId())));
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -132,7 +135,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->loadUserFixture(array('ws_creator'));
         $this->loadWorkspaceFixture(array('ws_a'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $crawler = $this->client->request('POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $this->getFixtureReference('workspace/ws_a')->getVisitorRole()->getId()))
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $crawler = $this->client->request('POST', "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/tools/user/{$this->getFixtureReference('user/ws_creator')->getId()}", array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')->getVisitorRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
@@ -142,8 +146,9 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $crawler = $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}", array('form' => array('role' => $pwu->getVisitorRole()->getId()))
+        $crawler = $this->client->request('POST', "/workspaces/{$pwu->getId()}/tools/user/{$this->getFixtureReference('user/user')->getId()}", array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')->getVisitorRole($pwu)->getId()))
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
