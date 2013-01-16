@@ -33,42 +33,36 @@ class LayoutController extends Controller
 
     /**
      * Displays the platform top bar. Its content depends on the user status
-     * (anonymous/connected, profile, etc.) and the platform options (e.g. self-
+     * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
      * registration allowed/prohibited).
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function topBarAction()
     {
-        $connected = false;
+        $isLogged = false;
+        $hasNewMsg = false;
         $username = null;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $alertMsg = false;
 
         $user = $this->container->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $wsRepo = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
         if ($user instanceof User) {
-            $connected = true;
-            $username = $user->getFirstName() . ' ' . $user->getLastName();
-            $workspaces = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
-                ->getAllWsOfUser($user);
-            $personalWs = $user->getPersonalWorkspace();
-            $unreadMessages = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('Claroline\CoreBundle\Entity\Message')
+            $isLogged = true;
+            $unreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
                 ->getUnreadMessages($user);
-
-            (count($unreadMessages) == 0) ? $alertMsg = false: $alertMsg = true;
-
+            $hasNewMsg = count($unreadMessages) !== 0;
+            $username = $user->getFirstName() . ' ' . $user->getLastName();
+            $workspaces = $wsRepo->getAllWsOfUser($user);
+            $personalWs = $user->getPersonalWorkspace();
         } else {
-
-            $workspaces = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
-                ->getVisibleWorkspaceForAnonymous();
-            
+            $username = $this->get('translator')->trans('anonymous', array(), 'platform');
+            $workspaces = $wsRepo->getVisibleWorkspaceForAnonymous();
             $configHandler = $this->get('claroline.config.platform_config_handler');
 
             if (true === $configHandler->getParameter('allow_self_registration')) {
@@ -79,17 +73,16 @@ class LayoutController extends Controller
             $loginTarget = 'claro_desktop_index';
         }
 
-
         return $this->render(
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
-                'connected' => $connected,
+                'isLogged' => $isLogged,
+                'hasNewMsg' => $hasNewMsg,
                 'username' => $username,
                 'register_target' => $registerTarget,
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
-                'personalWs' => $personalWs,
-                'alertMsg' => $alertMsg
+                'personalWs' => $personalWs
             )
         );
     }
