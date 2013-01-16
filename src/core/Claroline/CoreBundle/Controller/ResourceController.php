@@ -27,7 +27,7 @@ class ResourceController extends Controller
     /**
      * Renders the creation form for a given resource type.
      *
-     * @param string  $resourceType
+     * @param string $resourceType the resource type
      *
      * @return Response
      */
@@ -43,8 +43,8 @@ class ResourceController extends Controller
     /**
      * Creates a resource
      *
-     * @param string  $resourceType
-     * @param integer $parentId
+     * @param string  $resourceType the resource type
+     * @param integer $parentId     the parent id
      *
      * @return Response
      */
@@ -79,6 +79,17 @@ class ResourceController extends Controller
         return $response;
     }
 
+    /**
+     * Open a resource.
+     *
+     * @param integer $resourceId  the resource id
+     * @param string $resourceType the resource type
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
+     * @throws \Exception
+     */
     public function openAction($resourceId, $resourceType)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -111,6 +122,7 @@ class ResourceController extends Controller
 
     /**
      * Removes a many resources from a workspace.
+     * Takes an array of ids as parameters (query string: "ids[]=1&ids[]=2" ...).
      *
      * @return Response
      */
@@ -142,7 +154,7 @@ class ResourceController extends Controller
     /**
      * Displays the form allowing to rename a resource.
      *
-     * @param integer $resourceId
+     * @param integer $resourceId the resource id
      *
      * @return Response
      */
@@ -170,7 +182,7 @@ class ResourceController extends Controller
     /**
      * Renames a resource.
      *
-     * @param integer $resourceId
+     * @param integer $resourceId the resource id
      *
      * @return Response
      */
@@ -208,7 +220,7 @@ class ResourceController extends Controller
     /**
      * Display the resource properties form.
      *
-     * @param integer $resourceId
+     * @param integer $resourceId the resource id
      *
      * @return Response
      */
@@ -234,9 +246,9 @@ class ResourceController extends Controller
     }
 
     /**
-     * Changes the resource properties
+     * Changes the resource properties.
      *
-     * @param integer $resourceId
+     * @param integer $resourceId the resource id
      *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -297,7 +309,7 @@ class ResourceController extends Controller
 
     /**
      * Moves many resource (changes their parents).
-     * This function takes an array of parameters which are the ids of the moved resources.
+     * This function takes an array of parameters which are the ids of the moved resources (query string: "ids[]=1&ids[]=2" ...).
      *
      * @return Response
      */
@@ -354,9 +366,9 @@ class ResourceController extends Controller
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
-     * @param string $resourceType
-     * @param string $action
-     * @param integer $instanceId
+     * @param string $resourceType the resource type
+     * @param string $action       the action
+     * @param integer $resourceId  the resourceId
      *
      * @return Response
      */
@@ -388,7 +400,8 @@ class ResourceController extends Controller
     }
 
     /**
-     * This function takes an array of parameters. Theses parameters are the ids of the resources which are going to be downloaded.
+     * This function takes an array of parameters.
+     * Theses parameters are the ids of the resources which are going to be downloaded (query string: "ids[]=1&ids[]=2" ...).
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -429,7 +442,8 @@ class ResourceController extends Controller
     /**
      * Returns a json representation of the root resource of a workspace.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function rootAction($workspaceId)
@@ -454,8 +468,10 @@ class ResourceController extends Controller
      * If the directory id is a shortcut id, the directory targeted by the shortcut
      * is returned.
      *
-     * @param integer $directoryId
+     * @param integer $directoryId the directory id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws Exception if the id doesnt't match any existing directory
      */
     public function openDirectoryAction($directoryId)
@@ -507,8 +523,9 @@ class ResourceController extends Controller
 
     /**
      * Adds multiple resource resource to a workspace.
+     * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
-     * @param integer $resourceDestinationId
+     * @param integer $resourceDestinationId the new parent id.
      *
      * @return Response
      */
@@ -553,6 +570,7 @@ class ResourceController extends Controller
      * Returns a json representation of a resource search result.
      *
      * @param integer $directoryId The id of the directory from which the search was started
+     *
      * @return Response
      */
     public function filterAction($directoryId)
@@ -597,7 +615,15 @@ class ResourceController extends Controller
         return $response;
     }
 
-    //todo doc
+    /**
+     * Create (many) shortcuts.
+     * Takes an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
+     *
+     * @param $newParentId the shortcut parent id
+     *
+     * @return Response
+     */
+
     public function createShortcutAction($newParentId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -637,6 +663,15 @@ class ResourceController extends Controller
         return $response;
     }
 
+    /**
+     * Display the resource rights form.
+     *
+     * @param integer $resourceId the resource id
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
+     */
     public function rightFormAction($resourceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -662,6 +697,17 @@ class ResourceController extends Controller
         );
     }
 
+    /**
+     * Display the resource rights creation form. This is only usefull for directories.
+     * It'll show the different resource types already registered.
+     *
+     * @param integer $resourceId the resource id
+     * @param integer $roleId     the role for which the form is displayed
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
+     */
     public function rightCreationFormAction($resourceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -682,6 +728,15 @@ class ResourceController extends Controller
         );
     }
 
+    /**
+     * Handles the submission of the resource rights creation Form
+     * @param type $resourceId the resource id
+     * @param type $roleId     the role for which the form is displayed
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws AccessDeniedException
+     */
     public function editCreationRightsAction($resourceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -741,6 +796,15 @@ class ResourceController extends Controller
         return $response;
     }
 
+    /**
+     * Handles  the submission of the resource rights form
+     *
+     * @param type $resourceId the resource id
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     *
+     * @throws AccessDeniedException
+     */
     public function editRightsAction($resourceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -792,11 +856,17 @@ class ResourceController extends Controller
 
         $em->flush();
 
-        $json = $resource;
+//      It could send the new rights to the manager.js
+//        $json = $resource;
 
         return new Response('success');
     }
 
+    /**
+     * Removes the icon of a resource from the web/thumbnails folder.
+     *
+     * @param AbstractResource $resource the resource
+     */
     private function removeOldIcon($resource)
     {
         $icon = $resource->getIcon();
