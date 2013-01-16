@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Security\RightsManager;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Translation\Translator;
@@ -14,14 +14,14 @@ class WorkspaceVoter implements VoterInterface
     private $em;
     private $translator;
     private $validAttributes;
-    private $rm;
+    private $ut;
 
-    public function __construct(EntityManager $em, Translator $translator, RightsManager $rm)
+    public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;
         $this->translator = $translator;
         $this->validAttributes = array('VIEW', 'EDIT', 'DELETE', 'MANAGE');
-        $this->rm = $rm;
+        $this->ut = $ut;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -58,7 +58,7 @@ class WorkspaceVoter implements VoterInterface
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
 
-        $rights = $this->em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->getRights($this->rm->getRoles($token), $workspace);
+        $rights = $this->em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->getRights($this->ut->getRoles($token), $workspace);
         $permission = 'can'.ucfirst(strtolower($action));
 
         return $rights[$permission];

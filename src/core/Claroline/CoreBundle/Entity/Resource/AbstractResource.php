@@ -406,7 +406,9 @@ abstract class AbstractResource
 
     /**
      * Convert a path for display: remove ids.
-     * @param type $path
+     *
+     * @param string $path
+     *
      * @return string
      */
     public static function convertPathForDisplay($path)

@@ -4,19 +4,19 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Library\Security\RightsManager;
+use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class Converter
 {
     /* @var EntityManager */
     private $em;
-    private $rm;
+    private $ut;
 
-    public function __construct(EntityManager $em, RightsManager $rm)
+    public function __construct(EntityManager $em, SecurityUtilities $ut)
     {
         $this->em = $em;
-        $this->rm = $rm;
+        $this->ut = $ut;
     }
 
     public function toArray(AbstractResource $resource, TokenInterface $token)
@@ -33,7 +33,8 @@ class Converter
 
         $isAdmin = false;
 
-        $roles = $this->rm->getRoles($token);
+        $roles = $this->ut->getRoles($token);
+
         foreach($roles as $role){
             if($role === 'ROLE_ADMIN'){
                 $isAdmin = true;

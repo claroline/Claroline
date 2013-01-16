@@ -59,6 +59,6 @@ services:
             - "@claroline.security.right_manager"
 
     claroline.security.utilities:
-        class: Claroline\CoreBundle\Library\Security\RightsManager
+        class: Claroline\CoreBundle\Library\Security\Utilities
         arguments:
           - "@doctrine.orm.entity_manager"
