@@ -252,7 +252,6 @@ class MessageController extends Controller
      */
     public function deleteFromUserAction()
     {
-        throw new \Exception('message removed');
         $params = $this->get('request')->query->all();
 
         if (isset($params['ids'])){
@@ -376,7 +375,7 @@ class MessageController extends Controller
      *
      * @param integer $userMessageId the userMessage id (when you send a message, a UserMessage is created for
      * every users the message was sent. It contains a few attributes including the "asRead" one.
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function markAsReadAction($userMessageId){
