@@ -102,6 +102,7 @@ my_workspace: Mon espace de travail
 my_workspaces: Mes espaces d'activités
 manager: Gestionnaire
 name: Nom
+new_message_alert: Vous avez %count% nouveaux message(s)
 no_search_results: Votre recherche n'a retourné aucun résultat.
 note: Note
 object: Objet
