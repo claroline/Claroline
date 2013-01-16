@@ -96,7 +96,7 @@ class MessageControllerTest extends FunctionalTestCase
         $this->loadUserFixture(array('user', 'admin'));
         $this->loadFixture(new LoadMessagesData(array('to' => 'user'), 1));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertEquals(1, count($crawler->filter('.alert-envelope')));
+        $this->assertEquals(1, count($crawler->filter('.icon-new-msg')));
     }
 
     public function testShowMessageMarkAsRead()

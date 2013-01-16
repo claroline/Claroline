@@ -36,11 +36,6 @@ class WorkspaceRights
     protected $canView;
 
     /**
-     * @ORM\Column(type="boolean", name="can_manage")
-     */
-    protected $canManage;
-
-    /**
      * @ORM\Column(type="boolean", name="can_edit")
      */
     protected $canEdit;
@@ -88,16 +83,6 @@ class WorkspaceRights
     public function setCanView($boolean)
     {
         $this->canView = $boolean;
-    }
-
-    public function canManage()
-    {
-        return $this->canManage;
-    }
-
-    public function setCanManage($boolean)
-    {
-        $this->canManage = $boolean;
     }
 
     public function canDelete()
@@ -157,7 +142,6 @@ class WorkspaceRights
     {
         return array(
             'canView' => $this->canView,
-            'canManage' => $this->canManage,
             'canEdit' => $this->canEdit,
             'canDelete' => $this->canDelete
         );
