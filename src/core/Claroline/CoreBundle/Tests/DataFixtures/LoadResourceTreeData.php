@@ -144,7 +144,7 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $dir->setName($name);
         $dir->setParent($parent);
         $dir->setWorkspace($this->workspace);
-        $dir = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($dir, $this->dirType);
+        $dir = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($dir);
         $em->persist($dir);
 
         return $dir;
@@ -160,7 +160,7 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $file->setHashName($hash);
         $file->setSize(0);
         $file->setMimeType($mimeType);
-        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, $mimeType, true);
+        $file = $this->getContainer()->get('claroline.resource.icon_creator')->setResourceIcon($file, true);
         $file->setName($name);
         $file->setParent($parent);
         $file->setWorkspace($this->workspace);
