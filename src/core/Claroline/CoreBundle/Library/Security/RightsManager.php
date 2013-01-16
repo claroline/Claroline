@@ -40,7 +40,7 @@ class RightsManager
     {
         if(!in_array($typeOfRight, $this->expectedTypeOfRight)){
             throw new \Exception('Wrong type of right specified on setRightRequest for the RightsManager.
-                Expected values are "workspace", "resource" ("'.$typeOfRight.'" is inccorect).');
+                Expected values are "workspace", "resource" ("'.$typeOfRight.'" is incorect).');
         }
 
         $configs = array();

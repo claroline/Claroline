@@ -364,7 +364,7 @@ class WorkspaceUserController extends Controller
      * Most dql request required by this controller are paginated.
      * This function transform the results of the repository in an array.
      *
-     * @param type $paginator the return value of the Repository using a paginator.
+     * @param Paginator $paginator the return value of the Repository using a paginator.
      *
      * @return array.
      */
