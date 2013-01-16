@@ -19,9 +19,9 @@ class WorkspaceUserController extends Controller
     const NUMBER_USER_PER_ITERATION = 25;
 
     /**
-     * Renders the users management page with its layout
+     * Renders the users management page with its layout.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
@@ -37,7 +37,7 @@ class WorkspaceUserController extends Controller
     /**
      * Renders the unregistered user list layout for a workspace.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
@@ -56,7 +56,8 @@ class WorkspaceUserController extends Controller
      * Renders the user parameter page with its layout and
      * edit the user parameters for the selected workspace.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
+     * @param integer $userId     the user id
      *
      * @return Response
      */
@@ -113,12 +114,12 @@ class WorkspaceUserController extends Controller
     }
 
     /**
-     * Renders a list of registered users for a workspace.
-     * It'll search every users whose username, firstname or lastname match $search.
+     * Returns a partial json representation of the registered users of a workspace.
+     * It'll search every users whose name match $search.
      *
-     * @param string $search
-     * @param integer $workspaceId
-     * @param string $format
+     * @param string  $search      the search string
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -140,12 +141,12 @@ class WorkspaceUserController extends Controller
 
 
     /**
-     * Renders a list of unregistered users for a workspace.
-     * It'll search every users whose username or lastname or firstname match $search.
+     * Returns a partial json representation of the unregistered users of a workspace.
+     * It'll search every users whose name match $search.
      *
-     * @param string $search
-     * @param integer $workspaceId
-     * @param string $format
+     * @param string  $search      the search string
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -167,15 +168,17 @@ class WorkspaceUserController extends Controller
 
     /**
      * Adds many users to a workspace.
-     * It should be used with ajax and a list of userIds as parameter.
+     * It uses a query string of userIds as parameter (userIds[]=1&userIds[]=2)
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
-    //todo: detach($user)
-    //todo: flush outsite the loop
-    //todo: check is the user isn't already registered
+
+    //TODO: detach($user)
+    //TODO: flush outsite the loop
+    //TODO: check is the user isn't already registered
+    //TODO: change the userIds into ids
     public function addUsersAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
@@ -203,10 +206,10 @@ class WorkspaceUserController extends Controller
     }
 
     /**
-     * Renders a list of registered users for a workspace
+     * Returns a partial json representation of the registered users of a workspace.
      *
-     * @param integer $workspaceId
-     * @param integer $page
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -227,14 +230,10 @@ class WorkspaceUserController extends Controller
     }
 
     /**
-     * Renders a list of unregistered users for a workspace.
-     * if page = 1, it'll render users 1-25
-     * if page = 2, it'll render users 26-50
-     * if page = 3, it'll render users 51-75
-     * ...
+     * Returns a partial json representation of the unregistered users of a workspace.
      *
-     * @param integer $workspaceId
-     * @param integer $offset
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -255,14 +254,14 @@ class WorkspaceUserController extends Controller
     }
 
     /**
-     * Removes many users from a workspace. ( ?0=1&1=2... )
-     * If it was requested through ajax, it will respond "success".
-     * otherwise it'll redirect to the workspace list for a user.
+     * Removes many users from a workspace.
+     * It uses a query string of groupIds as parameter (userIds[]=1&userIds[]=2)
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
+    //TODO: change userIds into ids
     public function removeUsersAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -292,6 +291,17 @@ class WorkspaceUserController extends Controller
     /* PRIVATE METHODS */
     /*******************/
 
+     /**
+     * Checks if the role manager of the user can be changed.
+     * There should be awlays at least one manager of a workspace.
+     *
+     * @param array $parameters "$this->get('request')->query->all();" because I was lazy.
+     * In other word an array wich must contains ['userIds'] wich is an array of group ids.
+     * @param AbstractWorkspace $workspace the relevant workspace
+     *
+     * @throws LogicException
+     */
+    //TODO: change the $parameters parameter.
     private function checkRemoveManagerRoleIsValid($parameters, $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -321,6 +331,13 @@ class WorkspaceUserController extends Controller
         }
     }
 
+    /**
+     * Checks if the current user can see a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @throws AccessDeniedHttpException
+     */
     private function checkRegistration($workspace)
     {
         if(!$this->get('security.context')->isGranted('VIEW', $workspace))
@@ -329,6 +346,13 @@ class WorkspaceUserController extends Controller
         }
     }
 
+    /**
+     * Checks if the current user is the admin of a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @throws AccessDeniedHttpException
+     */
     private function checkIfAdmin($workspace)
     {
         if (!$this->get('security.context')->isGranted($this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getName())) {
@@ -336,6 +360,14 @@ class WorkspaceUserController extends Controller
         }
     }
 
+    /**
+     * Most dql request required by this controller are paginated.
+     * This function transform the results of the repository in an array.
+     *
+     * @param Paginator $paginator the return value of the Repository using a paginator.
+     *
+     * @return array.
+     */
     private function paginatorToArray($paginator)
     {
         $items = array();

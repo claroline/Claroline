@@ -10,7 +10,7 @@ class AdministrationWidgetController extends Controller
 {
 
     /**
-     *  Display the list of widget options for the administrator
+     * Display the list of widget options for the administrator
      *
      * @return Response
      */
@@ -40,6 +40,15 @@ class AdministrationWidgetController extends Controller
         return new Response('success', 204);
     }
 
+    /**
+     * Asks a widget to render its configuration form for a workspace.
+     *
+     * @param type $widgetId the widget id.
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
     public function configureWorkspaceWidgetAction($widgetId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -54,6 +63,15 @@ class AdministrationWidgetController extends Controller
         }
     }
 
+    /**
+     * Asks a widget to render its configuration form for a workspace.
+     *
+     * @param type $widgetId the widget id.
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
     public function configureDesktopWidgetAction($widgetId)
     {
         $em = $this->get('doctrine.orm.entity_manager');

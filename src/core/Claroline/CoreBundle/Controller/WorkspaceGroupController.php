@@ -13,10 +13,11 @@ class WorkspaceGroupController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_GROUP_PER_ITERATION = 25;
+
     /**
-     * Renders the groups management page with its layout
+     * Renders the groups management page with its layout.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
@@ -35,7 +36,8 @@ class WorkspaceGroupController extends Controller
      * Renders the group parameter page with its layout and
      * edit the group parameters for the selected workspace.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
+     * @param integer $groupId the group id
      *
      * @return Response
      */
@@ -71,7 +73,7 @@ class WorkspaceGroupController extends Controller
             //cannot bind request: why ?
             $newRole = $em->getRepository('ClarolineCoreBundle:Role')->find($parameters['form']['role']);
 
-            //verifications: his role cannot be changed
+            //verifications: can we change his role.
             if ($newRole->getId() != $em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getId()){
                 $groupIds = array($group->getId());
                 $parameters['groupIds'] = $groupIds;
@@ -95,7 +97,7 @@ class WorkspaceGroupController extends Controller
     /**
      * Renders the unregistered group list layout for a workspace.
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId workspace id
      *
      * @return Response
      */
@@ -111,12 +113,14 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Removes many groups from a workspace. ( ?0=1&1=2... )
+     * Removes many groups from a workspace.
+     * It uses a query string of groupIds as parameter (groupIds[]=1&groupIds[]=2)
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
+    //TODO: change groupsId into ids
     public function removeGroupsAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -143,14 +147,10 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Renders a list of unregistered groups for a workspace
-     * if page = 1, it'll render groups 1-10
-     * if page = 2, it'll render groups 11-20
-     * if page = 3, it'll render groups 21-30
-     * ...
+     * Returns a partial json representation of the unregistered groups of a workspace.
      *
-     * @param integer $workspaceId
-     * @param integer $page
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -169,10 +169,10 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Renders a list of registered groups for a workspace
+     * Returns a partial json representation of the registered groups of a workspace.
      *
-     * @param integer $workspaceId
-     * @param integer $page
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -189,14 +189,16 @@ class WorkspaceGroupController extends Controller
 
         return $response;
     }
+
     /**
      * Adds many groups to a workspace.
-     * It should be used with ajax and a list of grouppIds as parameter.
+     * It uses a query string of groupIds as parameter (groupIds[]=1&groupIds[]=2)
      *
-     * @param integer $workspaceId
+     * @param integer $workspaceId the workspace id
      *
      * @return Response
      */
+    //TODO: change groupsId into ids
     public function addGroupsAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
@@ -221,12 +223,12 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Renders a list of unregistered groups for a workspace.
+     * Returns a partial json representation of the unregistered groups of a workspace.
      * It'll search every groups whose name match $search.
      *
-     * @param string $search
-     * @param integer $workspaceId
-     * @param string $format
+     * @param string  $search      the search string
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -245,12 +247,12 @@ class WorkspaceGroupController extends Controller
     }
 
     /**
-     * Renders a list of registered groups for a workspace.
+     * Returns a partial json representation of the registered groups of a workspace.
      * It'll search every groups whose name match $search.
      *
-     * @param string $search
-     * @param integer $workspaceId
-     * @param string $format
+     * @param string  $search      the search string
+     * @param integer $workspaceId the workspace id
+     * @param integer $offset      the offset
      *
      * @return Response
      */
@@ -272,6 +274,17 @@ class WorkspaceGroupController extends Controller
     /* PRIVATE METHODS */
     /*******************/
 
+    /**
+     * Checks if the role manager of the group can be changed.
+     * There should be awlays at least one manager of a workspace.
+     *
+     * @param array $parameters "$this->get('request')->query->all();" because I was lazy.
+     * In other word an array wich must contains ['groupIds'] wich is an array of group ids.
+     * @param AbstractWorkspace $workspace the relevant workspace
+     *
+     * @throws LogicException
+     */
+    //TODO: change the $parameters parameter.
     private function checkRemoveManagerRoleIsValid($parameters, $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -297,6 +310,13 @@ class WorkspaceGroupController extends Controller
         }
     }
 
+    /**
+     * Checks if the current user can see a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @throws AccessDeniedHttpException
+     */
     private function checkRegistration($workspace)
     {
         if(!$this->get('security.context')->isGranted('VIEW', $workspace))
@@ -305,6 +325,13 @@ class WorkspaceGroupController extends Controller
         }
     }
 
+    /**
+     * Checks if the current user is the admin of a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @throws AccessDeniedHttpException
+     */
     private function checkIfAdmin($workspace)
     {
         if (!$this->get('security.context')->isGranted($this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getName())) {
@@ -312,9 +339,16 @@ class WorkspaceGroupController extends Controller
         }
     }
 
+    /**
+     * Most dql request required by this controller are paginated.
+     * This function transform the results of the repository in an array.
+     *
+     * @param Paginator $paginator the return value of the Repository using a paginator.
+     *
+     * @return array.
+     */
     private function paginatorToArray($paginator)
     {
-
         $items = array();
 
         foreach($paginator as $item){

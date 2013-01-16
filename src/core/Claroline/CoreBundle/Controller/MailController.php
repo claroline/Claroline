@@ -7,6 +7,13 @@ use Claroline\CoreBundle\Form\MailType;
 
 class MailController extends Controller
 {
+    /**
+     * Display the mail form.
+     *
+     * @param integer $userId
+     *
+     * @return Response
+     */
     public function formAction($userId)
     {
         $form = $this->createForm(new MailType());
@@ -17,6 +24,13 @@ class MailController extends Controller
         );
     }
 
+    /**
+     * Handles the mail form submission (sends a mail).
+     *
+     * @param integer $userId
+     *
+     * @return Response
+     */
     public function sendAction($userId)
     {
         $request = $this->get('request');

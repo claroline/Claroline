@@ -12,6 +12,15 @@ class MessageController extends Controller
 {
     const MESSAGE_PER_PAGE = 20;
 
+    /**
+     * Displays the message form. It'll be sent to every user of a group.
+     * In order to do this, this methods redirects to the form creation controller
+     * with a query string including every users of the group.
+     *
+     * @param integer $groupId
+     *
+     * @return Response
+     */
     public function formForGroupAction($groupId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -33,6 +42,14 @@ class MessageController extends Controller
         return $this->redirect($this->generateUrl('claro_message_form').$urlParameters);
     }
 
+    /**
+     * Display the message form.
+     * It takes a array of user ids (query string: ids[]=1&ids[]=2).
+     * The "to" field of the form must be completed in the following way: username1; username2; username3
+     * (the separator is ; and it requires the username).
+     *
+     * @return Response
+     */
     public function formAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -55,6 +72,14 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Handles the message form submission.
+     *
+     * @param integer $parentId the parent message (in a discussion, you can answer to a message wich is the parent).
+     * The entity Message is a nested tree. By default (no parent) $parentId = 0 (defined in the message.yml file).
+     *
+     * @return Response
+     */
     public function sendAction($parentId)
     {
         $user = $this->get('security.context')->getToken()->getUser();
@@ -107,6 +132,11 @@ class MessageController extends Controller
          }
     }
 
+    /**
+     * Displays the layout of the received message list.
+     *
+     * @return Response
+     */
     public function listReceivedLayoutAction()
     {
         return $this->render(
@@ -114,6 +144,11 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Displays the layout of the sent message list.
+     *
+     * @return Response
+     */
     public function listSentLayoutAction()
     {
         return $this->render(
@@ -121,6 +156,14 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Display a partial list of received message for the current user.
+     * This method is called with ajax and append the result in the layout.
+     *
+     * @param offset the offset
+     *
+     * @return Response
+     */
     public function listReceivedAction($offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -132,6 +175,14 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Display a partial list of sent message for the current user.
+     * This method is called with ajax and append the result in the layout.
+     *
+     * @param offset the offset
+     *
+     * @return Response
+     */
     public function listSentAction($offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -143,6 +194,11 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Displays the layout of the removed message list.
+     *
+     * @return Response
+     */
     public function listRemovedLayoutAction()
     {
         return $this->render(
@@ -150,6 +206,13 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Display a message.
+     *
+     * @param integer $messageId the message id
+     *
+     * @return Response
+     */
     public function showAction($messageId)
     {
 
@@ -181,6 +244,12 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Delete a message from the sent message list (soft delete).
+     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteFromUserAction()
     {
         $params = $this->get('request')->query->all();
@@ -198,6 +267,12 @@ class MessageController extends Controller
         return new Response('success', 204);
     }
 
+    /**
+     * Delete a message from the received message list (soft delete).
+     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteToUserAction()
     {
         $params = $this->get('request')->query->all();
@@ -215,6 +290,15 @@ class MessageController extends Controller
         return new Response('success', 204);
     }
 
+    /**
+     * Display a partial list of received message for the current user.
+     * This method is called with ajax and append the result in the layout.
+     *
+     * @param string  $search the search string (will search the object or the username)
+     * @param integer $offset the offset
+     *
+     * @return Response
+     */
     public function listSearchReceivedAction($search, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -225,6 +309,16 @@ class MessageController extends Controller
             'ClarolineCoreBundle:Message:list_user_message.html.twig', array('userMessages' => $userMessages)
         );
     }
+
+    /**
+     * Display a partial list of sent message for the current user.
+     * This method is called with ajax and append the result in the layout.
+     *
+     * @param string  $search the search string (will search the object or the username)
+     * @param integer $offset the offset
+     *
+     * @return Response
+     */
 
     public function listSearchSentAction($search, $offset)
     {
@@ -237,6 +331,14 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Display a partial list of removed message for the current user.
+     * This method is called with ajax and append the result in the layout.
+     *
+     * @param offset the offset
+     *
+     * @return Response
+     */
     public function listRemovedAction($offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -248,6 +350,15 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Display a partial list of removed message for the current user.
+     * This method is called with ajax and append the result in the layout.
+     *
+     * @param string  $search the search string (will search the object or the username)
+     * @param integer $offset the offset
+     *
+     * @return Response
+     */
     public function listRemovedSearchAction($search, $offset)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -259,6 +370,14 @@ class MessageController extends Controller
         );
     }
 
+    /**
+     * Marks a message as read.
+     *
+     * @param integer $userMessageId the userMessage id (when you send a message, a UserMessage is created for
+     * every users the message was sent. It contains a few attributes including the "asRead" one.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function markAsReadAction($userMessageId){
 
         $em = $this->get('doctrine.orm.entity_manager');
