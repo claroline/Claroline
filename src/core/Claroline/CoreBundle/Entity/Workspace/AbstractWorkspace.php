@@ -21,6 +21,14 @@ use JMS\SerializerBundle\Annotation\Type;
  */
 abstract class AbstractWorkspace
 {
+    const PERSONNAL = 0;
+    const STANDARD = 1;
+
+    protected static $visitorPrefix = 'ROLE_WS_VISITOR';
+    protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
+    protected static $managerPrefix = 'ROLE_WS_MANAGER';
+    protected static $customPrefix = 'ROLE_WS_CUSTOM';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -53,8 +61,8 @@ abstract class AbstractWorkspace
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="workspace")
      */
-
     protected $resources;
+    
     /**
      * @ORM\OneToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
@@ -62,9 +70,15 @@ abstract class AbstractWorkspace
      * )
      */
     protected $rights;
-
-    const PERSONNAL = 0;
-    const STANDARD = 1;
+    
+    /**
+     * @ORM\OneToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\Workspace\Event",
+     *  mappedBy="workspace",
+     *  cascade={"persist"}
+     * )
+     */
+    protected $events;
 
     public function __construct()
     {
@@ -97,6 +111,11 @@ abstract class AbstractWorkspace
     public function isPublic()
     {
         return $this->isPublic;
+    }
+    
+    public function getEvents()
+    {
+        return $this->events;
     }
 
     public function getResources()
