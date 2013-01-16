@@ -263,15 +263,13 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertTrue($seeToTrue->isEquals(array(
             'canView' => true,
             'canDelete' => false,
-            'canEdit' => false,
-            'canManage' => false,
+            'canEdit' => false
         )));
 
         $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
             'canView' => true,
             'canDelete' => true,
-            'canEdit' => false,
-            'canManage' => false
+            'canEdit' => false
         )));
     }
 

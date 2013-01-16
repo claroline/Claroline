@@ -624,7 +624,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('role_id', 'integer');
         $table->addColumn('can_view', 'boolean');
-        $table->addColumn('can_manage', 'boolean');
         $table->addColumn('can_edit', 'boolean');
         $table->addColumn('can_delete', 'boolean');
 
