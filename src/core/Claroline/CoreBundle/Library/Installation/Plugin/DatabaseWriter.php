@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
@@ -63,9 +62,10 @@ class DatabaseWriter
         $pluginEntity->setBundleName($plugin->getBundleName());
         $pluginEntity->setHasOptions($pluginConfiguration['has_options']);
 
-        if (isset($pluginConfiguration['icon'])){
+        if (isset($pluginConfiguration['icon'])) {
             $ds = DIRECTORY_SEPARATOR;
-            $pluginEntity->setIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$pluginConfiguration['icon']}");
+            $iconWebDir = "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons";
+            $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
         } else {
             $defaultIcon = $this->em
                 ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
@@ -144,7 +144,7 @@ class DatabaseWriter
             $this->persistResourceTypes($resource, $pluginEntity, $plugin);
         }
 
-        foreach ($processedConfiguration['widgets'] as $widget){
+        foreach ($processedConfiguration['widgets'] as $widget) {
             $this->persistWidget($widget, $pluginEntity, $plugin);
         }
     }
@@ -169,9 +169,14 @@ class DatabaseWriter
             $webPluginImgDir = "{$webPluginDir}{$ds}images";
             $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
             $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
-            $this->fileSystem->copy("{$plugin->getImgFolder()}{$ds}{$resource['icon']}", "{$webPluginIcoDir}{$ds}{$resource['icon']}");
+            $this->fileSystem->copy(
+                "{$plugin->getImgFolder()}{$ds}{$resource['icon']}",
+                "{$webPluginIcoDir}{$ds}{$resource['icon']}"
+            );
             $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
-            $resourceIcon->setRelativeUrl("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}");
+            $resourceIcon->setRelativeUrl(
+                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}"
+            );
         } else {
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
@@ -200,9 +205,10 @@ class DatabaseWriter
         $resourceType->setVisible($resource['is_visible']);
         $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setPlugin($pluginEntity);
-        $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array ('class' => $resource['class']));
+        $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneBy(array('class' => $resource['class']));
 
-        if (null == $resourceClass){
+        if (null === $resourceClass) {
             $resourceType->setClass($resource['class']);
         } else {
             $resourceType->setParent($resourceClass);
@@ -225,11 +231,14 @@ class DatabaseWriter
         $widgetEntity->setPlugin($pluginEntity);
 
 
-        if(isset($widget['icon'])){
-            $widgetEntity->setIcon("bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widget['icon']}");
+        if (isset($widget['icon'])) {
+            $widgetEntity->setIcon(
+                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widget['icon']}"
+            );
         } else {
-            $defaultIcon = "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}res_default.png";
-            $widgetEntity->setIcon($defaultIcon);
+            $widgetEntity->setIcon(
+                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}res_default.png"
+            );
         }
 
         $this->em->persist($widgetEntity);
@@ -250,7 +259,6 @@ class DatabaseWriter
 
         $this->em->persist($wWidgetConfig);
         $this->em->persist($dWidgetConfig);
-
         $this->em->flush();
     }
 }

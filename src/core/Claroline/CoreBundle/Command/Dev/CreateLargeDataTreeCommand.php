@@ -14,7 +14,6 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
  */
 class CreateLargeDataTreeCommand extends ContainerAwareCommand
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -24,12 +23,28 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('claroline:datatree:create')
-            ->setDescription('Creates a new data tree of resource instances. For better perfs, launch with --env=prod.');
+            ->setDescription('Creates a tree of resources. For better perfs, launch with --env=prod.');
         $this->setDefinition(array(
-            new InputArgument('username', InputArgument::REQUIRED, 'The user creating the tree'),
-            new InputArgument('depth', InputArgument::REQUIRED, 'The number of level'),
-            new InputArgument('directory_count', InputArgument::REQUIRED, 'The number of directories per level (min 1)'),
-            new InputArgument('file_count', InputArgument::REQUIRED, 'The number of files per level'),
+            new InputArgument(
+                'username',
+                InputArgument::REQUIRED,
+                'The user creating the tree'
+            ),
+            new InputArgument(
+                'depth',
+                InputArgument::REQUIRED,
+                'The number of levels'
+            ),
+            new InputArgument(
+                'directory_count',
+                InputArgument::REQUIRED,
+                'The number of directories per level (min 1)'
+            ),
+            new InputArgument(
+                'file_count',
+                InputArgument::REQUIRED,
+                'The number of files per level'
+            ),
         ));
     }
 

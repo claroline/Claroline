@@ -18,7 +18,6 @@ class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder()
     {
-
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('config');
         $pluginSection = $rootNode->children('plugin');
@@ -34,7 +33,6 @@ class Configuration implements ConfigurationInterface
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $imgFolder = $plugin->getImgFolder();
-
         $ds = DIRECTORY_SEPARATOR;
 
         $pluginSection
@@ -42,7 +40,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('icon')
                 ->validate()
                     ->ifTrue(function($v) use ($plugin){
-                        return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isIconValid', array($v, $plugin));
+                        return !call_user_func_array(__CLASS__ . '::isIconValid', array($v, $plugin));
                     })
                     ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
                 ->end()
@@ -65,16 +63,23 @@ class Configuration implements ConfigurationInterface
                        ->scalarNode('class')
                             ->isRequired()
                                 ->validate()
-                                    ->ifTrue(function($v) {
-                                        return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isResourceLocationValid', array($v));
+                                    ->ifTrue(function ($v) {
+                                        return !call_user_func_array(
+                                            __CLASS__ . '::isResourceLocationValid', array($v)
+                                        );
                                     })
                                     ->thenInvalid($pluginFqcn . " : %s (declared in {$resourceFile}) was not found.")
                                 ->end()
                                 ->validate()
                                     ->ifTrue(function ($v) {
-                                        return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isAbstractResourceExtended', array($v));
+                                        return !call_user_func_array(
+                                            __CLASS__ . '::isAbstractResourceExtended', array($v)
+                                        );
                                     })
-                                    ->thenInvalid($pluginFqcn . " : %s (declared in {$resourceFile}) must extend  'Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource'.")
+                                    ->thenInvalid(
+                                        $pluginFqcn . " : %s (declared in {$resourceFile}) must extend  "
+                                        . "'Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource'."
+                                    )
                                 ->end()
                             ->end()
                        ->booleanNode('is_visible')->isRequired()->end()
@@ -82,7 +87,9 @@ class Configuration implements ConfigurationInterface
                        ->scalarNode('icon')
                            ->validate()
                                 ->ifTrue(function($v) use ($plugin) {
-                                    return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isResourceIconValid', array($v, $plugin));
+                                    return !call_user_func_array(
+                                        __CLASS__ . '::isResourceIconValid', array($v, $plugin)
+                                    );
                                 })
                                 ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}%s)")
                            ->end()
@@ -116,7 +123,9 @@ class Configuration implements ConfigurationInterface
                        ->scalarNode('icon')
                            ->validate()
                            ->ifTrue(function($v) use ($plugin){
-                               return !call_user_func_array('Claroline\CoreBundle\Library\Installation\Plugin\Configuration::isIconValid', array($v, $plugin));
+                               return !call_user_func_array(
+                                   __CLASS__ . '::isIconValid', array($v, $plugin)
+                               );
                            })
                            ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
                            ->end()
@@ -124,16 +133,12 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
-       ->end()->end();
+        ->end()->end();
     }
 
     public static function isResourceLocationValid($v)
     {
-        if (class_exists($v)) {
-            return true;
-        }
-
-        return false;
+        return class_exists($v);
     }
 
     public static function isAbstractResourceExtended($v)
@@ -141,9 +146,7 @@ class Configuration implements ConfigurationInterface
         if (class_exists($v)) {
             $classInstance = new $v;
 
-            if ($classInstance instanceof AbstractResource) {
-                return true;
-            }
+            return $classInstance instanceof AbstractResource;
         }
 
         return false;
@@ -155,12 +158,7 @@ class Configuration implements ConfigurationInterface
         $imgFolder = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . $ds . $v;
 
-        if (file_exists($expectedImgLocation)) {
-
-            return true;
-        }
-
-        return false;
+        return file_exists($expectedImgLocation);
     }
 
     public static function isSmallIconValid($v, $plugin)
@@ -169,11 +167,7 @@ class Configuration implements ConfigurationInterface
         $imgFolder = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . 'small' . $ds . $v;
 
-        if (file_exists($expectedImgLocation)) {
-            return true;
-        }
-
-        return false;
+        return file_exists($expectedImgLocation);
     }
 
     public static function isIconValid($v, $plugin)
@@ -182,10 +176,6 @@ class Configuration implements ConfigurationInterface
         $imgFolder = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder.$ds.$v;
 
-        if (file_exists($expectedImgLocation)){
-            return true;
-        }
-
-        return false;
+        return file_exists($expectedImgLocation);
     }
 }

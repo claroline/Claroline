@@ -48,7 +48,7 @@ abstract class AbstractRoleSubject
                 $this->roles->removeElement($storedRole);
 
                 // but keep parent role, if any
-                if($keepParent){
+                if ($keepParent) {
                     if (null !== $parentRole = $storedRole->getParent()) {
                         $this->roles->add($parentRole);
                     }
@@ -64,7 +64,7 @@ abstract class AbstractRoleSubject
                         $this->roles->removeElement($storedRole);
 
                         // but keep parent role, if any
-                        if($keepParent){
+                        if ($keepParent) {
                             if (null !== $ancestorRole = $parentRole->getParent()) {
                                 $this->roles->add($ancestorRole);
                             }

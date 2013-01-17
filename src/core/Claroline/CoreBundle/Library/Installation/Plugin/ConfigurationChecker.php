@@ -29,7 +29,7 @@ class ConfigurationChecker implements CheckerInterface
         $this->plugin = $plugin;
         $config = $this->yamlParser->parse($plugin->getConfigFile());
 
-        if (null == $config){
+        if (null == $config) {
             $error = new ValidationError('config.yml file missing');
             $errors = array($error);
 
@@ -42,8 +42,7 @@ class ConfigurationChecker implements CheckerInterface
         try {
             $processedConfiguration = $processor->processConfiguration($configuration, $config);
             $this->processedConfiguration = $processedConfiguration;
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $error = new ValidationError($e->getMessage());
             $errors = array($error);
 

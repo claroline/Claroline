@@ -57,12 +57,15 @@ class Plugin
 
     public function getBundleFQCN()
     {
-        return "{$this->getVendorName()}\\{$this->getBundleName()}\\{$this->getVendorName()}{$this->getBundleName()}";
+        $vendor = $this->getVendorName();
+        $bundle = $this->getBundleName();
+
+        return "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
     }
 
     public function getShortName()
     {
-       return $this->getVendorName() . str_replace('Bundle', '', $this->getBundleName());
+        return $this->getVendorName() . str_replace('Bundle', '', $this->getBundleName());
     }
 
     public function getVendorName()

@@ -89,29 +89,39 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *      targetEntity="Claroline\CoreBundle\Entity\Group",
      *      inversedBy="users"
      * )
-     * @ORM\JoinTable(name="claro_user_group",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_user_group",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $groups;
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role",
-     *      inversedBy="users"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="users"
      * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_user_role",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $roles;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      mappedBy="creator"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     mappedBy="creator"
      * )
      */
     protected $abstractResources;
@@ -130,8 +140,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\UserMessage",
-     *      mappedBy="user"
+     *     targetEntity="Claroline\CoreBundle\Entity\UserMessage",
+     *     mappedBy="user"
      * )
      */
     protected $userMessages;
@@ -231,7 +241,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         $roleNames = parent::getRoles();
 
-        if ($areGroupsIncluded){
+        if ($areGroupsIncluded) {
             foreach ($this->getGroups() as $group) {
                 $roleNames = array_unique(array_merge($roleNames, $group->getRoles()));
             }
@@ -243,7 +253,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function addRole(Role $role)
     {
         parent::addRole($role);
-        if ($role instanceof WorkspaceRole){
+        if ($role instanceof WorkspaceRole) {
             $role->addUser($this);
         }
     }
@@ -322,16 +332,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function serialize()
     {
-        return serialize(array(
-                $this->id,
-            ));
+        return serialize(array($this->id));
     }
 
     public function unserialize($serialized)
     {
-        list(
-            $this->id,
-            ) = unserialize($serialized);
+        $this->id = unserialize($serialized);
     }
 
     public function setPersonalWorkspace($workspace)
@@ -363,8 +369,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         $roles = $this->getOwnedRoles();
 
-        foreach ($roles as $role){
-            if($role->getRoleType() != Role::WS_ROLE){
+        foreach ($roles as $role) {
+            if ($role->getRoleType() != Role::WS_ROLE) {
                 return $role;
             }
         }
@@ -374,13 +380,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         $roles = $this->getOwnedRoles();
 
-        foreach ($roles as $role){
-            if($role->getRoleType() != Role::WS_ROLE){
+        foreach ($roles as $role) {
+            if ($role->getRoleType() != Role::WS_ROLE) {
                 $removedRole = $role;
             }
         }
 
-        if(isset($removedRole)){
+        if (isset($removedRole)) {
             $this->roles->removeElement($removedRole);
         }
 

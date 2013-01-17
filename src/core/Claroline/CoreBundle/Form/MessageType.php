@@ -14,10 +14,10 @@ class MessageType extends AbstractType
         $this->object = $object;
 
         if ($isFast) {
-            if($username == '' || $username == null){
+            if ($username == '' || $username == null) {
                 throw new \Exception('username required');
             }
-            if($object == '' || $object == null){
+            if ($object == '' || $object == null) {
                 throw new \Exception('object required');
             }
         }
@@ -25,16 +25,16 @@ class MessageType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$this->isFast){
-        $builder
-            ->add('to', 'text', array('data' => $this->username, 'required' => true))
-            ->add('object', 'text', array('data' => $this->object, 'required' => true))
-            ->add('content', 'textarea', array('required' => true));
+        if (!$this->isFast) {
+            $builder
+                ->add('to', 'text', array('data' => $this->username, 'required' => true))
+                ->add('object', 'text', array('data' => $this->object, 'required' => true))
+                ->add('content', 'textarea', array('required' => true));
         } else {
-        $builder
-            ->add('to', 'hidden', array('data' => $this->username, 'required' => true))
-            ->add('object', 'hidden', array('data' => $this->object, 'required' => true))
-            ->add('content', 'textarea', array('required' => true));
+            $builder
+                ->add('to', 'hidden', array('data' => $this->username, 'required' => true))
+                ->add('object', 'hidden', array('data' => $this->object, 'required' => true))
+                ->add('content', 'textarea', array('required' => true));
         }
     }
 
@@ -45,8 +45,8 @@ class MessageType extends AbstractType
 
     public function getDefaultOptions(array $options)
     {
-       return array(
-           'translation_domain' => 'platform'
-       );
+        return array(
+            'translation_domain' => 'platform'
+        );
     }
 }
