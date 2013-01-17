@@ -23,10 +23,16 @@ class CreateUsersCommand extends ContainerAwareCommand
             new InputArgument('amount', InputArgument::REQUIRED, 'The number of users created'),
         ));
         $this->addOption(
-            'ws_creator', 'wsc', InputOption::VALUE_NONE, "When set to true, created users will have the workspace creator role"
+            'ws_creator',
+            'wsc',
+            InputOption::VALUE_NONE,
+            'When set to true, created users will have the workspace creator role'
         );
         $this->addOption(
-            'admin', 'a', InputOption::VALUE_NONE, "When set to true, created users will have the admin role"
+            'admin',
+            'a',
+            InputOption::VALUE_NONE,
+            'When set to true, created users will have the admin role'
         );
     }
 

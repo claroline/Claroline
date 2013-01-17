@@ -33,7 +33,10 @@ class Message
     protected $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
@@ -51,8 +54,8 @@ class Message
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\UserMessage",
-     *      mappedBy="message"
+     *     targetEntity="Claroline\CoreBundle\Entity\UserMessage",
+     *     mappedBy="message"
      * )
      */
     protected $userMessages;
@@ -84,27 +87,29 @@ class Message
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Message",
-     *      inversedBy="children"
+     *     targetEntity="Claroline\CoreBundle\Entity\Message",
+     *     inversedBy="children"
      * )
      * @ORM\JoinColumn(
-     *      name="parent_id",
-     *      referencedColumnName="id",
-     *      onDelete="SET NULL"
+     *     name="parent_id",
+     *     referencedColumnName="id",
+     *     onDelete="SET NULL"
      * )
      */
     protected $parent;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
-     *      mappedBy="parent"
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     protected $children;
 
-    /** @Assert\NotBlank() */
+    /**
+     * @Assert\NotBlank()
+     */
     protected $to;
 
     public function __construct()
@@ -152,7 +157,7 @@ class Message
         return $this->date;
     }
 
-    public function IsRemoved()
+    public function isRemoved()
     {
         return $this->isRemoved;
     }

@@ -31,24 +31,35 @@ class Group extends AbstractRoleSubject
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\User",
-     *      cascade={"persist"}, mappedBy="groups"
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     cascade={"persist"}, mappedBy="groups"
      * )
-     * @ORM\JoinTable(name="claro_user_group",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_user_group",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $users;
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role",
-     *      cascade={"persist"}, inversedBy="groups"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     cascade={"persist"},
+     *     inversedBy="groups"
      * )
-     * @ORM\JoinTable(name="claro_group_role",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_group_role",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $roles;
@@ -76,7 +87,7 @@ class Group extends AbstractRoleSubject
 
     public function addUser(User $user)
     {
-         $user->getGroups()->add($this);
+        $user->getGroups()->add($this);
     }
 
     public function removeUser(User $user)
@@ -93,8 +104,8 @@ class Group extends AbstractRoleSubject
     {
         $roles = $this->getOwnedRoles();
 
-        foreach ($roles as $role){
-            if($role->getRoleType() != Role::WS_ROLE){
+        foreach ($roles as $role) {
+            if ($role->getRoleType() != Role::WS_ROLE) {
                 return $role;
             }
         }
@@ -104,17 +115,16 @@ class Group extends AbstractRoleSubject
     {
         $roles = $this->getOwnedRoles();
 
-        foreach ($roles as $role){
-            if($role->getRoleType() != Role::WS_ROLE){
+        foreach ($roles as $role) {
+            if ($role->getRoleType() != Role::WS_ROLE) {
                 $removedRole = $role;
             }
         }
 
-        if(isset($removedRole)){
+        if (isset($removedRole)) {
             $this->roles->removeElement($removedRole);
         }
 
         $this->roles->add($platformRole);
     }
-
 }

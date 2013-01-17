@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
-Class CalendarController extends Controller
+class CalendarController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
 
@@ -31,7 +31,7 @@ Class CalendarController extends Controller
         $form = $formBuilder->getForm();
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig', 
+            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
             array('workspace' => $workspace, 'form' => $form->createView())
         );
     }
@@ -51,12 +51,12 @@ Class CalendarController extends Controller
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
         $request = $this->get('request');
-        
+
         if ($request->getMethod() === 'POST') {
-            // get the value not send by the built in form  
+            // get the value not send by the built in form
             $postData = $request->request->all();
             $form->bindRequest($request);
-            
+
             if ($form->isValid()) {
                 $date = explode('(', $postData['date']);
                 $event->setStart(new \DateTime($date[0]));
@@ -74,16 +74,15 @@ Class CalendarController extends Controller
                         'end' => date('Y-m-d', $event->getEnd())
                     );
                 } else {
-                    $content = array('responseCode' => 400, 'greeting' => ' start date is bigger than end date ');
+                    $content = array('responseCode' => 400, 'greeting' => 'start date is bigger than end date ');
                 }
             } else {
                 $content = array('responseCode' => 400, 'greeting' => 'not valid');
             }
-        }
-        else {
+        } else {
             $content = array('responseCode' => 400, 'greeting' => 'no post');
         }
-        
+
         return new Response(json_encode($content), 200, array('Content-Type' => 'application/json'));
     }
 
@@ -94,7 +93,7 @@ Class CalendarController extends Controller
         $this->checkUserIsAllowed('VIEW', $workspace);
         $listEvents = $workspace->getEvents();
         $data = array();
-        
+
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
@@ -128,9 +127,9 @@ Class CalendarController extends Controller
         $em->flush();
 
         return new Response(
-            json_encode(array('responseCode' => 200, 'greeting' => 'ok')), 
-            200, 
-            array('Content-Type' => 'application/json')
+                json_encode(array('responseCode' => 200, 'greeting' => 'ok')),
+                200,
+                array('Content-Type' => 'application/json')
         );
     }
 

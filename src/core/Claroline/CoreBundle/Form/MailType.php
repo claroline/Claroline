@@ -10,8 +10,8 @@ class MailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('object', 'text')
-        ->add('content', 'textarea');
+            ->add('object', 'text')
+            ->add('content', 'textarea');
     }
 
     public function getName()
@@ -21,8 +21,8 @@ class MailType extends AbstractType
 
     public function getDefaultOptions(array $options)
     {
-       return array(
-           'translation_domain' => 'platform'
-       );
+        return array(
+            'translation_domain' => 'platform'
+        );
     }
 }

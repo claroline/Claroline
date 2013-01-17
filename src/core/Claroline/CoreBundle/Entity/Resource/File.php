@@ -32,7 +32,6 @@ class File extends AbstractResource
      *
      * @return integer
      */
-
     private $file;
 
     public function getSize()
@@ -57,26 +56,17 @@ class File extends AbstractResource
      */
     public function getFormattedSize()
     {
-        if ($this->size < 1024)
-        {
+        if ($this->size < 1024) {
             return $this->size . ' B';
-        }
-        elseif ($this->size < 1048576)
-        {
+        } elseif ($this->size < 1048576) {
             return round($this->size / 1024, 2) . ' KB';
-        }
-        elseif ($this->size < 1073741824)
-        {
+        } elseif ($this->size < 1073741824) {
             return round($this->size / 1048576, 2) . ' MB';
-        }
-        elseif ($this->size < 1099511627776)
-        {
+        } elseif ($this->size < 1099511627776) {
             return round($this->size / 1073741824, 2) . ' GB';
         }
-        else
-        {
-            return round($this->size / 1099511627776, 2) . ' TB';
-        }
+
+        return round($this->size / 1099511627776, 2) . ' TB';
     }
 
     /**

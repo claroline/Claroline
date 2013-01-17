@@ -61,14 +61,15 @@ class DesktopController extends Controller
     }
 
     /**
-     * Display registered widgets.
+     * Displays registered widgets.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function widgetsAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $configs = $this->get('claroline.widget.manager')->generateDesktopDisplayConfig($user->getId());
+        $configs = $this->get('claroline.widget.manager')
+            ->generateDesktopDisplayConfig($user->getId());
 
         foreach ($configs as $config) {
             if ($config->isVisible()) {
@@ -79,11 +80,14 @@ class DesktopController extends Controller
             }
         }
 
-        return $this->render('ClarolineCoreBundle:Widget:widgets.html.twig', array('widgets' => $responsesString));
+        return $this->render(
+            'ClarolineCoreBundle:Widget:widgets.html.twig',
+            array('widgets' => $responsesString)
+        );
     }
 
     /**
-     * Display the user parameters page for its desktop.
+     * Displays the user parameters page for its desktop.
      *
      * @return Response
      */
@@ -93,20 +97,24 @@ class DesktopController extends Controller
     }
 
     /**
-     * Display the widget configuration page.
+     * Displays the widget configuration page.
      *
      * @return Response
      */
     public function widgetPropertiesAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $configs = $this->get('claroline.widget.manager')->generateDesktopDisplayConfig($user->getId());
+        $configs = $this->get('claroline.widget.manager')
+            ->generateDesktopDisplayConfig($user->getId());
 
-        return $this->render('ClarolineCoreBundle:Desktop:widget_properties.html.twig', array('configs' => $configs, 'user' => $user));
+        return $this->render(
+            'ClarolineCoreBundle:Desktop:widget_properties.html.twig',
+            array('configs' => $configs, 'user' => $user)
+        );
     }
 
     /**
-     * Invert the visibility boolean for a widget for the current user.
+     * Inverts the visibility boolean for a widget for the current user.
      *
      * @param integer $widgetId        the widget id
      * @param integer $displayConfigId the display config id (the configuration entity for widgets)
@@ -116,15 +124,15 @@ class DesktopController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
-
-        $displayConfig = $em
-            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->find($widgetId);
+        $displayConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findOneBy(array('user' => $user, 'widget' => $widget));
 
-        if ($displayConfig == null){
+        if ($displayConfig == null) {
             $displayConfig = new DisplayConfig();
-            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->find($displayConfigId);
+            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+                ->find($displayConfigId);
             $displayConfig->setParent($baseConfig);
             $displayConfig->setWidget($widget);
             $displayConfig->setUser($user);
@@ -151,17 +159,21 @@ class DesktopController extends Controller
      */
     public function configureWidgetAction($widgetId)
     {
-         $em = $this->get('doctrine.orm.entity_manager');
-         $user = $this->get('security.context')->getToken()->getUser();
-         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->find($widgetId);
-         $event = new ConfigureWidgetDesktopEvent($user);
-         $eventName = strtolower("widget_{$widget->getName()}_configuration_desktop");
-         $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->find($widgetId);
+        $event = new ConfigureWidgetDesktopEvent($user);
+        $eventName = strtolower("widget_{$widget->getName()}_configuration_desktop");
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
 
-         if ($event->getContent() !== ''){
-             return $this->render('ClarolineCoreBundle:Desktop:widget_configuration.html.twig', array('content' => $event->getContent()));
-         } else {
-             throw new \Exception("event $eventName didn't return any Response");
-         }
+        if ($event->getContent() !== '') {
+            return $this->render(
+                'ClarolineCoreBundle:Desktop:widget_configuration.html.twig',
+                array('content' => $event->getContent())
+            );
+        }
+
+        throw new \Exception("event $eventName didn't return any Response");
     }
 }

@@ -49,7 +49,6 @@ class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInt
         $manager->persist($userRole);
         $manager->persist($creatorRole);
         $manager->persist($adminRole);
-//        $manager->persist($customRole);
         $manager->flush();
 
         $this->addReference('role/user', $userRole);
