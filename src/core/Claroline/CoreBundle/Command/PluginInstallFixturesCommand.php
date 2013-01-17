@@ -7,10 +7,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
-
 class PluginInstallFixturesCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         parent::configure();
@@ -32,9 +30,9 @@ class PluginInstallFixturesCommand extends ContainerAwareCommand
             $environment = $kernel->getEnvironment();
 
             if ($environment === 'prod' || $environment === 'dev' || $environment == 'test') {
-
                 $fixturesPath = $kernel->getRootDir() . "/../src/plugin/{$vendor}/{$bundle}/DataFixtures";
-                if($this->isEmptyDir($fixturesPath)){
+
+                if ($this->isEmptyDir($fixturesPath)) {
                     $output->writeln("Loading {$environment} fixtures...");
                     $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
                     $fixtureInput = new ArrayInput(array(
@@ -72,16 +70,15 @@ class PluginInstallFixturesCommand extends ContainerAwareCommand
         return $fqcns;
     }
 
-
     public function isEmptyDir($folder)
     {
-        if (!is_dir($folder)){
+        if (!is_dir($folder)) {
             return false; // not a dir
         }
 
         $files = opendir($folder);
         while ($file = readdir($files)) {
-            if ($file != '.' && $file != '..'){
+            if ($file != '.' && $file != '..') {
                 return true; // not empty
             }
         }

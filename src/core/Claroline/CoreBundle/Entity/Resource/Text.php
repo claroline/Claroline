@@ -18,9 +18,9 @@ class Text extends AbstractResource
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
-     *      mappedBy="text",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
+     *     mappedBy="text",
+     *     cascade={"persist"}
      * )
      * @ORM\OrderBy({"version" = "DESC"})
      */
@@ -28,8 +28,8 @@ class Text extends AbstractResource
 
     /**
      * @ORM\OneToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="current_text_id", referencedColumnName="id")
      */

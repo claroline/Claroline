@@ -15,8 +15,10 @@ use JMS\SerializerBundle\Annotation\Type;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *      "Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace" = "Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
- *      "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace" = "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
+ *     "Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace"
+ *         = "Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
+ *     "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
+ *         = "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
  * })
  */
 abstract class AbstractWorkspace
@@ -59,23 +61,26 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", mappedBy="workspace")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     mappedBy="workspace"
+     * )
      */
     protected $resources;
-    
+
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
-     *      mappedBy="workspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
+     *     mappedBy="workspace"
      * )
      */
     protected $rights;
-    
+
     /**
      * @ORM\OneToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\Workspace\Event",
-     *  mappedBy="workspace",
-     *  cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Event",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
      * )
      */
     protected $events;
@@ -106,13 +111,13 @@ abstract class AbstractWorkspace
         $this->name = $name;
     }
 
-    abstract function setPublic($isPublic);
+    abstract public function setPublic($isPublic);
 
     public function isPublic()
     {
         return $this->isPublic;
     }
-    
+
     public function getEvents()
     {
         return $this->events;

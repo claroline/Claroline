@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class InstallType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -36,5 +35,4 @@ class InstallType extends AbstractType
             'data_class' => 'Claroline\CoreBundle\Entity\Install',
         );
     }
-
 }

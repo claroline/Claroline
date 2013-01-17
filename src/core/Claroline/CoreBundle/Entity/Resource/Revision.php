@@ -24,9 +24,9 @@ class Revision
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\Text",
-     *      inversedBy="revisions",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Text",
+     *     inversedBy="revisions",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="text_id", referencedColumnName="id")
      */
@@ -39,8 +39,8 @@ class Revision
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\User",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */

@@ -34,7 +34,6 @@ class IconType
         return $this->id;
     }
 
-
     public function setIconType($iconType)
     {
         $this->iconType = $iconType;
@@ -44,5 +43,4 @@ class IconType
     {
         return $this->iconType;
     }
-
 }

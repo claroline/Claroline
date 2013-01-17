@@ -25,7 +25,10 @@ class ResourceLog
     protected $resource;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     protected $resourceType;
@@ -36,10 +39,10 @@ class ResourceLog
      */
     protected $creator;
 
-   /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-    * @ORM\JoinColumn(name="updator_id", referencedColumnName="id")
-    */
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="updator_id", referencedColumnName="id")
+     */
     protected $updator;
 
     /**
