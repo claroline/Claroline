@@ -9,13 +9,28 @@ use Symfony\Component\HttpFoundation\Response;
 
 class WidgetListener extends ContainerAware
 {
-    function onDisplay(DisplayWidgetEvent $event)
+    public function onDisplay(DisplayWidgetEvent $event)
     {
         $event->setContent('
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vestibulum accumsan massa sed facilisis. Aliquam consequat porttitor suscipit. Curabitur lectus augue, lacinia tempor pretium quis, mollis eu tortor. Praesent mattis, quam ac ultrices consequat, magna lacus mollis lorem, in adipiscing diam sapien faucibus augue. Suspendisse quis purus dui. Pellentesque elit nulla, pretium vel lobortis ac, accumsan sit amet libero. Mauris sed magna pharetra turpis iaculis sollicitudin. Nulla eu velit euismod sapien molestie tincidunt. Morbi non lacus magna. Morbi pretium, augue ut porttitor tempor, leo sapien sollicitudin urna, ac placerat neque odio eu massa. Donec nec quam id augue porta rutrum a id lectus. Sed iaculis sem vitae mauris tincidunt facilisis. Cras libero eros, suscipit at ultrices sit amet, consectetur ac neque. Praesent rhoncus, est nec lacinia volutpat, lorem sem malesuada orci, vel eleifend tortor dolor ac justo. Donec feugiat, magna eu semper congue, dolor est ullamcorper nisi, in vestibulum mi sem id ante. Vestibulum tincidunt molestie quam vitae dignissim.');
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Vivamus vestibulum accumsan massa sed facilisis.
+            Aliquam consequat porttitor suscipit.
+            Curabitur lectus augue, lacinia tempor pretium quis, mollis eu tortor.
+            Praesent mattis, quam ac ultrices consequat, magna lacus mollis lorem,
+            in adipiscing diam sapien faucibus augue. Suspendisse quis purus dui.
+            Pellentesque elit nulla, pretium vel lobortis ac, accumsan sit amet libero.
+            Mauris sed magna pharetra turpis iaculis sollicitudin.
+            Nulla eu velit euismod sapien molestie tincidunt. Morbi non lacus magna.
+            Morbi pretium, augue ut porttitor tempor, leo sapien sollicitudin urna,
+            ac placerat neque odio eu massa. Donec nec quam id augue porta rutrum a id lectus.
+            Sed iaculis sem vitae mauris tincidunt facilisis. Cras libero eros, suscipit at ultrices sit amet,
+            consectetur ac neque. Praesent rhoncus, est nec lacinia volutpat, lorem sem malesuada orci,
+            vel eleifend tortor dolor ac justo. Donec feugiat, magna eu semper congue,
+            dolor est ullamcorper nisi, in vestibulum mi sem id ante.
+            Vestibulum tincidunt molestie quam vitae dignissim.');
     }
 
-    function onConfigure(ConfigureWidgetEvent $event)
+    public function onConfigure(ConfigureWidgetEvent $event)
     {
         $event->setResponse(new Response('some content'));
     }

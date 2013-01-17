@@ -33,7 +33,10 @@ class RecorderTest extends WebTestCase
             ->with(get_class($this->mockedPlugin));
         $this->mockedConfigWriter->expects($this->once())
             ->method('importRoutingResources')
-            ->with(get_class($this->mockedPlugin), $this->mockedPlugin->getRoutingResourcesPaths(), $this->mockedPlugin->getRoutingPrefix());
+            ->with(get_class($this->mockedPlugin),
+                $this->mockedPlugin->getRoutingResourcesPaths(),
+                $this->mockedPlugin->getRoutingPrefix()
+            );
 
         $this->recorder->register($this->mockedPlugin, array());
     }
@@ -77,10 +80,12 @@ class RecorderTest extends WebTestCase
     private function initMockObjects()
     {
         $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
-        $this->mockedConfigWriter = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationFileWriter')
+        $this->mockedConfigWriter =
+            $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationFileWriter')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->mockedDbWriter = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter')
+        $this->mockedDbWriter =
+            $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter')
             ->disableOriginalConstructor()
             ->getMock();
     }

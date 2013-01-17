@@ -15,7 +15,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
 
     public function __construct($usernames = null)
     {
-        if ($usernames != null){
+        if ($usernames != null) {
             $this->usernames = $usernames;
         } else {
             $this->usernames = array('admin', 'ws_creator', 'user', 'user_2', 'user_3');
@@ -54,7 +54,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
         );
 
         foreach ($this->usernames as $username) {
-            if(array_key_exists($username, $users)){
+            if (array_key_exists($username, $users)) {
                 $user = new User();
                 $user->setFirstName($users[$username][0]);
                 $user->setLastName($users[$username][1]);

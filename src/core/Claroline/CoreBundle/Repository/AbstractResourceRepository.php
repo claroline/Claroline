@@ -6,8 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Repository\Exception\NoDirectoryException;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Doctrine\ORM\AbstractQuery;
 
@@ -120,7 +118,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             }
         }
 
-        if($isAdmin){
+        if ($isAdmin) {
             $query = $this->buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible);
         } else {
             $query = $this->buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId);
@@ -167,11 +165,20 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $query;
     }
 
-    private function buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId, $asArray = true, $isVisible = true)
+    private function buildForRolesChildrenQuery(
+        $parentId,
+        $roles,
+        $resourceTypeId,
+        $asArray = true,
+        $isVisible = true
+    )
     {
-         $dql = "SELECT DISTINCT". self::SELECT_FOR_ARRAY. ", MAX (arRights.canExport) as can_export, MAX (arRights.canDelete) as can_delete, MAX (arRights.canEdit) as can_edit"
-             ." FROM ". self::FROM_RESOURCES
-             ." LEFT JOIN ar.rights arRights
+         $dql = "SELECT DISTINCT". self::SELECT_FOR_ARRAY
+             . ", MAX (arRights.canExport) as can_export"
+             . ", MAX (arRights.canDelete) as can_delete"
+             . ", MAX (arRights.canEdit) as can_edit"
+             . " FROM ". self::FROM_RESOURCES
+             . " LEFT JOIN ar.rights arRights
                 JOIN arRights.role rightRole
                 WHERE ";
 
@@ -180,10 +187,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         $i = 0;
-        foreach($roles as $role){
-            $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}' AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
+        foreach ($roles as $role) {
+            $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}'"
+                . " AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
 
-            if($i!=0){
+            if ($i!=0) {
                 $dql.= " OR ".$condition;
             } else {
                 $dql.= $condition;
@@ -259,21 +267,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function listResourcesForUserWithFilter($criterias, $user, $asArray = false)
     {
-        $isAdmin = false;
-        $isAnonymous = false;
-
-//        foreach ($roles as $role) {
-//            if ($role === 'ROLE_ADMIN') {
-//                $isAdmin = true;
-//            } else {
-//                if ($role === 'ROLE_ANONYMOUS'){
-//                    $isAnonymous = true;
-//                }
-//            }
-//        }
-
-        $isAdmin = false;
-
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
             . " FROM " . self::FROM_RESOURCES;
 
@@ -439,7 +432,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($criterias as $key => $value) {
             if (array_key_exists($key, $multipleValues)) {
-                $this->bindArray($query, $key, $value, array_key_exists($key, $likeValue), array_key_exists($key, $rootLikeValue));
+                $this->bindArray(
+                    $query,
+                    $key,
+                    $value,
+                    array_key_exists($key, $likeValue),
+                    array_key_exists($key, $rootLikeValue)
+                );
             } else {
                 if (!array_key_exists($key, $likeValue)) {
                     $query->setParameter($key, $value);
@@ -494,7 +493,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
             foreach ($res as &$r) {
                 $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
                 unset($r['path']);
-//                unset($r['parent_id']);
             }
         } else {
             $res = $query->getResult();

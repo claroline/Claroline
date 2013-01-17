@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
@@ -57,9 +56,11 @@ class Manager
      */
     public function create(AbstractResource $resource, $parentId, $resourceType, $user = null)
     {
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy(array('name' => $resourceType));
+        $resourceType = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneBy(array('name' => $resourceType));
 
-        if ($user == null){
+        if ($user == null) {
             $user = $this->sc->getToken()->getUser();
         }
 
@@ -75,7 +76,7 @@ class Manager
         $resource->setName($rename);
         $resource->setCreator($user);
 
-        if ($resource->getUserIcon() == null){
+        if ($resource->getUserIcon() == null) {
                 $resource = $this->ic->setResourceIcon($resource);
         } else {
             //upload the icon
@@ -111,7 +112,7 @@ class Manager
         $child->setName($rename);
         $rights = $child->getRights();
 
-        foreach($rights as $right){
+        foreach ($rights as $right) {
             $this->em->remove($right);
         }
 
@@ -217,7 +218,10 @@ class Manager
 
         if ($originalResource->getResourceType()->getName()=='directory') {
             $resourceCopy = new Directory();
-            $resourceCopy->setResourceType($this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'));
+            $dirType = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                ->findOneByName('directory');
+            $resourceCopy->setResourceType($dirType);
         } else {
             $event = new CopyResourceEvent($originalResource);
             $eventName = $this->ut->normalizeEventName('copy', $originalResource->getResourceType()->getName());
@@ -236,11 +240,13 @@ class Manager
 
     private function deleteDirectory(AbstractResource $resource)
     {
-        if ($resource->getParent() === null){
-           throw new \LogicException('Root directory cannot be removed');
+        if ($resource->getParent() === null) {
+            throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->getChildren($resource, false);
+        $children = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getChildren($resource, false);
         foreach ($children as $child) {
             $event = new DeleteResourceEvent($child);
             $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
@@ -258,8 +264,11 @@ class Manager
      */
     public function setResourceRights($old, $resource)
     {
-        $resourceRights = $this->em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')->findBy(array('resource' => $old));
-        foreach($resourceRights as $resourceRight){
+        $resourceRights = $this->em
+            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+            ->findBy(array('resource' => $old));
+
+        foreach ($resourceRights as $resourceRight) {
             $rs = new ResourceRights();
             $rs->setRole($resourceRight->getRole());
             $rs->setResource($resource);
@@ -267,8 +276,8 @@ class Manager
             //creation rights
             $resourceTypes = $resourceRight->getResourceTypes();
 
-            if($resource->getResourceType()->getName() == 'directory'){
-                foreach($resourceTypes as $resourceType){
+            if ($resource->getResourceType()->getName() == 'directory') {
+                foreach ($resourceTypes as $resourceType) {
                     $rs->addResourceType($resourceType);
                 }
             }

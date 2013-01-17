@@ -11,7 +11,7 @@ class LogListener extends ContainerAware
     public function onLogResource(ResourceLogEvent $event)
     {
         $rs = new ResourceLog();
-        if ($event->getAction() !== ResourceLogEvent::DELETE_ACTION){
+        if ($event->getAction() !== ResourceLogEvent::DELETE_ACTION) {
             $rs->setResource($event->getResource());
         }
 

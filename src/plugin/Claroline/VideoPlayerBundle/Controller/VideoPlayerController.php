@@ -10,7 +10,10 @@ class VideoPlayerController extends Controller
 {
     public function streamAction($videoId)
     {
-        $video = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\File')->find($videoId);
+        $video = $this
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\File')
+            ->find($videoId);
 
         $response = new StreamedResponse();
         $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$video->getHashName();

@@ -16,7 +16,8 @@ class ActivityControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $this->pwr = $this->resourceRepository->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+        $this->pwr = $this->resourceRepository
+            ->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
 
     }
 
@@ -36,15 +37,23 @@ class ActivityControllerTest extends FunctionalTestCase
         );
         $obj = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($obj));
-        $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
+        $resourceActivity = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->findOneBy(array('activity' => $activity->id));
         $this->assertEquals(1, count($resourceActivity));
-//       the code below doesn't work: no idea why
+        //the code below doesn't work: no idea why
         $this->client->request(
             'DELETE',
             "/activity/{$activity->id}/remove/resource/{$file->id}"
         );
         $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
-        $resourceActivity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->findOneBy(array('activity' => $activity->id));
+        $resourceActivity = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->findOneBy(array('activity' => $activity->id));
         $this->assertEquals(0, count($resourceActivity));
     }
 
@@ -54,7 +63,11 @@ class ActivityControllerTest extends FunctionalTestCase
         $fileOne = $this->uploadFile($this->pwr->getId(), 'file1');
         $fileTwo= $this->uploadFile($this->pwr->getId(), 'file2');
         $activity = $this->createActivity('name', 'instruction');
-        $activityEntity = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\Activity')->find($activity->id);
+        $activityEntity = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\Activity')
+            ->find($activity->id);
         $this->client->request(
             'POST',
             "/activity/{$activity->id}/add/resource/{$fileOne->id}"
@@ -64,20 +77,28 @@ class ActivityControllerTest extends FunctionalTestCase
             "/activity/{$activity->id}/add/resource/{$fileTwo->id}"
         );
 
-       $resourceActivities = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->getResourcesActivityForActivity($activityEntity);
+        $resourceActivities = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->getResourcesActivityForActivity($activityEntity);
 
-       foreach($resourceActivities as $resourceActivity){
-           $orders[] = $resourceActivity->getSequenceOrder();
-           $ids[] = $resourceActivity->getResource()->getId();
-       }
+        foreach ($resourceActivities as $resourceActivity) {
+            $orders[] = $resourceActivity->getSequenceOrder();
+            $ids[] = $resourceActivity->getResource()->getId();
+        }
 
-       $this->assertEquals(array('0', '1'), $orders);
+        $this->assertEquals(array('0', '1'), $orders);
 
-       $this->client->request(
-           'GET', "/activity/{$activity->id}/set/sequence?ids[]={$ids[1]}&ids[]={$ids[0]}"
-       );
+        $this->client->request(
+            'GET', "/activity/{$activity->id}/set/sequence?ids[]={$ids[1]}&ids[]={$ids[0]}"
+        );
 
-       $reverseActivities = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')->getResourcesActivityForActivity($activityEntity);
+        $reverseActivities = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->getResourcesActivityForActivity($activityEntity);
 
         foreach ($reverseActivities as $reverseActivity) {
 
@@ -105,7 +126,10 @@ class ActivityControllerTest extends FunctionalTestCase
     {
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
         $this->client->request(
-            'POST', "/resource/create/file/{$parentId}", array('file_form' => array()), array('file_form' => array('file' => $file, 'name' => 'tmp'))
+            'POST',
+            "/resource/create/file/{$parentId}",
+            array('file_form' => array()),
+            array('file_form' => array('file' => $file, 'name' => 'tmp'))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());

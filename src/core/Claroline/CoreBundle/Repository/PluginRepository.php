@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class PluginRepository extends EntityRepository
 {
-    function findOneByBundleFQCN($fqcn)
+    public function findOneByBundleFQCN($fqcn)
     {
         $split = explode('\\', $fqcn);
         $dql = "

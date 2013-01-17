@@ -28,7 +28,7 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
 
-        if ($role != null){
+        if ($role != null) {
             $query->setParameter('roleId', $role->getId());
         }
 
@@ -44,7 +44,9 @@ class GroupRepository extends EntityRepository
             WHERE g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                LEFT JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+                LEFT JOIN gr.roles wr WITH wr IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                )
                 JOIN wr.workspaceRights rights
                 JOIN rights.workspace w
                 WHERE w.id = :id
@@ -74,7 +76,9 @@ class GroupRepository extends EntityRepository
             AND g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+                JOIN gr.roles wr WITH wr IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                )
                 JOIN wr.workspaceRights rights
                 JOIN rights.workspace w
                 WHERE w.id = :id
@@ -105,7 +109,9 @@ class GroupRepository extends EntityRepository
             AND g IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+                JOIN gr.roles wr WITH wr IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                )
                 JOIN wr.workspaceRights rights
                 JOIN rights.workspace w
                 WHERE w.id = :id
@@ -166,7 +172,9 @@ class GroupRepository extends EntityRepository
         $dql = "
             SELECT g, wr
             FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+            LEFT JOIN g.roles wr WITH wr IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+            )
             LEFT JOIN wr.workspaceRights rights
             LEFT JOIN rights.workspace w
             WHERE w.id = :workspaceId

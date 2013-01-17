@@ -71,7 +71,7 @@ class ResourceCollection
     {
         $content = '';
 
-        foreach($this->errors as $error){
+        foreach ($this->errors as $error) {
             $content.="<p>{$error}</p>";
         }
 

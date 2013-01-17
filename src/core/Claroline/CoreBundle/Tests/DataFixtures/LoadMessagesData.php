@@ -40,22 +40,25 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
         $count = count($users);
         $count--;
 
-        for ($i=0; $i<$this->nbMessages; $i++){
+        for ($i=0; $i<$this->nbMessages; $i++) {
             $message = new Message;
             $message->setObject($this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(5));
-            $message->setContent($this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true));
+            $message->setContent($this->container
+                ->get('claroline.utilities.lipsum_generator')
+                ->generateLipsum(150, true)
+            );
 
             $userMessage = new UserMessage();
             $userMessage->setMessage($message);
 
 
-            if (isset($this->usernames['from'])){
+            if (isset($this->usernames['from'])) {
                 $message->setUser($userRepository->findOneBy(array('username' => $this->usernames['from'])));
             } else {
                 $message->setUser($users[rand(0, $count)]);
             }
 
-            if (isset($this->usernames['to'])){
+            if (isset($this->usernames['to'])) {
                 $userMessage->setUser($userRepository->findOneBy(array('username' => $this->usernames['to'])));
             } else {
                 $userMessage->setUser($users[rand(0, $count)]);

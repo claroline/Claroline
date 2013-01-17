@@ -10,21 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ForumOptions
 {
-   /**
-    * @ORM\Id
-    * @ORM\Column(type="integer")
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
-   /**
-    * @ORM\Column(name="subjects", type="integer")
-    */
+    /**
+     * @ORM\Column(name="subjects", type="integer")
+     */
     protected $subjects;
 
-   /**
-    * @ORM\Column(name="messages", type="integer")
-    */
+    /**
+     * @ORM\Column(name="messages", type="integer")
+     */
     protected $messages;
 
     public function getId()
