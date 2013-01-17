@@ -292,7 +292,7 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
     }
 
-    public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstanceAssociatedWithAnAcl()
+    public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstanceWithAnAcl()
     {
         $jane = $this->getFixtureReference('user/user');
         $entity = $this->createEntity();

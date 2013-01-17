@@ -38,10 +38,11 @@ class RssReaderController extends Controller
         }
 
         if ($config->getWorkspace() != null) {
-            return new RedirectResponse($this->generateUrl('claro_workspace_home', array('workspaceId' => $config->getWorkspace()->getId())));
+            $url = $this->generateUrl('claro_workspace_home', array('workspaceId' => $config->getWorkspace()->getId()));
+            return new RedirectResponse($url);
         } else {
-            if ($isDefault){
-            return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
+            if ($isDefault) {
+                return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
             } else {
                 return new RedirectResponse($this->generateUrl('claro_desktop_index'));
             }
@@ -80,7 +81,11 @@ class RssReaderController extends Controller
         }
 
         if ($rssConfig->getWorkspace() != null) {
-            return new RedirectResponse($this->generateUrl('claro_workspace_home', array('workspaceId' => $rssConfig->getWorkspace()->getId())));
+            $url = $this->generateUrl('claro_workspace_home', array(
+                'workspaceId' => $rssConfig->getWorkspace()->getId()
+            ));
+
+            return new RedirectResponse($url);
         } else {
             return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
         }

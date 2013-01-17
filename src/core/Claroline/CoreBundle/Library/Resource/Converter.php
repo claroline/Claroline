@@ -33,7 +33,7 @@ class Converter
         $resourceArray = array();
         $resourceArray['id'] = $resource->getId();
         $resourceArray['name'] = $resource->getName();
-        ($resource->getParent() != null) ? $resourceArray['parent_id'] = $resource->getParent()->getId() : $resourceArray['parent_id'] = null;
+        $resourceArray['parent_id'] = ($resource->getParent() != null) ? $resource->getParent()->getId() : null;
         $resourceArray['creator_username'] = $resource->getCreator()->getUsername();
         $resourceArray['type'] = $resource->getResourceType()->getName();
         $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
@@ -44,18 +44,20 @@ class Converter
 
         $roles = $this->ut->getRoles($token);
 
-        foreach($roles as $role){
-            if($role === 'ROLE_ADMIN'){
+        foreach ($roles as $role) {
+            if ($role === 'ROLE_ADMIN') {
                 $isAdmin = true;
             }
         }
 
-        if($isAdmin){
+        if ($isAdmin) {
             $resourceArray['can_export'] = true;
             $resourceArray['can_edit'] = true;
             $resourceArray['can_delete'] = true;
         } else {
-            $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Rights\ResourceRights')->getRights($roles, $resource);
+            $rights = $this->em
+                ->getRepository('Claroline\CoreBundle\Entity\Rights\ResourceRights')
+                ->getRights($roles, $resource);
             $resourceArray['can_export'] = $rights['canExport'];
             $resourceArray['can_edit'] = $rights['canEdit'];
             $resourceArray['can_delete'] = $rights['canDelete'];

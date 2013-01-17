@@ -38,7 +38,10 @@ class CreatorTest extends FunctionalTestCase
 
         $this->assertEquals(Configuration::TYPE_SIMPLE, get_class($workspace));
         $this->assertEquals('Workspace Foo', $workspace->getName());
-        $roleRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role');
+        $roleRepo = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role');
         $this->assertEquals('visitor', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
         $this->assertEquals('collaborator', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
         $this->assertEquals('manager', $roleRepo->getManagerRole($workspace)->getTranslationKey());
@@ -60,7 +63,10 @@ class CreatorTest extends FunctionalTestCase
 
         $this->assertEquals(Configuration::TYPE_AGGREGATOR, get_class($workspace));
         $this->assertEquals('Workspace Bar', $workspace->getName());
-        $roleRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role');
+        $roleRepo = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role');
         $this->assertEquals('Guest', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
         $this->assertEquals('Student', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
         $this->assertEquals('Professor', $roleRepo->getManagerRole($workspace)->getTranslationKey());

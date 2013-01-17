@@ -87,8 +87,10 @@ class DatabaseWriterTest extends TransactionalTestCase
     public function testCustomResourceTypesArePersisted()
     {
         $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomResources{$ds}Entity{$ds}ResourceA.php";
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomResources{$ds}Entity{$ds}ResourceB.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomResources{$ds}Entity{$ds}ResourceA.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomResources{$ds}Entity{$ds}ResourceB.php";
 
         $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
         $plugin = $this->loader->load($pluginFqcn);
@@ -111,7 +113,8 @@ class DatabaseWriterTest extends TransactionalTestCase
     {
         $this->markTestSkipped('Search the icon in the web folder and it isn\'t ');
         $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithResourceIcon{$ds}Entity{$ds}ResourceX.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithResourceIcon{$ds}Entity{$ds}ResourceX.php";
 
         $pluginFqcn = 'Valid\WithResourceIcon\ValidWithResourceIcon';
         $plugin = $this->loader->load($pluginFqcn);
@@ -131,7 +134,8 @@ class DatabaseWriterTest extends TransactionalTestCase
     public function testCustomActionsArePersited()
     {
         $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomActions{$ds}Entity{$ds}ResourceX.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomActions{$ds}Entity{$ds}ResourceX.php";
 
         $pluginFqcn = 'Valid\WithCustomActions\ValidWithCustomActions';
         $plugin = $this->loader->load($pluginFqcn);

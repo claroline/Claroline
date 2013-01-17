@@ -26,12 +26,14 @@ class WorkspaceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if (!in_array($attributes[0], $this->validAttributes)){
+        if (!in_array($attributes[0], $this->validAttributes)) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        if ($object instanceof AbstractWorkspace){
-            return ($this->canDo($object, $token, $attributes[0])) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+        if ($object instanceof AbstractWorkspace) {
+            return ($this->canDo($object, $token, $attributes[0])) ?
+                VoterInterface::ACCESS_GRANTED:
+                VoterInterface::ACCESS_DENIED;
         }
     }
 
@@ -58,7 +60,9 @@ class WorkspaceVoter implements VoterInterface
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
 
-        $rights = $this->em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')->getRights($this->ut->getRoles($token), $workspace);
+        $rights = $this->em
+            ->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
+            ->getRights($this->ut->getRoles($token), $workspace);
         $permission = 'can'.ucfirst(strtolower($action));
 
         return $rights[$permission];

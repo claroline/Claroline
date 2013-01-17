@@ -4,7 +4,5 @@ namespace Claroline\CoreBundle\Repository;
 
 
 class EventRepository extends EntityRepository{
-    
-}
 
-?>
+}

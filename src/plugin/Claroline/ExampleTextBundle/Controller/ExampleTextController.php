@@ -12,10 +12,13 @@ class ExampleTextController extends Controller
         //get the resource
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($exampleTextId);
         //get the current workspace.
-        //if you only have the workspace id => $em->getRepository('Claroline\CoreBundle\Workspace\AbstractWorkspace')->find(...);
+        //if you only have the workspace id =>
+        //$em->getRepository('Claroline\CoreBundle\Workspace\AbstractWorkspace')->find(...);
         $workspace = $resource->getWorkspace();
 
         //get the text.
-        return $this->render('ClarolineExampleTextBundle::open.html.twig', array('resource' => $resource, 'workspace' => $workspace));
+        return $this->render('ClarolineExampleTextBundle::open.html.twig', array(
+            'resource' => $resource, 'workspace' => $workspace
+        ));
     }
 }

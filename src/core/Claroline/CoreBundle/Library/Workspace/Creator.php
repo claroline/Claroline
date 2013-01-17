@@ -54,16 +54,45 @@ class Creator
         $this->entityManager->persist($rootDir);
 
         //default resource rights
-        $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $this->roleRepo->getManagerRole($workspace), $rootDir);
-        $this->createDefaultsResourcesRights(true, false, true, false, false, true, false, $this->roleRepo->getCollaboratorRole($workspace), $rootDir);
-        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->getVisitorRole($workspace), $rootDir);
-        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')), $rootDir);
+        $this->createDefaultsResourcesRights(
+            true, true, true, true, true, true, true,
+            $this->roleRepo->getManagerRole($workspace),
+            $rootDir
+        );
+        $this->createDefaultsResourcesRights(
+            true, false, true, false, false, true, false,
+            $this->roleRepo->getCollaboratorRole($workspace),
+            $rootDir
+        );
+        $this->createDefaultsResourcesRights(
+            false, false, false, false, false, false, false,
+            $this->roleRepo->getVisitorRole($workspace),
+            $rootDir
+        );
+        $this->createDefaultsResourcesRights(
+            false, false, false, false, false, false, false,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $rootDir
+        );
 
         //default workspace rights
-        $this->createDefaultsWorkspaceRights(true, true, true, $this->roleRepo->getManagerRole($workspace), $workspace);
-        $this->createDefaultsWorkspaceRights(true, false, false, $this->roleRepo->getCollaboratorRole($workspace), $workspace);
-        $this->createDefaultsWorkspaceRights(true, false, false, $this->roleRepo->getVisitorRole($workspace), $workspace);
-        $this->createDefaultsWorkspaceRights(false, false, false, $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')), $workspace);
+        $this->createDefaultsWorkspaceRights(
+            true, true, true,
+            $this->roleRepo->getManagerRole($workspace), $workspace
+        );
+        $this->createDefaultsWorkspaceRights(
+            true, false, false,
+            $this->roleRepo->getCollaboratorRole($workspace), $workspace
+        );
+        $this->createDefaultsWorkspaceRights(
+            true, false, false,
+            $this->roleRepo->getVisitorRole($workspace), $workspace
+        );
+        $this->createDefaultsWorkspaceRights(
+            false, false, false,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $workspace
+        );
 
         $manager->addRole($this->roleRepo->getManagerRole($workspace));
         $this->entityManager->persist($manager);
@@ -72,7 +101,17 @@ class Creator
         return $workspace;
     }
 
-    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canExport, $canCreate, Role $role, AbstractResource $resource)
+    private function createDefaultsResourcesRights(
+        $canView,
+        $canDelete,
+        $canOpen,
+        $canEdit,
+        $canCopy,
+        $canExport,
+        $canCreate,
+        Role $role,
+        AbstractResource $resource
+    )
     {
         $resourceRight = new ResourceRights();
 
@@ -86,7 +125,9 @@ class Creator
         $resourceRight->setResource($resource);
 
         if ($canCreate) {
-            $resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
+            $resourceTypes = $this->entityManager
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findBy(array('isVisible' => true));
 
             foreach ($resourceTypes as $resourceType) {
                 $resourceRight->addResourceType($resourceType);
@@ -98,7 +139,13 @@ class Creator
         return $resourceRight;
     }
 
-    private function createDefaultsWorkspaceRights($canView, $canEdit, $canDelete, Role $role, AbstractWorkspace $workspace)
+    private function createDefaultsWorkspaceRights(
+        $canView,
+        $canEdit,
+        $canDelete,
+        Role $role,
+        AbstractWorkspace $workspace
+    )
     {
         $workspaceRight = new WorkspaceRights();
         $workspaceRight->setCanView($canView);

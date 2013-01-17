@@ -81,7 +81,7 @@ class Exporter
         }
 
         $archive->close();
-//        throw new \Exception('coucou');
+        //throw new \Exception('coucou');
         return $pathArch;
     }
 
@@ -100,8 +100,8 @@ class Exporter
         $resIds = array();
 
         foreach ($resourceIds as $resourceId) {
-            $resource = $repoIns->find($resourceId);
-            ($resource->getResourceType()->getName() == 'directory') ? $dirIds[] = $resourceId : $resIds[] = $resourceId;
+            $resourceTypeName = $repoIns->find($resourceId)->getResourceType()->getName();
+            ($resourceTypeName == 'directory') ? $dirIds[] = $resourceId : $resIds[] = $resourceId;
         }
 
         $toAppend = array();

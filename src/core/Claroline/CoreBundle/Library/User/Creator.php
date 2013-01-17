@@ -15,7 +15,12 @@ class Creator
     private $ch;
     private $wsCreator;
 
-    public function __construct(EntityManager $em, Translator $trans, PlatformConfigurationHandler $ch, WsCreator $wsCreator)
+    public function __construct(
+        EntityManager $em,
+        Translator $trans,
+        PlatformConfigurationHandler $ch,
+        WsCreator $wsCreator
+    )
     {
         $this->em = $em;
         $this->trans = $trans;

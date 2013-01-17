@@ -83,15 +83,18 @@ class FileListener extends ContainerAware
 
     public function onCopy(CopyResourceEvent $event)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $resource = $event->getResource();
         $newFile = new File();
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
         $newFile->setMimeType($resource->getMimeType());
-        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+        $hashName = $this->container
+            ->get('claroline.resource.utilities')
+            ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
-        $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $resource->getHashName();
-        $newPath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hashName;
+        $filePath = $this->container->getParameter('claroline.files.directory') . $ds . $resource->getHashName();
+        $newPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
         copy($filePath, $newPath);
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($newFile);
@@ -109,13 +112,14 @@ class FileListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $file = $event->getResource();
         $mimeType = $file->getMimeType();
         $playEvent = new PlayFileEvent($file);
         $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
         $this->container->get('event_dispatcher')->dispatch($eventName, $playEvent);
 
-        if ($playEvent->getResponse() instanceof Response){
+        if ($playEvent->getResponse() instanceof Response) {
             $response = $playEvent->getResponse();
         } else {
             $fallBackPlayEvent = new PlayFileEvent($file);
@@ -123,18 +127,34 @@ class FileListener extends ContainerAware
             $baseType = strtolower($mimeElements[0]);
             $fallBackPlayEventName = 'play_file_'.$baseType;
             $this->container->get('event_dispatcher')->dispatch($fallBackPlayEventName, $fallBackPlayEvent);
-            if ($fallBackPlayEvent->getResponse() instanceof Response){
+            if ($fallBackPlayEvent->getResponse() instanceof Response) {
                 $response = $fallBackPlayEvent->getResponse();
             } else {
-                $item = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $file->getHashName();
+                $item = $this->container
+                    ->getParameter('claroline.files.directory') . $ds . $file->getHashName();
                 $file = file_get_contents($item);
                 $response = new Response();
                 $response->setContent($file);
-                $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-                $response->headers->set('Content-Type', 'application/force-download');
-                $response->headers->set('Content-Disposition', 'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION));
-                $response->headers->set('Content-Type', 'application/' . pathinfo($item, PATHINFO_EXTENSION));
-                $response->headers->set('Connection', 'close');
+                $response->headers->set(
+                    'Content-Transfer-Encoding',
+                    'octet-stream'
+                );
+                $response->headers->set(
+                    'Content-Type',
+                    'application/force-download'
+                );
+                $response->headers->set(
+                    'Content-Disposition',
+                    'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION)
+                );
+                $response->headers->set(
+                    'Content-Type',
+                    'application/' . pathinfo($item, PATHINFO_EXTENSION)
+                );
+                $response->headers->set(
+                    'Connection',
+                    'close'
+                );
             }
         }
 

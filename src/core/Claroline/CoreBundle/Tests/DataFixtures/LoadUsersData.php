@@ -8,8 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
 {
@@ -39,20 +37,24 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             "John", "Stan", "Stéphane", "Emmanuel", "Nicolas", "Frédéric", "Luke", "Luc", "Kenneth", "Stanley",
             "Kyle", "Léopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica", "Matthieu", "Aurélie", "Elisabeth",
             "Louis", "Jérome", "Ned", "Ralph", "Charles-Montgomery",
-            "Waylon", "Carl", "Timothy", "Kirk", "Milhouse", "Todd", "Maude", "Benjamen", "ObiWan", "George", "Barack",
-            "Alfred", "Paul", "Gabriel", "Anne", "Théophile", "Bill", "Claudia", "Silva", "Ford", "Rodney", "Greg", "Bob", "Robert",
-            "Jean-Kévin", "Charles-Henry", "Douglas", "Arthur", "Marvin", "Bruce", "William", "Jason", "Mélanie", "Sophie",
-            "Dominique", "Coralie", "Camille", "Claudia", "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Hélène", "14M4M3G4Z0RD",
-            "Frank", "Mélissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne", "Chloé"
+            "Waylon", "Carl", "Timothy", "Kirk", "Milhouse", "Todd", "Maude", "Benjamen", "ObiWan", "George",
+            "Barack","Alfred", "Paul", "Gabriel", "Anne", "Théophile", "Bill", "Claudia", "Silva", "Ford",
+            "Rodney", "Greg", "Bob", "Robert","Jean-Kévin", "Charles-Henry", "Douglas", "Arthur", "Marvin",
+            "Bruce", "William", "Jason", "Mélanie", "Sophie","Dominique", "Coralie", "Camille", "Claudia",
+            "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Hélène", "14M4M3G4Z0RD","Frank",
+            "Mélissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne",
+            "Chloé"
         );
 
         $this->lastNames = array(
-            "Johnson", "Miller", "Brown", "Williams", "Davis", "Simpson", "Smith", "Doe", "Klein", "Godfraind", "Gervy", "Fervaille",
-            "Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick", "McLane", "Bourne", "Yates", "Marilyn",
-            "McElroy", "Flanders", "Wiggum", "Burns", "Smithers", "Carlson", "LoveJoy", "Van Houten", "Gates", "Braconier", "Kenobi",
-            "Lucas", "Clooney", "Harisson", "Obama", "Bush", "Black", "Hogan", "Anderson", "McKay", "Fields", "Bruel", "Kottick",
-            "Dupond", "Leloux", "Miller", "Adams", "Dent", "Accroc", "Prefect", "Escort", "Sheridan", "William", "Willis", "Lee",
-            "Devos", "Tatcher", "Gilbert", "Casilli", "Wilson", "Cantor", "Descartes", "Carlyle", "Ford", "Tortelloni", "Pizza"
+            "Johnson", "Miller", "Brown", "Williams", "Davis", "Simpson", "Smith", "Doe", "Klein", "Godfraind",
+            "Gervy", "Fervaille","Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick",
+            "McLane", "Bourne", "Yates", "Marilyn","McElroy", "Flanders", "Wiggum", "Burns", "Smithers",
+            "Carlson", "LoveJoy", "Van Houten", "Gates", "Braconier", "Kenobi","Lucas", "Clooney", "Harisson",
+            "Obama", "Bush", "Black", "Hogan", "Anderson", "McKay", "Fields", "Bruel", "Kottick","Dupond",
+            "Leloux", "Miller", "Adams", "Dent", "Accroc", "Prefect", "Escort", "Sheridan", "William", "Willis",
+            "Lee","Devos", "Tatcher", "Gilbert", "Casilli", "Wilson", "Cantor", "Descartes", "Carlyle", "Ford",
+            "Tortelloni", "Pizza"
         );
 
         $this->maxFirstNameOffset = count($this->firstNames);
@@ -85,7 +87,9 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
 
     protected function loadRole($role)
     {
-        $roleRepo = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Role');
+        $roleRepo = $this->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Role');
 
         if ($role == 'admin') {
             return $roleRepo->findOneByName(PlatformRoles::ADMIN);

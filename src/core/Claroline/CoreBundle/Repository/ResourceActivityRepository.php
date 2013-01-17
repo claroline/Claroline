@@ -15,9 +15,9 @@ class ResourceActivityRepository extends EntityRepository
             ORDER BY ra.sequenceOrder
             ";
 
-       $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-       return $query->getResult();
+        return $query->getResult();
     }
 }
 

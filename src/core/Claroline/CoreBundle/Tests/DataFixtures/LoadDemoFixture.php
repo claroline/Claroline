@@ -114,7 +114,11 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $accItems[] = $this->createFile('sample.pdf', $dir, $user, 'sample.pdf');
         $accItems[] = $this->loadFixture(new LoadForumData('Forum Docs', $user->getUsername(), 5, 5, $dir));
         $accDir = $this->createDirectory('Activities', $dir, $user);
-        $dir = $this->createDirectory('Images et vidéos', $this->getWorkspaceRoot($user->getPersonalWorkspace()), $user);
+        $dir = $this->createDirectory(
+            'Images et vidéos',
+            $this->getWorkspaceRoot($user->getPersonalWorkspace()),
+            $user
+        );
         $accItems[] = $this->createFile('big_buck_bunny_480.webm', $dir, $user, 'bigbuck.webm');
         $accItems[] = $this->createFile('wallpaper.jpg', $dir, $user, 'wallpaper.jpg');
 
@@ -203,7 +207,8 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     private function getWorkspaceRoot($workspace)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findOneBy(array('workspace' => $workspace, 'parent' => null));
 
         return $root;
     }
@@ -212,13 +217,18 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     {
         $activity = new Activity();
         $activity->setName($name);
-        $activity->setInstructions($this->getContainer()->get('claroline.utilities.lipsum_generator')->generateLipsum(300));
-        $activity = $this->getContainer()->get('claroline.resource.manager')->create($activity, $parent->getId(), 'activity', $user);
+        $activity->setInstructions($this->getContainer()
+            ->get('claroline.utilities.lipsum_generator')
+            ->generateLipsum(300)
+        );
+        $activity = $this->getContainer()
+            ->get('claroline.resource.manager')
+            ->create($activity, $parent->getId(), 'activity', $user);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $i = 0;
 
-        foreach($resources as $resource) {
-            if (null != $resource){
+        foreach ($resources as $resource) {
+            if (null != $resource) {
                 $i++;
                 $rs = new ResourceActivity;
                 $rs->setActivity($activity);

@@ -40,3 +40,10 @@ Recherche~ si on possède un grp qui a les permissions de voir... => la recherch
 Ordre des messages
 
 Rename security/rightManager en security/utilities
+
+==========================================
+
+PHPCS règles à rajouter
+
++ camelcase pour les variables
++ . SPACE ' ' ...

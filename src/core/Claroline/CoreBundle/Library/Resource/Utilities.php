@@ -18,7 +18,7 @@ class Utilities
             $nbName = 0;
             foreach ($children as $child) {
                 $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
-                if ($baseName == $arChildName[0]){
+                if ($baseName == $arChildName[0]) {
                     $nbName++;
                 }
             }

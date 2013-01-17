@@ -19,24 +19,26 @@ class IconCreatorTest extends FixtureTestCase
         parent::setUp();
         $ds = DIRECTORY_SEPARATOR;
 
-        if( extension_loaded('gd') && extension_loaded('ffmpeg')){
+        if (extension_loaded('gd') && extension_loaded('ffmpeg')) {
             $this->areLoaded = true;
         }
 
         $videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.mp4";
-        $copyVideoPath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}video.mp4";
+        $copyVideoPath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds."video.mp4";
         copy($videoPath, $copyVideoPath);
 
         $videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.unknownExtension";
-        $copyVideoPath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}video.unknownExtension";
+        $copyVideoPath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds
+            . "video.unknownExtension";
         copy($videoPath, $copyVideoPath);
 
         $imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.jpg";
-        $copyImagePath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}image.jpg";
+        $copyImagePath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds."image.jpg";
         copy($imagePath, $copyImagePath);
 
         $imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.unknownExtension";
-        $copyImagePath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}image.unknownExtension";
+        $copyImagePath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds
+            . "image.unknownExtension";
         copy($imagePath, $copyImagePath);
 
         $textPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}text.txt";

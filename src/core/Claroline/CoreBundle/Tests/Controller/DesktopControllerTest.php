@@ -48,16 +48,25 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->loadUserFixture(array('user', 'admin'));
         //admin must unlock first
         $this->logUser($this->getFixtureReference('user/user'));
-        $configs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isDesktop' => true));
+        $configs = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findBy(array('isDesktop' => true));
         $countConfigs = count($configs);
         $crawler = $this->client->request('GET', "/desktop/info");
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
-            'POST', "/desktop/config/{$configs[0]->getId()}/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
+            'POST',
+            "/desktop/config/{$configs[0]->getId()}/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
         );
         $crawler = $this->client->request('GET', "/desktop/info");
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
-        $configs = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('isDesktop' => true));
+        $configs = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findBy(array('isDesktop' => true));
         $this->assertEquals(++$countConfigs, count($configs));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");

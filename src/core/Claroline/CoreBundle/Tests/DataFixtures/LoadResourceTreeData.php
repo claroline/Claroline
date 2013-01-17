@@ -8,7 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Resource\ResourceInstance;
 
 
 class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInterface
@@ -65,7 +64,8 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $numTot = (( 1 - pow($this->directoryCount, $this->depth + 1) ) / (1 - $this->directoryCount) ) - 1;
         $this->log('Number of directories that will be generated: ' . $numTot);
         $this->log('Number of files that will be generated: ' . $numTot * $this->fileCount);
-        $this->user = $manager->getRepository('Claroline\CoreBundle\Entity\User')->findOneBy(array('username' => $this->username));
+        $this->user = $manager->getRepository('Claroline\CoreBundle\Entity\User')
+            ->findOneBy(array('username' => $this->username));
         $this->workspace = $this->user->getPersonalWorkspace();
         $this->userRootDirectory = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->findOneBy(array('parent' => null, 'workspace' => $this->user->getPersonalWorkspace()->getId()));
@@ -73,9 +73,17 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
             ->findOneBy(array('name' => 'directory'));
         $this->fileType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findOneBy(array('name' => 'file'));
-        $nextId = $manager->createQuery('SELECT MAX(i.id) + 1 FROM Claroline\CoreBundle\Entity\Resource\AbstractResource i')
+        $nextId = $manager
+            ->createQuery('SELECT MAX(i.id) + 1 FROM Claroline\CoreBundle\Entity\Resource\AbstractResource i')
             ->getSingleResult();
-        $this->generateItems($manager, $this->depth, 0, $this->directoryCount, $this->fileCount, $this->userRootDirectory, array_shift($nextId));
+        $this->generateItems(
+            $manager,
+            $this->depth, 0,
+            $this->directoryCount,
+            $this->fileCount,
+            $this->userRootDirectory,
+            array_shift($nextId)
+        );
         $manager->flush();
         $this->log('===> NUMBER OF DIR CREATED: ' . $this->cptDirectories);
         $this->log('===> NUMBER OF FILES CREATED: ' . $this->cptFiles);
@@ -87,7 +95,11 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $dirToBeDetached = array();
 
         for ($j = 0; $j < $directoryCount; $j++) {
-            $ri = $this->addDirectory($em, $curDepth, sprintf($this->dirNameMasks[array_rand($this->dirNameMasks)], $nextId), $parent);
+            $ri = $this->addDirectory($em,
+                $curDepth,
+                sprintf($this->dirNameMasks[array_rand($this->dirNameMasks)], $nextId),
+                $parent
+            );
             $dirToBeDetached[] = $ri;
             $this->cptDirectories++;
             $nextId++;
@@ -95,13 +107,19 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
 
             for ($k = 0; $k < $fileCount; $k++) {
                 $fileNameMask = array_rand($this->fileNameMasks);
-                $fi = $this->addFile($em, $curDepth, sprintf($fileNameMask, $nextId), $this->fileNameMasks[$fileNameMask], $ri);
+                $fi = $this->addFile($em,
+                    $curDepth,
+                    sprintf($fileNameMask, $nextId), $this->fileNameMasks[$fileNameMask],
+                    $ri
+                );
                 $filesToBeDetached[] = $fi;
                 $this->cptFiles++;
                 $nextId++;
             }
 
-            $this->log('Depth: ' . $curDepth . ' => Flushing... (files: ' . $this->cptFiles . ", directories: " . $this->cptDirectories . ')');
+            $this->log('Depth: ' . $curDepth . ' => Flushing... (files: ' . $this->cptFiles
+                . ", directories: " . $this->cptDirectories . ')'
+            );
             $em->flush();
 
             // Detach file entities for better perfs as we do not need them anymore.

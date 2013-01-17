@@ -32,66 +32,66 @@ class RoleRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-   public function getCollaboratorRole(AbstractWorkspace $workspace)
-   {
-       $dql = "
-           SELECT r FROM Claroline\CoreBundle\Entity\Role r
-           WHERE r.name LIKE 'ROLE_WS_COLLABORATOR_{$workspace->getId()}'";
+    public function getCollaboratorRole(AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.name LIKE 'ROLE_WS_COLLABORATOR_{$workspace->getId()}'";
+
+         $query = $this->_em->createQuery($dql);
+
+         return $query->getSingleResult();
+    }
+
+    public function getVisitorRole(AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.name LIKE 'ROLE_WS_VISITOR_{$workspace->getId()}'";
 
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleResult();
-   }
+    }
 
-   public function getVisitorRole(AbstractWorkspace $workspace)
-   {
-       $dql = "
-           SELECT r FROM Claroline\CoreBundle\Entity\Role r
-           WHERE r.name LIKE 'ROLE_WS_VISITOR_{$workspace->getId()}'";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getSingleResult();
-   }
-
-   public function getManagerRole(AbstractWorkspace $workspace)
-   {
-       $dql = "
-           SELECT r FROM Claroline\CoreBundle\Entity\Role r
-           WHERE r.name LIKE 'ROLE_WS_MANAGER_{$workspace->getId()}'";
+    public function getManagerRole(AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.name LIKE 'ROLE_WS_MANAGER_{$workspace->getId()}'";
 
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleResult();
-   }
+    }
 
-   public function getTokenRoleForWorkspace($token, AbstractWorkspace $workspace)
-   {
-       $roles = $this->getWorkspaceRoles($workspace);
+    public function getTokenRoleForWorkspace($token, AbstractWorkspace $workspace)
+    {
+        $roles = $this->getWorkspaceRoles($workspace);
 
-       foreach($roles as $role){
-           foreach($token->getRoles() as $tokenRole){
-               if ($tokenRole->getRole() == $role->getName()){
-                   return $role;
-               }
-           }
-       }
+        foreach ($roles as $role) {
+            foreach ($token->getRoles() as $tokenRole) {
+                if ($tokenRole->getRole() == $role->getName()) {
+                    return $role;
+                }
+            }
+        }
 
-       return null;
-   }
+        return null;
+    }
 
-   public function getEntityRoleForWorkspace($entity, AbstractWorkspace $workspace)
-   {
-       $roles = $this->getWorkspaceRoles($workspace);
+    public function getEntityRoleForWorkspace($entity, AbstractWorkspace $workspace)
+    {
+        $roles = $this->getWorkspaceRoles($workspace);
 
-       foreach($roles as $role){
-           foreach($entity->getRoles() as $entityRole){
-               if ($entityRole == $role->getName()){
-                   return $role;
-               }
-           }
-       }
+        foreach ($roles as $role) {
+            foreach ($entity->getRoles() as $entityRole) {
+                if ($entityRole == $role->getName()) {
+                    return $role;
+                }
+            }
+        }
 
-       return null;
+        return null;
    }
 }
