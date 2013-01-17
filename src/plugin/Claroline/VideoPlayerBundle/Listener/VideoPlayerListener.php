@@ -20,7 +20,7 @@ class VideoPlayerListener extends ContainerAware
                 array('workspace' => $event->getResource()->getWorkspace(),
                     'path' => $path,
                     'video' => $event->getResource())
-                );
+            );
         $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();

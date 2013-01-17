@@ -441,8 +441,8 @@ class ResourceController extends Controller
         $response = new StreamedResponse();
 
         $response->setCallBack(function() use($file) {
-                readfile($file);
-            });
+            readfile($file);
+        });
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
@@ -894,7 +894,7 @@ class ResourceController extends Controller
                     } else {
                         $config->reset();
                     }
-                    
+
                     $em->persist($config);
                 }
             }

@@ -36,8 +36,10 @@ class ForumListenerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $this->resourceRepository
             ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
-        $this->client->request('POST', "/resource/create/claroline_forum/{$userRoot->getId()}",
-           array('forum_form' => array('name' => 'test'))
+        $this->client->request(
+            'POST',
+            "/resource/create/claroline_forum/{$userRoot->getId()}",
+            array('forum_form' => array('name' => 'test'))
         );
         $this->assertEquals(count(json_decode($this->client->getResponse()->getContent())), 1);
     }

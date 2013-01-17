@@ -174,7 +174,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->assertEquals(
             $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->find($jsonResponse[0]->id)->getWorkspace()->getId(),
+            ->find($jsonResponse[0]->id)->getWorkspace()->getId(),
             $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId()
         );
     }

@@ -127,9 +127,9 @@ class CalendarController extends Controller
         $em->flush();
 
         return new Response(
-                json_encode(array('responseCode' => 200, 'greeting' => 'ok')),
-                200,
-                array('Content-Type' => 'application/json')
+            json_encode(array('responseCode' => 200, 'greeting' => 'ok')),
+            200,
+            array('Content-Type' => 'application/json')
         );
     }
 
