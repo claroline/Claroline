@@ -22,12 +22,18 @@ class ResourceRights
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", inversedBy="resourcesRights")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="resourcesRights"
+     * )
      */
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource", inversedBy="rights", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     inversedBy="rights", cascade={"persist"}
+     * )
      */
     private $resource;
 
@@ -63,12 +69,17 @@ class ResourceRights
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *      inversedBy="rights"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *     inversedBy="rights"
      * )
-     * @ORM\JoinTable(name="claro_list_type_creation",
-     *      joinColumns={@ORM\JoinColumn(name="right_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_list_type_creation",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $resourceTypes;
@@ -185,8 +196,8 @@ class ResourceRights
      */
     public function isEquals($rights)
     {
-        foreach($this->getRights() as $key => $current){
-            if($current != $rights[$key]){
+        foreach ($this->getRights() as $key => $current) {
+            if ($current != $rights[$key]) {
                 return false;
             }
         }
@@ -218,7 +229,7 @@ class ResourceRights
      */
     public function setRights($rights)
     {
-        foreach($rights as $key => $value){
+        foreach ($rights as $key => $value) {
             $this->$key = $value;
         }
     }
@@ -240,6 +251,6 @@ class ResourceRights
 
     public function cleanResourceTypes()
     {
-         $this->resourceTypes = new ArrayCollection();
+        $this->resourceTypes = new ArrayCollection();
     }
 }

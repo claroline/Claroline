@@ -12,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
-    
-
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,46 +20,44 @@ class Event
     private $id;
 
     /**
-     *
      * @ORM\Column(name="title", type="string" , length=50)
      */
     private $title;
 
     /**
-     *
      * @ORM\Column(name="start", type="integer")
      */
     private $start;
 
     /**
-     *
      * @ORM\Column(name="end", type="integer" , nullable=true)
      */
     private $end;
 
     /**
-     *
      * @ORM\Column(name="description", type="string" , nullable=true)
      */
     private $description;
 
     /**
-     *
      *  @ORM\Column(name="workspace_id", type="integer")
      */
     private $workspaceId;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="events", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     inversedBy="events", cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     private $workspace;
 
     /**
-     *
      *  @ORM\Column(name="user_id", type="integer")
      */
     private $userId;
+
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -102,20 +98,12 @@ class Event
 
     public function getEnd()
     {
-        if (is_null($this->end)) {
-            return $this->end;
-        } else {
-            return $this->end;
-        }
+        return $this->end;
     }
 
     public function setEnd(\DateTime $end)
     {
-        if (is_null($end)) {
-            $this->end = $end;
-        }
-        $timestamp = $end->getTimestamp();
-        $this->end = $timestamp;
+        $this->end = $end->getTimestamp();
     }
 
     public function getDescription()
@@ -137,7 +125,7 @@ class Event
     {
         $this->workspaceId = $workspaceId;
     }
-    
+
     public function getUserId()
     {
         return $this->userId;
@@ -147,7 +135,7 @@ class Event
     {
         $this->userId = $userId;
     }
-    
+
     public function getWorkspace()
     {
         return $this->workspace;
@@ -157,7 +145,7 @@ class Event
     {
         $this->workspace = $workspace;
     }
-    
+
     public function getUser()
     {
         return $this->user;

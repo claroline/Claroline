@@ -7,17 +7,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ResourcePropertiesType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
         $builder->add('userIcon', 'file', array('required' => false));
-        $builder->add('creationDate',
+        $builder->add(
+            'creationDate',
             'date',
-            array('disabled' => true,
+            array(
+                'disabled' => true,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'
-            ));
-        $builder->add('resourceType',
+            )
+        );
+        $builder->add(
+            'resourceType',
             'entity',
             array(
                 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
@@ -25,8 +30,10 @@ class ResourcePropertiesType extends AbstractType
                 'multiple' => false,
                 'property' => 'name',
                 'disabled' => true
-            ));
-        $builder->add('creator',
+            )
+        );
+        $builder->add(
+            'creator',
             'entity',
             array(
                 'class' => 'Claroline\CoreBundle\Entity\User',
@@ -34,8 +41,8 @@ class ResourcePropertiesType extends AbstractType
                 'multiple' => false,
                 'property' => 'username',
                 'disabled' => true
-            ));
-
+            )
+        );
     }
 
     public function getName()
@@ -45,8 +52,8 @@ class ResourcePropertiesType extends AbstractType
 
     public function getDefaultOptions(array $options)
     {
-       return array(
-           'translation_domain' => 'platform'
-       );
+        return array(
+            'translation_domain' => 'platform'
+        );
     }
 }

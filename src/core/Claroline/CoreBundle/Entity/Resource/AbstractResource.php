@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\License;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
-
 /**
  * Base entity for all resources.
  *
@@ -40,7 +39,11 @@ abstract class AbstractResource
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\License", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\License",
+     *     inversedBy="abstractResources",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
      */
     protected $license;
@@ -58,19 +61,30 @@ abstract class AbstractResource
     protected $updated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *     inversedBy="abstractResources",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     protected $resourceType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="abstractResources", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     inversedBy="abstractResources",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="icon_id", referencedColumnName="id")
      */
     protected $icon;
@@ -92,9 +106,9 @@ abstract class AbstractResource
      *
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      inversedBy="children",
-     *      fetch="EAGER"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     inversedBy="children",
+     *     fetch="EAGER"
      * )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
@@ -110,8 +124,8 @@ abstract class AbstractResource
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      mappedBy="parent"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -119,8 +133,9 @@ abstract class AbstractResource
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut", cascade={"remove"},
-     *      mappedBy="resource"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut",
+     *     mappedBy="resource",
+     *     cascade={"remove"}
      * )
      */
     protected $shortcuts;
@@ -134,21 +149,20 @@ abstract class AbstractResource
      */
     protected $workspace;
 
-   /**
-    * @Gedmo\TreePath(separator="`")
-    * @ORM\Column(name="path", type="string", length=3000, nullable=true)
-    */
+    /**
+     * @Gedmo\TreePath(separator="`")
+     * @ORM\Column(name="path", type="string", length=3000, nullable=true)
+     */
     protected $path;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
-     *      mappedBy="resource"
+     *     targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
+     *     mappedBy="resource"
      * )
      */
     protected $rights;
 
-    //the user icon
     protected $userIcon;
 
     /**
@@ -260,7 +274,7 @@ abstract class AbstractResource
         $this->creator = $creator;
     }
 
-        /**
+    /**
      * Returns the children resource instances.
      *
      * @return \Doctrine\Common\ArrayCollection
@@ -330,7 +344,7 @@ abstract class AbstractResource
         return $this->parent;
     }
 
-        /**
+    /**
      * Return the lvl value of the resource in the tree.
      *
      * @return integer
@@ -370,7 +384,9 @@ abstract class AbstractResource
     public function setName($name)
     {
         if (strpos(self::PATH_SEPARATOR, $name) !== false) {
-            throw new \InvalidArgumentException('Invalid character "' . self::PATH_SEPARATOR . '" in resource name.');
+            throw new \InvalidArgumentException(
+                'Invalid character "' . self::PATH_SEPARATOR . '" in resource name.'
+            );
         }
 
         $this->name = $name;

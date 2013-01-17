@@ -34,7 +34,7 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
      *
      * @param ObjectManager $manager
      */
-    public function load (ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         $documentMetatype = new MetaType();
         $documentMetatype->setName('document');
@@ -48,7 +48,7 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('activity', true, false, 'Claroline\CoreBundle\Entity\Resource\Activity')
         );
 
-        $i=0;
+        $i = 0;
 
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
@@ -59,7 +59,7 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->addMetaType($documentMetatype);
             $manager->persist($type);
 
-            if(isset($customActions[$i])){
+            if (isset($customActions[$i])) {
                 if ($customActions[$i] !== null) {
                     $actions = new ResourceTypeCustomAction();
                     $actions->setAction($customActions[$i][0]);

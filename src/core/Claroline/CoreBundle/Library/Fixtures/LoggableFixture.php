@@ -15,8 +15,7 @@ abstract class LoggableFixture extends AbstractFixture
 
     protected function log($message)
     {
-        if (is_callable($this->logger))
-        {
+        if (is_callable($this->logger)) {
             call_user_func_array($this->logger, array($message));
         }
     }

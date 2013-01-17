@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,12 +18,18 @@ class UserMessage
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="userMessages")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     inversedBy="userMessages"
+     * )
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Message", inversedBy="userMessages")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Message",
+     *     inversedBy="userMessages"
+     * )
      */
     private $message;
 

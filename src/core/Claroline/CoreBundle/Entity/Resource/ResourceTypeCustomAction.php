@@ -28,7 +28,11 @@ class ResourceTypeCustomAction
     protected $isAsync;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType", inversedBy="customActions", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *     inversedBy="customActions",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      */
     protected $resourceType;
