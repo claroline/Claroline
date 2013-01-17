@@ -163,6 +163,8 @@ abstract class AbstractResource
      */
     protected $rights;
 
+    //The user icon.
+    //Used by some forms.
     protected $userIcon;
 
     /**
@@ -413,6 +415,7 @@ abstract class AbstractResource
 
     /**
      * Gets the user icon.
+     *
      * @return file
      */
     public function getUserIcon()
@@ -422,7 +425,9 @@ abstract class AbstractResource
 
     /**
      * Convert a path for display: remove ids.
-     * @param type $path
+     *
+     * @param string $path
+     *
      * @return string
      */
     public static function convertPathForDisplay($path)

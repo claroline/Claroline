@@ -124,7 +124,6 @@ class MessageControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/message/delete/from?ids[]={$msgId}");
         $crawler = $this->client->request('GET', '/message/list/removed/0');
         $this->assertEquals(1, count($crawler->filter('.row-user-message')));
-        var_dump($this->client->getResponse()->getContent());
     }
 
     public function testRemoveMessageToUser()

@@ -19,9 +19,9 @@ class MessageRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getUnreadMessages($user)
+    public function countUnreadMessage($user)
     {
-        $dql = "SELECT m FROM Claroline\CoreBundle\Entity\Message m
+        $dql = "SELECT Count(m) FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
             JOIN um.user u
             WHERE u.id = {$user->getId()}
@@ -30,8 +30,10 @@ class MessageRepository extends NestedTreeRepository
            ;
 
         $query = $this->_em->createQuery($dql);
+        $result = $query->getArrayResult();
 
-        return $query->getResult();
+        //?? getFirstResult and alisases do not work. Why ?
+        return $result[0][1];
     }
 
     public function getUserReceivedMessages($user, $isRemoved = false, $offset = null, $limit = null)

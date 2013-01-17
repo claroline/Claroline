@@ -41,7 +41,7 @@ class LayoutController extends Controller
     public function topBarAction()
     {
         $isLogged = false;
-        $hasNewMsg = false;
+        $countUnreadMessages = 0;
         $username = null;
         $registerTarget = null;
         $loginTarget = null;
@@ -54,9 +54,8 @@ class LayoutController extends Controller
 
         if ($user instanceof User) {
             $isLogged = true;
-            $unreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
-                ->getUnreadMessages($user);
-            $hasNewMsg = count($unreadMessages) !== 0;
+            $countUnreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
+                ->countUnreadMessage($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $workspaces = $wsRepo->getAllWsOfUser($user);
             $personalWs = $user->getPersonalWorkspace();
@@ -77,7 +76,7 @@ class LayoutController extends Controller
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
                 'isLogged' => $isLogged,
-                'hasNewMsg' => $hasNewMsg,
+                'countUnreadMessages' => $countUnreadMessages,
                 'username' => $username,
                 'register_target' => $registerTarget,
                 'login_target' => $loginTarget,
