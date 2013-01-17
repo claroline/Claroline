@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class Exporter
 {
@@ -21,7 +22,7 @@ class Exporter
     /* @var SecurityContext */
     private $sc;
 
-    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, $sc)
+    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, SecurityContext $sc)
     {
         $this->em = $em;
         $this->ed = $ed;
@@ -31,10 +32,13 @@ class Exporter
 
     /**
      * Returns an archive with the required content.
+     * The array of ids can even contains the ids of a directory.
+     *
+     * @param array $ids the ids array
      *
      * @return file
      */
-    public function exportResources($ids)
+    public function exportResources(array $ids)
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $archive = new \ZipArchive();
@@ -89,7 +93,7 @@ class Exporter
      *
      * @return array $toAppend
      */
-    public function expandResourceIds($resourceIds)
+    public function expandResourceIds(array $resourceIds)
     {
         $repoIns = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $dirIds = array();

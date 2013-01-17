@@ -28,7 +28,8 @@
                         <li>
                             <a href="{{ path('claro_message_list_received_layout') }}"
                                id="link-messages"
-                               class="icon-envelope {% if hasNewMsg == true %}icon-new-msg{% endif %}">
+                               class="icon-envelope {% if countUnreadMessages > 0 %}icon-new-msg{% endif %}"
+                                title="{{ 'new_message_alert'|trans({'%count%': countUnreadMessages}, 'platform')}}">
                             </a>
                         </li>
                     </ul>

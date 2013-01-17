@@ -328,11 +328,13 @@ class WorkspaceUserController extends Controller
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->getWorkspaceRoles($workspace);
         $params = $this->get('request')->query->all();
-        $this->checkRemoveManagerRoleIsValid($params, $workspace);
 
         if (isset($params['userIds'])) {
+            $this->checkRemoveManagerRoleIsValid($params['userIds'], $workspace);
             foreach ($params['userIds'] as $userId) {
+
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+
                 if (null != $user) {
                     foreach ($roles as $role) {
                         $user->removeRole($role);
@@ -350,34 +352,27 @@ class WorkspaceUserController extends Controller
      * Checks if the role manager of the user can be changed.
      * There should be awlays at least one manager of a workspace.
      *
-     * @param array $parameters "$this->get('request')->query->all();" because I was lazy.
-     * In other word an array wich must contains ['userIds'] wich is an array of group ids.
+     * @param array $userIds an array of user ids
      * @param AbstractWorkspace $workspace the relevant workspace
      *
      * @throws LogicException
      */
-    //TODO: change the $parameters parameter.
-    private function checkRemoveManagerRoleIsValid($parameters, $workspace)
+    private function checkRemoveManagerRoleIsValid($userIds, $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
             ->getManagerRole($workspace);
 
-        if (isset($parameters['userIds'])) {
-            foreach ($parameters['userIds'] as $userId) {
-                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+        foreach ($userIds as $userId) {
+            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
 
-                if (null !== $user) {
-                    if ($workspace == $user->getPersonalWorkspace()) {
-                        throw new LogicException(
-                            'You can\'t remove the original manager from a personal workspace'
-                        );
-                    }
-
-                    if ($user->hasRole($managerRole->getName())) {
-                        $countRemovedManagers++;
-                    }
+            if (null !== $user) {
+                if ($workspace == $user->getPersonalWorkspace()) {
+                    throw new LogicException("You can't remove the original manager from a personal workspace");
+                }
+                if ($user->hasRole($em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getName())) {
+                    $countRemovedManagers++;
                 }
             }
         }

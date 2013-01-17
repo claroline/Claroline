@@ -4,21 +4,30 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Library\Security\RightsManager;
+use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class Converter
 {
     /* @var EntityManager */
     private $em;
-    private $rm;
+    private $ut;
 
-    public function __construct(EntityManager $em, RightsManager $rm)
+    public function __construct(EntityManager $em, SecurityUtilities $ut)
     {
         $this->em = $em;
-        $this->rm = $rm;
+        $this->ut = $ut;
     }
 
+    /**
+     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
+     * a json response)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
     public function toArray(AbstractResource $resource, TokenInterface $token)
     {
         $resourceArray = array();
@@ -33,7 +42,8 @@ class Converter
 
         $isAdmin = false;
 
-        $roles = $this->rm->getRoles($token);
+        $roles = $this->ut->getRoles($token);
+
         foreach($roles as $role){
             if($role === 'ROLE_ADMIN'){
                 $isAdmin = true;
@@ -54,6 +64,14 @@ class Converter
         return $resourceArray;
     }
 
+    /**
+     * Convert a ressource into an json string (mainly used to be sent to the manager.js)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
     public function toJson(AbstractResource $resource, TokenInterface $token)
     {
         $phpArray[0] = $this->toArray($resource, $token);

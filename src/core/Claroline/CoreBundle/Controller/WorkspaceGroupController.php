@@ -79,10 +79,8 @@ class WorkspaceGroupController extends Controller
                 ->find($parameters['form']['role']);
 
             //verifications: can we change his role.
-            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
-                $groupIds = array($group->getId());
-                $parameters['groupIds'] = $groupIds;
-                $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
+            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()){
+                $this->checkRemoveManagerRoleIsValid(array($group->getId()), $workspace);
             }
 
             $group->removeRole($role, false);
@@ -144,9 +142,10 @@ class WorkspaceGroupController extends Controller
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->getWorkspaceRoles($workspace);
         $params = $this->get('request')->query->all();
-        $this->checkRemoveManagerRoleIsValid($params, $workspace);
+
 
         if (isset($params['groupIds'])) {
+            $this->checkRemoveManagerRoleIsValid($params['groupIds'], $workspace);
             foreach ($params['groupIds'] as $groupId) {
                 $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
@@ -326,28 +325,25 @@ class WorkspaceGroupController extends Controller
      * Checks if the role manager of the group can be changed.
      * There should be awlays at least one manager of a workspace.
      *
-     * @param array $parameters "$this->get('request')->query->all();" because I was lazy.
-     * In other word an array wich must contains ['groupIds'] wich is an array of group ids.
+     * @param array $groupIds an array of group ids.
      * @param AbstractWorkspace $workspace the relevant workspace
      *
      * @throws LogicException
      */
-    //TODO: change the $parameters parameter.
-    private function checkRemoveManagerRoleIsValid($parameters, $workspace)
+    private function checkRemoveManagerRoleIsValid($groupIds, $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
             ->getManagerRole($workspace);
         $countRemovedManagers = 0;
 
-        if (isset($parameters['groupIds'])) {
-            foreach ($parameters['groupIds'] as $groupId) {
-                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
 
-                if (null !== $group) {
-                    if ($group->hasRole($managerRole->getName())) {
-                        $countRemovedManagers += count($group->getUsers());
-                    }
+        foreach ($groupIds as $groupId) {
+            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+
+            if (null !== $group) {
+                if ($group->hasRole($managerRole->getName())) {
+                    $countRemovedManagers += count($group->getUsers());
                 }
             }
         }

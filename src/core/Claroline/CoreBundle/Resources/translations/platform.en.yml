@@ -102,6 +102,7 @@ my_resources: My resources
 my_workspace: My workspace
 my_workspaces: My workspaces
 name: Name
+new_message_alert: You have %count% new message(s)
 no_search_results: Your search hasn't returned any result.
 note: Note
 object: Object
