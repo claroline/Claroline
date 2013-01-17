@@ -71,8 +71,8 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-        $this->client->request
-            ('DELETE',
+        $this->client->request(
+            'DELETE',
             "/workspaces/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
         );
         $this->client->request(
@@ -178,7 +178,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $crawler = $this->client->request(
             'POST',
             "/workspaces/{$wsAId}/tools/group/{$this->getFixtureReference('group/group_a')->getId()}",
-                array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
+            array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->client->request(
@@ -346,8 +346,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->getFixtureReference('group/group_a')
             ->addRole($em->getRepository('ClarolineCoreBundle:Role')
                 ->getCollaboratorRole($this->getFixtureReference('workspace/ws_a')
-            )
-        );
+                ));
         $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')

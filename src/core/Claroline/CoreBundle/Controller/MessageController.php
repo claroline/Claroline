@@ -129,7 +129,7 @@ class MessageController extends Controller
             // add success/error message...
 
             return $this->render(
-                    'ClarolineCoreBundle:Message:message_form.html.twig', array('form' => $form->createView())
+                'ClarolineCoreBundle:Message:message_form.html.twig', array('form' => $form->createView())
             );
         }
     }

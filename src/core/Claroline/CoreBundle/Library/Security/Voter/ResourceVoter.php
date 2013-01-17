@@ -53,11 +53,11 @@ class ResourceVoter implements VoterInterface
                                     '%path%' => $resource->getPathForDisplay(),
                                     '%type%' => $this->translator->trans(
                                         strtolower($object->getAttribute('type')),
-                                         array(),
-                                        'resource')
-                                    ),
+                                        array(),
+                                        'resource'
+                                    )),
                                 'platform'
-                                );
+                            );
                     } else {
                         if (!$this->canCreate($rightsCreation, $object->getAttribute('type'))) {
                             $errors[] = $this->translator
@@ -71,7 +71,7 @@ class ResourceVoter implements VoterInterface
                                             'resource')
                                         ),
                                     'platform'
-                                    );
+                                );
                         }
                     }
                 }
@@ -88,7 +88,7 @@ class ResourceVoter implements VoterInterface
                             'resource_creation_denied',
                             array('%path%' => $object->getAttribute('parent')->getPathForDisplay()),
                             'platform'
-                            );
+                        );
                 } else {
                     foreach ($object->getResources() as $resource) {
                         if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
@@ -102,7 +102,7 @@ class ResourceVoter implements VoterInterface
                                              array(), 'resource')
                                          ),
                                      'platform'
-                                     );
+                                 );
                         }
 
                         $rights = $this->repository->getRights($this->ut->getRoles($token), $resource);
@@ -115,7 +115,7 @@ class ResourceVoter implements VoterInterface
                                         '%path%' => $resource->getPathForDisplay(),
                                         '%action%' => 'COPY'),
                                     'platform'
-                                    );
+                                );
                         }
 
                         if (!$rights['canDelete']) {
@@ -127,7 +127,7 @@ class ResourceVoter implements VoterInterface
                                         '%action%' => 'DELETE'
                                         ),
                                     'platform'
-                                    );
+                                );
                         }
                     }
                 }
@@ -144,7 +144,7 @@ class ResourceVoter implements VoterInterface
                             'resource_creation_denied',
                             array('%path%' => $object->getAttribute('parent')->getPathForDisplay()),
                             'platform'
-                            );
+                        );
                 } else {
                     foreach ($object->getResources() as $resource) {
                         if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
@@ -158,7 +158,7 @@ class ResourceVoter implements VoterInterface
                                             'resource')
                                         ),
                                     'platform'
-                                    );
+                                );
                         }
                     }
                 }
@@ -181,7 +181,7 @@ class ResourceVoter implements VoterInterface
                                     '%action%' => $action
                                     ),
                                 'platform'
-                                );
+                            );
                     } else {
                         if (!$this->canDo($resource, $token, $action)) {
                             $errors[] = $this->translator
@@ -192,7 +192,7 @@ class ResourceVoter implements VoterInterface
                                         '%action%' => $action
                                         ),
                                     'platform'
-                                    );
+                                );
                         }
                     }
                 }

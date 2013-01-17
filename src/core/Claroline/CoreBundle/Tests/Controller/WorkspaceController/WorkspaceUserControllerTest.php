@@ -140,7 +140,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->client->request(
             'PUT',
             "/workspaces/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
-         );
+        );
         $this->client->request(
             'GET',
             "/workspaces/{$pwu->getId()}/tools/user/{$creatorId}"

@@ -774,18 +774,18 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
 
-         $table->addForeignKeyConstraint(
-             $this->getStoredTable('claro_workspace'),
-             array('workspace_id'),
-             array('id'),
-             array('onDelete' => 'CASCADE')
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
         );
 
-         $table->addForeignKeyConstraint(
-             $this->getStoredTable('claro_user'),
-             array('user_id'),
-             array('id'),
-             array('onDelete' => 'CASCADE')
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
         );
     }
 }

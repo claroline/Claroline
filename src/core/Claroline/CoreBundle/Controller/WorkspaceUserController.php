@@ -100,9 +100,7 @@ class WorkspaceUserController extends Controller
             $newRole = $roleRepo->find($parameters['form']['role']);
 
             if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
-                $userIds = array($userId);
-                $parameters['userIds'] = $userIds;
-                $this->checkRemoveManagerRoleIsValid($parameters, $workspace);
+                $this->checkRemoveManagerRoleIsValid(array ($userId), $workspace);
             }
 
             $user->removeRole($role);
@@ -371,7 +369,7 @@ class WorkspaceUserController extends Controller
                 if ($workspace == $user->getPersonalWorkspace()) {
                     throw new LogicException("You can't remove the original manager from a personal workspace");
                 }
-                if ($user->hasRole($em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace)->getName())) {
+                if ($user->hasRole($managerRole->getName())) {
                     $countRemovedManagers++;
                 }
             }
@@ -383,7 +381,7 @@ class WorkspaceUserController extends Controller
 
         if ($countRemovedManagers >= $countUserManagers) {
             throw new LogicException(
-                "You can't remove every managers(you're trying to remove {$countRemovedManagers} "
+                "You can't remove every managers (you're trying to remove {$countRemovedManagers} "
                 . "manager(s) out of {$countUserManagers})"
             );
         }

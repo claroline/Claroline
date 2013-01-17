@@ -47,3 +47,5 @@ PHPCS règles à rajouter
 
 + camelcase pour les variables
 + . SPACE ' ' ...
++ multi line not indented correctly
++ Space before opening parenthesis of function call prohibited
