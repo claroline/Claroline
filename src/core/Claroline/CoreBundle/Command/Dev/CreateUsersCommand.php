@@ -19,9 +19,11 @@ class CreateUsersCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:users:create')
             ->setDescription('Creates a lot of users.');
-        $this->setDefinition(array(
-            new InputArgument('amount', InputArgument::REQUIRED, 'The number of users created'),
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument('amount', InputArgument::REQUIRED, 'The number of users created'),
+            )
+        );
         $this->addOption(
             'ws_creator',
             'wsc',
@@ -54,7 +56,9 @@ class CreateUsersCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
@@ -77,9 +81,11 @@ class CreateUsersCommand extends ContainerAwareCommand
         }
         $nbUsers = $input->getArgument('amount');
         $fixture = new LoadUsersData($nbUsers, $role);
-        $fixture->setLogger(function ($message) use ($output){
-            $output->writeln($message);
-        });
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);

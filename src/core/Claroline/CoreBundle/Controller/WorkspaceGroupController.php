@@ -143,7 +143,6 @@ class WorkspaceGroupController extends Controller
             ->getWorkspaceRoles($workspace);
         $params = $this->get('request')->query->all();
 
-
         if (isset($params['groupIds'])) {
             $this->checkRemoveManagerRoleIsValid($params['groupIds'], $workspace);
             foreach ($params['groupIds'] as $groupId) {
@@ -336,7 +335,6 @@ class WorkspaceGroupController extends Controller
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
             ->getManagerRole($workspace);
         $countRemovedManagers = 0;
-
 
         foreach ($groupIds as $groupId) {
             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);

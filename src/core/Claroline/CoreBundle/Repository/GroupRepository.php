@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Claroline\CoreBundle\Entity\Role;
 
-
 class GroupRepository extends EntityRepository
 {
     /**
@@ -31,7 +30,7 @@ class GroupRepository extends EntityRepository
        ";
 
         if ($role != null) {
-            $dql.= "AND wr.id = :roleId";
+            $dql .= "AND wr.id = :roleId";
         }
 
         $query = $this->_em->createQuery($dql);

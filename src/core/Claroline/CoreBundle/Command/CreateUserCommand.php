@@ -9,8 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -21,12 +19,14 @@ class CreateUserCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:user:create')
             ->setDescription('Creates a new user.');
-        $this->setDefinition(array(
-            new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
-            new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
-            new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
-            new InputArgument('user_password', InputArgument::REQUIRED, 'The user password')
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
+                new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
+                new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
+                new InputArgument('user_password', InputArgument::REQUIRED, 'The user password')
+            )
+        );
         $this->addOption(
             'ws_creator',
             'wsc',
