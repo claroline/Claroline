@@ -15,13 +15,13 @@ class ResourceA extends AbstractResource
      * @ORM\Column(type="string", length=255)
      */
     private $someField;
-    
-    public function getSomeField() 
+
+    public function getSomeField()
     {
         return $this->someField;
     }
 
-    public function setSomeField($value) 
+    public function setSomeField($value)
     {
         $this->someField = $value;
     }

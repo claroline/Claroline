@@ -18,10 +18,12 @@ class CreateRootsCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:roots:create')
             ->setDescription('Creates new roots.');
-        $this->setDefinition(array(
-            new InputArgument('username', InputArgument::REQUIRED, 'The user creating the roots'),
-            new InputArgument('count', InputArgument::REQUIRED, 'The number of roots'),
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument('username', InputArgument::REQUIRED, 'The user creating the roots'),
+                new InputArgument('count', InputArgument::REQUIRED, 'The number of roots'),
+            )
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -43,7 +45,9 @@ class CreateRootsCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }

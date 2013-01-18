@@ -33,14 +33,14 @@ class LipsumGenerator
             $loopBeforeEnd--;
 
             if ($isFullText && $loopBeforeEnd == 0) {
-                $content.="{$endPhrase[array_rand($endPhrase)]} " . ucfirst($words[array_rand($words)]);
+                $content .= "{$endPhrase[array_rand($endPhrase)]} " . ucfirst($words[array_rand($words)]);
             } else {
 
                 if ($content != '') {
                     $content .= ' ';
                 }
 
-                $content.= "{$words[array_rand($words)]}";
+                $content .= "{$words[array_rand($words)]}";
             }
 
             $i++;

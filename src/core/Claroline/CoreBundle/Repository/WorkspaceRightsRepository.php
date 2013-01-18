@@ -34,7 +34,7 @@ class WorkspaceRightsRepository extends EntityRepository
         ";
 
         foreach ($roles as $role) {
-            $dql.= " OR workspace.id = {$workspace->getId()} AND role.name = '{$role}'";
+            $dql .= " OR workspace.id = {$workspace->getId()} AND role.name = '{$role}'";
         }
 
         return $this->_em

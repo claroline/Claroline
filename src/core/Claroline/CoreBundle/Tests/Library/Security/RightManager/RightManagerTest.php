@@ -281,7 +281,6 @@ class RightManagerTest extends FunctionalTestCase
         $bob->addRole($roleC);
         $this->getEntityManager()->flush();
 
-
         $this->rightManager->addRight($entity, $roleC, MaskBuilder::MASK_VIEW);
 
         $this->logUser($jane);

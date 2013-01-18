@@ -162,7 +162,7 @@ class RssReaderListener extends ContainerAware
 
         foreach ($items as $index => $item) {
             if (isset($items[$index]['description'])) {
-                $items[$index]['description']=  preg_replace('/<[^>]+>/i', '', $item['description']);
+                $items[$index]['description'] = preg_replace('/<[^>]+>/i', '', $item['description']);
             }
         }
 

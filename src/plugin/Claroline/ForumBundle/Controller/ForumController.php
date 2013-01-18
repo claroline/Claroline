@@ -22,7 +22,7 @@ class ForumController extends Controller
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
         $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsForForum($forum);
-        $nbPages = ceil($countSubjects/$limit);
+        $nbPages = ceil($countSubjects / $limit);
 
         return $this->render(
             'ClarolineForumBundle::index.html.twig', array(
@@ -110,7 +110,7 @@ class ForumController extends Controller
             ->countMessagesForSubject($subject);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
-        $nbPages = ceil($countMessages/$limit);
+        $nbPages = ceil($countMessages / $limit);
         $workspace = $subject->getWorkspace();
 
         return $this->render(

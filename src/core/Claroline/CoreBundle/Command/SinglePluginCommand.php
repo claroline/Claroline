@@ -13,17 +13,21 @@ abstract class SinglePluginCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
-        $this->setDefinition(array(
-            new InputArgument('vendor_name', InputArgument::REQUIRED, 'The plugin vendor'),
-            new InputArgument('bundle_name', InputArgument::REQUIRED, 'The plugin bundle name'),
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument('vendor_name', InputArgument::REQUIRED, 'The plugin vendor'),
+                new InputArgument('bundle_name', InputArgument::REQUIRED, 'The plugin bundle name'),
+            )
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if (!$input->getArgument('vendor_name')) {
             $vendorName = $this->getHelper('dialog')->askAndValidate(
-                $output, 'Enter the plugin vendor: ', function($vendorName) {
+                $output,
+                'Enter the plugin vendor: ',
+                function ($vendorName) {
                     if (empty($vendorName)) {
                         throw new \Exception('Vendor name cannot be empty');
                     }
@@ -36,7 +40,9 @@ abstract class SinglePluginCommand extends AbstractPluginCommand
 
         if (!$input->getArgument('bundle_name')) {
             $bundleName = $this->getHelper('dialog')->askAndValidate(
-                $output, 'Enter the plugin bundle name: ', function($bundleName) {
+                $output,
+                'Enter the plugin bundle name: ',
+                function ($bundleName) {
                     if (empty($bundleName)) {
                         throw new \Exception('Bundle name cannot be empty');
                     }
