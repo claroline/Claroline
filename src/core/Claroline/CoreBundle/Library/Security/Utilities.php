@@ -68,11 +68,11 @@ class Utilities
     public function getRoles(TokenInterface $token)
     {
         if ($token->getUser() === 'anon.') {
-            foreach($token->getRoles() as $role) {
+            foreach ($token->getRoles() as $role) {
                 $roles[] = $role->getRole();
             }
         } else {
-            foreach($token->getUser()->getRoles() as $role) {
+            foreach ($token->getUser()->getRoles() as $role) {
                 $roles[] = $role;
             }
         }

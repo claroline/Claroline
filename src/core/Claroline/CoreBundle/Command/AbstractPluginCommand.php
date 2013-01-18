@@ -23,6 +23,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function installPlugin($fqcn, OutputInterface $output)
     {
         $installer = $this->getContainer()->get('claroline.plugin.installer');
+
         if (!$installer->isInstalled($fqcn)) {
             $output->writeln("Installing plugin '{$fqcn}'...");
             $installer->install($fqcn);
@@ -102,10 +103,12 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     {
         $command = $this->getApplication()->find('cache:clear');
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput(
+            array(
                 'command' => 'cache:clear',
                 '--no-warmup' => true,
-            ));
+            )
+        );
 
         $command->run($input, $output);
     }
@@ -118,11 +121,13 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function installAssets(OutputInterface $output)
     {
         $command = $this->getApplication()->find('assets:install');
-        $input = new ArrayInput(array(
+        $input = new ArrayInput(
+            array(
                 'command' => 'assets:install',
                 'target' => realpath(__DIR__ . '/../../../../../web'),
                 '--symlink' => true
-            ));
+            )
+        );
         $command->run($input, $output);
     }
 
@@ -135,6 +140,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             if (!$vendor->isDir() || $vendor->isDot()) {
                 continue;
             }
+
             $vendorName = $vendor->getBasename();
             $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
 
@@ -142,6 +148,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
                 if (!$plugin->isDir() || $plugin->isDot()) {
                     continue;
                 }
+
                 $bundleName = $plugin->getBasename();
                 $fqcns[] = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
             }

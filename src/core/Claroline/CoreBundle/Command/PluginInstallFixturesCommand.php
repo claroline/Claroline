@@ -35,11 +35,13 @@ class PluginInstallFixturesCommand extends ContainerAwareCommand
                 if ($this->isEmptyDir($fixturesPath)) {
                     $output->writeln("Loading {$environment} fixtures...");
                     $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
-                    $fixtureInput = new ArrayInput(array(
+                    $fixtureInput = new ArrayInput(
+                        array(
                             'command' => 'doctrine:fixtures:load',
                             '--fixtures' => $fixturesPath,
                             '--append' => true
-                        ));
+                        )
+                    );
                     $fixtureCommand->run($fixtureInput, $output);
                 }
             }

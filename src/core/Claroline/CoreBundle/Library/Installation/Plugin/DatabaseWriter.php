@@ -230,7 +230,6 @@ class DatabaseWriter
         $widgetEntity->setConfigurable($widget['is_configurable']);
         $widgetEntity->setPlugin($pluginEntity);
 
-
         if (isset($widget['icon'])) {
             $widgetEntity->setIcon(
                 "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widget['icon']}"

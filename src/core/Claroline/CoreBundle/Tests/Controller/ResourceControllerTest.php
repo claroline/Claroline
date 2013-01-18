@@ -381,7 +381,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
             ->findAll();
-        $this->assertEquals(1, count($postEvents)-count($preEvents));
+        $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
     public function testOpenActionLogsEvent()
@@ -399,7 +399,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
             ->findAll();
-        $this->assertEquals(1, count($postEvents)-count($preEvents));
+        $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
     public function testCreateActionLogsEvent()

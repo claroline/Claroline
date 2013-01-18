@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DisplayConfigRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_widget_dispay")
  * @Gedmo\Tree(type="nested")
  */

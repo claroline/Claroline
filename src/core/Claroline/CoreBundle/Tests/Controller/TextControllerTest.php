@@ -44,7 +44,7 @@ class TextControllerTest extends FunctionalTestCase
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
         $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
         $node = $crawler->filter('#text_content');
-        $this->assertTrue(strpos($node->text(), 'the answer is 42')!=false);
+        $this->assertTrue(strpos($node->text(), 'the answer is 42') != false);
         $textId = $text->{'id'};
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($textId);
         $revisions = $text->getRevisions();

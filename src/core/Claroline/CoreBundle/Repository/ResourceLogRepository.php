@@ -28,14 +28,13 @@ class ResourceLogRepository extends EntityRepository
             )";
 
         if ($workspace !== null) {
-            $dql.= " AND ws.id = {$workspace->getId()}";
+            $dql .= " AND ws.id = {$workspace->getId()}";
         }
 
-        $dql.= "ORDER by rl.dateLog DESC";
+        $dql .= 'ORDER by rl.dateLog DESC';
 
         $query = $this->_em->createQuery($dql);
         $query->setMaxResults(5);
-        //$query->setFetchMode('Claroline\CoreBundle\Entity\Resource\AbstractResource', 'parent', 'EAGER');
 
         return $query->getResult();
     }

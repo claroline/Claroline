@@ -79,7 +79,7 @@ class WorkspaceGroupController extends Controller
                 ->find($parameters['form']['role']);
 
             //verifications: can we change his role.
-            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()){
+            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
                 $this->checkRemoveManagerRoleIsValid(array($group->getId()), $workspace);
             }
 
@@ -142,7 +142,6 @@ class WorkspaceGroupController extends Controller
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->getWorkspaceRoles($workspace);
         $params = $this->get('request')->query->all();
-
 
         if (isset($params['groupIds'])) {
             $this->checkRemoveManagerRoleIsValid($params['groupIds'], $workspace);
@@ -336,7 +335,6 @@ class WorkspaceGroupController extends Controller
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
             ->getManagerRole($workspace);
         $countRemovedManagers = 0;
-
 
         foreach ($groupIds as $groupId) {
             $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);

@@ -3,8 +3,16 @@
 <ruleset name="Claronext coding standard">
     <description>Claronext coding standard</description>
     <exclude-pattern>*/Resources/*</exclude-pattern>
+    <!-- our base coding standard is PSR -->
     <!-- see https://github.com/klaussilveira/phpcs-psr -->
-    <rule ref="PSR"></rule>
+    <!-- see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md -->
+    <!-- see http://edorian.github.com/php-coding-standard-generator/#phpcs -->
+    <rule ref="PSR">
+        <!-- excluded because it requires interfaces methods to have modifiers -->
+        <exclude name="Squiz.Scope.MethodScope"/>
+        <!-- excluded because some third-party code (e.g. doctrine) uses other conventions -->
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName"/>
+    </rule>
     <rule ref="Generic.Files.LineLength">
         <properties>
             <!-- we don't want warnings for +80 characters lines -->
@@ -12,4 +20,19 @@
             <property name="absoluteLineLimit" value="120"/>
         </properties>
     </rule>
+    <!-- variable names must be in camel case and without digits -->
+    <rule ref="Zend.NamingConventions.ValidVariableName">
+        <!-- private variables don't have to start with an underscore -->
+        <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    </rule>
+    <!-- no whitespaces at the end of a line, no more than one blank line between statements -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <!-- operators must be surrounded by one space -->
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing"/>
+    <!-- no  count() inside for loops -->
+    <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+    <!-- no dead code -->
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
+    <!-- function arguments must be separated by one space or be indented on a new line -->
+    <!--<rule ref="PEAR.Functions.FunctionCallSignature"/>-->
 </ruleset>

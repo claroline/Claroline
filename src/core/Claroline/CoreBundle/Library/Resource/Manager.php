@@ -216,7 +216,7 @@ class Manager
     {
         $user = $this->sc->getToken()->getUser();
 
-        if ($originalResource->getResourceType()->getName()=='directory') {
+        if ($originalResource->getResourceType()->getName() === 'directory') {
             $resourceCopy = new Directory();
             $dirType = $this->em
                 ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
