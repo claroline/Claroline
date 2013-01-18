@@ -1,0 +1,103 @@
+Gestion des ressources :
+
+1)
+En tant qu'utilisateur je me rend dans la page « gestion des resources » de mon
+workspace personnel et ouvre le répertoire racine de ce workspace.
+Si je crée un fichier dans ce répertoire, il apparaît dans le répertoire dans lequel je me trouve.
+
+2)
+En tant qu'utilisateur, je me rend dans la page « gestion des resources » d'un workspace A auquel
+je possède les droits d'administrateur et ouvre le répertoire racine de ce workspace.
+Si je crée un fichier dans ce répertoire, il apparaît dans le répertoire dans lequel je me trouve.
+Q : Apparait-t-il aussi dans mon espace personnel ? Si oui, la ressource que j'ai créée dans l'espace A
+est-elle un lien ? Problème, dans les espace non personnels, tout sera vu comme lien.
+
+3)
+En tant qu'utilisateur, je me rend dans la page « gestion des resources » d'un workspace A
+auquel je possède les droits d'administrateur. Je possède au préalable quelques fichiers que
+j'aimerais partager dont je suis le propriétaire. Ces fichiers sont situés dans mon espace personnel.
+Si je crée un lien vers un de ces documents, une ressource de type « lien » apparaît dans le dossier dans lequel
+je me situe. La platforme possède un moyen de lire le fichier elle-même (par exemple d'afficher le pdf),
+je clique ensuite sur ce lien.
+1) Je suis « téléporté » dans mon espace personnel pour voir le fichier.
+2) Je reste dans l'espace dans lequel je me trouve pour voir le fichier.
+
+4)
+En tant qu'utilisateur, je me rend dans la page « gestion des resources » d'un workspace A
+auquel je possède les droits d'administrateur  et ouvre le répertoire racine de ce workspace.
+Je possède un dossier que j'aimerais partager dans ce workspace.
+Si je crée un lien vers ce dossier, que se passe-t-il ?
+1) Une ressource de type dossier apparaît dans dans le répertoire dans lequel je me situe.
+2) Une ressource de type lien apparaît dans le répertoire dans lequel je me situe.
+Q : Que se passe-t-il lorsque je clique sur le dossier ? Je vois les ressources qu'il contient. Q
+uel est le contexte de ces ressources ? Si je clique sur l'une de ces ressources,
+dans quel workspace vais-je me situer ?
+Q : Que se passe-t-il lorsqu'on rajoute des documents/dossier dans le répertoire sur lequel on a fait le lien ?
+ Mit à jour à un seul ou aux 2 endroits ?
+Q : Que se passe-t-il lorsqu'on rajoute des documents/dossiers dans le lien ? Mit à jour à un seul ou aux 2 endroits ?
+
+5)
+En tant qu'utilisateur X, je me rend dans la page « gestion des ressources » de mon workspace personnel.
+J'ai invité certaines personnes dans ce workspace et ces personnes y ont donc accès.
+Ces personnes possèdent le rôle Collaborateur de mon workspace.
+Si je veux éditer les permissions sur un fichier, je demande le formulaire d'edition des permissions de mon fichier.
+Q : Qu'est ce que je vois ?
+Mon workspace possède 3 roles prédéfinis (Visiteur, Collaborateur & Manager).
+Je vois 1 ligne dans le formulaire pour chacun des ces roles et une supplémentaire pour les utilisateurs anonyme.
+La liste de droits que j'ai la possibilité d'éditer est VOIR, SUPPRIMER, MODIFIER, COPIER, EXPORTER
+pour chacun des roles.
+Q : ? Y a-t-il un droit spécial pour le partage ?
+
+Je permets aux utilisateurs ayant le rôle collaborateur de VOIR et MODIFIER et COPIER mon fichier
+(et si le droit spécial pour le partage existe, de la partager).
+Un de ces utilisateurs (monsieur Y) fait un lien depuis son workspace personnel (celui de Y donc) vers
+ce fichier et en donne l'accès aux utilisateurs ayant le rôle collaborateur du workspace personnel de Y.
+Que se passe-t-il quand un collaborateur de Y clique sur le lien ? Quels sont les actions qu'il peuvent exécuter ?
+Je dois avoir un moyen de préciser quelles sont les actions que les utilisateurs venant des liens peuvent
+exécuter car je ne les connais pas à l'avance.
+Conflits ? Si le lien de l'utilisateur Y possède uniquement le droit VOIR mais que les utilisateurs venant
+des liens ont les droits de VOIR et EDITER. Comment le système doit-t-il se comporter ?
+Quels seront les droits calculés (et comme le sont-ils) ?
+
+<<
+Idée de la cascade de droits de philippe.
+>>
+
+6)
+En tant qu'utilisateur X, je me rend dans la page « gestion des ressources » de mon workspace personnel.
+Je crée un forum dans ce workspace (ou n'importe quelle ressource pouvant définir sa propre gestion de droits).
+Lorsque je clique sur cette ressource, je rentre dans le forum.
+A cet endroit, je peux configurer et régler les droits pour les différents utilisateurs qui ont accès au workspace
+dans lequel se trouve le forum (càd mon workspace personnel).
+L'utilisateur Y qui est collaborateur de mon workspace var créer un lien depuis son workspace personnel
+vers mon forum.
+Q : Est-ce-qu'il peut faire ça ? Un ressource capable de définir sa propre gestion des droits est-elle partagable ?
+En admettant que le forum puisse être partagé, comment en tant qu'utilisateur X je peux m'occuper de
+la gestion de droits spécialisée du forum ? Les roles de l'utilisateurs Y sont-il rajoutés dans la gestion
+de droits du forum ?
+
+7)
+En tant qu'utilisateur, je possède une arborescence de fichier dans mon espace personnel.
+J'aimerais que l'un des fichiers situé au fond de mon arborescence soit visible pour les utilisateurs anonymes.
+Pour arriver à mes fins, je donne aux anonymes le droit de voir mon workspace, et dans le gestionnaire de ressource,
+coche la case 'VOIR' du formulaire de gestion des droits pour la ressource en question. 
+Q : que se passe-t-il ? Les anonymes n'ont pas le droits de voir les dossiers dans lesquels se situent ma ressource.
+1) Les droits des répertoires parents sont modifiés automatiquement pour que l'anonyme puisse arriver
+jusqu'à la ressource.
+2) L'utilisateur est alerté comme quoi les anonymes n'ont pas le droits de voir le répertoire parent.
+3) Rien de spécial ne se passe. Les anonyme ne pourront pas voir ma ressource depuis le gestionnaire.
+Finalement, je permet également aux anonyme d'accéder au fichier via l'arborescence de dossier que
+j'ai déclaré visible. Si je décide de cacher un de ces dossiers aux anonyme, que se passe-t-il ?
+1) Rien : l'anonyme ne pourra plus accéder au fichier via le gestionnaire.
+2) Je suis alerté comme quoi il y a des fichiers visible pour ce rôle plus bas dans l'arborescence
+qui deviendront donc inaccessible.
+
+8)
+En tant qu'utilisateur, je possède une ressource dans mon workspace personnel.
+Cette ressource peut-être partagée et des liens ont été crées dans différents workspace.
+Si je supprime ma ressource, je suis alerté que des liens existent.
+Je peux décider de la supprimer uniquement de mon workspace ou partout à la fois.
+Si je décide de la supprimer uniquement de mon workspace, comment s'effectue la gestion des droits sur
+la ressource (fin du point 5)
+Si je décide de la supprimer partout, les liens sont-ils cassés ou supprimés ?
+Même question pour un dossier
