@@ -9,18 +9,26 @@ class PlatformParametersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('selfRegistration', 'checkbox', array('required' => false));
-        $builder->add('localLanguage', 'choice', array(
-            'choices' => array('en' => 'en', 'fr' => 'fr')
+        $builder
+            ->add('selfRegistration', 'checkbox', array('required' => false))
+            ->add(
+                'localLanguage',
+                'choice',
+                array(
+                    'choices' => array('en' => 'en', 'fr' => 'fr')
+                )
             )
-        );
-        $builder->add('theme', 'choice', array(
-            'choices' => array(
-                'bootstrap-default' => 'bootstrap-default',
-                'bootswatch-cyborg' => 'bootswatch-cyborg',
-                'claroline' => 'claroline'
-            )
-        ));
+            ->add(
+                'theme',
+                'choice',
+                array(
+                    'choices' => array(
+                        'bootstrap-default' => 'bootstrap-default',
+                        'bootswatch-cyborg' => 'bootswatch-cyborg',
+                        'claroline' => 'claroline'
+                    )
+                )
+            );
     }
 
     public function getName()

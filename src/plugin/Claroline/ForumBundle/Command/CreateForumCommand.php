@@ -15,12 +15,14 @@ class CreateForumCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:forum:create')
             ->setDescription('Creates a forum.');
-        $this->setDefinition(array(
-            new InputArgument('username', InputArgument::REQUIRED, 'The username'),
-            new InputArgument('name', InputArgument::REQUIRED, 'The forum name'),
-            new InputArgument('subjectsAmount', InputArgument::REQUIRED, 'The number of subjects'),
-            new InputArgument('messagesAmount', InputArgument::REQUIRED, 'The number of messages'),
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument('username', InputArgument::REQUIRED, 'The username'),
+                new InputArgument('name', InputArgument::REQUIRED, 'The forum name'),
+                new InputArgument('subjectsAmount', InputArgument::REQUIRED, 'The number of subjects'),
+                new InputArgument('messagesAmount', InputArgument::REQUIRED, 'The number of messages'),
+            )
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -65,9 +67,11 @@ class CreateForumCommand extends ContainerAwareCommand
         $username = $input->getArgument('username');
         $name = $input->getArgument('name');
         $fixture = new LoadForumData($name, $username, $messagesAmount, $subjectsAmount);
-        $fixture->setLogger(function ($message) use ($output){
-            $output->writeln($message);
-        });
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);

@@ -30,30 +30,34 @@ class ProfileType extends BaseProfileType
             ->add('phone', 'text', array('required' => false));
         if ($this->grantRole == true) {
             $builder->add(
-                'platformRole', 'entity', array(
-                'class' => 'Claroline\CoreBundle\Entity\Role',
-                'expanded' => false,
-                'multiple' => false,
-                'property' => 'translationKey',
-                'disabled' => false,
-                'query_builder' => function(\Doctrine\ORM\EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                            ->add('where', "r.roleType != " . Role::WS_ROLE);
-                }
+                'platformRole',
+                'entity',
+                array(
+                    'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'expanded' => false,
+                    'multiple' => false,
+                    'property' => 'translationKey',
+                    'disabled' => false,
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                        return $er->createQueryBuilder('r')
+                                ->add('where', "r.roleType != " . Role::WS_ROLE);
+                    }
                 )
             );
         } else {
             $builder->add(
-                'platformRole', 'entity', array(
-                'class' => 'Claroline\CoreBundle\Entity\Role',
-                'expanded' => false,
-                'multiple' => false,
-                'property' => 'translationKey',
-                'disabled' => true,
-                'query_builder' => function(\Doctrine\ORM\EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                            ->add('where', "r.roleType != " . Role::WS_ROLE);
-                }
+                'platformRole',
+                'entity',
+                array(
+                    'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'expanded' => false,
+                    'multiple' => false,
+                    'property' => 'translationKey',
+                    'disabled' => true,
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                        return $er->createQueryBuilder('r')
+                                ->add('where', "r.roleType != " . Role::WS_ROLE);
+                    }
                 )
             );
         }

@@ -115,6 +115,7 @@ class RightManager implements RightManagerInterface
             return $acl->isGranted(array($rightMask), array($sid));
         } catch (NoAceFoundException $ex) {
             unset($ex);
+
             return false;
         }
     }
@@ -156,6 +157,7 @@ class RightManager implements RightManagerInterface
                 if ($updatedMask == 0 || $mask == 0) {
                     $this->currentTargetStrategy->deleteAce($acl, $aceIndex);
                     $this->doRecursiveRemoveRight($acl, $sid, $mask, $aceIndex);
+
                     return;
                 } else {
 

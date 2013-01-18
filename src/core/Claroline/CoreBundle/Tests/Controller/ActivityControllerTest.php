@@ -21,11 +21,6 @@ class ActivityControllerTest extends FunctionalTestCase
 
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testAddThenRemoveResource()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -133,6 +128,7 @@ class ActivityControllerTest extends FunctionalTestCase
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
+
         return $obj[0];
     }
 }

@@ -13,11 +13,6 @@ class MessageControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testMessageForm()
     {
         $this->loadUserFixture(array('user'));

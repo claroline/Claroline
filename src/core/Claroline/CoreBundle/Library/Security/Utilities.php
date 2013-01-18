@@ -47,8 +47,9 @@ class Utilities
     public function setRightsRequest(array $checks, $typeOfRight)
     {
         if (!in_array($typeOfRight, $this->expectedTypeOfRight)) {
-            throw new \Exception('Wrong type of right specified on setRightRequest for the RightsManager.
-                Expected values are "workspace", "resource" ("'.$typeOfRight.'" is incorect).');
+            throw new \Exception(
+                "Unknown right type '{$typeOfRight}' (possible values are 'workspace' and 'resource')"
+            );
         }
 
         $configs = array();
@@ -63,7 +64,6 @@ class Utilities
 
         return $configs;
     }
-
 
     /**
      * Returns the roles (an array of string) of the $token.
@@ -112,4 +112,3 @@ class Utilities
         return $rights;
     }
 }
-

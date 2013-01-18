@@ -376,10 +376,12 @@ class WorkspaceController extends Controller
 
         $em->flush();
 
-        return $this->redirect($this->generateUrl(
-            'claro_workspace_rights',
-            array('workspaceId' => $workspaceId)
-        ));
+        return $this->redirect(
+            $this->generateUrl(
+                'claro_workspace_rights',
+                array('workspaceId' => $workspaceId)
+            )
+        );
     }
 
     /**

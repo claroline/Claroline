@@ -17,11 +17,6 @@ class ForumControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testSubjects()
     {
         $this->loadFixture(new LoadOptionsData());

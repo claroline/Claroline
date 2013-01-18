@@ -55,20 +55,23 @@ class WorkspaceGroupController extends Controller
         $defaultData = array('role' => $role);
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
-                'role', 'entity', array(
-                'class' => 'Claroline\CoreBundle\Entity\Role',
-                'property' => 'translationKey',
-                'query_builder' => function (EntityRepository $er) use ($workspaceId) {
-                    return $er->createQueryBuilder('wr')
-                        ->select('role')
-                        ->from('Claroline\CoreBundle\Entity\Role', 'role')
-                        ->leftJoin('role.workspaceRights', 'rights')
-                        ->leftJoin('rights.workspace', 'workspace')
-                        ->where('workspace.id = :workspaceId')
-                        ->andWhere("role.name != 'ROLE_ANONYMOUS'")
-                        ->setParameter('workspaceId', $workspaceId);
-                }
-            ))
+                'role',
+                'entity',
+                array(
+                    'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'property' => 'translationKey',
+                    'query_builder' => function (EntityRepository $er) use ($workspaceId) {
+                        return $er->createQueryBuilder('wr')
+                            ->select('role')
+                            ->from('Claroline\CoreBundle\Entity\Role', 'role')
+                            ->leftJoin('role.workspaceRights', 'rights')
+                            ->leftJoin('rights.workspace', 'workspace')
+                            ->where('workspace.id = :workspaceId')
+                            ->andWhere("role.name != 'ROLE_ANONYMOUS'")
+                            ->setParameter('workspaceId', $workspaceId);
+                    }
+                )
+            )
             ->getForm();
 
         if ($this->getRequest()->getMethod() == 'POST') {
@@ -236,8 +239,10 @@ class WorkspaceGroupController extends Controller
             foreach ($params['groupIds'] as $groupId) {
                 $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
                 $groups[] = $group;
-                $group->addRole($em->getRepository('ClarolineCoreBundle:Role')
-                    ->getCollaboratorRole($workspace));
+                $group->addRole(
+                    $em->getRepository('ClarolineCoreBundle:Role')
+                        ->getCollaboratorRole($workspace)
+                );
                 $em->flush();
             }
         }

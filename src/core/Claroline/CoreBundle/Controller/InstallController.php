@@ -118,6 +118,7 @@ class InstallController extends Controller
     {
         $user = new User();
         $form = $this->createForm(new AdminType, $user);
+
         return $this->render(
             'ClarolineCoreBundle:Install:checkAdmin.html.twig',
             array('form' => $form->createView())
@@ -139,6 +140,7 @@ class InstallController extends Controller
                         $this->createParametersYml();
                         $db = $this->readYml(self::PATH);
                         $this->get('cache_warmer')->warmUp($this->container->getParameter('kernel.cache_dir'));
+
                         return $this->render('ClarolineCoreBundle:Install:execute.html.twig', array('value' => $db));
                     }
                 } else {
@@ -256,6 +258,7 @@ class InstallController extends Controller
                         vérifier vos droits en écriture" . $e->getMessage();
                 }
             }
+
             return 1;
         } else {
             $dumper = new Dumper();
@@ -274,6 +277,7 @@ class InstallController extends Controller
         } catch (ParseException $e) {
             echo "Impossible d'ouvrir le fichier install.yml " . $e->getMessage();
         }
+
         return($value);
     }
 
@@ -318,10 +322,8 @@ class InstallController extends Controller
         foreach ($input as $index => $value) {
             if (!empty($value)) {
                 if (!is_array($value)) {
-                    if (strlen($value) >= 3) {
-
-                    } else {
-                        $errors[] = ' Le champs ' . $index . ' doit etre plus grand que 3 caractères';
+                    if (strlen($value) < 3) {
+                        $errors[] = ' Le champs ' . $index . ' doit être plus grand que 3 caractères';
                     }
                 } else {
                     $errors = $this->validateForm($value);
@@ -330,7 +332,8 @@ class InstallController extends Controller
                 $errors[] = $keys[$index] . ' Ce champs ' . $index . ' ne peut pas être vide';
             }
         }
-        return($errors);
+
+        return $errors;
     }
 
     private function createRole()

@@ -621,42 +621,51 @@ class ResourceControllerTest extends FunctionalTestCase
                  "canDelete-{$resourceRights[1]->getId()}" => true,
              )
         );
-
         $resourceRights = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findBy(array('resource' => $file));
         $this->assertEquals(4, count($resourceRights));
-        $this->assertTrue($resourceRights[0]->isEquals(array(
-            'canView' => true,
-            'canCopy' => false,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canOpen' => false,
-            'canCreate' => false,
-            'canExport' => false
-        )));
-
-        $this->assertTrue($resourceRights[1]->isEquals(array(
-            'canView' => true,
-            'canCopy' => false,
-            'canDelete' => true,
-            'canEdit' => false,
-            'canOpen' => false,
-            'canCreate' => false,
-            'canExport' => false
-        )));
-
-        $this->assertTrue($resourceRights[2]->isEquals(array(
-            'canView' => false,
-            'canCopy' => false,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canOpen' => false,
-            'canCreate' => false,
-            'canExport' => false
-        )));
+        $this->assertTrue(
+            $resourceRights[0]->isEquals(
+                array(
+                    'canView' => true,
+                    'canCopy' => false,
+                    'canDelete' => false,
+                    'canEdit' => false,
+                    'canOpen' => false,
+                    'canCreate' => false,
+                    'canExport' => false
+                )
+            )
+        );
+        $this->assertTrue(
+            $resourceRights[1]->isEquals(
+                array(
+                    'canView' => true,
+                    'canCopy' => false,
+                    'canDelete' => true,
+                    'canEdit' => false,
+                    'canOpen' => false,
+                    'canCreate' => false,
+                    'canExport' => false
+                )
+            )
+        );
+        $this->assertTrue(
+            $resourceRights[2]->isEquals(
+                array(
+                    'canView' => false,
+                    'canCopy' => false,
+                    'canDelete' => false,
+                    'canEdit' => false,
+                    'canOpen' => false,
+                    'canCreate' => false,
+                    'canExport' => false
+                )
+            )
+        );
     }
 
     public function testDisplayCreationRightForm()
@@ -666,9 +675,10 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole($this->getFixtureReference('user/user')
-                ->getPersonalWorkspace());
-
+            ->getCollaboratorRole(
+                $this->getFixtureReference('user/user')
+                    ->getPersonalWorkspace()
+            );
         $dir = $this->createDirectory($this->pwr->getId(), 'dir');
         $crawler = $this->client->request(
             'GET',
@@ -680,18 +690,14 @@ class ResourceControllerTest extends FunctionalTestCase
     public function testSubmitRightsCreationForm()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $collaboratorRole = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole($this->getFixtureReference('user/user')
-                ->getPersonalWorkspace());
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $collaboratorRole = $em->getRepository('ClarolineCoreBundle:Role')
+            ->getCollaboratorRole(
+                $this->getFixtureReference('user/user')
+                    ->getPersonalWorkspace()
+            );
         $dir = $this->createDirectory($this->pwr->getId(), 'dir');
-        $resourceTypes = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
 
         //Creating new ResourceRight from the default one
@@ -700,18 +706,13 @@ class ResourceControllerTest extends FunctionalTestCase
             "/resource/{$dir->id}/role/{$collaboratorRole->getId()}/right/creation/edit",
             array(
                 "create-{$resourceTypes[0]->getId()}" => true,
-                "create-{$resourceTypes[1]->getId()}" => true,
+                "create-{$resourceTypes[1]->getId()}" => true
             )
         );
 
         //checks if the creation right is set to true now
-        $config = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findOneBy(array('resource' => $dir->id, 'role' => $collaboratorRole));
-
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(2, count($permCreate));
 
@@ -722,17 +723,12 @@ class ResourceControllerTest extends FunctionalTestCase
             array(
                 "create-{$resourceTypes[1]->getId()}" => true,
                 "create-{$resourceTypes[2]->getId()}" => true,
-                "create-{$resourceTypes[3]->getId()}" => true,
+                "create-{$resourceTypes[3]->getId()}" => true
             )
         );
-
-        $config = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $em->detach($config); // TODO: doctrine doesn't retrieve new permissions without that...
+        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findOneBy(array('resource' => $dir->id, 'role' => $collaboratorRole));
-
         $permCreate = $config->getResourceTypes();
         $this->assertEquals(3, count($permCreate));
     }
@@ -829,8 +825,8 @@ class ResourceControllerTest extends FunctionalTestCase
             array('file_form' => array()),
             array('file_form' => array('file' => $file, 'name' => 'tmp'))
         );
-
         $obj = json_decode($this->client->getResponse()->getContent());
+
         return $obj[0];
     }
 
