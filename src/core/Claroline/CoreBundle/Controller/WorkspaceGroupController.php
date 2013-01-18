@@ -79,7 +79,7 @@ class WorkspaceGroupController extends Controller
                 ->find($parameters['form']['role']);
 
             //verifications: can we change his role.
-            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()){
+            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
                 $this->checkRemoveManagerRoleIsValid(array($group->getId()), $workspace);
             }
 

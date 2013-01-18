@@ -62,7 +62,9 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the user {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the user {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }

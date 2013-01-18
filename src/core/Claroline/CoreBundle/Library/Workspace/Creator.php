@@ -25,6 +25,14 @@ class Creator
         $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
     }
 
+    /**
+     * Creates a workspace.
+     *
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     * @param \Claroline\CoreBundle\Entity\User $manager
+     *
+     * @return AbstractWorkspace
+     */
     public function createWorkspace(Configuration $config, User $manager)
     {
         $config->check();
@@ -101,6 +109,21 @@ class Creator
         return $workspace;
     }
 
+    /**
+     * Create default permissions for a role and a resource.
+     *
+     * @param boolean $canView
+     * @param boolean $canDelete
+     * @param boolean $canOpen
+     * @param boolean $canEdit
+     * @param boolean $canCopy
+     * @param boolean $canExport
+     * @param boolean $canCreate
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Rights\ResourceRights
+     */
     private function createDefaultsResourcesRights(
         $canView,
         $canDelete,
@@ -139,6 +162,15 @@ class Creator
         return $resourceRight;
     }
 
+    /**
+     * Create default permissions for a role and a workspace.
+     *
+     * @param boolean $canView
+     * @param boolean $canEdit
+     * @param boolean $canDelete
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
     private function createDefaultsWorkspaceRights(
         $canView,
         $canEdit,
@@ -157,6 +189,12 @@ class Creator
         $this->entityManager->persist($workspaceRight);
     }
 
+    /**
+     * Creates the base roles of a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     */
     private function initBaseRoles(AbstractWorkspace $workspace, Configuration $config)
     {
         $this->createRole('VISITOR', $workspace, $config->getVisitorTranslationKey());
@@ -166,6 +204,15 @@ class Creator
         $this->entityManager->flush();
     }
 
+    /**
+     * Creates a new role.
+     *
+     * @param string $baseName
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $translationKey
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
     private function createRole($baseName, AbstractWorkspace $workspace, $translationKey)
     {
         $baseRole = new Role();
