@@ -17,7 +17,7 @@ class ResourceRightsRepository extends EntityRepository
      */
     public function getRights($roles, AbstractResource $resource)
     {
-        if (count($roles) == 0) {
+        if (count($roles) === 0) {
             throw new \RuntimeException(
                 "The role array cannot be empty for the getRights method in the ResourceRightRepository"
             );
@@ -37,13 +37,13 @@ class ResourceRightsRepository extends EntityRepository
             JOIN rrw.resource resource
             WHERE  ";
 
-        $i=0;
+        $i = 0;
 
         foreach ($roles as $role) {
-            if ($i!=0) {
-                $dql.= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            if ($i !== 0) {
+                $dql .= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
             } else {
-                $dql.= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+                $dql .= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
                 $i++;
             }
         }
@@ -55,9 +55,9 @@ class ResourceRightsRepository extends EntityRepository
 
     public function getCreationRights($roles, AbstractResource $resource)
     {
-        if (count($roles) == 0) {
+        if (count($roles) === 0) {
             throw new \RuntimeException(
-                "The role array cannot be empty for the getRights method in the ResourceRightRepository"
+                'The role array cannot be empty for the getRights method in the ResourceRightRepository'
             );
         }
 
@@ -69,13 +69,13 @@ class ResourceRightsRepository extends EntityRepository
             JOIN right.resource resource
             WHERE  ";
 
-            $i=0;
+            $i = 0;
 
         foreach ($roles as $role) {
-            if ($i!=0) {
-                $dql.= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            if ($i !== 0) {
+                $dql .= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
             } else {
-                $dql.= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+                $dql .= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
                 $i++;
             }
         }

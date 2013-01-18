@@ -80,7 +80,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
 
         if ($resourceType !== null) {
-            $dql.= "AND rt.name = :rt_name";
+            $dql .= "AND rt.name = :rt_name";
         }
 
         $query = $this->_em->createQuery($dql);
@@ -123,7 +123,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
         } else {
             $query = $this->buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId);
         }
-
 
         $results = array();
 
@@ -191,15 +190,15 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}'"
                 . " AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
 
-            if ($i!=0) {
-                $dql.= " OR ".$condition;
+            if ($i != 0) {
+                $dql .= " OR ".$condition;
             } else {
-                $dql.= $condition;
+                $dql .= $condition;
                 $i++;
             }
         }
 
-        $dql.= "GROUP BY ar.id";
+        $dql .= "GROUP BY ar.id";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ar_parentid', $parentId);
@@ -314,7 +313,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= " AND (rt.name = :{$key}{$i}";   // eg. "types0"
+                $dqlPart .= " AND (rt.name = :{$key}{$i}";   // eg. "types0"
                 $isFirst = false;
             } else {
                 $dqlPart .= " OR rt.name = :{$key}{$i}";
@@ -341,10 +340,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= " AND (ar.path like :{$key}{$i}";
+                $dqlPart .= " AND (ar.path like :{$key}{$i}";
                 $isFirst = false;
             } else {
-                $dqlPart.= " OR ar.path like :{$key}{$i}";
+                $dqlPart .= " OR ar.path like :{$key}{$i}";
             }
         }
         if (strlen($dqlPart) > 0) {
@@ -368,10 +367,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= "AND (ic.type LIKE :{$key}{$i}";
+                $dqlPart .= "AND (ic.type LIKE :{$key}{$i}";
                 $isFirst = false;
             } else {
-                $dqlPart.= " OR  ic.type LIKE :{$key}{$i}";
+                $dqlPart .= " OR  ic.type LIKE :{$key}{$i}";
             }
         }
         if (strlen($dqlPart) > 0) {

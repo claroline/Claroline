@@ -24,7 +24,6 @@ class Utilities
             }
         }
 
-
         if (0 != $nbName) {
             $newName = $baseName.'~'.$nbName.'.'.pathinfo($resource->getName(), PATHINFO_EXTENSION);
         } else {

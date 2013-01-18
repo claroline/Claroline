@@ -72,7 +72,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', $user);
 
             $entityToBeDetached = array();
-            for ($j=0; $j<$this->nbMessages; $j++) {
+            for ($j = 0; $j < $this->nbMessages; $j++) {
 
                 $sender = $collaborators[rand(0, $maxOffset)];
                 $message = new Message();

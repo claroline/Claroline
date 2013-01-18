@@ -54,11 +54,11 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
             }
         }
 
-        if ($this->class == 'group') {
+        if ($this->class === 'group') {
             $entities = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-        } elseif ($this->class == 'user') {
+        } elseif ($this->class === 'user') {
             $entities = $em->getRepository('ClarolineCoreBundle:User')->findAll();
-        } elseif ($this->class == null){
+        } elseif ($this->class === null) {
             $this->log("cleaning...");
             $this->log("done");
             $entities = null;

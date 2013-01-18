@@ -61,7 +61,7 @@ class ActivityControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/admin'));
         $fileOne = $this->uploadFile($this->pwr->getId(), 'file1');
-        $fileTwo= $this->uploadFile($this->pwr->getId(), 'file2');
+        $fileTwo = $this->uploadFile($this->pwr->getId(), 'file2');
         $activity = $this->createActivity('name', 'instruction');
         $activityEntity = $this->client
             ->getContainer()

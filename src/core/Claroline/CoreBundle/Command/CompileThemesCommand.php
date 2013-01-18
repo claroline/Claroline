@@ -88,7 +88,6 @@ class CompileThemesCommand extends ContainerAwareCommand
                 => 'bootstrap-responsive.css'
         );
 
-
         foreach ($preLessFiles as $preLessFile => $targetCssFile) {
             $fp = fopen($preLessFile, 'r');
             $preProcessedContent = '';

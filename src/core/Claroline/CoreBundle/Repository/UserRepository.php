@@ -68,7 +68,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
-        $user =  $query->getSingleResult();
+        $user = $query->getSingleResult();
 
         //Deep doctrine sorcery goes here.
         //This will help doctrine to not make 1 request by role.
@@ -91,7 +91,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /*
      * End UserProviderInterface methods
      */
-
     //todo prepared statement here
     public function getUsersByUsernameList(array $usernames)
     {
@@ -141,7 +140,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 WHERE w.id = {$workspace->getId()}";
 
             if ($role != null) {
-                $dql.= " AND wr.id = {$role->getId()}";
+                $dql .= " AND wr.id = {$role->getId()}";
             }
 
             $query = $this->_em->createQuery($dql);

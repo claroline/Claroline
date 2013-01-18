@@ -32,10 +32,10 @@ class MessageController extends Controller
 
         foreach ($users as $user) {
             if ($i > 0) {
-                $urlParameters.="&";
+                $urlParameters .= "&";
             }
 
-            $urlParameters.="ids[]={$user->getId()}";
+            $urlParameters .= "ids[]={$user->getId()}";
 
             $i++;
         }
@@ -61,7 +61,7 @@ class MessageController extends Controller
             foreach ($params['ids'] as $id) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->find($id);
-                $usersString.= "{$user->getUsername()}; ";
+                $usersString .= "{$user->getUsername()}; ";
             }
         }
 
@@ -238,7 +238,7 @@ class MessageController extends Controller
             $stringUsername = '';
 
             foreach ($userMessages as $userMessage) {
-                $stringUsername.= "{$userMessage->getUser()->getUsername()}; ";
+                $stringUsername .= "{$userMessage->getUser()->getUsername()}; ";
             }
 
             $form = $this->createForm(new MessageType($stringUsername, 'Re: ' . $message->getObject()));
@@ -357,7 +357,7 @@ class MessageController extends Controller
      */
     public function listRemovedAction($offset)
     {
-        $user =  $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
             ->getRemovedMessages($user, $offset, self::MESSAGE_PER_PAGE);

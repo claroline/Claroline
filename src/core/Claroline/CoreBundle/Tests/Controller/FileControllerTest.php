@@ -89,7 +89,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $stdFile = $this->uploadFile($this->pwr->getId(), 'text.txt');
-        $file =  $this->client
+        $file = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')

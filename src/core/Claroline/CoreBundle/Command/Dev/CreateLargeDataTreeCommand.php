@@ -14,38 +14,34 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
  */
 class CreateLargeDataTreeCommand extends ContainerAwareCommand
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-    }
-
     protected function configure()
     {
         $this->setName('claroline:datatree:create')
             ->setDescription('Creates a tree of resources. For better perfs, launch with --env=prod.');
-        $this->setDefinition(array(
-            new InputArgument(
-                'username',
-                InputArgument::REQUIRED,
-                'The user creating the tree'
-            ),
-            new InputArgument(
-                'depth',
-                InputArgument::REQUIRED,
-                'The number of levels'
-            ),
-            new InputArgument(
-                'directory_count',
-                InputArgument::REQUIRED,
-                'The number of directories per level (min 1)'
-            ),
-            new InputArgument(
-                'file_count',
-                InputArgument::REQUIRED,
-                'The number of files per level'
-            ),
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument(
+                    'username',
+                    InputArgument::REQUIRED,
+                    'The user creating the tree'
+                ),
+                new InputArgument(
+                    'depth',
+                    InputArgument::REQUIRED,
+                    'The number of levels'
+                ),
+                new InputArgument(
+                    'directory_count',
+                    InputArgument::REQUIRED,
+                    'The number of directories per level (min 1)'
+                ),
+                new InputArgument(
+                    'file_count',
+                    InputArgument::REQUIRED,
+                    'The number of files per level'
+                ),
+            )
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -69,7 +65,9 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
@@ -88,9 +86,11 @@ class CreateLargeDataTreeCommand extends ContainerAwareCommand
         $directoryCount = $input->getArgument('directory_count');
         $fileCount = $input->getArgument('file_count');
         $fixture = new LoadResourceTreeData($username, $maxDepth, $directoryCount, $fileCount);
-        $fixture->setLogger(function ($message) use ($output){
-            $output->writeln($message);
-        });
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);

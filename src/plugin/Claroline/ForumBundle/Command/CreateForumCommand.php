@@ -46,12 +46,12 @@ class CreateForumCommand extends ContainerAwareCommand
         $argument = $this->getHelper('dialog')->askAndValidate(
             $output,
             "Enter the {$argumentName}: ",
-            function($argument) {
-            if (empty($argument)) {
-                throw new \Exception('This argument is required');
-            }
+            function ($argument) {
+                if (empty($argument)) {
+                    throw new \Exception('This argument is required');
+                }
 
-            return $argument;
+                return $argument;
             }
         );
 
