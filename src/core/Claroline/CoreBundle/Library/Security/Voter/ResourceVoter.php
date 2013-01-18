@@ -47,87 +47,85 @@ class ResourceVoter implements VoterInterface
                     $rightsCreation = $this->repository->getCreationRights($this->ut->getRoles($token), $resource);
 
                     if (count($rightsCreation) == 0) {
-                        $errors[] = $this->translator
-                            ->trans('resource_creation_wrong_type',
+                        $errors[] = $this->translator->trans(
+                            'resource_creation_wrong_type',
+                            array(
+                                '%path%' => $resource->getPathForDisplay(),
+                                '%type%' => $this->translator->trans(
+                                    strtolower($object->getAttribute('type')),
+                                    array(),
+                                    'resource'
+                                )
+                            ),
+                            'platform'
+                        );
+                    } else {
+                        if (!$this->canCreate($rightsCreation, $object->getAttribute('type'))) {
+                            $errors[] = $this->translator->trans(
+                                'resource_creation_wrong_type',
                                 array(
                                     '%path%' => $resource->getPathForDisplay(),
                                     '%type%' => $this->translator->trans(
                                         strtolower($object->getAttribute('type')),
                                         array(),
                                         'resource'
-                                    )),
+                                    )
+                                ),
                                 'platform'
                             );
-                    } else {
-                        if (!$this->canCreate($rightsCreation, $object->getAttribute('type'))) {
-                            $errors[] = $this->translator
-                                ->trans(
-                                    'resource_creation_wrong_type',
-                                    array(
-                                        '%path%' => $resource->getPathForDisplay(),
-                                        '%type%' => $this->translator->trans(
-                                            strtolower($object->getAttribute('type')),
-                                            array(),
-                                            'resource')
-                                        ),
-                                    'platform'
-                                );
                         }
                     }
                 }
             }
 
             if ($attributes[0] == 'MOVE') {
-
                 $rightsCreation = $this->repository
                     ->getCreationRights($this->ut->getRoles($token), $object->getAttribute('parent'));
 
                 if (count($rightsCreation) == 0) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_creation_denied',
-                            array('%path%' => $object->getAttribute('parent')->getPathForDisplay()),
-                            'platform'
-                        );
+                    $errors[] = $this->translator->trans(
+                        'resource_creation_denied',
+                        array('%path%' => $object->getAttribute('parent')->getPathForDisplay()),
+                        'platform'
+                    );
                 } else {
                     foreach ($object->getResources() as $resource) {
                         if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
-                             $errors[] = $this->translator
-                                 ->trans(
-                                     'resource_creation_wrong_type',
-                                     array(
-                                         '%path%' => $object->getAttribute('parent')->getPathForDisplay(),
-                                         '%type%' => $this->translator->trans(
-                                             strtolower($resource->getResourceType()->getName()),
-                                             array(), 'resource')
-                                         ),
-                                     'platform'
-                                 );
+                            $errors[] = $this->translator->trans(
+                                'resource_creation_wrong_type',
+                                array(
+                                    '%path%' => $object->getAttribute('parent')->getPathForDisplay(),
+                                    '%type%' => $this->translator->trans(
+                                        strtolower($resource->getResourceType()->getName()),
+                                        array(), 'resource'
+                                    )
+                                ),
+                                'platform'
+                            );
                         }
 
                         $rights = $this->repository->getRights($this->ut->getRoles($token), $resource);
 
                         if (!$rights['canCopy']) {
-                            $errors[] = $this->translator
-                                ->trans(
-                                    'resource_action_denied_message',
-                                    array(
-                                        '%path%' => $resource->getPathForDisplay(),
-                                        '%action%' => 'COPY'),
-                                    'platform'
-                                );
+                            $errors[] = $this->translator->trans(
+                                'resource_action_denied_message',
+                                array(
+                                    '%path%' => $resource->getPathForDisplay(),
+                                    '%action%' => 'COPY'
+                                ),
+                                'platform'
+                            );
                         }
 
                         if (!$rights['canDelete']) {
-                            $errors[] = $this->translator
-                                ->trans(
-                                    'resource_action_denied_message',
-                                    array(
-                                        '%path%' => $resource->getPathForDisplay(),
-                                        '%action%' => 'DELETE'
-                                        ),
-                                    'platform'
-                                );
+                            $errors[] = $this->translator->trans(
+                                'resource_action_denied_message',
+                                array(
+                                    '%path%' => $resource->getPathForDisplay(),
+                                    '%action%' => 'DELETE'
+                                ),
+                                'platform'
+                            );
                         }
                     }
                 }
@@ -139,26 +137,26 @@ class ResourceVoter implements VoterInterface
                     ->getCreationRights($this->ut->getRoles($token), $object->getAttribute('parent'));
 
                 if (count($rightsCreation) == 0) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_creation_denied',
-                            array('%path%' => $object->getAttribute('parent')->getPathForDisplay()),
-                            'platform'
-                        );
+                    $errors[] = $this->translator->trans(
+                        'resource_creation_denied',
+                        array('%path%' => $object->getAttribute('parent')->getPathForDisplay()),
+                        'platform'
+                    );
                 } else {
                     foreach ($object->getResources() as $resource) {
                         if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
-                            $errors[] = $this->translator
-                                ->trans('resource_creation_wrong_type',
-                                    array(
-                                        '%path%' => $object->getAttribute('parent')->getPathForDisplay(),
-                                        '%type%' => $this->translator->trans(
-                                            strtolower($resource->getResourceType()->getName()),
-                                            array(),
-                                            'resource')
-                                        ),
-                                    'platform'
-                                );
+                            $errors[] = $this->translator->trans(
+                                'resource_creation_wrong_type',
+                                array(
+                                    '%path%' => $object->getAttribute('parent')->getPathForDisplay(),
+                                    '%type%' => $this->translator->trans(
+                                        strtolower($resource->getResourceType()->getName()),
+                                        array(),
+                                        'resource'
+                                    )
+                                ),
+                                'platform'
+                            );
                         }
                     }
                 }
@@ -173,26 +171,24 @@ class ResourceVoter implements VoterInterface
                     $rights = $this->repository->getRights($this->ut->getRoles($token), $resource);
 
                     if ($rights == null) {
-                        $errors[] = $this->translator
-                            ->trans(
+                        $errors[] = $this->translator->trans(
+                            'resource_action_denied_message',
+                            array(
+                                '%path%' => $resource->getPathForDisplay(),
+                                '%action%' => $action
+                            ),
+                            'platform'
+                        );
+                    } else {
+                        if (!$this->canDo($resource, $token, $action)) {
+                            $errors[] = $this->translator->trans(
                                 'resource_action_denied_message',
                                 array(
                                     '%path%' => $resource->getPathForDisplay(),
                                     '%action%' => $action
-                                    ),
+                                ),
                                 'platform'
                             );
-                    } else {
-                        if (!$this->canDo($resource, $token, $action)) {
-                            $errors[] = $this->translator
-                                ->trans(
-                                    'resource_action_denied_message',
-                                    array(
-                                        '%path%' => $resource->getPathForDisplay(),
-                                        '%action%' => $action
-                                        ),
-                                    'platform'
-                                );
                         }
                     }
                 }
@@ -202,6 +198,7 @@ class ResourceVoter implements VoterInterface
                 return VoterInterface::ACCESS_GRANTED;
             } else {
                 $object->setErrors($errors);
+
                 return VoterInterface::ACCESS_DENIED;
             }
         } else {

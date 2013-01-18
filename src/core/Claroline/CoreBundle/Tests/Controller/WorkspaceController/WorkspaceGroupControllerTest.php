@@ -343,15 +343,12 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
     private function addGroupAToWsA()
     {
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->getFixtureReference('group/group_a')
-            ->addRole($em->getRepository('ClarolineCoreBundle:Role')
-                ->getCollaboratorRole($this->getFixtureReference('workspace/ws_a')
-                ));
-        $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->persist($this->getFixtureReference('group/group_a'));
-        $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $this->getFixtureReference('group/group_a')->addRole(
+            $em->getRepository('ClarolineCoreBundle:Role')
+                ->getCollaboratorRole($this->getFixtureReference('workspace/ws_a'))
+        );
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $em->persist($this->getFixtureReference('group/group_a'));
+        $em->flush();
     }
 }
-

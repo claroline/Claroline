@@ -28,21 +28,24 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('OPEN', new ResourceCollection(array($this->root)))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('OPEN', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('OPEN', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('OPEN', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->manager);
         $this->rootRights->setCanOpen(false);
         $em->persist($this->rootRights);
         $em->flush();
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('OPEN', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('OPEN', new ResourceCollection(array($this->root)))
         );
 
     }
@@ -52,21 +55,24 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('EDIT', new ResourceCollection(array($this->root)))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('EDIT', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('EDIT', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('EDIT', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->manager);
         $this->rootRights->setCanEdit(false);
         $em->persist($this->rootRights);
         $em->flush();
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('EDIT', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('EDIT', new ResourceCollection(array($this->root)))
         );
     }
 
@@ -75,21 +81,24 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('DELETE', new ResourceCollection(array($this->root)))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('DELETE', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('DELETE', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('DELETE', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->manager);
         $this->rootRights->setCanDelete(false);
         $em->persist($this->rootRights);
         $em->flush();
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('DELETE', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('DELETE', new ResourceCollection(array($this->root)))
         );
     }
 
@@ -98,21 +107,24 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
         );
 
         $this->logUser($this->manager);
         $this->rootRights->setCanExport(false);
         $em->persist($this->rootRights);
         $em->flush();
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
         );
     }
 
@@ -121,13 +133,15 @@ class ResourceVoterTest extends FunctionalTestCase
         $em = $this->getEntityManager();
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
         );
 
         $this->logUser($this->manager);
@@ -136,28 +150,30 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->rootRights->removeResourceType($directoryType);
         $em->persist($this->rootRights);
         $em->flush();
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
         );
     }
 
     public function testCopyResource()
     {
         $em = $this->getEntityManager();
-
         $resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
         $directory = new Directory();
         $directory->setName('NEWDIR');
         $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', $this->manager);
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root)))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root)))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root)))
         );
 
         $this->logUser($this->manager);
@@ -185,13 +201,15 @@ class ResourceVoterTest extends FunctionalTestCase
         $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', $this->manager);
 
         $this->logUser($this->manager);
-        $this->assertTrue($this->getSecurityContext()
-            ->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root)))
+        $this->assertTrue(
+            $this->getSecurityContext()
+                ->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root)))
         );
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->assertFalse($this->getSecurityContext()
-            ->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root)))
+        $this->assertFalse(
+            $this->getSecurityContext()
+                ->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root)))
         );
 
         $this->logUser($this->manager);

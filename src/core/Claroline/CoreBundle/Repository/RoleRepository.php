@@ -11,8 +11,8 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = '
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE (r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole)'
-        ;
+            WHERE (r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole)
+        ';
         $query = $this->_em->createQuery($dql);
         $results = $query->getResult();
 
@@ -26,9 +26,10 @@ class RoleRepository extends NestedTreeRepository
             JOIN r.workspaceRights workspaceRights
             JOIN workspaceRights.workspace ws
             WHERE ws.id = {$workspace->getId()}
-            AND r.name != 'ROLE_ANONYMOUS'";
-
+            AND r.name != 'ROLE_ANONYMOUS'
+        ";
         $query = $this->_em->createQuery($dql);
+
         return $query->getResult();
     }
 
@@ -36,8 +37,8 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name LIKE 'ROLE_WS_COLLABORATOR_{$workspace->getId()}'";
-
+            WHERE r.name LIKE 'ROLE_WS_COLLABORATOR_{$workspace->getId()}'
+        ";
          $query = $this->_em->createQuery($dql);
 
          return $query->getSingleResult();
@@ -47,8 +48,8 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name LIKE 'ROLE_WS_VISITOR_{$workspace->getId()}'";
-
+            WHERE r.name LIKE 'ROLE_WS_VISITOR_{$workspace->getId()}'
+        ";
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleResult();
@@ -58,8 +59,8 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name LIKE 'ROLE_WS_MANAGER_{$workspace->getId()}'";
-
+            WHERE r.name LIKE 'ROLE_WS_MANAGER_{$workspace->getId()}'
+        ";
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleResult();
@@ -67,7 +68,7 @@ class RoleRepository extends NestedTreeRepository
 
     /**
      * Return the role of a user of a group in a workspace.
-     * 
+     *
      * @param Group|User $entity
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *

@@ -60,14 +60,15 @@ class SiteListener extends FileListener
         $zip = new \ZipArchive();
 
         if ($zip->open($path) === true) {
-            $zip->extractTo($this->container->getParameter('claroline.site.directory')
+            $zip->extractTo(
+                $this->container->getParameter('claroline.site.directory')
                 . DIRECTORY_SEPARATOR
                 . pathinfo($hashName, PATHINFO_FILENAME)
                 . DIRECTORY_SEPARATOR
             );
             $zip->close();
         } else {
-            return 0;
+            return 0; // TODO: ????
         }
     }
 }

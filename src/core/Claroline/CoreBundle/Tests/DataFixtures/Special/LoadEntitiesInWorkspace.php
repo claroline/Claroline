@@ -86,13 +86,12 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
     //may cause infinite loop due to the lack of optimization.
     private function addToWorkspace($entities, $workspace, $om)
     {
-
         $maxOffset = count($entities);
         $maxOffset--;
         $offset = rand(0, $maxOffset);
         $entity = $entities[$offset];
-
-        $wsRoles = $om->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+        $roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $wsRoles = $roleRepo->getWorkspaceRoles($workspace);
         $isRegistered = false;
 
         if (get_class($entity) === 'Claroline\CoreBundle\Entity\Group') {
@@ -115,17 +114,18 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
         }
 
         if ($isRegistered) {
-            $this->log("I strongly recommand to ctrl+c if you see this a lot");
+            $this->log('I strongly recommand to ctrl+c if you see this a lot');
             $this->addToWorkspace($entities, $workspace, $om);
         } else {
-            $this->log("entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
-            $entity->addRole($om->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($workspace));
+            $this->log("Entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
+            $entity->addRole($roleRepo->getCollaboratorRole($workspace));
             $om->persist($entity);
             $om->flush();
             unset($entities[$offset]);
             $entities = array_values($entities);
-            $this->log(count($om->getRepository('ClarolineCoreBundle:Role')
-                ->getCollaboratorRole($workspace)->getUsers())." collaborators added "
+            $this->log(
+                count($roleRepo->getCollaboratorRole($workspace)->getUsers())
+                . ' collaborators added'
             );
         }
     }

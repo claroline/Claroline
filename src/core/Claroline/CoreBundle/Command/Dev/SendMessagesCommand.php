@@ -70,7 +70,7 @@ class SendMessagesCommand extends ContainerAwareCommand
         $fixture->setLogger(
             function ($message) use ($output) {
                 $output->writeln($message);
-           }
+            }
         );
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);

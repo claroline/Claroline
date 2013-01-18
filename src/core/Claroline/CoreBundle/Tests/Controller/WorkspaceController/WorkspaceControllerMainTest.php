@@ -73,8 +73,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
             'GET',
             "/workspaces/user/{$this->getFixtureReference('user/ws_creator')->getId()}"
         );
-        $link = $crawler->filter("#link-home-{$this->getFixtureReference('workspace/ws_d')
-            ->getId()}")
+        $link = $crawler->filter("#link-home-{$this->getFixtureReference('workspace/ws_d')->getId()}")
             ->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(1, $crawler->filter(".welcome-home")->count());
@@ -132,9 +131,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->loadUserFixture(array('user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwuId}/tools/user_management");
+        $this->client->request('GET', "/workspaces/{$pwuId}/tools/user_management");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -143,10 +140,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->loadUserFixture(array('user', 'admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwaId}/tools/user_management"
-        );
+        $this->client->request('GET', "/workspaces/{$pwaId}/tools/user_management");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -155,10 +149,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->loadUserFixture(array('user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwuId}/tools/users/unregistered"
-        );
+        $this->client->request('GET', "/workspaces/{$pwuId}/tools/users/unregistered");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -168,9 +159,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->loadUserFixture(array('user', 'admin'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwuId}/tools/users/unregistered");
+        $this->client->request('GET', "/workspaces/{$pwuId}/tools/users/unregistered");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -250,10 +239,8 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         //admin must unlock first
         $this->logUser($this->getFixtureReference('user/user'));
-        $configs = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
         $countConfigs = count($configs);
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
@@ -265,10 +252,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         );
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget-content')));
-        $configs = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
         $this->assertEquals(++$countConfigs, count($configs));
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -304,7 +288,6 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $workspaceRights = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
             ->findBy(array('workspace' => $workspace));
-
         $this->client->request(
             'POST',
             "/workspaces/{$workspace->getId()}/properties/workspace/rights/edit",
@@ -314,24 +297,29 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
                "canDelete-{$workspaceRights[1]->getId()}" => true,
            )
         );
-
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $seeToTrue = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
             ->find($workspaceRights[0]->getId());
         $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
             ->find($workspaceRights[1]->getId());
-
-        $this->assertTrue($seeToTrue->isEquals(array(
-            'canView' => true,
-            'canDelete' => false,
-            'canEdit' => false
-        )));
-
-        $this->assertTrue($seeAndDeleteToTrue->isEquals(array(
-            'canView' => true,
-            'canDelete' => true,
-            'canEdit' => false
-        )));
+        $this->assertTrue(
+            $seeToTrue->isEquals(
+                array(
+                    'canView' => true,
+                    'canDelete' => false,
+                    'canEdit' => false
+                )
+            )
+        );
+        $this->assertTrue(
+            $seeAndDeleteToTrue->isEquals(
+                array(
+                    'canView' => true,
+                    'canDelete' => true,
+                    'canEdit' => false
+                )
+            )
+        );
     }
 
     private function registerStubPlugins(array $pluginFqcns)
