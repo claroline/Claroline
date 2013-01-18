@@ -280,7 +280,7 @@ class WorkspaceControllerMainTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('#workspace-rights-form')));
     }
 
-    public function testEditResourceRights()
+    public function testEditWorkspaceRights()
     {
         $this->loadUserFixture(array('user'));
         $this->logUser($this->getFixtureReference('user/user'));
