@@ -20,9 +20,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     const ALL_ROLES = 3;
 
     /*
-     * UserProviderInterface methods
+     * UserProviderInterface method
      */
-
     public function loadUserByUsername($username)
     {
         $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
@@ -50,6 +49,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $user;
     }
 
+    /*
+     * UserProviderInterface method
+     */
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
@@ -83,14 +85,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $user;
     }
 
+    /*
+     * UserProviderInterface method
+     */
     public function supportsClass($class)
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
     }
-
-    /*
-     * End UserProviderInterface methods
-     */
 
     //todo prepared statement here
     public function getUsersByUsernameList(array $usernames)
@@ -240,9 +241,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $paginator;
     }
 
-    /**
-     * Current logged user will see all his roles
-     */
     public function users($offset, $limit, $modeRole)
     {
         switch($modeRole){
@@ -444,6 +442,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $paginator;
     }
 
+    /**
+     * Checks if a user is registered in a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return boolean
+     */
     public function isRegisteredInWorkspace(AbstractWorkspace $workspace, User $user)
     {
         $dql = "

@@ -143,6 +143,16 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $results;
     }
 
+    /**
+     * The children query for the admin (every resource is shown).
+     *
+     * @param integer $parentId
+     * @param integer $resourceTypeId
+     * @param boolean $asArray
+     * @param boolean $isVisible
+     *
+     * @return Query
+     */
     private function buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible)
     {
         $dql = "SELECT DISTINCT". ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
@@ -165,6 +175,17 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $query;
     }
 
+    /**
+     * The children query an array of Roles.
+     *
+     * @param integer $parentId
+     * @param array   roles
+     * @param integer $resourceTypeId
+     * @param boolean $asArray
+     * @param boolean $isVisible
+     *
+     * @return Query
+     */
     private function buildForRolesChildrenQuery(
         $parentId,
         $roles,
@@ -214,8 +235,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
+     *
      * @param User $user Owner of the resources.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
      * @return an array of arrays or entities
      */
     public function listRootsForUser(User $user, $asArray = false)
@@ -235,7 +258,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
     /**
      * Returns an array of all ancestors of a abstractResource
      * (the resource itlsef is returned too).
+     *
      * @param listDirectChildrenResourceInstances $resource The resource about which we want ancestors.
+     *
      * @return array (name, id)
      */
     public function listAncestors(AbstractResource $resource)
@@ -260,9 +285,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns all resources owned by the user and filtered with given criterias.
+     *
      * @param Array $criterias Array of criterias to use to build the filter.
      * @param $roles as array of role (string)
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
      * @return an array of arrays or entities
      */
     public function listResourcesForUserWithFilter($criterias, $user, $asArray = false)
@@ -270,6 +297,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
             . " FROM " . self::FROM_RESOURCES;
 
+        $isAdmin = false;
         if ($isAdmin === false) {
             $dql .= "
                 JOIN ar.rights arRights
@@ -302,8 +330,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Types.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildTypesFilter($key, $criteria)
@@ -329,8 +359,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Root.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildRootsFilter($key, $criteria)
@@ -356,8 +388,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Mime types.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildMimeTypesFilter($key, $criteria)
@@ -382,9 +416,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
+     *
      * Build the Dql part of the filter about FromDate.
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildDateFromFilter($key, $criteria)
@@ -394,8 +430,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about ToDate.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildDateToFilter($key, $criteria)
@@ -405,8 +443,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Name.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildNameFilter($key, $criteria)
@@ -416,9 +456,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Bind all values to the DQL filter.
+     *
      * @param Query $query to bind with values.
      * @param Array $criterias Array of criterias to apply.
      * @param User $user Owner of the resources.
+     *
      * @return string
      */
     private function bindFilter($query, $criterias, $user)
@@ -453,11 +495,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Bind all values to the DQL filter.
+     *
      * @param Query $query to bind with values.
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $values Array of values to filter on.
      * @param boolean $isLike If true, will bind with a %val%" value.
      * @param boolean $isRootLike If true, will bind with a val%" value.
+     *
      * @return string
      */
     private function bindArray($query, $key, $values, $isLike = false, $isRootLike = false)
@@ -476,10 +520,12 @@ class AbstractResourceRepository extends MaterializedPathRepository
     /**
      * Execute a DQL query and may return a list of entities or a list of arrays.
      * If it returns arrays, it add a "pathfordisplay" field in each item.
+     *
      * @param Query $query The query to execute.
      * @param boolean $asArray Set it to true if you want the result as a list of arrays.
      * @param int $numrows Maximum number of rows to return.
      * @param int ResourceType $resourceType Resource type to filter on.
+     * 
      * @return array of arrays or array of entities
      */
     private function executeQuery($query, $asArray, $offset = null, $numrows = null)

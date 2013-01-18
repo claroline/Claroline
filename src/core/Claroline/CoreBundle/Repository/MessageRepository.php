@@ -4,10 +4,19 @@ namespace Claroline\CoreBundle\Repository;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\User;
 
 class MessageRepository extends NestedTreeRepository
 {
-    public function getAncestors($message)
+    /**
+     * Returns the ancestors of a message.
+     *
+     * @param Message $message
+     *
+     * @return type
+     */
+    public function getAncestors(Message $message)
     {
         $dql = "SELECT m FROM Claroline\CoreBundle\Entity\Message m
             WHERE m.lft BETWEEN m.lft AND m.rgt
@@ -19,7 +28,14 @@ class MessageRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function countUnreadMessage($user)
+    /**
+     * Count the number of unread messages for a user.
+     *
+     * @param User $user
+     *
+     * @return integer
+     */
+    public function countUnreadMessage(User $user)
     {
         $dql = "SELECT Count(m) FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um

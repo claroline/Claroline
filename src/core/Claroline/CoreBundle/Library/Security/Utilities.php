@@ -44,7 +44,7 @@ class Utilities
      *
      * @Return array
      */
-    public function setRightsRequest($checks, $typeOfRight)
+    public function setRightsRequest(array $checks, $typeOfRight)
     {
         if (!in_array($typeOfRight, $this->expectedTypeOfRight)) {
             throw new \Exception('Wrong type of right specified on setRightRequest for the RightsManager.
@@ -65,14 +65,21 @@ class Utilities
     }
 
 
+    /**
+     * Returns the roles (an array of string) of the $token.
+     *
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
     public function getRoles(TokenInterface $token)
     {
         if ($token->getUser() === 'anon.') {
-            foreach($token->getRoles() as $role) {
+            foreach ($token->getRoles() as $role) {
                 $roles[] = $role->getRole();
             }
         } else {
-            foreach($token->getUser()->getRoles() as $role) {
+            foreach ($token->getUser()->getRoles() as $role) {
                 $roles[] = $role;
             }
         }
@@ -80,7 +87,16 @@ class Utilities
         return $roles;
     }
 
-    private function addMissingRights($rights, $typeOfRight)
+    /**
+     * Given an array of rights permission, the method will add the missing rights
+     * and set them to false.
+     *
+     * @param array $rights the right array ie(array('canDelete' => true))
+     * @param type $typeOfRight the type of right: currently 'resource' or 'workspace'
+     *
+     * @return array
+     */
+    private function addMissingRights(array $rights, $typeOfRight)
     {
         switch ($typeOfRight) {
             case "resource": $expectedKeys = $this->expectedKeysForResource;
