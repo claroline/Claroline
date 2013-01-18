@@ -5,7 +5,8 @@ namespace Claroline\CoreBundle\Library\Utilities;
 class LipsumGenerator
 {
     /**
-     * if nbwords = 0, then it's somewhat random (from 5 to 500)
+     * Generate some random texts.
+     * If nbwords = 0, then it's somewhat random (from 5 to 500).
      *
      * @param integer $nbWords
      * @param boolean $isFullText

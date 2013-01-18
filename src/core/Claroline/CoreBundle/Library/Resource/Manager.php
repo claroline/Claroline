@@ -43,7 +43,7 @@ class Manager
     }
 
     /**
-     * Creates a resource. If instanceParentId is null, added to the root.
+     * Creates a resource. If parentId is null, added to the root.
      *
      * @param integer          $parentId
      * @param string           $resouceType
@@ -99,7 +99,7 @@ class Manager
     }
 
     /**
-     * Moves a resource instance.
+     * Moves a resource.
      *
      * @param Abstractesource  $child
      * @param Abstractesource  $parent
@@ -133,7 +133,7 @@ class Manager
     }
 
     /**
-     * Removes a resource instance.
+     * Removes a resource.
      *
      * @param AbstractResource $resource
      */
@@ -206,7 +206,7 @@ class Manager
     }
 
     /**
-     *  Creates a resource copy with no name
+     *  Creates a resource copy with no name.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $originalResource
      *
@@ -238,6 +238,13 @@ class Manager
         return $resourceCopy;
     }
 
+    /**
+     * Removes a directory.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @throws \LogicException
+     */
     private function deleteDirectory(AbstractResource $resource)
     {
         if ($resource->getParent() === null) {

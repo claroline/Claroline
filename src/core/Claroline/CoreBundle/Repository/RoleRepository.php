@@ -65,21 +65,14 @@ class RoleRepository extends NestedTreeRepository
         return $query->getSingleResult();
     }
 
-    public function getTokenRoleForWorkspace($token, AbstractWorkspace $workspace)
-    {
-        $roles = $this->getWorkspaceRoles($workspace);
-
-        foreach ($roles as $role) {
-            foreach ($token->getRoles() as $tokenRole) {
-                if ($tokenRole->getRole() == $role->getName()) {
-                    return $role;
-                }
-            }
-        }
-
-        return null;
-    }
-
+    /**
+     * Return the role of a user of a group in a workspace.
+     * 
+     * @param Group|User $entity
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return null|Role
+     */
     public function getEntityRoleForWorkspace($entity, AbstractWorkspace $workspace)
     {
         $roles = $this->getWorkspaceRoles($workspace);

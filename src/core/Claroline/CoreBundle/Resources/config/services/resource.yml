@@ -27,9 +27,6 @@ services:
     claroline.resource.utilities:
          class: Claroline\CoreBundle\Library\Resource\Utilities
 
-    claroline.resource.searcher:
-         class: Claroline\CoreBundle\Library\Resource\Searcher
-
     claroline.resource.converter:
          class: Claroline\CoreBundle\Library\Resource\Converter
          arguments:

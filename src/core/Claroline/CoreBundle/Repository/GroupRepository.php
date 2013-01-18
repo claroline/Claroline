@@ -10,6 +10,15 @@ use Claroline\CoreBundle\Entity\Role;
 
 class GroupRepository extends EntityRepository
 {
+    /**
+     * Gets the groups of a workspace.
+     *
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param Role $role
+     *
+     * @return type
+     */
     public function getGroupsOfWorkspace(AbstractWorkspace $workspace, $role = null)
     {
         $dql = "
@@ -130,6 +139,14 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Returns the groups of the platform according to the limit and the offset
+     *
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
     public function groups($offset, $limit)
     {
         $dql = "
@@ -145,6 +162,15 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Search the groups of the platform according to the limit and the offset
+     *
+     * @param string  $search
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
     public function searchGroups($search, $offset, $limit)
     {
         $search = strtoupper($search);
@@ -189,6 +215,14 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Checks if a group is registered in a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     *
+     * @return boolean
+     */
     public function isRegisteredInWorkspace(AbstractWorkspace $workspace, Group $group)
     {
         $dql = "

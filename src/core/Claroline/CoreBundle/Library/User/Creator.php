@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 
 class Creator
 {
@@ -28,7 +29,15 @@ class Creator
         $this->wsCreator = $wsCreator;
     }
 
-    public function create($user)
+    /**
+     * Creates a user. This method will create the user personal workspace
+     * and persist the $user.
+     *
+     * @param User $user
+     *
+     * @return User
+     */
+    public function create(User $user)
     {
         $this->em->persist($user);
         $config = new Configuration();
