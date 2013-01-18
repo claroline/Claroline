@@ -219,7 +219,16 @@ class ResourceVoter implements VoterInterface
         return true;
     }
 
-    private function canCreate($rightsCreation, $resourceType)
+    /**
+     * Checks if the resourceType name $resourceType is in the
+     * $rightsCreation array.
+     *
+     * @param array $rightsCreation
+     * @param string $resourceType
+     *
+     * @return boolean
+     */
+    private function canCreate(array $rightsCreation, $resourceType)
     {
         foreach ($rightsCreation as $item) {
             if ($item['name'] == $resourceType) {
@@ -232,6 +241,7 @@ class ResourceVoter implements VoterInterface
 
 
     /**
+     * Checks if the current token has the right to do the action $action.
      *
      * @param AbstractResource $resource
      * @param TokenInterface $token

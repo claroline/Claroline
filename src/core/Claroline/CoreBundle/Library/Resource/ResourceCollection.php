@@ -4,6 +4,9 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
+/**
+ * This is the class used by the ResourceVoter to take access decisions.
+ */
 class ResourceCollection
 {
     private $resources;
@@ -32,6 +35,13 @@ class ResourceCollection
         return $this->resources;
     }
 
+    /**
+     * Used by the ResourceVoter to set an array of errors.
+     *
+     * @param string $errors
+     *
+     * @return array
+     */
     public function setErrors($errors)
     {
         $this->errors = $errors;
