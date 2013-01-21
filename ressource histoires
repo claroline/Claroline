@@ -11,6 +11,7 @@ je possède les droits d'administrateur et ouvre le répertoire racine de ce wor
 Si je crée un fichier dans ce répertoire, il apparaît dans le répertoire dans lequel je me trouve.
 Q : Apparait-t-il aussi dans mon espace personnel ? Si oui, la ressource que j'ai créée dans l'espace A
 est-elle un lien ? Problème, dans les espace non personnels, tout sera vu comme lien.
+R : Dans le desktop => filter par utilisateur admin.
 
 3)
 En tant qu'utilisateur, je me rend dans la page « gestion des resources » d'un workspace A

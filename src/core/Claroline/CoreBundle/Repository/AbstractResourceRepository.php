@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Claroline\CoreBundle\Repository;
@@ -524,7 +525,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @param boolean $asArray Set it to true if you want the result as a list of arrays.
      * @param int $numrows Maximum number of rows to return.
      * @param int ResourceType $resourceType Resource type to filter on.
-     * 
+     *
      * @return array of arrays or array of entities
      */
     private function executeQuery($query, $asArray, $offset = null, $numrows = null)
