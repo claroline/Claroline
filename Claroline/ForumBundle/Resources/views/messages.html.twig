@@ -1,0 +1,16 @@
+{% for message in messages %}
+    <tr class="row-message">
+        <td width="125px">
+            <div>
+                <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
+            </div>
+            <div>
+               {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
+            </div>
+            <div>
+                {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
+            </div>
+        </td>
+        <td>{{ message.getContent()|raw }}</td>
+    </tr>
+{% endfor %}

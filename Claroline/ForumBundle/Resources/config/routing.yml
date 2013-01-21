@@ -1,0 +1,41 @@
+claro_forum_form_subject_creation:
+    pattern: /form/subject/{forumId}
+    defaults: { _controller: ClarolineForumBundle:Forum:forumSubjectCreationForm }
+
+claro_forum_create_subject:
+    pattern: /subject/create/{forumId}
+    defaults: { _controller: ClarolineForumBundle:Forum:createSubject }
+
+claro_forum_show_message:
+   pattern: /subject/message/{subjectId}
+   defaults: { _controller: ClarolineForumBundle:Forum:showMessages }
+
+claro_forum_messages:
+   pattern: /subject/{subjectId}/offset/{offset}
+   defaults: { _controller: ClarolineForumBundle:Forum:messages }
+   options:
+      expose: true
+
+claro_forum_subjects:
+   pattern: /{forumId}/offset/{offset}
+   defaults: { _controller: ClarolineForumBundle:Forum:subjects }
+   options:
+      expose: true
+
+claro_forum_open:
+   pattern: /open/{resourceId}
+   defaults: { _controller: ClarolineForumBundle:Forum:open }
+
+claro_forum_message_form:
+   pattern: /add/message/{subjectId}
+   defaults: { _controller: ClarolineForumBundle:Forum:messageCreationForm }
+
+claro_forum_create_message:
+   pattern: /create/message/{subjectId}
+   defaults: { _controller: ClarolineForumBundle:Forum:createMessage }
+
+claro_forum_edit_options:
+   pattern: /options/edit
+   defaults: { _controller: ClarolineForumBundle:Forum:editForumOptions }
+
+

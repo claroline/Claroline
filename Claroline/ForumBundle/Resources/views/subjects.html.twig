@@ -1,0 +1,13 @@
+{% for subject in subjects %}
+<tr class='row-subject'>
+    <td>
+        <a class="link-subject" href="{{ _path('claro_forum_show_message', {'subjectId': subject.id }) }}">{{ subject.title }}</a><br>
+        {{ 'started_by' | trans({}, 'forum') }} {{ subject.subject_creator_firstname }}, {{ subject.subject_created|date('m/d/Y H:i:s') }}
+    </td>
+    <td>{{ subject.count_messages }}</td>
+    <td>
+        {{ subject.last_message_creator_firstname }}<br/>
+        {{ subject.last_message_created|date('m/d/Y H:i:s') }}
+    </td>
+</tr>
+{% endfor %}

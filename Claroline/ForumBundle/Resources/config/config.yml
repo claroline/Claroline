@@ -1,0 +1,24 @@
+plugin:
+  has_options: true
+  icon: res_forum.png
+
+  resources:
+    - class: Claroline\ForumBundle\Entity\Forum
+      name: claroline_forum
+      is_visible: true
+      is_browsable: false
+      icon: res_forum.png
+
+    - class: Claroline\ForumBundle\Entity\Subject
+      name: claroline_subject
+      is_visible: false
+      is_browsable: false
+
+    - class: Claroline\ForumBundle\Entity\Message
+      name: claroline_message
+      is_visible: false
+      is_browsable: false
+
+
+
+
