@@ -31,10 +31,11 @@
     <!-- classes must have their opening brace on a new line and an indentation of four spaces -->
     <rule ref="PEAR.Classes.ClassDeclaration"/>
     <!-- BSD-Allman function declaration, plus closure checking -->
-    <rule ref="PEAR.Functions.FunctionDeclaration">
-        <!-- we don't follow PEAR exception for multi-line declarations -->
-        <!-- opening brace should always be on a line by itself -->
-        <exclude name="PEAR.Functions.FunctionDeclaration.NewlineBeforeOpenBrace"/>
+    <rule ref="PEAR.Functions.FunctionDeclaration"/>
+    <!-- we don't follow PEAR exception for multi-line declarations -->
+    <!-- opening brace should always be on a line by itself -->
+    <rule ref="PEAR.Functions.FunctionDeclaration.NewlineBeforeOpenBrace">
+        <severity>0</severity>
     </rule>
     <!-- check arguments spacing and/or indentation (multi-line calls) -->
     <rule ref="PEAR.Functions.FunctionCallSignature"/>
@@ -47,9 +48,10 @@
     <!-- operators must be surrounded by one space -->
     <rule ref="Squiz.WhiteSpace.OperatorSpacing"/>
     <!-- variable names must be in camel case and without digits -->
-    <rule ref="Zend.NamingConventions.ValidVariableName">
-        <!-- private variables don't have to start with an underscore -->
-        <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    <rule ref="Zend.NamingConventions.ValidVariableName"/>
+    <!-- private variables don't have to start with an underscore -->
+    <rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
+        <severity>0</severity>
     </rule>
     <!-- only one class per file -->
     <rule ref="Symfony2.Classes.MultipleClassesOneFile"/>
