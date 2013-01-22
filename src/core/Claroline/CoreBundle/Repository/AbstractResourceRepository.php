@@ -21,10 +21,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
     //      to get "ar" information.
     //      That's also the reason why we do not use
     //      the "MaterializedPathRepository->getChildren" method.
-    const SELECT_FOR_ENTITIES = "ar";
 
     /** SELECT DQL part to get array. Please add any required field here. */
     const SELECT_FOR_ARRAY = "
+            SELECT DISTINCT
             ar.id as id,
             ar.name as name,
             ar.path as path,
@@ -73,9 +73,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
+    public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null)
     {
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = "SELECT " . self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES
             . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
 
@@ -92,7 +92,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 
-        return $this->executeQuery($query, $asArray);
+        return $this->executeQuery($query);
     }
 
     /**
@@ -108,7 +108,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function children($parentId, $roles, $resourceTypeId = 0, $asArray = true, $isVisible = true)
+    public function children($parentId, $roles, $resourceTypeId = 0, $isVisible = true)
     {
         $isAdmin = false;
 
@@ -119,7 +119,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         if ($isAdmin) {
-            $query = $this->buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible);
+            $query = $this->buildAdminChildrenQuery($parentId, $resourceTypeId, $isVisible);
         } else {
             $query = $this->buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId);
         }
@@ -127,7 +127,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $results = array();
 
         if (!$isAdmin) {
-            $results = $this->executeQuery($query, $asArray);
+            $results = $this->executeQuery($query);
         } else {
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
 
@@ -152,9 +152,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return Query
      */
-    private function buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible)
+    private function buildAdminChildrenQuery($parentId, $resourceTypeId, $isVisible)
     {
-        $dql = "SELECT DISTINCT". ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = self::SELECT_FOR_ARRAY
            . " FROM " . self::FROM_RESOURCES
            . " WHERE ar.parent = :ar_parentid
                AND rt.isVisible = :rt_isvisible";
@@ -189,11 +189,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $parentId,
         $roles,
         $resourceTypeId,
-        $asArray = true,
         $isVisible = true
     )
     {
-         $dql = "SELECT DISTINCT". self::SELECT_FOR_ARRAY
+         $dql = self::SELECT_FOR_ARRAY
              . ", MAX (arRights.canExport) as can_export"
              . ", MAX (arRights.canDelete) as can_delete"
              . ", MAX (arRights.canEdit) as can_edit"
@@ -240,9 +239,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function listRootsForUser(User $user, $asArray = false)
+    public function listRootsForUser(User $user)
     {
-        $dql = "SELECT " . self::SELECT_FOR_ARRAY
+        $dql = self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES
             . " WHERE ar.parent IS NULL"
             . " AND " . self::WHERECONDITION_USER_WORKSPACE
@@ -251,7 +250,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('u_id', $user->getId());
 
-        return $this->executeQuery($query, $asArray);
+        return $this->executeQuery($query);
     }
 
     /**
@@ -291,28 +290,21 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function listResourcesForUserWithFilter($criterias, $user, $asArray = false)
+    public function listResourcesForUserWithFilter($criterias, $user)
     {
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES;
 
-        $isAdmin = false;
-        if ($isAdmin === false) {
-            $dql .= "
-                JOIN ar.rights arRights
-                JOIN arRights.role rightRole WITH rightRole IN (
-                    SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
-                    JOIN currentUserRole.users currentUser
-                    WHERE currentUser.id = {$user->getId()}
-                )";
-        }
-
+        $dql .= "
+            JOIN ar.rights arRights
+            JOIN arRights.role rightRole WITH rightRole IN (
+                SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
+                JOIN currentUserRole.users currentUser
+                WHERE currentUser.id = {$user->getId()}
+            )";
         $dql .= " WHERE rt.isVisible=1"
             . " AND " . self::WHERECONDITION_USER_WORKSPACE;
-
-        if ($user !== null && $isAdmin === false) {
-            $dql .= " AND arRights.canView = 1";
-        }
+        $dql .= " AND arRights.canView = 1";
 
         foreach ($criterias as $key => $value) {
             $methodName = 'build' . ucfirst($key) . 'Filter';
@@ -324,7 +316,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query = $this->_em->createQuery($dql);
         $this->bindFilter($query, $criterias, $user);
 
-        return $this->executeQuery($query, $asArray);
+        return $this->executeQuery($query);
     }
 
     /**
@@ -527,23 +519,18 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return array of arrays or array of entities
      */
-    private function executeQuery($query, $asArray, $offset = null, $numrows = null)
+    private function executeQuery($query, $offset = null, $numrows = null)
     {
         $query->setFirstResult($offset);
         $query->setMaxResults($numrows);
 
-        if ($asArray) {
-            $res = $query->getArrayResult();
-            // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($res as &$r) {
-                $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
-                unset($r['path']);
-            }
-        } else {
-            $res = $query->getResult();
+        $res = $query->getArrayResult();
+        // Add a field "pathfordisplay" in each entity (as array) of the given array.
+        foreach ($res as &$r) {
+            $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
+            unset($r['path']);
         }
 
         return $res;
     }
-
 }

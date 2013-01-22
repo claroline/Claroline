@@ -70,11 +70,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
-     */
-    protected $note;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $mail;
@@ -155,11 +150,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->workspaceRoles = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getId()
@@ -269,14 +259,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-        if ($this->firstName !== $user->getFirstName()) {
-            return false;
-        }
-
-        if ($this->lastName !== $user->getLastName()) {
-            return false;
-        }
-
         if ($this->username !== $user->getUsername()) {
             return false;
         }
@@ -288,6 +270,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if ($this->getSalt() !== $user->getSalt()) {
             return false;
         }
+
+        /*
+        return $user instanceof User
+            && $this->username === $user->getUsername()
+            && $this->password === $user->getPassword()
+            && $this->getSalt() === $user->getSalt();*/
     }
 
     public function getPhone()
@@ -298,16 +286,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function setPhone($phone)
     {
         $this->phone = $phone;
-    }
-
-    public function getNote()
-    {
-        return $this->note;
-    }
-
-    public function setNote($note)
-    {
-        $this->note = $note;
     }
 
     public function getMail()
@@ -348,16 +326,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function getPersonalWorkspace()
     {
         return $this->personalWorkspace;
-    }
-
-    public function getAbstractResources()
-    {
-        return $this->abstractResources;
-    }
-
-    public function addAbstractResource(AbstractResource $abstractResource)
-    {
-        $this->abstractResources->add($abstractResource);
     }
 
     public function getCreationDate()

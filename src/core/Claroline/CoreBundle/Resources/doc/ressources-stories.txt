@@ -11,6 +11,7 @@ je possède les droits d'administrateur et ouvre le répertoire racine de ce wor
 Si je crée un fichier dans ce répertoire, il apparaît dans le répertoire dans lequel je me trouve.
 Q : Apparait-t-il aussi dans mon espace personnel ? Si oui, la ressource que j'ai créée dans l'espace A
 est-elle un lien ? Problème, dans les espace non personnels, tout sera vu comme lien.
+R : Dans le desktop => filter par utilisateur admin.
 
 3)
 En tant qu'utilisateur, je me rend dans la page « gestion des resources » d'un workspace A
@@ -52,7 +53,7 @@ Je permets aux utilisateurs ayant le rôle collaborateur de VOIR et MODIFIER et 
 (et si le droit spécial pour le partage existe, de la partager).
 Un de ces utilisateurs (monsieur Y) fait un lien depuis son workspace personnel (celui de Y donc) vers
 ce fichier et en donne l'accès aux utilisateurs ayant le rôle collaborateur du workspace personnel de Y.
-Que se passe-t-il quand un collaborateur de Y clique sur le lien ? Quels sont les actions qu'il peuvent exécuter ?
+Que se passe-t-il quand un collaborateur de Y clique sur le lien ? Quels sont les actions qu'ils peuvent exécuter ?
 Je dois avoir un moyen de préciser quelles sont les actions que les utilisateurs venant des liens peuvent
 exécuter car je ne les connais pas à l'avance.
 Conflits ? Si le lien de l'utilisateur Y possède uniquement le droit VOIR mais que les utilisateurs venant
@@ -73,7 +74,7 @@ L'utilisateur Y qui est collaborateur de mon workspace var créer un lien depuis
 vers mon forum.
 Q : Est-ce-qu'il peut faire ça ? Un ressource capable de définir sa propre gestion des droits est-elle partagable ?
 En admettant que le forum puisse être partagé, comment en tant qu'utilisateur X je peux m'occuper de
-la gestion de droits spécialisée du forum ? Les roles de l'utilisateurs Y sont-il rajoutés dans la gestion
+la gestion de droits spécialisée du forum ? Les roles de l'utilisateurs Y sont-ils rajoutés dans la gestion
 de droits du forum ?
 
 7)

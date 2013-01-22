@@ -3,7 +3,8 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
 
 class ActivityControllerTest extends FunctionalTestCase
 {
@@ -24,11 +25,12 @@ class ActivityControllerTest extends FunctionalTestCase
     public function testAddThenRemoveResource()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $file = $this->uploadFile($this->pwr->getId(), 'file');
+        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $file = $this->createFile($this->pwr, 'file', $user);
         $activity = $this->createActivity('name', 'instruction');
         $this->client->request(
             'POST',
-            "/activity/{$activity->id}/add/resource/{$file->id}"
+            "/activity/{$activity->id}/add/resource/{$file->getId()}"
         );
         $obj = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($obj));
@@ -41,7 +43,7 @@ class ActivityControllerTest extends FunctionalTestCase
         //the code below doesn't work: no idea why
         $this->client->request(
             'DELETE',
-            "/activity/{$activity->id}/remove/resource/{$file->id}"
+            "/activity/{$activity->id}/remove/resource/{$file->getId()}"
         );
         $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
         $resourceActivity = $this->client
@@ -55,8 +57,9 @@ class ActivityControllerTest extends FunctionalTestCase
     public function testSequenceOrder()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $fileOne = $this->uploadFile($this->pwr->getId(), 'file1');
-        $fileTwo = $this->uploadFile($this->pwr->getId(), 'file2');
+        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $fileOne = $this->createFile($this->pwr, 'file1', $user);
+        $fileTwo = $this->createFile($this->pwr, 'file2', $user);
         $activity = $this->createActivity('name', 'instruction');
         $activityEntity = $this->client
             ->getContainer()
@@ -65,11 +68,11 @@ class ActivityControllerTest extends FunctionalTestCase
             ->find($activity->id);
         $this->client->request(
             'POST',
-            "/activity/{$activity->id}/add/resource/{$fileOne->id}"
+            "/activity/{$activity->id}/add/resource/{$fileOne->getId()}"
         );
         $this->client->request(
             'POST',
-            "/activity/{$activity->id}/add/resource/{$fileTwo->id}"
+            "/activity/{$activity->id}/add/resource/{$fileTwo->getId()}"
         );
 
         $resourceActivities = $this->client
@@ -117,18 +120,11 @@ class ActivityControllerTest extends FunctionalTestCase
         return $obj[0];
     }
 
-    private function uploadFile($parentId, $name, $shareType = 1)
+    private function createFile($parent, $name, User $user)
     {
-        $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), $name, 'text/plain', null, null, true);
-        $this->client->request(
-            'POST',
-            "/resource/create/file/{$parentId}",
-            array('file_form' => array()),
-            array('file_form' => array('file' => $file, 'name' => 'tmp'))
-        );
+        $fileData = new LoadFileData($name, $parent, $user, tempnam(sys_get_temp_dir(), 'FormTest'));
+        $this->loadFixture($fileData);
 
-        $obj = json_decode($this->client->getResponse()->getContent());
-
-        return $obj[0];
+        return $fileData->getLastFileCreated();
     }
 }

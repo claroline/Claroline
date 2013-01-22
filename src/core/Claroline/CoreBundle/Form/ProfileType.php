@@ -61,7 +61,6 @@ class ProfileType extends BaseProfileType
                 )
             );
         }
-        $builder->add('note', 'textarea', array('required' => false));
     }
 
     public function getName()
