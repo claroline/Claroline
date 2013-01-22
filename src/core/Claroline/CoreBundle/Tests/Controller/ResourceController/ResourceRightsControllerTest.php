@@ -63,35 +63,47 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findBy(array('resource' => $file));
         $this->assertEquals(4, count($resourceRights));
-        $this->assertTrue($resourceRights[0]->isEquals(array(
-            'canView' => true,
-            'canCopy' => false,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canOpen' => false,
-            'canCreate' => false,
-            'canExport' => false
-        )));
+        $this->assertTrue(
+            $resourceRights[0]->isEquals(
+                array(
+                    'canView' => true,
+                    'canCopy' => false,
+                    'canDelete' => false,
+                    'canEdit' => false,
+                    'canOpen' => false,
+                    'canCreate' => false,
+                    'canExport' => false
+                )
+            )
+        );
 
-        $this->assertTrue($resourceRights[1]->isEquals(array(
-            'canView' => true,
-            'canCopy' => false,
-            'canDelete' => true,
-            'canEdit' => false,
-            'canOpen' => false,
-            'canCreate' => false,
-            'canExport' => false
-        )));
+        $this->assertTrue(
+            $resourceRights[1]->isEquals(
+                array(
+                    'canView' => true,
+                    'canCopy' => false,
+                    'canDelete' => true,
+                    'canEdit' => false,
+                    'canOpen' => false,
+                    'canCreate' => false,
+                    'canExport' => false
+                )
+            )
+        );
 
-        $this->assertTrue($resourceRights[2]->isEquals(array(
-            'canView' => false,
-            'canCopy' => false,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canOpen' => false,
-            'canCreate' => false,
-            'canExport' => false
-        )));
+        $this->assertTrue(
+            $resourceRights[2]->isEquals(
+                array(
+                    'canView' => false,
+                    'canCopy' => false,
+                    'canDelete' => false,
+                    'canEdit' => false,
+                    'canOpen' => false,
+                    'canCreate' => false,
+                    'canExport' => false
+                )
+            )
+        );
     }
 
     public function testDisplayCreationRightForm()
@@ -101,8 +113,10 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole($this->getFixtureReference('user/user')
-                ->getPersonalWorkspace());
+            ->getCollaboratorRole(
+                $this->getFixtureReference('user/user')
+                    ->getPersonalWorkspace()
+            );
 
         $dir = $this->createDirectory($this->pwr, 'dir');
         $crawler = $this->client->request(
@@ -119,8 +133,10 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole($this->getFixtureReference('user/user')
-                ->getPersonalWorkspace());
+            ->getCollaboratorRole(
+                $this->getFixtureReference('user/user')
+                    ->getPersonalWorkspace()
+            );
         $dir = $this->createDirectory($this->pwr, 'dir');
         $resourceTypes = $this
             ->client

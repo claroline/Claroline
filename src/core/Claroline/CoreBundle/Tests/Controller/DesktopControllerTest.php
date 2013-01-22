@@ -12,11 +12,6 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
-
     //test if the url is working
     public function testPersoAction()
     {

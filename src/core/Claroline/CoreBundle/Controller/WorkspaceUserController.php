@@ -77,20 +77,23 @@ class WorkspaceUserController extends Controller
         $defaultData = array('role' => $role);
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
-                'role', 'entity', array(
-                'class' => 'Claroline\CoreBundle\Entity\Role',
-                'property' => 'translationKey',
-                'query_builder' => function (EntityRepository $er) use ($workspaceId) {
-                    return $er->createQueryBuilder('wr')
-                        ->select('role')
-                        ->from('Claroline\CoreBundle\Entity\Role', 'role')
-                        ->leftJoin('role.workspaceRights', 'rights')
-                        ->leftJoin('rights.workspace', 'workspace')
-                        ->where('workspace.id = :workspaceId')
-                        ->andWhere("role.name != 'ROLE_ANONYMOUS'")
-                        ->setParameter('workspaceId', $workspaceId);
-                }
-            ))
+                'role',
+                'entity',
+                array(
+                    'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'property' => 'translationKey',
+                    'query_builder' => function (EntityRepository $er) use ($workspaceId) {
+                        return $er->createQueryBuilder('wr')
+                            ->select('role')
+                            ->from('Claroline\CoreBundle\Entity\Role', 'role')
+                            ->leftJoin('role.workspaceRights', 'rights')
+                            ->leftJoin('rights.workspace', 'workspace')
+                            ->where('workspace.id = :workspaceId')
+                            ->andWhere("role.name != 'ROLE_ANONYMOUS'")
+                            ->setParameter('workspaceId', $workspaceId);
+                    }
+                )
+            )
             ->getForm();
 
         if ($this->getRequest()->getMethod() === 'POST') {
@@ -224,8 +227,10 @@ class WorkspaceUserController extends Controller
             foreach ($params['userIds'] as $userId) {
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
                 $users[] = $user;
-                $user->addRole($em->getRepository('ClarolineCoreBundle:Role')
-                    ->getCollaboratorRole($workspace));
+                $user->addRole(
+                    $em->getRepository('ClarolineCoreBundle:Role')
+                        ->getCollaboratorRole($workspace)
+                );
                 $em->flush();
             }
         }

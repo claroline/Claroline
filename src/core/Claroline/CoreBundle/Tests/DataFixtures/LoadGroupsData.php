@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;;
+use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Group;
 
 class LoadGroupsData extends LoggableFixture implements ContainerAwareInterface

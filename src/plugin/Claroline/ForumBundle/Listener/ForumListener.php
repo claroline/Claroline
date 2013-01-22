@@ -40,6 +40,7 @@ class ForumListener extends ContainerAware
             $forum = $form->getData();
             $event->setResource($forum);
             $event->stopPropagation();
+
             return;
         }
 

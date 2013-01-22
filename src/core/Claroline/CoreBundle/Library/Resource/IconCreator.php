@@ -313,7 +313,7 @@ class IconCreator
     public function createCustomIcon(UploadedFile $file)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $iconName = $file->getClientOriginalName();;
+        $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
         $file->move($this->container->getParameter('claroline.thumbnails.directory'), $hashName);

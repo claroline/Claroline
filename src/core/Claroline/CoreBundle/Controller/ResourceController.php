@@ -66,8 +66,10 @@ class ResourceController extends Controller
             $manager = $this->get('claroline.resource.manager');
             $resource = $manager->create($resource, $parentId, $resourceType);
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($this->get('claroline.resource.converter')
-                ->toJson($resource, $this->get('security.context')->getToken()));
+            $response->setContent(
+                $this->get('claroline.resource.converter')
+                    ->toJson($resource, $this->get('security.context')->getToken())
+            );
         } else {
             if ($event->getErrorFormContent() != null) {
                 $response->setContent($event->getErrorFormContent());
@@ -263,9 +265,11 @@ class ResourceController extends Controller
         $file = $this->get('claroline.resource.exporter')->exportResources($ids);
         $response = new StreamedResponse();
 
-        $response->setCallBack(function() use($file) {
-            readfile($file);
-        });
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
@@ -329,11 +333,15 @@ class ResourceController extends Controller
             }
         }
 
-        $response = new Response(json_encode(array(
-            'path' => $path,
-            'creatableTypes' => $creatableTypes,
-            'resources' => $resources
-        )));
+        $response = new Response(
+            json_encode(
+                array(
+                    'path' => $path,
+                    'creatableTypes' => $creatableTypes,
+                    'resources' => $resources
+                )
+            )
+        );
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -415,10 +423,7 @@ class ResourceController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $resources = $resourceRepo->listResourcesForUserWithFilter($criteria, $user);
-        $response = new Response(json_encode(array(
-                    'resources' => $resources,
-                    'path' => $path
-                )));
+        $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

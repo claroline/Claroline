@@ -303,7 +303,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 WHERE currentUser.id = {$user->getId()}
             )";
         $dql .= " WHERE rt.isVisible=1"
-            . " AND " . self::WHERECONDITION_USER_WORKSPACE;-
+            . " AND " . self::WHERECONDITION_USER_WORKSPACE;
         $dql .= " AND arRights.canView = 1";
 
         foreach ($criterias as $key => $value) {

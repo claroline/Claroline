@@ -39,6 +39,7 @@ class RssReaderController extends Controller
 
         if ($config->getWorkspace() != null) {
             $url = $this->generateUrl('claro_workspace_home', array('workspaceId' => $config->getWorkspace()->getId()));
+
             return new RedirectResponse($url);
         } else {
             if ($isDefault) {
@@ -81,13 +82,14 @@ class RssReaderController extends Controller
         }
 
         if ($rssConfig->getWorkspace() != null) {
-            $url = $this->generateUrl('claro_workspace_home', array(
-                'workspaceId' => $rssConfig->getWorkspace()->getId()
-            ));
+            $url = $this->generateUrl(
+                'claro_workspace_home',
+                array('workspaceId' => $rssConfig->getWorkspace()->getId())
+            );
 
             return new RedirectResponse($url);
-        } else {
-            return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
         }
+
+        return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
     }
 }

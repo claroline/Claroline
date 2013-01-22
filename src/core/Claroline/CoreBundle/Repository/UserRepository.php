@@ -97,9 +97,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function getUsersByUsernameList(array $usernames)
     {
         $nameList = array_map(
-            function($name) {
+            function ($name) {
                 return "'{$name}'";
-            }, $usernames
+            },
+            $usernames
         );
         $nameList = implode(', ', $nameList);
         $dql = "

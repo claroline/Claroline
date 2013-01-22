@@ -74,6 +74,7 @@ class ResourceVoter implements VoterInterface
                 return VoterInterface::ACCESS_GRANTED;
             } else {
                 $object->setErrors($errors);
+
                 return VoterInterface::ACCESS_DENIED;
             }
         } else {
@@ -187,21 +188,30 @@ class ResourceVoter implements VoterInterface
 
         if (count($rightsCreation) == 0) {
             $errors[] = $this->translator
-                ->trans('resource_creation_wrong_type', array(
-                    '%path%' => $resource->getPathForDisplay(),
-                    '%type%' => $this->translator->trans(
-                        strtolower($types), array(), 'resource'
-                    )), 'platform'
+                ->trans(
+                    'resource_creation_wrong_type',
+                    array(
+                        '%path%' => $resource->getPathForDisplay(),
+                        '%type%' => $this->translator->trans(
+                            strtolower($types),
+                            array(),
+                            'resource'
+                        )
+                    ),
+                    'platform'
                 );
         } else {
             if (!$this->canCreate($rightsCreation, $types)) {
                 $errors[] = $this->translator
                     ->trans(
-                        'resource_creation_wrong_type', array(
-                        '%path%' => $resource->getPathForDisplay(),
-                        '%type%' => $this->translator->trans(
-                            strtolower($types), array(), 'resource')
-                        ), 'platform'
+                        'resource_creation_wrong_type',
+                        array(
+                            '%path%' => $resource->getPathForDisplay(),
+                            '%type%' => $this->translator->trans(
+                                strtolower($types), array(), 'resource'
+                            )
+                        ),
+                        'platform'
                     );
             }
         }
@@ -242,8 +252,10 @@ class ResourceVoter implements VoterInterface
                                  '%path%' => $parent->getPathForDisplay(),
                                  '%type%' => $this->translator->trans(
                                      strtolower($resource->getResourceType()->getName()),
-                                     array(), 'resource')
-                                 ),
+                                     array(),
+                                     'resource'
+                                 )
+                             ),
                              'platform'
                          );
                 }
@@ -305,14 +317,16 @@ class ResourceVoter implements VoterInterface
             foreach ($resources as $resource) {
                 if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
                     $errors[] = $this->translator
-                        ->trans('resource_creation_wrong_type',
+                        ->trans(
+                            'resource_creation_wrong_type',
                             array(
                                 '%path%' => $parent->getPathForDisplay(),
                                 '%type%' => $this->translator->trans(
                                     strtolower($resource->getResourceType()->getName()),
                                     array(),
-                                    'resource')
-                                ),
+                                    'resource'
+                                )
+                            ),
                             'platform'
                         );
                 }

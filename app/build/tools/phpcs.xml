@@ -1,76 +1,66 @@
 <?xml version="1.0"?>
 
-<!-- see http://pear.php.net/manual/en/package.php.php-codesniffer.annotated-ruleset.php -->
-
 <ruleset name="Claronext coding standard">
     <description>Claronext coding standard</description>
-
-    <!-- based on https://github.com/aYaline/Symfony2-coding-standard -->
-
-    <!-- There should not be any code in the bundle Resources directory. -->
     <exclude-pattern>*/Resources/*</exclude-pattern>
-
-
-    <!--
-
-    See the [documented coding standard](https://docs.google.com/Doc?docid=0AWlHYuu5ayMrZGRmaG1wa2ZfMTVmd3Z2YzNkdw&hl=en)
-
-    This CodeSniffer standard does not yet enforce the following:
-
-    # Structure
-
-    * Add a blank line before return statements;
-    * Define one class per file;
-    * Declare class properties before methods;
-    * Declare public methods first, then protected ones and finally private ones.
-    * Suffix interfaces with Interface;
-    * Use namespaces for all classes;
-    * Add PHPDoc blocks for all classes, methods, and functions;
-    * The @package and @subpackage annotations are not used.
-
-    # Naming Conventions
-
-    * Use underscores for option, argument, parameter names;
-    * Use Symfony as the first namespace level;
-
-    -->
-
-    <!-- Import Zend coding standard (which in turn imports PEAR) -->
-    <rule ref="Zend">
-        <!-- but exclude their code analyzer -->
-        <exclude name="Zend.Debug.CodeAnalyzer"/>
-
-        <!-- covered by Squiz ControlSignature, which enforces try/catch as well -->
-        <exclude name="PEAR.ControlStructures.ControlSignature"/>
-        <exclude name="Generic.Files.LineLength"/>
+    <!-- our base coding standard is PSR -->
+    <!-- sniffs come from PSR, Generic, PEAR, Squiz, Zend and Symfony -->
+    <!-- see https://github.com/klaussilveira/phpcs-psr -->
+    <!-- see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md -->
+    <!-- see https://github.com/opensky/Symfony2-coding-standard -->
+    <!-- see http://edorian.github.com/php-coding-standard-generator/#phpcs -->
+    <rule ref="PSR">
+        <!-- excluded because some third-party code (e.g. doctrine) uses other conventions -->
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName"/>
+        <!-- excluded because it requires interfaces methods to have modifiers (Symfony2 sniff used instead) -->
+        <exclude name="Squiz.Scope.MethodScope"/>
     </rule>
-
-
-    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-    <rule ref="Generic.Functions.CallTimePassByReference"/>
-    <rule ref="Generic.PHP.LowerCaseConstant"/>
-    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-    <!-- next is disabled because it doesn't fit our rule :
-    opening and closing braces are alone on their line -->
-    <!-- <rule ref="Squiz.ControlStructures.ControlSignature"/> -->
-    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration"/>
-    <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
-    <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
-    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
-    <rule ref="Squiz.Scope.MemberVarScope"/>
-
-    <!-- Don't enforce Zend's private member underscores -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <!-- we don't want warnings for +80 characters lines -->
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
+        </properties>
+    </rule>
+    <!-- statement body (i.e. within braces) cannot be empty -->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <!-- overriding methods must add something to the parent implementation -->
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <!-- one statement per line (useful to detect double semi-colons) -->
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <!-- classes must have their opening brace on a new line and an indentation of four spaces -->
+    <rule ref="PEAR.Classes.ClassDeclaration"/>
+    <!-- BSD-Allman function declaration, plus closure checking -->
+    <rule ref="PEAR.Functions.FunctionDeclaration"/>
+    <!-- we don't follow PEAR exception for multi-line declarations -->
+    <!-- opening brace should always be on a line by itself -->
+    <rule ref="PEAR.Functions.FunctionDeclaration.NewlineBeforeOpenBrace">
+        <severity>0</severity>
+    </rule>
+    <!-- check arguments spacing and/or indentation (multi-line calls) -->
+    <rule ref="PEAR.Functions.FunctionCallSignature"/>
+    <!-- no dead code (e.g. expression after return statement) -->
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
+    <!-- no count() inside for loops -->
+    <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+    <!-- no whitespaces at the end of a line, no more than one blank line between statements -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <!-- operators must be surrounded by one space -->
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing"/>
+    <!-- variable names must be in camel case and without digits -->
+    <rule ref="Zend.NamingConventions.ValidVariableName"/>
+    <!-- private variables don't have to start with an underscore -->
     <rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
         <severity>0</severity>
     </rule>
-
-    <!-- In practice, Symfony2 spaces multiline function calls differently than Zend -->
-    <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
-        <severity>0</severity>
-    </rule>
-    <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
-        <severity>0</severity>
-    </rule>
-
+    <!-- only one class per file -->
+    <rule ref="Symfony2.Classes.MultipleClassesOneFile"/>
+    <!-- blank line required before return statement -->
+    <rule ref="Symfony2.Formatting.BlankLineBeforeReturn"/>
+    <!-- interfaces must be suffixed by "Interface" -->
+    <rule ref="Symfony2.NamingConventions.InterfaceSuffix"/>
+    <!-- methods must have scope modifiers (not applicable to interfaces) -->
+    <rule ref="Symfony2.Scope.MethodScope"/>
+    <!-- no trailing whitespaces -->
+    <rule ref="Symfony2.WhiteSpace.DiscourageFitzinator"/>
 </ruleset>

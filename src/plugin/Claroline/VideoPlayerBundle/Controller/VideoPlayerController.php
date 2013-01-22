@@ -16,10 +16,14 @@ class VideoPlayerController extends Controller
             ->find($videoId);
 
         $response = new StreamedResponse();
-        $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$video->getHashName();
-        $response->setCallBack(function() use($path){
-            readfile($path);
-        });
+        $path = $this->container->getParameter('claroline.files.directory')
+            . DIRECTORY_SEPARATOR
+            . $video->getHashName();
+        $response->setCallBack(
+            function () use ($path) {
+                readfile($path);
+            }
+        );
         $response->headers->set('Content-Type', $video->getMimeType());
 
         return $response;
