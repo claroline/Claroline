@@ -3,8 +3,10 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
 
 class FileControllerTest extends FunctionalTestCase
 {
@@ -54,8 +56,9 @@ class FileControllerTest extends FunctionalTestCase
     public function testDelete()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $node = $this->uploadFile($this->pwr->getId(), 'text.txt');
-        $this->client->request('GET', "/resource/delete?ids[]={$node->id}");
+        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $node = $this->createFile($this->pwr, 'text.txt', $user);
+        $this->client->request('GET', "/resource/delete?ids[]={$node->getId()}");
         $this->client->request('POST', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
@@ -88,12 +91,13 @@ class FileControllerTest extends FunctionalTestCase
     public function testCopy()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $stdFile = $this->uploadFile($this->pwr->getId(), 'text.txt');
+        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $stdFile = $this->createFile($this->pwr, 'text.txt', $user);
         $file = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->find($stdFile->id);
+            ->find($stdFile->getId());
         $event = new CopyResourceEvent($file);
         $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_file', $event);
         $this->assertEquals(1, count($event->getCopy()));
@@ -112,6 +116,14 @@ class FileControllerTest extends FunctionalTestCase
         $obj = json_decode($this->client->getResponse()->getContent());
 
         return $obj[0];
+    }
+
+    private function createFile($parent, $name, User $user)
+    {
+        $fileData = new LoadFileData($name, $parent, $user, tempnam(sys_get_temp_dir(), 'FormTest'));
+        $this->loadFixture($fileData);
+
+        return $fileData->getLastFileCreated();
     }
 
     private function getUploadedFiles()
