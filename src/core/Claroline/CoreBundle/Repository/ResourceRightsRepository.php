@@ -25,7 +25,6 @@ class ResourceRightsRepository extends EntityRepository
 
         $dql = "
             SELECT
-                MAX (rrw.canView) as canView,
                 MAX (rrw.canEdit) as canEdit,
                 MAX (rrw.canOpen) as canOpen,
                 MAX (rrw.canDelete) as canDelete,

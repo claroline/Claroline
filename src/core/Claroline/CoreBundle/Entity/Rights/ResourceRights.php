@@ -38,11 +38,6 @@ class ResourceRights
     private $resource;
 
     /**
-     * @ORM\Column(type="boolean", name="can_see")
-     */
-    protected $canView;
-
-    /**
      * @ORM\Column(type="boolean", name="can_delete")
      */
     protected $canDelete;
@@ -114,16 +109,6 @@ class ResourceRights
         $this->resource = $resource;
     }
 
-    public function canView()
-    {
-        return $this->canView;
-    }
-
-    public function setCanView($canView)
-    {
-        $this->canView = $canView;
-    }
-
     public function canDelete()
     {
         return $this->canDelete;
@@ -183,7 +168,6 @@ class ResourceRights
         $this->canDelete = false;
         $this->canEdit = false;
         $this->canOpen = false;
-        $this->canView = false;
         $this->canExport = false;
     }
 
@@ -217,7 +201,6 @@ class ResourceRights
             'canDelete' => $this->canDelete,
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
-            'canView' => $this->canView,
             'canExport' => $this->canExport
         );
     }

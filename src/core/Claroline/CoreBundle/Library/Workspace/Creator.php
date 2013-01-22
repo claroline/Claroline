@@ -59,26 +59,27 @@ class Creator
         $rootDir->setIcon($directoryIcon);
         $rootDir->setResourceType($directoryType);
         $rootDir->setWorkspace($workspace);
+        $this->setResourceOwnerRights(true, true, true, true, true, $rootDir);
         $this->entityManager->persist($rootDir);
 
         //default resource rights
         $this->createDefaultsResourcesRights(
-            true, true, true, true, true, true, true,
+            true, true, true, true, true, true,
             $this->roleRepo->getManagerRole($workspace),
             $rootDir
         );
         $this->createDefaultsResourcesRights(
-            true, false, true, false, false, true, false,
+            false, true, false, false, true, false,
             $this->roleRepo->getCollaboratorRole($workspace),
             $rootDir
         );
         $this->createDefaultsResourcesRights(
-            false, false, false, false, false, false, false,
+            false, false, false, false, false, false,
             $this->roleRepo->getVisitorRole($workspace),
             $rootDir
         );
         $this->createDefaultsResourcesRights(
-            false, false, false, false, false, false, false,
+            false, false, false, false, false, false,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $rootDir
         );
@@ -112,7 +113,6 @@ class Creator
     /**
      * Create default permissions for a role and a resource.
      *
-     * @param boolean $canView
      * @param boolean $canDelete
      * @param boolean $canOpen
      * @param boolean $canEdit
@@ -125,7 +125,6 @@ class Creator
      * @return \Claroline\CoreBundle\Entity\Rights\ResourceRights
      */
     private function createDefaultsResourcesRights(
-        $canView,
         $canDelete,
         $canOpen,
         $canEdit,
@@ -142,7 +141,6 @@ class Creator
         $resourceRight->setCanDelete($canDelete);
         $resourceRight->setCanEdit($canEdit);
         $resourceRight->setCanOpen($canOpen);
-        $resourceRight->setCanView($canView);
         $resourceRight->setCanExport($canExport);
         $resourceRight->setRole($role);
         $resourceRight->setResource($resource);
@@ -224,5 +222,30 @@ class Creator
         $this->entityManager->persist($baseRole);
 
         return $baseRole;
+    }
+
+    private function setResourceOwnerRights(
+        $isSharable,
+        $isEditable,
+        $isDeletable,
+        $isExportable,
+        $isCopiable,
+        AbstractResource $resource
+    )
+    {
+        $resource->setSharable($isSharable);
+        $resource->setEditable($isEditable);
+        $resource->setDeletable($isDeletable);
+        $resource->setExportable($isExportable);
+        $resource->setCopiable($isCopiable);
+        $resourceTypes = $this->entityManager
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findBy(array('isVisible' => true));
+
+        foreach ($resourceTypes as $resourceType) {
+            $resource->addResourceTypeCreation($resourceType);
+        }
+
+        return $resource;
     }
 }

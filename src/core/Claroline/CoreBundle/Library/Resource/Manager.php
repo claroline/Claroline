@@ -115,7 +115,6 @@ class Manager
         foreach ($rights as $right) {
             $this->em->remove($right);
         }
-
         try {
             $this->em->flush();
             $this->setResourceRights($parent, $child);
@@ -183,6 +182,7 @@ class Manager
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
+            $this->setResourceRights($parent, $copy);
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -199,7 +199,6 @@ class Manager
         }
 
         $this->em->persist($copy);
-        $this->setResourceRights($parent, $copy);
         $this->em->flush();
 
         return $copy;
@@ -269,7 +268,7 @@ class Manager
      * @param AbstractResource $old
      * @param AbstractResource $resource
      */
-    public function setResourceRights($old, $resource)
+    public function setResourceRights(AbstractResource $old, AbstractResource $resource)
     {
         $resourceRights = $this->em
             ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
@@ -287,11 +286,20 @@ class Manager
                 foreach ($resourceTypes as $resourceType) {
                     $rs->addResourceType($resourceType);
                 }
+
+                $ownerCreationRights = $resource->getResourceCreationRights();
+
+                foreach ($ownerCreationRights as $ownerCreationRight) {
+                    $resource->addResourceTypeCreation($ownerCreationRight);
+                }
             }
 
             $this->em->persist($rs);
         }
 
+        $resource->setOwnerRights($old->getOwnerRights());
+
+        $this->em->persist($resource);
         $this->em->flush();
     }
 }
