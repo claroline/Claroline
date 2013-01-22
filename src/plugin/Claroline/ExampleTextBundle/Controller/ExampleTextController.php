@@ -17,8 +17,9 @@ class ExampleTextController extends Controller
         $workspace = $resource->getWorkspace();
 
         //get the text.
-        return $this->render('ClarolineExampleTextBundle::open.html.twig', array(
-            'resource' => $resource, 'workspace' => $workspace
-        ));
+        return $this->render(
+            'ClarolineExampleTextBundle::open.html.twig',
+            array('resource' => $resource, 'workspace' => $workspace)
+        );
     }
 }

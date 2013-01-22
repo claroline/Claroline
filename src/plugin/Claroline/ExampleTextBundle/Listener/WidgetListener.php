@@ -11,8 +11,8 @@ class WidgetListener extends ContainerAware
 {
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent('
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        $event->setContent(
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Vivamus vestibulum accumsan massa sed facilisis.
             Aliquam consequat porttitor suscipit.
             Curabitur lectus augue, lacinia tempor pretium quis, mollis eu tortor.
@@ -27,7 +27,8 @@ class WidgetListener extends ContainerAware
             consectetur ac neque. Praesent rhoncus, est nec lacinia volutpat, lorem sem malesuada orci,
             vel eleifend tortor dolor ac justo. Donec feugiat, magna eu semper congue,
             dolor est ullamcorper nisi, in vestibulum mi sem id ante.
-            Vestibulum tincidunt molestie quam vitae dignissim.');
+            Vestibulum tincidunt molestie quam vitae dignissim.'
+        );
     }
 
     public function onConfigure(ConfigureWidgetEvent $event)

@@ -95,7 +95,8 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $dirToBeDetached = array();
 
         for ($j = 0; $j < $directoryCount; $j++) {
-            $ri = $this->addDirectory($em,
+            $ri = $this->addDirectory(
+                $em,
                 $curDepth,
                 sprintf($this->dirNameMasks[array_rand($this->dirNameMasks)], $nextId),
                 $parent
@@ -107,7 +108,8 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
 
             for ($k = 0; $k < $fileCount; $k++) {
                 $fileNameMask = array_rand($this->fileNameMasks);
-                $fi = $this->addFile($em,
+                $fi = $this->addFile(
+                    $em,
                     $curDepth,
                     sprintf($fileNameMask, $nextId), $this->fileNameMasks[$fileNameMask],
                     $ri
@@ -117,8 +119,9 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
                 $nextId++;
             }
 
-            $this->log('Depth: ' . $curDepth . ' => Flushing... (files: ' . $this->cptFiles
-                . ", directories: " . $this->cptDirectories . ')'
+            $this->log(
+                "Depth: {$curDepth} => Flushing... (files: {$this->cptFiles}, "
+                . "directories: {$this->cptDirectories})"
             );
             $em->flush();
 

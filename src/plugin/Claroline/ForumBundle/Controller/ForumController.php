@@ -25,12 +25,14 @@ class ForumController extends Controller
         $nbPages = ceil($countSubjects / $limit);
 
         return $this->render(
-            'ClarolineForumBundle::index.html.twig', array(
+            'ClarolineForumBundle::index.html.twig',
+            array(
                 'forum' => $forum,
                 'workspace' => $forum->getWorkspace(),
                 'limit' => $limit,
                 'nbPages' => $nbPages
-             ));
+            )
+        );
     }
 
     public function subjectsAction($forumId, $offset)
@@ -55,11 +57,13 @@ class ForumController extends Controller
             ->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::subject_form.html.twig', array(
+            'ClarolineForumBundle::subject_form.html.twig',
+            array(
                 'form' => $formSubject->createView(),
                 'forumId' => $forumId,
                 'workspace' => $workspace
-            ));
+            )
+        );
     }
 
     /*
@@ -88,17 +92,19 @@ class ForumController extends Controller
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject');
             $creator->create($message, $subject->getId(), 'claroline_message');
 
-            return new RedirectResponse($this->generateUrl('claro_forum_open', array(
-                'resourceId' => $forum->getId()
-             )));
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_open', array('resourceId' => $forum->getId()))
+            );
         }
 
         return $this->render(
-            'ClarolineForumBundle::subject_form.html.twig', array(
+            'ClarolineForumBundle::subject_form.html.twig',
+            array(
                 'form' => $form->createView(),
                 'forumId' => $forum->getId(),
                 'workspace' => $forum->getWorkspace()
-            ));
+            )
+        );
     }
 
     public function showMessagesAction($subjectId)
@@ -114,12 +120,14 @@ class ForumController extends Controller
         $workspace = $subject->getWorkspace();
 
         return $this->render(
-            'ClarolineForumBundle::messages_table.html.twig', array(
+            'ClarolineForumBundle::messages_table.html.twig',
+            array(
                 'subject' => $subject,
                 'workspace' => $workspace,
                 'limit' => $limit,
                 'nbPages' => $nbPages
-            ));
+            )
+        );
     }
 
     public function messageCreationFormAction($subjectId)
@@ -129,11 +137,13 @@ class ForumController extends Controller
         $subject = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($subjectId);
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array(
+            'ClarolineForumBundle::message_form.html.twig',
+            array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
                 'workspace' => $subject->getWorkspace()
-        ));
+            )
+        );
     }
 
     public function messagesAction($subjectId, $offset)
@@ -148,7 +158,6 @@ class ForumController extends Controller
         return $this->render(
             'ClarolineForumBundle::messages.html.twig', array('messages' => $messages)
         );
-
     }
 
     public function createMessageAction($subjectId)
@@ -171,17 +180,19 @@ class ForumController extends Controller
             $creator->create($message, $subject->getId(), 'claroline_message');
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl('claro_forum_show_message', array(
-                'subjectId' => $subjectId
-             )));
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_show_message', array('subjectId' => $subjectId))
+            );
         }
 
         return $this->render(
-            'ClarolineForumBundle::message_form.html.twig', array(
+            'ClarolineForumBundle::message_form.html.twig',
+            array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
                 'workspace' => $subject->getWorkspace()
-            ));
+            )
+        );
     }
 
     public function editForumOptionsAction()

@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-
 class DirectoryListener extends ContainerAware
 {
     public function onCreateForm(CreateFormResourceEvent $event)
@@ -38,6 +37,7 @@ class DirectoryListener extends ContainerAware
         if ($form->isValid()) {
             $event->setResource($form->getData());
             $event->stopPropagation();
+
             return;
         }
 
@@ -58,9 +58,11 @@ class DirectoryListener extends ContainerAware
         $file = $this->container->get('claroline.resource.exporter')->exportResources(array($dir->getId()));
         $response = new StreamedResponse();
 
-        $response->setCallBack(function() use($file){
-            readfile($file);
-        });
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');

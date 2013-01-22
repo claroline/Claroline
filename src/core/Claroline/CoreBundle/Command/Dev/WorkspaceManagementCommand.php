@@ -19,7 +19,6 @@ class WorkspaceManagementCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:workspace:management')
             ->setDescription('Will register users to the personal workspace of the specified user');
-
         $this->setDefinition(
             array(
                 new InputArgument('username', InputArgument::REQUIRED, 'the username'),
@@ -62,7 +61,9 @@ class WorkspaceManagementCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }

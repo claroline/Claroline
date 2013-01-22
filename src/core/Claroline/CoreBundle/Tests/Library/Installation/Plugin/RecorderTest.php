@@ -33,7 +33,8 @@ class RecorderTest extends WebTestCase
             ->with(get_class($this->mockedPlugin));
         $this->mockedConfigWriter->expects($this->once())
             ->method('importRoutingResources')
-            ->with(get_class($this->mockedPlugin),
+            ->with(
+                get_class($this->mockedPlugin),
                 $this->mockedPlugin->getRoutingResourcesPaths(),
                 $this->mockedPlugin->getRoutingPrefix()
             );

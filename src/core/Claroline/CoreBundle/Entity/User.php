@@ -271,7 +271,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-/*
+        /*
         return $user instanceof User
             && $this->username === $user->getUsername()
             && $this->password === $user->getPassword()

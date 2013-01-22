@@ -320,10 +320,12 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdmincanViewWidgetParameters()
     {
-        $this->registerStubPlugins(array(
-            'Valid\Simple\ValidSimple',
-            'Valid\WithWidgets\ValidWithWidgets'
-        ));
+        $this->registerStubPlugins(
+            array(
+                'Valid\Simple\ValidSimple',
+                'Valid\WithWidgets\ValidWithWidgets'
+            )
+        );
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/widgets');
         //exampletext has 4 widgets
@@ -332,10 +334,12 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanSetWidgetVisibleOption()
     {
-        $this->registerStubPlugins(array(
-            'Valid\Simple\ValidSimple',
-            'Valid\WithWidgets\ValidWithWidgets'
-        ));
+        $this->registerStubPlugins(
+            array(
+                'Valid\Simple\ValidSimple',
+                'Valid\WithWidgets\ValidWithWidgets'
+            )
+        );
         $this->logUser($this->getFixtureReference('user/admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
@@ -353,10 +357,12 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanSetWidgetLockOption()
     {
-        $this->registerStubPlugins(array(
-            'Valid\Simple\ValidSimple',
-            'Valid\WithWidgets\ValidWithWidgets'
-        ));
+        $this->registerStubPlugins(
+            array(
+                'Valid\Simple\ValidSimple',
+                'Valid\WithWidgets\ValidWithWidgets'
+            )
+        );
         $this->logUser($this->getFixtureReference('user/admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
@@ -374,23 +380,24 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testDesktopDisplayVisibleWidgets()
     {
-        $this->registerStubPlugins(array(
-            'Valid\Simple\ValidSimple',
-            'Valid\WithWidgets\ValidWithWidgets'
-        ));
-         $this->logUser($this->getFixtureReference('user/admin'));
-         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-             ->findBy(array('isVisible' => true, 'isDesktop' => true));
-         $crawler = $this->client->request('GET', '/desktop/info');
-         $this->assertEquals(count($crawler->filter('.widget')), count($configs));
+        $this->registerStubPlugins(
+            array(
+                'Valid\Simple\ValidSimple',
+                'Valid\WithWidgets\ValidWithWidgets'
+            )
+        );
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findBy(array('isVisible' => true, 'isDesktop' => true));
+        $crawler = $this->client->request('GET', '/desktop/info');
+        $this->assertEquals(count($crawler->filter('.widget')), count($configs));
     }
 
     public function testConfigureWorkspaceWidgetActionThrowsEvent()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $widget = $this->client
-            ->getContainer()
+        $widget = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneBy(array('name' => 'claroline_rssreader'));
         $crawler = $this->client->request('GET', "/admin/widget/{$widget->getId()}/configuration/workspace");
@@ -400,8 +407,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testConfigureDesktopWidgetActionThrowsEvent()
     {
         $this->logUser($this->getFixtureReference('user/admin'));
-        $widget = $this->client
-            ->getContainer()
+        $widget = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneBy(array('name' => 'claroline_rssreader'));
@@ -426,8 +432,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     private function getUser($username)
     {
-        $user = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\User')
+        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')
             ->findOneByUsername($username);
 
         return $user;

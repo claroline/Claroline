@@ -22,11 +22,15 @@ class CalendarController extends Controller
         $formBuilder = $this->createFormBuilder($event);
         $formBuilder
             ->add('title', 'text', array('required' => true))
-            ->add('end', 'date', array(
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'choice',
-                'data' => new \DateTime('now')
-            ))
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                    'data' => new \DateTime('now')
+                )
+            )
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
 
@@ -44,10 +48,14 @@ class CalendarController extends Controller
         $event = new Event();
         $formBuilder = $this->createFormBuilder($event);
         $formBuilder->add('title', 'text')
-            ->add('end', 'date', array(
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'choice',
-            ))
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                )
+            )
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
         $request = $this->get('request');

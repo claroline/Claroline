@@ -34,6 +34,7 @@ class RssReaderListener extends ContainerAware
         if ($rssconfig == null) {
             $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
             $event->stopPropagation();
+
             return;
         }
 
@@ -65,6 +66,7 @@ class RssReaderListener extends ContainerAware
         if ($rssconfig == null) {
             $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
             $event->stopPropagation();
+
             return;
         }
 

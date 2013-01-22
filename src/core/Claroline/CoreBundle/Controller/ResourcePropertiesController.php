@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 class ResourcePropertiesController extends Controller
 {
- /**
+    /**
      * Displays the form allowing to rename a resource.
      *
      * @param integer $resourceId the resource id

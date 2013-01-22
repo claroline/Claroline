@@ -141,8 +141,12 @@ class ResourceRightsController extends Controller
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent($this->get('claroline.resource.converter')
-            ->toJson($resource, $this->get('security.context')->getToken()));
+        $response->setContent(
+            $this->get('claroline.resource.converter')->toJson(
+                $resource,
+                $this->get('security.context')->getToken()
+            )
+        );
 
         return $response;
     }

@@ -53,6 +53,7 @@ class ExampleTextListener extends ContainerAware
             //give it back to the event.
             $event->setResource($exampleText);
             $event->stopPropagation();
+
             return;
         }
 

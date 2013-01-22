@@ -39,9 +39,14 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('has_options')->end()
             ->scalarNode('icon')
                 ->validate()
-                    ->ifTrue(function($v) use ($plugin){
-                        return !call_user_func_array(__CLASS__ . '::isIconValid', array($v, $plugin));
-                    })
+                    ->ifTrue(
+                        function ($v) use ($plugin) {
+                            return !call_user_func_array(
+                                __CLASS__ . '::isIconValid',
+                                array($v, $plugin)
+                            );
+                        }
+                    )
                     ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
                 ->end()
             ->end()
@@ -63,19 +68,25 @@ class Configuration implements ConfigurationInterface
                        ->scalarNode('class')
                             ->isRequired()
                                 ->validate()
-                                    ->ifTrue(function ($v) {
-                                        return !call_user_func_array(
-                                            __CLASS__ . '::isResourceLocationValid', array($v)
-                                        );
-                                    })
+                                    ->ifTrue(
+                                        function ($v) {
+                                            return !call_user_func_array(
+                                                __CLASS__ . '::isResourceLocationValid',
+                                                array($v)
+                                            );
+                                        }
+                                    )
                                     ->thenInvalid($pluginFqcn . " : %s (declared in {$resourceFile}) was not found.")
                                 ->end()
                                 ->validate()
-                                    ->ifTrue(function ($v) {
-                                        return !call_user_func_array(
-                                            __CLASS__ . '::isAbstractResourceExtended', array($v)
-                                        );
-                                    })
+                                    ->ifTrue(
+                                        function ($v) {
+                                            return !call_user_func_array(
+                                                __CLASS__ . '::isAbstractResourceExtended',
+                                                array($v)
+                                            );
+                                        }
+                                    )
                                     ->thenInvalid(
                                         $pluginFqcn . " : %s (declared in {$resourceFile}) must extend  "
                                         . "'Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource'."
@@ -86,11 +97,14 @@ class Configuration implements ConfigurationInterface
                        ->booleanNode('is_browsable')->isRequired()->end()
                        ->scalarNode('icon')
                            ->validate()
-                                ->ifTrue(function($v) use ($plugin) {
-                                    return !call_user_func_array(
-                                        __CLASS__ . '::isResourceIconValid', array($v, $plugin)
-                                    );
-                                })
+                                ->ifTrue(
+                                    function ($v) use ($plugin) {
+                                        return !call_user_func_array(
+                                            __CLASS__ . '::isResourceIconValid',
+                                            array($v, $plugin)
+                                        );
+                                    }
+                                )
                                 ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}%s)")
                            ->end()
                        ->end()
@@ -112,23 +126,26 @@ class Configuration implements ConfigurationInterface
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $imgFolder = $plugin->getImgFolder();
-
         $ds = DIRECTORY_SEPARATOR;
+
         $pluginSection
             ->arrayNode('widgets')
                 ->prototype('array')
                     ->children()
-                       ->scalarNode('name')->isRequired()->end()
-                       ->booleanNode('is_configurable')->isRequired()->end()
-                       ->scalarNode('icon')
-                           ->validate()
-                           ->ifTrue(function($v) use ($plugin){
-                               return !call_user_func_array(
-                                   __CLASS__ . '::isIconValid', array($v, $plugin)
-                               );
-                           })
-                           ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
-                           ->end()
+                        ->scalarNode('name')->isRequired()->end()
+                        ->booleanNode('is_configurable')->isRequired()->end()
+                        ->scalarNode('icon')
+                            ->validate()
+                            ->ifTrue(
+                                function ($v) use ($plugin) {
+                                    return !call_user_func_array(
+                                        __CLASS__ . '::isIconValid',
+                                        array($v, $plugin)
+                                    );
+                                }
+                            )
+                            ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

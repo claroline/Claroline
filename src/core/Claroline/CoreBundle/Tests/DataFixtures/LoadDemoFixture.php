@@ -128,14 +128,19 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $accItems[] = $this->createActivity('Chapitre 1', $accDir, $user, array($accItems[0], $accItems[1]));
         $accItems[] = $this->createActivity('Chapitre 2', $accDir, $user, array($accItems[2], $accItems[3]));
 
-        $this->createActivity('Activité principale', $this->getWorkspaceRoot($activityWs), $user, array(
-            $accItems[4],
-            $accItems[5],
-            $accItems[6],
-            $accItems[7],
-            $accItems[8],
-            $accItems[9]
-        ));
+        $this->createActivity(
+            'Activité principale',
+            $this->getWorkspaceRoot($activityWs),
+            $user,
+            array(
+                $accItems[4],
+                $accItems[5],
+                $accItems[6],
+                $accItems[7],
+                $accItems[8],
+                $accItems[9]
+            )
+        );
     }
 
     private function createWorkspace($name, $user, $code)
@@ -202,9 +207,10 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     {
         $activity = new Activity();
         $activity->setName($name);
-        $activity->setInstructions($this->getContainer()
-            ->get('claroline.utilities.lipsum_generator')
-            ->generateLipsum(300)
+        $activity->setInstructions(
+            $this->getContainer()
+                ->get('claroline.utilities.lipsum_generator')
+                ->generateLipsum(300)
         );
         $activity = $this->getContainer()
             ->get('claroline.resource.manager')

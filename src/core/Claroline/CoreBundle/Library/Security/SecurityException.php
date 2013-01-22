@@ -19,9 +19,4 @@ class SecurityException extends Exception
 
     // role exceptions
     const ROLE_EXCEPTION = 10;
-
-    public function __construct($message, $code)
-    {
-        parent::__construct($message, $code);
-    }
 }

@@ -32,10 +32,11 @@ class Version20120119000003 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('firstEntityChildField', 'string', array('length' => 255));
-        $table->addForeignKeyConstraint($this->getStoredTable('claro_test_security_first_entity'),
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_test_security_first_entity'),
             array('id'),
             array('id'),
-            array("onDelete" => "CASCADE")
+            array('onDelete' => 'CASCADE')
         );
     }
 
