@@ -168,6 +168,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $parameters = $this->get('request')->request->all();
+        var_dump($parameters);
 
         if (isset($parameters['isRecursive'])) {
             $isRecursive = true;
@@ -182,11 +183,12 @@ class ResourceRightsController extends Controller
             ->findBy(array('resource' => $resource));
 
         foreach ($configs as $config) {
+            $config->reset();
+
             if (isset($checks[$config->getId()])) {
                 $config->setRights($checks[$config->getId()]);
-            } else {
-                $config->reset();
             }
+
             $em->persist($config);
         }
 
@@ -200,13 +202,12 @@ class ResourceRightsController extends Controller
 
                 foreach ($configs as $config) {
                     $key = $this->findKeyForConfig($checks, $config);
+                    $config->reset();
 
                     if ($key !== null) {
                         $config->setRights($checks[$key]);
-                    } else {
-                        $config->reset();
                     }
-
+                    
                     $em->persist($config);
                 }
             }

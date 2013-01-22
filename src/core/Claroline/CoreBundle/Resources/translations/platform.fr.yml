@@ -156,6 +156,11 @@ resource_properties_form_creator: Créateur
 resource_properties_form_shareType: Redistribution
 resource_properties_form_name: Nom
 resource_properties_form_userIcon: Icône
+resource_properties_form_sharable: Partager cette ressource
+resource_properties_form_editable: Editer
+resource_properties_form_deletable: Supprimer
+resource_properties_form_exportable: Exporter
+resource_properties_form_copiable: Copier
 resources: Ressources
 resources_rights: Droits des ressources
 resources_rights_form_canView: Voir

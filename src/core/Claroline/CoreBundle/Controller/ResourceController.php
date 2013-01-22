@@ -462,10 +462,10 @@ class ResourceController extends Controller
                 $shortcut->setResource($resource->getResource());
             }
 
+            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
             $em->persist($shortcut);
             $em->flush();
             $em->refresh($parent);
-            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
 
             $links[] = $this->get('claroline.resource.converter')->toArray(
                 $shortcut,
