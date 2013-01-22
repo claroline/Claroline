@@ -21,12 +21,19 @@ class WorkspaceRights
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", inversedBy="workspaceRights")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="workspaceRights"
+     * )
      */
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="rights", cascade={"persist"})
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     inversedBy="rights",
+     *     cascade={"persist"}
+     * )
      */
     private $workspace;
 
@@ -34,11 +41,6 @@ class WorkspaceRights
      * @ORM\Column(type="boolean", name="can_view")
      */
     protected $canView;
-
-    /**
-     * @ORM\Column(type="boolean", name="can_manage")
-     */
-    protected $canManage;
 
     /**
      * @ORM\Column(type="boolean", name="can_edit")
@@ -90,16 +92,6 @@ class WorkspaceRights
         $this->canView = $boolean;
     }
 
-    public function canManage()
-    {
-        return $this->canManage;
-    }
-
-    public function setCanManage($boolean)
-    {
-        $this->canManage = $boolean;
-    }
-
     public function canDelete()
     {
         return $this->canDelete;
@@ -120,8 +112,6 @@ class WorkspaceRights
         $this->canEdit = $boolean;
     }
 
-
-
     /**
      * Sets every right to false
      */
@@ -139,8 +129,8 @@ class WorkspaceRights
      */
     public function isEquals($rights)
     {
-        foreach($this->getRights() as $key => $current){
-            if($current != $rights[$key]){
+        foreach ($this->getRights() as $key => $current) {
+            if ($current != $rights[$key]) {
                 return false;
             }
         }
@@ -157,7 +147,6 @@ class WorkspaceRights
     {
         return array(
             'canView' => $this->canView,
-            'canManage' => $this->canManage,
             'canEdit' => $this->canEdit,
             'canDelete' => $this->canDelete
         );
@@ -170,7 +159,7 @@ class WorkspaceRights
      */
     public function setRights($rights)
     {
-        foreach($rights as $key => $value){
+        foreach ($rights as $key => $value) {
             $this->$key = $value;
         }
     }
@@ -183,11 +172,12 @@ class WorkspaceRights
      */
     public function getRight($right)
     {
-        if (property_exists($this, $right))
-        {
+        if (property_exists($this, $right)) {
             return $this->$right;
-        } else {
-            throw new \RuntimeException("Property {$right} doesn't exists in the entity WorkspaceRights");
         }
+
+        throw new \RuntimeException(
+            "Property {$right} doesn't exists in the entity WorkspaceRights"
+        );
     }
 }

@@ -2,21 +2,20 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+/**
+ * @todo : this is not an entity -> to be moved to, e.g., library
+ */
 class Install
 {
     private $dbHost;
-
     private $dbUser;
-
     private $dbName;
-
     private $dbPassword;
-    
     private $exist;
 
     public function setDbHost($dbHost)
     {
-       $this->dbHost = $dbHost;
+        $this->dbHost = $dbHost;
     }
 
     public function getDbHost()
@@ -26,16 +25,17 @@ class Install
 
     public function setDbUser($dbUser)
     {
-       $this->dbUser = $dbUser;
+        $this->dbUser = $dbUser;
     }
 
     public function getDbUser()
     {
         return $this->dbUser;
     }
+
     public function setDbName($dbName)
     {
-       $this->dbName = $dbName;
+        $this->dbName = $dbName;
     }
 
     public function getDbName()
@@ -43,7 +43,7 @@ class Install
         return $this->dbName;
     }
 
-    public function setDbPassword( $dbPassword)
+    public function setDbPassword($dbPassword)
     {
         $this->dbPassword = $dbPassword;
     }
@@ -52,8 +52,8 @@ class Install
     {
         return $this->dbPassword;
     }
-    
-    public function setExist( $exist)
+
+    public function setExist($exist)
     {
         $this->exist = $exist;
     }
@@ -62,5 +62,4 @@ class Install
     {
         return $this->exist;
     }
-    
 }

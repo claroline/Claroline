@@ -17,20 +17,19 @@ use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader as DataFixturesLoa
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 
+/**
+ * @todo Remove lang strings / find a way to translate
+ * @todo Remove all echos !
+ */
 class InstallController extends Controller
 {
-
     const PATH = '../app/config/local/install.yml';
     const FINAL_PATH = '../app/config/local/parameters.yml';
 
     public function indexAction()
     {
-
-
         $ourFileHandle = fopen(self::PATH, 'w');
         fclose($ourFileHandle);
-        $permission = 'ok';
-
         $permission = 'Verifier les permissions en écritures et lecture du dossier [app/config/local]';
 
         $config = array(
@@ -42,7 +41,10 @@ class InstallController extends Controller
             'web' => (is_writable('../web') ? 'OK' : 'KO')
         );
 
-        return $this->render('ClarolineCoreBundle:Install:index.html.twig', array('version' => $config,));
+        return $this->render(
+            'ClarolineCoreBundle:Install:index.html.twig',
+            array('version' => $config)
+        );
     }
 
     public function showDbFormAction()
@@ -50,7 +52,10 @@ class InstallController extends Controller
         $install = new Install();
         $form = $this->createForm(new InstallType, $install);
 
-        return $this->render('ClarolineCoreBundle:Install:checkupDb.html.twig', array('form' => $form->createView(),));
+        return $this->render(
+            'ClarolineCoreBundle:Install:checkupDb.html.twig',
+            array('form' => $form->createView())
+        );
     }
 
     public function checkDbFormAction()
@@ -58,33 +63,53 @@ class InstallController extends Controller
         $install = new Install();
         $form = $this->createForm(new InstallType(), $install);
         $request = $this->get('request');
-        if ($request->getMethod() == 'POST') {
 
+        if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
+
             if ($form->isValid()) {
                 $postData = $request->request->get('install_form');
                 $db = new \PDO('mysql:host=' . $postData['dbHost'], $postData['dbUser'], $postData['dbPassword']);
+
                 if ($db) {
-                    $count = $db->query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $postData['dbName'] . "'")->fetch();
+                    $query = "
+                        SELECT SCHEMA_NAME
+                        FROM INFORMATION_SCHEMA.SCHEMATA
+                        WHERE SCHEMA_NAME = '{$postData['dbName']}'
+                    ";
+                    $count = $db->query($query)->fetch();
+
                     if (!is_null($count['0']) && !isset($postData['exist'])) {
                         $this->get('session')->setFlash('warning', 'La base de donnée existe deja');
-                        return $this->render('ClarolineCoreBundle:Install:checkupDb.html.twig', array(
+
+                        return $this->render(
+                            'ClarolineCoreBundle:Install:checkupDb.html.twig',
+                            array(
                                 'form' => $form->createView(),
                                 'exist' => 1,
-                            ));
+                            )
+                        );
                     }
                     if ($this->putInYml($postData, $form->getName(), 'install_form') == 1) {
                         return $this->showAdminFormAction();
                     } else {
-                        $this->get('session')->setFlash('erreure', 'Erreure lors de l ecriture des données');
+                        $this->get('session')->setFlash('error', 'Erreur lors de l ecriture des données');
                     }
                 } else {
-                    $this->get('session')->setFlash('erreure', 'Impossible de creer la base de donnee verifier vos identifiants');
+                    $this->get('session')->setFlash(
+                        'error',
+                        'Impossible de creer la base de donnee verifier vos identifiants'
+                    );
+
                     return $this->showDbFormAction();
                 }
             } else {
-                $this->get('session')->setFlash('erreure', 'Veuillez completer correctement le formulaire');
-                return $this->render('ClarolineCoreBundle:Install:checkupDb.html.twig', array('form' => $form->createView(),));
+                $this->get('session')->setFlash('error', 'Veuillez completer correctement le formulaire');
+
+                return $this->render(
+                    'ClarolineCoreBundle:Install:checkupDb.html.twig',
+                    array('form' => $form->createView())
+                );
             }
         }
     }
@@ -93,7 +118,11 @@ class InstallController extends Controller
     {
         $user = new User();
         $form = $this->createForm(new AdminType, $user);
-        return $this->render('ClarolineCoreBundle:Install:checkAdmin.html.twig', array('form' => $form->createView(),));
+
+        return $this->render(
+            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
+            array('form' => $form->createView())
+        );
     }
 
     public function checkAdminFormAction()
@@ -103,6 +132,7 @@ class InstallController extends Controller
         $form = $this->createForm(new AdminType, $user);
         $postData = $request->request->get('admin_form');
         $error = $this->validateForm($postData);
+
         if (strcmp($postData['plainPassword']['first'], $postData['plainPassword']['second']) == 0) {
             if ($request->getMethod() == 'POST') {
                 if (count($error) <= 0) {
@@ -110,18 +140,27 @@ class InstallController extends Controller
                         $this->createParametersYml();
                         $db = $this->readYml(self::PATH);
                         $this->get('cache_warmer')->warmUp($this->container->getParameter('kernel.cache_dir'));
+
                         return $this->render('ClarolineCoreBundle:Install:execute.html.twig', array('value' => $db));
                     }
                 } else {
                     foreach ($error as $i => $message) {
                         $this->get('session')->setFlash($i, $message);
                     }
-                    return $this->render('ClarolineCoreBundle:Install:checkAdmin.html.twig', array('form' => $form->createView(),));
+
+                    return $this->render(
+                        'ClarolineCoreBundle:Install:checkAdmin.html.twig',
+                        array('form' => $form->createView())
+                    );
                 }
             }
         } else {
-            $this->get('session')->setFlash('erreure', 'Les mot de passes ne correspondent pas');
-            return $this->render('ClarolineCoreBundle:Install:checkAdmin.html.twig', array('form' => $form->createView(),));
+            $this->get('session')->setFlash('error', 'Les mot de passes ne correspondent pas');
+
+            return $this->render(
+                'ClarolineCoreBundle:Install:checkAdmin.html.twig',
+                array('form' => $form->createView())
+            );
         }
     }
 
@@ -129,7 +168,10 @@ class InstallController extends Controller
     {
         $value = $this->readYml(self::PATH);
 
-        return $this->render('ClarolineCoreBundle:Install:execute.html.twig', array('value' => $value));
+        return $this->render(
+            'ClarolineCoreBundle:Install:execute.html.twig',
+            array('value' => $value)
+        );
     }
 
     public function executeAction()
@@ -147,20 +189,20 @@ class InstallController extends Controller
         $tmpConnection = DriverManager::getConnection($connectionParams, $config);
 
         $error = false;
+
         try {
             $tmpConnection->getSchemaManager()->dropAndCreateDatabase($db['dbName']);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo $e->getMessage();
             $error = true;
         }
+
         $tmpConnection->close();
         $manager = $this->get('claroline.install.core_installer');
         $manager->install();
 
         $this->createAcl();
         $this->createRole();
-
 
         $user = new User();
         $user->setLastName($db['lastName']);
@@ -178,27 +220,29 @@ class InstallController extends Controller
         $em->flush();
 
         if (!unlink(self::PATH)) {
-            $this->get('session')->setFlash('erreur', 'Le fichier n\'a pas ete supprimé, veuiller le supprimmer à la main');
+            $this->get('session')->setFlash(
+                'erreur',
+                'Le fichier n\'a pas ete supprimé, veuiller le supprimmer à la main'
+            );
         }
 
         return $this->render('ClarolineCoreBundle:Install:sucess.html.twig');
     }
 
-    public function putInYml($array)
+    /**
+     * @param $array the array to put in the yml file
+     */
+    private function putInYml($array)
     {
-        /*
-         * @$array the array to put in the yml file
-         */
-
         $parser = new Parser();
+
         try {
             $value = $parser->parse(file_get_contents(self::PATH));
-        }
-        catch (ParseException $e) {
+        } catch (ParseException $e) {
             echo "Impossible d'ouvrir le fichier install.yml " . $e->getMessage();
         }
-        if (!empty($value)) {
 
+        if (!empty($value)) {
             //  Check if the array is not send a second time by hiting refresh
             // if the array keys are different then is ok
             $key = array_keys($value);
@@ -209,12 +253,12 @@ class InstallController extends Controller
                     $dumper = new Dumper();
                     $yaml = $dumper->dump($result, 1);
                     file_put_contents(self::PATH, $yaml);
-                }
-                catch (DumpException $e) {
+                } catch (DumpException $e) {
                     echo "probleme lors de la creation du fichier de configuration parameters.yml
-                 vérifier vos droits en écriture" . $e->getMessage();
+                        vérifier vos droits en écriture" . $e->getMessage();
                 }
             }
+
             return 1;
         } else {
             $dumper = new Dumper();
@@ -225,19 +269,19 @@ class InstallController extends Controller
         return 1;
     }
 
-    function readYml($string)
+    private function readYml($string)
     {
         try {
             $parser = new Parser();
             $value = $parser->parse(file_get_contents($string));
-        }
-        catch (ParseException $e) {
+        } catch (ParseException $e) {
             echo "Impossible d'ouvrir le fichier install.yml " . $e->getMessage();
         }
+
         return($value);
     }
 
-    public function createParametersYml()
+    private function createParametersYml()
     {
         $fromFile = $this->readYml(self::PATH);
         $parameters = array(
@@ -259,46 +303,41 @@ class InstallController extends Controller
         );
 
         try {
-            /*  $parser = new Symfony\Component\Yaml\Parser();
-              $parameters= $parser->parse($parameters);
-              var_dump($parameters); */
             $dumper = new Dumper();
             $yaml = $dumper->dump($parameters, 2);
             file_put_contents(self::FINAL_PATH, $yaml);
-        }
-        catch (DumpException $e) {
+        } catch (DumpException $e) {
             echo "probleme lors de la creation du fichier de configuration parameters.yml
-                 vÃ©rifier vos droits en Ã©criture" . $e->getMessage();
+                 vérifier vos droits en écriture" . $e->getMessage();
         }
+
         return 1;
     }
 
-    public function validateForm(array $input)
+    private function validateForm(array $input)
     {
-        $error = array();
+        $errors = array();
         $keys = array_keys($input);
+
         foreach ($input as $index => $value) {
             if (!empty($value)) {
                 if (!is_array($value)) {
-                    if (strlen($value) >= 3) {
-
-                    } else {
-
-                        $error[] = ' Le champs ' . $index . ' doit etre plus grand que 3 caractères';
+                    if (strlen($value) < 3) {
+                        $errors[] = ' Le champs ' . $index . ' doit être plus grand que 3 caractères';
                     }
                 } else {
-                    $error = $this->validateForm($value);
+                    $errors = $this->validateForm($value);
                 }
             } else {
-                $error[] = $keys[$index] . ' Ce champs ' . $index . ' ne peut pas être vide';
+                $errors[] = $keys[$index] . ' Ce champs ' . $index . ' ne peut pas être vide';
             }
         }
-        return($error);
+
+        return $errors;
     }
 
     private function createRole()
     {
-
         $path = __DIR__ . '/../DataFixtures/';
         $doctrine = $this->get('doctrine');
         $em = $doctrine->getManager();
@@ -306,15 +345,15 @@ class InstallController extends Controller
         $loader->loadFromDirectory($path);
 
         $fixtures = $loader->getFixtures();
+
         if (!$fixtures) {
             throw new InvalidArgumentException(
                 sprintf('Could not find any fixtures to load in: %s', "\n\n- " . implode("\n- ", $path))
             );
         }
-        $purger = new ORMPurger($em);
-        //  $purger->setPurgeMode($input->getOption('purge-with-truncate') ? ORMPurger::PURGE_MODE_TRUNCATE : ORMPurger::PURGE_MODE_DELETE);
-        $executor = new ORMExecutor($em, $purger);
 
+        $purger = new ORMPurger($em);
+        $executor = new ORMExecutor($em, $purger);
         $executor->execute($fixtures, true);
     }
 
@@ -325,8 +364,7 @@ class InstallController extends Controller
 
         try {
             $schema->addToSchema($connection->getSchemaManager()->createSchema());
-        }
-        catch (SchemaException $e) {
+        } catch (SchemaException $e) {
             echo "Aborting: " . $e->getMessage();
 
             return 1;
@@ -341,6 +379,10 @@ class InstallController extends Controller
     {
         //todo: FIX ME
         $config = 'FIX ME';
-        return $this->render('ClarolineCoreBundle:Install:index.html.twig', array('version' => $config,));
+
+        return $this->render(
+            'ClarolineCoreBundle:Install:index.html.twig',
+            array('version' => $config)
+        );
     }
 }

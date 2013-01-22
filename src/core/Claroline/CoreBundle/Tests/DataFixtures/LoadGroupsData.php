@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;;
+use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Group;
 
 class LoadGroupsData extends LoggableFixture implements ContainerAwareInterface
@@ -106,10 +106,10 @@ class LoadGroupsData extends LoggableFixture implements ContainerAwareInterface
                 $created = false;
                 while (false === $created) {
                     $pos = rand(0, $maxUsersOffset);
-                    // Add random id in array if not already in it.
+                    //Add random id in array if not already in it.
                     if (!array_key_exists($pos, $userAddedIds)) {
                         $userAddedIds[$pos] = $pos;
-//                        $this->log("add user {$users[$pos]->getId()} to group {$group->getId()}\n");
+                        //$this->log("add user {$users[$pos]->getId()} to group {$group->getId()}\n");
                         $group->addUser($users[$pos]);
                         $created = true;
                     }
@@ -118,14 +118,15 @@ class LoadGroupsData extends LoggableFixture implements ContainerAwareInterface
             $this->log("  -> Added " . $userNumber . " users in it\n");
             $manager->persist($group);
             $manager->flush();
-            // Clear EntityManager (EM) after each group to free memory and speed the EM process.
-//            $manager->clear();
+            //Clear EntityManager (EM) after each group to free memory and speed the EM process.
+            //$manager->clear();
         }
     }
 
     private function createGroupName()
     {
-        $name = "{$this->groupsYears[mt_rand(0, $this->maxGroupsYearsOffset)]} - {$this->basicGroupName[mt_rand(0, $this->maxBasicGroupNameOffset)]} - " . mt_rand(0, 1000);
+        $name = "{$this->groupsYears[mt_rand(0, $this->maxGroupsYearsOffset)]} - "
+            . "{$this->basicGroupName[mt_rand(0, $this->maxBasicGroupNameOffset)]} - " . mt_rand(0, 1000);
 
         return $name;
     }

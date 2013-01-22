@@ -27,18 +27,18 @@ class ResourceType
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *      mappedBy="resourceType",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     mappedBy="resourceType",
+     *     cascade={"persist"}
      * )
      */
     protected $abstractResources;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction",
-     *      mappedBy="resourceType",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction",
+     *     mappedBy="resourceType",
+     *     cascade={"persist"}
      * )
      */
     protected $customActions;
@@ -66,20 +66,25 @@ class ResourceType
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\MetaType",
-     *      cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\MetaType",
+     *     cascade={"persist"}
      * )
-     * @ORM\JoinTable(name="claro_meta_type_resource_type",
-     *      joinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="meta_type_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_meta_type_resource_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="meta_type_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $metaTypes;
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *      inversedBy="children"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *     inversedBy="children"
      * )
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
@@ -87,8 +92,8 @@ class ResourceType
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *      mappedBy="parent"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -96,11 +101,17 @@ class ResourceType
 
     /**
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights", mappedBy="resourceTypes"
+     *     targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
+     *     mappedBy="resourceTypes"
      * )
-     * @ORM\JoinTable(name="claro_list_type_creation",
-     *      joinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="right_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_list_type_creation",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $rights;

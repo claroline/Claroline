@@ -21,15 +21,16 @@ class DropAclCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $connection = $this->getContainer()->get('security.acl.dbal.connection');
+        $container = $this->getContainer();
+        $connection = $container->get('security.acl.dbal.connection');
         $sm = $connection->getSchemaManager();
         $tableNames = $sm->listTableNames();
         $tables = array(
-            'entry_table_name' => $this->getContainer()->getParameter('security.acl.dbal.entry_table_name'),
-            'class_table_name' => $this->getContainer()->getParameter('security.acl.dbal.class_table_name'),
-            'sid_table_name' => $this->getContainer()->getParameter('security.acl.dbal.sid_table_name'),
-            'oid_ancestors_table_name' => $this->getContainer()->getParameter('security.acl.dbal.oid_ancestors_table_name'),
-            'oid_table_name' => $this->getContainer()->getParameter('security.acl.dbal.oid_table_name'),
+            'entry_table_name' => $container->getParameter('security.acl.dbal.entry_table_name'),
+            'class_table_name' => $container->getParameter('security.acl.dbal.class_table_name'),
+            'sid_table_name' => $container->getParameter('security.acl.dbal.sid_table_name'),
+            'oid_ancestors_table_name' => $container->getParameter('security.acl.dbal.oid_ancestors_table_name'),
+            'oid_table_name' => $container->getParameter('security.acl.dbal.oid_table_name'),
         );
 
         $absentTables = 0;

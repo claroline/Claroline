@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
-Class CalendarController extends Controller
+class CalendarController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
 
@@ -22,16 +22,20 @@ Class CalendarController extends Controller
         $formBuilder = $this->createFormBuilder($event);
         $formBuilder
             ->add('title', 'text', array('required' => true))
-            ->add('end', 'date', array(
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'choice',
-                'data' => new \DateTime('now')
-            ))
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                    'data' => new \DateTime('now')
+                )
+            )
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig', 
+            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
             array('workspace' => $workspace, 'form' => $form->createView())
         );
     }
@@ -44,16 +48,20 @@ Class CalendarController extends Controller
         $event = new Event();
         $formBuilder = $this->createFormBuilder($event);
         $formBuilder->add('title', 'text')
-            ->add('end', 'date', array(
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'choice',
-            ))
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                )
+            )
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
         $request = $this->get('request');
 
         if ($request->getMethod() === 'POST') {
-            // get the value not send by the built in form  
+            // get the value not send by the built in form
             $postData = $request->request->all();
             $form->bindRequest($request);
 

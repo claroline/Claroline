@@ -18,7 +18,12 @@ class TransactionalTestClient extends Client
     /** @var boolean */
     protected $requested;
 
-    public function __construct(HttpKernelInterface $kernel, array $server = array(), History $history = null, CookieJar $cookieJar = null)
+    public function __construct(
+        HttpKernelInterface $kernel,
+        array $server = array(),
+        History $history = null,
+        CookieJar $cookieJar = null
+    )
     {
         parent::__construct($kernel, $server, $history, $cookieJar);
         $this->connection = $this->getContainer()->get('doctrine.dbal.default_connection');

@@ -18,9 +18,11 @@ class CreateGroupsCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:groups:create')
             ->setDescription('Creates some groups with the current registerd users and roles');
-        $this->setDefinition(array(
-            new InputArgument('amount', InputArgument::REQUIRED, 'The number of groups'),
-        ));
+        $this->setDefinition(
+            array(
+                new InputArgument('amount', InputArgument::REQUIRED, 'The number of groups'),
+            )
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -41,7 +43,9 @@ class CreateGroupsCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
@@ -57,9 +61,11 @@ class CreateGroupsCommand extends ContainerAwareCommand
     {
         $nbGroups = $input->getArgument('amount');
         $fixture = new LoadGroupsData($nbGroups);
-        $fixture->setLogger(function ($message) use ($output){
-            $output->writeln($message);
-        });
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);

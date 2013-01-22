@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * @todo Remove this entity
+ *
  * @ORM\Entity
  * @ORM\Table(name="claro_meta_type")
  */
@@ -24,13 +26,20 @@ class MetaType
     protected $name;
 
     /*
+     * Mapping is broken...
+     *
      * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\ResourceType",
-     *      inversedBy="metaTypes"
+     *     targetEntity="Claroline\CoreBundle\Entity\ResourceType",
+     *     inversedBy="metaTypes"
      * )
-     * @ORM\JoinTable(name="claro_meta_type_resource_type",
-     *      joinColumns={@ORM\JoinColumn(name="meta_type_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_meta_type_resource_type",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="meta_type_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $resourceTypes;

@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class ActivityListenerTest extends FunctionalTestCase
 {
-   /** @var string */
+    /** @var string */
     private $upDir;
 
     /** @var string */

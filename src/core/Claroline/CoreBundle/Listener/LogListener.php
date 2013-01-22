@@ -11,7 +11,8 @@ class LogListener extends ContainerAware
     public function onLogResource(ResourceLogEvent $event)
     {
         $rs = new ResourceLog();
-        if ($event->getAction() !== ResourceLogEvent::DELETE_ACTION){
+
+        if ($event->getAction() !== ResourceLogEvent::DELETE_ACTION) {
             $rs->setResource($event->getResource());
         }
 
@@ -32,6 +33,5 @@ class LogListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($rs);
         $em->flush();
-        return;
     }
 }

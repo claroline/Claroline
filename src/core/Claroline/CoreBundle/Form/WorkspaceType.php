@@ -16,7 +16,7 @@ class WorkspaceType extends AbstractType
             'choice',
             array(
                 'choices' => array(
-                    'simple'     => 'Simple',
+                    'simple' => 'Simple',
                     'aggregator' => 'Aggregator',
                 ),
                 'multiple' => false,

@@ -115,6 +115,7 @@ class RightManager implements RightManagerInterface
             return $acl->isGranted(array($rightMask), array($sid));
         } catch (NoAceFoundException $ex) {
             unset($ex);
+
             return false;
         }
     }
@@ -131,8 +132,9 @@ class RightManager implements RightManagerInterface
     private function doRecursiveRemoveRight(Acl $acl, $sid, $mask, $startIndex)
     {
         $aces = $this->currentTargetStrategy->getAces($acl);
+        $aceCount = count($aces);
 
-        if (count($aces) == 0) {
+        if ($aceCount === 0) {
             return;
         }
 
@@ -140,7 +142,7 @@ class RightManager implements RightManagerInterface
             return;
         }
 
-        for ($aceIndex = $startIndex; $aceIndex < count($aces); ++$aceIndex) {
+        for ($aceIndex = $startIndex; $aceIndex < $aceCount; ++$aceIndex) {
             $ace = $aces[$aceIndex];
             $compatibleAce =
                 $ace->getSecurityIdentity() == $sid
@@ -155,6 +157,7 @@ class RightManager implements RightManagerInterface
                 if ($updatedMask == 0 || $mask == 0) {
                     $this->currentTargetStrategy->deleteAce($acl, $aceIndex);
                     $this->doRecursiveRemoveRight($acl, $sid, $mask, $aceIndex);
+
                     return;
                 } else {
 

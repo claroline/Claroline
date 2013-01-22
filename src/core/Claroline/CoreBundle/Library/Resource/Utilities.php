@@ -6,6 +6,16 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class Utilities
 {
+    /**
+     * Gets a unique name for a resource in a folder.
+     * If the name of the resource already exists here, ~*indice* will be happened
+     * to its name
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
+     *
+     * @return string
+     */
     public function getUniqueName (AbstractResource $resource, AbstractResource $parent)
     {
         $children = $parent->getChildren();
@@ -18,12 +28,11 @@ class Utilities
             $nbName = 0;
             foreach ($children as $child) {
                 $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
-                if ($baseName == $arChildName[0]){
+                if ($baseName == $arChildName[0]) {
                     $nbName++;
                 }
             }
         }
-
 
         if (0 != $nbName) {
             $newName = $baseName.'~'.$nbName.'.'.pathinfo($resource->getName(), PATHINFO_EXTENSION);
@@ -34,6 +43,14 @@ class Utilities
         return $newName;
     }
 
+    /**
+     * Normalize events name.
+     * 
+     * @param string $prefix
+     * @param string $resourceType
+     *
+     * @return string
+     */
     public function normalizeEventName($prefix, $resourceType)
     {
         return $prefix . '_' . strtolower(str_replace(' ', '_', $resourceType));

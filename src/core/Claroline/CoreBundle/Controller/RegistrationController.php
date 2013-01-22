@@ -8,9 +8,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -65,6 +62,14 @@ class RegistrationController extends Controller
         );
     }
 
+    /**
+     * Checks if a user is allowed to register.
+     * ie: if the self registration is disabled, he can't.
+     *
+     * @return Respone
+     * 
+     * @throws AccessDeniedHttpException
+     */
     private function checkAccess()
     {
         $securityContext = $this->get('security.context');

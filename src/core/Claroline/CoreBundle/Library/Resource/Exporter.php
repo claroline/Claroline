@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class Exporter
 {
@@ -21,7 +22,7 @@ class Exporter
     /* @var SecurityContext */
     private $sc;
 
-    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, $sc)
+    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, SecurityContext $sc)
     {
         $this->em = $em;
         $this->ed = $ed;
@@ -31,10 +32,13 @@ class Exporter
 
     /**
      * Returns an archive with the required content.
+     * The array of ids can even contains the ids of a directory.
+     *
+     * @param array $ids the ids array
      *
      * @return file
      */
-    public function exportResources($ids)
+    public function exportResources(array $ids)
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $archive = new \ZipArchive();
@@ -77,7 +81,7 @@ class Exporter
         }
 
         $archive->close();
-//        throw new \Exception('coucou');
+        //throw new \Exception('coucou');
         return $pathArch;
     }
 
@@ -89,15 +93,15 @@ class Exporter
      *
      * @return array $toAppend
      */
-    public function expandResourceIds($resourceIds)
+    public function expandResourceIds(array $resourceIds)
     {
         $repoIns = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $dirIds = array();
         $resIds = array();
 
         foreach ($resourceIds as $resourceId) {
-            $resource = $repoIns->find($resourceId);
-            ($resource->getResourceType()->getName() == 'directory') ? $dirIds[] = $resourceId : $resIds[] = $resourceId;
+            $resourceTypeName = $repoIns->find($resourceId)->getResourceType()->getName();
+            ($resourceTypeName == 'directory') ? $dirIds[] = $resourceId : $resIds[] = $resourceId;
         }
 
         $toAppend = array();

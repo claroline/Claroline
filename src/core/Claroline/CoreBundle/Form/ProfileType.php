@@ -38,9 +38,9 @@ class ProfileType extends BaseProfileType
                     'multiple' => false,
                     'property' => 'translationKey',
                     'disabled' => false,
-                    'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                         return $er->createQueryBuilder('r')
-                            ->add('where', "r.roleType != ".Role::WS_ROLE);
+                                ->add('where', "r.roleType != " . Role::WS_ROLE);
                     }
                 )
             );
@@ -54,14 +54,13 @@ class ProfileType extends BaseProfileType
                     'multiple' => false,
                     'property' => 'translationKey',
                     'disabled' => true,
-                    'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                         return $er->createQueryBuilder('r')
-                            ->add('where', "r.roleType != ".Role::WS_ROLE);
+                                ->add('where', "r.roleType != " . Role::WS_ROLE);
                     }
                 )
             );
         }
-        $builder->add('note', 'textarea', array('required' => false));
     }
 
     public function getName()
@@ -71,8 +70,8 @@ class ProfileType extends BaseProfileType
 
     public function getDefaultOptions(array $options)
     {
-       return array(
-           'translation_domain' => 'platform'
-       );
+        return array(
+            'translation_domain' => 'platform'
+        );
     }
 }

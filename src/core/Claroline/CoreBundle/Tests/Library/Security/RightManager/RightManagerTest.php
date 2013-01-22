@@ -281,7 +281,6 @@ class RightManagerTest extends FunctionalTestCase
         $bob->addRole($roleC);
         $this->getEntityManager()->flush();
 
-
         $this->rightManager->addRight($entity, $roleC, MaskBuilder::MASK_VIEW);
 
         $this->logUser($jane);
@@ -292,7 +291,7 @@ class RightManagerTest extends FunctionalTestCase
         $this->assertFalse($this->getSecurityContext()->isGranted('VIEW', $entity));
     }
 
-    public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstanceAssociatedWithAnAcl()
+    public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstanceWithAnAcl()
     {
         $jane = $this->getFixtureReference('user/user');
         $entity = $this->createEntity();

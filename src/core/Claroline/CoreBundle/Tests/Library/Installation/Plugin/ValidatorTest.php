@@ -17,7 +17,7 @@ class ValidatorTest extends WebTestCase
         new Validator($checkers);
     }
 
-    public function S_testValidatorCollectsValidationErrorsFromCheckers()
+    public function testValidatorCollectsValidationErrorsFromCheckers()
     {
         $this->markTestSkipped('something is broken');
         $firstChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
@@ -54,9 +54,12 @@ class ValidatorTest extends WebTestCase
     public function testValidatorReturnsNoErrorForValidPlugins($pluginFqcn)
     {
         $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomResources{$ds}Entity{$ds}ResourceA.php";
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomResources{$ds}Entity{$ds}ResourceB.php";
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}WithCustomActions{$ds}Entity{$ds}ResourceX.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomResources{$ds}Entity{$ds}ResourceA.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomResources{$ds}Entity{$ds}ResourceB.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomActions{$ds}Entity{$ds}ResourceX.php";
 
         $container = static::createClient()->getContainer();
         $validator = $container->get('claroline.plugin.validator');

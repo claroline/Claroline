@@ -68,8 +68,10 @@ class ResourceExtenderTest extends FunctionalTestCase
 
         // Insert two specific resource types (see test/Stub/Entity)
         $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_visible, is_browsable)"
-            . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1', 'SpecificResource1', true, false),"
-            . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2', 'SpecificResource2', true, false)";
+            . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1',"
+            . " 'SpecificResource1', true, false),"
+            . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2',"
+            . " 'SpecificResource2', true, false)";
         $conn->exec($sql);
     }
 

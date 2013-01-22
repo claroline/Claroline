@@ -53,11 +53,13 @@ class PlatformInstallCommand extends ContainerAwareCommand
                     : $coreBundleDirectory.'/DataFixtures';
                 $output->writeln("Loading {$environment} fixtures...");
                 $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
-                $fixtureInput = new ArrayInput(array(
-                    'command' => 'doctrine:fixtures:load',
-                    '--fixtures' => $fixturesPath,
-                    '--append' => true
-                ));
+                $fixtureInput = new ArrayInput(
+                    array(
+                        'command' => 'doctrine:fixtures:load',
+                        '--fixtures' => $fixturesPath,
+                        '--append' => true
+                    )
+                );
                 $fixtureCommand->run($fixtureInput, $output);
             }
         }
@@ -68,11 +70,13 @@ class PlatformInstallCommand extends ContainerAwareCommand
         }
 
         $assetCommand = $this->getApplication()->find('assets:install');
-        $assetInput = new ArrayInput(array(
-            'command' => 'assets:install',
-            'target' => realpath(__DIR__ . '/../../../../../web'),
-            '--symlink' => true
-        ));
+        $assetInput = new ArrayInput(
+            array(
+                'command' => 'assets:install',
+                'target' => realpath(__DIR__ . '/../../../../../web'),
+                '--symlink' => true
+            )
+        );
         $assetCommand->run($assetInput, $output);
 
         $asseticCommand = $this->getApplication()->find('assetic:dump');

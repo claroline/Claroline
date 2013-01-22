@@ -17,8 +17,10 @@ class ResourceRightsRepository extends EntityRepository
      */
     public function getRights($roles, AbstractResource $resource)
     {
-        if(count($roles) == 0){
-            throw new \RuntimeException("The role array cannot be empty for the getRights method in the ResourceRightRepository");
+        if (count($roles) === 0) {
+            throw new \RuntimeException(
+                "The role array cannot be empty for the getRights method in the ResourceRightRepository"
+            );
         }
 
         $dql = "
@@ -35,28 +37,28 @@ class ResourceRightsRepository extends EntityRepository
             JOIN rrw.resource resource
             WHERE  ";
 
-            $i=0;
+        $i = 0;
 
-            foreach($roles as $role){
-                if($i!=0){
-                    $dql.= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
-                } else {
-                    $dql.= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
-                    $i++;
-                }
+        foreach ($roles as $role) {
+            if ($i !== 0) {
+                $dql .= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            } else {
+                $dql .= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+                $i++;
             }
+        }
 
-            //récupérer la liste des trucs que je peux créer...
+        $query = $this->_em->createQuery($dql);
 
-       $query = $this->_em->createQuery($dql);
-
-       return $query->getSingleResult();
+        return $query->getSingleResult();
     }
 
     public function getCreationRights($roles, AbstractResource $resource)
     {
-        if(count($roles) == 0){
-            throw new \RuntimeException("The role array cannot be empty for the getRights method in the ResourceRightRepository");
+        if (count($roles) === 0) {
+            throw new \RuntimeException(
+                'The role array cannot be empty for the getRights method in the ResourceRightRepository'
+            );
         }
 
         $dql = "
@@ -67,21 +69,19 @@ class ResourceRightsRepository extends EntityRepository
             JOIN right.resource resource
             WHERE  ";
 
-            $i=0;
+            $i = 0;
 
-            foreach($roles as $role){
-                if($i!=0){
-                    $dql.= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
-                } else {
-                    $dql.= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
-                    $i++;
-                }
+        foreach ($roles as $role) {
+            if ($i !== 0) {
+                $dql .= " OR resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            } else {
+                $dql .= " resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+                $i++;
             }
+        }
 
-            //récupérer la liste des trucs que je peux créer...
+        $query = $this->_em->createQuery($dql);
 
-       $query = $this->_em->createQuery($dql);
-
-       return $query->getArrayResult();
+        return $query->getArrayResult();
     }
 }

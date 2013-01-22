@@ -12,17 +12,15 @@ class GroupSettingsType extends GroupType
     {
         parent::buildForm($builder, $options);
         $builder->add(
-            'platformRole',
-            'entity',
-            array(
+            'platformRole', 'entity', array(
                 'class' => 'Claroline\CoreBundle\Entity\Role',
                 'expanded' => false,
                 'multiple' => false,
                 'property' => 'translationKey',
                 'disabled' => false,
-                'query_builder' => function(\Doctrine\ORM\EntityRepository $er){
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->add('where', "r.roleType != ".Role::WS_ROLE);
+                        ->add('where', "r.roleType != " . Role::WS_ROLE);
                 }
             )
         );
@@ -35,8 +33,8 @@ class GroupSettingsType extends GroupType
 
     public function getDefaultOptions(array $options)
     {
-       return array(
-           'translation_domain' => 'platform'
-       );
+        return array(
+            'translation_domain' => 'platform'
+        );
     }
 }

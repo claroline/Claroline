@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Security;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class RightsManager
+class Utilities
 {
     /** @var EntityManager */
     private $em;
@@ -23,8 +23,16 @@ class RightsManager
     {
         $this->em = $em;
         $this->expectedTypeOfRight = array('workspace', 'resource');
-        $this->expectedKeysForResource = array('canView', 'canOpen', 'canDelete', 'canEdit', 'canCopy', 'canCreate', 'canExport');
-        $this->expectedKeysForWorkspace = array('canView', 'canDelete', 'canEdit', 'canManage');
+        $this->expectedKeysForResource = array(
+            'canView',
+            'canOpen',
+            'canDelete',
+            'canEdit',
+            'canCopy',
+            'canCreate',
+            'canExport'
+        );
+        $this->expectedKeysForWorkspace = array('canView', 'canDelete', 'canEdit');
     }
 
     /**
@@ -36,35 +44,42 @@ class RightsManager
      *
      * @Return array
      */
-    public function setRightsRequest($checks, $typeOfRight)
+    public function setRightsRequest(array $checks, $typeOfRight)
     {
-        if(!in_array($typeOfRight, $this->expectedTypeOfRight)){
-            throw new \Exception('Wrong type of right specified on setRightRequest for the RightsManager.
-                Expected values are "workspace", "resource" ("'.$typeOfRight.'" is inccorect).');
+        if (!in_array($typeOfRight, $this->expectedTypeOfRight)) {
+            throw new \Exception(
+                "Unknown right type '{$typeOfRight}' (possible values are 'workspace' and 'resource')"
+            );
         }
 
         $configs = array();
-        foreach(array_keys($checks) as $key){
+        foreach (array_keys($checks) as $key) {
             $arr = explode('-', $key);
             $configs[$arr[1]][$arr[0]] = true;
         }
 
-        foreach($configs as $key => $config){
+        foreach ($configs as $key => $config) {
             $configs[$key] = $this->addMissingRights($config, $typeOfRight);
         }
 
         return $configs;
     }
 
-
+    /**
+     * Returns the roles (an array of string) of the $token.
+     *
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
     public function getRoles(TokenInterface $token)
     {
-        if ($token->getUser() === 'anon.'){
-            foreach($token->getRoles() as $role){
+        if ($token->getUser() === 'anon.') {
+            foreach ($token->getRoles() as $role) {
                 $roles[] = $role->getRole();
             }
         } else {
-            foreach($token->getUser()->getRoles() as $role){
+            foreach ($token->getUser()->getRoles() as $role) {
                 $roles[] = $role;
             }
         }
@@ -72,15 +87,24 @@ class RightsManager
         return $roles;
     }
 
-    private function addMissingRights($rights, $typeOfRight)
+    /**
+     * Given an array of rights permission, the method will add the missing rights
+     * and set them to false.
+     *
+     * @param array $rights the right array ie(array('canDelete' => true))
+     * @param type $typeOfRight the type of right: currently 'resource' or 'workspace'
+     *
+     * @return array
+     */
+    private function addMissingRights(array $rights, $typeOfRight)
     {
-        switch($typeOfRight){
+        switch ($typeOfRight) {
             case "resource": $expectedKeys = $this->expectedKeysForResource;
             case "workspace": $expectedKeys = $this->expectedKeysForWorkspace;
         }
 
-        foreach($expectedKeys as $expected){
-            if(!isset($rights[$expected])){
+        foreach ($expectedKeys as $expected) {
+            if (!isset($rights[$expected])) {
                 $rights[$expected] = false;
             }
         }
@@ -88,4 +112,3 @@ class RightsManager
         return $rights;
     }
 }
-
