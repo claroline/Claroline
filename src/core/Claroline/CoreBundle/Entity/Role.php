@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 
 /**
@@ -76,21 +75,21 @@ class Role implements RoleInterface
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role",
-     *      inversedBy="children"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="children"
      * )
      * @ORM\JoinColumn(
-     *      name="parent_id",
-     *      referencedColumnName="id",
-     *      onDelete="SET NULL"
+     *     name="parent_id",
+     *     referencedColumnName="id",
+     *     onDelete="SET NULL"
      * )
      */
     protected $parent;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Role",
-     *      mappedBy="parent"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
@@ -98,24 +97,34 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\User",
-     *  mappedBy="roles"
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="roles"
      * )
-     * @ORM\JoinTable(name="claro_user_role",
-     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_user_role",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $users;
 
     /**
      * @ORM\ManyToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\Group",
-     *  mappedBy="roles"
+     *     targetEntity="Claroline\CoreBundle\Entity\Group",
+     *     mappedBy="roles"
      * )
-     * @ORM\JoinTable(name="claro_group_role",
-     *     joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * @ORM\JoinTable(
+     *     name="claro_group_role",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $groups;
@@ -126,12 +135,18 @@ class Role implements RoleInterface
     protected $roleType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights", mappedBy="role")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
+     *     mappedBy="role"
+     * )
      */
     protected $resourceRights;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights", mappedBy="role")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
+     *     mappedBy="role"
+     * )
      */
     protected $workspaceRights;
 
@@ -239,7 +254,6 @@ class Role implements RoleInterface
             $user->addRole($this);
         }
     }
-
 
     public function setRoleType($roleType)
     {

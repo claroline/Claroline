@@ -36,10 +36,14 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
     {
         $i = 0;
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        if ($this->username !== null){
-            $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
+        if ($this->username !== null) {
+            $user = $em->getRepository('ClarolineCoreBundle:User')
+                ->findOneBy(array('username' => $this->username));
             if ($user == null) {
-                throw new \Exception("Cannot load entities in a non existing user personal workspace: user {$username} does not exists");
+                throw new \Exception(
+                    "Cannot load entities in a non existing user personal workspace:"
+                    . "user {$this->username} does not exists"
+                );
             }
             $workspace = $user->getPersonalWorkspace();
         } else {
@@ -49,16 +53,13 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
                 throw new \Exception("Cannot load entities in an non existing workspace");
             }
         }
-//        $collaboratorRole = $em->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($workspace);
-//        $this->log('role '.$collaboratorRole->getRole());
 
-        if ($this->class == 'group') {
+        if ($this->class === 'group') {
             $entities = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-        } elseif ($this->class == 'user') {
+        } elseif ($this->class === 'user') {
             $entities = $em->getRepository('ClarolineCoreBundle:User')->findAll();
-        } elseif ($this->class == null){
+        } elseif ($this->class === null) {
             $this->log("cleaning...");
-//            $this->clean($collaboratorRole, $manager);
             $this->log("done");
             $entities = null;
         }
@@ -67,86 +68,88 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
 
         $maxLoops = count($entities);
 
-        if($maxLoops > $this->nbUsers){
-           $maxLoops = $this->nbUsers;
+        if ($maxLoops > $this->nbUsers) {
+            $maxLoops = $this->nbUsers;
         }
 
         $this->log("max loops: $maxLoops");
 
-        while ($i < $maxLoops)
-        {
+        while ($i < $maxLoops) {
             $this->addToWorkspace($entities, $workspace, $manager);
             $i++;
         }
 
         $manager->flush();
 
-//        $this->log(count($user->getPersonalWorkspace()->getCollaboratorRole()->getUsers())." collaborators added to user {$user->getUsername()}");
     }
 
     //may cause infinite loop due to the lack of optimization.
     private function addToWorkspace($entities, $workspace, $om)
     {
-
         $maxOffset = count($entities);
         $maxOffset--;
         $offset = rand(0, $maxOffset);
         $entity = $entities[$offset];
-
-        $wsRoles = $om->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+        $roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $wsRoles = $roleRepo->getWorkspaceRoles($workspace);
         $isRegistered = false;
 
-        if (get_class($entity) === 'Claroline\CoreBundle\Entity\Group'){
-            foreach($wsRoles as $role){
-                if($entity->hasRole($role->getName())){
+        if (get_class($entity) === 'Claroline\CoreBundle\Entity\Group') {
+            foreach ($wsRoles as $role) {
+                if ($entity->hasRole($role->getName())) {
                     $isRegistered = true;
                 }
             }
         } else {
-            //it must be sure the user doens't already have this role. If the user has the role through a group it's stikk OK.
+            //it must be sure the user doens't already have this role.
+            //If the user has the role through a group it's stikk OK.
             $userRoles = $entity->getRoles(false);
-            foreach($userRoles as $userRole){
-                foreach($wsRoles as $role){
-                    if($role->getName() == $userRole){
+            foreach ($userRoles as $userRole) {
+                foreach ($wsRoles as $role) {
+                    if ($role->getName() == $userRole) {
                         $isRegistered = true;
                     }
                 }
             }
         }
 
-        if($isRegistered){
-            $this->log("I strongly recommand to ctrl+c if you see this a lot");
+        if ($isRegistered) {
+            $this->log('I strongly recommand to ctrl+c if you see this a lot');
             $this->addToWorkspace($entities, $workspace, $om);
         } else {
-            $this->log("entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
-            $entity->addRole($om->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($workspace));
+            $this->log("Entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
+            $entity->addRole($roleRepo->getCollaboratorRole($workspace));
             $om->persist($entity);
             $om->flush();
             unset($entities[$offset]);
             $entities = array_values($entities);
-            $this->log(count($om->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($workspace)->getUsers())." collaborators added ");
+            $this->log(
+                count($roleRepo->getCollaboratorRole($workspace)->getUsers())
+                . ' collaborators added'
+            );
         }
     }
+    /*
+    private function clean($collaboratorRole, $om)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
 
-//    private function clean($collaboratorRole, $om)
-//    {
-//        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-//        $users = $em->getRepository('ClarolineCoreBundle:User')->findAll();
-//
-//        foreach($users as $user){
-//            $user->removeRole($collaboratorRole);
-//            $om->persist($user);
-//        }
-//
-//        $om->flush();
-//        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
-//
-//        foreach($groups as $group){
-//            $group->removeRole($collaboratorRole);
-//            $om->persist($group);
-//        }
-//
-//        $om->flush();
-//    }
+        foreach($users as $user){
+            $user->removeRole($collaboratorRole);
+            $om->persist($user);
+        }
+
+        $om->flush();
+        $groups = $em->getRepository('ClarolineCoreBundle:Group')->findAll();
+
+        foreach($groups as $group){
+            $group->removeRole($collaboratorRole);
+            $om->persist($group);
+        }
+
+        $om->flush();
+    }
+    */
 }
 

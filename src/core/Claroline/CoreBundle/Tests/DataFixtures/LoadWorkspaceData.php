@@ -23,8 +23,7 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
 
     public function __construct($workspaceNames = null)
     {
-        if ($workspaceNames !== null)
-        {
+        if ($workspaceNames !== null) {
             $this->workspaceNames = $workspaceNames;
         } else {
             $this->workspaceNames = array('ws_a', 'ws_b', 'ws_c', 'ws_d', 'ws_e', 'ws_f');
@@ -52,9 +51,13 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
             'ws_f' => array('Workspace_F', 'admin', 'wsF', false, 'ws_e')
         );
 
-        foreach ($this->workspaceNames as $workspaceName){
-            if(array_key_exists($workspaceName, $workspaces)){
-                $ws = $this->createSimpleWorkspace($workspaces[$workspaceName][0], $this->getReference('user/'.$workspaces[$workspaceName][1]), $workspaces[$workspaceName][2]);
+        foreach ($this->workspaceNames as $workspaceName) {
+            if (array_key_exists($workspaceName, $workspaces)) {
+                $ws = $this->createSimpleWorkspace(
+                    $workspaces[$workspaceName][0],
+                    $this->getReference('user/'.$workspaces[$workspaceName][1]),
+                    $workspaces[$workspaceName][2]
+                );
                 $ws->setPublic($workspaces[$workspaceName][3]);
                 $manager->persist($ws);
                 $this->addReference('workspace/'.$workspaceName, $ws);

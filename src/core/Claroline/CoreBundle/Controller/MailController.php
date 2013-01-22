@@ -7,6 +7,13 @@ use Claroline\CoreBundle\Form\MailType;
 
 class MailController extends Controller
 {
+    /**
+     * Displays the mail form.
+     *
+     * @param integer $userId
+     *
+     * @return Response
+     */
     public function formAction($userId)
     {
         $form = $this->createForm(new MailType());
@@ -17,6 +24,13 @@ class MailController extends Controller
         );
     }
 
+    /**
+     * Handles the mail form submission (sends a mail).
+     *
+     * @param integer $userId
+     *
+     * @return Response
+     */
     public function sendAction($userId)
     {
         $request = $this->get('request');
@@ -25,7 +39,9 @@ class MailController extends Controller
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $user = $this->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+            $user = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('Claroline\CoreBundle\Entity\User')
+                ->find($userId);
             $message = \Swift_Message::newInstance()
                 ->setSubject($data['object'])
                 ->setFrom('noreply@claroline.net')

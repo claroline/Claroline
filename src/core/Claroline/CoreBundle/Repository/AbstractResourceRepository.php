@@ -6,8 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Repository\Exception\NoDirectoryException;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Doctrine\ORM\AbstractQuery;
 
@@ -23,10 +21,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
     //      to get "ar" information.
     //      That's also the reason why we do not use
     //      the "MaterializedPathRepository->getChildren" method.
-    const SELECT_FOR_ENTITIES = "ar";
 
     /** SELECT DQL part to get array. Please add any required field here. */
     const SELECT_FOR_ARRAY = "
+            SELECT DISTINCT
             ar.id as id,
             ar.name as name,
             ar.path as path,
@@ -75,14 +73,14 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null, $asArray = false)
+    public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null)
     {
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = "SELECT " . self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES
             . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
 
         if ($resourceType !== null) {
-            $dql.= "AND rt.name = :rt_name";
+            $dql .= "AND rt.name = :rt_name";
         }
 
         $query = $this->_em->createQuery($dql);
@@ -94,7 +92,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query->setParameter('pathlike', $parent->getPath() . '%');
         $query->setParameter('path', $parent->getPath());
 
-        return $this->executeQuery($query, $asArray);
+        return $this->executeQuery($query);
     }
 
     /**
@@ -110,7 +108,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function children($parentId, $roles, $resourceTypeId = 0, $asArray = true, $isVisible = true)
+    public function children($parentId, $roles, $resourceTypeId = 0, $isVisible = true)
     {
         $isAdmin = false;
 
@@ -120,17 +118,16 @@ class AbstractResourceRepository extends MaterializedPathRepository
             }
         }
 
-        if($isAdmin){
-            $query = $this->buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible);
+        if ($isAdmin) {
+            $query = $this->buildAdminChildrenQuery($parentId, $resourceTypeId, $isVisible);
         } else {
             $query = $this->buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId);
         }
 
-
         $results = array();
 
         if (!$isAdmin) {
-            $results = $this->executeQuery($query, $asArray);
+            $results = $this->executeQuery($query);
         } else {
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
 
@@ -145,9 +142,19 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $results;
     }
 
-    private function buildAdminChildrenQuery($parentId, $resourceTypeId, $asArray, $isVisible)
+    /**
+     * The children query for the admin (every resource is shown).
+     *
+     * @param integer $parentId
+     * @param integer $resourceTypeId
+     * @param boolean $asArray
+     * @param boolean $isVisible
+     *
+     * @return Query
+     */
+    private function buildAdminChildrenQuery($parentId, $resourceTypeId, $isVisible)
     {
-        $dql = "SELECT DISTINCT". ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = self::SELECT_FOR_ARRAY
            . " FROM " . self::FROM_RESOURCES
            . " WHERE ar.parent = :ar_parentid
                AND rt.isVisible = :rt_isvisible";
@@ -167,11 +174,30 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $query;
     }
 
-    private function buildForRolesChildrenQuery($parentId, $roles, $resourceTypeId, $asArray = true, $isVisible = true)
+    /**
+     * The children query an array of Roles.
+     *
+     * @param integer $parentId
+     * @param array   roles
+     * @param integer $resourceTypeId
+     * @param boolean $asArray
+     * @param boolean $isVisible
+     *
+     * @return Query
+     */
+    private function buildForRolesChildrenQuery(
+        $parentId,
+        $roles,
+        $resourceTypeId,
+        $isVisible = true
+    )
     {
-         $dql = "SELECT DISTINCT". self::SELECT_FOR_ARRAY. ", MAX (arRights.canExport) as can_export, MAX (arRights.canDelete) as can_delete, MAX (arRights.canEdit) as can_edit"
-             ." FROM ". self::FROM_RESOURCES
-             ." LEFT JOIN ar.rights arRights
+         $dql = self::SELECT_FOR_ARRAY
+             . ", MAX (arRights.canExport) as can_export"
+             . ", MAX (arRights.canDelete) as can_delete"
+             . ", MAX (arRights.canEdit) as can_edit"
+             . " FROM ". self::FROM_RESOURCES
+             . " LEFT JOIN ar.rights arRights
                 JOIN arRights.role rightRole
                 WHERE ";
 
@@ -180,18 +206,19 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         $i = 0;
-        foreach($roles as $role){
-            $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}' AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
+        foreach ($roles as $role) {
+            $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}'"
+                . " AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
 
-            if($i!=0){
-                $dql.= " OR ".$condition;
+            if ($i != 0) {
+                $dql .= " OR ".$condition;
             } else {
-                $dql.= $condition;
+                $dql .= $condition;
                 $i++;
             }
         }
 
-        $dql.= "GROUP BY ar.id";
+        $dql .= "GROUP BY ar.id";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ar_parentid', $parentId);
@@ -206,13 +233,15 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
+     *
      * @param User $user Owner of the resources.
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
      * @return an array of arrays or entities
      */
-    public function listRootsForUser(User $user, $asArray = false)
+    public function listRootsForUser(User $user)
     {
-        $dql = "SELECT " . self::SELECT_FOR_ARRAY
+        $dql = self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES
             . " WHERE ar.parent IS NULL"
             . " AND " . self::WHERECONDITION_USER_WORKSPACE
@@ -221,13 +250,15 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('u_id', $user->getId());
 
-        return $this->executeQuery($query, $asArray);
+        return $this->executeQuery($query);
     }
 
     /**
      * Returns an array of all ancestors of a abstractResource
      * (the resource itlsef is returned too).
+     *
      * @param listDirectChildrenResourceInstances $resource The resource about which we want ancestors.
+     *
      * @return array (name, id)
      */
     public function listAncestors(AbstractResource $resource)
@@ -252,47 +283,28 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns all resources owned by the user and filtered with given criterias.
+     *
      * @param Array $criterias Array of criterias to use to build the filter.
      * @param $roles as array of role (string)
      * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
      * @return an array of arrays or entities
      */
-    public function listResourcesForUserWithFilter($criterias, $user, $asArray = false)
+    public function listResourcesForUserWithFilter($criterias, $user)
     {
-        $isAdmin = false;
-        $isAnonymous = false;
-
-//        foreach ($roles as $role) {
-//            if ($role === 'ROLE_ADMIN') {
-//                $isAdmin = true;
-//            } else {
-//                if ($role === 'ROLE_ANONYMOUS'){
-//                    $isAnonymous = true;
-//                }
-//            }
-//        }
-
-        $isAdmin = false;
-
-        $dql = "SELECT " . ($asArray ? self::SELECT_FOR_ARRAY : self::SELECT_FOR_ENTITIES)
+        $dql = self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES;
 
-        if ($isAdmin === false) {
-            $dql .= "
-                JOIN ar.rights arRights
-                JOIN arRights.role rightRole WITH rightRole IN (
-                    SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
-                    JOIN currentUserRole.users currentUser
-                    WHERE currentUser.id = {$user->getId()}
-                )";
-        }
-
+        $dql .= "
+            JOIN ar.rights arRights
+            JOIN arRights.role rightRole WITH rightRole IN (
+                SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
+                JOIN currentUserRole.users currentUser
+                WHERE currentUser.id = {$user->getId()}
+            )";
         $dql .= " WHERE rt.isVisible=1"
             . " AND " . self::WHERECONDITION_USER_WORKSPACE;
-
-        if ($user !== null && $isAdmin === false) {
-            $dql .= " AND arRights.canView = 1";
-        }
+        $dql .= " AND arRights.canView = 1";
 
         foreach ($criterias as $key => $value) {
             $methodName = 'build' . ucfirst($key) . 'Filter';
@@ -304,13 +316,15 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query = $this->_em->createQuery($dql);
         $this->bindFilter($query, $criterias, $user);
 
-        return $this->executeQuery($query, $asArray);
+        return $this->executeQuery($query);
     }
 
     /**
      * Build the Dql part of the filter about Types.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildTypesFilter($key, $criteria)
@@ -321,7 +335,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= " AND (rt.name = :{$key}{$i}";   // eg. "types0"
+                $dqlPart .= " AND (rt.name = :{$key}{$i}";   // eg. "types0"
                 $isFirst = false;
             } else {
                 $dqlPart .= " OR rt.name = :{$key}{$i}";
@@ -336,8 +350,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Root.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildRootsFilter($key, $criteria)
@@ -348,10 +364,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= " AND (ar.path like :{$key}{$i}";
+                $dqlPart .= " AND (ar.path like :{$key}{$i}";
                 $isFirst = false;
             } else {
-                $dqlPart.= " OR ar.path like :{$key}{$i}";
+                $dqlPart .= " OR ar.path like :{$key}{$i}";
             }
         }
         if (strlen($dqlPart) > 0) {
@@ -363,8 +379,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Mime types.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildMimeTypesFilter($key, $criteria)
@@ -375,10 +393,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($keys as $i) {
             if ($isFirst) {
-                $dqlPart.= "AND (ic.type LIKE :{$key}{$i}";
+                $dqlPart .= "AND (ic.type LIKE :{$key}{$i}";
                 $isFirst = false;
             } else {
-                $dqlPart.= " OR  ic.type LIKE :{$key}{$i}";
+                $dqlPart .= " OR  ic.type LIKE :{$key}{$i}";
             }
         }
         if (strlen($dqlPart) > 0) {
@@ -389,9 +407,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
+     *
      * Build the Dql part of the filter about FromDate.
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildDateFromFilter($key, $criteria)
@@ -401,8 +421,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about ToDate.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildDateToFilter($key, $criteria)
@@ -412,8 +434,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Build the Dql part of the filter about Name.
+     *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $criteria Array of values to filter on.
+     *
      * @return string
      */
     public function buildNameFilter($key, $criteria)
@@ -423,9 +447,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Bind all values to the DQL filter.
+     *
      * @param Query $query to bind with values.
      * @param Array $criterias Array of criterias to apply.
      * @param User $user Owner of the resources.
+     *
      * @return string
      */
     private function bindFilter($query, $criterias, $user)
@@ -439,7 +465,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($criterias as $key => $value) {
             if (array_key_exists($key, $multipleValues)) {
-                $this->bindArray($query, $key, $value, array_key_exists($key, $likeValue), array_key_exists($key, $rootLikeValue));
+                $this->bindArray(
+                    $query,
+                    $key,
+                    $value,
+                    array_key_exists($key, $likeValue),
+                    array_key_exists($key, $rootLikeValue)
+                );
             } else {
                 if (!array_key_exists($key, $likeValue)) {
                     $query->setParameter($key, $value);
@@ -454,11 +486,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Bind all values to the DQL filter.
+     *
      * @param Query $query to bind with values.
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
      * @param array $values Array of values to filter on.
      * @param boolean $isLike If true, will bind with a %val%" value.
      * @param boolean $isRootLike If true, will bind with a val%" value.
+     *
      * @return string
      */
     private function bindArray($query, $key, $values, $isLike = false, $isRootLike = false)
@@ -477,29 +511,26 @@ class AbstractResourceRepository extends MaterializedPathRepository
     /**
      * Execute a DQL query and may return a list of entities or a list of arrays.
      * If it returns arrays, it add a "pathfordisplay" field in each item.
+     *
      * @param Query $query The query to execute.
      * @param boolean $asArray Set it to true if you want the result as a list of arrays.
      * @param int $numrows Maximum number of rows to return.
      * @param int ResourceType $resourceType Resource type to filter on.
+     *
      * @return array of arrays or array of entities
      */
-    private function executeQuery($query, $asArray, $offset = null, $numrows = null)
+    private function executeQuery($query, $offset = null, $numrows = null)
     {
         $query->setFirstResult($offset);
         $query->setMaxResults($numrows);
 
-        if ($asArray) {
-            $res = $query->getArrayResult();
-            // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($res as &$r) {
-                $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
-                unset($r['path']);
-//                unset($r['parent_id']);
-            }
-        } else {
-            $res = $query->getResult();
+        $res = $query->getArrayResult();
+        // Add a field "pathfordisplay" in each entity (as array) of the given array.
+        foreach ($res as &$r) {
+            $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
+            unset($r['path']);
         }
+
         return $res;
     }
-
 }

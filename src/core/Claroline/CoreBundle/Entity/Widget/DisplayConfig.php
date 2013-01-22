@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DisplayConfigRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_widget_dispay")
  * @Gedmo\Tree(type="nested")
  */
@@ -50,21 +50,21 @@ class DisplayConfig
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
-     *      inversedBy="children"
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
+     *     inversedBy="children"
      * )
      * @ORM\JoinColumn(
-     *      name="parent_id",
-     *      referencedColumnName="id",
-     *      onDelete="SET NULL"
+     *     name="parent_id",
+     *     referencedColumnName="id",
+     *     onDelete="SET NULL"
      * )
      */
     protected $parent;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
-     *      mappedBy="parent"
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
@@ -130,7 +130,7 @@ class DisplayConfig
 
     public function invertLock()
     {
-        ($this->isLocked == true) ? $this->isLocked = false: $this->isLocked = true;
+        $this->isLocked = !$this->isLocked;
     }
 
     public function isVisible()
@@ -145,7 +145,7 @@ class DisplayConfig
 
     public function invertVisible()
     {
-        ($this->isVisible == true) ? $this->isVisible = false: $this->isVisible = true;
+        $this->isVisible = !$this->isVisible;
     }
 
     public function getParent()

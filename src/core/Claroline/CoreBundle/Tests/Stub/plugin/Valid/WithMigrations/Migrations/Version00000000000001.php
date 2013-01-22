@@ -11,14 +11,14 @@ class Version00000000000001 extends BundleMigration
     {
         $table = $schema->createTable($this->getTablePrefix() . '_stuffs');
 
-        $this->addId($table);        
+        $this->addId($table);
         $table->addColumn(
-            'name', 
-            'string', 
+            'name',
+            'string',
             array(
                 'length' => 50
             )
-        );      
+        );
     }
 
     public function down(Schema $schema)

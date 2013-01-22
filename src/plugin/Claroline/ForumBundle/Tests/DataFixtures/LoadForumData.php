@@ -45,7 +45,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $creator = $this->getContainer()->get('claroline.resource.manager');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
-        if ($this->parent == null){
+        if ($this->parent == null) {
             $root = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
                 ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         } else {
@@ -72,21 +72,22 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', $user);
 
             $entityToBeDetached = array();
-            for ($j=0; $j<$this->nbMessages; $j++){
+            for ($j = 0; $j < $this->nbMessages; $j++) {
 
                 $sender = $collaborators[rand(0, $maxOffset)];
                 $message = new Message();
                 $message->setName('tmp-'.microtime());
                 $message->setCreator($sender);
-                $message->setContent($this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true));
+                $lipsum = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true);
+                $message->setContent($lipsum);
                 $inst = $creator->create($message, $subject->getId(), 'claroline_message', $sender);
                 $entityToBeDetached[] = $message;
                 $entityToBeDetached[] = $inst;
             }
             $manager->flush();
-//            foreach ($entityToBeDetached as $msg) {
-//                $manager->detach($msg);
-//            }
+            //foreach ($entityToBeDetached as $msg) {
+            //    $manager->detach($msg);
+            //}
         }
 
         $manager->flush();

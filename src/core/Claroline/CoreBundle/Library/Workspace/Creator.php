@@ -6,6 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Rights\ResourceRights;
 use Claroline\CoreBundle\Entity\Rights\WorkspaceRights;
@@ -23,6 +25,14 @@ class Creator
         $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
     }
 
+    /**
+     * Creates a workspace.
+     *
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     * @param \Claroline\CoreBundle\Entity\User $manager
+     *
+     * @return AbstractWorkspace
+     */
     public function createWorkspace(Configuration $config, User $manager)
     {
         $config->check();
@@ -50,32 +60,57 @@ class Creator
         $rootDir->setResourceType($directoryType);
         $rootDir->setWorkspace($workspace);
         $this->entityManager->persist($rootDir);
-//        $this->entityManager->flush();
 
         //default resource rights
-        $this->createDefaultsResourcesRights(true, true, true, true, true, true, true, $this->roleRepo->getManagerRole($workspace), $rootDir);
-        $this->createDefaultsResourcesRights(true, false, true, false, false, true, false, $this->roleRepo->getCollaboratorRole($workspace), $rootDir);
-        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->getVisitorRole($workspace), $rootDir);
-        $this->createDefaultsResourcesRights(false, false, false, false, false, false, false, $this->roleRepo->findOneBy(array ('name' => 'ROLE_ANONYMOUS')), $rootDir);
+        $this->createDefaultsResourcesRights(
+            true, true, true, true, true, true, true,
+            $this->roleRepo->getManagerRole($workspace),
+            $rootDir
+        );
+        $this->createDefaultsResourcesRights(
+            true, false, true, false, false, true, false,
+            $this->roleRepo->getCollaboratorRole($workspace),
+            $rootDir
+        );
+        $this->createDefaultsResourcesRights(
+            false, false, false, false, false, false, false,
+            $this->roleRepo->getVisitorRole($workspace),
+            $rootDir
+        );
+        $this->createDefaultsResourcesRights(
+            false, false, false, false, false, false, false,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $rootDir
+        );
 
         //default workspace rights
-        $this->createDefaultsWorkspaceRights(true, true, true, true, $this->roleRepo->getManagerRole($workspace), $workspace);
-        $this->createDefaultsWorkspaceRights(true, false, false, false, $this->roleRepo->getCollaboratorRole($workspace), $workspace);
-        $this->createDefaultsWorkspaceRights(true, false, false, false, $this->roleRepo->getVisitorRole($workspace), $workspace);
-        $this->createDefaultsWorkspaceRights(false, false, false, false, $this->roleRepo->findOneBy(array ('name' => 'ROLE_ANONYMOUS')), $workspace);
+        $this->createDefaultsWorkspaceRights(
+            true, true, true,
+            $this->roleRepo->getManagerRole($workspace), $workspace
+        );
+        $this->createDefaultsWorkspaceRights(
+            true, false, false,
+            $this->roleRepo->getCollaboratorRole($workspace), $workspace
+        );
+        $this->createDefaultsWorkspaceRights(
+            true, false, false,
+            $this->roleRepo->getVisitorRole($workspace), $workspace
+        );
+        $this->createDefaultsWorkspaceRights(
+            false, false, false,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $workspace
+        );
 
         $manager->addRole($this->roleRepo->getManagerRole($workspace));
-        $this->entityManager->persist( $manager);
+        $this->entityManager->persist($manager);
         $this->entityManager->flush();
-//        $this->entityManager->detach($rootDir);
-        //for some reason, it broke the test suite... and that's all.
-//      $this->entityManager->detach($workspace);
 
         return $workspace;
     }
 
     /**
-     * Creates a ResourceRights entity (will be used as the default one)
+     * Create default permissions for a role and a resource.
      *
      * @param boolean $canView
      * @param boolean $canDelete
@@ -84,10 +119,22 @@ class Creator
      * @param boolean $canCopy
      * @param boolean $canExport
      * @param boolean $canCreate
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
-     * @return ResourceRights
+     * @return \Claroline\CoreBundle\Entity\Rights\ResourceRights
      */
-    private function createDefaultsResourcesRights($canView, $canDelete, $canOpen, $canEdit, $canCopy, $canExport, $canCreate, $role, $resource)
+    private function createDefaultsResourcesRights(
+        $canView,
+        $canDelete,
+        $canOpen,
+        $canEdit,
+        $canCopy,
+        $canExport,
+        $canCreate,
+        Role $role,
+        AbstractResource $resource
+    )
     {
         $resourceRight = new ResourceRights();
 
@@ -100,10 +147,12 @@ class Creator
         $resourceRight->setRole($role);
         $resourceRight->setResource($resource);
 
-        if($canCreate){
-            $resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findBy(array('isVisible' => true));
+        if ($canCreate) {
+            $resourceTypes = $this->entityManager
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findBy(array('isVisible' => true));
 
-            foreach($resourceTypes as $resourceType){
+            foreach ($resourceTypes as $resourceType) {
                 $resourceRight->addResourceType($resourceType);
             }
         }
@@ -113,11 +162,25 @@ class Creator
         return $resourceRight;
     }
 
-    private function createDefaultsWorkspaceRights($canView, $canManage, $canEdit, $canDelete, $role, $workspace)
+    /**
+     * Create default permissions for a role and a workspace.
+     *
+     * @param boolean $canView
+     * @param boolean $canEdit
+     * @param boolean $canDelete
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
+    private function createDefaultsWorkspaceRights(
+        $canView,
+        $canEdit,
+        $canDelete,
+        Role $role,
+        AbstractWorkspace $workspace
+    )
     {
         $workspaceRight = new WorkspaceRights();
         $workspaceRight->setCanView($canView);
-        $workspaceRight->setCanManage($canManage);
         $workspaceRight->setCanEdit($canEdit);
         $workspaceRight->setCanDelete($canDelete);
         $workspaceRight->setRole($role);
@@ -126,19 +189,34 @@ class Creator
         $this->entityManager->persist($workspaceRight);
     }
 
-     private function initBaseRoles($workspace, Configuration $config)
-     {
-         $this->createRole('VISITOR', $workspace, $config->getVisitorTranslationKey());
-         $this->createRole('COLLABORATOR', $workspace, $config->getCollaboratorTranslationKey());
-         $this->createRole('MANAGER', $workspace, $config->getManagerTranslationKey());
+    /**
+     * Creates the base roles of a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     */
+    private function initBaseRoles(AbstractWorkspace $workspace, Configuration $config)
+    {
+        $this->createRole('VISITOR', $workspace, $config->getVisitorTranslationKey());
+        $this->createRole('COLLABORATOR', $workspace, $config->getCollaboratorTranslationKey());
+        $this->createRole('MANAGER', $workspace, $config->getManagerTranslationKey());
 
-         $this->entityManager->flush();
-     }
+        $this->entityManager->flush();
+    }
 
-     private function createRole($baseName, $workspace, $translationKey)
-     {
+    /**
+     * Creates a new role.
+     *
+     * @param string $baseName
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $translationKey
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    private function createRole($baseName, AbstractWorkspace $workspace, $translationKey)
+    {
         $baseRole = new Role();
-        $baseRole->setName('ROLE_WS_'.$baseName.'_'.$workspace->getId());
+        $baseRole->setName('ROLE_WS_' . $baseName . '_' . $workspace->getId());
         $baseRole->setParent(null);
         $baseRole->setRoleType(Role::WS_ROLE);
         $baseRole->setTranslationKey($translationKey);
@@ -146,5 +224,5 @@ class Creator
         $this->entityManager->persist($baseRole);
 
         return $baseRole;
-     }
+    }
 }

@@ -8,9 +8,17 @@ use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Claroline\CoreBundle\Entity\Role;
 
-
 class GroupRepository extends EntityRepository
 {
+    /**
+     * Gets the groups of a workspace.
+     *
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param Role $role
+     *
+     * @return type
+     */
     public function getGroupsOfWorkspace(AbstractWorkspace $workspace, $role = null)
     {
         $dql = "
@@ -22,13 +30,13 @@ class GroupRepository extends EntityRepository
        ";
 
         if ($role != null) {
-            $dql.= "AND wr.id = :roleId";
+            $dql .= "AND wr.id = :roleId";
         }
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
 
-        if ($role != null){
+        if ($role != null) {
             $query->setParameter('roleId', $role->getId());
         }
 
@@ -44,7 +52,9 @@ class GroupRepository extends EntityRepository
             WHERE g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                LEFT JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+                LEFT JOIN gr.roles wr WITH wr IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                )
                 JOIN wr.workspaceRights rights
                 JOIN rights.workspace w
                 WHERE w.id = :id
@@ -74,7 +84,9 @@ class GroupRepository extends EntityRepository
             AND g NOT IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+                JOIN gr.roles wr WITH wr IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                )
                 JOIN wr.workspaceRights rights
                 JOIN rights.workspace w
                 WHERE w.id = :id
@@ -105,7 +117,9 @@ class GroupRepository extends EntityRepository
             AND g IN
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+                JOIN gr.roles wr WITH wr IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                )
                 JOIN wr.workspaceRights rights
                 JOIN rights.workspace w
                 WHERE w.id = :id
@@ -125,6 +139,14 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Returns the groups of the platform according to the limit and the offset
+     *
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
     public function groups($offset, $limit)
     {
         $dql = "
@@ -140,6 +162,15 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Search the groups of the platform according to the limit and the offset
+     *
+     * @param string  $search
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
     public function searchGroups($search, $offset, $limit)
     {
         $search = strtoupper($search);
@@ -166,7 +197,9 @@ class GroupRepository extends EntityRepository
         $dql = "
             SELECT g, wr
             FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles wr WITH wr IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+            LEFT JOIN g.roles wr WITH wr IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+            )
             LEFT JOIN wr.workspaceRights rights
             LEFT JOIN rights.workspace w
             WHERE w.id = :workspaceId
@@ -182,6 +215,14 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Checks if a group is registered in a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     *
+     * @return boolean
+     */
     public function isRegisteredInWorkspace(AbstractWorkspace $workspace, Group $group)
     {
         $dql = "

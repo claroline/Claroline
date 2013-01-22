@@ -15,25 +15,34 @@ class Manager
 
     /**
      * Generate the the configuration of every widget of the current workspace.
-     * If the configuration was never defined before, a temporary one is created (lvl1).
+     * Widgets configuration works as a nested tree.
+     * If the configuration was never defined before, a temporary one is created (lvl1)
+     * with the parameters wich were defined by the admin .
      * Temporaries config have their id set to NULL.
      *
-     * @param type $workspaceId
+     * @param integer $workspaceId
      *
      * @return array
      */
     public function generateWorkspaceDisplayConfig($workspaceId)
     {
-        $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->find($workspaceId);
-        $workspaceConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('workspace' => $workspace)));
-        $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => false)));
+        $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+            ->find($workspaceId);
+        $configRepo = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
+        $workspaceConfigs = $this->setEntitiesArrayKeysAsIds(
+            $configRepo->findBy(array('workspace' => $workspace))
+        );
+        $adminConfigs = $this->setEntitiesArrayKeysAsIds(
+            $configRepo->findBy(array('parent' => null, 'isDesktop' => false))
+        );
 
         return $this->mergeConfigs($adminConfigs, $workspaceConfigs);
     }
 
     /**
-     * Generate the the configuration of every widget of the current user.
+     * Generate the the configuration of every widget of the current user desktop.
      * If the configuration was never defined before, a temporary one is created (lvl1).
+     * with the parameters wich were defined by the admin .
      * Temporaries config have their id set to NULL.
      *
      * @param type $userId
@@ -43,9 +52,13 @@ class Manager
     public function generateDesktopDisplayConfig($userId)
     {
         $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
-
-        $userConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('user' => $user)));
-        $adminConfigs = $this->setEntitiesArrayKeysAsIds($this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findBy(array('parent' => null, 'isDesktop' => true)));
+        $configRepo = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
+        $userConfigs = $this->setEntitiesArrayKeysAsIds(
+            $configRepo->findBy(array('user' => $user))
+        );
+        $adminConfigs = $this->setEntitiesArrayKeysAsIds(
+            $configRepo->findBy(array('parent' => null, 'isDesktop' => true))
+        );
 
         return $this->mergeConfigs($adminConfigs, $userConfigs);
     }
@@ -63,16 +76,14 @@ class Manager
     public function isWorkspaceDefaultConfig($widgetId, $workspaceId)
     {
         $dconfig = $this->getWorkspaceForcedConfig($widgetId, $workspaceId);
-        $bool = true;
-        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
 
-        return $bool;
+        return $dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked();
     }
 
     /**
      * Tells if the default config must be used (ie locked by the admin)
-     * for a user for these parameters:
-     * widgetId & workspaceId
+     * for a user deskop for these parameters:
+     * widgetId & userId
      *
      * @param integer $widgetId
      * @param integer $userId
@@ -82,54 +93,94 @@ class Manager
     public function isDesktopDefaultConfig($widgetId, $userId)
     {
         $dconfig = $this->getDesktopForcedConfig($widgetId, $userId);
-        $bool = true;
-        ($dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked()) ? $bool = true: $bool = false;
 
-        return $bool;
+        return $dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked();
     }
 
+    /**
+     * Gets the config in use for a widget in a workspace. If the admin locked
+     * his choice or no workspace config were defined, the admin one will be returned.
+     *
+     * @param integer $widgetId
+     * @param integer $workspaceId
+     *
+     * @return DisplayConfig
+     */
     private function getWorkspaceForcedConfig($widgetId, $workspaceId)
     {
-        $wsConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('workspace' => $workspaceId, 'widget' => $widgetId));
-        $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => false));
+        $wsConfig = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('workspace' => $workspaceId, 'widget' => $widgetId));
+        $adminConfig = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => false));
 
-        if($wsConfig != null){
-            if($wsConfig->getParent()->isLocked()){
+        if ($wsConfig != null) {
+            if ($wsConfig->getParent()->isLocked()) {
                 return $adminConfig;
-            } else {
-                return $wsConfig;
             }
-        } else {
-            return $adminConfig;
+
+            return $wsConfig;
         }
+
+        return $adminConfig;
     }
 
+    /**
+     * Gets the config in use for a widget in a uyser desktop. If the admin locked
+     * his choice or no desktop config were defined, the admin one will be returned.
+     *
+     * @param integer $widgetId
+     * @param integer $userId
+     *
+     * @return DisplayConfig
+     */
     private function getDesktopForcedConfig($widgetId, $userId)
     {
-        $userConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('user' => $userId, 'widget' => $widgetId));
-        $adminConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => true));
+        $userConfig = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('user' => $userId, 'widget' => $widgetId));
+        $adminConfig = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('parent' => null, 'widget' => $widgetId, 'isDesktop' => true));
 
-        if($userConfig != null){
-            if($userConfig->getParent()->isLocked()){
+        if ($userConfig != null) {
+            if ($userConfig->getParent()->isLocked()) {
                 return $adminConfig;
-            } else {
-                return $userConfig;
             }
-        } else {
-            return $adminConfig;
+
+            return $userConfig;
         }
+
+        return $adminConfig;
     }
 
+    /**
+     * Given a Collection of entities, this method will return an array
+     * of entities whose array keys are the entities ids.
+     *
+     * @param type $array
+     *
+     * @return array
+     */
     private function setEntitiesArrayKeysAsIds($array)
     {
         $tmpArray = array();
-        foreach ($array as $item){
+
+        foreach ($array as $item) {
             $tmpArray[$item->getId()] = $item;
         }
 
         return $tmpArray;
     }
 
+    /**
+     * Generate a child similar to its parent.
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\DisplayConfig
+     */
     private function generateChild($config)
     {
         $childConfig = new DisplayConfig();
@@ -144,6 +195,16 @@ class Manager
         return $childConfig;
     }
 
+    /**
+     * Merge the configs defined by the platform administrator and the configs
+     * defined by a user. If the user didn't specicfy a config, the administrator
+     * one will be copied (in other words, it only returns what should be the lv1 configs).
+     *
+     * @param type $adminConfigs
+     * @param type $childConfigs
+     *
+     * @return array
+     */
     private function mergeConfigs($adminConfigs, $childConfigs)
     {
         foreach ($childConfigs as $childConfig) {

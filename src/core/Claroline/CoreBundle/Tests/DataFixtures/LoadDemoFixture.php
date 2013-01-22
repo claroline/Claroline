@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Activity;
@@ -17,7 +16,6 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 
 class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
@@ -114,7 +112,11 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $accItems[] = $this->createFile('sample.pdf', $dir, $user, 'sample.pdf');
         $accItems[] = $this->loadFixture(new LoadForumData('Forum Docs', $user->getUsername(), 5, 5, $dir));
         $accDir = $this->createDirectory('Activities', $dir, $user);
-        $dir = $this->createDirectory('Images et vidéos', $this->getWorkspaceRoot($user->getPersonalWorkspace()), $user);
+        $dir = $this->createDirectory(
+            'Images et vidéos',
+            $this->getWorkspaceRoot($user->getPersonalWorkspace()),
+            $user
+        );
         $accItems[] = $this->createFile('big_buck_bunny_480.webm', $dir, $user, 'bigbuck.webm');
         $accItems[] = $this->createFile('wallpaper.jpg', $dir, $user, 'wallpaper.jpg');
 
@@ -126,18 +128,20 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $accItems[] = $this->createActivity('Chapitre 1', $accDir, $user, array($accItems[0], $accItems[1]));
         $accItems[] = $this->createActivity('Chapitre 2', $accDir, $user, array($accItems[2], $accItems[3]));
 
-        $this->createActivity('Activité principale', $this->getWorkspaceRoot($activityWs), $user, array(
-            $accItems[4],
-            $accItems[5],
-            $accItems[6],
-            $accItems[7],
-            $accItems[8],
-            $accItems[9]
-        ));
+        $this->createActivity(
+            'Activité principale',
+            $this->getWorkspaceRoot($activityWs),
+            $user,
+            array(
+                $accItems[4],
+                $accItems[5],
+                $accItems[6],
+                $accItems[7],
+                $accItems[8],
+                $accItems[9]
+            )
+        );
     }
-
-
-
 
     private function createWorkspace($name, $user, $code)
     {
@@ -155,20 +159,10 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $filepath = __DIR__."{$ds}DemoFiles{$ds}{$fileName}";
-        $manager = $this->getContainer()->get('claroline.resource.manager');
-        $file = new File();
-        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
-        $size = filesize($filepath);
-        $mimeType = MimeTypeGuesser::getInstance()->guess($filepath);
-        $hashName = $this->getContainer()->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        copy($filepath, "{$this->getContainer()->getParameter('claroline.files.directory')}{$ds}{$hashName}");
-        $file->setSize($size);
-        $file->setName($name);
-        $file->setHashName($hashName);
-        $file->setMimeType($mimeType);
-        $file = $manager->create($file, $parent->getId(), 'file', $user);
+        $fileData = new LoadFileData($name, $parent, $user, $filepath);
+        $this->loadFixture($fileData);
 
-        return $file;
+        return $fileData->getLastFileCreated();
     }
 
     private function createText($name, $parent, $user, $nbWords)
@@ -203,7 +197,8 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     private function getWorkspaceRoot($workspace)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findOneBy(array('workspace' => $workspace, 'parent' => null));
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findOneBy(array('workspace' => $workspace, 'parent' => null));
 
         return $root;
     }
@@ -212,13 +207,19 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     {
         $activity = new Activity();
         $activity->setName($name);
-        $activity->setInstructions($this->getContainer()->get('claroline.utilities.lipsum_generator')->generateLipsum(300));
-        $activity = $this->getContainer()->get('claroline.resource.manager')->create($activity, $parent->getId(), 'activity', $user);
+        $activity->setInstructions(
+            $this->getContainer()
+                ->get('claroline.utilities.lipsum_generator')
+                ->generateLipsum(300)
+        );
+        $activity = $this->getContainer()
+            ->get('claroline.resource.manager')
+            ->create($activity, $parent->getId(), 'activity', $user);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $i = 0;
 
-        foreach($resources as $resource) {
-            if (null != $resource){
+        foreach ($resources as $resource) {
+            if (null != $resource) {
                 $i++;
                 $rs = new ResourceActivity;
                 $rs->setActivity($activity);

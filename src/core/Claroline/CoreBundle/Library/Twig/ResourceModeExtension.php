@@ -6,6 +6,10 @@ use Twig_Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Library\Resource\Mode;
 
+/**
+ * Adds the isPathMode var to the twig Globals. It's used by the
+ * activity player to remove the resource context.s
+ */
 class ResourceModeExtension extends Twig_Extension
 {
     private $generator;

@@ -53,6 +53,7 @@ class ExampleTextListener extends ContainerAware
             //give it back to the event.
             $event->setResource($exampleText);
             $event->stopPropagation();
+
             return;
         }
 
@@ -103,7 +104,9 @@ class ExampleTextListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
         //Redirection to the controller.
-        $route = $this->container->get('router')->generate('claro_exampletext_open', array('exampleTextId' => $event->getResource()->getId()));
+        $route = $this->container
+            ->get('router')
+            ->generate('claro_exampletext_open', array('exampleTextId' => $event->getResource()->getId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }

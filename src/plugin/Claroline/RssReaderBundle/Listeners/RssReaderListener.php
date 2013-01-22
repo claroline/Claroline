@@ -13,11 +13,20 @@ class RssReaderListener extends ContainerAware
 {
     public function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {
-        $repo = $this->container->get('doctrine.orm.entity_manager')->getRepository('Claroline\RssReaderBundle\Entity\Config');
-        $widget = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_rssreader'));
+        $repo = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\RssReaderBundle\Entity\Config');
+        $widget = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneBy(array('name' => 'claroline_rssreader'));
         $rssconfig = $repo->findOneBy(array('workspace' => $event->getWorkspace()->getId()));
 
-        if ($this->container->get('claroline.widget.manager')->isWorkspaceDefaultConfig($widget->getId(), $event->getWorkspace()->getId()) || $rssconfig == null){
+        $isDefaultConfig = $this->container
+            ->get('claroline.widget.manager')
+            ->isWorkspaceDefaultConfig($widget->getId(), $event->getWorkspace()->getId());
+
+        if ($isDefaultConfig || $rssconfig == null) {
             $rssconfig = $repo->findOneBy(array('isDefault' => true, 'isDesktop' => false));
         }
 
@@ -25,6 +34,7 @@ class RssReaderListener extends ContainerAware
         if ($rssconfig == null) {
             $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
             $event->stopPropagation();
+
             return;
         }
 
@@ -35,12 +45,20 @@ class RssReaderListener extends ContainerAware
 
     public function onDesktopDisplay(DisplayWidgetEvent $event)
     {
-        $repo = $this->container->get('doctrine.orm.entity_manager')->getRepository('Claroline\RssReaderBundle\Entity\Config');
+        $repo = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\RssReaderBundle\Entity\Config');
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $widget = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array('name' => 'claroline_rssreader'));
+        $widget = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneBy(array('name' => 'claroline_rssreader'));
         $rssconfig = $repo->findOneBy(array('user' => $user));
+        $isDefaultConfig = $this->container
+            ->get('claroline.widget.manager')
+            ->isDesktopDefaultConfig($widget->getId(), $user->getId());
 
-        if ($this->container->get('claroline.widget.manager')->isDesktopDefaultConfig($widget->getId(), $user->getId()) || $rssconfig == null){
+        if ($isDefaultConfig || $rssconfig == null) {
             $rssconfig = $repo->findOneBy(array('isDefault' => true, 'isDesktop' => true));
         }
 
@@ -48,6 +66,7 @@ class RssReaderListener extends ContainerAware
         if ($rssconfig == null) {
             $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
             $event->stopPropagation();
+
             return;
         }
 
@@ -64,7 +83,7 @@ class RssReaderListener extends ContainerAware
 
         //find the correct config (if it exists)
 
-        if ($workspace != null){
+        if ($workspace != null) {
             $config = $repo->findOneBy(array('workspace' => $workspace->getId()));
             $workspaceId = $workspace->getId();
         } else {
@@ -102,7 +121,7 @@ class RssReaderListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('Claroline\RssReaderBundle\Entity\Config');
 
-        if ($user != null){
+        if ($user != null) {
             $config = $repo->findOneBy(array('user' => $user->getId()));
             $userId = $user->getId();
         } else {
@@ -144,8 +163,8 @@ class RssReaderListener extends ContainerAware
         $items = $flux->exportItems();
 
         foreach ($items as $index => $item) {
-            if(isset($items[$index]['description'])){
-                $items[$index]['description']=  preg_replace('/<[^>]+>/i', '', $item['description']);
+            if (isset($items[$index]['description'])) {
+                $items[$index]['description'] = preg_replace('/<[^>]+>/i', '', $item['description']);
             }
         }
 

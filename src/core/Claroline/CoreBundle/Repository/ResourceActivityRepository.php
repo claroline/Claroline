@@ -3,10 +3,18 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Resource\Activity;
 
 class ResourceActivityRepository extends EntityRepository
 {
-    public function getResourcesActivityForActivity($activity)
+    /**
+     * Returns the actvity that were set in an activity.
+     *
+     * @param Activity $activity
+     *
+     * @return type
+     */
+    public function getResourcesActivityForActivity(Activity $activity)
     {
         $dql = "SELECT ra, r FROM Claroline\CoreBundle\Entity\Resource\ResourceActivity ra
             LEFT JOIN ra.resource r
@@ -15,9 +23,9 @@ class ResourceActivityRepository extends EntityRepository
             ORDER BY ra.sequenceOrder
             ";
 
-       $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-       return $query->getResult();
+        return $query->getResult();
     }
 }
 

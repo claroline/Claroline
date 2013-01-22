@@ -57,11 +57,23 @@ class HistoryBrowserTest extends WebTestCase
 
     public function testBrowserBuildsCompleteContextsAndReturnsThemFromTheNewerToTheOlder()
     {
-        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/1'), $this->session, $this->configHandler);
+        $browser = new HistoryBrowser(
+            $this->getMockedRequest('GET', 'some/uri/1'),
+            $this->session,
+            $this->configHandler
+        );
         $browser->keepCurrentContext('A');
-        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/2'), $this->session, $this->configHandler);
+        $browser = new HistoryBrowser(
+            $this->getMockedRequest('GET', 'some/uri/2'),
+            $this->session,
+            $this->configHandler
+        );
         $browser->keepCurrentContext('B');
-        $browser = new HistoryBrowser($this->getMockedRequest('GET', 'some/uri/3'), $this->session, $this->configHandler);
+        $browser = new HistoryBrowser(
+            $this->getMockedRequest('GET', 'some/uri/3'),
+            $this->session,
+            $this->configHandler
+        );
         $browser->keepCurrentContext('C');
 
         $history = $this->browser->getContextHistory();

@@ -4,18 +4,18 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
-use Claroline\CoreBundle\Form\TextType;
-use Claroline\CoreBundle\Entity\User;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
+ * This is more or less a test because it's hard to keep the diff between 2 html files and doesn't really
+ * work properly for now. It's also untested.
  */
 class TextController extends Controller
 {
+
     /**
-     * found on https://github.com/paulgb/simplediff/blob/5bfe1d2a8f967c7901ace50f04ac2d9308ed3169/simplediff.php
+     * See https://github.com/paulgb/simplediff/blob/5bfe1d2a8f967c7901ace50f04ac2d9308ed3169/simplediff.php
      * Paul's Simple Diff Algorithm v 0.1
      * (C) Paul Butler 2007 <http://www.paulbutler.org/>
      * May be used and distributed under the zlib/libpng license.
@@ -42,7 +42,7 @@ class TextController extends Controller
             $nkeys = array_keys($new, $ovalue);
             foreach ($nkeys as $nindex) {
                 $matrix[$oindex][$nindex] = isset($matrix[$oindex - 1][$nindex - 1]) ?
-                        $matrix[$oindex - 1][$nindex - 1] + 1 : 1;
+                    $matrix[$oindex - 1][$nindex - 1] + 1 : 1;
                 if ($matrix[$oindex][$nindex] > $maxlen) {
                     $maxlen = $matrix[$oindex][$nindex];
                     $omax = $oindex + 1 - $maxlen;
@@ -64,7 +64,7 @@ class TextController extends Controller
     }
 
     /**
-     * wraps the diff between 2 texts with HTML.
+     * Wraps the diff between 2 texts with HTML.
      *
      * @param string $old
      * @param string $new
@@ -79,7 +79,7 @@ class TextController extends Controller
         foreach ($diff as $k) {
             if (is_array($k)) {
                 $ret .= (!empty($k['d']) ? "<b style='color:red'>" . implode(' ', $k['d']) . "</b> " : '') .
-                        (!empty($k['i']) ? "<b style='color:green'>" . implode(' ', $k['i']) . "</b> " : '');
+                    (!empty($k['i']) ? "<b style='color:green'>" . implode(' ', $k['i']) . "</b> " : '');
             } else {
                 $ret .= $k . ' ';
             }
@@ -89,7 +89,7 @@ class TextController extends Controller
     }
 
     /**
-     * Test method
+     * Test method.
      *
      * @param string $txt
      *
@@ -115,7 +115,7 @@ class TextController extends Controller
     }
 
     /**
-     * Test method
+     * Test method.
      *
      * @param string $txt
      *
@@ -141,7 +141,7 @@ class TextController extends Controller
     }
 
     /**
-     * Show the diff between every text verion. This function is a test.
+     * Shows the diff between every text version. This function is a test.
      *
      * @param integer $textId
      *
@@ -162,11 +162,6 @@ class TextController extends Controller
             $i++;
             $old = $revisions[$i]->getContent();
 
-            //$doc = new \DOMDocument();
-            //$doc->loadHTML($new);
-            //$normalized = $doc->loadHTML($new);
-            //var_dump($doc);
-
             $old = $this->tokenize($old);
             $new = $this->tokenize($new);
 
@@ -186,12 +181,36 @@ class TextController extends Controller
         );
     }
 
+    /**
+     * Displays the text edition form.
+     *
+     * @param integer $textId
+     *
+     * @return Response
+     */
     public function editFormAction($textId)
     {
-        $text = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
-        return $this->render('ClarolineCoreBundle:Text:edit.html.twig', array('text' => $text->getLastRevision()->getContent(), 'textId' => $textId, 'workspace' => $text->getWorkspace()));
+        $text = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Text')
+            ->find($textId);
+
+        return $this->render(
+            'ClarolineCoreBundle:Text:edit.html.twig',
+            array(
+                'text' => $text->getLastRevision()->getContent(),
+                'textId' => $textId,
+                'workspace' => $text->getWorkspace()
+            )
+        );
     }
 
+    /**
+     * Handles the text edition form submission.
+     *
+     * @param integer $textId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function editAction($textId)
     {
 

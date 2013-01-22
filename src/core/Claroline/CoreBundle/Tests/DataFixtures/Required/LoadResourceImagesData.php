@@ -6,5 +6,4 @@ use Claroline\CoreBundle\DataFixtures\LoadResourceImagesData as BaseResourceImag
 
 class LoadResourceImagesData extends BaseResourceImagesFixture
 {
-    
 }

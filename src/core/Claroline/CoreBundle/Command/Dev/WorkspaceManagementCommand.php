@@ -19,19 +19,26 @@ class WorkspaceManagementCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:workspace:management')
             ->setDescription('Will register users to the personal workspace of the specified user');
-
-        $this->setDefinition(array(
-            new InputArgument('username', InputArgument::REQUIRED, 'the username'),
-            new InputArgument('count', InputArgument::OPTIONAL, 'the maximum amount of entities added'),
-        ));
-        $this->addOption(
-            'group', 'g', InputOption::VALUE_NONE, "When set to true, the command will register groups"
+        $this->setDefinition(
+            array(
+                new InputArgument('username', InputArgument::REQUIRED, 'the username'),
+                new InputArgument('count', InputArgument::OPTIONAL, 'the maximum amount of entities added'),
+            )
         );
         $this->addOption(
-            'user', 'u', InputOption::VALUE_NONE, "When set to true, the command will register groups"
+            'group',
+            'g',
+            InputOption::VALUE_NONE, "When set to true, the command will register groups"
         );
         $this->addOption(
-            'clean', 'c', InputOption::VALUE_NONE, "When set to true, the command will register groups"
+            'user',
+            'u',
+            InputOption::VALUE_NONE, "When set to true, the command will register groups"
+        );
+        $this->addOption(
+            'clean',
+            'c',
+            InputOption::VALUE_NONE, "When set to true, the command will register groups"
         );
     }
 
@@ -54,7 +61,9 @@ class WorkspaceManagementCommand extends ContainerAwareCommand
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
-            $output, "Enter the {$argumentName}: ", function($argument) {
+            $output,
+            "Enter the {$argumentName}: ",
+            function ($argument) {
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
@@ -78,9 +87,11 @@ class WorkspaceManagementCommand extends ContainerAwareCommand
         $nbUsers = $input->getArgument('count');
         $username = $input->getArgument('username');
         $fixture = new LoadEntitiesInWorkspace($nbUsers, $class, $username);
-        $fixture->setLogger(function ($message) use ($output){
-            $output->writeln($message);
-        });
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);

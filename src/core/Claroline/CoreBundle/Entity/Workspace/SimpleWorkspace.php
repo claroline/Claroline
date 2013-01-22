@@ -42,21 +42,21 @@ class SimpleWorkspace extends AbstractWorkspace
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
-     *      inversedBy="children"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
+     *     inversedBy="children"
      * )
      * @ORM\JoinColumn(
-     *      name="parent_id",
-     *      referencedColumnName="id",
-     *      onDelete="SET NULL"
+     *     name="parent_id",
+     *     referencedColumnName="id",
+     *     onDelete="SET NULL"
      * )
      */
     protected $parent;
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
-     *      mappedBy="parent"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */

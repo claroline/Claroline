@@ -40,6 +40,7 @@ class ForumListener extends ContainerAware
             $forum = $form->getData();
             $event->setResource($forum);
             $event->stopPropagation();
+
             return;
         }
 
@@ -56,14 +57,18 @@ class ForumListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->container->get('router')->generate('claro_forum_open', array('resourceId' => $event->getResource()->getId()));
+        $route = $this->container
+            ->get('router')
+            ->generate('claro_forum_open', array('resourceId' => $event->getResource()->getId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
     public function onAdministrate(PluginOptionsEvent $event)
     {
-        $forumOptions = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
+        $forumOptions = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $form = $this->container->get('form.factory')->create(new ForumOptionsType, $forumOptions[0]);
         $content = $this->container->get('templating')->render(
             'ClarolineForumBundle::plugin_options_form.html.twig', array(

@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This command compiles the bootstrap theme(s) located in "Resources/less/themes".
@@ -52,8 +51,7 @@ class CompileThemesCommand extends ContainerAwareCommand
             }
         }
 
-        foreach ($themesToCompile as $theme)
-        {
+        foreach ($themesToCompile as $theme) {
             $output->writeln("Compiling theme {$theme}...");
 
             // Each theme must include the following files
@@ -90,7 +88,6 @@ class CompileThemesCommand extends ContainerAwareCommand
                 => 'bootstrap-responsive.css'
         );
 
-
         foreach ($preLessFiles as $preLessFile => $targetCssFile) {
             $fp = fopen($preLessFile, 'r');
             $preProcessedContent = '';
@@ -98,9 +95,10 @@ class CompileThemesCommand extends ContainerAwareCommand
             while ($line = fgets($fp)) {
                 // Makes all the @import urls point to the bootstrap package (FrontEndBundle)
                 if (preg_match('#\s*@import\s+"(.+)"\s*;#', $line, $matches)) {
+                    $frontRelativePath = "../../vendor/claroline/front-end-bundle/Claroline/Bundle/FrontEndBundle";
                     $line = str_replace(
                         $matches[1],
-                        "../../vendor/claroline/front-end-bundle/Claroline/Bundle/FrontEndBundle/Resources/public/twitter-bootstrap/less/{$matches[1]}",
+                        "{$frontRelativePath}/Resources/public/twitter-bootstrap/less/{$matches[1]}",
                         $line
                     );
                 }
