@@ -34,7 +34,7 @@ class Plugin
     protected $bundleName;
 
     /**
-     * @ORM\Column(name="has_options")
+     * @ORM\Column(name="has_options", type="boolean")
      */
     protected $hasOptions;
 
