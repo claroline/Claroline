@@ -222,7 +222,6 @@ class ResourceVoter implements VoterInterface
     private function checkMove(AbstractResource $parent, $resources, TokenInterface $token)
     {
         $errors = array();
-
         $rightsCreation = $this->repository
             ->getCreationRights($this->ut->getRoles($token), $parent);
 
@@ -292,7 +291,6 @@ class ResourceVoter implements VoterInterface
     public function checkCopy(AbstractResource $parent, $resources, TokenInterface $token)
     {
         $errors = array();
-
         $rightsCreation = $this->repository
             ->getCreationRights($this->ut->getRoles($token), $parent);
 

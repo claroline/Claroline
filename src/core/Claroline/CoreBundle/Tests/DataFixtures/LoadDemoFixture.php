@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Activity;
@@ -17,7 +16,6 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 
 class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
@@ -156,20 +154,10 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $filepath = __DIR__."{$ds}DemoFiles{$ds}{$fileName}";
-        $manager = $this->getContainer()->get('claroline.resource.manager');
-        $file = new File();
-        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
-        $size = filesize($filepath);
-        $mimeType = MimeTypeGuesser::getInstance()->guess($filepath);
-        $hashName = $this->getContainer()->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        copy($filepath, "{$this->getContainer()->getParameter('claroline.files.directory')}{$ds}{$hashName}");
-        $file->setSize($size);
-        $file->setName($name);
-        $file->setHashName($hashName);
-        $file->setMimeType($mimeType);
-        $file = $manager->create($file, $parent->getId(), 'file', $user);
+        $fileData = new LoadFileData($name, $parent, $user, $filepath);
+        $this->loadFixture($fileData);
 
-        return $file;
+        return $fileData->getLastFileCreated();
     }
 
     private function createText($name, $parent, $user, $nbWords)
