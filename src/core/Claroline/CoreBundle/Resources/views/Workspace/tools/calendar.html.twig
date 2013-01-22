@@ -18,17 +18,20 @@
             <h3 id="myModalLabel"> Nouvelle entrée</h3>
         </div>
         <div class="modal-body">
-            <form method="get" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" name="myForm" {{ form_enctype(form) }}>
+            
+                <button class="btn btn-danger" id="deleteBtn" > delete</button>
+            <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" name="myForm" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
             </form>
             <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
             <a href="{{ path('claro_workspace_agenda_move', {workspaceId: workspace.getId()}) }}" id="move"></a>
-            <input type="submit" value="submit" />
+            <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
+            <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="update"></a>
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button class="btn btn-primary" id="click">Save changes</button>
-        </div>S
+            <button class="btn btn-primary" id="save">Save changes</button>
+        </div>
     </div>
 {% endblock %}
 

@@ -109,8 +109,8 @@ claro_workspace_agenda:
 claro_workspace_agenda_add_event:
   pattern: /{workspaceId}/agenda/add
   defaults: { _controller: ClarolineCoreBundle:Calendar:addEvent }
-  requirements:
-    _method: POST
+#  requirements:
+#    _method: POST
     
 claro_workspace_agenda_show:
   pattern: /{workspaceId}/agenda/show
@@ -121,6 +121,12 @@ claro_workspace_agenda_show:
 claro_workspace_agenda_move:
   pattern: /{workspaceId}/agenda/move
   defaults: { _controller: ClarolineCoreBundle:Calendar:move }
+  requirements:
+    _method: POST
+    
+claro_workspace_agenda_delete:
+  pattern: /{workspaceId}/agenda/delete
+  defaults: { _controller: ClarolineCoreBundle:Calendar:delete }
   requirements:
     _method: POST
 

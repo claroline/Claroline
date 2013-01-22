@@ -51,40 +51,47 @@ Class CalendarController extends Controller
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
         $request = $this->get('request');
-        
+
         if ($request->getMethod() === 'POST') {
             // get the value not send by the built in form  
             $postData = $request->request->all();
             $form->bindRequest($request);
-            
+
             if ($form->isValid()) {
                 $date = explode('(', $postData['date']);
                 $event->setStart(new \DateTime($date[0]));
+
                 // the end date has to be bigger
-                if ($event->getStart() < $event->getEnd()) {
+                if ($event->getStart() <= $event->getEnd()) {
                     $event->setWorkspace($workspace);
                     $event->setUser($this->get('security.context')->getToken()->getUser());
                     $em->persist($event);
                     $em->flush();
-                    $content = array(
-                        'responseCode' => 200,
-                        'greeting' => 'ok',
+                    $data = array(
                         'title' => $event->getTitle(),
                         'start' => date('Y-m-d', $event->getStart()),
                         'end' => date('Y-m-d', $event->getEnd())
                     );
+
+                    return new Response(json_encode($data),
+                        200,
+                        array('Content-Type' => 'application/json')
+                    );
                 } else {
-                    $content = array('responseCode' => 400, 'greeting' => ' start date is bigger than end date ');
+                    return new Response(
+                        json_encode(array('greeting' => ' start date is bigger than end date ')),
+                        400,
+                        array('Content-Type' => 'application/json')
+                    );
                 }
             } else {
-                $content = array('responseCode' => 400, 'greeting' => 'not valid');
+                return new Response(
+                    json_encode(array('greeting' => 'error occured ')),
+                    500,
+                    array('Content-Type' => 'application/json')
+                );
             }
         }
-        else {
-            $content = array('responseCode' => 400, 'greeting' => 'no post');
-        }
-        
-        return new Response(json_encode($content), 200, array('Content-Type' => 'application/json'));
     }
 
     public function showAction($workspaceId)
@@ -94,7 +101,7 @@ Class CalendarController extends Controller
         $this->checkUserIsAllowed('VIEW', $workspace);
         $listEvents = $workspace->getEvents();
         $data = array();
-        
+
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
@@ -103,7 +110,7 @@ Class CalendarController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar_json.html.twig',
+            'ClarolineCoreBundle:Workspace:tools/calendar_json.html.twig', 
             array('data' => utf8_encode(json_encode($data)))
         );
     }
@@ -128,8 +135,27 @@ Class CalendarController extends Controller
         $em->flush();
 
         return new Response(
-            json_encode(array('responseCode' => 200, 'greeting' => 'ok')), 
-            200, 
+            json_encode(array('greeting' => 'move')),
+            200,
+            array('Content-Type' => 'application/json')
+        );
+    }
+
+    public function deleteAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('EDIT', $workspace);
+        $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
+        $request = $this->get('request');
+        $postData = $request->request->all();
+        $event = $repository->find($postData['id']);
+        $em->remove($event);
+        $em->flush();
+
+        return new Response(
+            json_encode(array('greeting' => 'delete')),
+            200,
             array('Content-Type' => 'application/json')
         );
     }
