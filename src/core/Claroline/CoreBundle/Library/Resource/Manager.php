@@ -264,7 +264,9 @@ class Manager
 
     /**
      * Copy the resource rights from $old to $resource.
-     *
+     * Warning: workspace & cie.
+     * //Recursive !
+     * 
      * @param AbstractResource $old
      * @param AbstractResource $resource
      */
@@ -279,6 +281,7 @@ class Manager
             $rs->setRole($resourceRight->getRole());
             $rs->setResource($resource);
             $rs->setRights($resourceRight->getRights());
+            $rs->setWorkspace(($resourceRight->getWorkspace()));
             //creation rights
             $resourceTypes = $resourceRight->getResourceTypes();
 

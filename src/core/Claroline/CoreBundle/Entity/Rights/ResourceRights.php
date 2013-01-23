@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -24,7 +25,7 @@ class ResourceRights
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="resourcesRights"
+     *     inversedBy="resourceRights"
      * )
      */
     private $role;
@@ -36,6 +37,13 @@ class ResourceRights
      * )
      */
     private $resource;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", cascade={"persist"}
+     * )
+     */
+    private $workspace;
 
     /**
      * @ORM\Column(type="boolean", name="can_delete")
@@ -235,5 +243,15 @@ class ResourceRights
     public function cleanResourceTypes()
     {
         $this->resourceTypes = new ArrayCollection();
+    }
+
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 }

@@ -101,11 +101,12 @@ class ResourceController extends Controller
         //If it's a link, the resource will be its target.
         $resource = $this->getResource($resource);
         $this->checkAccess('OPEN', $collection);
-
+        $resource = $this->getResource($resource);
         $event = new OpenResourceEvent($resource);
         $eventName = $this->get('claroline.resource.utilities')
             ->normalizeEventName('open', $resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $resource = $this->getResource($resource);
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
@@ -113,6 +114,7 @@ class ResourceController extends Controller
             );
         }
 
+        $resource = $this->getResource($resource);
         $logEvent = new ResourceLogEvent($resource, 'open');
         $this->get('event_dispatcher')->dispatch('log_resource', $logEvent);
 
@@ -463,6 +465,8 @@ class ResourceController extends Controller
             }
 
             $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
+//            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $resource);
+
             $em->persist($shortcut);
             $em->flush();
             $em->refresh($parent);

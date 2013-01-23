@@ -53,6 +53,7 @@ find_workspaces: Find workspaces
 first_name: First name
 form_role: Role
 from: From
+general: General
 group: Group
 group_form_name: Name
 group_form_ownedRoles: Roles
@@ -115,6 +116,7 @@ parameters: Parameters
 password: Password
 paste: Paste
 path: Path
+permissions: Permissions
 personal_workspace: Personal workspace
 phone: Phone
 platform_parameters: Platform parameters

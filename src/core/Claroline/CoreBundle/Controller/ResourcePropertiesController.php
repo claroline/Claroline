@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
@@ -81,7 +82,7 @@ class ResourcePropertiesController extends Controller
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
-        $this->checkAccess('EDIT', $collection);
+//        $this->checkAccess('EDIT', $collection);
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
@@ -104,7 +105,11 @@ class ResourcePropertiesController extends Controller
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
-        $this->checkAccess('EDIT', $collection);
+
+        if (!$this->get('security.context')->getToken()->getUser() === $resource->getCreator()) {
+             throw new AccessDeniedException("You're not the owner of this resource");
+        }
+
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
         $form->bindRequest($request);
 

@@ -66,22 +66,33 @@ class Creator
         $this->createDefaultsResourcesRights(
             true, true, true, true, true, true,
             $this->roleRepo->getManagerRole($workspace),
-            $rootDir
+            $rootDir,
+            $workspace
         );
         $this->createDefaultsResourcesRights(
             false, true, false, false, true, false,
             $this->roleRepo->getCollaboratorRole($workspace),
-            $rootDir
+            $rootDir,
+            $workspace
         );
         $this->createDefaultsResourcesRights(
             false, false, false, false, false, false,
             $this->roleRepo->getVisitorRole($workspace),
-            $rootDir
+            $rootDir,
+            $workspace
         );
         $this->createDefaultsResourcesRights(
             false, false, false, false, false, false,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $rootDir
+            $rootDir,
+            $workspace
+        );
+
+        $this->createDefaultsResourcesRights(
+            true, true, true, true, true, true,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            $rootDir,
+            $workspace
         );
 
         //default workspace rights
@@ -132,11 +143,11 @@ class Creator
         $canExport,
         $canCreate,
         Role $role,
-        AbstractResource $resource
+        AbstractResource $resource,
+        AbstractWorkspace $workspace
     )
     {
         $resourceRight = new ResourceRights();
-
         $resourceRight->setCanCopy($canCopy);
         $resourceRight->setCanDelete($canDelete);
         $resourceRight->setCanEdit($canEdit);
@@ -144,6 +155,7 @@ class Creator
         $resourceRight->setCanExport($canExport);
         $resourceRight->setRole($role);
         $resourceRight->setResource($resource);
+        $resourceRight->setWorkspace($workspace);
 
         if ($canCreate) {
             $resourceTypes = $this->entityManager
