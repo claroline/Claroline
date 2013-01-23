@@ -434,7 +434,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_message');
         $this->addId($table);
         $table->addColumn('object', 'string');
-        $table->addColumn('content', 'string', array('1000'));
+        $table->addColumn('content', 'string', array('length' => 1023));
         $table->addColumn('date', 'datetime');
         $table->addColumn('user_id', 'integer');
         $table->addColumn('is_removed', 'boolean');
@@ -652,7 +652,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_activity');
         $this->addId($table);
-        $table->addColumn('instruction', 'string');
+        $table->addColumn('instruction', 'string', array('length' => 2055));
         $table->addColumn('date_beginning', 'datetime', array('notnull' => false));
         $table->addColumn('date_end', 'datetime', array('notnull' => false));
 

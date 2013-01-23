@@ -211,7 +211,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $activity->setInstructions(
             $this->getContainer()
                 ->get('claroline.utilities.lipsum_generator')
-                ->generateLipsum(300)
+                ->generateLipsum(100)
         );
         $activity = $this->getContainer()
             ->get('claroline.resource.manager')
