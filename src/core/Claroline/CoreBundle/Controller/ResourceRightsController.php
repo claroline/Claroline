@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ResourceRightsController extends Controller
 {
@@ -26,7 +27,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findBy(array('resource' => $resource));
-
+        
         if ($resource->getResourceType()->getName() == 'directory') {
             return $this->render(
                 'ClarolineCoreBundle:Resource:rights_form_directory.html.twig',
@@ -168,7 +169,6 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $parameters = $this->get('request')->request->all();
-        var_dump($parameters);
 
         if (isset($parameters['isRecursive'])) {
             $isRecursive = true;
@@ -207,7 +207,7 @@ class ResourceRightsController extends Controller
                     if ($key !== null) {
                         $config->setRights($checks[$key]);
                     }
-                    
+
                     $em->persist($config);
                 }
             }

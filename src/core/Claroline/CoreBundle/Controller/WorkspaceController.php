@@ -365,7 +365,7 @@ class WorkspaceController extends Controller
                             ->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
                         $resourceRight = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
                             ->findOneBy(array('resource' => $root, 'role' => $role));
-                        $resourceRight->setCanView(true);
+                        $resourceRight->setCanOpen(true);
                         $em->persist($resourceRight);
                     }
                 }

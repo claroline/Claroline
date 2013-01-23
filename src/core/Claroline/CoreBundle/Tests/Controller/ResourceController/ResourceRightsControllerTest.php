@@ -33,7 +33,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $file = $this->uploadFile($this->pwr, 'file');
         $crawler = $this->client->request('GET', "/resource/{$file->getId()}/rights/form");
-        $this->assertEquals(4, count($crawler->filter('.row-rights')));
+        $this->assertEquals(5, count($crawler->filter('.row-rights')));
     }
 
     public function testSubmitRightsForm()
@@ -43,7 +43,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $resourceRights = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findBy(array('resource' => $file));
-        $this->assertEquals(4, count($resourceRights));
+        $this->assertEquals(5, count($resourceRights));
 
         //changes keep the 1st $resourceRight and change the others
 
@@ -62,7 +62,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
             ->findBy(array('resource' => $file));
-        $this->assertEquals(4, count($resourceRights));
+        $this->assertEquals(5, count($resourceRights));
         $this->assertTrue(
             $resourceRights[0]->isEquals(
                 array(
