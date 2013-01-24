@@ -41,7 +41,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $file = $this->uploadFile($this->pwr, 'file');
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $resourceRights = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findBy(array('resource' => $file));
         $this->assertEquals(5, count($resourceRights));
 
@@ -60,7 +60,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $resourceRights = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findBy(array('resource' => $file));
         $this->assertEquals(5, count($resourceRights));
         $this->assertTrue(
@@ -160,7 +160,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findOneBy(array('resource' => $dir->getId(), 'role' => $collaboratorRole));
 
         $permCreate = $config->getResourceTypes();
@@ -181,7 +181,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findOneBy(array('resource' => $dir->getId(), 'role' => $collaboratorRole));
 
         $permCreate = $config->getResourceTypes();

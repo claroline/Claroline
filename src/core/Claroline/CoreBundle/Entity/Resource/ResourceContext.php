@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Rights;
+namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
@@ -10,10 +10,10 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceContextRepository")
  * @ORM\Table(name="claro_resource_rights")
  */
-class ResourceRights
+class ResourceContext
 {
     /**
      * @ORM\Id
@@ -25,7 +25,7 @@ class ResourceRights
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="resourceRights"
+     *     inversedBy="resourceContext"
      * )
      */
     private $role;

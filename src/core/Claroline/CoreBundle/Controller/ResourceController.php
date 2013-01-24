@@ -323,7 +323,7 @@ class ResourceController extends Controller
             $path = $resourceRepo->listAncestors($directory);
             $resources = $resourceRepo->children($directory->getId(), $currentRoles, 0, true);
 
-            $creationRights = $em->getRepository('Claroline\CoreBundle\Entity\Rights\ResourceRights')
+            $creationRights = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceContext')
                 ->getCreationRights($currentRoles, $directory);
 
             if (count($creationRights) != 0) {

@@ -363,7 +363,7 @@ class WorkspaceController extends Controller
                             ->getRootForWorkspace($ws);
                         $role = $em->getRepository('ClarolineCoreBundle:Role')
                             ->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
                             ->findOneBy(array('resource' => $root, 'role' => $role));
                         $resourceRight->setCanOpen(true);
                         $em->persist($resourceRight);
