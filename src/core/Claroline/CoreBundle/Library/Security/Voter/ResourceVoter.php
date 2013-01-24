@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Rights\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceContext;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\EntityManager;
 
@@ -21,14 +21,22 @@ class ResourceVoter implements VoterInterface
     private $translator;
     private $validAttributes;
     private $ut;
+    private $fromResourceRightsToOwnerRights;
 
     public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights');
+        $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext');
         $this->translator = $translator;
         $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
         $this->ut = $ut;
+        $this->fromResourceRightsToOwnerRights = array(
+            'DELETE' => 'isDeletable',
+            'EDIT' => 'isEditable',
+            'COPY' => 'isCopiable',
+            'EXPORT' => 'isExportable',
+            'OPEN' => 'isSharable'
+        );
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -117,7 +125,7 @@ class ResourceVoter implements VoterInterface
         $errors = array();
         $call = "can" . ucfirst(strtolower($action));
         $action = strtoupper($action);
-        $rr = new ResourceRights;
+        $rr = new ResourceContext;
 
         if (method_exists($rr, $call)) {
             foreach ($resources as $resource) {
@@ -135,15 +143,7 @@ class ResourceVoter implements VoterInterface
                         );
                 } else {
                     if (!$this->canDo($resource, $token, $action)) {
-                        $errors[] = $this->translator
-                            ->trans(
-                                'resource_action_denied_message',
-                                array(
-                                    '%path%' => $resource->getPathForDisplay(),
-                                    '%action%' => $action
-                                    ),
-                                'platform'
-                            );
+                        $errors[] = $this->getRoleActionDeniedMessage($action, $resource->getPathForDisplay());
                     }
                 }
             }
@@ -163,8 +163,14 @@ class ResourceVoter implements VoterInterface
      */
     private function canDo(AbstractResource $resource, TokenInterface $token, $action)
     {
+        $method = $this->fromResourceRightsToOwnerRights[$action];
+
+        if (!$resource->$method()) {
+            return false;
+        }
+
         $rights = $this->em
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->getRights($this->ut->getRoles($token), $resource);
         $permission = 'can'.ucfirst(strtolower($action));
 
@@ -263,26 +269,11 @@ class ResourceVoter implements VoterInterface
                 $rights = $this->repository->getRights($this->ut->getRoles($token), $resource);
 
                 if (!$rights['canCopy']) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_action_denied_message',
-                            array(
-                                '%path%' => $resource->getPathForDisplay(),
-                                '%action%' => 'COPY'),
-                            'platform'
-                        );
+                    $errors[] = $this->getRoleActionDeniedMessage('COPY', $resource->getPathForDisplay());
                 }
 
                 if (!$rights['canDelete']) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_action_denied_message',
-                            array(
-                                '%path%' => $resource->getPathForDisplay(),
-                                '%action%' => 'DELETE'
-                                ),
-                            'platform'
-                        );
+                    $errors[] = $this->getRoleActionDeniedMessage('DELETE', $resource->getPathForDisplay());
                 }
             }
         }
@@ -334,5 +325,18 @@ class ResourceVoter implements VoterInterface
         }
 
         return $errors;
+    }
+
+    public function getRoleActionDeniedMessage($action, $path)
+    {
+        return $this->translator
+            ->trans(
+                'resource_action_denied_message',
+                array(
+                    '%path%' => $path,
+                    '%action%' => $action
+                    ),
+                'platform'
+        );
     }
 }

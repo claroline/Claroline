@@ -55,7 +55,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $dir = $this->createDirectory($this->pwr, 'testDir');
         $crawler = $this->client->request('GET', "/resource/properties/form/{$dir->getId()}");
-        $form = $crawler->filter('#resource_properties_form');
+        $form = $crawler->filter('#resource-properties-form');
         $this->assertEquals(count($form), 1);
     }
 

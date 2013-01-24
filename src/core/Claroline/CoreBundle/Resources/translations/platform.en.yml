@@ -53,6 +53,7 @@ find_workspaces: Find workspaces
 first_name: First name
 form_role: Role
 from: From
+general: General
 group: Group
 group_form_name: Name
 group_form_ownedRoles: Roles
@@ -115,6 +116,7 @@ parameters: Parameters
 password: Password
 paste: Paste
 path: Path
+permissions: Permissions
 personal_workspace: Personal workspace
 phone: Phone
 platform_parameters: Platform parameters
@@ -155,10 +157,14 @@ resource_properties_form_resourceType: Resource type
 resource_properties_form_creator: Creator
 resource_properties_form_shareType: Redistribution
 resource_properties_form_name: Nom
-resource_properties_form_userIcon: Icône
+resource_properties_form_userIcon: Icon
 resource_properties_form_shareType: Share type
 resource_properties_form_name: Name
-resource_properties_form_userIcon: Icon
+resource_properties_form_sharable: Share this resource
+resource_properties_form_editable: Edit
+resource_properties_form_deletable: Delete
+resource_properties_form_exportable: Export
+resource_properties_form_copiable: Copy
 resources: Resources
 resources_rights: Resources rights
 resources_rights_form_canView: See

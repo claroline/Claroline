@@ -1,18 +1,19 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Rights;
+namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceContextRepository")
  * @ORM\Table(name="claro_resource_rights")
  */
-class ResourceRights
+class ResourceContext
 {
     /**
      * @ORM\Id
@@ -24,7 +25,7 @@ class ResourceRights
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="resourcesRights"
+     *     inversedBy="resourceContext"
      * )
      */
     private $role;
@@ -38,9 +39,11 @@ class ResourceRights
     private $resource;
 
     /**
-     * @ORM\Column(type="boolean", name="can_see")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", cascade={"persist"}
+     * )
      */
-    protected $canView;
+    private $workspace;
 
     /**
      * @ORM\Column(type="boolean", name="can_delete")
@@ -114,16 +117,6 @@ class ResourceRights
         $this->resource = $resource;
     }
 
-    public function canView()
-    {
-        return $this->canView;
-    }
-
-    public function setCanView($canView)
-    {
-        $this->canView = $canView;
-    }
-
     public function canDelete()
     {
         return $this->canDelete;
@@ -183,7 +176,6 @@ class ResourceRights
         $this->canDelete = false;
         $this->canEdit = false;
         $this->canOpen = false;
-        $this->canView = false;
         $this->canExport = false;
     }
 
@@ -217,7 +209,6 @@ class ResourceRights
             'canDelete' => $this->canDelete,
             'canEdit' => $this->canEdit,
             'canOpen' => $this->canOpen,
-            'canView' => $this->canView,
             'canExport' => $this->canExport
         );
     }
@@ -252,5 +243,15 @@ class ResourceRights
     public function cleanResourceTypes()
     {
         $this->resourceTypes = new ArrayCollection();
+    }
+
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 }

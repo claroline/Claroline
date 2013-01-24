@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ResourceRightsController extends Controller
 {
@@ -24,9 +25,9 @@ class ResourceRightsController extends Controller
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
-        $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $configs = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findBy(array('resource' => $resource));
-
+        
         if ($resource->getResourceType()->getName() == 'directory') {
             return $this->render(
                 'ClarolineCoreBundle:Resource:rights_form_directory.html.twig',
@@ -60,7 +61,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $role = $em->getRepository('ClarolineCoreBundle:Role')
             ->find($roleId);
-        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findOneBy(array('resource' => $resourceId, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
@@ -178,15 +179,16 @@ class ResourceRightsController extends Controller
 
         $checks = $this->get('claroline.security.utilities')
             ->setRightsRequest($parameters, 'resource');
-        $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $configs = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findBy(array('resource' => $resource));
 
         foreach ($configs as $config) {
+            $config->reset();
+
             if (isset($checks[$config->getId()])) {
                 $config->setRights($checks[$config->getId()]);
-            } else {
-                $config->reset();
             }
+
             $em->persist($config);
         }
 
@@ -195,16 +197,15 @@ class ResourceRightsController extends Controller
                 ->getDescendant($resource);
 
             foreach ($resources as $resource) {
-                $configs = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+                $configs = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
                     ->findBy(array('resource' => $resource));
 
                 foreach ($configs as $config) {
                     $key = $this->findKeyForConfig($checks, $config);
+                    $config->reset();
 
                     if ($key !== null) {
                         $config->setRights($checks[$key]);
-                    } else {
-                        $config->reset();
                     }
 
                     $em->persist($config);
@@ -233,7 +234,7 @@ class ResourceRightsController extends Controller
         $keys = array_keys($checks);
         foreach ($keys as $key) {
             $baseConfig = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
                 ->find($key);
             $role = $baseConfig->getRole();
 
@@ -255,7 +256,7 @@ class ResourceRightsController extends Controller
     private function setCreationPermissionForResource($resourceId, $resourceTypesIds, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
 
@@ -276,7 +277,7 @@ class ResourceRightsController extends Controller
     private function resetCreationPermissionForResource($resourceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+        $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findOneBy(array('resource' => $resourceId, 'role' => $roleId));
         $config->cleanResourceTypes();
         $em->persist($config);
