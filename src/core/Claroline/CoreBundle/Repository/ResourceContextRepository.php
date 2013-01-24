@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
-class ResourceRightsRepository extends EntityRepository
+class ResourceContextRepository extends EntityRepository
 {
     /**
      * Used by the ResourceVoter.
@@ -13,7 +13,7 @@ class ResourceRightsRepository extends EntityRepository
      * @param type array $rights
      * @param type AbstractResource $resource
      *
-     * @return ResourceRights;
+     * @return ResourceContext;
      */
     public function getRights($roles, AbstractResource $resource)
     {
@@ -25,14 +25,13 @@ class ResourceRightsRepository extends EntityRepository
 
         $dql = "
             SELECT
-                MAX (rrw.canView) as canView,
                 MAX (rrw.canEdit) as canEdit,
                 MAX (rrw.canOpen) as canOpen,
                 MAX (rrw.canDelete) as canDelete,
                 MAX (rrw.canCopy) as canCopy,
                 MAX (rrw.canExport) as canExport
 
-            FROM Claroline\CoreBundle\Entity\Rights\ResourceRights rrw
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceContext rrw
             JOIN rrw.role role
             JOIN rrw.resource resource
             WHERE  ";

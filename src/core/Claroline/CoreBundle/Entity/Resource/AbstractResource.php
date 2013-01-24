@@ -157,7 +157,7 @@ abstract class AbstractResource
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceContext",
      *     mappedBy="resource"
      * )
      */
@@ -168,11 +168,52 @@ abstract class AbstractResource
     protected $userIcon;
 
     /**
+     * @ORM\Column(type="boolean", name="is_sharable")
+     */
+    protected $sharable;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_deletable")
+     */
+    protected $deletable;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_exportable")
+     */
+    protected $exportable;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_copiable")
+     */
+    protected $copiable;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_editable")
+     */
+    protected $editable;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType"
+     * )
+     * @ORM\JoinTable(
+     *     name="claro_resource_owner_creation_rights",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $resourceTypesCreationRights;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->resourceInstances = new ArrayCollection();
+        $this->resourceTypesCreationRights = new ArrayCollection();
     }
 
     /**
@@ -449,5 +490,88 @@ abstract class AbstractResource
     public function getRights()
     {
         return $this->rights;
+    }
+
+    public function setSharable($boolean)
+    {
+        $this->sharable = $boolean;
+    }
+
+    public function isSharable()
+    {
+        return $this->sharable;
+    }
+
+    public function setEditable($boolean)
+    {
+        $this->editable = $boolean;
+    }
+
+    public function isEditable()
+    {
+        return $this->editable;
+    }
+
+    public function setDeletable($boolean)
+    {
+        $this->deletable = $boolean;
+    }
+
+    public function isDeletable()
+    {
+        return $this->deletable;
+    }
+
+    public function setCopiable($boolean)
+    {
+        $this->copiable = $boolean;
+    }
+
+    public function isCopiable()
+    {
+        return $this->copiable;
+    }
+
+    public function setExportable($boolean)
+    {
+        $this->exportable = $boolean;
+    }
+
+    public function isExportable()
+    {
+        return $this->exportable;
+    }
+
+    public function getOwnerRights()
+    {
+        return array(
+            'sharable' => $this->sharable,
+            'editable' => $this->editable,
+            'exportable' => $this->exportable,
+            'copiable' => $this->copiable,
+            'deletable' => $this->deletable
+        );
+    }
+
+    public function setOwnerRights($rights)
+    {
+        foreach ($rights as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    public function getResourceCreationRights()
+    {
+        return $this->resourceTypesCreationRights;
+    }
+
+    public function addResourceTypeCreation(ResourceType $resourceType)
+    {
+        $this->resourceTypesCreationRights->add($resourceType);
+    }
+
+    public function removeResourceTypeCreation(ResourceType $resourceType)
+    {
+        $this->resourceTypesCreationRights->removeElement($resourceType);
     }
 }
