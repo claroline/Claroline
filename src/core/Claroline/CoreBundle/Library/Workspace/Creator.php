@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Rights\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceContext;
 use Claroline\CoreBundle\Entity\Rights\WorkspaceRights;
 
 class Creator
@@ -133,7 +133,7 @@ class Creator
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
-     * @return \Claroline\CoreBundle\Entity\Rights\ResourceRights
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceContext
      */
     private function createDefaultsResourcesRights(
         $canDelete,
@@ -147,15 +147,15 @@ class Creator
         AbstractWorkspace $workspace
     )
     {
-        $resourceRight = new ResourceRights();
-        $resourceRight->setCanCopy($canCopy);
-        $resourceRight->setCanDelete($canDelete);
-        $resourceRight->setCanEdit($canEdit);
-        $resourceRight->setCanOpen($canOpen);
-        $resourceRight->setCanExport($canExport);
-        $resourceRight->setRole($role);
-        $resourceRight->setResource($resource);
-        $resourceRight->setWorkspace($workspace);
+        $resourceContext = new ResourceContext();
+        $resourceContext->setCanCopy($canCopy);
+        $resourceContext->setCanDelete($canDelete);
+        $resourceContext->setCanEdit($canEdit);
+        $resourceContext->setCanOpen($canOpen);
+        $resourceContext->setCanExport($canExport);
+        $resourceContext->setRole($role);
+        $resourceContext->setResource($resource);
+        $resourceContext->setWorkspace($workspace);
 
         if ($canCreate) {
             $resourceTypes = $this->entityManager
@@ -163,13 +163,13 @@ class Creator
                 ->findBy(array('isVisible' => true));
 
             foreach ($resourceTypes as $resourceType) {
-                $resourceRight->addResourceType($resourceType);
+                $resourceContext->addResourceType($resourceType);
             }
         }
 
-        $this->entityManager->persist($resourceRight);
+        $this->entityManager->persist($resourceContext);
 
-        return $resourceRight;
+        return $resourceContext;
     }
 
     /**
