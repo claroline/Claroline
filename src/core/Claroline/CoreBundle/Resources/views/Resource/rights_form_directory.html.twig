@@ -3,24 +3,53 @@
     <table class="table table-striped table-bordered table-condensed">
         <tr>
             <th>{{ 'role'|trans({}, 'platform') }}</th>
-            <th>{{ 'see'|trans({}, 'platform') }}</th>
             <th>{{ 'delete'|trans({}, 'platform') }}</th>
             <th>{{ 'open'|trans({}, 'platform') }}</th>
             <th>{{ 'edit'|trans({}, 'platform') }}</th>
             <th>{{ 'copy'|trans({}, 'platform') }}</th>
-            <th>{{ 'create'|trans({}, 'platform') }}</th>
             <th>{{ 'export'|trans({}, 'platform') }}</th>
+            <th>{{ 'create'|trans({}, 'platform') }}</th>
         </tr>
         {% for config in configs %}
         <tr class="row-rights">
             <td>{{ config.getRole().getTranslationKey()|trans({}, 'platform') }}</td>
-            <td><input name="canView-{{ config.getId() }}" id="can-see-{{ config.getId() }}" type="checkbox" value="1" {% if config.canView() %} checked {% endif %}></td>
-            <td><input name="canDelete-{{ config.getId() }}" id="can-delete-{{ config.getId() }}" type="checkbox" value="1" {% if config.canDelete() %} checked {% endif %}></td>
-            <td><input name="canOpen-{{ config.getId() }}" id="can-open-{{ config.getId() }}" type="checkbox" value="1" {% if config.canOpen() %} checked {% endif %}></td>
-            <td><input name="canEdit-{{ config.getId() }}" id="can-edit-{{ config.getId() }}" type="checkbox" value="1" {% if config.canEdit() %} checked {% endif %}></td>
-            <td><input name="canCopy-{{ config.getId() }}" id="can-copy-{{ config.getId() }}" type="checkbox" value="1" {% if config.canCopy() %} checked {% endif %}></td>
+            <td><input name="canDelete-{{ config.getId() }}" id="can-delete-{{ config.getId() }}" type="checkbox" value="1"
+                {% if (config.canDelete()) and (resource.isDeletable()) %} checked
+                {% else %}
+                    {% if resource.isDeletable == false %}
+                       disabled
+                    {% endif %}
+                {% endif %}>
+            </td>
+            <td><input name="canOpen-{{ config.getId() }}" id="can-open-{{ config.getId() }}" type="checkbox" value="1"
+                {% if config.canOpen() %} checked
+                {% endif %}
+            </td>
+            <td><input name="canEdit-{{ config.getId() }}" id="can-edit-{{ config.getId() }}" type="checkbox" value="1"
+                {% if (config.canEdit()) and (resource.isEditable()) %} checked
+                {% else %}
+                    {% if resource.isEditable() == false %}
+                       disabled
+                    {% endif %}
+                {% endif %}>
+            </td>
+            <td><input name="canCopy-{{ config.getId() }}" id="can-copy-{{ config.getId() }}" type="checkbox" value="1"
+                {% if config.canCopy() and (resource.isCopiable()) %} checked
+                {% else %}
+                    {% if resource.isCopiable() == false %}
+                       disabled
+                    {% endif %}
+                {% endif %}>
+            </td>
+            <td><input name="canExport-{{ config.getId() }}" id="can-export-{{ config.getId() }}" type="checkbox" value="1"
+                {% if config.canExport() and (resource.isExportable()) %} checked
+                {% else %}
+                    {% if resource.isExportable() == false %}
+                       disabled
+                    {% endif %}
+                {% endif %}>
+            </td>
             <td><a data-resource-id="{{ resource.getId() }}" href="{{ path('claro_resource_right_creation_form', {'resourceId': resource.getId(), 'roleId': config.getRole().getId() }) }}"> {{ 'options'|trans({}, 'platform') }}</a></td>
-            <td><input name="canExport-{{ config.getId() }}" id="can-export-{{ config.getId() }}" type="checkbox" value="1" {% if config.canExport() %} checked {% endif %}></td>
         </tr>
         {% endfor %}
     </table>

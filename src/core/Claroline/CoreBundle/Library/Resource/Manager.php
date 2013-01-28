@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException  ;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Rights\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceContext;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
@@ -115,7 +115,6 @@ class Manager
         foreach ($rights as $right) {
             $this->em->remove($right);
         }
-
         try {
             $this->em->flush();
             $this->setResourceRights($parent, $child);
@@ -183,6 +182,7 @@ class Manager
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
+            $this->setResourceRights($parent, $copy);
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -199,7 +199,6 @@ class Manager
         }
 
         $this->em->persist($copy);
-        $this->setResourceRights($parent, $copy);
         $this->em->flush();
 
         return $copy;
@@ -265,33 +264,45 @@ class Manager
 
     /**
      * Copy the resource rights from $old to $resource.
+     * Warning: workspace & cie.
+     * //Recursive !
      *
      * @param AbstractResource $old
      * @param AbstractResource $resource
      */
-    public function setResourceRights($old, $resource)
+    public function setResourceRights(AbstractResource $old, AbstractResource $resource)
     {
         $resourceRights = $this->em
-            ->getRepository('ClarolineCoreBundle:Rights\ResourceRights')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findBy(array('resource' => $old));
 
         foreach ($resourceRights as $resourceRight) {
-            $rs = new ResourceRights();
-            $rs->setRole($resourceRight->getRole());
-            $rs->setResource($resource);
-            $rs->setRights($resourceRight->getRights());
+            $rc = new ResourceContext();
+            $rc->setRole($resourceRight->getRole());
+            $rc->setResource($resource);
+            $rc->setRights($resourceRight->getRights());
+            $rc->setWorkspace(($resourceRight->getWorkspace()));
             //creation rights
             $resourceTypes = $resourceRight->getResourceTypes();
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resourceTypes as $resourceType) {
-                    $rs->addResourceType($resourceType);
+                    $rc->addResourceType($resourceType);
+                }
+
+                $ownerCreationRights = $resource->getResourceCreationRights();
+
+                foreach ($ownerCreationRights as $ownerCreationRight) {
+                    $resource->addResourceTypeCreation($ownerCreationRight);
                 }
             }
 
-            $this->em->persist($rs);
+            $this->em->persist($rc);
         }
 
+        $resource->setOwnerRights($old->getOwnerRights());
+
+        $this->em->persist($resource);
         $this->em->flush();
     }
 }

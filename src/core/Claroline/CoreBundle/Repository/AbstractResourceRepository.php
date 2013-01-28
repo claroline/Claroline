@@ -75,7 +75,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null)
     {
-        $dql = "SELECT " . self::SELECT_FOR_ARRAY
+        $dql = self::SELECT_FOR_ARRAY
             . " FROM " . self::FROM_RESOURCES
             . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
 
@@ -208,7 +208,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $i = 0;
         foreach ($roles as $role) {
             $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}'"
-                . " AND rt.isVisible = :rt_isvisible AND arRights.canView = 1";
+                . " AND rt.isVisible = :rt_isvisible AND arRights.canOpen = 1";
 
             if ($i != 0) {
                 $dql .= " OR ".$condition;

@@ -24,7 +24,6 @@ class Utilities
         $this->em = $em;
         $this->expectedTypeOfRight = array('workspace', 'resource');
         $this->expectedKeysForResource = array(
-            'canView',
             'canOpen',
             'canDelete',
             'canEdit',
