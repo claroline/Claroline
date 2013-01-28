@@ -76,6 +76,7 @@ class CalendarController extends Controller
                     $em->persist($event);
                     $em->flush();
                     $data = array(
+                        'id' =>$event->getId(),
                         'title' => $event->getTitle(),
                         'start' => date('Y-m-d', $event->getStart()),
                         'end' => date('Y-m-d', $event->getEnd())
@@ -92,13 +93,13 @@ class CalendarController extends Controller
                         array('Content-Type' => 'application/json')
                     );
                 }
-            } else {
-                return new Response(
-                    json_encode(array('greeting' => 'error occured ')),
-                    500,
-                    array('Content-Type' => 'application/json')
-                );
-            }
+            } 
+            
+            
+            return $this->render(
+            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
+            array('workspace' => $workspace, 'form' => $form->createView())
+        );
         }
     }
 
@@ -143,7 +144,12 @@ class CalendarController extends Controller
         $em->flush();
 
         return new Response(
-            json_encode(array('greeting' => 'move')),
+            json_encode(array(
+                'id' =>$event->getId(),
+                        'title' => $event->getTitle(),
+                        'start' =>$event->getStart(),
+                        'end' =>$event->getEnd()
+                )),
             200,
             array('Content-Type' => 'application/json')
         );

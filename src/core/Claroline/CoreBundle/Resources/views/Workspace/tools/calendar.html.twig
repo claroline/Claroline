@@ -18,7 +18,7 @@
             <h3 id="myModalLabel"> Nouvelle entrée</h3>
         </div>
         <div class="modal-body">
-            
+            <div id="divTitle" class="alert alert-info"></div>
                 <button class="btn btn-danger" id="deleteBtn" > delete</button>
             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" name="myForm" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
