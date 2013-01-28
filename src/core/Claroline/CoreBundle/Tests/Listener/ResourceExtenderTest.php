@@ -90,6 +90,15 @@ class ResourceExtenderTest extends FunctionalTestCase
         $firstRes->setWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $firstRes->setName('name');
         $firstRes->setIcon($defaultIcon);
+        $firstRes->setOwnerRights(
+            array(
+                'sharable' => true,
+                'editable' => true,
+                'exportable' => true,
+                'deletable' => true,
+                'copiable' => true
+            )
+        );
 
         $secondRes = new SpecificResource2();
         $secondRes->setSomeField('Test');
@@ -97,6 +106,15 @@ class ResourceExtenderTest extends FunctionalTestCase
         $secondRes->setWorkspace($this->getFixtureReference('user/ws_creator')->getPersonalWorkspace());
         $secondRes->setName('name');
         $secondRes->setIcon($defaultIcon);
+        $secondRes->setOwnerRights(
+            array(
+                'sharable' => true,
+                'editable' => true,
+                'exportable' => true,
+                'deletable' => true,
+                'copiable' => true
+            )
+        );
 
         $thirdRes = new SpecificResource2();
         $thirdRes->setSomeField('Test');
@@ -104,6 +122,15 @@ class ResourceExtenderTest extends FunctionalTestCase
         $thirdRes->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
         $thirdRes->setName('name');
         $thirdRes->setIcon($defaultIcon);
+        $thirdRes->setOwnerRights(
+            array(
+                'sharable' => true,
+                'editable' => true,
+                'exportable' => true,
+                'deletable' => true,
+                'copiable' => true
+            )
+        );
 
         $fourthRes = new Directory();
         $fourthRes->setName('Test');
@@ -111,6 +138,15 @@ class ResourceExtenderTest extends FunctionalTestCase
         $fourthRes->setWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $fourthRes->setName('name');
         $fourthRes->setIcon($defaultIcon);
+        $fourthRes->setOwnerRights(
+            array(
+                'sharable' => true,
+                'editable' => true,
+                'exportable' => true,
+                'deletable' => true,
+                'copiable' => true
+            )
+        );
 
         $this->em->persist($firstRes);
         $this->em->persist($secondRes);

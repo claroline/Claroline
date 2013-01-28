@@ -373,15 +373,17 @@
                 },
                 'click a': function (event) {
                     event.preventDefault();
-                    $.ajax({
-                        url: event.currentTarget.href,
-                        type: 'POST',
-                        processData: false,
-                        contentType: false,
-                        success: function(form){
-                           this.views['form'].render(form, $(event.currentTarget).attr('data-resource-id'), 'edit-rights-creation');
-                        }
-                    });
+                    if(($(event.currentTarget).attr('data-toggle') !== 'tab')){
+                        $.ajax({
+                            url: event.currentTarget.href,
+                            type: 'POST',
+                            processData: false,
+                            contentType: false,
+                            success: function(form){
+                               this.views['form'].render(form, $(event.currentTarget).attr('data-resource-id'), 'edit-rights-creation');
+                            }
+                        });
+                    }
                 }
             },
             initialize: function (dispatcher) {

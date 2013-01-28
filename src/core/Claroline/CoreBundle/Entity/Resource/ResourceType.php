@@ -101,7 +101,7 @@ class ResourceType
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Rights\ResourceRights",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceContext",
      *     mappedBy="resourceTypes"
      * )
      * @ORM\JoinTable(

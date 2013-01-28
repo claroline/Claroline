@@ -27,6 +27,7 @@ class RoleRepository extends NestedTreeRepository
             JOIN workspaceRights.workspace ws
             WHERE ws.id = {$workspace->getId()}
             AND r.name != 'ROLE_ANONYMOUS'
+            AND r.name != 'ROLE_ADMIN'
         ";
         $query = $this->_em->createQuery($dql);
 

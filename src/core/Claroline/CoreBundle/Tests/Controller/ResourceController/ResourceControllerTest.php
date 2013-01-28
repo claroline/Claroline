@@ -438,7 +438,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/open/file/{$jsonResponse[0]->id}");
         $openShortcut = $this->client->getResponse()->getContent();
         $this->assertEquals($openFile, $openShortcut);
-
     }
 
     public function testChildrenShortcut()
