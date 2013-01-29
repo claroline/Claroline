@@ -76,7 +76,7 @@ class CalendarController extends Controller
                     $em->persist($event);
                     $em->flush();
                     $data = array(
-                        'id' =>$event->getId(),
+                        'id' => $event->getId(),
                         'title' => $event->getTitle(),
                         'start' => date('Y-m-d', $event->getStart()),
                         'end' => date('Y-m-d', $event->getEnd())
@@ -93,13 +93,12 @@ class CalendarController extends Controller
                         array('Content-Type' => 'application/json')
                     );
                 }
-            } 
-            
+            }    
             
             return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
-            array('workspace' => $workspace, 'form' => $form->createView())
-        );
+                'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
+                array('workspace' => $workspace, 'form' => $form->createView())
+            );
         }
     }
 
@@ -143,13 +142,14 @@ class CalendarController extends Controller
         $event->setEnd($dateEnd);
         $em->flush();
 
-        return new Response(
-            json_encode(array(
-                'id' =>$event->getId(),
-                        'title' => $event->getTitle(),
-                        'start' =>$event->getStart(),
-                        'end' =>$event->getEnd()
-                )),
+        return new Response(json_encode(
+            array(
+                'id' => $event->getId(),
+                'title' => $event->getTitle(),
+                'start' => $event->getStart(),
+                'end' => $event->getEnd()
+                )
+            ),
             200,
             array('Content-Type' => 'application/json')
         );
@@ -172,6 +172,12 @@ class CalendarController extends Controller
             200,
             array('Content-Type' => 'application/json')
         );
+    }
+
+    public function desktopAction()
+    {
+
+        return $this->render('ClarolineCoreBundle:Desktop:calendar.html.twig');
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
