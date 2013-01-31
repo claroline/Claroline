@@ -26,14 +26,14 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
-            'PUT', "/workspaces/{$wsAId}/add/user?userIds[]={$userId}"
+            'PUT', "/workspaces/tool/user_management/{$wsAId}/add/user?userIds[]={$userId}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
         $this->client->request(
             'GET',
-            "/workspaces/".$wsAId."/users/0/registered",
+            "/workspaces/tool/user_management/".$wsAId."/users/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -41,11 +41,11 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
         $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/users?userIds[]={$userId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$userId}"
         );
         $this->client->request(
             'GET',
-            "/workspaces/{$wsAId}/users/0/registered",
+            "/workspaces/tool/user_management/{$wsAId}/users/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -72,7 +72,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/users?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$creatorId}"
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
@@ -88,12 +88,12 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
             'PUT',
-            "/workspaces/{$wsAId}/user/{$userId}"
+            "/workspaces/tool/user_management/{$wsAId}/user/{$userId}"
         );
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/users?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$creatorId}"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -109,17 +109,17 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request(
             'PUT',
-            "/workspaces/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
         );
         $this->client->request(
             'POST',
-            "/workspaces/{$pwu->getId()}/tools/user/{$creatorId}",
+            "/workspaces/tool/user_management/{$pwu->getId()}/user/{$creatorId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getManagerRole($this->getFixtureReference('workspace/ws_a'))))
         );
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/{$pwu->getId()}/users?userIds[]={$userId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/users?userIds[]={$userId}"
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
@@ -139,23 +139,23 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request(
             'PUT',
-            "/workspaces/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
         );
         $this->client->request(
             'GET',
-            "/workspaces/{$pwu->getId()}/tools/user/{$creatorId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/user/{$creatorId}"
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->client->request(
             'POST',
-            "/workspaces/{$pwu->getId()}/tools/user/{$creatorId}",
+            "/workspaces/tool/user_management/{$pwu->getId()}/user/{$creatorId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getManagerRole($pwu)->getId()))
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->client->request(
             'GET',
-            "/workspaces/{$pwu->getId()}/users/0/registered",
+            "/workspaces/tool/user_management/{$pwu->getId()}/users/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -181,12 +181,12 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->request(
             'PUT',
-            "/workspaces/{$pwcId}/user/{$userId}"
+            "/workspaces/tool/user_management/{$pwcId}/user/{$userId}"
         );
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
             'GET',
-            "/workspaces/{$pwcId}/tools/user/{$creatorId}"
+            "/workspaces/tool/user_management/{$pwcId}/user/{$creatorId}"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         $visitorRoleId = $em->getRepository('ClarolineCoreBundle:Role')
@@ -194,7 +194,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             ->getId();
         $this->client->request(
             'POST',
-            "/workspaces/{$pwcId}/tools/user/{$pwcId}",
+            "/workspaces/tool/user_management/{$pwcId}/user/{$pwcId}",
             array('form' => array('role' => $visitorRoleId))
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
@@ -213,7 +213,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             ->getId();
         $crawler = $this->client->request(
             'POST',
-            "/workspaces/{$wsAId}/tools/user/{$creatorId}",
+            "/workspaces/tool/user_management/{$wsAId}/user/{$creatorId}",
             array('form' => array('role' => $visitorRoleId))
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
@@ -232,7 +232,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             ->getId();
         $crawler = $this->client->request(
             'POST',
-            "/workspaces/{$pwu->getId()}/tools/user/{$userId}",
+            "/workspaces/tool/user_management/{$pwu->getId()}/user/{$userId}",
             array('form' => array('role' => $visitorRoleId))
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
@@ -255,7 +255,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwuId}/users/0/unregistered",
+            "/workspaces/tool/user_management/{$pwuId}/users/0/unregistered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -272,7 +272,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
-            'GET', "/workspaces/{$wsAId}/users/0/unregistered",
+            'GET', "/workspaces/tool/user_management/{$wsAId}/users/0/unregistered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -288,7 +288,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$wsAId}/users/0/registered",
+            "/workspaces/tool/user_management/{$wsAId}/users/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -302,7 +302,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $pwcId = $this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId();
         $this->client->request(
-            'GET', "/workspaces/{$pwcId}/users/0/registered",
+            'GET', "/workspaces/tool/user_management/{$pwcId}/users/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -317,7 +317,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
-            'GET', "/workspaces/{$wsAId}/user/search/doe/unregistered/0",
+            'GET', "/workspaces/tool/user_management/{$wsAId}/user/search/doe/unregistered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -327,7 +327,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(4, count($users));
 
         $this->client->request(
-            'GET', "/workspaces/{$wsAId}/user/search/bob/unregistered/0",
+            'GET', "/workspaces/tool/user_management/{$wsAId}/user/search/bob/unregistered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -343,7 +343,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $pwcId = $this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId();
         $this->client->request(
-            'GET', "/workspaces/{$pwcId}/user/search/doe/unregistered/0",
+            'GET', "/workspaces/tool/user_management/{$pwcId}/user/search/doe/unregistered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -357,7 +357,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
-            'GET', "/workspaces/{$pwaId}/user/search/doe/registered/0",
+            'GET', "/workspaces/tool/user_management/{$pwaId}/user/search/doe/registered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -373,7 +373,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
-            'GET', "/workspaces/{$pwaId}/user/search/doe/registered/0",
+            'GET', "/workspaces/tool/user_management/{$pwaId}/user/search/doe/registered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')

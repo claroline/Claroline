@@ -1,9 +1,8 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadRoleData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
 class WorkspaceGroupControllerTest extends FunctionalTestCase
@@ -29,14 +28,14 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
             'PUT',
-            "/workspaces/{$pwu}/add/group?groupIds[]={$groupAId}"
+            "/workspaces/tool/group_management/{$pwu}/add/group?groupIds[]={$groupAId}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
         $this->client->request(
             'GET',
-            "/workspaces/{$pwu}/groups/0/registered",
+            "/workspaces/tool/group_management/{$pwu}/groups/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -65,7 +64,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
 
         $this->client->request(
-            'GET', "/workspaces/{$wsAId}/groups/0/registered",
+            'GET', "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -73,11 +72,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
         $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
+            "/workspaces/tool/group_management/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
         );
         $this->client->request(
             'GET',
-            "/workspaces/{$wsAId}/groups/0/registered",
+            "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -95,7 +94,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
+            "/workspaces/tool/group_management/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -111,18 +110,18 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->request(
             'POST',
-            "/workspaces/{$wsAId}/tools/group/{$this->getFixtureReference('group/group_a')->getId()}",
+            "/workspaces/tool/group_management/{$wsAId}/group/{$this->getFixtureReference('group/group_a')->getId()}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/users?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}"
+            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}"
         );
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
+            "/workspaces/tool/group_management/{$wsAId}/groups?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}"
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
@@ -144,13 +143,13 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->client->request(
             'POST',
-            "/workspaces/{$wsAId}/tools/group/{$this->getFixtureReference('group/group_a')->getId()}",
+            "/workspaces/tool/group_management/{$wsAId}/group/{$this->getFixtureReference('group/group_a')->getId()}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->client->request(
             'GET',
-            "/workspaces/{$wsAId}/groups/0/registered",
+            "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -177,17 +176,17 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $crawler = $this->client->request(
             'POST',
-            "/workspaces/{$wsAId}/tools/group/{$this->getFixtureReference('group/group_a')->getId()}",
+            "/workspaces/tool/group_management/{$wsAId}/group/{$this->getFixtureReference('group/group_a')->getId()}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->client->request(
             'DELETE',
-            "/workspaces/{$wsAId}/users?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}"
+            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$this->getFixtureReference('user/ws_creator')->getId()}"
         );
         $crawler = $this->client->request(
             'POST',
-            "/workspaces/{$wsAId}/tools/group/{$this->getFixtureReference('group/group_a')->getId()}",
+            "/workspaces/tool/group_management/{$wsAId}/group/{$this->getFixtureReference('group/group_a')->getId()}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->getCollaboratorRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
@@ -208,7 +207,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwuId}/groups/0/unregistered",
+            "/workspaces/tool/group_management/{$pwuId}/groups/0/unregistered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -226,7 +225,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwaId}/groups/0/unregistered",
+            "/workspaces/tool/group_management/{$pwaId}/groups/0/unregistered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -243,7 +242,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'GET',
-            "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered",
+            "/workspaces/tool/group_management/{$this->getFixtureReference('workspace/ws_a')->getId()}/groups/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -258,7 +257,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwaId}/groups/0/registered",
+            "/workspaces/tool/group_management/{$pwaId}/groups/0/registered",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -274,7 +273,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwuId}/group/search/a/unregistered/0",
+            "/workspaces/tool/group_management/{$pwuId}/group/search/a/unregistered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -292,7 +291,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwaId}/group/search/a/unregistered/0",
+            "/workspaces/tool/group_management/{$pwaId}/group/search/a/unregistered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -309,13 +308,13 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
             'PUT',
-            "/workspaces/{$wsAId}/add/group?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}",
+            "/workspaces/tool/group_management/{$wsAId}/add/group?groupIds[]={$this->getFixtureReference('group/group_a')->getId()}",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->client->request(
-            'GET', "/workspaces/{$wsAId}/group/search/group/registered/0",
+            'GET', "/workspaces/tool/group_management/{$wsAId}/group/search/group/registered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
@@ -332,7 +331,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
-            "/workspaces/{$pwaId}/group/search/group/registered/0",
+            "/workspaces/tool/group_management/{$pwaId}/group/search/group/registered/0",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')

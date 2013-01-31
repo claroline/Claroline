@@ -15,8 +15,9 @@
    {% spaceless %}
         <ul class="breadcrumb">
             <li>
-                <a href="{{ path('claro_workspace_tools_users_management', {'workspaceId': workspace.getId()}) }}"
-                id="link_user_management">{{ 'user_management'|trans({}, 'platform') }}
+                <a href="{{ path('claro_workspace_open_tool',
+                    {'workspaceId': workspace.getId(), 'toolName': 'user_management'}) }}">
+                    {{ 'user_management'|trans({}, 'platform') }}
                 </a>
             </li>
             <span class="divider"> / </span>

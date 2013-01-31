@@ -8,6 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Role;
 use JMS\SerializerBundle\Annotation\Type;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -85,10 +88,19 @@ abstract class AbstractWorkspace
      */
     protected $events;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceTool",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $workspaceTools;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->tools = new ArrayCollection();
+        $this->workspaceTools = new ArrayCollection();
     }
 
     public function getId()
@@ -151,5 +163,18 @@ abstract class AbstractWorkspace
     public function getRights()
     {
         return $this->rights;
+    }
+
+    public function addTool(Tool $tool)
+    {
+        $wsTool = new WorkspaceTool();
+        $wsTool->setTool($tool);
+        $wsTool->setWorkspace($this);
+        $this->workspaceTools->add($wsTool);
+    }
+
+    public function getWorkspaceTools()
+    {
+        return $this->workspaceTools;
     }
 }

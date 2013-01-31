@@ -1,0 +1,67 @@
+<div class="tool-list">
+    {% for tool in tools %}
+        <div class="workspace-toolbox-item">
+            <a href="tochange"
+               id="{{ tool.getName() }}-link"
+               data-original-title="{{ tool.getTranslationKey()|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{ asset(tool.getIcon()) }}" />
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+{#
+ <div class="tool-list">
+    <div class="workspace-left-toolbox">
+        <div class="workspace-toolbox-item">
+            <a href="{{ path('claro_desktop_index') }}"
+               rel="tooltip"
+               data-original-title="{{ 'home'|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/home_small.png')}}" />
+            </a>
+        </div>
+        <div class="workspace-toolbox-item">
+            <a href="{{ path('claro_desktop_resources') }}"
+               rel="tooltip"
+               data-original-title="{{ 'resources'|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/resource_small.png') }}" />
+            </a>
+        </div>
+        <div class="workspace-toolbox-item">
+            <a href="#"
+               rel="tooltip"
+               data-original-title="{{ 'dashboard'|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/chart_pie_small.png') }}" />
+            </a>
+        </div>
+        <div class="workspace-toolbox-item">
+            <a href="#"
+               rel="tooltip"
+               data-original-title="{{ 'communication'|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/comment_small.png') }}" />
+            </a>
+        </div>
+        <div class="workspace-toolbox-item">
+             <a href="{{ path('claro_desktop_user_parameters') }}"
+                rel="tooltip"
+                data-original-title="{{ 'parameters'|trans({}, 'platform') }}"
+                data-placement="right">
+                <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/process_small.png')}}" />
+            </a>
+        </div>
+        <div class="workspace-toolbox-item">
+             <a href="#"
+               rel="tooltip"
+               data-original-title="{{ 'agenda'|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{asset('bundles/clarolinecore/images/workspaces/tools/calendar_small.png')}}" />
+            </a>
+        </div>
+    </div>
+</div>
+#}

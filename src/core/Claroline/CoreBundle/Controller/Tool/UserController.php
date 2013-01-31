@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Tool;
 
 use Doctrine\ORM\EntityRepository;
 use LogicException;
@@ -9,32 +9,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class WorkspaceUserController extends Controller
+class UserController extends Controller
 {
     /*******************/
     /* USER MANAGEMENT */
     /*******************/
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
-
-    /**
-     * Renders the users management page with its layout.
-     *
-     * @param integer $workspaceId the workspace id
-     *
-     * @return Response
-     */
-    public function usersManagementAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
-
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:tools\user_management.html.twig',
-            array('workspace' => $workspace)
-        );
-    }
 
     /**
      * Renders the unregistered user list layout for a workspace.
@@ -50,7 +31,7 @@ class WorkspaceUserController extends Controller
         $this->checkRegistration($workspace);
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools\unregistered_user_list_layout.html.twig',
+            'ClarolineCoreBundle:Tools:workspace\user_management\unregistered_user_list_layout.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -111,15 +92,15 @@ class WorkspaceUserController extends Controller
             $em->persist($user);
             $em->flush();
             $route = $this->get('router')->generate(
-                'claro_workspace_tools_users_management',
-                array('workspaceId' => $workspaceId)
+                'claro_workspace_open_tool',
+                array('workspaceId' => $workspaceId, 'toolName' => 'user_management')
             );
 
             return new RedirectResponse($route);
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools\user_parameters.html.twig',
+            'ClarolineCoreBundle:Tools:workspace\user_management\user_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'user' => $user,
@@ -223,6 +204,7 @@ class WorkspaceUserController extends Controller
             $em = $this->get('doctrine.orm.entity_manager');
             $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
                 ->find($workspaceId);
+            $this->checkRegistration($workspace);
 
             foreach ($params['userIds'] as $userId) {
                 $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
@@ -401,7 +383,7 @@ class WorkspaceUserController extends Controller
      */
     private function checkRegistration($workspace)
     {
-        if (!$this->get('security.context')->isGranted('VIEW', $workspace)) {
+        if (!$this->get('security.context')->isGranted('user_management', $workspace)) {
             throw new AccessDeniedHttpException();
         }
     }

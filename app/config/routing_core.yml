@@ -25,13 +25,17 @@ claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
     prefix: workspaces
 
-claro_workspace_user:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_user.yml"
-    prefix: workspaces
+claro_workspace_tool_properties:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_properties.yml"
+    prefix: workspaces/tool/properties
 
-claro_workspace_group:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_group.yml"
-    prefix: workspaces
+claro_workspace_tool_user:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_user.yml"
+    prefix: workspaces/tool/user_management
+
+claro_workspace_tool_group:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_group.yml"
+    prefix: workspaces/tool/group_management
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
@@ -59,7 +63,7 @@ claro_activity:
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-    
+
 claro_install:
     resource: "@ClarolineCoreBundle/Resources/config/routing/install.yml"
     prefix: install
