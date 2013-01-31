@@ -6,7 +6,10 @@
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_workspace_properties', {'workspaceId': workspace.getId()}) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_workspace_open_tool',
+               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+               {{ 'parameters'|trans({}, 'platform') }}
+            </a>
         </li>
          <span class="divider"> / </span>
         <li>

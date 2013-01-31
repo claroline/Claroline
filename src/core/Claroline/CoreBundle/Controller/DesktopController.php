@@ -71,6 +71,11 @@ class DesktopController extends Controller
         $configs = $this->get('claroline.widget.manager')
             ->generateDesktopDisplayConfig($user->getId());
 
+        //The line below is some weird doctrine optimization. Widgets are loaded one by one otherwise.
+        $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findAll();
+
         foreach ($configs as $config) {
             if ($config->isVisible()) {
                 $eventName = strtolower("widget_{$config->getWidget()->getName()}_desktop");
@@ -175,5 +180,22 @@ class DesktopController extends Controller
         }
 
         throw new \Exception("event $eventName didn't return any Response");
+    }
+
+    /**
+     * Renders the left tool bar. Not routed.
+     *
+     * @return Response
+     */
+    public function renderToolListAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+
+        return $this->render(
+            'ClarolineCoreBundle:Desktop:tool_list.html.twig',
+            array('tools' => $tools)
+        );
     }
 }

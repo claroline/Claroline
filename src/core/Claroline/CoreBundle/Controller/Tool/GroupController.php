@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Tool;
 
 use Doctrine\ORM\EntityRepository;
 use LogicException;
@@ -9,29 +9,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class WorkspaceGroupController extends Controller
+class GroupController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
     const NUMBER_GROUP_PER_ITERATION = 25;
-
-    /**
-     * Renders the groups management page with its layout.
-     *
-     * @param integer $workspaceId the workspace id
-     *
-     * @return Response
-     */
-    public function groupsManagementAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
-
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:tools\group_management.html.twig',
-            array('workspace' => $workspace)
-        );
-    }
 
     /**
      * Renders the group parameter page with its layout and
@@ -91,15 +72,15 @@ class WorkspaceGroupController extends Controller
             $em->persist($group);
             $em->flush();
             $route = $this->get('router')->generate(
-                'claro_workspace_tools_groups_management',
-                array('workspaceId' => $workspaceId)
+                'claro_workspace_open_tool',
+                array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
 
             return new RedirectResponse($route);
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools\group_parameters.html.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\group_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'group' => $group,
@@ -122,7 +103,7 @@ class WorkspaceGroupController extends Controller
         $this->checkRegistration($workspace);
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools\unregistered_group_list_layout.html.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\unregistered_group_list_layout.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -182,7 +163,7 @@ class WorkspaceGroupController extends Controller
             ->unregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Workspace:group.json.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -209,7 +190,7 @@ class WorkspaceGroupController extends Controller
             ->registeredGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Workspace:group.json.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -248,7 +229,7 @@ class WorkspaceGroupController extends Controller
         }
 
         $content = $this->renderView(
-            'ClarolineCoreBundle:Workspace:group.json.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -282,7 +263,7 @@ class WorkspaceGroupController extends Controller
             );
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Workspace:group.json.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -316,7 +297,7 @@ class WorkspaceGroupController extends Controller
             );
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Workspace:group.json.twig',
+            'ClarolineCoreBundle:Tools:workspace\group_management\group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -372,7 +353,7 @@ class WorkspaceGroupController extends Controller
      */
     private function checkRegistration($workspace)
     {
-        if (!$this->get('security.context')->isGranted('VIEW', $workspace)) {
+        if (!$this->get('security.context')->isGranted('group_management', $workspace)) {
             throw new AccessDeniedHttpException();
         }
     }

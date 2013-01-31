@@ -77,7 +77,7 @@ class Manager
     {
         $dconfig = $this->getWorkspaceForcedConfig($widgetId, $workspaceId);
 
-        return $dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked();
+        return $dconfig->getParent() == null && $dconfig->isLocked();
     }
 
     /**
@@ -94,7 +94,7 @@ class Manager
     {
         $dconfig = $this->getDesktopForcedConfig($widgetId, $userId);
 
-        return $dconfig->getLvl() == DisplayConfig::ADMIN_LEVEL && $dconfig->isLocked();
+        return $dconfig->getParent() == null && $dconfig->isLocked();
     }
 
     /**
@@ -188,9 +188,6 @@ class Manager
         $childConfig->setVisible($config->isVisible());
         $childConfig->setWidget($config->getWidget());
         $childConfig->setLock($config->isLocked());
-        $lvl = $config->getLvl();
-        $lvl++;
-        $childConfig->setLvl($lvl);
 
         return $childConfig;
     }
@@ -198,7 +195,7 @@ class Manager
     /**
      * Merge the configs defined by the platform administrator and the configs
      * defined by a user. If the user didn't specicfy a config, the administrator
-     * one will be copied (in other words, it only returns what should be the lv1 configs).
+     * one will be copied.
      *
      * @param type $adminConfigs
      * @param type $childConfigs

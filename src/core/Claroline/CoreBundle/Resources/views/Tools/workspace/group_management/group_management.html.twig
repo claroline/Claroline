@@ -16,8 +16,9 @@
    {% spaceless %}
         <ul class="breadcrumb">
             <li>
-                <a href="{{ path('claro_workspace_tools_groups_management', {'workspaceId': workspace.getId()}) }}"
-                id="link_group_management">{{ 'group_management'|trans({}, 'platform') }}
+                <a href="{{ path('claro_workspace_open_tool',
+                    {'workspaceId': workspace.getId(), 'toolName': 'group_management'}) }}">
+                    {{ 'group_management'|trans({}, 'platform') }}
                 </a>
             </li>
         </ul>

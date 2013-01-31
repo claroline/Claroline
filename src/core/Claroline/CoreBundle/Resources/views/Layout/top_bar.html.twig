@@ -50,7 +50,9 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ path('claro_workspace_home', {'workspaceId': personalWs.getId()}) }}" id="link-my-workspace">
+                            <a href="{{ path('claro_workspace_open_tool',
+                                   {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
+                                   id="link-my-workspace">
                                 {{ 'my_workspace'|trans({}, 'platform') }}
                             </a>
                         </li>
@@ -112,9 +114,11 @@
                     <ul class="dropdown-menu">
                         {% for workspace in workspaces %}
                             <li>
-                                <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}" id="link-workspace-{{ workspace.getId() }}">
-                                    {{ workspace.getName() }}
-                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                <a href="{{ path('claro_workspace_open_tool',
+                                   {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                   id="link-workspace-{{ workspace.getId() }}">
+                                   {{ workspace.getName() }}
+                                   <span class="workspace-code">({{ workspace.getCode() }})</span>
                                 </a>
                             </li>
                         {% endfor %}

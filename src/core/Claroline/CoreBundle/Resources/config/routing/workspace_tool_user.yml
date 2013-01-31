@@ -1,6 +1,6 @@
 claro_workspace_multiadd_user:
    pattern: /{workspaceId}/add/user
-   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:addUsers }
+   defaults: { _controller: ClarolineCoreBundle:Tool\User:addUsers }
    options:
       expose: true
    requirements:
@@ -8,22 +8,15 @@ claro_workspace_multiadd_user:
       workspaceId: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_unregistered_users_list:
-    pattern: /{workspaceId}/tools/users/unregistered
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:unregiseredUsersList }
-    requirements:
-      _method: GET
-      workspaceId: ^(?=.*[1-9].*$)\d*$
-
-claro_workspace_tools_users_management:
-    pattern: /{workspaceId}/tools/user_management
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:usersManagement }
+    pattern: /{workspaceId}/users/unregistered
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:unregiseredUsersList }
     requirements:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$
 
 claro_workspace_tools_show_user_parameters:
-    pattern: /{workspaceId}/tools/user/{userId}
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:userParameters }
+    pattern: /{workspaceId}/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:userParameters }
     requirements:
       _method: GET
       workspaceId: ^(?=.*[1-9].*$)\d*$
@@ -32,8 +25,8 @@ claro_workspace_tools_show_user_parameters:
       expose: TRUE
 
 claro_workspace_tools_edit_user_parameters:
-    pattern: /{workspaceId}/tools/user/{userId}
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:userParameters }
+    pattern: /{workspaceId}/user/{userId}
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:userParameters }
     requirements:
       _method: POST
       workspaceId: ^(?=.*[1-9].*$)\d*$
@@ -43,7 +36,7 @@ claro_workspace_tools_edit_user_parameters:
 
 claro_workspace_search_unregistered_users:
     pattern: /{workspaceId}/user/search/{search}/unregistered/{offset}
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:searchUnregisteredUsers }
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:searchUnregisteredUsers }
     options:
       expose: TRUE
     requirements:
@@ -53,7 +46,7 @@ claro_workspace_search_unregistered_users:
 
 claro_workspace_search_registered_users:
     pattern: /{workspaceId}/user/search/{search}/registered/{offset}
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:searchRegisteredUsers }
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:searchRegisteredUsers }
     options:
       expose: TRUE
     requirements:
@@ -63,7 +56,7 @@ claro_workspace_search_registered_users:
 
 claro_workspace_registered_users_paginated:
     pattern: /{workspaceId}/users/{offset}/registered
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:registeredUsers }
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:registeredUsers }
     options:
         expose: true
     requirements:
@@ -73,7 +66,7 @@ claro_workspace_registered_users_paginated:
 
 claro_workspace_unregistered_users_paginated:
    pattern: /{workspaceId}/users/{offset}/unregistered
-   defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:unregisteredUsers }
+   defaults: { _controller: ClarolineCoreBundle:Tool\User:unregisteredUsers }
    options:
      expose: true
    requirements:
@@ -84,7 +77,7 @@ claro_workspace_unregistered_users_paginated:
 
 claro_workspace_delete_users:
     pattern: /{workspaceId}/users
-    defaults: { _controller: ClarolineCoreBundle:WorkspaceUser:removeUsers }
+    defaults: { _controller: ClarolineCoreBundle:Tool\User:removeUsers }
     options:
        expose: true
     requirements:

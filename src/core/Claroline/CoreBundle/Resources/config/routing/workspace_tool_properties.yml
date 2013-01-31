@@ -1,0 +1,39 @@
+claro_workspace_widget_properties:
+  pattern: /{workspaceId}/widget
+  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:widgetsProperties }
+  requirements:
+    _method: GET
+
+claro_workspace_rights:
+  pattern: /{workspaceId}/rights
+  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:configureRights }
+  requirements:
+    _method: GET
+
+claro_workspace_workspace_rights_form:
+  pattern: /{workspaceId}/rights/form
+  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:workspaceRightsForm }
+  requirements:
+    _method: GET
+
+claro_workspace_workspace_rigths_edit:
+  pattern: /{workspaceId}/rights/edit
+  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:editWorkspaceRights }
+  requirements:
+    _method: POST
+
+claro_workspace_widget_invertvisible:
+  pattern: /{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible
+  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:invertVisibleWidget }
+  requirements:
+    _method: POST
+  options:
+    expose: true
+
+claro_workspace_widget_configuration:
+  pattern: /{workspaceId}/widget/{widgetId}/configuration
+  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:configureWidget }
+  requirements:
+    _method: GET
+  options:
+    expose: true

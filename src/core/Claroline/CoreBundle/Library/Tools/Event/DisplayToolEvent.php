@@ -1,20 +1,20 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Widget\Event;
+namespace Claroline\CoreBundle\Library\Tools\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
-class DisplayWidgetEvent extends Event
+class DisplayToolEvent extends Event
 {
+    protected $response;
     protected $content;
-    protected $workspace;
 
     public function __construct(AbstractWorkspace $workspace = null)
     {
         $this->workspace = $workspace;
     }
-    
+
     public function setContent($content)
     {
         $this->content = $content;
@@ -29,4 +29,5 @@ class DisplayWidgetEvent extends Event
     {
         return $this->workspace;
     }
+
 }
