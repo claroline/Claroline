@@ -14,6 +14,8 @@
         <exclude name="Generic.NamingConventions.UpperCaseConstantName"/>
         <!-- excluded because it requires interfaces methods to have modifiers (Symfony2 sniff used instead) -->
         <exclude name="Squiz.Scope.MethodScope"/>
+        <!-- excluded because phpcs should run on windows -->
+        <exclude name="Generic.Files.LineEndings"/>
     </rule>
     <rule ref="Generic.Files.LineLength">
         <properties>
@@ -61,6 +63,4 @@
     <rule ref="Symfony2.NamingConventions.InterfaceSuffix"/>
     <!-- methods must have scope modifiers (not applicable to interfaces) -->
     <rule ref="Symfony2.Scope.MethodScope"/>
-    <!-- no trailing whitespaces -->
-    <rule ref="Symfony2.WhiteSpace.DiscourageFitzinator"/>
 </ruleset>

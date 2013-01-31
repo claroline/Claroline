@@ -68,30 +68,38 @@ class CalendarController extends Controller
             if ($form->isValid()) {
                 $date = explode('(', $postData['date']);
                 $event->setStart(new \DateTime($date[0]));
+
                 // the end date has to be bigger
-                if ($event->getStart() < $event->getEnd()) {
+                if ($event->getStart() <= $event->getEnd()) {
                     $event->setWorkspace($workspace);
                     $event->setUser($this->get('security.context')->getToken()->getUser());
                     $em->persist($event);
                     $em->flush();
-                    $content = array(
-                        'responseCode' => 200,
-                        'greeting' => 'ok',
+                    $data = array(
+                        'id' => $event->getId(),
                         'title' => $event->getTitle(),
                         'start' => date('Y-m-d', $event->getStart()),
                         'end' => date('Y-m-d', $event->getEnd())
                     );
-                } else {
-                    $content = array('responseCode' => 400, 'greeting' => 'start date is bigger than end date ');
-                }
-            } else {
-                $content = array('responseCode' => 400, 'greeting' => 'not valid');
-            }
-        } else {
-            $content = array('responseCode' => 400, 'greeting' => 'no post');
-        }
 
-        return new Response(json_encode($content), 200, array('Content-Type' => 'application/json'));
+                    return new Response(json_encode($data),
+                        200,
+                        array('Content-Type' => 'application/json')
+                    );
+                } else {
+                    return new Response(
+                        json_encode(array('greeting' => ' start date is bigger than end date ')),
+                        400,
+                        array('Content-Type' => 'application/json')
+                    );
+                }
+            }    
+            
+            return $this->render(
+                'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
+                array('workspace' => $workspace, 'form' => $form->createView())
+            );
+        }
     }
 
     public function showAction($workspaceId)
@@ -110,7 +118,7 @@ class CalendarController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar_json.html.twig',
+            'ClarolineCoreBundle:Workspace:tools/calendar_json.html.twig', 
             array('data' => utf8_encode(json_encode($data)))
         );
     }
@@ -134,11 +142,42 @@ class CalendarController extends Controller
         $event->setEnd($dateEnd);
         $em->flush();
 
-        return new Response(
-            json_encode(array('responseCode' => 200, 'greeting' => 'ok')),
+        return new Response(json_encode(
+            array(
+                'id' => $event->getId(),
+                'title' => $event->getTitle(),
+                'start' => $event->getStart(),
+                'end' => $event->getEnd()
+                )
+            ),
             200,
             array('Content-Type' => 'application/json')
         );
+    }
+
+    public function deleteAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('EDIT', $workspace);
+        $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
+        $request = $this->get('request');
+        $postData = $request->request->all();
+        $event = $repository->find($postData['id']);
+        $em->remove($event);
+        $em->flush();
+
+        return new Response(
+            json_encode(array('greeting' => 'delete')),
+            200,
+            array('Content-Type' => 'application/json')
+        );
+    }
+
+    public function desktopAction()
+    {
+
+        return $this->render('ClarolineCoreBundle:Desktop:calendar.html.twig');
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)

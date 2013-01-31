@@ -808,6 +808,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('description', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
+        $table->addColumn('allDay','boolean',array('notnull'=>true));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'),
