@@ -8,19 +8,19 @@
             "source": {
                 "type": "git",
                 "url": "http://github.com/claroline/FrontEndBundle",
-                "reference": "f09bd92dcffe955f4cd0e2921de8f16ec80b2fb8"
+                "reference": "d094150aab4f9dbbd790057c8a38aef6a3758d96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/claroline/FrontEndBundle/archive/f09bd92dcffe955f4cd0e2921de8f16ec80b2fb8.zip",
-                "reference": "f09bd92dcffe955f4cd0e2921de8f16ec80b2fb8",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/d094150aab4f9dbbd790057c8a38aef6a3758d96",
+                "reference": "d094150aab4f9dbbd790057c8a38aef6a3758d96",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "symfony/framework-bundle": "2.1.*"
             },
-            "time": "2012-11-30 09:34:59",
+            "time": "2013-01-16 14:54:57",
             "type": "library",
             "installation-source": "source",
             "autoload": {
