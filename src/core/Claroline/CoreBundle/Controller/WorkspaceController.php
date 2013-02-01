@@ -197,7 +197,7 @@ class WorkspaceController extends Controller
         return new Response($event->getContent());
     }
 
-      //todo dql for this
+    //todo dql for this
 
     /**
     * Display registered widgets.

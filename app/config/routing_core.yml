@@ -21,6 +21,14 @@ claro_desktop:
     resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
     prefix: desktop
 
+claro_desktop_tool_home:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_home.yml"
+    prefix: desktop/tool/home
+
+claro_desktop_tool_properties:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_properties.yml"
+    prefix: desktop/tool/properties
+
 claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
     prefix: workspaces

@@ -92,6 +92,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace_tools_role');
     }
 
+    //@todo: foreign key constraint on desktop_default_tool.
     private function createUserTable(Schema $schema)
     {
         $table = $schema->createTable('claro_user');
@@ -107,6 +108,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('administrative_code', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('creation_date', 'datetime');
+        $table->addColumn('desktop_default_tool_name', 'string');
         $table->addUniqueIndex(array('username'));
 
         $table->addForeignKeyConstraint(

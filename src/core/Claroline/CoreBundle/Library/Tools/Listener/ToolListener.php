@@ -9,12 +9,12 @@ class ToolListener extends ContainerAware
 {
     public function onDisplayWorkspaceResouceManager(DisplayToolEvent $event)
     {
-        $event->setContent($this->resource($event->getWorkspace()->getId()));
+        $event->setContent($this->resourceWorkspace($event->getWorkspace()->getId()));
     }
 
     public function onDisplayWorkspaceParameters(DisplayToolEvent $event)
     {
-         $event->setContent($this->parameters($event->getWorkspace()->getId()));
+         $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
     }
 
     public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
@@ -29,7 +29,22 @@ class ToolListener extends ContainerAware
 
     public function onDisplayWorkspaceHome(DisplayToolEvent $event)
     {
-        $event->setContent($this->home($event->getWorkspace()->getId()));
+        $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
+    }
+
+    public function onDisplayDesktopResourceManager(DisplayToolEvent $event)
+    {
+        $event->setContent($this->resourceDesktop());
+    }
+
+    public function onDisplayDesktopHome(DisplayToolEvent $event)
+    {
+        $event->setContent($this->desktopHome());
+    }
+
+    public function onDisplayDesktopParameters(DisplayToolEvent $event)
+    {
+        $event->setContent($this->desktopParameters());
     }
 
     /**
@@ -41,7 +56,7 @@ class ToolListener extends ContainerAware
      *
      * @throws AccessDeniedHttpException
      */
-    public function resource($workspaceId)
+    public function resourceWorkspace($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
@@ -52,7 +67,7 @@ class ToolListener extends ContainerAware
             ->findBy(array('isVisible' => true));
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tools:workspace\resource_manager\resources.html.twig', array(
+            'ClarolineCoreBundle:Tool:workspace\resource_manager\resources.html.twig', array(
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes
@@ -67,13 +82,13 @@ class ToolListener extends ContainerAware
      *
      * @return string
      */
-    public function parameters($workspaceId)
+    public function workspaceParameters($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tools:workspace\parameters\parameters.html.twig',
+            'ClarolineCoreBundle:Tool:workspace\parameters\parameters.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -91,7 +106,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tools:workspace\user_management\user_management.html.twig',
+            'ClarolineCoreBundle:Tool:workspace\user_management\user_management.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -109,7 +124,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tools:workspace\group_management\group_management.html.twig',
+            'ClarolineCoreBundle:Tool:workspace\group_management\group_management.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -123,15 +138,53 @@ class ToolListener extends ContainerAware
      *
      * @throws AccessDeniedHttpException
      */
-    public function home($workspaceId)
+    public function workspaceHome($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tools:workspace\home\home.html.twig',
+            'ClarolineCoreBundle:Tool:workspace\home\home.html.twig',
             array('workspace' => $workspace)
         );
+    }
+
+    /**
+     * Displays the resource manager.
+     *
+     * @return string
+     */
+    public function resourceDesktop()
+    {
+        $resourceTypes = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->findBy(array('isVisible' => true));
+
+        return $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
+            array('resourceTypes' => $resourceTypes)
+        );
+    }
+
+    /**
+     * Displays the Info desktop tab.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function desktopHome()
+    {
+        return $this->container->get('templating')->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
+    }
+
+    /**
+     * Displays the Info desktop tab.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function desktopParameters()
+    {
+        return $this->container->get('templating')->render('ClarolineCoreBundle:Tool\desktop\properties:parameters.html.twig');
     }
 }
 

@@ -274,6 +274,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayWorkspaceRightsForm()
     {
+        $this->markTestSkipped('Now a workspace is an aggregation of tools');
         $this->loadUserFixture(array('user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
