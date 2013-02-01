@@ -21,7 +21,7 @@ class WorkspaceTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     cascade={"persist"}
+     *     cascade={"persist"}, inversedBy="workspaceTools"
      * )
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
@@ -30,7 +30,7 @@ class WorkspaceTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist"}
+     *     cascade={"persist"}, inversedBy="workspaceTools"
      * )
      * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
      */

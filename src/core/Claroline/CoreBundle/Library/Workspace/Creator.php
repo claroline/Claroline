@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceContext;
-use Claroline\CoreBundle\Entity\Rights\WorkspaceRights;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
 
@@ -97,25 +96,6 @@ class Creator
             $workspace
         );
 
-        //default workspace rights
-        $this->createDefaultsWorkspaceRights(
-            true, true, true,
-            $this->roleRepo->getManagerRole($workspace), $workspace
-        );
-        $this->createDefaultsWorkspaceRights(
-            true, false, false,
-            $this->roleRepo->getCollaboratorRole($workspace), $workspace
-        );
-        $this->createDefaultsWorkspaceRights(
-            true, false, false,
-            $this->roleRepo->getVisitorRole($workspace), $workspace
-        );
-        $this->createDefaultsWorkspaceRights(
-            false, false, false,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $workspace
-        );
-
         $manager->addRole($this->roleRepo->getManagerRole($workspace));
         $this->addMandatoryTools($workspace);
         $this->entityManager->persist($manager);
@@ -176,33 +156,6 @@ class Creator
     }
 
     /**
-     * Create default permissions for a role and a workspace.
-     *
-     * @param boolean $canView
-     * @param boolean $canEdit
-     * @param boolean $canDelete
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     */
-    private function createDefaultsWorkspaceRights(
-        $canView,
-        $canEdit,
-        $canDelete,
-        Role $role,
-        AbstractWorkspace $workspace
-    )
-    {
-        $workspaceRight = new WorkspaceRights();
-        $workspaceRight->setCanView($canView);
-        $workspaceRight->setCanEdit($canEdit);
-        $workspaceRight->setCanDelete($canDelete);
-        $workspaceRight->setRole($role);
-        $workspaceRight->setWorkspace($workspace);
-
-        $this->entityManager->persist($workspaceRight);
-    }
-
-    /**
      * Creates the base roles of a workspace.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
@@ -233,6 +186,7 @@ class Creator
         $baseRole->setParent(null);
         $baseRole->setRoleType(Role::WS_ROLE);
         $baseRole->setTranslationKey($translationKey);
+        $baseRole->setWorkspace($workspace);
 
         $this->entityManager->persist($baseRole);
 

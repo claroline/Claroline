@@ -353,6 +353,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
     }
 
+    /**
+     * Replace the old platform role of a user by a new one.
+     *
+     * @param Role $platformRole
+     */
     public function setPlatformRole($platformRole)
     {
         $roles = $this->getOwnedRoles();
@@ -366,5 +371,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if (isset($removedRole)) {
             $this->roles->removeElement($removedRole);
         }
+
+        $this->roles->add($platformRole);
     }
 }

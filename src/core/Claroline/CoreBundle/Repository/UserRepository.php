@@ -60,27 +60,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
-        $dql = "SELECT u, groups, group_roles, roles, ws, wrights FROM Claroline\CoreBundle\Entity\User u
+        $dql = "SELECT u, groups, group_roles, roles, ws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.groups groups
             LEFT JOIN groups.roles group_roles
             LEFT JOIN u.roles roles
-            LEFT JOIN roles.workspaceRights wrights
-            LEFT JOIN wrights.workspace ws
+            LEFT JOIN roles.workspace ws
             WHERE u.id = :userId";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $user = $query->getSingleResult();
-
-        //Deep doctrine sorcery goes here.
-        //This will help doctrine to not make 1 request by role.
-
-        $dql = "SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            LEFT JOIN r.users users WITH users IN (
-                SELECT u from Claroline\CoreBundle\Entity\User u where u.id = {$user->getId()}
-            )";
-        $query = $this->_em->createQuery($dql);
-        $query->getResult();
 
         return $user;
     }
@@ -120,8 +109,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN u.roles wr WITH wr IN (
                 SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
             )
-            LEFT JOIN wr.workspaceRights wrr
-            LEFT JOIN wrr.workspace w
+            LEFT JOIN wr.workspace w
             WHERE w.id = {$workspace->getId()}";
 
         if ($role != null) {
@@ -138,8 +126,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN g.roles wr WITH wr IN (
                     SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
                 )
-                LEFT JOIN wr.workspaceRights wrr
-                LEFT JOIN wrr.workspace w
+                LEFT JOIN wr.workspace w
                 WHERE w.id = {$workspace->getId()}";
 
             if ($role != null) {
@@ -175,8 +162,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WITH role_1 IN (
                 SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.roleType = ".Role::WS_ROLE."
             )
-            JOIN role_1.workspaceRights rights_1
-            JOIN rights_1.workspace workspace_1
+            JOIN role_1.workspace workspace_1
             WHERE workspace_1.id = :id
             )
             OR UPPER(u.firstName) LIKE :search
@@ -186,8 +172,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN user_2.roles role_2 WITH role_2 IN (
                 SELECT pr3 from Claroline\CoreBundle\Entity\Role pr3 WHERE pr3.roleType = ".Role::WS_ROLE."
             )
-            JOIN role_2.workspaceRights rights_2
-            JOIN rights_2.workspace workspace_2
+            JOIN role_2.workspace workspace_2
             WHERE workspace_2.id = :id
             )
             OR UPPER(u.username) LIKE :search
@@ -197,8 +182,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN user_3.roles role_3 WITH role_3 IN (
                 SELECT pr4 from Claroline\CoreBundle\Entity\Role pr4 WHERE pr4.roleType = ".Role::WS_ROLE."
             )
-            JOIN role_3.workspaceRights rights_3
-            JOIN rights_3.workspace workspace_3
+            JOIN role_3.workspace workspace_3
             WHERE workspace_3.id = :id
             )
         ";
@@ -227,8 +211,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 LEFT JOIN us.roles wr WITH wr IN (
                     SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.roleType = ".Role::WS_ROLE."
                 )
-                LEFT JOIN wr.workspaceRights rights
-                LEFT JOIN rights.workspace w
+                LEFT JOIN wr.workspace w
                 WHERE w.id = :id
             )
         ";
@@ -335,8 +318,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.roles wr WITH wr IN (
                 SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
             )
-            LEFT JOIN wr.workspaceRights rights
-            JOIN rights.workspace w
+            LEFT JOIN wr.workspace w
             JOIN u.personalWorkspace ws
             WHERE w.id = :workspaceId";
 
@@ -357,8 +339,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.roles r WITH r IN (
                 SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
             )
-            LEFT JOIN r.workspaceRights rights
-            JOIN rights.workspace wol
+            LEFT JOIN r.workspace wol
             JOIN u.personalWorkspace ws
             WHERE wol.id = :workspaceId AND u IN (SELECT us FROM Claroline\CoreBundle\Entity\User us WHERE
             UPPER(us.lastName) LIKE :search
@@ -455,8 +436,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.workspaceRights wsr
-            JOIN wsr.workspace ws
+            JOIN r.workspace ws
             JOIN r.users u
             WHERE u.id = {$user->getId()}
             AND ws.id = {$workspace->getId()}

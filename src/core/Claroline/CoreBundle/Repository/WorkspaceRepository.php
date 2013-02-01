@@ -10,9 +10,8 @@ class WorkspaceRepository extends EntityRepository
     public function getWorkspacesOfUser(User $user)
     {
         $dql = "
-            SELECT w, r, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.rights wr
-            JOIN wr.role r
+            SELECT w, r FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
             JOIN r.users u
             WHERE u.id = :userId
         ";
@@ -25,9 +24,8 @@ class WorkspaceRepository extends EntityRepository
     public function getNonPersonnalWS()
     {
         $dql = "
-            SELECT w, r, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.rights wr
-            JOIN wr.role r
+            SELECT w, r FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
             JOIN r.users u
             WHERE w.type != 0
         ";
@@ -40,9 +38,8 @@ class WorkspaceRepository extends EntityRepository
     public function getAllWsOfUser(User $user)
     {
         $dql = "
-            SELECT w, r, wr FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.rights wr
-            JOIN wr.role r
+            SELECT w, r FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
             JOIN r.users u
             WHERE u.id = :userId
             ";
@@ -57,10 +54,8 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.rights wr
-            JOIN wr.role r
-            WHERE r.name LIKE 'ROLE_ANONYMOUS'
-            AND wr.canView = 1";
+            JOIN w.roles r
+            WHERE r.name LIKE 'ROLE_ANONYMOUS'";
 
             $query = $this->_em->createQuery($dql);
 

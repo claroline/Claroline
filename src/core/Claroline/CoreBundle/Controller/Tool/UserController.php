@@ -67,8 +67,7 @@ class UserController extends Controller
                         return $er->createQueryBuilder('wr')
                             ->select('role')
                             ->from('Claroline\CoreBundle\Entity\Role', 'role')
-                            ->leftJoin('role.workspaceRights', 'rights')
-                            ->leftJoin('rights.workspace', 'workspace')
+                            ->leftJoin('role.workspace', 'workspace')
                             ->where('workspace.id = :workspaceId')
                             ->andWhere("role.name != 'ROLE_ANONYMOUS'")
                             ->setParameter('workspaceId', $workspaceId);

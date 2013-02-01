@@ -23,8 +23,7 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.workspaceRights workspaceRights
-            JOIN workspaceRights.workspace ws
+            JOIN r.workspace ws
             WHERE ws.id = {$workspace->getId()}
             AND r.name != 'ROLE_ANONYMOUS'
             AND r.name != 'ROLE_ADMIN'
