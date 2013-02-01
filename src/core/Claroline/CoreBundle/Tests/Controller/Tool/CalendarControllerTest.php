@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
@@ -20,7 +20,7 @@ class CalendarControllerTest extends FunctionalTestCase
 
         $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $this->client->request('GET', "/workspaces/{$workspaceId}/agenda");
+        $this->client->request('GET', "/workspaces/{$workspaceId}/open/tool/calendar");
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
     }
@@ -31,9 +31,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/{$workspaceId}/agenda/add",
+            "/workspaces/tool/calendar/{$workspaceId}/agenda/add",
             array(
-                'form'=> array(
+                'form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -42,7 +42,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'year' => '2013'
                     ),
                    ),
-                  'date' =>'Thu Jan 24 2013 00:00:00 GMT+0100'
+                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
         $status = $this->client->getResponse()->getStatusCode();
@@ -55,9 +55,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/{$workspaceId}/agenda/add",
+            "/workspaces/tool/calendar/{$workspaceId}/agenda/add",
             array(
-                'form'=>array(
+                'form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -66,7 +66,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'year' => '2013'
                     ),
                    ),
-                  'date' =>'Thu Jan 24 2013 00:00:00 GMT+0100'
+                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
 
@@ -75,9 +75,9 @@ class CalendarControllerTest extends FunctionalTestCase
 
         $this->client->request(
             'POST',
-            "/workspaces/{$workspaceId}/agenda/delete",
+            "/workspaces/tool/calendar/{$workspaceId}/agenda/delete",
             array(
-                    'id' =>$data['id']
+                    'id' => $data['id']
                 )
         );
 
@@ -92,33 +92,33 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/{$workspaceId}/agenda/add",
+            "/workspaces/tool/calendar/{$workspaceId}/agenda/add",
             array(
                 'form' => array(
                     'title' => 'foo',
-                    'description'=> 'ghhkkgf',
+                    'description' => 'ghhkkgf',
                     'end' => array(
                         'day' => '24',
                         'month' => '1',
                         'year' => '2013'
                     ),
                    ),
-                  'date' =>'Thu Jan 24 2013 00:00:00 GMT+0100'
+                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        $dataForm= array(
+        $dataForm = array(
                 'id' => $content['id'],
                 'dayDelta' => '1',
                 'minuteDelta' => '0'
                 );
         $this->client->request(
             'POST',
-            "/workspaces/{$workspaceId}/agenda/move",
+            "/workspaces/tool/calendar/{$workspaceId}/agenda/move",
             $dataForm
         );
-        $contentUpdate =json_decode($this->client->getResponse()->getContent());
+        $contentUpdate = json_decode($this->client->getResponse()->getContent());
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
         $this->client->request('GET', "/workspaces/{$workspaceId}/agenda/show");

@@ -97,6 +97,8 @@ services:
         - { name: kernel.event_listener, event: open_tool_workspace_user_management, method: onDisplayWorkspaceUserManagement }
         - { name: kernel.event_listener, event: open_tool_workspace_group_management, method: onDisplayWorkspaceGroupManagement }
         - { name: kernel.event_listener, event: open_tool_workspace_home, method: onDisplayWorkspaceHome }
+        - { name: kernel.event_listener, event: open_tool_workspace_calendar, method: onDisplayWorkspaceCalendar }
         - { name: kernel.event_listener, event: open_tool_desktop_resource_manager, method: onDisplayDesktopResourceManager }
         - { name: kernel.event_listener, event: open_tool_desktop_home, method: onDisplayDesktopHome }
         - { name: kernel.event_listener, event: open_tool_desktop_parameters, method: onDisplayDesktopParameters }
+        - { name: kernel.event_listener, event: open_tool_desktop_calendar, method: onDisplayDesktopCalendar }
