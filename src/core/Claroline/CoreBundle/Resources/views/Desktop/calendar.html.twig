@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
@@ -9,7 +9,7 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
 
-{% block section_content %}
+{% block sectionContent %}
     <div id="output"></div>
     <div id='calendar'></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -20,13 +20,13 @@
         <div class="modal-body">
             <div id="divTitle" class="alert alert-info"></div>
                 <button class="btn btn-danger" id="deleteBtn" > delete</button>
-            <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" name="myForm" {{ form_enctype(form) }}>
+            <form method="post" action="{#{{ path('claro_workspace_agenda_add_event') }}#}" id="myForm" name="myForm" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
             </form>
-            <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
-            <a href="{{ path('claro_workspace_agenda_move', {workspaceId: workspace.getId()}) }}" id="move"></a>
-            <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
-            <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="update"></a>
+            <a href="{{ path('claro_desktop_calendar_show') }}" id="link"></a>
+           {# <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
+            <a href="{{ path('claro_workspace_agenda_delete') }}" id="delete"></a>
+            <a href="{{ path('claro_workspace_agenda_delete') }}" id="update"></a>#}
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -39,5 +39,13 @@
     {{ parent() }}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
-    <script type='text/javascript'src='{{ asset(calendarPath ~ 'js/calendarprocess.js') }}'></script>
+    <script type='text/javascript'src='{{ asset('/src/core/Claroline/CoreBundle/Resources/public/js/tool/calendar.js') }}'></script>
+    {#<script type='text/javascript'src='{{ asset('/src/core/Claroline/CoreBundle/Resources/public/js/workspace/calendarprocess.js') }}'></script> #}
+
+    <script type='text/javascript'>
+        $(function () {
+            Claroline.Calendar.initialize('desktop');
+        });
+    </script>
+
 {% endblock javascripts %}

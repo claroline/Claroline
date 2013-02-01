@@ -33,7 +33,7 @@ class CalendarControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/{$workspaceId}/agenda/add",
             array(
-                'form'=> array(
+                'form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -42,7 +42,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'year' => '2013'
                     ),
                    ),
-                  'date' =>'Thu Jan 24 2013 00:00:00 GMT+0100'
+                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
         $status = $this->client->getResponse()->getStatusCode();
@@ -57,7 +57,7 @@ class CalendarControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/{$workspaceId}/agenda/add",
             array(
-                'form'=>array(
+                'form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -66,7 +66,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'year' => '2013'
                     ),
                    ),
-                  'date' =>'Thu Jan 24 2013 00:00:00 GMT+0100'
+                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
 
@@ -77,7 +77,7 @@ class CalendarControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/{$workspaceId}/agenda/delete",
             array(
-                    'id' =>$data['id']
+                    'id' => $data['id']
                 )
         );
 
@@ -96,19 +96,19 @@ class CalendarControllerTest extends FunctionalTestCase
             array(
                 'form' => array(
                     'title' => 'foo',
-                    'description'=> 'ghhkkgf',
+                    'description' => 'ghhkkgf',
                     'end' => array(
                         'day' => '24',
                         'month' => '1',
                         'year' => '2013'
                     ),
                    ),
-                  'date' =>'Thu Jan 24 2013 00:00:00 GMT+0100'
+                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        $dataForm= array(
+        $dataForm = array(
                 'id' => $content['id'],
                 'dayDelta' => '1',
                 'minuteDelta' => '0'
@@ -118,7 +118,7 @@ class CalendarControllerTest extends FunctionalTestCase
             "/workspaces/{$workspaceId}/agenda/move",
             $dataForm
         );
-        $contentUpdate =json_decode($this->client->getResponse()->getContent());
+        $contentUpdate = json_decode($this->client->getResponse()->getContent());
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
         $this->client->request('GET', "/workspaces/{$workspaceId}/agenda/show");

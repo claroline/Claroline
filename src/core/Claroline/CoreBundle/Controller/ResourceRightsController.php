@@ -27,7 +27,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $configs = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
             ->findBy(array('resource' => $resource));
-        
+          
         if ($resource->getResourceType()->getName() == 'directory') {
             return $this->render(
                 'ClarolineCoreBundle:Resource:rights_form_directory.html.twig',

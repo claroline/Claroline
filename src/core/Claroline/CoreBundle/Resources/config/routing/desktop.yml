@@ -43,4 +43,14 @@ claro_desktop_widget_configuration:
     _method: GET
   options:
     expose: true
+    
+claro_desktop_calendar:
+  pattern: /agenda
+  defaults: { _controller: ClarolineCoreBundle:Calendar:desktop }
+
+claro_desktop_calendar_show:
+  pattern: /agenda/show
+  defaults: { _controller: ClarolineCoreBundle:Calendar:desktopShow }
+  
+  
 
