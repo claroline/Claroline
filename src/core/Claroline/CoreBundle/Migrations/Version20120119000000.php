@@ -44,6 +44,9 @@ class Version20120119000000 extends BundleMigration
         $this->createWorkspaceRightsTable($schema);
         $this->createEventTable($schema);
         $this->createResourceOwnerCreationRightsTable($schema);
+        $this->createToolTable($schema);
+        $this->createWorkspaceToolsTable($schema);
+        $this->createWorkspaceToolsRoleTable($schema);
     }
 
     public function down(Schema $schema)
@@ -84,8 +87,12 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace_rights');
         $schema->dropTable('claro_list_type_creation');
         $schema->dropTable('claro_event');
+        $schema->dropTable('claro_tools');
+        $schema->dropTable('claro_workspace_tools');
+        $schema->dropTable('claro_workspace_tools_role');
     }
 
+    //@todo: foreign key constraint on desktop_default_tool.
     private function createUserTable(Schema $schema)
     {
         $table = $schema->createTable('claro_user');
@@ -101,6 +108,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('administrative_code', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('creation_date', 'datetime');
+        $table->addColumn('desktop_default_tool_name', 'string');
         $table->addUniqueIndex(array('username'));
 
         $table->addForeignKeyConstraint(
@@ -624,10 +632,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('is_locked', 'boolean', array('notnull' => false));
         $table->addColumn('is_visible', 'boolean');
         $table->addColumn('is_desktop', 'boolean');
-        $table->addColumn('lft', 'integer', array('notnull' => true));
-        $table->addColumn('rgt', 'integer', array('notnull' => true));
-        $table->addColumn('lvl', 'integer', array('notnull' => true));
-        $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -818,6 +822,65 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
             array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createToolTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_tools');
+        $this->addId($table);
+        $table->addColumn('name', 'string');
+        $table->addColumn('icon', 'string');
+        $table->addColumn('displayability', 'integer');
+        $table->addColumn('is_workspace_required', 'boolean');
+        $table->addColumn('translation_key', 'string');
+
+        $this->storeTable($table);
+    }
+
+    private function createWorkspaceToolsTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_tools');
+        $this->addId($table);
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('tool_id', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_tools'),
+            array('tool_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($table);
+    }
+
+    private function createWorkspaceToolsRoleTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_tools_role');
+        $this->addId($table);
+        $table->addColumn('workspace_tool_id', 'integer');
+        $table->addColumn('role_id', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace_tools'),
+            array('workspace_tool_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_role'),
+            array('role_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );

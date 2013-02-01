@@ -14,7 +14,7 @@
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li>
-                            <a href="{{ path('claro_desktop_index') }}" id="link-desktop">
+                            <a href="{{ path('claro_desktop_open_tool', {'toolName': app.user.getDefaultDesktopToolName() }) }}" id="link-desktop">
                                 {{ 'desktop'|trans({}, 'platform') }}
                             </a>
                         </li>
@@ -50,7 +50,9 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ path('claro_workspace_home', {'workspaceId': personalWs.getId()}) }}" id="link-my-workspace">
+                            <a href="{{ path('claro_workspace_open_tool',
+                                   {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
+                                   id="link-my-workspace">
                                 {{ 'my_workspace'|trans({}, 'platform') }}
                             </a>
                         </li>
@@ -60,7 +62,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('claro_desktop_resources') ~ '#resources/0' }}" id="link-my-resources">
+                            <a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0' }}" id="link-my-resources">
                                 {{ 'my_resources'|trans({}, 'platform') }}
                             </a>
                         </li>
@@ -96,7 +98,7 @@
                             <li class="divider"></li>
                         {% endif %}
                             <li>
-                                <a href="{{ path(login_target) }}" id="link-login">
+                                <a href="{{ login_target }}" id="link-login">
                                     {{ 'login'|trans({}, 'platform') }}
                                 </a>
                             </li>
@@ -112,9 +114,11 @@
                     <ul class="dropdown-menu">
                         {% for workspace in workspaces %}
                             <li>
-                                <a href="{{ path('claro_workspace_home', {'workspaceId': workspace.getId()}) }}" id="link-workspace-{{ workspace.getId() }}">
-                                    {{ workspace.getName() }}
-                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                <a href="{{ path('claro_workspace_open_tool',
+                                   {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                   id="link-workspace-{{ workspace.getId() }}">
+                                   {{ workspace.getName() }}
+                                   <span class="workspace-code">({{ workspace.getCode() }})</span>
                                 </a>
                             </li>
                         {% endfor %}

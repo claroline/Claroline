@@ -3,19 +3,13 @@
 namespace Claroline\CoreBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_widget_dispay")
- * @Gedmo\Tree(type="nested")
  */
 class DisplayConfig
 {
-    const ADMIN_LEVEL = 0;
-    const WORKSPACE_LEVEL = 1;
-    const USER_LEVEL = 2;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -24,31 +18,6 @@ class DisplayConfig
     protected $id;
 
     /**
-     * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
-     */
-    protected $lft;
-
-    /**
-     * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
-     */
-    protected $lvl;
-
-    /**
-     * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
-     */
-    protected $rgt;
-
-    /**
-     * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
-     */
-    protected $root;
-
-    /**
-     * @Gedmo\TreeParent
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
      *     inversedBy="children"
@@ -156,16 +125,6 @@ class DisplayConfig
     public function setParent($parent)
     {
         $this->parent = $parent;
-    }
-
-    public function getLvl()
-    {
-        return $this->lvl;
-    }
-
-    public function setLvl($lvl)
-    {
-        $this->lvl = $lvl;
     }
 
     public function getWorkspace()

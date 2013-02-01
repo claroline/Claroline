@@ -337,6 +337,6 @@ class ResourceVoter implements VoterInterface
                     '%action%' => $action
                     ),
                 'platform'
-        );
+            );
     }
 }

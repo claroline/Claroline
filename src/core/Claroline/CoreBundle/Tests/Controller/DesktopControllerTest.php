@@ -17,7 +17,7 @@ class DesktopControllerTest extends FunctionalTestCase
     {
         $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('GET', '/desktop/perso');
+        $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -26,7 +26,7 @@ class DesktopControllerTest extends FunctionalTestCase
     {
         $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('GET', '/desktop/resources');
+        $this->client->request('GET', '/desktop/tool/open/resource_manager');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -34,7 +34,7 @@ class DesktopControllerTest extends FunctionalTestCase
     {
         $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
-        $crawler = $this->client->request('GET', '/desktop/user/parameters');
+        $crawler = $this->client->request('GET', '/desktop/tool/open/parameters');
         $this->assertEquals(1, count($crawler->filter('.li-user-parameters')));
     }
 
@@ -49,13 +49,14 @@ class DesktopControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isDesktop' => true));
         $countConfigs = count($configs);
-        $crawler = $this->client->request('GET', "/desktop/info");
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
             'POST',
-            "/desktop/config/{$configs[0]->getId()}/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
+            "/desktop/tool/properties/config/{$configs[0]->getId()}"
+            . "/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
         );
-        $crawler = $this->client->request('GET', "/desktop/info");
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
         $configs = $this->client
             ->getContainer()
@@ -66,7 +67,7 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
         $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/desktop/info");
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
     }
 }

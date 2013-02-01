@@ -1,0 +1,12 @@
+<div class="tool-list">
+    {% for tool in tools %}
+        <div class="workspace-toolbox-item">
+            <a href="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) }}"
+               id="{{ tool.getName() }}-link"
+               data-original-title="{{ tool.getTranslationKey()|trans({}, 'platform') }}"
+               data-placement="right">
+               <img src="{{ asset(tool.getIcon()) }}" />
+            </a>
+        </div>
+    {% endfor %}
+</div>

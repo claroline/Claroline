@@ -85,3 +85,18 @@ services:
       tags:
         - { name: kernel.event_listener, event: widget_core_resource_logger_workspace, method: onWorkspaceDisplay }
         - { name: kernel.event_listener, event: widget_core_resource_logger_desktop, method: onDesktopDisplay }
+
+
+    claroline.listener.resource_tool:
+      class: Claroline\CoreBundle\Listener\ToolListener
+      calls:
+        - [setContainer, ["@service_container"]]
+      tags:
+        - { name: kernel.event_listener, event: open_tool_workspace_resource_manager, method: onDisplayWorkspaceResouceManager }
+        - { name: kernel.event_listener, event: open_tool_workspace_parameters, method: onDisplayWorkspaceParameters }
+        - { name: kernel.event_listener, event: open_tool_workspace_user_management, method: onDisplayWorkspaceUserManagement }
+        - { name: kernel.event_listener, event: open_tool_workspace_group_management, method: onDisplayWorkspaceGroupManagement }
+        - { name: kernel.event_listener, event: open_tool_workspace_home, method: onDisplayWorkspaceHome }
+        - { name: kernel.event_listener, event: open_tool_desktop_resource_manager, method: onDisplayDesktopResourceManager }
+        - { name: kernel.event_listener, event: open_tool_desktop_home, method: onDisplayDesktopHome }
+        - { name: kernel.event_listener, event: open_tool_desktop_parameters, method: onDisplayDesktopParameters }

@@ -54,7 +54,6 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 
     private function createMainTeacher($manager)
     {
-        var_dump("main teacher creation");
         $user = new User();
         $user->setFirstName('Jane');
         $user->setLastName('Doe');

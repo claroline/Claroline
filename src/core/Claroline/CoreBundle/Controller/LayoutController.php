@@ -69,7 +69,7 @@ class LayoutController extends Controller
             }
 
             // TODO : use a platform option to make this target configurable
-            $loginTarget = 'claro_desktop_index';
+            $loginTarget = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'));
         }
 
         return $this->render(
