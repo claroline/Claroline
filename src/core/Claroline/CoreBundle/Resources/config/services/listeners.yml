@@ -88,7 +88,7 @@ services:
 
 
     claroline.listener.resource_tool:
-      class: Claroline\CoreBundle\Library\Tools\Listener\ToolListener
+      class: Claroline\CoreBundle\Listener\ToolListener
       calls:
         - [setContainer, ["@service_container"]]
       tags:

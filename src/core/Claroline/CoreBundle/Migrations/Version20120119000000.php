@@ -869,7 +869,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_workspace_tools_role');
         $this->addId($table);
         $table->addColumn('workspace_tool_id', 'integer');
-        $table->addColumn('role_id',  'integer');
+        $table->addColumn('role_id', 'integer');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace_tools'),

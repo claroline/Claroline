@@ -14,13 +14,13 @@ class ToolRepository extends EntityRepository
             JOIN workspaceTool.workspace workspace
             WHERE workspace.id = {$workspace->getId()}";
 
-
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }
 
-    public function getToolsForRolesInWorkspace (array $roles, AbstractWorkspace $workspace) {
+    public function getToolsForRolesInWorkspace (array $roles, AbstractWorkspace $workspace)
+    {
 
         if (null === $firstRole = array_shift($roles)) {
             throw new \RuntimeException('The roles array cannot be empty');
@@ -34,7 +34,7 @@ class ToolRepository extends EntityRepository
             WHERE role.name = '{$firstRole}' and ws.id = {$workspace->getId()}";
 
         foreach ($roles as $role) {
-            $dql.= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
+            $dql .= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
         }
 
         $query = $this->_em->createQuery($dql);

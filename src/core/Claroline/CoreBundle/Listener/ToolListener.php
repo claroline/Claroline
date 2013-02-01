@@ -1,8 +1,8 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Tools\Listener;
+namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Library\Tools\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ToolListener extends ContainerAware
@@ -174,7 +174,9 @@ class ToolListener extends ContainerAware
      */
     public function desktopHome()
     {
-        return $this->container->get('templating')->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
+        return $this->container
+            ->get('templating')
+            ->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
     }
 
     /**
@@ -184,7 +186,9 @@ class ToolListener extends ContainerAware
      */
     public function desktopParameters()
     {
-        return $this->container->get('templating')->render('ClarolineCoreBundle:Tool\desktop\properties:parameters.html.twig');
+        return $this->container
+            ->get('templating')
+            ->render('ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig');
     }
 }
 

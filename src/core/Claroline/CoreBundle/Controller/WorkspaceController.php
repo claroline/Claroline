@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Claroline\CoreBundle\Library\Tools\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 
 /**
@@ -182,7 +182,7 @@ class WorkspaceController extends Controller
      */
     public function openToolAction($toolName, $workspaceId)
     {
-        $em =  $this->get('doctrine.orm.entity_manager');
+        $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
 
