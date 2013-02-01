@@ -81,7 +81,8 @@ class LayoutController extends Controller
                 'register_target' => $registerTarget,
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
-                'personalWs' => $personalWs
+                'personalWs' => $personalWs,
+                'toolName' => 'home'
             )
         );
     }

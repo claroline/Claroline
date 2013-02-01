@@ -17,12 +17,10 @@ class ResourceLogRepository extends EntityRepository
             JOIN rl.workspace ws
             JOIN rl.resource res
             JOIN res.resourceType rt
-            JOIN ws.rights workspaceRights
-            JOIN workspaceRights.role r
+            JOIN ws.roles r
             WHERE rl.workspace IN (
                 SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                JOIN w.rights rights
-                JOIN rights.role wr
+                JOIN w.roles wr
                 JOIN wr.users ur
                 WHERE ur.id = {$user->getId()}
             )";

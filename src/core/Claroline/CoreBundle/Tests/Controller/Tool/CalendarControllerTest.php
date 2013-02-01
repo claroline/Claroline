@@ -121,7 +121,7 @@ class CalendarControllerTest extends FunctionalTestCase
         $contentUpdate = json_decode($this->client->getResponse()->getContent());
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
-        $this->client->request('GET', "/workspaces/{$workspaceId}/agenda/show");
+        $this->client->request('GET', "/workspaces/tool/calendar/{$workspaceId}/agenda/show");
         $listEvents = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(array($contentUpdate), $listEvents);
     }

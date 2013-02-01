@@ -73,14 +73,6 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
-     *     mappedBy="workspace"
-     * )
-     */
-    protected $rights;
-
-    /**
-     * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Event",
      *     mappedBy="workspace",
      *     cascade={"persist"}
@@ -96,6 +88,16 @@ abstract class AbstractWorkspace
      * )
      */
     protected $workspaceTools;
+
+
+    /**
+     * @ORM\OneToMany(
+     * targetEntity="Claroline\CoreBundle\Entity\Role",
+     * mappedBy="workspace",
+     * cascade={"persist"}
+     * )
+     */
+    protected $roles;
 
     public function __construct()
     {
@@ -158,11 +160,6 @@ abstract class AbstractWorkspace
     public function getCode()
     {
         return $this->code;
-    }
-
-    public function getRights()
-    {
-        return $this->rights;
     }
 
     public function addTool(Tool $tool)

@@ -5,8 +5,20 @@ namespace Claroline\CoreBundle\Entity\Tool;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
 
+/**
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
+ * @ORM\Table(name="claro_user_desktop_tool")
+ */
 class UserDesktopTool
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
@@ -58,6 +70,11 @@ class UserDesktopTool
     public function getOrder()
     {
         return $this->order;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 }
 
