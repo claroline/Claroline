@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,47 +14,12 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 class CalendarController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
-
-    public function indexAction ($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('VIEW', $workspace);
-
-        $event = new Event();
-        $formBuilder = $this->createFormBuilder($event);
-        $formBuilder
-            ->add('title', 'text', array('required' => true))
-            ->add(
-                'end',
-                'date',
-                array(
-                    'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
-                    'data' => new \DateTime('now')
-                )
-            )
-            ->add(
-                'allDay',
-                'checkbox',
-                array(
-                'label' => 'all day ?',
-                )
-            )
-            ->add('description', 'textarea');
-        $form = $formBuilder->getForm();
-
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
-            array('workspace' => $workspace, 'form' => $form->createView())
-        );
-    }
-
+  
     public function addEventAction($workspaceId)
     {
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('EDIT', $workspace);
+        $this->checkUserIsAllowed('calendar', $workspace);
         $event = new Event();
         $formBuilder = $this->createFormBuilder($event);
         $formBuilder->add('title', 'text')
@@ -113,7 +78,7 @@ class CalendarController extends Controller
             }
 
             return $this->render(
-                'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
+                'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
                 array('workspace' => $workspace, 'form' => $form->createView())
             );
         }
@@ -123,7 +88,7 @@ class CalendarController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('VIEW', $workspace);
+        $this->checkUserIsAllowed('calendar', $workspace);
         $listEvents = $workspace->getEvents();
         $data = array();
 
@@ -145,7 +110,7 @@ class CalendarController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('EDIT', $workspace);
+        $this->checkUserIsAllowed('calendar', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
         $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
@@ -178,7 +143,7 @@ class CalendarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('EDIT', $workspace);
+        $this->checkUserIsAllowed('calendar', $workspace);
         $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
         $request = $this->get('request');
         $postData = $request->request->all();
@@ -190,33 +155,6 @@ class CalendarController extends Controller
             json_encode(array('greeting' => 'delete')),
             200,
             array('Content-Type' => 'application/json')
-        );
-    }
-
-    public function desktopAction()
-    {
-        $event = new Event();
-        $formBuilder = $this->createFormBuilder($event);
-        $formBuilder->add('title', 'text')
-            ->add(
-                'end',
-                'date',
-                array(
-                    'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
-                )
-            )
-            ->add(
-                'allDay',
-                'checkbox',
-                array(
-                    'label' => 'all day ?')
-            )
-            ->add('description', 'textarea');
-
-        return $this->render(
-            'ClarolineCoreBundle:Desktop:calendar.html.twig',
-            array('form' => $formBuilder-> getForm()-> createView())
         );
     }
 
