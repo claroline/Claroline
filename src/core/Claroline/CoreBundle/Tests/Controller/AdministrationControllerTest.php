@@ -390,7 +390,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => true, 'isDesktop' => true));
-        $crawler = $this->client->request('GET', '/desktop/info');
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(count($crawler->filter('.widget')), count($configs));
     }
 

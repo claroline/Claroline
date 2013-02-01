@@ -1,0 +1,7 @@
+claro_tool_desktop_info:
+    pattern: /info
+    defaults: { _controller: ClarolineCoreBundle:Tool\Home:info }
+
+claro_tool_desktop_perso:
+    pattern: /perso
+    defaults: { _controller: ClarolineCoreBundle:Tool\Home:perso }

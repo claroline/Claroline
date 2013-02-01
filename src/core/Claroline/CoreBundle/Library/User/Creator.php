@@ -29,6 +29,7 @@ class Creator
         $this->wsCreator = $wsCreator;
     }
 
+    //@todo defaultToolName should go here; refactor places where a user is created
     /**
      * Creates a user. This method will create the user personal workspace
      * and persist the $user.

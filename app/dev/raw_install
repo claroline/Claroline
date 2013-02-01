@@ -26,7 +26,7 @@ refreshFile("{$rootDirectory}/app/logs/test.log");
 
 require_once __DIR__.'/delete_files';
 
-system("php {$rootDirectory}/composer.phar install");
+//system("php {$rootDirectory}/composer.phar install");
 system("php {$rootDirectory}/app/console claroline:themes:compile");
 
 system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");

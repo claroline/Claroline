@@ -14,8 +14,10 @@
         <ul>
             {% for workspace in workspaces %}
             <li class="row-workspace">
-                <a href="{{path('claro_workspace_home', {'workspaceId': workspace.getId()})}}" class="link-home" id="link-home-{{workspace.getId}}">
-                    {{ workspace.getName () }}
+                <a href="{{ path('claro_workspace_open_tool',
+                   {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                   id="link-home-{{ workspace.getId() }}">
+                   {{ workspace.getName() }}
                 </a>
                 {% if is_granted('DELETE', workspace ) %}
                    <a href="#" data-workspace-id="{{workspace.getId()}}" class="link-delete-workspace" id="link-delete-{{workspace.getId}}">

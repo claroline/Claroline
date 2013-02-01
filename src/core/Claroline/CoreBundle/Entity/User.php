@@ -141,6 +141,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $userMessages;
 
+    /**
+     * @ORM\Column(type="string", nullable=true, name="desktop_default_tool_name")
+     */
+    protected $desktopDefaultToolName;
+
     public function __construct()
     {
         parent::__construct();
@@ -150,6 +155,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->workspaceRoles = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->desktopDefaultToolName = 'home';
     }
 
     public function getId()
@@ -364,5 +370,15 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function getUserMessages()
     {
         return $this->userMessages;
+    }
+
+    public function setDefaultDesktopToolName($toolName)
+    {
+        $this->desktopDefaultToolName = $toolName;
+    }
+
+    public function getDefaultDesktopToolName()
+    {
+        return $this->desktopDefaultToolName;
     }
 }

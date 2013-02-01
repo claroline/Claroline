@@ -11,6 +11,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceContext;
 use Claroline\CoreBundle\Entity\Rights\WorkspaceRights;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
 
 class Creator
 {
@@ -115,6 +117,7 @@ class Creator
         );
 
         $manager->addRole($this->roleRepo->getManagerRole($workspace));
+        $this->addMandatoryTools($workspace);
         $this->entityManager->persist($manager);
         $this->entityManager->flush();
 
@@ -259,5 +262,38 @@ class Creator
         }
 
         return $resource;
+    }
+
+    private function addMandatoryTools(AbstractWorkspace $workspace)
+    {
+        $tools = $this->entityManager
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findBy(array('isWorkspaceRequired' => true));
+
+        foreach ($tools as $tool) {
+            $workspace->addTool($tool);
+
+        }
+
+        $manager = $this->roleRepo->getManagerRole($workspace);
+        $visitor = $this->roleRepo->getVisitorRole($workspace);
+        $collaborator = $this->roleRepo->getCollaboratorRole($workspace);
+
+        foreach ($workspace->getWorkspaceTools() as $wsTool) {
+            $this->setWorkspaceToolRole($wsTool, $manager);
+            $this->setWorkspaceToolRole($wsTool, $visitor);
+            $this->setWorkspaceToolRole($wsTool, $collaborator);
+        }
+
+        $this->entityManager->persist($workspace);
+    }
+
+    private function setWorkspaceToolRole(WorkspaceTool $wsTool, Role $role)
+    {
+        $wtr = new WorkspaceToolRole();
+        $wtr->setRole($role);
+        $wtr->setWorkspaceTool($wsTool);
+
+        $this->entityManager->persist($wtr);
     }
 }
