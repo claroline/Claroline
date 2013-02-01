@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class ToolRepository extends EntityRepository
 {
@@ -40,5 +41,13 @@ class ToolRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+
+    public function getDesktopTools()
+    {
+        $dql = "
+            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool.displayability = " . Tool::DESKTOP_ONLY
+        ;
     }
 }

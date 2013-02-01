@@ -142,9 +142,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $userMessages;
 
     /**
-     * @ORM\Column(type="string", nullable=true, name="desktop_default_tool_name")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\UserDesktopTool",
+     *     mappedBy="user"
+     * )
      */
-    protected $desktopDefaultToolName;
+    protected $desktopTools;
 
     public function __construct()
     {
@@ -155,7 +158,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->workspaceRoles = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->desktopDefaultToolName = 'home';
+        $this->desktopTools = new ArrayCollection();
     }
 
     public function getId()
@@ -363,22 +366,5 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if (isset($removedRole)) {
             $this->roles->removeElement($removedRole);
         }
-
-        $this->roles->add($platformRole);
-    }
-
-    public function getUserMessages()
-    {
-        return $this->userMessages;
-    }
-
-    public function setDefaultDesktopToolName($toolName)
-    {
-        $this->desktopDefaultToolName = $toolName;
-    }
-
-    public function getDefaultDesktopToolName()
-    {
-        return $this->desktopDefaultToolName;
     }
 }
