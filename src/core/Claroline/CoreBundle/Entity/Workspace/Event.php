@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\EventRepository")
  * @ORM\Table(name="claro_event")
  */
 class Event
@@ -40,11 +40,6 @@ class Event
     private $description;
 
     /**
-     *  @ORM\Column(name="workspace_id", type="integer")
-     */
-    private $workspaceId;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *     inversedBy="events", cascade={"persist"}
@@ -54,15 +49,14 @@ class Event
     private $workspace;
 
     /**
-     *  @ORM\Column(name="user_id", type="integer")
-     */
-    private $userId;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+    /**
+     * @ORM\Column(name="allday", type="string" , nullable=false)
+     */
+    private $allDay;
 
     public function getId()
     {
@@ -126,16 +120,6 @@ class Event
         $this->workspaceId = $workspaceId;
     }
 
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
-
     public function getWorkspace()
     {
         return $this->workspace;
@@ -155,4 +139,16 @@ class Event
     {
         $this->user = $user;
     }
+
+    public function getAllDay()
+    {
+        return $this->allDay;
+    }
+
+    public function setAllDay($allDay)
+    {
+        $this->allDay = $allDay;
+    }
+
+
 }

@@ -8,11 +8,14 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Workspace\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
+/**
+ * Controller of the calendar
+ */
 class CalendarController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
 
-    public function indexAction($workspaceId)
+    public function indexAction ($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
@@ -29,6 +32,13 @@ class CalendarController extends Controller
                     'format' => 'dd-MM-yyyy',
                     'widget' => 'choice',
                     'data' => new \DateTime('now')
+                )
+            )
+            ->add(
+                'allDay',
+                'checkbox',
+                array(
+                'label' => 'all day ?',
                 )
             )
             ->add('description', 'textarea');
@@ -56,6 +66,12 @@ class CalendarController extends Controller
                     'widget' => 'choice',
                 )
             )
+            ->add(
+                'allDay',
+                'checkbox',
+                array(
+                    'label' => 'all day ?')
+            )
             ->add('description', 'textarea');
         $form = $formBuilder->getForm();
         $request = $this->get('request');
@@ -82,7 +98,8 @@ class CalendarController extends Controller
                         'end' => date('Y-m-d', $event->getEnd())
                     );
 
-                    return new Response(json_encode($data),
+                    return new Response(
+                        json_encode($data),
                         200,
                         array('Content-Type' => 'application/json')
                     );
@@ -93,8 +110,8 @@ class CalendarController extends Controller
                         array('Content-Type' => 'application/json')
                     );
                 }
-            }    
-            
+            }
+
             return $this->render(
                 'ClarolineCoreBundle:Workspace:tools/calendar.html.twig',
                 array('workspace' => $workspace, 'form' => $form->createView())
@@ -117,9 +134,10 @@ class CalendarController extends Controller
             $data[$key]['end'] = $object->getEnd();
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:tools/calendar_json.html.twig', 
-            array('data' => utf8_encode(json_encode($data)))
+        return new Response(
+            json_encode($data),
+            200,
+            array('Content-Type' => 'application/json')
         );
     }
 
@@ -142,13 +160,14 @@ class CalendarController extends Controller
         $event->setEnd($dateEnd);
         $em->flush();
 
-        return new Response(json_encode(
-            array(
-                'id' => $event->getId(),
-                'title' => $event->getTitle(),
-                'start' => $event->getStart(),
-                'end' => $event->getEnd()
-                )
+        return new Response(
+            json_encode(
+                array(
+                    'id' => $event->getId(),
+                    'title' => $event->getTitle(),
+                    'start' => $event->getStart(),
+                    'end' => $event->getEnd()
+                    )
             ),
             200,
             array('Content-Type' => 'application/json')
@@ -176,8 +195,50 @@ class CalendarController extends Controller
 
     public function desktopAction()
     {
+        $event = new Event();
+        $formBuilder = $this->createFormBuilder($event);
+        $formBuilder->add('title', 'text')
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                )
+            )
+            ->add(
+                'allDay',
+                'checkbox',
+                array(
+                    'label' => 'all day ?')
+            )
+            ->add('description', 'textarea');
 
-        return $this->render('ClarolineCoreBundle:Desktop:calendar.html.twig');
+        return $this->render(
+            'ClarolineCoreBundle:Desktop:calendar.html.twig',
+            array('form' => $formBuilder-> getForm()-> createView())
+        );
+    }
+
+    public function DesktopShowAction()
+    {
+         $em = $this->getDoctrine()->getManager();
+        $usr = $this-> get('security.context')-> getToken()-> getUser();
+        $listEvents = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event')->getAllUserEvents($usr);
+
+        foreach ($listEvents as $key => $object) {
+            $data[$key]['id'] = $object->getId();
+            $data[$key]['title'] = $object->getTitle();
+            $data[$key]['start'] = $object->getStart();
+            $data[$key]['end'] = $object->getEnd();
+        }
+
+        return new Response(
+            json_encode($data),
+            200,
+            array('Content-Type' => 'application/json')
+        );
+
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
