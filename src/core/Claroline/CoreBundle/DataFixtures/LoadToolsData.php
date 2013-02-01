@@ -26,7 +26,7 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
 
         $tools = array(
             array('resource_manager', 'resource_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'resources'),
-            array('agenda', 'calendar_small.png', false, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
+            array('calendar', 'calendar_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
             array('parameters', 'process_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'parameters'),
             array('user_management', 'user_small.png', true, Tool::WORKSPACE_ONLY, 'user_management'),
             array('group_management', 'users_small.png', true,  Tool::WORKSPACE_ONLY, 'group_management'),

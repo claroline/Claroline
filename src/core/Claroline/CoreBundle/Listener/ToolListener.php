@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Entity\Workspace\Event;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ToolListener extends ContainerAware
@@ -31,6 +32,11 @@ class ToolListener extends ContainerAware
     {
         $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
     }
+    
+    public function onDisplayWorkspaceCalendar(DisplayToolEvent $event)
+    {
+        $event->setContent($this->workspaceCalendar($event->getWorkspace()->getId()));
+    }
 
     public function onDisplayDesktopResourceManager(DisplayToolEvent $event)
     {
@@ -45,6 +51,11 @@ class ToolListener extends ContainerAware
     public function onDisplayDesktopParameters(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopParameters());
+    }
+    
+    public function onDisplayDesktopCalendar(DisplayToolEvent $event)
+    {
+        $event->setContent($this->desktopCalendar());
     }
 
     /**
@@ -189,6 +200,66 @@ class ToolListener extends ContainerAware
         return $this->container
             ->get('templating')
             ->render('ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig');
+    }
+    
+    public function workspaceCalendar($workspaceId)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $event = new Event();
+        $formBuilder = $this->container->get('form.factory')->createBuilder('form', $event, array());
+        $formBuilder
+            ->add('title', 'text', array('required' => true))
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                    'data' => new \DateTime('now')
+                )
+            )
+            ->add(
+                'allDay',
+                'checkbox',
+                array(
+                'label' => 'all day ?',
+                )
+            )
+            ->add('description', 'textarea');
+        $form = $formBuilder->getForm();
+
+        return $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
+            array('workspace' => $workspace, 'form' => $form->createView())
+        );
+    }
+    
+    public function desktopCalendar()
+    {
+        $event = new Event();
+        $formBuilder = $this->container->get('form.factory')->createBuilder('form', $event, array());
+        $formBuilder->add('title', 'text')
+            ->add(
+                'end',
+                'date',
+                array(
+                    'format' => 'dd-MM-yyyy',
+                    'widget' => 'choice',
+                )
+            )
+            ->add(
+                'allDay',
+                'checkbox',
+                array(
+                    'label' => 'all day ?')
+            )
+            ->add('description', 'textarea');
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool:desktop/calendar/calendar.html.twig',
+            array('form' => $formBuilder-> getForm()-> createView())
+        );
     }
 }
 
