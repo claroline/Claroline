@@ -304,7 +304,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             )";
         $dql .= " WHERE rt.isVisible=1"
             . " AND " . self::WHERECONDITION_USER_WORKSPACE;
-        $dql .= " AND arRights.canView = 1";
+        $dql .= " AND arRights.canOpen = 1";
 
         foreach ($criterias as $key => $value) {
             $methodName = 'build' . ucfirst($key) . 'Filter';
