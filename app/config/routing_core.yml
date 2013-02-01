@@ -21,6 +21,10 @@ claro_desktop:
     resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
     prefix: desktop
 
+claro_desktop_tool_calendar:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_calendar.yml"
+    prefix: desktop/tool/calendar
+
 claro_desktop_tool_home:
     resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_home.yml"
     prefix: desktop/tool/home
@@ -44,6 +48,10 @@ claro_workspace_tool_user:
 claro_workspace_tool_group:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_group.yml"
     prefix: workspaces/tool/group_management
+    
+claro_workspace_tool_calendar:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_calendar.yml"
+    prefix: workspaces/tool/calendar
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
