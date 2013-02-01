@@ -81,8 +81,7 @@ class ResourcePropertiesController extends Controller
             ->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
-        $collection = new ResourceCollection(array($resource));
-//        $this->checkAccess('EDIT', $collection);
+
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
         return $this->render(
@@ -104,7 +103,6 @@ class ResourcePropertiesController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
             ->find($resourceId);
-        $collection = new ResourceCollection(array($resource));
 
         if (!$this->get('security.context')->getToken()->getUser() === $resource->getCreator()) {
              throw new AccessDeniedException("You're not the owner of this resource");

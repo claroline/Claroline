@@ -1,10 +1,10 @@
 claro_widget_properties:
     pattern: /widget/properties
-    defaults: { _controller: ClarolineCoreBundle:Tool/Properties:desktopWidgetProperties }
+    defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopWidgetProperties }
 
 claro_desktop_widget_invertvisible:
     pattern: /config/{displayConfigId}/widget/{widgetId}/invertvisible
-    defaults: { _controller: ClarolineCoreBundle:Tool/Properties:desktopInvertVisibleUserWidget }
+    defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopInvertVisibleUserWidget }
     requirements:
       _method: POST
     options:
@@ -12,7 +12,7 @@ claro_desktop_widget_invertvisible:
 
 claro_desktop_widget_configuration:
   pattern: widget/{widgetId}/configuration/desktop
-  defaults: { _controller: ClarolineCoreBundle:Tool/Properties:desktopConfigureWidget }
+  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopConfigureWidget }
   requirements:
     _method: GET
   options:

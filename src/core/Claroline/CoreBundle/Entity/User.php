@@ -372,7 +372,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->userMessages;
     }
 
-    public function setDefaultDesktopToolName($toolName) {
+    public function setDefaultDesktopToolName($toolName)
+    {
         $this->desktopDefaultToolName = $toolName;
     }
 

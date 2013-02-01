@@ -1,30 +1,30 @@
 claro_workspace_widget_properties:
   pattern: /{workspaceId}/widget
-  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:workspaceWidgetsProperties }
+  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceWidgetsProperties }
   requirements:
     _method: GET
 
 claro_workspace_rights:
   pattern: /{workspaceId}/rights
-  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:workspaceConfigureRights }
+  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceConfigureRights }
   requirements:
     _method: GET
 
 claro_workspace_workspace_rights_form:
   pattern: /{workspaceId}/rights/form
-  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:RightsForm }
+  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:RightsForm }
   requirements:
     _method: GET
 
 claro_workspace_workspace_rigths_edit:
   pattern: /{workspaceId}/rights/edit
-  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:workspaceEditRights }
+  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceEditRights }
   requirements:
     _method: POST
 
 claro_workspace_widget_invertvisible:
   pattern: /{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible
-  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:workspaceInvertVisibleWidget }
+  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceInvertVisibleWidget }
   requirements:
     _method: POST
   options:
@@ -32,7 +32,7 @@ claro_workspace_widget_invertvisible:
 
 claro_workspace_widget_configuration:
   pattern: /{workspaceId}/widget/{widgetId}/configuration
-  defaults: { _controller: ClarolineCoreBundle:Tool\Properties:workspaceConfigureWidget }
+  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceConfigureWidget }
   requirements:
     _method: GET
   options:

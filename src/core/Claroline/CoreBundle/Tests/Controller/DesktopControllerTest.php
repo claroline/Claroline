@@ -53,7 +53,8 @@ class DesktopControllerTest extends FunctionalTestCase
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/config/{$configs[0]->getId()}/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
+            "/desktop/tool/properties/config/{$configs[0]->getId()}"
+            . "/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
         );
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));

@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
-class PropertiesController extends Controller
+class ParametersController extends Controller
 {
     /**
      * Renders the workspace widget properties page.
@@ -222,7 +222,7 @@ class PropertiesController extends Controller
             ->generateDesktopDisplayConfig($user->getId());
 
         return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\properties:widget_properties.html.twig',
+            'ClarolineCoreBundle:Tool\desktop\parameters:widget_properties.html.twig',
             array('configs' => $configs, 'user' => $user)
         );
     }
@@ -283,7 +283,7 @@ class PropertiesController extends Controller
 
         if ($event->getContent() !== '') {
             return $this->render(
-                'ClarolineCoreBundle:Desktop:widget_configuration.html.twig',
+                'ClarolineCoreBundle:Tool\desktop\parameters:widget_configuration.html.twig',
                 array('content' => $event->getContent())
             );
         }

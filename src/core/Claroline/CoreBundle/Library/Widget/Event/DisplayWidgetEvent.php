@@ -14,7 +14,7 @@ class DisplayWidgetEvent extends Event
     {
         $this->workspace = $workspace;
     }
-    
+
     public function setContent($content)
     {
         $this->content = $content;

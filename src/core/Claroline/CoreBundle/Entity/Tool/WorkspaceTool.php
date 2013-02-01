@@ -44,8 +44,9 @@ class WorkspaceTool
      */
     private $workspaceToolRoles;
 
-    public function __construct() {
-        $this->workspaceToolRoles =  new ArrayCollection();
+    public function __construct()
+    {
+        $this->workspaceToolRoles = new ArrayCollection();
     }
 
     public function getId()

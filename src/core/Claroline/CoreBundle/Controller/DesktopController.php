@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Library\Tools\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
 
 /**
  * Controller of the user's desktop.
