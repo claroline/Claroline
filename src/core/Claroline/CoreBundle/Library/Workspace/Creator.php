@@ -42,7 +42,6 @@ class Creator
         $workspace = new $workspaceType;
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
-        $workspace->setType($config->getType());
         $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
         $this->entityManager->flush();
@@ -64,24 +63,20 @@ class Creator
         $this->entityManager->persist($rootDir);
 
         //default resource rights
-        $this->createDefaultsResourcesRights(
-            true, true, true, true, true, true,
-            $this->roleRepo->getManagerRole($workspace),
-            $rootDir,
-            $workspace
-        );
-        $this->createDefaultsResourcesRights(
-            false, true, false, false, true, false,
-            $this->roleRepo->getCollaboratorRole($workspace),
-            $rootDir,
-            $workspace
-        );
-        $this->createDefaultsResourcesRights(
-            false, false, false, false, false, false,
-            $this->roleRepo->getVisitorRole($workspace),
-            $rootDir,
-            $workspace
-        );
+        foreach($config->getRootPermissions() as $role => $permission) {
+            $this->createDefaultsResourcesRights(
+                $permission['canDelete'],
+                $permission['canOpen'],
+                $permission['canEdit'],
+                $permission['canCopy'],
+                $permission['canExport'],
+                $permission['canCopy'],
+                $this->roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId())),
+                $rootDir,
+                $workspace
+            );
+        }
+
         $this->createDefaultsResourcesRights(
             false, false, false, false, false, false,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
@@ -97,7 +92,8 @@ class Creator
         );
 
         $manager->addRole($this->roleRepo->getManagerRole($workspace));
-        $this->addMandatoryTools($workspace);
+        $this->addMandatoryTools($workspace, $config);
+
         $this->entityManager->persist($manager);
         $this->entityManager->flush();
 
@@ -163,9 +159,11 @@ class Creator
      */
     private function initBaseRoles(AbstractWorkspace $workspace, Configuration $config)
     {
-        $this->createRole('VISITOR', $workspace, $config->getVisitorTranslationKey());
-        $this->createRole('COLLABORATOR', $workspace, $config->getCollaboratorTranslationKey());
-        $this->createRole('MANAGER', $workspace, $config->getManagerTranslationKey());
+        $roles = $config->getRoles();
+
+        foreach ($roles as $name => $translation){
+            $this->createRole($name, $workspace, $translation);
+        }
 
         $this->entityManager->flush();
     }
@@ -182,7 +180,7 @@ class Creator
     private function createRole($baseName, AbstractWorkspace $workspace, $translationKey)
     {
         $baseRole = new Role();
-        $baseRole->setName('ROLE_WS_' . $baseName . '_' . $workspace->getId());
+        $baseRole->setName($baseName . '_' . $workspace->getId());
         $baseRole->setParent(null);
         $baseRole->setRoleType(Role::WS_ROLE);
         $baseRole->setTranslationKey($translationKey);
@@ -218,25 +216,34 @@ class Creator
         return $resource;
     }
 
-    private function addMandatoryTools(AbstractWorkspace $workspace)
+    /**
+     * Adds the tools for a workspace.
+     *
+     * @todo Optimize this for doctrine (loops with findby aren't exactly really effective).
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     */
+    private function addMandatoryTools(AbstractWorkspace $workspace, Configuration $config)
     {
-        $tools = $this->entityManager
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findBy(array('isWorkspaceRequired' => true));
+        $tools = $config->getTools();
 
-        foreach ($tools as $tool) {
-            $workspace->addTool($tool);
+        foreach ($tools as $name => $roles) {
+            $tool = $this->entityManager
+                ->getRepository('ClarolineCoreBundle:Tool\Tool')
+                ->findOneBy(array('name' => $name));
+            $wsTool = new WorkspaceTool();
+            $wsTool->setTool($tool);
+            $wsTool->setWorkspace($workspace);
 
-        }
+            $this->entityManager->persist($wsTool);
 
-        $manager = $this->roleRepo->getManagerRole($workspace);
-        $visitor = $this->roleRepo->getVisitorRole($workspace);
-        $collaborator = $this->roleRepo->getCollaboratorRole($workspace);
-
-        foreach ($workspace->getWorkspaceTools() as $wsTool) {
-            $this->setWorkspaceToolRole($wsTool, $manager);
-            $this->setWorkspaceToolRole($wsTool, $visitor);
-            $this->setWorkspaceToolRole($wsTool, $collaborator);
+            foreach ($roles as $role) {
+                $role = $this->entityManager
+                    ->getRepository('ClarolineCoreBundle:Role')
+                    ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+                $this->setWorkspaceToolRole($wsTool, $role);
+            }
         }
 
         $this->entityManager->persist($workspace);

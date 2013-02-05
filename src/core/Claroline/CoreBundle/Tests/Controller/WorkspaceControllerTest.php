@@ -92,7 +92,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     //++++++++++++++++++++++++++++++/
     // ACCESS WORKSPACE MAIN PAGES +/
     //++++++++++++++++++++++++++++++/
-
+/*
     public function testUserCantAccessUnregisteredResource()
     {
         $this->loadUserFixture(array('user', 'admin'));
@@ -324,7 +324,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
             )
         );
     }
-
+*/
     private function registerStubPlugins(array $pluginFqcns)
     {
         $container = $this->client->getContainer();

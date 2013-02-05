@@ -63,11 +63,6 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/invert/visibility/tool/{$home->getId()}"
-        );
-
-        $this->client->request(
-            'POST',
             "/desktop/tool/properties/move/up/tool/{$home->getId()}"
         );
 

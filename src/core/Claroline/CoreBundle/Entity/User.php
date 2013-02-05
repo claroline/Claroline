@@ -122,7 +122,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $abstractResources;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     inversedBy="personalUser"
+     * )
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $personalWorkspace;
@@ -373,7 +376,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
         $this->roles->add($platformRole);
     }
-    
+
     public function getDesktopTools()
     {
         return $this->desktopTools;
