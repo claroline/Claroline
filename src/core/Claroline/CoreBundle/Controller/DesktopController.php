@@ -4,9 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
 use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
 
 /**
@@ -53,8 +51,8 @@ class DesktopController extends Controller
     public function renderToolListAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
 
         return $this->render(
             'ClarolineCoreBundle:Desktop:tool_list.html.twig',

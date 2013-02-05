@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\User;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
  * @ORM\Table(name="claro_user_desktop_tool")
  */
-class UserDesktopTool
+class DesktopTool
 {
     /**
      * @ORM\Id
@@ -30,7 +30,8 @@ class UserDesktopTool
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool", cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool", cascade={"persist"},
+     *     inversedBy="desktopTools"
      * )
      * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
      *
@@ -38,7 +39,7 @@ class UserDesktopTool
     private $tool;
 
     /**
-     * @ORM\Column(name="order", type="integer")
+     * @ORM\Column(name="display_order", type="integer")
      */
     protected $order;
 
@@ -75,6 +76,18 @@ class UserDesktopTool
     public function getId()
     {
         return $this->id;
+    }
+
+    public function moveUp()
+    {
+        if ($this->order !== 1) {
+            $this->order--;
+        }
+    }
+
+    public function moveDown()
+    {
+        $this->order++;
     }
 }
 

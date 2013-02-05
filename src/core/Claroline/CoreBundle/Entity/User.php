@@ -13,8 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 // TODO: Implements AdvancedUserInterface
 
 /**
@@ -143,7 +143,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\UserDesktopTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
      *     mappedBy="user"
      * )
      */
@@ -155,7 +155,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->userMessages = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->workspaceRoles = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->desktopTools = new ArrayCollection();
@@ -373,5 +372,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
 
         $this->roles->add($platformRole);
+    }
+    
+    public function getDesktopTools()
+    {
+        return $this->desktopTools;
     }
 }
