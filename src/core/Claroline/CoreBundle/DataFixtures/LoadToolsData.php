@@ -25,12 +25,12 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
         $basePath = "bundles{$ds}clarolinecore{$ds}images{$ds}workspace{$ds}tools{$ds}";
 
         $tools = array(
-            array('resource_manager', 'resource_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'resources'),
-            array('calendar', 'calendar_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
-            array('parameters', 'process_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'parameters'),
-            array('user_management', 'user_small.png', true, Tool::WORKSPACE_ONLY, 'user_management'),
-            array('group_management', 'users_small.png', true,  Tool::WORKSPACE_ONLY, 'group_management'),
-            array('home', 'home_small.png', true, Tool::WORKSPACE_AND_DESKTOP, 'home' )
+            array('home', 'home_small.png', true, true, Tool::WORKSPACE_AND_DESKTOP, 'home' ),
+            array('parameters', 'process_small.png', true, true, Tool::WORKSPACE_AND_DESKTOP, 'parameters'),
+            array('resource_manager', 'resource_small.png', true, false, Tool::WORKSPACE_AND_DESKTOP, 'resources'),
+            array('calendar', 'calendar_small.png', true, false, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
+            array('user_management', 'user_small.png', true, false, Tool::WORKSPACE_ONLY, 'user_management'),
+            array('group_management', 'users_small.png', true,  false, Tool::WORKSPACE_ONLY, 'group_management')
         );
 
         foreach ($tools as $tool) {
@@ -38,8 +38,9 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
             $entity->setName($tool[0]);
             $entity->setIcon($basePath.$tool[1]);
             $entity->setIsWorkspaceRequired($tool[2]);
-            $entity->setDisplayability($tool[3]);
-            $entity->setTranslationKey($tool[4]);
+            $entity->setIsDesktopRequired($tool[3]);
+            $entity->setDisplayability($tool[4]);
+            $entity->setTranslationKey($tool[5]);
 
             $manager->persist($entity);
         }

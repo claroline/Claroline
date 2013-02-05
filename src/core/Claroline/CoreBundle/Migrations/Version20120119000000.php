@@ -92,7 +92,6 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_user_desktop_tool');
     }
 
-    //@todo: foreign key constraint on desktop_default_tool.
     private function createUserTable(Schema $schema)
     {
         $table = $schema->createTable('claro_user');
@@ -814,6 +813,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('icon', 'string');
         $table->addColumn('displayability', 'integer');
         $table->addColumn('is_workspace_required', 'boolean');
+        $table->addColumn('is_desktop_required', 'boolean');
         $table->addColumn('translation_key', 'string');
 
         $this->storeTable($table);
@@ -872,7 +872,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('user_id', 'integer');
         $table->addColumn('tool_id', 'integer');
-        $table->addColumn('order', 'integer');
+        $table->addColumn('display_order', 'integer');
 
        $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_tools'),
@@ -887,5 +887,7 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
+
+        $table->addUniqueIndex(array('user_id', 'tool_id', 'display_order'));
     }
 }

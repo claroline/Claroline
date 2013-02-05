@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 
 class Creator
 {
@@ -51,6 +52,23 @@ class Creator
         $workspace->setType(AbstractWorkspace::PERSONNAL);
         $user->setPersonalWorkspace($workspace);
         $this->em->persist($workspace);
+        $this->em->flush();
+
+        $requiredTools = $this->em
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findBy(array('isDesktopRequired' => true));
+
+        $i = 1;
+
+        foreach ($requiredTools as $requiredTool) {
+            $udt = new DesktopTool();
+            $udt->setUser($user);
+            $udt->setOrder($i);
+            $udt->setTool($requiredTool);
+            $i++;
+            $this->em->persist($udt);
+        }
+
         $this->em->flush();
 
         return $user;

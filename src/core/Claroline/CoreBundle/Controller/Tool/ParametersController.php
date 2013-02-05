@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
@@ -289,6 +290,112 @@ class ParametersController extends Controller
         }
 
         throw new \Exception("event $eventName didn't return any Response");
+    }
+
+    /**
+     * Displays the tools configuration page.
+     *
+     * @return Response
+     */
+    public function desktopConfigureToolAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $displayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
+
+        foreach ($displayedTools as $tool) {
+            $tool->setVisible(true);
+        }
+
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopUndisplayedTools($user);
+
+        foreach ($undisplayedTools as $tool) {
+            $tool->setVisible(false);
+        }
+
+        $tools = array_merge($displayedTools, $undisplayedTools);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\desktop\parameters:tool_properties.html.twig',
+            array('tools' => $tools)
+        );
+    }
+
+    public function desktopInvertToolVisibilityAction($toolId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $displayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
+        $found = false;
+
+        foreach ($displayedTools as $displayedTool) {
+            if ($tool == $displayedTool) {
+                $found = true;
+                if ($tool->isDesktopRequired()) {
+                    throw new \Exception('this tool is required in the desktop');
+                } else {
+                    $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+                        ->findOneBy(array('user' => $user, 'tool' => $tool));
+                    $em->remove($desktopTool);
+
+                    foreach ($displayedTools as $remainingTool) {
+                        $remainingDesktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+                            ->findOneBy(array('user' => $user, 'tool' => $tool));
+                        $remainingDesktopTool->moveUp();
+                        $em->persist($remainingDesktopTool);
+                    }
+
+                    $em->flush();
+
+                    return new Response('success', 204);
+                }
+            }
+        }
+
+        $totalTools = count($displayedTools);
+        $totalTools++;
+        $desktopTool = new DesktopTool();
+        $desktopTool->setUser($user);
+        $desktopTool->setTool($tool);
+        $desktopTool->setOrder($totalTools);
+        $em->persist($desktopTool);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+    public function desktopMoveToolUpAction($toolId)
+    {
+         $em = $this->get('doctrine.orm.entity_manager');
+         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
+         $user = $this->get('security.context')->getToken()->getUser();
+         $displayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
+
+         foreach ($displayedTools as $displayedTool) {
+             if ($tool == $displayedTool) {
+                 $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+                      ->findOneBy(array('user' => $user, 'tool' => $tool));
+
+                 if ($desktopTool->getOrder() === 1) {
+                     throw new \RuntimeException('this row is already the first and cannot be moved up');
+                 }
+
+                 $switchOrder = $desktopTool->getOrder();
+                 $switchOrder--;
+                 $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+                      ->findOneBy(array('order' => $switchOrder, 'user' => $user));
+                 $desktopTool->moveUp();
+                 $switchTool->moveDown();
+                 $em->persist($desktopTool);
+                 $em->persist($switchTool);
+                 $em->flush();
+
+                 return new Response('success');
+             }
+        }
+
+        throw new \RuntimeException("this tool isn't visible yet");
     }
 }
 

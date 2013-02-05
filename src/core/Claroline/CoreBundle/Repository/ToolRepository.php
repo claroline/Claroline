@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class ToolRepository extends EntityRepository
@@ -43,11 +44,60 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getDesktopTools()
+    public function getDesktopTools(User $user)
     {
         $dql = "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            WHERE tool.displayability = " . Tool::DESKTOP_ONLY
+            JOIN tool.desktopTools desktopTool
+            JOIN desktopTool.user user
+            WHERE user.id = {$user->getId()}
+            ORDER BY desktopTool.order";
         ;
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
     }
+
+    public function getDesktopUndisplayedTools(User $user)
+    {
+        $subSelect = "( SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+                JOIN tool_2.desktopTools desktopTool_2
+                JOIN desktopTool_2.user user_2
+                WHERE user_2.id = {$user->getId()})";
+        $dsOnly = Tool::DESKTOP_ONLY;
+        $dsAndWs = Tool::WORKSPACE_AND_DESKTOP;
+
+        $dql = "
+            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool NOT IN ( SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+                JOIN tool_2.desktopTools desktopTool_2
+                JOIN desktopTool_2.user user_2
+                WHERE user_2.id = {$user->getId()}) AND tool.displayability = {$dsOnly}
+            OR tool NOT IN ( SELECT tool_3 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_3
+                JOIN tool_3.desktopTools desktopTool_3
+                JOIN desktopTool_3.user user_3
+                WHERE user_3.id = {$user->getId()}) AND tool.displayability = {$dsAndWs}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function getDesktopDisplayableTools()
+    {
+        $dsOnly = Tool::DESKTOP_ONLY;
+        $dsAndWs = Tool::WORKSPACE_AND_DESKTOP;
+
+        $dql = "
+            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool.displayability = {$dsOnly} OR tool.displayability = {$dsAndWs}";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+
 }

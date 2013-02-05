@@ -37,6 +37,11 @@ class Tool
     protected $isWorkspaceRequired;
 
     /**
+     * @ORM\Column(name="is_desktop_required", type="boolean")
+     */
+    protected $isDesktopRequired;
+
+    /**
      * @ORM\Column(name="displayability", type="integer")
      */
     protected $displayability;
@@ -53,6 +58,21 @@ class Tool
      * )
      */
     protected $workspaceTools;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     mappedBy="tool"
+     * )
+     */
+    protected $desktopTools;
+
+    /**
+     * Unmapped var used for the tool configuration.
+     *
+     * @var boolean
+     */
+    private $isVisible;
 
     public function getId()
     {
@@ -89,6 +109,16 @@ class Tool
         return $this->isWorkspaceRequired;
     }
 
+    public function setIsDesktopRequired($bool)
+    {
+        $this->isDesktopRequired = $bool;
+    }
+
+    public function isDesktopRequired()
+    {
+        return $this->isDesktopRequired;
+    }
+
     public function setDisplayability($display)
     {
         $this->displayability = $display;
@@ -107,6 +137,21 @@ class Tool
     public function getTranslationKey()
     {
         return $this->translationKey;
+    }
+
+    public function setVisible($bool)
+    {
+        $this->isVisible = $bool;
+    }
+
+    public function isVisible()
+    {
+        return $this->isVisible;
+    }
+
+    public function removeDesktopTool($dt)
+    {
+        $this->desktopTools->removeElement($dt);
     }
 }
 
