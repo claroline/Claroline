@@ -49,14 +49,13 @@ class Creator
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
         $workspace = $this->wsCreator->createWorkspace($config, $user);
-        $workspace->setType(AbstractWorkspace::PERSONNAL);
         $user->setPersonalWorkspace($workspace);
         $this->em->persist($workspace);
         $this->em->flush();
 
-        $requiredTools = $this->em
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findBy(array('isDesktopRequired' => true));
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $requiredTools[] = $repo->findOneBy(array('name' => 'home'));
+        $requiredTools[] = $repo->findOneBy(array('name' => 'parameters'));
 
         $i = 1;
 

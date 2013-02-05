@@ -165,7 +165,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => false));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
-        $table->addColumn('type', 'integer', array('notnull' => false));
         $table->addColumn('code', 'string', array('length' => 255));
 
         $this->storeTable($table);

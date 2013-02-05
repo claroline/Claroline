@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use \RuntimeException;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class Configuration
 {
@@ -14,19 +13,63 @@ class Configuration
     private $workspaceName;
     private $workspaceCode;
     private $isPublic;
-    private $type;
-    private $visitorTranslationKey;
-    private $collaboratorTranslationKey;
-    private $managerTranslationKey;
+    private $roles;
+    private $tools;
+    private $rootPermissions;
 
     public function __construct()
     {
         $this->workspaceType = self::TYPE_SIMPLE;
         $this->isPublic = true;
-        $this->type = AbstractWorkspace::STANDARD;
-        $this->visitorTranslationKey = 'visitor';
-        $this->collaboratorTranslationKey = 'collaborator';
-        $this->managerTranslationKey = 'manager';
+        $this->roles = array(
+            'ROLE_WS_VISITOR' => 'visitor',
+            'ROLE_WS_COLLABORATOR' => 'collaborator',
+            'ROLE_WS_MANAGER' => 'manager'
+        );
+        $this->tools = array(
+            'home' => array(
+                'ROLE_WS_VISITOR',
+                'ROLE_WS_COLLABORATOR',
+                'ROLE_WS_MANAGER'
+            ),
+            'resource_manager' => array(
+                'ROLE_WS_COLLABORATOR',
+                'ROLE_WS_MANAGER'
+            ),
+            'calendar' => array(
+                'ROLE_WS_COLLABORATOR',
+                'ROLE_WS_MANAGER'
+            ),
+            'parameters' => array('ROLE_WS_MANAGER'),
+            'group_management' => array('ROLE_WS_MANAGER'),
+            'user_management' => array('ROLE_WS_MANAGER')
+        );
+        $this->rootPermissions = array(
+            'ROLE_WS_VISITOR' => array(
+                'canCopy' => false,
+                'canOpen' => false,
+                'canEdit' => false,
+                'canDelete' => false,
+                'canExport' => false,
+                'canCreate' => false
+             ),
+            'ROLE_WS_COLLABORATOR' => array(
+                'canCopy' => false,
+                'canOpen' => true,
+                'canEdit' => false,
+                'canDelete' => false,
+                'canExport' => true,
+                'canCreate' => false
+            ),
+            'ROLE_WS_MANAGER' => array(
+                'canCopy' => true,
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canExport' => true,
+                'canCreate' => true
+            )
+        );
     }
 
     public static function fromTemplate($templateFile)
@@ -64,46 +107,6 @@ class Configuration
         return $this->isPublic;
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setVisitorTranslationKey($key)
-    {
-        $this->visitorTranslationKey = $key;
-    }
-
-    public function getVisitorTranslationKey()
-    {
-        return $this->visitorTranslationKey;
-    }
-
-    public function setCollaboratorTranslationKey($key)
-    {
-        $this->collaboratorTranslationKey = $key;
-    }
-
-    public function getCollaboratorTranslationKey()
-    {
-        return $this->collaboratorTranslationKey;
-    }
-
-    public function setManagerTranslationKey($key)
-    {
-        $this->managerTranslationKey = $key;
-    }
-
-    public function getManagerTranslationKey()
-    {
-        return $this->managerTranslationKey;
-    }
-
     public function check()
     {
         if ($this->workspaceType != self::TYPE_SIMPLE && $this->workspaceType != self::TYPE_AGGREGATOR) {
@@ -123,5 +126,35 @@ class Configuration
     public function getWorkspaceCode()
     {
         return $this->workspaceCode;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+    }
+
+    public function getTools()
+    {
+        return $this->tools;
+    }
+
+    public function setTools(array $tools)
+    {
+        $this->tools = $tools;
+    }
+
+    public function getRootPermissions()
+    {
+        return $this->rootPermissions;
+    }
+
+    public function setRootPermissions(array $rootPermissions)
+    {
+        $this->rootPermissions = $rootPermissions;
     }
 }

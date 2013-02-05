@@ -25,12 +25,12 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
         $basePath = "bundles{$ds}clarolinecore{$ds}images{$ds}workspace{$ds}tools{$ds}";
 
         $tools = array(
-            array('home', 'home_small.png', true, true, Tool::WORKSPACE_AND_DESKTOP, 'home' ),
-            array('parameters', 'process_small.png', true, true, Tool::WORKSPACE_AND_DESKTOP, 'parameters'),
-            array('resource_manager', 'resource_small.png', true, false, Tool::WORKSPACE_AND_DESKTOP, 'resources'),
-            array('calendar', 'calendar_small.png', true, false, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
-            array('user_management', 'user_small.png', true, false, Tool::WORKSPACE_ONLY, 'user_management'),
-            array('group_management', 'users_small.png', true,  false, Tool::WORKSPACE_ONLY, 'group_management')
+            array('home', 'home_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'home' ),
+            array('parameters', 'process_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'parameters'),
+            array('resource_manager', 'resource_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'resources'),
+            array('calendar', 'calendar_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
+            array('user_management', 'user_small.png', false, false, Tool::WORKSPACE_ONLY, 'user_management'),
+            array('group_management', 'users_small.png', false,  false, Tool::WORKSPACE_ONLY, 'group_management')
         );
 
         foreach ($tools as $tool) {

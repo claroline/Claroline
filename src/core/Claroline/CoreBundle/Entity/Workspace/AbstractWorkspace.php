@@ -6,9 +6,7 @@ use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Role;
 use JMS\SerializerBundle\Annotation\Type;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
 
@@ -26,9 +24,6 @@ use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
  */
 abstract class AbstractWorkspace
 {
-    const PERSONNAL = 0;
-    const STANDARD = 1;
-
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
     protected static $managerPrefix = 'ROLE_WS_MANAGER';
@@ -52,11 +47,6 @@ abstract class AbstractWorkspace
      * @Assert\NotBlank()
      */
     protected $code;
-
-    /**
-     * @ORM\Column(type="integer", length=255)
-     */
-    protected $type;
 
     /**
      * @ORM\Column(name="is_public", type="boolean")
@@ -99,6 +89,14 @@ abstract class AbstractWorkspace
      */
     protected $roles;
 
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="personalWorkspace"
+     * )
+     */
+    protected $personalUser;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -140,16 +138,6 @@ abstract class AbstractWorkspace
     public function getResources()
     {
         return $this->resources;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
     }
 
     public function setCode($code)
