@@ -21,6 +21,17 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Returns the tools list for an array of role for a workspace.
+     *
+     * @todo removing the array of role and do it for a single role instead ?
+     * @param array $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return array
+     *
+     * @throws \RuntimeException
+     */
     public function getToolsForRolesInWorkspace (array $roles, AbstractWorkspace $workspace)
     {
         $isAdmin = false;
@@ -50,13 +61,12 @@ class ToolRepository extends EntityRepository
             $query = $this->_em->createQuery($dql);
 
             return $query->getResult();
-        } else {
-
-            $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
-            $query = $this->_em->createQuery($dql);
-
-            return $query->getResult();
         }
+
+        $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
     }
 
     public function getUndisplayedToolsForRolesInWorkspace(array $roles, AbstractWorkspace $workspace)
@@ -154,5 +164,8 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function getWorkspaceFirstTool(AbstractWorkspace $workspace, $roleName)
+    {
 
+    }
 }

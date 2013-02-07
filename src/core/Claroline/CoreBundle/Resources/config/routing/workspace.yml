@@ -48,5 +48,8 @@ claro_workspace_open_tool:
   requirements:
     _method: GET
 
-
-
+claro_workspace_open:
+  pattern: /{workspaceId}/open
+  defaults: { _controller: ClarolineCoreBundle:Workspace:open }
+  requirements:
+    _method: GET
