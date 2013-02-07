@@ -19,20 +19,36 @@ claro_desktop_widget_configuration:
     expose: true
 
 claro_tool_properties:
-  pattern: /tool/properties
+  pattern: /tools
   defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopConfigureTool }
 
-claro_tool_invert_visibility:
-  pattern: /invert/visibility/tool/{toolId}
-  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopInvertToolVisibility }
+claro_tool_desktop_remove:
+  pattern: /remove/tool/{toolId}
+  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopRemoveTool }
   requirements:
       _method: POST
   options:
     expose: true
 
-claro_tool_move_up:
-  pattern: /move/up/tool/{toolId}
-  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopMoveToolUp }
+claro_tool_desktop_remove:
+  pattern: /remove/tool/{toolId}
+  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopRemoveTool }
+  requirements:
+    _method: POST
+  options:
+    expose: true
+
+claro_tool_desktop_add:
+  pattern: /add/tool/{toolId}/position/{position}
+  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopAddTool }
+  requirements:
+      _method: POST
+  options:
+    expose: true
+
+claro_tool_desktop_move:
+  pattern: /move/tool/{toolId}/position/{position}
+  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:desktopMoveTool }
   requirements:
     _method: POST
   options:

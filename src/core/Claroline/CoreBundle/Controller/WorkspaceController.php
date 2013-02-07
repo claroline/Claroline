@@ -164,7 +164,11 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
 
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getToolsForWorkspace($workspace);
+        $currentRoles = $this->get('claroline.security.utilities')
+            ->getRoles($this->get('security.context')->getToken());
+
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->getToolsForRolesInWorkspace($currentRoles, $workspace);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:tool_list.html.twig',
