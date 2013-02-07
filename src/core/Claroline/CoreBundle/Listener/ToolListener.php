@@ -256,7 +256,7 @@ class ToolListener extends ContainerAware
             )
             ->add('description', 'textarea');
 
-        return $this->render(
+        return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool:desktop/calendar/calendar.html.twig',
             array('form' => $formBuilder-> getForm()-> createView())
         );

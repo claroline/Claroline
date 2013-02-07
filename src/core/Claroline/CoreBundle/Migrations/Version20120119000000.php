@@ -808,10 +808,18 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('name', 'string');
         $table->addColumn('icon', 'string');
-        $table->addColumn('displayability', 'integer');
+        $table->addColumn('is_displayable_in_workspace', 'integer');
+        $table->addColumn('is_displayable_in_desktop', 'integer');
         $table->addColumn('is_workspace_required', 'boolean');
         $table->addColumn('is_desktop_required', 'boolean');
-        $table->addColumn('translation_key', 'string');
+        $table->addColumn('plugin_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_plugin'),
+            array('plugin_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
 
         $this->storeTable($table);
     }
