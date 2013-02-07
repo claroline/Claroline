@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\Filesystem\Filesystem;
@@ -147,6 +148,10 @@ class DatabaseWriter
         foreach ($processedConfiguration['widgets'] as $widget) {
             $this->persistWidget($widget, $pluginEntity, $plugin);
         }
+
+        foreach ($processedConfiguration['tools'] as $tool) {
+            $this->persistTool($tool, $pluginEntity, $plugin);
+        }
     }
 
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
@@ -258,6 +263,32 @@ class DatabaseWriter
 
         $this->em->persist($wWidgetConfig);
         $this->em->persist($dWidgetConfig);
+        $this->em->flush();
+    }
+
+    private function persistTool($tool, $pluginEntity, $plugin)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $toolEntity = new Tool();
+        $toolEntity->setName($tool['name']);
+        $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
+        $toolEntity->setDisplayableInWorkspace($tool['is_displayable_in_workspace']);
+        $toolEntity->setIsDesktopRequired(false);
+        $toolEntity->setIsWorkspaceRequired(false);
+        $toolEntity->setPlugin($pluginEntity);
+
+        if (isset($tool['icon'])) {
+            $toolEntity->setIcon(
+                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$tool['icon']}"
+            );
+        } else {
+            $toolEntity->setIcon(
+                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}res_default.png"
+            );
+        }
+
+        $this->em->persist($toolEntity);
         $this->em->flush();
     }
 }

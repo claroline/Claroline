@@ -264,15 +264,16 @@ class WorkspaceController extends Controller
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->getToolsForRolesInWorkspace(array($foundRole->getRole()), $workspace);
 
-            if ($openedTool == null) {
-                throw new AccessDeniedHttpException("No tool found for role {$foundRole}");
-            }
-
         } else {
+            $foundRole = 'ROLE_ANONYMOUS';
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->getToolsForRolesInWorkspace(array('ROLE_ANONYMOUS'), $workspace);
         }
-        
+
+        if ($openedTool == null) {
+            throw new AccessDeniedHttpException("No tool found for role {$foundRole}");
+        }
+
         $route = $this->get('router')->generate(
             'claro_workspace_open_tool',
             array('workspaceId' => $workspaceId, 'toolName' => $openedTool[0]->getName())

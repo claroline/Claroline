@@ -57,11 +57,9 @@ general: General
 group: Groupe
 group_form_name: Nom
 group_form_ownedRoles: Rôles
-group_management: Gestion des groupes
 group_parameter: Paramètres du groupe
 group_form_platformRole: Role
 groups: Groupes
-home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
@@ -137,7 +135,6 @@ profile_form_phone: Téléphone
 profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification
 profile_form_username: Nom d'utilisateur
-properties: Propriétés
 public: Publique
 recursive_dir_action: Appliquer au contenu du répertoire et aux sous-répertoires
 register: Inscription
@@ -151,7 +148,6 @@ resource: Ressource
 resource_action_denied_message: "L'action %action% n'a pas pu être exécutée sur la resource '%path%': accès refusé."
 resource_creation_wrong_type: "Vous n'avez pas la permission de créer un(e) %type% dans le répertoire '%path%': accès refusé."
 resource_creation_denied: "Vous n'avez pas la permission de créer une ressource dans le répertoire '%path': accès refusé."
-resource_manager: Gestionnaire de ressources
 resource_properties_form_creationDate: Date de création
 resource_properties_form_resourceType: Type de ressource
 resource_properties_form_creator: Créateur
@@ -188,6 +184,8 @@ text_form_name: Nom
 text_form_text: Texte
 text_form_shareType: Redistribution
 to: Jusque
+tool: Outil
+tools: Outils
 today: Aujourd'hui
 type_s: Type(s)
 type: Type
@@ -205,7 +203,6 @@ user_form_phone: Téléphone
 user_form_plainPassword_first: Mot de passe
 user_form_plainPassword_second: Vérification
 user_form_username: Nom d'utilisateur
-user_management: Gestion des utilisateurs
 user_parameters: Paramètres de l'utilisateur
 username: Nom d'utilisateur
 users: Utilisateurs

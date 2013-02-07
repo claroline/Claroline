@@ -25,12 +25,12 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
         $basePath = "bundles{$ds}clarolinecore{$ds}images{$ds}workspace{$ds}tools{$ds}";
 
         $tools = array(
-            array('home', 'home_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'home' ),
-            array('parameters', 'process_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'parameters'),
-            array('resource_manager', 'resource_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'resources'),
-            array('calendar', 'calendar_small.png', false, false, Tool::WORKSPACE_AND_DESKTOP, 'agenda'),
-            array('user_management', 'user_small.png', false, false, Tool::WORKSPACE_ONLY, 'user_management'),
-            array('group_management', 'users_small.png', false,  false, Tool::WORKSPACE_ONLY, 'group_management')
+            array('home', 'home_small.png', false, false, true, true),
+            array('parameters', 'process_small.png', false, false, true, true),
+            array('resource_manager', 'resource_small.png', false, false, true, true),
+            array('calendar', 'calendar_small.png', false, false, true, true),
+            array('user_management', 'user_small.png', false, false, true, false),
+            array('group_management', 'users_small.png', false,  false, true, false)
         );
 
         foreach ($tools as $tool) {
@@ -39,8 +39,8 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
             $entity->setIcon($basePath.$tool[1]);
             $entity->setIsWorkspaceRequired($tool[2]);
             $entity->setIsDesktopRequired($tool[3]);
-            $entity->setDisplayability($tool[4]);
-            $entity->setTranslationKey($tool[5]);
+            $entity->setDisplayableInDesktop($tool[5]);
+            $entity->setDisplayableInWorkspace($tool[4]);
 
             $manager->persist($entity);
         }
