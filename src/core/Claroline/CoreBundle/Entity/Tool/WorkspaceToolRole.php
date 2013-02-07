@@ -19,12 +19,21 @@ class WorkspaceToolRole
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
      *     cascade={"persist"}, inversedBy="workspaceToolRoles"
      * )
-     * @ORM\JoinColumn(name="workspace_tool_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
      */
-    protected $workspaceTool;
+    protected $tool;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     cascade={"persist"}, inversedBy="workspaceToolRoles"
+     * )
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     */
+    protected $workspace;
 
 
     /**
@@ -35,6 +44,11 @@ class WorkspaceToolRole
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
      */
     protected $role;
+
+    /**
+     * @ORM\Column(name="display_order", type="integer")
+     */
+    protected $order;
 
     public function getId()
     {
@@ -51,9 +65,14 @@ class WorkspaceToolRole
         return $this->role;
     }
 
-    public function setWorkspaceTool($wsTool)
+    public function setTool($tool)
     {
-        $this->workspaceTool = $wsTool;
+        $this->tool = $tool;
+    }
+
+    public function getTool()
+    {
+        return $this->tool;
     }
 
     public function setRole($role)
@@ -61,5 +80,23 @@ class WorkspaceToolRole
         $this->role = $role;
     }
 
+    public function setWorkspace($ws)
+    {
+        $this->workspace = $ws;
+    }
 
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    public function getOrder()
+    {
+        return $this->order;
+    }
 }

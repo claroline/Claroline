@@ -1,4 +1,7 @@
 (function(){
+    var wsId = $('#tool-table').attr('data-workspace-id');
+    var roleId = $('#tool-table').attr('data-role-id');
+
     $('.chk-tool-visible').on('change', function(e){
         var toolId = $(e.target.parentElement.parentElement).attr('data-tool-id');
         var rowIndex = e.target.parentElement.parentElement.rowIndex;
@@ -7,16 +10,15 @@
         var route = ''
         if (isCurrentRowChecked) {
             route = Routing.generate(
-                'claro_tool_desktop_add',
-                { 'toolId' : toolId, 'position': rowIndex }
+                'claro_tool_workspace_add',
+                { 'toolId' : toolId, 'position': rowIndex, 'workspaceId': wsId, 'roleId': roleId }
             );
         } else {
             route = Routing.generate(
-                'claro_tool_desktop_remove',
-                { 'toolId' : toolId }
+                'claro_tool_workspace_remove',
+                { 'toolId' : toolId, 'workspaceId': wsId, 'roleId': roleId }
             );
         }
-
         Claroline.Utilities.ajax({url:route, type:'POST'});
     })
 
@@ -35,14 +37,14 @@
             if (isCurrentRowChecked) {
                 var toolId = $(rows.eq(index)[0]).attr('data-tool-id');
                 var route = Routing.generate(
-                    'claro_tool_desktop_move',
-                    { 'toolId': toolId, 'position': index - 1 }
+                    'claro_tool_workspace_move',
+                    { 'toolId': toolId, 'position': index - 1, 'workspaceId': wsId, 'roleId': roleId }
                 );
             } else {
                 var toolId = $(rows.eq(index - 1)[0]).attr('data-tool-id');
                 var route = Routing.generate(
-                    'claro_tool_desktop_move',
-                    { 'toolId': toolId, 'position': index }
+                    'claro_tool_workspace',
+                    { 'toolId': toolId, 'position': index, 'workspaceId': wsId, 'roleId': roleId }
                 );
             }
             Claroline.Utilities.ajax({url:route, type:'POST'});

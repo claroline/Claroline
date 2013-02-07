@@ -44,9 +44,8 @@ class Version20120119000000 extends BundleMigration
         $this->createEventTable($schema);
         $this->createResourceOwnerCreationRightsTable($schema);
         $this->createToolTable($schema);
-        $this->createWorkspaceToolsTable($schema);
-        $this->createWorkspaceToolsRoleTable($schema);
         $this->createUserDesktopToolTable($schema);
+        $this->createWorkspaceToolsRoleTable($schema);
     }
 
     public function down(Schema $schema)
@@ -87,7 +86,6 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_list_type_creation');
         $schema->dropTable('claro_event');
         $schema->dropTable('claro_tools');
-        $schema->dropTable('claro_workspace_tools');
         $schema->dropTable('claro_workspace_tools_role');
         $schema->dropTable('claro_user_desktop_tool');
     }
@@ -818,11 +816,13 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    private function createWorkspaceToolsTable(Schema $schema)
+    private function createWorkspaceToolsRoleTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_workspace_tools');
+        $table = $schema->createTable('claro_workspace_tools_role');
         $this->addId($table);
         $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('role_id', 'integer');
+        $table->addColumn('display_order', 'integer');
         $table->addColumn('tool_id', 'integer');
 
         $table->addForeignKeyConstraint(
@@ -839,30 +839,15 @@ class Version20120119000000 extends BundleMigration
             array('onDelete' => 'CASCADE')
         );
 
-        $this->storeTable($table);
-    }
-
-    private function createWorkspaceToolsRoleTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_workspace_tools_role');
-        $this->addId($table);
-        $table->addColumn('workspace_tool_id', 'integer');
-        $table->addColumn('role_id', 'integer');
-        $table->addColumn('order', 'integer');
-
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace_tools'),
-            array('workspace_tool_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
-
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_role'),
             array('role_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );
+
+        $table->addUniqueIndex(array('role_id', 'tool_id', 'workspace_id'));
+        $table->addUniqueIndex(array('role_id', 'workspace_id', 'display_order'));
     }
 
     private function createUserDesktopToolTable(Schema $schema)
@@ -873,7 +858,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('tool_id', 'integer');
         $table->addColumn('display_order', 'integer');
 
-       $table->addForeignKeyConstraint(
+        $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_tools'),
             array('tool_id'),
             array('id'),
@@ -887,6 +872,7 @@ class Version20120119000000 extends BundleMigration
             array('onDelete' => 'CASCADE')
         );
 
-        $table->addUniqueIndex(array('user_id', 'tool_id', 'display_order'));
+        $table->addUniqueIndex(array('user_id', 'tool_id'));
+        $table->addUniqueIndex(array('user_id', 'display_order'));
     }
 }

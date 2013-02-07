@@ -25,9 +25,9 @@ class RoleRepository extends NestedTreeRepository
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
             WHERE ws.id = {$workspace->getId()}
-            AND r.name != 'ROLE_ANONYMOUS'
             AND r.name != 'ROLE_ADMIN'
         ";
+
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();

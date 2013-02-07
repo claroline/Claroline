@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,98 +34,6 @@ class ParametersController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Tool:workspace\parameters\widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
-        );
-    }
-
-    /**
-     * Renders the workspace roles configuration page.
-     *
-     * @param integer $workspaceId
-     *
-     * @return Response
-     */
-    public function workspaceConfigureRightsAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\parameters\rights_list.html.twig',
-            array('workspace' => $workspace)
-        );
-    }
-
-    /**
-     * Renders the resource configuration for a specific role.
-     *
-     * @param integer $roleId
-     *
-     * @return Response
-     */
-    public function workspaceRightsFormAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
-        $configs = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
-            ->findBy(array('workspace' => $workspaceId));
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\parameters\workspace_rights.html.twig',
-            array('workspace' => $workspace, 'configs' => $configs)
-        );
-    }
-
-    /**
-     * Edit the resources permissions. It handles to form displayed by the
-     * workspaceRightsFormAction method. The handling is a bit weird because
-     * the form wasn't created with the Symfony2 form component.
-     *
-     * @param integer $workspaceId
-     *
-     * @return Response
-     */
-    public function workspaceEditRightsAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $configs = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
-            ->findBy(array('workspace' => $workspaceId));
-        $checks = $this->get('claroline.security.utilities')
-            ->setRightsRequest($this->get('request')->request->all(), 'workspace');
-
-        foreach ($configs as $config) {
-            $config->reset();
-
-            if (isset($checks[$config->getId()])) {
-                $config->setRights($checks[$config->getId()]);
-                if ($config->getRole()->getName() == 'ROLE_ANONYMOUS') {
-                    //if anonymous can see a a workspace, he also can see the root
-                    if ($checks[$config->getId()]['canView'] === true) {
-                        $ws = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                            ->find($workspaceId);
-                        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                            ->getRootForWorkspace($ws);
-                        $role = $em->getRepository('ClarolineCoreBundle:Role')
-                            ->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-                            ->findOneBy(array('resource' => $root, 'role' => $role));
-                        $resourceRight->setCanOpen(true);
-                        $em->persist($resourceRight);
-                    }
-                }
-            }
-
-            $em->persist($config);
-        }
-
-        $em->flush();
-
-        return $this->redirect(
-            $this->generateUrl(
-                'claro_workspace_rights',
-                array('workspaceId' => $workspaceId)
-            )
         );
     }
 
@@ -301,10 +210,12 @@ class ParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
-        $displayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
+        $orderedToolList = array();
+        $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')->findBy(array('user' => $user));
 
-        foreach ($displayedTools as $tool) {
-            $tool->setVisible(true);
+        foreach ($desktopTools as $desktopTool) {
+            $desktopTool->getTool()->setVisible(true);
+            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
         }
 
         $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopUndisplayedTools($user);
@@ -313,7 +224,7 @@ class ParametersController extends Controller
             $tool->setVisible(false);
         }
 
-        $tools = array_merge($displayedTools, $undisplayedTools);
+        $tools = $this->claroArrayFill($orderedToolList, $undisplayedTools);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\desktop\parameters:tool_properties.html.twig',
@@ -321,81 +232,297 @@ class ParametersController extends Controller
         );
     }
 
-    public function desktopInvertToolVisibilityAction($toolId)
+    /**
+     * Remove a tool from the desktop.
+     *
+     * @param integer $toolId
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function desktopRemoveToolAction($toolId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+            ->findOneBy(array('user' => $user, 'tool' => $toolId));
+        $em->remove($desktopTool);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * Add a tool to the desktop.
+     *
+     * @param integer $toolId
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function desktopAddToolAction($toolId, $position)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
         $user = $this->get('security.context')->getToken()->getUser();
-        $displayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
-        $found = false;
-
-        foreach ($displayedTools as $displayedTool) {
-            if ($tool == $displayedTool) {
-                $found = true;
-                if ($tool->isDesktopRequired()) {
-                    throw new \Exception('this tool is required in the desktop');
-                } else {
-                    $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-                        ->findOneBy(array('user' => $user, 'tool' => $tool));
-                    $em->remove($desktopTool);
-
-                    foreach ($displayedTools as $remainingTool) {
-                        $remainingDesktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-                            ->findOneBy(array('user' => $user, 'tool' => $tool));
-                        $remainingDesktopTool->moveUp();
-                        $em->persist($remainingDesktopTool);
-                    }
-
-                    $em->flush();
-
-                    return new Response('success', 204);
-                }
-            }
+        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+            ->findOneBy(array('user' => $user, 'order' => $position));
+        if ($switchTool != null) {
+            throw new \RuntimeException('A tool already exists at this position');
         }
-
-        $totalTools = count($displayedTools);
-        $totalTools++;
         $desktopTool = new DesktopTool();
         $desktopTool->setUser($user);
         $desktopTool->setTool($tool);
-        $desktopTool->setOrder($totalTools);
+        $desktopTool->setOrder($position);
         $em->persist($desktopTool);
         $em->flush();
 
         return new Response('success', 204);
     }
 
-    public function desktopMoveToolUpAction($toolId)
+    /**
+     * This method switch the position of a tool with an other one.
+     *
+     * @param integer $toolId
+     * @param integer $position
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function desktopMoveToolAction($toolId, $position)
     {
          $em = $this->get('doctrine.orm.entity_manager');
          $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
          $user = $this->get('security.context')->getToken()->getUser();
-         $displayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
+         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+            ->findOneBy(array('user' => $user, 'tool' => $tool));
+         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
+            ->findOneBy(array('user' => $user, 'order' => $position));
 
-         foreach ($displayedTools as $displayedTool) {
-             if ($tool == $displayedTool) {
-                 $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-                      ->findOneBy(array('user' => $user, 'tool' => $tool));
-
-                 if ($desktopTool->getOrder() === 1) {
-                     throw new \RuntimeException('this row is already the first and cannot be moved up');
-                 }
-
-                 $switchOrder = $desktopTool->getOrder();
-                 $switchOrder--;
-                 $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-                      ->findOneBy(array('order' => $switchOrder, 'user' => $user));
-                 $desktopTool->moveUp();
-                 $switchTool->moveDown();
-                 $em->persist($desktopTool);
-                 $em->persist($switchTool);
-                 $em->flush();
-
-                 return new Response('success');
-             }
+        //if a tool is already at this position, he must go "far away"
+        if ($switchTool !== null) {
+            //go far away ! Integrety constraints.
+            $switchTool->setOrder('99');
+            $em->persist($switchTool);
         }
 
-        throw new \RuntimeException("this tool isn't visible yet");
+        $em->flush();
+
+        //the tool must exists
+        if ($movingTool !== null) {
+            $newPosition = $movingTool->getOrder();
+            $movingTool->setOrder(intval($position));
+            $em->persist($movingTool);
+        }
+
+         //put the original tool back.
+        if ($switchTool !== null) {
+            $switchTool->setOrder($newPosition);
+            $em->persist($switchTool);
+        }
+
+        $em->flush();
+
+        return new Response('<body>success</body>');
     }
+
+    public function workspaceToolsRolesAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+        $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
+        $wsRoles = array_merge($wsRoles, $anonRole);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:tool_roles.html.twig',
+            array('roles' => $wsRoles, 'workspace' => $workspace)
+        );
+    }
+
+    public function workspaceToolsParametersAction($workspaceId, $roleName)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => $roleName));
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $workspaceTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
+            ->findBy(array('workspace' => $workspace, 'role' => $role));
+
+        $orderedToolList = array();
+        
+        foreach ($workspaceTools as $workspaceTool) {
+            $workspaceTool->getTool()->setVisible(true);
+            $orderedToolList[$workspaceTool->getOrder()] = $workspaceTool->getTool();
+        }
+
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->getUndisplayedToolsForRolesInWorkspace(array($roleName), $workspace);
+
+        foreach ($undisplayedTools as $tool) {
+            $tool->setVisible(false);
+        }
+
+        $tools = $tools = $this->claroArrayFill($orderedToolList, $undisplayedTools);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:tool_parameters.html.twig',
+            array('tools' => $tools, 'workspace' => $workspace, 'role' => $role)
+        );
+    }
+
+    /**
+     * Remove a tool from a role in a workspace.
+     *
+     * @param integer $toolId
+     * @param integer $roleId
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     */
+    public function workspaceRemoveToolAction($toolId, $roleId, $workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
+            ->findOneBy(array('role' => $roleId, 'tool' => $toolId, 'workspace' => $workspaceId));
+        $em->remove($wtr);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * Adds a tool to a role in a workspace.
+     *
+     * @param integer $toolId
+     * @param integer $roleId
+     * @param integer $workspaceId
+     * @param integer $position
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     */
+    public function workspaceAddToolAction($toolId, $roleId, $workspaceId, $position)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
+            ->findOneBy(array('workspace' => $workspace, 'order' => $position, 'role' => $role));
+
+        if ($switchTool != null) {
+            throw new \RuntimeException('A tool already exists at this position');
+        }
+
+        $wtr = new WorkspaceToolRole();
+        $wtr->setRole($role);
+        $wtr->setTool($em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId));
+        $wtr->setWorkspace($workspace);
+        $wtr->setOrder($position);
+        $em->persist($wtr);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * This method switch the position of a tool with an other one.
+     *
+     * @param integer $toolId
+     * @param integer $position
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function workspaceMoveToolAction($toolId, $position, $workspaceId, $roleId)
+    {
+         $em = $this->get('doctrine.orm.entity_manager');
+         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+         }
+
+         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
+         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+
+         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
+            ->findOneBy(array('role' => $role, 'tool' => $tool, 'workspace' => $workspace));
+         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
+            ->findOneBy(array('role' => $role, 'order' => $position, 'workspace' => $workspace));
+
+         //if a tool is already at this position, he must go "far away"
+        if ($switchTool !== null) {
+            //go far away ! Integrety constraints.
+            $switchTool->setOrder('99');
+            $em->persist($switchTool);
+        }
+
+        $em->flush();
+
+         //the tool must exists
+        if ($movingTool !== null) {
+            $newPosition = $movingTool->getOrder();
+            $movingTool->setOrder(intval($position));
+            $em->persist($movingTool);
+        }
+
+        //put the original tool back.
+        if ($switchTool !== null) {
+            $switchTool->setOrder($newPosition);
+            $em->persist($switchTool);
+        }
+
+        $em->flush();
+
+        return new Response('<body>success</body>');
+    }
+
+    public function claroArrayFill(array $fillable, array $array)
+    {
+        ksort($fillable);
+        $saveKey = 1;
+        $filledArray = array();
+
+        foreach ($fillable as $key => $value) {
+            if ($key - $saveKey != 0) {
+                while ($key - $saveKey >= 1) {
+                    $filledArray[$saveKey] = array_shift($array);
+                    $saveKey++;
+                }
+                $filledArray[$key] = $value;
+            } else {
+                $filledArray[$key] = $value;
+            }
+            $saveKey++;
+        }
+
+        if (count($array) > 0) {
+            foreach ($array as $item) {
+                $filledArray[] = $item;
+            }
+        }
+
+        return $filledArray;
+     }
 }
 
