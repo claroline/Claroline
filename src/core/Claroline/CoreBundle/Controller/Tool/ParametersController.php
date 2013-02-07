@@ -333,6 +333,8 @@ class ParametersController extends Controller
         }
 
         $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+        $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
+        $wsRoles = array_merge($wsRoles, $anonRole);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:tool_roles.html.twig',
@@ -353,6 +355,8 @@ class ParametersController extends Controller
         $workspaceTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
             ->findBy(array('workspace' => $workspace, 'role' => $role));
 
+        $orderedToolList = array();
+        
         foreach ($workspaceTools as $workspaceTool) {
             $workspaceTool->getTool()->setVisible(true);
             $orderedToolList[$workspaceTool->getOrder()] = $workspaceTool->getTool();
@@ -493,7 +497,7 @@ class ParametersController extends Controller
         return new Response('<body>success</body>');
     }
 
-    public function claroArrayFill($fillable, $array)
+    public function claroArrayFill(array $fillable, array $array)
     {
         ksort($fillable);
         $saveKey = 1;

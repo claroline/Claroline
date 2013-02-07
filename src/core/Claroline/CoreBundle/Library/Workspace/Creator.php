@@ -235,9 +235,16 @@ class Creator
                 ->findOneBy(array('name' => $name));
 
             foreach ($roles as $role) {
-                $role = $this->entityManager
-                    ->getRepository('ClarolineCoreBundle:Role')
-                    ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+                if ($role === 'ROLE_ANONYMOUS') {
+                     $role = $this->entityManager
+                        ->getRepository('ClarolineCoreBundle:Role')
+                        ->findOneBy(array('name' => $role));
+                } else {
+                     $role = $this->entityManager
+                        ->getRepository('ClarolineCoreBundle:Role')
+                        ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+                }
+
                 $this->setWorkspaceToolRole($workspace, $tool, $role, $order);
             }
 
