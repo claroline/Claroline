@@ -72,12 +72,12 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
      */
-    protected $workspaceTools;
+    protected $workspaceToolRoles;
 
 
     /**
@@ -150,16 +150,8 @@ abstract class AbstractWorkspace
         return $this->code;
     }
 
-    public function addTool(Tool $tool)
+    public function getWorkspaceToolRoles()
     {
-        $wsTool = new WorkspaceTool();
-        $wsTool->setTool($tool);
-        $wsTool->setWorkspace($this);
-        $this->workspaceTools->add($wsTool);
-    }
-
-    public function getWorkspaceTools()
-    {
-        return $this->workspaceTools;
+        return $this->workspaceToolRoles;
     }
 }

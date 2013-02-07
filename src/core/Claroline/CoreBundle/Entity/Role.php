@@ -143,10 +143,10 @@ class Role implements RoleInterface
      */
     protected $resourceContext;
 
-   /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
-    * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
-    */
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     */
     protected $workspace;
 
     public function __construct()

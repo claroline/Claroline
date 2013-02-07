@@ -53,11 +53,11 @@ class Tool
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
      *     mappedBy="tool"
      * )
      */
-    protected $workspaceTools;
+    protected $workspaceToolRoles;
 
     /**
      * @ORM\OneToMany(

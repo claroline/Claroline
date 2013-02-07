@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceContext;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class Creator
 {
@@ -63,7 +63,7 @@ class Creator
         $this->entityManager->persist($rootDir);
 
         //default resource rights
-        foreach($config->getRootPermissions() as $role => $permission) {
+        foreach ($config->getRootPermissions() as $role => $permission) {
             $this->createDefaultsResourcesRights(
                 $permission['canDelete'],
                 $permission['canOpen'],
@@ -161,7 +161,7 @@ class Creator
     {
         $roles = $config->getRoles();
 
-        foreach ($roles as $name => $translation){
+        foreach ($roles as $name => $translation) {
             $this->createRole($name, $workspace, $translation);
         }
 
@@ -228,33 +228,34 @@ class Creator
     {
         $tools = $config->getTools();
 
+        $order = 1;
         foreach ($tools as $name => $roles) {
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
-            $wsTool = new WorkspaceTool();
-            $wsTool->setTool($tool);
-            $wsTool->setWorkspace($workspace);
-
-            $this->entityManager->persist($wsTool);
 
             foreach ($roles as $role) {
                 $role = $this->entityManager
                     ->getRepository('ClarolineCoreBundle:Role')
                     ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-                $this->setWorkspaceToolRole($wsTool, $role);
+                $this->setWorkspaceToolRole($workspace, $tool, $role, $order);
             }
+
+            $order++;
         }
 
         $this->entityManager->persist($workspace);
     }
 
-    private function setWorkspaceToolRole(WorkspaceTool $wsTool, Role $role)
+    private function setWorkspaceToolRole(AbstractWorkspace $workspace, Tool $tool, Role $role, $order)
     {
         $wtr = new WorkspaceToolRole();
         $wtr->setRole($role);
-        $wtr->setWorkspaceTool($wsTool);
+        $wtr->setTool($tool);
+        $wtr->setWorkspace($workspace);
+        $wtr->setOrder($order);
 
         $this->entityManager->persist($wtr);
+
     }
 }
