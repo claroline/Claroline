@@ -1,6 +1,6 @@
-# Getting started with Claroline plugin development
+# Getting started with Claroline development
 
-This tutorial aims to explain how to develop a plugin that manages a new resource type in the Claronext LMS.
+This tutorial aims to explain how to develop on Claronext LMS.
 
 ## Prerequisites
 
