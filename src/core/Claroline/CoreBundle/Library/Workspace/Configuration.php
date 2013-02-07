@@ -13,6 +13,11 @@ class Configuration
     private $workspaceName;
     private $workspaceCode;
     private $isPublic;
+    /**
+     * If you want to use the role_anonymous from the platform, use
+     * 'ROLE_ANONYMOUS'.
+     * @var array
+     */
     private $roles;
     private $tools;
     private $rootPermissions;
