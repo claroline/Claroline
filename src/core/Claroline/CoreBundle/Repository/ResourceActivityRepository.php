@@ -14,7 +14,7 @@ class ResourceActivityRepository extends EntityRepository
      *
      * @return type
      */
-    public function getResourcesActivityForActivity(Activity $activity)
+    public function findActivities(Activity $activity)
     {
         $dql = "SELECT ra, r FROM Claroline\CoreBundle\Entity\Resource\ResourceActivity ra
             LEFT JOIN ra.resource r
