@@ -62,7 +62,7 @@ class WorkspaceVoter implements VoterInterface
 
         $tools = $this->em
             ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->getToolsForRolesInWorkspace($this->ut->getRoles($token), $workspace);
+            ->findByRolesAndWorkspace($this->ut->getRoles($token), $workspace, true);
 
         foreach ($tools as $tool) {
 

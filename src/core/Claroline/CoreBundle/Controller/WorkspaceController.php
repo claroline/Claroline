@@ -168,7 +168,7 @@ class WorkspaceController extends Controller
             ->getRoles($this->get('security.context')->getToken());
 
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->getToolsForRolesInWorkspace($currentRoles, $workspace);
+            ->findByRolesAndWorkspace($currentRoles, $workspace, true);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:tool_list.html.twig',
@@ -213,21 +213,17 @@ class WorkspaceController extends Controller
     public function widgetsAction($workspaceId)
     {
         $responsesString = '';
+        $configs = $this->get('claroline.widget.manager')
+            ->generateWorkspaceDisplayConfig($workspaceId);
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
-        if ($this->get('security.context')->getToken()->getUser() !== 'anon.') {
-
-            $configs = $this->get('claroline.widget.manager')
-                ->generateWorkspaceDisplayConfig($workspaceId);
-            $em = $this->getDoctrine()->getEntityManager();
-            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-
-            foreach ($configs as $config) {
-                if ($config->isVisible()) {
-                    $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
-                    $event = new DisplayWidgetEvent($workspace);
-                    $this->get('event_dispatcher')->dispatch($eventName, $event);
-                    $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
-                }
+        foreach ($configs as $config) {
+            if ($config->isVisible()) {
+                $eventName = strtolower("widget_{$config->getWidget()->getName()}_workspace");
+                $event = new DisplayWidgetEvent($workspace);
+                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
             }
         }
 
@@ -235,5 +231,54 @@ class WorkspaceController extends Controller
             'ClarolineCoreBundle:Widget:widgets.html.twig',
             array('widgets' => $responsesString)
         );
+    }
+
+    /**
+     * Open the first tool of a workspace.
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function openAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+
+        if ('anon.' != $this->get('security.context')->getToken()->getUser()) {
+            $roles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+            $foundRole = null;
+
+            foreach ($roles as $wsRole) {
+                foreach ($this->get('security.context')->getToken()->getRoles() as $userRole) {
+                    if ($userRole->getRole() == $wsRole->getName()) {
+                        $foundRole = $userRole;
+                    }
+                }
+            }
+
+            if ($foundRole == null) {
+                throw new AccessDeniedHttpException('No role found in that workspace');
+            }
+
+            $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+                ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
+
+        } else {
+            $foundRole = 'ROLE_ANONYMOUS';
+            $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+                ->findByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace, true);
+        }
+
+        if ($openedTool == null) {
+            throw new AccessDeniedHttpException("No tool found for role {$foundRole}");
+        }
+
+        $route = $this->get('router')->generate(
+            'claro_workspace_open_tool',
+            array('workspaceId' => $workspaceId, 'toolName' => $openedTool[0]->getName())
+        );
+
+        return new RedirectResponse($route);
     }
 }

@@ -5,23 +5,36 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class ToolRepository extends EntityRepository
 {
-    public function getToolsForWorkspace(AbstractWorkspace $workspace)
+    /**
+     * Returns the tools list for an array of role for a workspace.
+     *
+     * @todo removing the array of role and do it for a single role instead ?
+     * rename findByWorkspaceAndRoles + param.
+     * @param array $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param boolean $isVisible is the tool visible
+     *
+     * @return array
+     *
+     * @throws \RuntimeException
+     */
+    public function findByRolesAndWorkspace (array $roles, AbstractWorkspace $workspace, $isVisible)
     {
-        $dql = "SELECT DISTINCT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            JOIN tool.workspaceToolRoles wtr
-            JOIN wtr.workspace workspace
-            WHERE workspace.id = {$workspace->getId()}";
+        if ($isVisible) {
+            $dql = $this->getDisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
+        } else {
+            $dql = $this->getUndisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
+        }
 
-        $query = $this->_em->createQuery($dql);
+       $query = $this->_em->createQuery($dql);
 
-        return $query->getResult();
+       return $query->getResult();
     }
 
-    public function getToolsForRolesInWorkspace (array $roles, AbstractWorkspace $workspace)
+    private function getDisplayedToolsForRolesInWorkspaceQuery(array $roles, AbstractWorkspace $workspace)
     {
         $isAdmin = false;
 
@@ -47,112 +60,76 @@ class ToolRepository extends EntityRepository
             }
 
             $dql .= "ORDER BY wtr.order";
-            $query = $this->_em->createQuery($dql);
 
-            return $query->getResult();
-        } else {
-
-            $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
-            $query = $this->_em->createQuery($dql);
-
-            return $query->getResult();
+            return $dql;
         }
+
+        return "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
     }
 
-    public function getUndisplayedToolsForRolesInWorkspace(array $roles, AbstractWorkspace $workspace)
+    private function getUndisplayedToolsForRolesInWorkspaceQuery(array $roles, AbstractWorkspace $workspace)
     {
-        $wsOnly = Tool::WORKSPACE_ONLY;
-        $dsAndWs = Tool::WORKSPACE_AND_DESKTOP;
-
         if (null === $firstRole = array_shift($roles)) {
             throw new \RuntimeException('The roles array cannot be empty');
         }
 
         $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            JOIN tool.workspaceToolRoles wtr
+            LEFT JOIN tool.workspaceToolRoles wtr
             WHERE tool NOT IN (SELECT tool2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool2
             JOIN tool2.workspaceToolRoles wtr2
             JOIN wtr2.workspace ws2
             JOIN wtr2.role role2
             WHERE role2.name = '{$firstRole}' and ws2.id = {$workspace->getId()}
-            and tool2.displayability = $wsOnly";
+            and tool2.isDisplayableInWorkspace = TRUE";
 
         foreach ($roles as $role) {
             $dql .= " OR role2.name = '{$role}' and ws2.id = {$workspace->getId()}
-            and tool2.displayability = $wsOnly";
+            and tool2.isDisplayableInWorkspace = TRUE";
         }
 
-        $dql .= " )
-        AND tool NOT IN (SELECT tool3 FROM Claroline\CoreBundle\Entity\Tool\Tool tool3
-        JOIN tool3.workspaceToolRoles wtr3
-        JOIN wtr3.workspace ws3
-        JOIN wtr3.role role3
-        WHERE role3.name = '{$firstRole}'
-        and ws3.id = {$workspace->getId()} and tool3.displayability = $dsAndWs";
-        foreach ($roles as $role) {
-            $dql .= " OR role3.name = '{$role}'
-            and ws3.id = {$workspace->getId()} and tool3.displayability = $dsAndWs";
-        }
+        $dql .= " ) ORDER BY wtr.order";
 
-        $dql .= " )
-
-        ORDER BY wtr.order";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+        return $dql;
     }
 
-    public function getDesktopTools(User $user)
+    /**
+     * Returns the tools in a user's desktop.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param boolean $isVisible is the user visible
+     *
+     * @return array
+     */
+    public function findByUser(User $user, $isVisible)
     {
-        $dql = "
+        if ($isVisible) {
+            $dql = $this->getDesktopDisplayedToolsQuery($user);
+        } else {
+            $dql = $this->getDesktopUndisplayedToolsQuery($user);
+        }
+
+       $query = $this->_em->createQuery($dql);
+
+       return $query->getResult();
+    }
+
+    private function getDesktopDisplayedToolsQuery(User $user)
+    {
+        return "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.desktopTools desktopTool
             JOIN desktopTool.user user
             WHERE user.id = {$user->getId()}
             ORDER BY desktopTool.order";
-        ;
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
     }
 
-    public function getDesktopUndisplayedTools(User $user)
+    private function getDesktopUndisplayedToolsQuery(User $user)
     {
-        $dsOnly = Tool::DESKTOP_ONLY;
-        $dsAndWs = Tool::WORKSPACE_AND_DESKTOP;
-
-        $dql = "
+        return "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             WHERE tool NOT IN ( SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
                 JOIN tool_2.desktopTools desktopTool_2
                 JOIN desktopTool_2.user user_2
-                WHERE user_2.id = {$user->getId()}) AND tool.displayability = {$dsOnly}
-            OR tool NOT IN ( SELECT tool_3 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_3
-                JOIN tool_3.desktopTools desktopTool_3
-                JOIN desktopTool_3.user user_3
-                WHERE user_3.id = {$user->getId()}) AND tool.displayability = {$dsAndWs}
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+                WHERE user_2.id = {$user->getId()} ) AND tool.isDisplayableInDesktop = true";
     }
-
-    public function getDesktopDisplayableTools()
-    {
-        $dsOnly = Tool::DESKTOP_ONLY;
-        $dsAndWs = Tool::WORKSPACE_AND_DESKTOP;
-
-        $dql = "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            WHERE tool.displayability = {$dsOnly} OR tool.displayability = {$dsAndWs}";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-
 }

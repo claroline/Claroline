@@ -11,13 +11,13 @@
         <tr>
             <th>{{ 'name'|trans({}, 'platform') }}</th>
             <th>{{ 'visible'|trans({}, 'platform') }}</th>
-            <th>{{ 'order'|trans({}, 'platform') }}</th>
+            <th>{{ 'position'|trans({}, 'platform') }}</th>
         </tr>
     </thead>
     <tbody id="widget-table-body">
         {% for tool in tools %}
             <tr class='row-tool-config' data-tool-id={{ tool.getId () }}>
-                <th>{{ tool.getName()|lower|trans({}, 'platform') }}</th>
+                <th>{{ tool.getName()|lower|trans({}, 'tools') }}</th>
                 <th>
                     <input type="checkbox"
                            class="chk-tool-visible"
