@@ -168,7 +168,7 @@ class WorkspaceController extends Controller
             ->getRoles($this->get('security.context')->getToken());
 
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->getToolsForRolesInWorkspace($currentRoles, $workspace);
+            ->findByRolesAndWorkspace($currentRoles, $workspace, true);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:tool_list.html.twig',
@@ -262,12 +262,12 @@ class WorkspaceController extends Controller
             }
 
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->getToolsForRolesInWorkspace(array($foundRole->getRole()), $workspace);
+                ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->getToolsForRolesInWorkspace(array('ROLE_ANONYMOUS'), $workspace);
+                ->findByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace, true);
         }
 
         if ($openedTool == null) {

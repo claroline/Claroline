@@ -15,12 +15,26 @@ class ToolRepository extends EntityRepository
      * rename findByWorkspaceAndRoles + param.
      * @param array $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param boolean $isVisible is the tool visible
      *
      * @return array
      *
      * @throws \RuntimeException
      */
-    public function getToolsForRolesInWorkspace (array $roles, AbstractWorkspace $workspace)
+    public function findByRolesAndWorkspace (array $roles, AbstractWorkspace $workspace, $isVisible)
+    {
+        if ($isVisible) {
+            $dql = $this->getDisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
+        } else {
+            $dql = $this->getUndisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
+        }
+
+       $query = $this->_em->createQuery($dql);
+
+       return $query->getResult();
+    }
+
+    private function getDisplayedToolsForRolesInWorkspaceQuery(array $roles, AbstractWorkspace $workspace)
     {
         $isAdmin = false;
 
@@ -46,18 +60,14 @@ class ToolRepository extends EntityRepository
             }
 
             $dql .= "ORDER BY wtr.order";
-            $query = $this->_em->createQuery($dql);
 
-            return $query->getResult();
+            return $dql;
         }
 
-        $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+        return "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
     }
 
-    public function getUndisplayedToolsForRolesInWorkspace(array $roles, AbstractWorkspace $workspace)
+    private function getUndisplayedToolsForRolesInWorkspaceQuery(array $roles, AbstractWorkspace $workspace)
     {
         if (null === $firstRole = array_shift($roles)) {
             throw new \RuntimeException('The roles array cannot be empty');
@@ -77,47 +87,49 @@ class ToolRepository extends EntityRepository
             and tool2.isDisplayableInWorkspace = TRUE";
         }
 
-        $dql .= " )
-        ORDER BY wtr.order";
+        $dql .= " ) ORDER BY wtr.order";
 
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+        return $dql;
     }
 
     /**
-     * @todo rename findByUser +isVisible
+     * Returns the tools in a user's desktop.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @return type
+     * @param boolean $isVisible is the user visible
+     *
+     * @return array
      */
-    public function getDesktopTools(User $user)
+    public function findByUser(User $user, $isVisible)
     {
-        $dql = "
+        if ($isVisible) {
+            $dql = $this->getDesktopDisplayedToolsQuery($user);
+        } else {
+            $dql = $this->getDesktopUndisplayedToolsQuery($user);
+        }
+
+       $query = $this->_em->createQuery($dql);
+
+       return $query->getResult();
+    }
+
+    private function getDesktopDisplayedToolsQuery(User $user)
+    {
+        return "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.desktopTools desktopTool
             JOIN desktopTool.user user
             WHERE user.id = {$user->getId()}
             ORDER BY desktopTool.order";
-        ;
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
     }
 
-    public function getDesktopUndisplayedTools(User $user)
+    private function getDesktopUndisplayedToolsQuery(User $user)
     {
-        $dql = "
+        return "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             WHERE tool NOT IN ( SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
                 JOIN tool_2.desktopTools desktopTool_2
                 JOIN desktopTool_2.user user_2
-                WHERE user_2.id = {$user->getId()} ) AND tool.isDisplayableInDesktop = true
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+                WHERE user_2.id = {$user->getId()} ) AND tool.isDisplayableInDesktop = true";
     }
 }
