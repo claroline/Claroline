@@ -1,0 +1,3 @@
+claro_example_open:
+   pattern: /open/{exampleId}
+   defaults: { _controller: ClarolineExampleBundle:Example:open }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\ExampleTextBundle\Form;
+namespace Claroline\ExampleBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ExampleTextType extends AbstractType
+class ExampleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -16,13 +16,13 @@ class ExampleTextType extends AbstractType
 
     public function getName()
     {
-        return 'example_text_form';
+        return 'example_form';
     }
 
     public function getDefaultOptions(array $options)
     {
         return array(
-            'translation_domain' => 'platform'
+            'translation_domain' => 'resource'
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ExampleTextBundle\Migrations;
+namespace Claroline\ExampleBundle\Migrations;
 
 use Claroline\CoreBundle\Library\Installation\BundleMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -19,7 +19,7 @@ class Version20121002000000 extends BundleMigration
      */
     public function up(Schema $schema)
     {
-        $this->createExampleTextTable($schema);
+        $this->createExampleTable($schema);
     }
 
     /**
@@ -35,10 +35,10 @@ class Version20121002000000 extends BundleMigration
      * Create the 'claro_example_text' table.
      * @param \Doctrine\DBAL\Schema\Schema $schema
      */
-    public function createExampleTextTable(Schema $schema)
+    public function createExampleTable(Schema $schema)
     {
         // Table creation
-        $table = $schema->createTable('claro_example_text');
+        $table = $schema->createTable('claro_example');
         // Add an auto increment id
         $this->addId($table);
         // Add a column

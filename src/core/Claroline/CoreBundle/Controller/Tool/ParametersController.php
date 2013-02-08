@@ -356,7 +356,7 @@ class ParametersController extends Controller
             ->findBy(array('workspace' => $workspace, 'role' => $role));
 
         $orderedToolList = array();
-        
+
         foreach ($workspaceTools as $workspaceTool) {
             $workspaceTool->getTool()->setVisible(true);
             $orderedToolList[$workspaceTool->getOrder()] = $workspaceTool->getTool();
