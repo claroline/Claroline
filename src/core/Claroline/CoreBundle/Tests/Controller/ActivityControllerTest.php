@@ -104,7 +104,6 @@ class ActivityControllerTest extends FunctionalTestCase
         }
 
         $this->assertEquals($ids, array_reverse($reverseIds));
-
     }
 
     private function createActivity($name, $instruction)
