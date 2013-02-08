@@ -79,7 +79,7 @@ class ActivityControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
-            ->getResourcesActivityForActivity($activityEntity);
+            ->findActivities($activityEntity);
 
         foreach ($resourceActivities as $resourceActivity) {
             $orders[] = $resourceActivity->getSequenceOrder();
@@ -96,7 +96,7 @@ class ActivityControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
-            ->getResourcesActivityForActivity($activityEntity);
+            ->findActivities($activityEntity);
 
         foreach ($reverseActivities as $reverseActivity) {
 

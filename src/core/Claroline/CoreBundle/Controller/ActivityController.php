@@ -107,7 +107,7 @@ class ActivityController extends Controller
         $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
             ->find($activityId);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->getResourcesActivityForActivity($activity);
+            ->findActivities($activity);
         $totalSteps = $this->countSteps($activity, 0);
         $totalItems = $this->countItems($activity, 0);
         $totalItems++;
@@ -138,7 +138,7 @@ class ActivityController extends Controller
         $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
             ->find($activityId);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->getResourcesActivityForActivity($activity);
+            ->findActivities($activity);
 
         return $this->render(
             'ClarolineCoreBundle:Activity:player/activity.html.twig',
@@ -164,7 +164,7 @@ class ActivityController extends Controller
         $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
             ->find($activityId);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->getResourcesActivityForActivity($activity);
+            ->findActivities($activity);
 
         return $this->render(
             'ClarolineCoreBundle:Activity:index.html.twig', array(
