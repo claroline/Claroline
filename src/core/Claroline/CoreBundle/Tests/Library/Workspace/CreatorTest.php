@@ -42,9 +42,9 @@ class CreatorTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role');
-        $this->assertEquals('visitor', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
-        $this->assertEquals('collaborator', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
-        $this->assertEquals('manager', $roleRepo->getManagerRole($workspace)->getTranslationKey());
+        $this->assertEquals('visitor', $roleRepo->findVisitorRole($workspace)->getTranslationKey());
+        $this->assertEquals('collaborator', $roleRepo->findCollaboratorRole($workspace)->getTranslationKey());
+        $this->assertEquals('manager', $roleRepo->findManagerRole($workspace)->getTranslationKey());
     }
 
     public function invalidConfigProvider()
