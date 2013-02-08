@@ -87,6 +87,7 @@ move : Déplacer
 message_form_object: Objet
 message_form_content: Contenu
 message_form_to: A
+messages: Messages
 messages_received: Messages reçus
 messages_removed: Messages supprimés
 messages_sent_removed: Messages envoyés supprimés
