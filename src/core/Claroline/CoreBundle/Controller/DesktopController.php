@@ -53,7 +53,7 @@ class DesktopController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopTools($user);
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByUser($user, true);
 
         return $this->render(
             'ClarolineCoreBundle:Desktop:tool_list.html.twig',

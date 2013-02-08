@@ -218,7 +218,7 @@ class ParametersController extends Controller
             $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
         }
 
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->getDesktopUndisplayedTools($user);
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByUser($user, false);
 
         foreach ($undisplayedTools as $tool) {
             $tool->setVisible(false);
@@ -363,7 +363,7 @@ class ParametersController extends Controller
         }
 
         $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->getUndisplayedToolsForRolesInWorkspace(array($roleName), $workspace);
+            ->findByRolesAndWorkspace(array($roleName), $workspace, false);
 
         foreach ($undisplayedTools as $tool) {
             $tool->setVisible(false);
