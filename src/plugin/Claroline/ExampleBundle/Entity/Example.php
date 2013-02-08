@@ -2,16 +2,16 @@
 
 //Your entity must extends abstract resource.
 
-namespace Claroline\ExampleTextBundle\Entity;
+namespace Claroline\ExampleBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_example_text")
+ * @ORM\Table(name="claro_example")
  */
-class ExampleText extends AbstractResource
+class Example extends AbstractResource
 {
     /**
      * @ORM\Column(type="string")

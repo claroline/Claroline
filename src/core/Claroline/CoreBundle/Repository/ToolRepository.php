@@ -8,22 +8,11 @@ use Claroline\CoreBundle\Entity\User;
 
 class ToolRepository extends EntityRepository
 {
-    public function getToolsForWorkspace(AbstractWorkspace $workspace)
-    {
-        $dql = "SELECT DISTINCT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            JOIN tool.workspaceToolRoles wtr
-            JOIN wtr.workspace workspace
-            WHERE workspace.id = {$workspace->getId()}";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
     /**
      * Returns the tools list for an array of role for a workspace.
      *
      * @todo removing the array of role and do it for a single role instead ?
+     * rename findByWorkspaceAndRoles + param.
      * @param array $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
@@ -75,7 +64,7 @@ class ToolRepository extends EntityRepository
         }
 
         $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            JOIN tool.workspaceToolRoles wtr
+            LEFT JOIN tool.workspaceToolRoles wtr
             WHERE tool NOT IN (SELECT tool2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool2
             JOIN tool2.workspaceToolRoles wtr2
             JOIN wtr2.workspace ws2
@@ -96,6 +85,12 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @todo rename findByUser +isVisible
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return type
+     */
     public function getDesktopTools(User $user)
     {
         $dql = "

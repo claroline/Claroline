@@ -1,16 +1,16 @@
 <?php
 
-namespace Claroline\ExampleTextBundle\Controller;
+namespace Claroline\ExampleBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ExampleTextController extends Controller
+class ExampleController extends Controller
 {
-    public function openAction($exampleTextId)
+    public function openAction($exampleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         //get the resource
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($exampleTextId);
+        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($exampleId);
         //get the current workspace.
         //if you only have the workspace id =>
         //$em->getRepository('Claroline\CoreBundle\Workspace\AbstractWorkspace')->find(...);
@@ -18,7 +18,7 @@ class ExampleTextController extends Controller
 
         //get the text.
         return $this->render(
-            'ClarolineExampleTextBundle::open.html.twig',
+            'ClarolineExampleBundle::resource.html.twig',
             array('resource' => $resource, 'workspace' => $workspace)
         );
     }

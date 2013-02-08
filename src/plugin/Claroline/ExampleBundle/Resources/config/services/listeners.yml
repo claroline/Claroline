@@ -1,6 +1,6 @@
 services:
-  claroline.listener.exampletext_listener:
-    class: Claroline\ExampleTextBundle\Listener\ExampleTextListener
+  claroline.listener.example_listener:
+    class: Claroline\ExampleBundle\Listener\ResourceListener
     calls:
       - [setContainer, ["@service_container"]]
     #event definition
@@ -12,24 +12,24 @@ services:
       # copy_myresourcetype
       # mycustomaction_myresourcetype
       #
-      # In this case, my resource type is "exampletext".
+      # In this case, my resource type is "example".
       # mycustomaction is the custom action names you defined earlier.
     #this event is fired by the platform plugin manager:
       # plugin_options_mydomain
       # in this case mydomain is the domain you specified in the config.yml file.
     tags:
-      - { name: kernel.event_listener, event: create_form_claroline_exampletext, method: onCreateForm }
-      - { name: kernel.event_listener, event: create_claroline_exampletext, method: onCreate }
-      - { name: kernel.event_listener, event: open_claroline_exampletext, method: onOpen }
-      - { name: kernel.event_listener, event: export_claroline_exampletext, method: onExport }
-      - { name: kernel.event_listener, event: delete_claroline_exampletext, method: onDelete }
-      - { name: kernel.event_listener, event: copy_claroline_exampletext, method: onCopy }
+      - { name: kernel.event_listener, event: create_form_claroline_example, method: onCreateForm }
+      - { name: kernel.event_listener, event: create_claroline_example, method: onCreate }
+      - { name: kernel.event_listener, event: open_claroline_example, method: onOpen }
+      - { name: kernel.event_listener, event: export_claroline_example, method: onExport }
+      - { name: kernel.event_listener, event: delete_claroline_example, method: onDelete }
+      - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
       - { name: kernel.event_listener, event: plugin_options_clarolineexampletest, method: onAdministrate }
       #... more to come.
 
 
-  claroline.listener.exampletext_widget:
-    class: Claroline\ExampleTextBundle\Listener\WidgetListener
+  claroline.listener.example_widget:
+    class: Claroline\ExampleBundle\Listener\WidgetListener
     calls:
       - [setContainer, ["@service_container"]]
     tags:
@@ -38,3 +38,11 @@ services:
       - { name: kernel.event_listener, event: widget_claroline_mywidget2_desktop, method: onDisplay }
       - { name: kernel.event_listener, event: widget_claroline_mywidget2_workspace, method: onDisplay }
       - { name: kernel.event_listener, event: widget_claroline_mywidget1_configuration, method: onConfigure }
+
+  claroline.listener.example_tool:
+    class: Claroline\ExampleBundle\Listener\ToolListener
+    calls:
+      - [setContainer, ["@service_container"]]
+    tags:
+      - { name: kernel.event_listener, event: open_tool_workspace_claroline_mytool, method: onWorkspaceOpen }
+      - { name: kernel.event_listener, event: open_tool_desktop_claroline_mytool, method: onDesktopOpen }

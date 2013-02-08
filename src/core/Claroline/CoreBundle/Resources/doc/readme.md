@@ -56,7 +56,7 @@ This class will be executed by the plateform when installing your plugin. It mus
         */
         public function up(Schema $schema)
         {
-            $this->createExampleTextTable($schema);
+            $this->createExampleTable($schema);
         }
 
         /**
@@ -72,7 +72,7 @@ This class will be executed by the plateform when installing your plugin. It mus
         * Create the 'claro_example_text' table.
         * @param \Doctrine\DBAL\Schema\Schema $schema
         */
-        public function createExampleTextTable(Schema $schema)
+        public function createExampleTable(Schema $schema)
         {
             // Table creation
             $table = $schema->createTable('claro_example_text');
@@ -93,7 +93,7 @@ If your entity is a resource that must be recognized by the platform and managea
     * @ORM\Entity
     * @ORM\Table(name="claro_example_text")
     */
-    class ExampleText extends AbstractResource
+    class Example extends AbstractResource
     {
         /**
         * @ORM\Column(type="string")
@@ -141,9 +141,9 @@ This file will be parsed by the plugin installator to install your plugin and cr
             # resource of the platform. This entity defines how the resource is stocked.
             # It may be usefull is your resource is a zip file with a particular structure.
             # In this case you can extend *Claroline\CoreBundle\Entity\Resource\File*.
-          - class: Claroline\ExampleTextBundle\Entity\ExampleText
+          - class: Claroline\ExampleBundle\Entity\Example
             # Your resource type name
-            name: claroline_exampletext
+            name: claroline_example
             # Is it visible in the resource manager ?
             is_visible: true
             # Is it possible to navigate within your resource (does it have sub-resources ?)
@@ -175,20 +175,20 @@ The definition of your listener must be placed in the *Resources/config/services
 You declare in this file all events that you want to catch.
 
     services:
-      claroline.listener.exampletext_listener:
+      claroline.listener.example_listener:
         # Class that implements the listener
-        class: Claroline\ExampleTextBundle\Listener\ExampleTextListener
+        class: Claroline\ExampleBundle\Listener\ExampleListener
         # The Symfony Container will be given to the class
         calls:
           - [setContainer, ["@service_container"]]
         tags:
-          - { name: kernel.event_listener, event: create_form_claroline_exampletext, method: onCreateForm }
-          - { name: kernel.event_listener, event: create_claroline_exampletext, method: onCreate }
-          - { name: kernel.event_listener, event: delete_claroline_exampletext, method: onDelete }
-          - { name: kernel.event_listener, event: export_claroline_exampletext, method: onExport }
-          - { name: kernel.event_listener, event: copy_claroline_exampletext, method: onCopy }
-          - { name: kernel.event_listener, event: open_claroline_exampletext, method: onOpen }
-          - { name: kernel.event_listener, event: plugin_options_clarolineexampletext, method: onAdministrate }
+          - { name: kernel.event_listener, event: create_form_claroline_example, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_claroline_example, method: onCreate }
+          - { name: kernel.event_listener, event: delete_claroline_example, method: onDelete }
+          - { name: kernel.event_listener, event: export_claroline_example, method: onExport }
+          - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
+          - { name: kernel.event_listener, event: open_claroline_example, method: onOpen }
+          - { name: kernel.event_listener, event: plugin_options_clarolineexample, method: onAdministrate }
 
 Here is the list of events fired by the resource manager (lower case is forced here):
 
@@ -200,7 +200,7 @@ Here is the list of events fired by the resource manager (lower case is forced h
 * open_*resourcetypename*
 * *customaction*_*resourcetypename*
 
-Where *resourcetypename* is the name of your resource in lowercase (e.g. "exampletext") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
+Where *resourcetypename* is the name of your resource in lowercase (e.g. "example") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
 
 This event is fired by the plugin managemement page:
 
@@ -217,15 +217,15 @@ The export event is fired for resource whose is_visible field is set to true.
 
 Define your listener class in the *Listener* folder.
 
-    class ExampleTextListener extends ContainerAware
+    class ExampleListener extends ContainerAware
     {
       ...
       // Fired when a resource is removed.
       public function onDelete(DeleteResourceEvent $event)
       {
           $em = $this->container->get('doctrine.orm.entity_manager');
-          foreach ($event->getResources() as $exampleText) {
-              $em->remove($exampleText);
+          foreach ($event->getResources() as $example) {
+              $em->remove($example);
           }
           // Stop execution of further listeners
           $event->stopPropagation();
@@ -248,14 +248,14 @@ You can use the 'ClarolineCoreBundle:Resource:create_form.html.twig' as default 
         //the form you defined with the symfony2 form component
         $form = $this->container
             ->get('form.factory')
-            ->create(new ExampleTextType, new ExampleText());
+            ->create(new ExampleType, new Example());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:resource_form.html.twig', array(
             'form' => $form->createView(),
             /*you must add the attribute resourceType to the twig File.
             The Resource Manager need
             to know wich kind of resource is going to be added.*/
-            'resourceType' => 'claroline_exampletext'
+            'resourceType' => 'claroline_example'
             )
         );
         ...
@@ -334,7 +334,7 @@ Here is the translation key used to translate your plugin name:
 
 eg:
 
-    clarolineexampletext: exemple
+    clarolineexample: exemple
 
 ### resource
 
@@ -345,7 +345,7 @@ They'll be displayed at the resource creation.
 
 /!\ everything must be lower case here
 
-    exampletext: example
+    example: example
 
 ### widget
 

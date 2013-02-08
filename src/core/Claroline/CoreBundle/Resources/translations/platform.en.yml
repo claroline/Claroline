@@ -77,6 +77,7 @@ log_create_verb: has created
 log_delete_verb: has deleted
 log_move_verb: has moved
 log_open_verb: has opened
+log_export_verb: has exported
 mail: Mail
 mail_form_object: Object
 mail_form_content: Content

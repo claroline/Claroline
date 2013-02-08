@@ -241,7 +241,7 @@ class DatabaseWriter
             );
         } else {
             $widgetEntity->setIcon(
-                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}res_default.png"
+                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
             );
         }
 
@@ -284,7 +284,7 @@ class DatabaseWriter
             );
         } else {
             $toolEntity->setIcon(
-                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}large{$ds}res_default.png"
+                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
             );
         }
 
