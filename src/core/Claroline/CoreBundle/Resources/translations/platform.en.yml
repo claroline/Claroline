@@ -89,6 +89,7 @@ move : Move
 message_form_object: Object
 message_form_content: Content
 message_form_to: To
+messages: Message
 messages_received: Messages received
 messages_removed: Messages removed
 messages_received_removed: Messages received removed
