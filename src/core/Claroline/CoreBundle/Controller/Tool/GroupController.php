@@ -79,7 +79,7 @@ class GroupController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Tools:workspace\group_management\group_parameters.html.twig',
+            'ClarolineCoreBundle:Tool:workspace\group_management\group_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'group' => $group,
@@ -332,7 +332,7 @@ class GroupController extends Controller
         }
 
         $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->getUsersOfWorkspace($workspace, $managerRole, true);
+            ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 
         if ($countRemovedManagers >= $countUserManagers) {
@@ -386,12 +386,7 @@ class GroupController extends Controller
      */
     private function paginatorToArray($paginator)
     {
-        $items = array();
-
-        foreach ($paginator as $item) {
-            $items[] = $item;
-        }
-
-        return $items;
+        return $this->get('claroline.utilities.paginator_parser')
+            ->paginatorToArray($paginator);
     }
 }

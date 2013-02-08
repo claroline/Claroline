@@ -128,8 +128,8 @@ class UserController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->searchRegisteredUsersOfWorkspace(
-                $workspaceId,
+            ->findByWorkspaceAndName(
+                $workspace,
                 $search,
                 $offset,
                 self::NUMBER_USER_PER_ITERATION
@@ -165,7 +165,7 @@ class UserController extends Controller
         // - otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->searchUnregisteredUsersOfWorkspace(
+            ->findWorkspaceOutsidersByName(
                 $search,
                 $workspace,
                 $offset,
@@ -244,8 +244,8 @@ class UserController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->registeredUsersOfWorkspace(
-                $workspaceId,
+            ->findByWorkspace(
+                $workspace,
                 $offset,
                 self::NUMBER_USER_PER_ITERATION
             );
@@ -278,7 +278,7 @@ class UserController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->unregisteredUsersOfWorkspace(
+            ->findWorkspaceOutsiders(
                 $workspace,
                 $offset,
                 self::NUMBER_USER_PER_ITERATION
@@ -362,7 +362,7 @@ class UserController extends Controller
         }
 
         $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->getUsersOfWorkspace($workspace, $managerRole, true);
+            ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 
         if ($countRemovedManagers >= $countUserManagers) {
@@ -405,7 +405,6 @@ class UserController extends Controller
             throw new AccessDeniedHttpException();
         }
     }
-
     /**
      * Most dql request required by this controller are paginated.
      * This function transform the results of the repository in an array.
@@ -416,12 +415,7 @@ class UserController extends Controller
      */
     private function paginatorToArray($paginator)
     {
-        $items = array();
-
-        foreach ($paginator as $item) {
-            $items[] = $item;
-        }
-
-        return $items;
+        return $this->get('claroline.utilities.paginator_parser')
+            ->paginatorToArray($paginator);
     }
 }
