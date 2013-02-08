@@ -57,11 +57,9 @@ general: General
 group: Group
 group_form_name: Name
 group_form_ownedRoles: Roles
-group_management: Group management
 group_parameter: Group parameter
 group_form_platformRole: Role
 groups: Groups
-home: Home
 id: Id
 informations: Informations
 instructions: Instructions
@@ -79,6 +77,7 @@ log_create_verb: has created
 log_delete_verb: has deleted
 log_move_verb: has moved
 log_open_verb: has opened
+log_export_verb: has exported
 mail: Mail
 mail_form_object: Object
 mail_form_content: Content
@@ -138,7 +137,6 @@ profile_form_phone: Phone
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
 profile_form_username: Username
-properties: Properties
 public: Public
 recursive_dir_action: Apply to the contents of the directory and its subdirectories
 register: Register
@@ -152,7 +150,6 @@ resource: Resource
 resource_action_denied_message: "The action %action% couldn't be done on '%path%': acces denied."
 resource_creation_wrong_type: "You don't have the permission to create a(n) %type% in the directory '%path%': access denied"
 resource_creation_denied: "You don't have the permission to create in the directory '%path': access denied"
-resource_manager: Resource manager
 resource_properties_form_creationDate: Creation Date
 resource_properties_form_resourceType: Resource type
 resource_properties_form_creator: Creator
@@ -192,6 +189,8 @@ text_form_text: Text
 text_form_shareType: Sharable
 to: To
 today: Today
+tool: Tool
+tools: Tools
 type: Type
 type_s: Type(s)
 unregister: Unregister
@@ -208,7 +207,6 @@ user_form_phone: Phone
 user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
-user_management: User management
 user_parameters: User parameters
 username: Username
 users: Users

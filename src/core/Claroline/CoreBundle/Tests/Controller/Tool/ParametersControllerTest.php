@@ -19,7 +19,7 @@ class ParametersControllerTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Tool\Tool');
 
-        $baseDisplayedTools = $repo->getDesktopTools($this->getFixtureReference('user/admin'));
+        $baseDisplayedTools = $repo->findByUser($this->getFixtureReference('user/admin'), true);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $home = $repo->findOneBy(array('name' => 'calendar'));
         $this->logUser($this->getFixtureReference('user/admin'));
@@ -31,7 +31,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->getDesktopTools($this->getFixtureReference('user/admin')))
+            count($repo->findByUser($this->getFixtureReference('user/admin'), true))
         );
 
         $this->client->request(
@@ -41,7 +41,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->getDesktopTools($this->getFixtureReference('user/admin')))
+            count($repo->findByUser($this->getFixtureReference('user/admin'), true))
         );
     }
 
@@ -58,7 +58,7 @@ class ParametersControllerTest extends FunctionalTestCase
              ->get('doctrine.orm.entity_manager')
              ->getRepository('ClarolineCoreBundle:Role')->getVisitorRole($workspace);
 
-         $baseDisplayedTools = $repo->getToolsForRolesInWorkspace(array($role->getName()), $workspace);
+         $baseDisplayedTools = $repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true);
          $nbBaseDisplayedTools = count($baseDisplayedTools);
          $calendar = $repo->findOneBy(array('name' => 'calendar'));
          $this->logUser($this->getFixtureReference('user/admin'));
@@ -74,7 +74,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
          $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->getToolsForRolesInWorkspace(array($role->getName()), $workspace))
+            count($repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true))
         );
 
         $this->client->request(
@@ -84,7 +84,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->getToolsForRolesInWorkspace(array($role->getName()), $workspace))
+            count($repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true))
         );
     }
 

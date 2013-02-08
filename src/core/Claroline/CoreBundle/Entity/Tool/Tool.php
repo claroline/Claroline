@@ -10,10 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tool
 {
-    const WORKSPACE_ONLY = 1;
-    const DESKTOP_ONLY = 2;
-    const WORKSPACE_AND_DESKTOP = 3;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -42,16 +38,6 @@ class Tool
     protected $isDesktopRequired;
 
     /**
-     * @ORM\Column(name="displayability", type="integer")
-     */
-    protected $displayability;
-
-    /**
-     * @ORM\Column(name="translation_key", type="integer")
-     */
-    protected $translationKey;
-
-    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
      *     mappedBy="tool"
@@ -66,6 +52,22 @@ class Tool
      * )
      */
     protected $desktopTools;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     */
+    protected $plugin;
+
+    /**
+     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
+     */
+    protected $isDisplayableInWorkspace;
+
+    /**
+     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
+     */
+    protected $isDisplayableInDesktop;
 
     /**
      * Unmapped var used for the tool configuration.
@@ -129,16 +131,6 @@ class Tool
         return $this->displayability;
     }
 
-    public function setTranslationKey($translationKey)
-    {
-        $this->translationKey = $translationKey;
-    }
-
-    public function getTranslationKey()
-    {
-        return $this->translationKey;
-    }
-
     public function setVisible($bool)
     {
         $this->isVisible = $bool;
@@ -152,6 +144,36 @@ class Tool
     public function removeDesktopTool($dt)
     {
         $this->desktopTools->removeElement($dt);
+    }
+
+    public function setPlugin($plugin)
+    {
+        $this->plugin = $plugin;
+    }
+
+    public function getPlugin()
+    {
+        return $this->plugin;
+    }
+
+    public function setDisplayableInWorkspace($bool)
+    {
+        $this->isDisplayableInWorkspace = $bool;
+    }
+
+    public function isDisplayableInWorkspace()
+    {
+        return $this->isDisplayableInWorkspace;
+    }
+
+    public function setDisplayableInDesktop($bool)
+    {
+        $this->isDisplayableInDesktop = $bool;
+    }
+
+    public function isDisplayableInDesktop()
+    {
+        return $this->isDisplayableInDesktop;
     }
 }
 

@@ -57,7 +57,7 @@ class LayoutController extends Controller
             $countUnreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
                 ->countUnreadMessage($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
-            $workspaces = $wsRepo->getAllWsOfUser($user);
+            $workspaces = $wsRepo->getWorkspacesOfUser($user);
             $personalWs = $user->getPersonalWorkspace();
         } else {
             $username = $this->get('translator')->trans('anonymous', array(), 'platform');
@@ -82,7 +82,6 @@ class LayoutController extends Controller
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
                 'personalWs' => $personalWs,
-                'toolName' => 'home'
             )
         );
     }
