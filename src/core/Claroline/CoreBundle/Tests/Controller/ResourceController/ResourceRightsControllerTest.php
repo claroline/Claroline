@@ -113,7 +113,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole(
+            ->findCollaboratorRole(
                 $this->getFixtureReference('user/user')
                     ->getPersonalWorkspace()
             );
@@ -133,7 +133,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole(
+            ->findCollaboratorRole(
                 $this->getFixtureReference('user/user')
                     ->getPersonalWorkspace()
             );

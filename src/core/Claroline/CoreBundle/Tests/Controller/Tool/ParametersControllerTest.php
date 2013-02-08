@@ -56,7 +56,7 @@ class ParametersControllerTest extends FunctionalTestCase
          $role = $this->client
              ->getContainer()
              ->get('doctrine.orm.entity_manager')
-             ->getRepository('ClarolineCoreBundle:Role')->getVisitorRole($workspace);
+             ->getRepository('ClarolineCoreBundle:Role')->findVisitorRole($workspace);
 
          $baseDisplayedTools = $repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true);
          $nbBaseDisplayedTools = count($baseDisplayedTools);
@@ -142,7 +142,7 @@ class ParametersControllerTest extends FunctionalTestCase
          $role = $this->client
              ->getContainer()
              ->get('doctrine.orm.entity_manager')
-             ->getRepository('ClarolineCoreBundle:Role')->getCollaboratorRole($workspace);
+             ->getRepository('ClarolineCoreBundle:Role')->findCollaboratorRole($workspace);
 
          $this->logUser($this->getFixtureReference('user/admin'));
 

@@ -82,7 +82,7 @@ class UserController extends Controller
             //cannot bind request: why ?
             $newRole = $roleRepo->find($parameters['form']['role']);
 
-            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
+            if ($newRole->getId() != $roleRepo->findManagerRole($workspace)->getId()) {
                 $this->checkRemoveManagerRoleIsValid(array ($userId), $workspace);
             }
 
@@ -210,7 +210,7 @@ class UserController extends Controller
                 $users[] = $user;
                 $user->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
-                        ->getCollaboratorRole($workspace)
+                        ->findCollaboratorRole($workspace)
                 );
                 $em->flush();
             }
@@ -310,7 +310,7 @@ class UserController extends Controller
             ->find($workspaceId);
         $this->checkIfAdmin($workspace);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getWorkspaceRoles($workspace);
+            ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
         if (isset($params['userIds'])) {
@@ -346,7 +346,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getManagerRole($workspace);
+            ->findManagerRole($workspace);
 
         foreach ($userIds as $userId) {
             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
@@ -398,7 +398,7 @@ class UserController extends Controller
     {
         $managerRoleName = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getManagerRole($workspace)
+            ->findManagerRole($workspace)
             ->getName();
 
         if (!$this->get('security.context')->isGranted($managerRoleName)) {

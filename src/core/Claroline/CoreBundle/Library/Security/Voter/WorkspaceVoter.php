@@ -54,7 +54,7 @@ class WorkspaceVoter implements VoterInterface
      */
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
-        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->getManagerRole($workspace);
+        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($workspace);
 
         if ($action === 'DELETE') {
             return $token->getUser()->hasRole($manager->getName()) ? true : false;

@@ -12,7 +12,7 @@ class ResourceActivityRepository extends EntityRepository
      *
      * @param Activity $activity
      *
-     * @return type
+     * @return array
      */
     public function findActivities(Activity $activity)
     {
