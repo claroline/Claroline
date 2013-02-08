@@ -39,6 +39,7 @@
                 <directory>../src/plugin/Claroline/*Bundle/Resources</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Command</directory>
                 <directory>../src/plugin/Claroline/*Bundle/Migrations</directory>
+                <directory>../src/core/Claroline/CoreBundle/DataFixtures</directory>
             </exclude>
         </whitelist>
     </filter>
