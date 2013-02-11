@@ -246,7 +246,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         if ('anon.' != $this->get('security.context')->getToken()->getUser()) {
-            $roles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+            $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
             $foundRole = null;
 
             foreach ($roles as $wsRole) {

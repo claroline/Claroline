@@ -86,7 +86,7 @@ class DesktopController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->getDesktopTools($this->get('security.context')->getToken()->getUser());
+            ->findByUser($this->get('security.context')->getToken()->getUser(), true);
 
         $route = $this->get('router')->generate(
                 'claro_desktop_open_tool',

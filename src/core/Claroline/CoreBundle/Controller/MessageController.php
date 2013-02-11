@@ -24,8 +24,9 @@ class MessageController extends Controller
     public function formForGroupAction($groupId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $users = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->usersOfGroup($groupId);
+            ->findByGroup($group);
         $urlParameters = '?';
 
         $i = 0;

@@ -115,7 +115,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/user_management/{$pwu->getId()}/user/{$creatorId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
-                ->getManagerRole($this->getFixtureReference('workspace/ws_a'))))
+                ->findManagerRole($this->getFixtureReference('workspace/ws_a'))))
         );
         $crawler = $this->client->request(
             'DELETE',
@@ -150,7 +150,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/user_management/{$pwu->getId()}/user/{$creatorId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
-                ->getManagerRole($pwu)->getId()))
+                ->findManagerRole($pwu)->getId()))
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->client->request(
@@ -190,7 +190,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         $visitorRoleId = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getVisitorRole($this->getFixtureReference('user/ws_creator')->getPersonalWorkspace())
+            ->findVisitorRole($this->getFixtureReference('user/ws_creator')->getPersonalWorkspace())
             ->getId();
         $this->client->request(
             'POST',
@@ -209,7 +209,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $visitorRoleId = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getVisitorRole($this->getFixtureReference('workspace/ws_a'))
+            ->findVisitorRole($this->getFixtureReference('workspace/ws_a'))
             ->getId();
         $crawler = $this->client->request(
             'POST',
@@ -228,7 +228,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $userId = $this->getFixtureReference('user/user')->getId();
         $visitorRoleId = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getVisitorRole($pwu)
+            ->findVisitorRole($pwu)
             ->getId();
         $crawler = $this->client->request(
             'POST',
