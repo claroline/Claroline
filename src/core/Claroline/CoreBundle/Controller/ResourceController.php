@@ -312,7 +312,7 @@ class ResourceController extends Controller
             ->getRoles($this->get('security.context')->getToken());
 
         if ($directoryId === 0) {
-            $resources = $resourceRepo->listRootsForUser($user, true);
+            $resources = $resourceRepo->findWorkspaceRootsByUser($user);
         } else {
             $directory = $this->getResource($resourceRepo->find($directoryId));
 
@@ -320,11 +320,11 @@ class ResourceController extends Controller
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
             }
 
-            $path = $resourceRepo->listAncestors($directory);
-            $resources = $resourceRepo->children($directory->getId(), $currentRoles, 0, true);
+            $path = $resourceRepo->findAncestors($directory);
+            $resources = $resourceRepo->findChildren($directory->getId(), $currentRoles, 0, true);
 
-            $creationRights = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceContext')
-                ->getCreationRights($currentRoles, $directory);
+            $creationRights = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceRights')
+                ->findCreationRights($currentRoles, $directory);
 
             if (count($creationRights) != 0) {
                 $translator = $this->get('translator');
@@ -420,11 +420,11 @@ class ResourceController extends Controller
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
             }
 
-            $path = $resourceRepo->listAncestors($directory);
+            $path = $resourceRepo->findAncestors($directory);
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $resourceRepo->listResourcesForUserWithFilter($criteria, $user);
+        $resources = $resourceRepo->findUserResourceByCriteria($user, $criteria);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -510,24 +510,23 @@ class ResourceController extends Controller
     }
 
     /**
-     * Checks if the current user has the right to do an action on a ResourceCollection.
-     * Be carrefull, ResourceCollection may need some aditionnal parameters.
+     * Checks if the current user has the right to perform an action on a ResourceCollection.
+     * Be careful, ResourceCollection may need some aditionnal parameters.
      *
      * - for CREATE: $collection->setAttributes(array('type' => $resourceType))
      *  where $resourceType is the name of the resource type.
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     *
      * @param string $permission
      * @param ResourceCollection $collection
      *
      * @throws AccessDeniedException
      */
-    private function checkAccess($permission, $collection)
+    private function checkAccess($permission, ResourceCollection $collection)
     {
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 }

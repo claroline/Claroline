@@ -18,8 +18,8 @@ class ResourceVoterTest extends FunctionalTestCase
             ->findOneBy(array('name' => 'ROLE_WS_MANAGER_'.$this->manager->getPersonalWorkspace()->getId()));
         $this->root = $em
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($this->manager->getPersonalWorkspace());
-        $this->rootRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
+            ->findWorkspaceRoot($this->manager->getPersonalWorkspace());
+        $this->rootRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $this->root, 'role' => $this->roleWsManager));
     }
 
@@ -180,7 +180,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'directory'));
         $this->rootRights->removeResourceType($directoryType);
-        $directoryRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
         $directoryRights->setCanCopy(false);
         $em->persist($this->rootRights);
@@ -216,7 +216,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $directoryType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'directory'));
         $this->rootRights->removeResourceType($directoryType);
-        $directoryRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
+        $directoryRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $directory, 'role' => $this->roleWsManager));
         $directoryRights->setCanCopy(false);
         $directoryRights->setCanDelete(false);

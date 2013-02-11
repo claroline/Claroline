@@ -2,224 +2,211 @@
 
 namespace Claroline\CoreBundle\Controller\ResourceController;
 
-Use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Role;
 
 class ResourceRightsControllerTest extends FunctionalTestCase
 {
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->client->followRedirects();
-        $this->pwr = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
-    }
-
-    public function tearDown()
-    {
-        $this->cleanDirectory($this->client->getContainer()->getParameter('claroline.files.directory'));
-        $this->cleanDirectory($this->client->getContainer()->getParameter('claroline.thumbnails.directory'));
-        parent::tearDown();
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('john' => 'user'));
     }
 
     public function testDisplayRightsForm()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $file = $this->uploadFile($this->pwr, 'file');
-        $crawler = $this->client->request('GET', "/resource/{$file->getId()}/rights/form");
-        $this->assertEquals(5, count($crawler->filter('.row-rights')));
+        $this->loadFileData('john', 'john', array('test.pdf'));
+        $this->logUser($this->getUser('john'));
+        $crawler = $this->client->request('GET', "/resource/{$this->getFile('test.pdf')->getId()}/rights/form");
+        // admin rights shouldn't be displayed
+        $this->assertEquals(4, count($crawler->filter('.role-permissions')));
     }
 
     public function testSubmitRightsForm()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $file = $this->uploadFile($this->pwr, 'file');
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-            ->findBy(array('resource' => $file));
-        $this->assertEquals(5, count($resourceRights));
+        $this->loadDirectoryData('john', array('john/dir1'));
+        $this->loadFileData('john', 'dir1', array('test.pdf'));
+        $this->logUser($this->getUser('john'));
+        $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
+        $userRights = $rightsRepo->findOneBy(
+                array(
+                    'resource' => $this->getDirectory('dir1'),
+                    'role' => $roleRepo->findWorkspaceRole(
+                        $this->getUser('john'),
+                        $this->getWorkspace('john')
+                    )
+                )
+            );
 
-        //changes keep the 1st $resourceRight and change the others
-
+        // set open and edit permissions to true recursively for user role
         $this->client->request(
             'POST',
-            "/resource/{$file->getId()}/rights/edit",
+            "/resource/{$this->getDirectory('dir1')->getId()}/rights/edit",
             array(
-                 "canView-{$resourceRights[0]->getId()}" => true,
-                 "canView-{$resourceRights[1]->getId()}" => true,
-                 "canDelete-{$resourceRights[1]->getId()}" => true,
-             )
+                'roleRights' => array(
+                    $userRights->getId() => array(
+                        'open' => 'on',
+                        'edit' => 'on'
+                    )
+                ),
+                'isRecursive' => 'on'
+            )
+        );
+        $this->assertRolePermissionsOnResource(
+            $userRights->getRole(),
+            $this->getDirectory('dir1'),
+            array('delete' => false, 'open' => true, 'export' => false, 'copy' => false, 'edit' => true),
+            array('delete' => false, 'open' => true, 'export' => false, 'copy' => false, 'edit' => true)
         );
 
-        $resourceRights = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-            ->findBy(array('resource' => $file));
-        $this->assertEquals(5, count($resourceRights));
-        $this->assertTrue(
-            $resourceRights[0]->isEquals(
-                array(
-                    'canView' => true,
-                    'canCopy' => false,
-                    'canDelete' => false,
-                    'canEdit' => false,
-                    'canOpen' => false,
-                    'canCreate' => false,
-                    'canExport' => false
+        // set delete, export and copy permissions to true for user role on root resource only
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir1')->getId()}/rights/edit",
+            array(
+                'roleRights' => array(
+                    $userRights->getId() => array(
+                        'delete' => 'on',
+                        'export' => 'on',
+                        'copy' => 'on'
+                    )
                 )
             )
         );
-
-        $this->assertTrue(
-            $resourceRights[1]->isEquals(
-                array(
-                    'canView' => true,
-                    'canCopy' => false,
-                    'canDelete' => true,
-                    'canEdit' => false,
-                    'canOpen' => false,
-                    'canCreate' => false,
-                    'canExport' => false
-                )
-            )
+        $this->assertRolePermissionsOnResource(
+            $userRights->getRole(),
+            $this->getDirectory('dir1'),
+            array('delete' => true, 'open' => false, 'export' => true, 'copy' => true, 'edit' => false),
+            array('delete' => false, 'open' => true, 'export' => false, 'copy' => false, 'edit' => true)
         );
 
-        $this->assertTrue(
-            $resourceRights[2]->isEquals(
-                array(
-                    'canView' => false,
-                    'canCopy' => false,
-                    'canDelete' => false,
-                    'canEdit' => false,
-                    'canOpen' => false,
-                    'canCreate' => false,
-                    'canExport' => false
-                )
-            )
+        // check that admin permissions are still set to true
+        $this->assertRolePermissionsOnResource(
+            $this->getRole('admin'),
+            $this->getDirectory('dir1'),
+            array('delete' => true, 'open' => true, 'export' => true, 'copy' => true, 'edit' => true),
+            array('delete' => true, 'open' => true, 'export' => true, 'copy' => true, 'edit' => true)
         );
+
+        // check that other roles permissions are set to false (as not passed in previous requests)
+        foreach ($rightsRepo->findNonAdminRights($this->getDirectory('dir1')) as $rights) {
+            if ($rights != $userRights) {
+                $this->assertRolePermissionsOnResource(
+                    $rights->getRole(),
+                    $this->getDirectory('dir1'),
+                    array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false),
+                    array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false)
+                );
+            }
+        }
     }
 
     public function testDisplayCreationRightForm()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $collaboratorRole = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole(
-                $this->getFixtureReference('user/user')
-                    ->getPersonalWorkspace()
-            );
-
-        $dir = $this->createDirectory($this->pwr, 'dir');
+        $this->loadDirectoryData('john', array('john/dir1'));
+        $directoryId = $this->getDirectory('dir1')->getId();
+        $collaboratorRoleId = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->getCollaboratorRole($this->getWorkspace('john'))
+            ->getId();
+        $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
             'GET',
-            "/resource/{$dir->getId()}/role/{$collaboratorRole->getId()}/right/creation/form"
+            "/resource/{$directoryId}/role/{$collaboratorRoleId}/right/creation/form"
         );
         $this->assertEquals(1, count($crawler->filter('#form-resource-creation-rights')));
     }
 
     public function testSubmitRightsCreationForm()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $collaboratorRole = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole(
-                $this->getFixtureReference('user/user')
-                    ->getPersonalWorkspace()
-            );
-        $dir = $this->createDirectory($this->pwr, 'dir');
-        $resourceTypes = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $directoryId = $this->getDirectory('dir1')->getId();
+        $collaboratorRoleId = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->getCollaboratorRole($this->getWorkspace('john'))
+            ->getId();
+        $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findByIsVisible(true);
+        $this->logUser($this->getUser('john'));
 
-        //Creating new ResourceRight from the default one
+        // allow two creatable types recursively for collaborator role
         $this->client->request(
             'POST',
-            "/resource/{$dir->getId()}/role/{$collaboratorRole->getId()}/right/creation/edit",
+            "/resource/{$directoryId}/role/{$collaboratorRoleId}/right/creation/edit",
             array(
-                "create-{$resourceTypes[0]->getId()}" => true,
-                "create-{$resourceTypes[1]->getId()}" => true,
+                'resourceTypes' => array(
+                    $resourceTypes[0]->getId(),
+                    $resourceTypes[1]->getId()
+                ),
+                'isRecursive' => 'on'
             )
         );
 
-        //checks if the creation right is set to true now
-        $config = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-            ->findOneBy(array('resource' => $dir->getId(), 'role' => $collaboratorRole));
+        $this->em->clear();
 
-        $permCreate = $config->getResourceTypes();
-        $this->assertEquals(2, count($permCreate));
+        $firstDirCreatableTypes = $rightsRepo->findOneBy(
+            array('resource' => $this->getDirectory('dir1'), 'role' => $collaboratorRoleId)
+        );
+        $secondDirCreatableTypes = $rightsRepo->findOneBy(
+            array('resource' => $this->getDirectory('dir2'), 'role' => $collaboratorRoleId)
+        );
+        $this->assertEquals(
+            array($resourceTypes[0], $resourceTypes[1]),
+            $firstDirCreatableTypes->getCreatableResourceTypes()->toArray()
+        );
+        $this->assertEquals(
+            array($resourceTypes[0], $resourceTypes[1]),
+            $secondDirCreatableTypes->getCreatableResourceTypes()->toArray()
+        );
 
-        //updating the new right
+        // allow three other creatable types on root resource only
         $this->client->request(
             'POST',
-            "/resource/{$dir->getId()}/role/{$collaboratorRole->getId()}/right/creation/edit",
+            "/resource/{$directoryId}/role/{$collaboratorRoleId}/right/creation/edit",
             array(
-                "create-{$resourceTypes[1]->getId()}" => true,
-                "create-{$resourceTypes[2]->getId()}" => true,
-                "create-{$resourceTypes[3]->getId()}" => true,
+                'resourceTypes' => array(
+                    $resourceTypes[1]->getId(),
+                    $resourceTypes[2]->getId(),
+                    $resourceTypes[3]->getId()
+                )
             )
         );
 
-        $config = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-            ->findOneBy(array('resource' => $dir->getId(), 'role' => $collaboratorRole));
+        $this->em->refresh($firstDirCreatableTypes);
+        $this->em->refresh($secondDirCreatableTypes);
 
-        $permCreate = $config->getResourceTypes();
-        $this->assertEquals(3, count($permCreate));
+        $this->assertEquals(
+            array($resourceTypes[1], $resourceTypes[2], $resourceTypes[3]),
+            $firstDirCreatableTypes->getCreatableResourceTypes()->toArray()
+        );
+        $this->assertEquals(
+            array($resourceTypes[0], $resourceTypes[1]), // only the first dir should be changed
+            $secondDirCreatableTypes->getCreatableResourceTypes()->toArray()
+        );
     }
 
-    private function uploadFile($parent, $name)
+    private function assertRolePermissionsOnResource(
+        Role $role,
+        AbstractResource $resource,
+        array $expectedPermissionsOnResource,
+        array $expectedPermissionsOnDescendants
+    )
     {
-        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
-        $fileData = new LoadFileData($name, $parent, $user, tempnam(sys_get_temp_dir(), 'FormTest'));
-        $this->loadFixture($fileData);
+        $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $resources = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findDescendants($resource, true, false);
 
-        return $fileData->getLastFileCreated();
-    }
-
-    private function createDirectory($parent, $name)
-    {
-        $manager = $this->client->getContainer()->get('claroline.resource.manager');
-        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
-        $directory = new Directory();
-        $directory->setName($name);
-        $dir = $manager->create($directory, $parent->getId(), 'directory', $user);
-
-        return $dir;
-    }
-
-    private function cleanDirectory($dir)
-    {
-        $iterator = new \DirectoryIterator($dir);
-
-        foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                && $file->getFilename() !== 'originalFile.txt'
-                && $file->getFilename() !== 'originalZip.zip'
-            ) {
-                chmod($file->getPathname(), 0777);
-                unlink($file->getPathname());
-            }
+        for ($i = 0, $resourceCount = count($resources); $i < $resourceCount; ++$i) {
+            $expectedPermissions = $i === 0 ? $expectedPermissionsOnResource : $expectedPermissionsOnDescendants;
+            $resourceRights = $rightsRepo->findOneBy(array('resource' => $resources[$i], 'role' => $role));
+            $this->em->refresh($resourceRights);
+            $this->assertEquals($expectedPermissions['open'], $resourceRights->canOpen());
+            $this->assertEquals($expectedPermissions['delete'], $resourceRights->canDelete());
+            $this->assertEquals($expectedPermissions['export'], $resourceRights->canExport());
+            $this->assertEquals($expectedPermissions['edit'], $resourceRights->canEdit());
+            $this->assertEquals($expectedPermissions['copy'], $resourceRights->canCopy());
         }
     }
 }

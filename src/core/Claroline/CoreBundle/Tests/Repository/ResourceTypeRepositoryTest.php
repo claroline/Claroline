@@ -54,6 +54,18 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $this->assertEquals('XXX/XXX/XXX', $lastType['class']);
     }
 
+    public function testFindByIds()
+    {
+        $resourceTypes = $this->repo->findAll();
+        $this->assertGreaterThan(1, count($resourceTypes));
+        $retrievedTypes = $this->repo->findByIds(
+            array($resourceTypes[0]->getId(), $resourceTypes[1]->getId())
+        );
+        $this->assertEquals(2, count($retrievedTypes));
+        $this->assertEquals($resourceTypes[0], $retrievedTypes[0]);
+        $this->assertEquals($resourceTypes[1], $retrievedTypes[1]);
+    }
+
     private function createResourceTypes()
     {
         $plugin = new Plugin();

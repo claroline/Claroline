@@ -195,7 +195,7 @@ class WorkspaceController extends Controller
         }
 
         $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($workspace)
+            ->findWorkspaceRoot($workspace)
             ->getId();
         $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findBy(array('isVisible' => true));
@@ -360,10 +360,10 @@ class WorkspaceController extends Controller
                         $ws = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                             ->find($workspaceId);
                         $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                            ->getRootForWorkspace($ws);
+                            ->findWorkspaceRoot($ws);
                         $role = $em->getRepository('ClarolineCoreBundle:Role')
                             ->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
+                        $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                             ->findOneBy(array('resource' => $root, 'role' => $role));
                         $resourceRight->setCanOpen(true);
                         $em->persist($resourceRight);
