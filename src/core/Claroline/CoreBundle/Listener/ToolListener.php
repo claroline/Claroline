@@ -33,7 +33,7 @@ class ToolListener extends ContainerAware
     {
         $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
     }
-    
+
     public function onDisplayWorkspaceCalendar(DisplayToolEvent $event)
     {
         $event->setContent($this->workspaceCalendar($event->getWorkspace()->getId()));
@@ -53,7 +53,7 @@ class ToolListener extends ContainerAware
     {
         $event->setContent($this->desktopParameters());
     }
-    
+
     public function onDisplayDesktopCalendar(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopCalendar());
@@ -202,7 +202,7 @@ class ToolListener extends ContainerAware
             ->get('templating')
             ->render('ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig');
     }
-    
+
     public function workspaceCalendar($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -214,7 +214,7 @@ class ToolListener extends ContainerAware
             array('workspace' => $workspace, 'form' => $form->createView())
         );
     }
-    
+
     public function desktopCalendar()
     {
         $event = new Event();

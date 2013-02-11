@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/clarolinecore/js/desktop/widget_properties.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/clarolinecore/js/tool/desktop/widget_properties.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block sectionContent %}
@@ -28,10 +28,22 @@
         </thead>
         <tbody id="widget-table-body" data-user-id="{{ user.getId() }}">
             {% for config in configs %}
-            <tr class='row-widget-config' data-id="{{ config.getParent().getId() }}" data-widget-id="{{ config.getWidget().getId() }}">
+            <tr class='row-widget-config'
+                data-id="{{ config.getParent().getId() }}"
+                data-widget-id="{{ config.getWidget().getId() }}">
                 <th>{{ config.getWidget().getName()|lower|trans({}, 'widget') }}</th>
-                <th><input type="checkbox" class="chk-config-visible" value="1" {% if config.isVisible() %} checked {% endif %} {% if config.getParent().isLocked() %} disabled {% endif %}></th>
-                <th> {% if config.getWidget().isConfigurable() and config.getParent().isLocked() == false %} <a href="{{ path('claro_desktop_widget_configuration', {'widgetId': config.getWidget().getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a> {% endif %} </th>
+                <th>
+                    <input type="checkbox"
+                           class="chk-config-visible"
+                           value="1"
+                           {% if config.isVisible() %} checked {% endif %}
+                           {% if config.getParent().isLocked() %} disabled {% endif %}>
+                </th>
+                <th> {% if config.getWidget().isConfigurable() and config.getParent().isLocked() == false %}
+                    <a href="{{ path('claro_desktop_widget_configuration', {'widgetId': config.getWidget().getId()}) }}">
+                        {{ 'configure'|trans({}, 'platform') }}
+                    </a> {% endif %}
+                </th>
             </tr>
             {% endfor %}
         </tbody>

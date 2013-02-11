@@ -45,8 +45,7 @@ class GroupController extends Controller
                         return $er->createQueryBuilder('wr')
                             ->select('role')
                             ->from('Claroline\CoreBundle\Entity\Role', 'role')
-                            ->leftJoin('role.workspaceRights', 'rights')
-                            ->leftJoin('rights.workspace', 'workspace')
+                            ->leftJoin('role.workspace', 'workspace')
                             ->where('workspace.id = :workspaceId')
                             ->andWhere("role.name != 'ROLE_ANONYMOUS'")
                             ->setParameter('workspaceId', $workspaceId);
@@ -63,7 +62,7 @@ class GroupController extends Controller
                 ->find($parameters['form']['role']);
 
             //verifications: can we change his role.
-            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
+            if ($newRole->getId() != $roleRepo->findManagerRole($workspace)->getId()) {
                 $this->checkRemoveManagerRoleIsValid(array($group->getId()), $workspace);
             }
 
@@ -80,7 +79,7 @@ class GroupController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Tools:workspace\group_management\group_parameters.html.twig',
+            'ClarolineCoreBundle:Tool:workspace\group_management\group_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'group' => $group,
@@ -124,7 +123,7 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkIfAdmin($workspace);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getWorkspaceRoles($workspace);
+            ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
         if (isset($params['groupIds'])) {
@@ -222,7 +221,7 @@ class GroupController extends Controller
                 $groups[] = $group;
                 $group->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
-                        ->getCollaboratorRole($workspace)
+                        ->findCollaboratorRole($workspace)
                 );
                 $em->flush();
             }
@@ -319,7 +318,7 @@ class GroupController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getManagerRole($workspace);
+            ->findManagerRole($workspace);
         $countRemovedManagers = 0;
 
         foreach ($groupIds as $groupId) {
@@ -333,7 +332,7 @@ class GroupController extends Controller
         }
 
         $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->getUsersOfWorkspace($workspace, $managerRole, true);
+            ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 
         if ($countRemovedManagers >= $countUserManagers) {
@@ -369,7 +368,7 @@ class GroupController extends Controller
     {
         $managerRoleName = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getManagerRole($workspace)
+            ->findManagerRole($workspace)
             ->getName();
 
         if (!$this->get('security.context')->isGranted($managerRoleName)) {
@@ -387,12 +386,7 @@ class GroupController extends Controller
      */
     private function paginatorToArray($paginator)
     {
-        $items = array();
-
-        foreach ($paginator as $item) {
-            $items[] = $item;
-        }
-
-        return $items;
+        return $this->get('claroline.utilities.paginator_parser')
+            ->paginatorToArray($paginator);
     }
 }

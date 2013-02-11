@@ -42,34 +42,9 @@ class CreatorTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role');
-        $this->assertEquals('visitor', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
-        $this->assertEquals('collaborator', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
-        $this->assertEquals('manager', $roleRepo->getManagerRole($workspace)->getTranslationKey());
-    }
-
-    public function testWorkspaceCanBeCreatedWithCustomParameters()
-    {
-        $user = $this->getFixtureReference('user/user');
-        $config = new Configuration();
-        $config->setWorkspaceType(Configuration::TYPE_AGGREGATOR);
-        $config->setWorkspaceName('Workspace Bar');
-        $config->setWorkspaceCode('WBAR');
-        $config->setPublic(true);
-        $config->setVisitorTranslationKey('Guest');
-        $config->setCollaboratorTranslationKey('Student');
-        $config->setManagerTranslationKey('Professor');
-
-        $workspace = $this->creator->createWorkspace($config, $user);
-
-        $this->assertEquals(Configuration::TYPE_AGGREGATOR, get_class($workspace));
-        $this->assertEquals('Workspace Bar', $workspace->getName());
-        $roleRepo = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role');
-        $this->assertEquals('Guest', $roleRepo->getVisitorRole($workspace)->getTranslationKey());
-        $this->assertEquals('Student', $roleRepo->getCollaboratorRole($workspace)->getTranslationKey());
-        $this->assertEquals('Professor', $roleRepo->getManagerRole($workspace)->getTranslationKey());
+        $this->assertEquals('visitor', $roleRepo->findVisitorRole($workspace)->getTranslationKey());
+        $this->assertEquals('collaborator', $roleRepo->findCollaboratorRole($workspace)->getTranslationKey());
+        $this->assertEquals('manager', $roleRepo->findManagerRole($workspace)->getTranslationKey());
     }
 
     public function invalidConfigProvider()

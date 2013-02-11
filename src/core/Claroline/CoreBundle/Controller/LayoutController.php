@@ -57,7 +57,7 @@ class LayoutController extends Controller
             $countUnreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
                 ->countUnreadMessage($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
-            $workspaces = $wsRepo->getAllWsOfUser($user);
+            $workspaces = $wsRepo->getWorkspacesOfUser($user);
             $personalWs = $user->getPersonalWorkspace();
         } else {
             $username = $this->get('translator')->trans('anonymous', array(), 'platform');
@@ -68,8 +68,7 @@ class LayoutController extends Controller
                 $registerTarget = 'claro_registration_user_registration_form';
             }
 
-            // TODO : use a platform option to make this target configurable
-            $loginTarget = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'));
+            $loginTarget = $this->get('router')->generate('claro_desktop_open');
         }
 
         return $this->render(
@@ -81,7 +80,7 @@ class LayoutController extends Controller
                 'register_target' => $registerTarget,
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
-                'personalWs' => $personalWs
+                'personalWs' => $personalWs,
             )
         );
     }

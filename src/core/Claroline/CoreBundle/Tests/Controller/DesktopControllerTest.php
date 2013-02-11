@@ -35,7 +35,7 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->loadUserFixture(array('admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/parameters');
-        $this->assertEquals(1, count($crawler->filter('.li-user-parameters')));
+        $this->assertEquals(2, count($crawler->filter('.li-user-parameters')));
     }
 
     public function testManagerCanInvertWidgetVisible()

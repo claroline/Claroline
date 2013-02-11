@@ -35,7 +35,6 @@ class DisplayConfig
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
      *     mappedBy="parent"
      * )
-     * @ORM\OrderBy({"lft" = "ASC"})
      */
     protected $children;
 
