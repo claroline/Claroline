@@ -13,7 +13,7 @@ class EventRepository extends EntityRepository
     {
         $dql = "
             SELECT e 
-            FROM Claroline\CoreBundle\Entity\Workspace\Event e
+            FROM Claroline\CoreBundle\Entity\Event e
             JOIN e.workspace ws
             WITH ws in (
                 SELECT w
