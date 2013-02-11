@@ -10,17 +10,16 @@
                 Claroline
             </a>
             {% if isLogged %}
-
             <div class="nav-collapse">
             <ul class="nav">
             <li{% if app.request.requesturi == path('claro_desktop_open') %} class="active"{% endif %}>
                 <a href="{{ path('claro_desktop_open') }}" id="link-desktop">
-                <i class="icon-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }} 
+                <i class="icon-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }}
                 </a>
             </li>
-            
+
             {% if is_granted('ROLE_ADMIN') %}
-            
+
             <li{% if app.request.requesturi == path('claro_admin_index') %} class="active"{% endif %}>
                 <a href="{{ path('claro_admin_index') }}" id="link-administration">
                 <i class='icon-cog'></i>{{ 'administration'|trans({}, 'platform') }}
@@ -38,12 +37,12 @@
             </li>
 
             </ul>
-        
+
 
             {% endif %}
             <ul class="nav pull-right">
             <li class="divider-vertical"></li>
-            
+
             {% if isLogged or workspaces|length > 0 %}
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -54,8 +53,8 @@
                 <ul class="dropdown-menu">
                 {% for workspace in workspaces %}
                     <li>
-                    <a href="{{ path('claro_workspace_open_tool',
-                        {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                    <a href="{{ path('claro_workspace_open',
+                        {'workspaceId': workspace.getId()}) }}"
                         id="link-workspace-{{ workspace.getId() }}">
                         {{ workspace.getName() }}
                         <span class="workspace-code">({{ workspace.getCode() }})</span>
@@ -83,11 +82,11 @@
                     </li>
                 {% endif %}
                 </ul>
-            </li>    
+            </li>
             {% endif %}
-        
+
         <li class="dropdown">
-        
+
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="icon-user"></i>
                 {{ username }}
@@ -156,7 +155,7 @@
                     </li>
                 {% endif %}
             </ul>
-            
+
         </li>
         </ul>
 	</div>
