@@ -128,7 +128,7 @@ class AdministrationController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->users($offset, self::USER_PER_PAGE, UserRepository::PLATEFORM_ROLE);
+            ->findAll($offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig",
@@ -159,7 +159,7 @@ class AdministrationController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->searchUsers($search, $offset, self::USER_PER_PAGE, UserRepository::PLATEFORM_ROLE);
+            ->findByName($search, $offset, self::USER_PER_PAGE, UserRepository::PLATEFORM_ROLE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:user_list.{$format}.twig",
@@ -186,8 +186,9 @@ class AdministrationController extends Controller
     public function usersOfGroupAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->usersOfGroup($groupId, $offset, self::USER_PER_PAGE);
+            ->findByGroup($group, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
             'ClarolineCoreBundle:Administration:user_list.json.twig',
@@ -212,8 +213,9 @@ class AdministrationController extends Controller
     public function searchUsersOfGroupAction($groupId, $offset, $search)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->searchUsersOfGroup($search, $groupId, $offset, self::USER_PER_PAGE);
+            ->findByNameAndGroup($search, $group, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
             'ClarolineCoreBundle:Administration:user_list.json.twig',
@@ -386,8 +388,9 @@ class AdministrationController extends Controller
     public function grouplessUsersAction($groupId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->unregisteredUsersOfGroup($groupId, $offset, self::USER_PER_PAGE);
+        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
+        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
+            ->findGroupOutsiders($group, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
             'ClarolineCoreBundle:Administration:user_list.json.twig',
@@ -412,8 +415,9 @@ class AdministrationController extends Controller
     public function searchGrouplessUsersAction($groupId, $search, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->searchUnregisteredUsersOfGroup($groupId, $search, $offset, self::USER_PER_PAGE);
+            ->findGroupOutsidersByName($group, $search, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
             'ClarolineCoreBundle:Administration:user_list.json.twig',
@@ -644,12 +648,7 @@ class AdministrationController extends Controller
 
     private function paginatorToArray($paginator)
     {
-        $items = array();
-
-        foreach ($paginator as $item) {
-            $items[] = $item;
-        }
-
-        return $items;
+        return $this->get('claroline.utilities.paginator_parser')
+            ->paginatorToArray($paginator);
     }
 }

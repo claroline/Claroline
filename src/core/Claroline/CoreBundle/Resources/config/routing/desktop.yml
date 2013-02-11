@@ -6,3 +6,7 @@ claro_desktop_open_tool:
   pattern: tool/open/{toolName}
   defaults: { _controller: ClarolineCoreBundle:Desktop:openTool }
 
+claro_desktop_open:
+  pattern: /open
+  defaults: { _controller: ClarolineCoreBundle:Desktop:open }
+

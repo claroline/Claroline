@@ -10,10 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tool
 {
-    const WORKSPACE_ONLY = 1;
-    const DESKTOP_ONLY = 2;
-    const WORKSPACE_AND_DESKTOP = 3;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -37,22 +33,48 @@ class Tool
     protected $isWorkspaceRequired;
 
     /**
-     * @ORM\Column(name="displayability", type="integer")
+     * @ORM\Column(name="is_desktop_required", type="boolean")
      */
-    protected $displayability;
-
-    /**
-     * @ORM\Column(name="translation_key", type="integer")
-     */
-    protected $translationKey;
+    protected $isDesktopRequired;
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
      *     mappedBy="tool"
      * )
      */
-    protected $workspaceTools;
+    protected $workspaceToolRoles;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     mappedBy="tool"
+     * )
+     */
+    protected $desktopTools;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     */
+    protected $plugin;
+
+    /**
+     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
+     */
+    protected $isDisplayableInWorkspace;
+
+    /**
+     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
+     */
+    protected $isDisplayableInDesktop;
+
+    /**
+     * Unmapped var used for the tool configuration.
+     *
+     * @var boolean
+     */
+    private $isVisible;
 
     public function getId()
     {
@@ -89,6 +111,16 @@ class Tool
         return $this->isWorkspaceRequired;
     }
 
+    public function setIsDesktopRequired($bool)
+    {
+        $this->isDesktopRequired = $bool;
+    }
+
+    public function isDesktopRequired()
+    {
+        return $this->isDesktopRequired;
+    }
+
     public function setDisplayability($display)
     {
         $this->displayability = $display;
@@ -99,14 +131,49 @@ class Tool
         return $this->displayability;
     }
 
-    public function setTranslationKey($translationKey)
+    public function setVisible($bool)
     {
-        $this->translationKey = $translationKey;
+        $this->isVisible = $bool;
     }
 
-    public function getTranslationKey()
+    public function isVisible()
     {
-        return $this->translationKey;
+        return $this->isVisible;
+    }
+
+    public function removeDesktopTool($dt)
+    {
+        $this->desktopTools->removeElement($dt);
+    }
+
+    public function setPlugin($plugin)
+    {
+        $this->plugin = $plugin;
+    }
+
+    public function getPlugin()
+    {
+        return $this->plugin;
+    }
+
+    public function setDisplayableInWorkspace($bool)
+    {
+        $this->isDisplayableInWorkspace = $bool;
+    }
+
+    public function isDisplayableInWorkspace()
+    {
+        return $this->isDisplayableInWorkspace;
+    }
+
+    public function setDisplayableInDesktop($bool)
+    {
+        $this->isDisplayableInDesktop = $bool;
+    }
+
+    public function isDisplayableInDesktop()
+    {
+        return $this->isDisplayableInDesktop;
     }
 }
 

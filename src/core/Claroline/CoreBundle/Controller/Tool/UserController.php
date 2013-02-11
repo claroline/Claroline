@@ -67,8 +67,7 @@ class UserController extends Controller
                         return $er->createQueryBuilder('wr')
                             ->select('role')
                             ->from('Claroline\CoreBundle\Entity\Role', 'role')
-                            ->leftJoin('role.workspaceRights', 'rights')
-                            ->leftJoin('rights.workspace', 'workspace')
+                            ->leftJoin('role.workspace', 'workspace')
                             ->where('workspace.id = :workspaceId')
                             ->andWhere("role.name != 'ROLE_ANONYMOUS'")
                             ->setParameter('workspaceId', $workspaceId);
@@ -83,7 +82,7 @@ class UserController extends Controller
             //cannot bind request: why ?
             $newRole = $roleRepo->find($parameters['form']['role']);
 
-            if ($newRole->getId() != $roleRepo->getManagerRole($workspace)->getId()) {
+            if ($newRole->getId() != $roleRepo->findManagerRole($workspace)->getId()) {
                 $this->checkRemoveManagerRoleIsValid(array ($userId), $workspace);
             }
 
@@ -129,8 +128,8 @@ class UserController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->searchRegisteredUsersOfWorkspace(
-                $workspaceId,
+            ->findByWorkspaceAndName(
+                $workspace,
                 $search,
                 $offset,
                 self::NUMBER_USER_PER_ITERATION
@@ -166,7 +165,7 @@ class UserController extends Controller
         // - otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->searchUnregisteredUsersOfWorkspace(
+            ->findWorkspaceOutsidersByName(
                 $search,
                 $workspace,
                 $offset,
@@ -211,7 +210,7 @@ class UserController extends Controller
                 $users[] = $user;
                 $user->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
-                        ->getCollaboratorRole($workspace)
+                        ->findCollaboratorRole($workspace)
                 );
                 $em->flush();
             }
@@ -245,8 +244,8 @@ class UserController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->registeredUsersOfWorkspace(
-                $workspaceId,
+            ->findByWorkspace(
+                $workspace,
                 $offset,
                 self::NUMBER_USER_PER_ITERATION
             );
@@ -279,7 +278,7 @@ class UserController extends Controller
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->unregisteredUsersOfWorkspace(
+            ->findWorkspaceOutsiders(
                 $workspace,
                 $offset,
                 self::NUMBER_USER_PER_ITERATION
@@ -311,7 +310,7 @@ class UserController extends Controller
             ->find($workspaceId);
         $this->checkIfAdmin($workspace);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getWorkspaceRoles($workspace);
+            ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
         if (isset($params['userIds'])) {
@@ -347,7 +346,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
-            ->getManagerRole($workspace);
+            ->findManagerRole($workspace);
 
         foreach ($userIds as $userId) {
             $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
@@ -363,7 +362,7 @@ class UserController extends Controller
         }
 
         $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
-            ->getUsersOfWorkspace($workspace, $managerRole, true);
+            ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 
         if ($countRemovedManagers >= $countUserManagers) {
@@ -399,14 +398,13 @@ class UserController extends Controller
     {
         $managerRoleName = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Role')
-            ->getManagerRole($workspace)
+            ->findManagerRole($workspace)
             ->getName();
 
         if (!$this->get('security.context')->isGranted($managerRoleName)) {
             throw new AccessDeniedHttpException();
         }
     }
-
     /**
      * Most dql request required by this controller are paginated.
      * This function transform the results of the repository in an array.
@@ -417,12 +415,7 @@ class UserController extends Controller
      */
     private function paginatorToArray($paginator)
     {
-        $items = array();
-
-        foreach ($paginator as $item) {
-            $items[] = $item;
-        }
-
-        return $items;
+        return $this->get('claroline.utilities.paginator_parser')
+            ->paginatorToArray($paginator);
     }
 }

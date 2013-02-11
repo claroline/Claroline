@@ -263,68 +263,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget-content')));
     }
 
-    public function testDisplayWsRightsProperties()
-    {
-        $this->loadUserFixture(array('user'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwu}/rights");
-        $this->assertEquals(1, count($crawler->filter('#right-table')));
-    }
-
-    public function testDisplayWorkspaceRightsForm()
-    {
-        $this->markTestSkipped('Now a workspace is an aggregation of tools');
-        $this->loadUserFixture(array('user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/rights/form");
-        $this->assertEquals(1, count($crawler->filter('#workspace-rights-form')));
-    }
-
-    public function testEditWorkspaceRights()
-    {
-        $this->markTestSkipped('Now a workspace is an aggregation of tools');
-        $this->loadUserFixture(array('user'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $workspace = $this->getFixtureReference('user/user')->getPersonalWorkspace();
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $workspaceRights = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
-            ->findBy(array('workspace' => $workspace));
-        $this->client->request(
-            'POST',
-            "/workspaces/{$workspace->getId()}/properties/workspace/rights/edit",
-            array(
-               "canView-{$workspaceRights[0]->getId()}" => true,
-               "canView-{$workspaceRights[1]->getId()}" => true,
-               "canDelete-{$workspaceRights[1]->getId()}" => true,
-           )
-        );
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $seeToTrue = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
-            ->find($workspaceRights[0]->getId());
-        $seeAndDeleteToTrue = $em->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
-            ->find($workspaceRights[1]->getId());
-        $this->assertTrue(
-            $seeToTrue->isEquals(
-                array(
-                    'canView' => true,
-                    'canDelete' => false,
-                    'canEdit' => false
-                )
-            )
-        );
-        $this->assertTrue(
-            $seeAndDeleteToTrue->isEquals(
-                array(
-                    'canView' => true,
-                    'canDelete' => true,
-                    'canEdit' => false
-                )
-            )
-        );
-    }
-
     private function registerStubPlugins(array $pluginFqcns)
     {
         $container = $this->client->getContainer();

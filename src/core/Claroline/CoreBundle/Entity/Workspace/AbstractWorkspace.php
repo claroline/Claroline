@@ -6,9 +6,7 @@ use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Role;
 use JMS\SerializerBundle\Annotation\Type;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
 
@@ -26,9 +24,6 @@ use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
  */
 abstract class AbstractWorkspace
 {
-    const PERSONNAL = 0;
-    const STANDARD = 1;
-
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
     protected static $managerPrefix = 'ROLE_WS_MANAGER';
@@ -54,11 +49,6 @@ abstract class AbstractWorkspace
     protected $code;
 
     /**
-     * @ORM\Column(type="integer", length=255)
-     */
-    protected $type;
-
-    /**
      * @ORM\Column(name="is_public", type="boolean")
      */
     protected $isPublic = true;
@@ -73,15 +63,7 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
-     *     mappedBy="workspace"
-     * )
-     */
-    protected $rights;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Event",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Event",
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
@@ -90,12 +72,34 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceTool",
+<<<<<<< HEAD
+     *     targetEntity="Claroline\CoreBundle\Entity\Event",
+=======
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
+>>>>>>> 88b6b16784f39380ffcab09b8756434d5d16f1d8
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
      */
-    protected $workspaceTools;
+    protected $workspaceToolRoles;
+
+
+    /**
+     * @ORM\OneToMany(
+     * targetEntity="Claroline\CoreBundle\Entity\Role",
+     * mappedBy="workspace",
+     * cascade={"persist"}
+     * )
+     */
+    protected $roles;
+
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="personalWorkspace"
+     * )
+     */
+    protected $personalUser;
 
     public function __construct()
     {
@@ -140,16 +144,6 @@ abstract class AbstractWorkspace
         return $this->resources;
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
     public function setCode($code)
     {
         $this->code = $code;
@@ -160,21 +154,8 @@ abstract class AbstractWorkspace
         return $this->code;
     }
 
-    public function getRights()
+    public function getWorkspaceToolRoles()
     {
-        return $this->rights;
-    }
-
-    public function addTool(Tool $tool)
-    {
-        $wsTool = new WorkspaceTool();
-        $wsTool->setTool($tool);
-        $wsTool->setWorkspace($this);
-        $this->workspaceTools->add($wsTool);
-    }
-
-    public function getWorkspaceTools()
-    {
-        return $this->workspaceTools;
+        return $this->workspaceToolRoles;
     }
 }

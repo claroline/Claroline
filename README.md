@@ -11,6 +11,8 @@ After cloning the project :
 
 * install a local copy of [composer][composer_website] in the root directory of the project
 
+* you'll need to install ffmpeg for php (run apt-get install php5-ffmpeg on Ubuntu).
+
 * use the automatic install script (php must be in $PATH ) : `php app/dev/raw_install`
 
 * make the *app/cache*, *app/logs*, *app/config/local*, *files* and *test* directories

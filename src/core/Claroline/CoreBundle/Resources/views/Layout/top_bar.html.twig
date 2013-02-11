@@ -1,4 +1,4 @@
-<div id="top_bar" class="navbar navbar-fixed-top">
+<div id="top_bar" class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -6,145 +6,162 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="{{ path('claro_index')}}">
-                <img src="{{ asset('bundles/clarolinecore/images/logo/claroline-logo-bulles-14x16.png') }}"/>
+            <a class="brand" href="{{ path('claro_index') }}">
                 Claroline
             </a>
+            
+	    <div class="nav-collapse">
+
             {% if isLogged %}
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li>
-                            <a href="{{ path('claro_desktop_open_tool', {'toolName': app.user.getDefaultDesktopToolName() }) }}" id="link-desktop">
-                                {{ 'desktop'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li>
-                                <a href="{{ path('claro_admin_index') }}" id="link-administration">
-                                    {{ 'administration'|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="{{ path('claro_message_list_received_layout') }}"
-                               id="link-messages"
-                               class="icon-envelope {% if countUnreadMessages > 0 %}icon-new-msg{% endif %}"
-                                title="{{ 'new_message_alert'|trans({'%count%': countUnreadMessages}, 'platform')}}">
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+
+            <ul class="nav">
+            <li{% if app.request.requesturi == path('claro_desktop_open') %} class="active"{% endif %}>
+                <a href="{{ path('claro_desktop_open') }}" id="link-desktop">
+                <i class="icon-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }}
+                </a>
+            </li>
+
+            {% if is_granted('ROLE_ADMIN') %}
+
+            <li{% if app.request.requesturi == path('claro_admin_index') %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_index') }}" id="link-administration">
+                <i class='icon-cog'></i>{{ 'administration'|trans({}, 'platform') }}
+                </a>
+            </li>
+
             {% endif %}
-            <div class="btn-group pull-right">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i>
-                    {{ username }}
-                    <span class="caret"></span>
+
+            <li{% if app.request.requesturi == path('claro_message_list_received_layout') %} class="active"{% endif %}>
+                <a href="{{ path('claro_message_list_received_layout') }}" id="link-messages"
+                title="{{ 'new_message_alert'|trans({'%count%': countUnreadMessages}, 'platform')}}">
+                <i class="icon-envelope"></i> <span class="text">{{ 'messages'|trans({}, 'platform') }}</span>
+                {% if countUnreadMessages > 0 %}&nbsp;<span class="badge badge-important">{{ countUnreadMessages }}</span>{% endif %}
+                </a>
+            </li>
+
+            </ul>
+
+
+            {% endif %}
+            <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+
+            {% if isLogged or workspaces|length > 0 %}
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-book"></i>
+                    {{ 'workspaces'|trans({}, 'platform') }}
+                    <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    {% if isLogged %}
-                        <li>
-                            <a href="{{ path('claro_profile_form') }}" id="link-account">
-                                {{ 'my_account'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="{{ path('claro_workspace_open_tool',
-                                   {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
-                                   id="link-my-workspace">
-                                {{ 'my_workspace'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="link-agenda">
-                                {{ 'my_agenda'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0' }}" id="link-my-resources">
-                                {{ 'my_resources'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="link-my-contacts">
-                                {{ 'my_contacts'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#" id="link-my-notes">
-                                {{ 'my_notes'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="link-portfolio">
-                                {{ 'my_portfolio'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="{{ path('claro_security_logout') }}" id="link-logout">
-                                {{ 'logout'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                    {% else %}
-                        {% if register_target is not null %}
-                            <li>
-                                <a id="link-registration" href="{{ path(register_target) }}">
-                                    {{ 'register'|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                        {% endif %}
-                            <li>
-                                <a href="{{ login_target }}" id="link-login">
-                                    {{ 'login'|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                    {% endif %}
-                </ul>
-            </div>
-            {% if isLogged or workspaces|length > 0 %}
-                <div class="btn-group pull-right">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        {{ 'workspaces'|trans({}, 'platform') }}
-                        <span class="caret"></span>
+                {% for workspace in workspaces %}
+                    <li>
+                    <a href="{{ path('claro_workspace_open',
+                        {'workspaceId': workspace.getId()}) }}"
+                        id="link-workspace-{{ workspace.getId() }}">
+                        {{ workspace.getName() }}
+                        <span class="workspace-code">({{ workspace.getCode() }})</span>
                     </a>
-                    <ul class="dropdown-menu">
-                        {% for workspace in workspaces %}
-                            <li>
-                                <a href="{{ path('claro_workspace_open_tool',
-                                   {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                                   id="link-workspace-{{ workspace.getId() }}">
-                                   {{ workspace.getName() }}
-                                   <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                </a>
-                            </li>
-                        {% endfor %}
-                        {% if isLogged %}
-                            <li class="divider"></li>
-                            <li>
-                                <a href="{{ path('claro_workspace_by_user', {'userId': app.user.id }) }}" id="link-my-workspaces">
-                                    {{ 'my_workspaces'|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('claro_workspace_list') }}" id="link-search-workspaces">
-                                    {{ 'find_workspaces'|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="{{ path('claro_workspace_creation_form') }}"
-                                   id="link-create-ws-form">
-                                    {{ 'create_workspace'|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+                    </li>
+                {% endfor %}
+                {% if isLogged %}
+                    <li class="divider"></li>
+                    <li>
+                    <a href="{{ path('claro_workspace_by_user', {'userId': app.user.id }) }}" id="link-my-workspaces">
+                        {{ 'my_workspaces'|trans({}, 'platform') }}
+                    </a>
+                    </li>
+                    <li>
+                    <a href="{{ path('claro_workspace_list') }}" id="link-search-workspaces">
+                        {{ 'find_workspaces'|trans({}, 'platform') }}
+                    </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                    <a href="{{ path('claro_workspace_creation_form') }}"
+                        id="link-create-ws-form">
+                        {{ 'create_workspace'|trans({}, 'platform') }}
+                    </a>
+                    </li>
+                {% endif %}
+                </ul>
+            </li>
             {% endif %}
+
+        <li class="dropdown">
+
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-user"></i>
+                {{ username }}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                {% if isLogged %}
+                    <li>
+                    <a href="{{ path('claro_profile_form') }}" id="link-account">
+                       {{ 'my_account'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="{{ path('claro_workspace_open_tool',
+                    {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
+                    id="link-my-workspace">
+                    {{ 'my_workspace'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="link-agenda">
+                    {{ 'my_agenda'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0' }}" id="link-my-resources">
+                    {{ 'my_resources'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="link-my-contacts">
+                    {{ 'my_contacts'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#" id="link-my-notes">
+                    {{ 'my_notes'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="link-portfolio">
+                    {{ 'my_portfolio'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="{{ path('claro_security_logout') }}" id="link-logout">
+		        {{ 'logout'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                {% else %}
+                {% if register_target is not null %}
+                    <li>
+                    <a id="link-registration" href="{{ path(register_target) }}">
+                        {{ 'register'|trans({}, 'platform') }}
+                    </a>
+                    </li>
+                    <li class="divider"></li>
+                {% endif %}
+                    <li>
+                    <a href="{{ login_target }}" id="link-login">
+                        {{ 'login'|trans({}, 'platform') }}
+                    </a>
+                    </li>
+                {% endif %}
+            </ul>
+
+        </li>
+        </ul>
+	</div>
         </div>
     </div>
 </div>

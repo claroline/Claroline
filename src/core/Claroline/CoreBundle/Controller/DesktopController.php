@@ -4,9 +4,8 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
 
 /**
@@ -53,8 +52,8 @@ class DesktopController extends Controller
     public function renderToolListAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByUser($user, true);
 
         return $this->render(
             'ClarolineCoreBundle:Desktop:tool_list.html.twig',
@@ -76,5 +75,24 @@ class DesktopController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         return new Response($event->getContent());
+    }
+
+    /**
+     * Opens the desktop.
+     *
+     * @return Response
+     */
+    public function openAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findByUser($this->get('security.context')->getToken()->getUser(), true);
+
+        $route = $this->get('router')->generate(
+                'claro_desktop_open_tool',
+                array('toolName' => $openedTool[0]->getName())
+            );
+
+        return new RedirectResponse($route);
     }
 }
