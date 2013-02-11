@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Entity\Resource\ResourceContext;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -136,11 +136,11 @@ class Role implements RoleInterface
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceContext",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
      *     mappedBy="role"
      * )
      */
-    protected $resourceContext;
+    protected $resourceRights;
 
     /**
      * @ORM\OneToMany(
@@ -265,13 +265,13 @@ class Role implements RoleInterface
         return $this->roleType;
     }
 
-    public function addResourceContext(ResourceContext $rc)
+    public function addResourceRights(ResourceRights $rc)
     {
-        $this->resourceContext->add($rc);
+        $this->resourceRights->add($rc);
     }
 
-    public function getResourceContext()
+    public function getResourceRights()
     {
-        return $this->resourceContext;
+        return $this->resourceRights;
     }
 }

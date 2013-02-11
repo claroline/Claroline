@@ -29,7 +29,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $this->pwr = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function tearDown()
@@ -192,11 +192,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $creationTimeAdminTreeOne = new \DateTime();
         $adminpwr = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/admin')->getPersonalWorkspace());
         $this->createBigTree($adminpwr->getId());
         //sleep(2); // Pause to allow us to filter on creation date
         //$creationTimeAdminTreeTwo = new \DateTime();
-        //$wsEroot = $this->resourceRepository->getRootForWorkspace($this->getFixtureReference('workspace/ws_e'));
+        //$wsEroot = $this->resourceRepository->findWorkspaceRoot($this->getFixtureReference('workspace/ws_e'));
         //$this->createBigTree($wsEroot->getId());
         //$now = new \DateTime();
         //filter by types (1)
@@ -486,7 +486,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $user = $this->getFixtureReference('user/user');
         $rootDir = $this->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($user->getPersonalWorkspace());
+            ->findWorkspaceRoot($user->getPersonalWorkspace());
         $fooDir = $this->createFolder($rootDir, 'Foo', $user);
         $barDir = $this->createFolder($fooDir, 'Bar', $user);
         $this->uploadFile($barDir, 'Baz', $user);
@@ -531,7 +531,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $user = $this->getFixtureReference('user/user');
         $rootDir = $this->getEntityManager()
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($user->getPersonalWorkspace());
+            ->findWorkspaceRoot($user->getPersonalWorkspace());
         $file = $this->uploadFile($rootDir, 'Baz', $user);
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/resource/directory/{$file->getId()}");

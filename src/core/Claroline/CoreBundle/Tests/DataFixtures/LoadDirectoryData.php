@@ -24,7 +24,7 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
 
     public function load(ObjectManager $manager)
     {
-        $this->createTree($this->getReference("user/user"), 10, $manager);
+        $this->createTree($this->getReference('user/user'), 10, $manager);
         $manager->flush();
     }
 
