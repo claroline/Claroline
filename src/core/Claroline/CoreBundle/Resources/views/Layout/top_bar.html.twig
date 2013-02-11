@@ -9,9 +9,12 @@
             <a class="brand" href="{{ path('claro_index') }}">
                 Claroline
             </a>
+            
+	    <div class="nav-collapse">
+
             {% if isLogged %}
 
-            <div class="nav-collapse">
+            
             <ul class="nav">
             <li{% if app.request.requesturi == path('claro_desktop_open') %} class="active"{% endif %}>
                 <a href="{{ path('claro_desktop_open') }}" id="link-desktop">
