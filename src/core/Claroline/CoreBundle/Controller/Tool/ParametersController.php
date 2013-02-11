@@ -332,7 +332,7 @@ class ParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->getWorkspaceRoles($workspace);
+        $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
 

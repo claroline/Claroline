@@ -91,7 +91,7 @@ class Creator
             $workspace
         );
 
-        $manager->addRole($this->roleRepo->getManagerRole($workspace));
+        $manager->addRole($this->roleRepo->findManagerRole($workspace));
         $this->addMandatoryTools($workspace, $config);
 
         $this->entityManager->persist($manager);

@@ -2,3 +2,6 @@ services:
 
     claroline.utilities.lipsum_generator:
         class: Claroline\CoreBundle\Library\Utilities\LipsumGenerator
+
+    claroline.utilities.paginator_parser:
+        class: Claroline\CoreBundle\Library\Utilities\PaginatorParser

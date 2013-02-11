@@ -68,8 +68,7 @@ class LayoutController extends Controller
                 $registerTarget = 'claro_registration_user_registration_form';
             }
 
-            // TODO : use a platform option to make this target configurable
-            $loginTarget = $this->get('router')->generate('claro_desktop_open_tool', array('toolName' => 'home'));
+            $loginTarget = $this->get('router')->generate('claro_desktop_open');
         }
 
         return $this->render(

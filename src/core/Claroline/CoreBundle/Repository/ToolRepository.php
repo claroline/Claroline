@@ -59,7 +59,7 @@ class ToolRepository extends EntityRepository
                 $dql .= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
             }
 
-            $dql .= "ORDER BY wtr.order";
+            $dql .= " ORDER BY wtr.order";
 
             return $dql;
         }

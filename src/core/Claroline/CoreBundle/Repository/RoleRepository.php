@@ -7,19 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class RoleRepository extends NestedTreeRepository
 {
-    public function getPlatformRoles()
-    {
-        $dql = '
-            SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE (r NOT INSTANCE OF Claroline\CoreBundle\Entity\WorkspaceRole)
-        ';
-        $query = $this->_em->createQuery($dql);
-        $results = $query->getResult();
-
-        return $results;
-    }
-
-    public function getWorkspaceRoles(AbstractWorkspace $workspace)
+    public function findByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -33,7 +21,7 @@ class RoleRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function getCollaboratorRole(AbstractWorkspace $workspace)
+    public function findCollaboratorRole(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -44,7 +32,7 @@ class RoleRepository extends NestedTreeRepository
          return $query->getSingleResult();
     }
 
-    public function getVisitorRole(AbstractWorkspace $workspace)
+    public function findVisitorRole(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -55,7 +43,7 @@ class RoleRepository extends NestedTreeRepository
         return $query->getSingleResult();
     }
 
-    public function getManagerRole(AbstractWorkspace $workspace)
+    public function findManagerRole(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -69,6 +57,7 @@ class RoleRepository extends NestedTreeRepository
     /**
      * Return the role of a user of a group in a workspace.
      *
+     * @todo change this name or move this.
      * @param Group|User $entity
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
@@ -76,7 +65,7 @@ class RoleRepository extends NestedTreeRepository
      */
     public function getEntityRoleForWorkspace($entity, AbstractWorkspace $workspace)
     {
-        $roles = $this->getWorkspaceRoles($workspace);
+        $roles = $this->findByWorkspace($workspace);
 
         foreach ($roles as $role) {
             foreach ($entity->getRoles() as $entityRole) {

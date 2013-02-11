@@ -115,7 +115,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/group_management/{$wsAId}/group/{$grAId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
-                ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
+                ->findManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $this->client->request(
@@ -150,7 +150,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/group_management/{$wsAId}/group/{$grAId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
-                ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
+                ->findManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->client->request(
             'GET',
@@ -184,7 +184,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/group_management/{$wsAId}/group/{$grAId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
-                ->getManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
+                ->findManagerRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $this->client->request(
@@ -195,7 +195,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/group_management/{$wsAId}/group/{$grAId}",
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
-                ->getCollaboratorRole($this->getFixtureReference('workspace/ws_a'))->getId()))
+                ->findCollaboratorRole($this->getFixtureReference('workspace/ws_a'))->getId()))
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
@@ -353,7 +353,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->getFixtureReference('group/group_a')->addRole(
             $em->getRepository('ClarolineCoreBundle:Role')
-                ->getCollaboratorRole($this->getFixtureReference('workspace/ws_a'))
+                ->findCollaboratorRole($this->getFixtureReference('workspace/ws_a'))
         );
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $em->persist($this->getFixtureReference('group/group_a'));
