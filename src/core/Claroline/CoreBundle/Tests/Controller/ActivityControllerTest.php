@@ -18,7 +18,7 @@ class ActivityControllerTest extends FunctionalTestCase
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $this->pwr = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/admin')->getPersonalWorkspace());
 
     }
 

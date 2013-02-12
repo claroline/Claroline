@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 
 class RoleRepository extends NestedTreeRepository
 {
@@ -55,21 +56,19 @@ class RoleRepository extends NestedTreeRepository
     }
 
     /**
-     * Return the role of a user or a group in a workspace.
+     * Returns the role of a user or a group in a workspace.
      *
-     * @todo change this name or move this.
-     * @param Group|User $entity
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     *
+     * @param AbstractRoleSubject   $subject    The subject of the role
+     * @param AbstractWorkspace     $workspace  The workspace the role should be bound to
      * @return null|Role
      */
-    public function getEntityRoleForWorkspace($entity, AbstractWorkspace $workspace)
+    public function findWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace)
     {
         $roles = $this->findByWorkspace($workspace);
 
         foreach ($roles as $role) {
-            foreach ($entity->getRoles() as $entityRole) {
-                if ($entityRole == $role->getName()) {
+            foreach ($subject->getRoles() as $subjectRole) {
+                if ($subjectRole == $role->getName()) {
                     return $role;
                 }
             }
