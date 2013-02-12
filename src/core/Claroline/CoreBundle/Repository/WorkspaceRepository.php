@@ -40,7 +40,8 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.workspaceToolRoles wtr
+            JOIN w.workspaceOrderedTools wot
+            JOIN wot.workspaceToolRoles wtr
             JOIN wtr.role r
             WHERE r.name LIKE 'ROLE_ANONYMOUS'";
 

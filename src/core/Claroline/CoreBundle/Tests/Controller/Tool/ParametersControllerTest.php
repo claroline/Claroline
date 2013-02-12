@@ -148,7 +148,6 @@ class ParametersControllerTest extends FunctionalTestCase
 
          $workspaceId = $workspace->getId();
          $toolId = $home->getId();
-         $roleId = $role->getId();
          $resourceManager = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -158,23 +157,23 @@ class ParametersControllerTest extends FunctionalTestCase
 
          $this->client->request(
             'POST',
-            "/workspaces/tool/properties/move/tool/{$toolId}/position/2/workspace/{$workspaceId}/role/{$roleId}"
+            "/workspaces/tool/properties/move/tool/{$toolId}/position/2/workspace/{$workspaceId}"
          );
 
          $repo = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole');
+            ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool');
 
         $this->assertEquals(
             2,
-            $repo->findOneBy(array('tool' => $home, 'role' => $role, 'workspace' => $workspace))
+            $repo->findOneBy(array('tool' => $home, 'workspace' => $workspace))
                 ->getOrder()
         );
 
         $this->assertEquals(
             1,
-            $repo->findOneBy(array('tool' => $resourceManager, 'role' => $role, 'workspace' => $workspace))
+            $repo->findOneBy(array('tool' => $resourceManager, 'workspace' => $workspace))
                ->getOrder()
         );
 

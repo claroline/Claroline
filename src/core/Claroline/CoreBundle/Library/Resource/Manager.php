@@ -265,7 +265,6 @@ class Manager
     /**
      * Copy the resource rights from $old to $resource.
      * Warning: workspace & cie.
-     * //Recursive !
      *
      * @param AbstractResource $old
      * @param AbstractResource $resource
