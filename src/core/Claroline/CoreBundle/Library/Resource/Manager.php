@@ -302,47 +302,4 @@ class Manager
 
         $this->em->remove($resource);
     }
-
-    /**
-     * Copy the resource rights from $old to $resource.
-     * Warning: workspace & cie.
-     *
-     * @param AbstractResource $old
-     * @param AbstractResource $resource
-     */
-    public function setResourceRights(AbstractResource $old, AbstractResource $resource)
-    {
-        $resourceRights = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-            ->findBy(array('resource' => $old));
-
-        foreach ($resourceRights as $resourceRight) {
-            $rc = new ResourceContext();
-            $rc->setRole($resourceRight->getRole());
-            $rc->setResource($resource);
-            $rc->setRights($resourceRight->getRights());
-            $rc->setWorkspace(($resourceRight->getWorkspace()));
-            //creation rights
-            $resourceTypes = $resourceRight->getResourceTypes();
-
-            if ($resource->getResourceType()->getName() == 'directory') {
-                foreach ($resourceTypes as $resourceType) {
-                    $rc->addResourceType($resourceType);
-                }
-
-                $ownerCreationRights = $resource->getResourceCreationRights();
-
-                foreach ($ownerCreationRights as $ownerCreationRight) {
-                    $resource->addResourceTypeCreation($ownerCreationRight);
-                }
-            }
-
-            $this->em->persist($rc);
-        }
-
-        $resource->setOwnerRights($old->getOwnerRights());
-
-        $this->em->persist($resource);
-        $this->em->flush();
-    }
 }
