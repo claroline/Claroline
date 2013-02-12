@@ -1,6 +1,6 @@
 1) Stockage:
 
-Les droits sur les ressources sont stockés dans l'entité Resource\ResourceContext.
+Les droits sur les ressources sont stockés dans l'entité Resource\ResourceRights.
 Cette table possède un lien vers une ressource et un lien vers un rôle (une série de permission par ressource et par rôle).
 Les permissions pouvant être mise à true/false sont: COPY, DELETE, EDIT, OPEN, VIEW.
 

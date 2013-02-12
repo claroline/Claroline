@@ -30,7 +30,7 @@ class ForumListenerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->client->request(
             'POST',
             "/resource/create/claroline_forum/{$userRoot->getId()}",
@@ -44,7 +44,7 @@ class ForumListenerTest extends FunctionalTestCase
         $this->loadFixture(new LoadOptionsData());
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->client->request(
             'POST',
             "/resource/create/claroline_forum/{$userRoot->getId()}",

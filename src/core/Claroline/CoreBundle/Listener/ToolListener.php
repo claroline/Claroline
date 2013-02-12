@@ -73,7 +73,7 @@ class ToolListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($workspace)
+            ->findWorkspaceRoot($workspace)
             ->getId();
         $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findBy(array('isVisible' => true));

@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Resource\ResourceContext;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\EntityManager;
 
@@ -26,7 +26,7 @@ class ResourceVoter implements VoterInterface
     public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceContext');
+        $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->translator = $translator;
         $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
         $this->ut = $ut;
@@ -125,11 +125,11 @@ class ResourceVoter implements VoterInterface
         $errors = array();
         $call = "can" . ucfirst(strtolower($action));
         $action = strtoupper($action);
-        $rr = new ResourceContext;
+        $rr = new ResourceRights;
 
         if (method_exists($rr, $call)) {
             foreach ($resources as $resource) {
-                $rights = $this->repository->getRights($this->ut->getRoles($token), $resource);
+                $rights = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
 
                 if ($rights == null) {
                     $errors[] = $this->translator
@@ -170,8 +170,8 @@ class ResourceVoter implements VoterInterface
         }
 
         $rights = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceContext')
-            ->getRights($this->ut->getRoles($token), $resource);
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findMaximumRights($this->ut->getRoles($token), $resource);
         $permission = 'can'.ucfirst(strtolower($action));
 
         return $rights[$permission];
@@ -189,7 +189,7 @@ class ResourceVoter implements VoterInterface
      */
     private function checkCreation($types, AbstractResource $resource, TokenInterface $token)
     {
-        $rightsCreation = $this->repository->getCreationRights($this->ut->getRoles($token), $resource);
+        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $resource);
         $errors = array();
 
         if (count($rightsCreation) == 0) {
@@ -239,7 +239,7 @@ class ResourceVoter implements VoterInterface
     {
         $errors = array();
         $rightsCreation = $this->repository
-            ->getCreationRights($this->ut->getRoles($token), $parent);
+            ->findCreationRights($this->ut->getRoles($token), $parent);
 
         if (count($rightsCreation) == 0) {
             $errors[] = $this->translator
@@ -266,7 +266,7 @@ class ResourceVoter implements VoterInterface
                          );
                 }
 
-                $rights = $this->repository->getRights($this->ut->getRoles($token), $resource);
+                $rights = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
 
                 if (!$rights['canCopy']) {
                     $errors[] = $this->getRoleActionDeniedMessage('COPY', $resource->getPathForDisplay());
@@ -295,7 +295,7 @@ class ResourceVoter implements VoterInterface
     {
         $errors = array();
         $rightsCreation = $this->repository
-            ->getCreationRights($this->ut->getRoles($token), $parent);
+            ->findCreationRights($this->ut->getRoles($token), $parent);
 
         if (count($rightsCreation) == 0) {
             $errors[] = $this->translator

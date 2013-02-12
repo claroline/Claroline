@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
@@ -23,41 +22,51 @@ class AbstractResourceRepository extends MaterializedPathRepository
     //      the "MaterializedPathRepository->getChildren" method.
 
     /** SELECT DQL part to get array. Please add any required field here. */
-    const SELECT_FOR_ARRAY = "
-            SELECT DISTINCT
-            ar.id as id,
-            ar.name as name,
-            ar.path as path,
-            IDENTITY(ar.parent) as parent_id,
-            aru.username as creator_username,
-            rt.name as type,
-            rt.isBrowsable as is_browsable,
-            ic.relativeUrl as large_icon ";
+    const SELECT_ARRAY = '
+        SELECT DISTINCT
+        ar.id as id,
+        ar.name as name,
+        ar.path as path,
+        IDENTITY(ar.parent) as parent_id,
+        aru.username as creator_username,
+        rt.name as type,
+        rt.isBrowsable as is_browsable,
+        ic.relativeUrl as large_icon
+    ';
+
+    const SELECT_ENTITY = 'SELECT ar ';
 
     /** FROM DQL part to join all needed entities. */
-    const FROM_RESOURCES = "
-            Claroline\CoreBundle\Entity\Resource\AbstractResource ar
-            JOIN ar.creator aru
-            JOIN ar.resourceType rt
-            JOIN ar.icon ic ";
+    const FROM_RESOURCES = '
+        FROM Claroline\CoreBundle\Entity\Resource\AbstractResource ar
+        JOIN ar.creator aru
+        JOIN ar.resourceType rt
+        JOIN ar.icon ic
+    ';
 
     /** FROM DQL part to join all needed entities. Warning: need to bind :u_id to userid. */
-    const WHERECONDITION_USER_WORKSPACE = "
-            ar.workspace IN
-            ( SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
-                JOIN aw.roles r
-                JOIN r.users u WHERE u.id = :u_id ) ";
+    const WHERECONDITION_USER_WORKSPACE = '
+        ar.workspace IN
+        (
+            SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
+            JOIN aw.roles r
+            JOIN r.users u
+            WHERE u.id = :u_id
+        )
+    ';
 
     /**
      * Returns the root resource of the workspace
      * @param AbstractWorkspace $ws
      * @return a resource resource entity
      */
-    public function getRootForWorkspace(AbstractWorkspace $ws)
+    public function findWorkspaceRoot(AbstractWorkspace $ws)
     {
-        $dql = "SELECT ar FROM Claroline\CoreBundle\Entity\Resource\AbstractResource ar
-                WHERE ar.lvl = 1 AND ar.workspace = :ws_id";
-
+        $dql = '
+            SELECT ar
+            FROM Claroline\CoreBundle\Entity\Resource\AbstractResource ar
+            WHERE ar.lvl = 1 AND ar.workspace = :ws_id
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ws_id', $ws->getId());
 
@@ -65,34 +74,34 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
-     * Returns all resources under parent. Returns a list of entities or an array if requested.
+     * Returns the descendants of a resource.
      *
-     * @param AbstractResource $parent Parent of children that we request.
-     * @param int ResourceType $resourceType Resource type to filter on.
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     * @param AbstractResource  $resource           The resource node to start with
+     * @param boolean           $includeStartNode   Whether the given resource should be included in the result
+     * @param boolean           $asArray            Whether the resulting nodes should be arrays or entities
+     * @param string            $filterResourceType A resource type to filter the results
      *
-     * @return an array of arrays or entities
+     * @return mixed
      */
-    public function getDescendant(AbstractResource $parent, ResourceType $resourceType = null)
-    {
-        $dql = self::SELECT_FOR_ARRAY
-            . " FROM " . self::FROM_RESOURCES
-            . "WHERE (ar.path LIKE :pathlike AND ar.path <> :path)";
-
-        if ($resourceType !== null) {
-            $dql .= "AND rt.name = :rt_name";
-        }
-
+    public function findDescendants(
+        AbstractResource $resource,
+        $includeStartNode = false,
+        $asArray = true,
+        $filterResourceType = null
+    ) {
+        $select = $asArray ? self::SELECT_ARRAY : self::SELECT_ENTITY;
+        $startNodeClause = $includeStartNode ? '' : 'AND ar.path <> :path';
+        $filterClause = $filterResourceType ? 'AND rt.name = :filter' : '';
+        $dql = $select
+            . self::FROM_RESOURCES
+            . "WHERE (ar.path LIKE :pathlike {$startNodeClause}) "
+            . "AND rt.isVisible = true {$filterClause}";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('pathlike', $resource->getPath() . '%');
+        !$includeStartNode && $query->setParameter('path', $resource->getPath());
+        $filterResourceType && $query->setParameter('filter', $filterResourceType);
 
-        if ($resourceType !== null) {
-            $query->setParameter('rt_name', $resourceType->getName());
-        }
-
-        $query->setParameter('pathlike', $parent->getPath() . '%');
-        $query->setParameter('path', $parent->getPath());
-
-        return $this->executeQuery($query);
+        return $this->executeQuery($query, null, null, $asArray);
     }
 
     /**
@@ -108,7 +117,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function children($parentId, $roles, $resourceTypeId = 0, $isVisible = true)
+    public function findChildren($parentId, $roles, $resourceTypeId = 0, $isVisible = true)
     {
         $isAdmin = false;
 
@@ -143,6 +152,93 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
+     * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
+     *
+     * @param User $user Owner of the resources.
+     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
+     * @return an array of arrays or entities
+     */
+    public function findWorkspaceRootsByUser(User $user)
+    {
+        $dql = self::SELECT_ARRAY
+            . self::FROM_RESOURCES
+            . ' WHERE ar.parent IS NULL'
+            . ' AND ' . self::WHERECONDITION_USER_WORKSPACE
+            . ' ORDER BY ar.path';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('u_id', $user->getId());
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * Returns an array of all ancestors of a abstractResource
+     * (the resource itlsef is returned too).
+     *
+     * @param listDirectChildrenResourceInstances $resource The resource about which we want ancestors.
+     *
+     * @return array (name, id)
+     */
+    public function findAncestors(AbstractResource $resource)
+    {
+        // No need to access DB to get ancestors as they are given by the materialized path.
+        $regex = '/-(\d+)' . AbstractResource::PATH_SEPARATOR . '/';
+        $parts = preg_split($regex, $resource->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $ancestors = array();
+        $currentPath = '';
+
+        for ($i = 0, $count = count($parts); $i < $count; $i += 2) {
+            $ancestor = array();
+            $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
+            $ancestor['path'] = $currentPath;
+            $ancestor['name'] = $parts[$i];
+            $ancestor['id'] = $parts[$i + 1];
+            $ancestors[] = $ancestor;
+        }
+
+        return $ancestors;
+    }
+
+    /**
+     * Returns all the resources a user can open, filtered with given criteria.
+     *
+     * @param Array $criterias Array of criterias to use to build the filter.
+     * @param $roles as array of role (string)
+     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     *
+     * @return an array of arrays or entities
+     */
+    public function finderUserResourcesByCriteria(User $user, array $criteria)
+    {
+        $dql = self::SELECT_ARRAY . self::FROM_RESOURCES;
+
+        $dql .= "
+            JOIN ar.rights arRights
+            JOIN arRights.role rightRole WITH rightRole IN (
+                SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
+                JOIN currentUserRole.users currentUser
+                WHERE currentUser.id = {$user->getId()}
+            )";
+        $dql .= ' WHERE rt.isVisible = 1'
+            . ' AND ' . self::WHERECONDITION_USER_WORKSPACE
+            . ' AND arRights.canOpen = 1';
+
+        foreach ($criteria as $key => $value) {
+            $methodName = 'build' . ucfirst($key) . 'Filter';
+            $dql .= $this->$methodName($key, $value);
+        }
+
+        $dql .= ' ORDER BY ar.path';
+
+        $query = $this->_em->createQuery($dql);
+        $this->bindFilter($query, $criteria, $user);
+
+        return $this->executeQuery($query);
+    }
+
+    /**
      * The children query for the admin (every resource is shown).
      *
      * @param integer $parentId
@@ -154,13 +250,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     private function buildAdminChildrenQuery($parentId, $resourceTypeId, $isVisible)
     {
-        $dql = self::SELECT_FOR_ARRAY
-           . " FROM " . self::FROM_RESOURCES
-           . " WHERE ar.parent = :ar_parentid
-               AND rt.isVisible = :rt_isvisible";
+        $dql = self::SELECT_ARRAY
+            . self::FROM_RESOURCES
+            . 'WHERE ar.parent = :ar_parentid '
+            . 'AND rt.isVisible = :rt_isvisible';
 
         if ($resourceTypeId !== 0) {
-            $dql .= " AND rt.id = :rt_id";
+            $dql .= ' AND rt.id = :rt_id';
         }
 
         $query = $this->_em->createQuery($dql);
@@ -190,35 +286,35 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $roles,
         $resourceTypeId,
         $isVisible = true
-    )
-    {
-         $dql = self::SELECT_FOR_ARRAY
-             . ", MAX (arRights.canExport) as can_export"
-             . ", MAX (arRights.canDelete) as can_delete"
-             . ", MAX (arRights.canEdit) as can_edit"
-             . " FROM ". self::FROM_RESOURCES
-             . " LEFT JOIN ar.rights arRights
-                JOIN arRights.role rightRole
-                WHERE ";
+    ) {
+         $dql = self::SELECT_ARRAY
+             . ', MAX (arRights.canExport) as can_export'
+             . ', MAX (arRights.canDelete) as can_delete'
+             . ', MAX (arRights.canEdit) as can_edit'
+             . self::FROM_RESOURCES
+             . ' LEFT JOIN ar.rights arRights'
+             . ' JOIN arRights.role rightRole'
+             . ' WHERE ';
 
         if ($resourceTypeId !== 0) {
-            $condition .= " AND rt.id = :rt_id";
+            $condition .= ' AND rt.id = :rt_id';
         }
 
         $i = 0;
+
         foreach ($roles as $role) {
             $condition = "ar.parent = :ar_parentid AND rightRole.name LIKE '{$role}'"
-                . " AND rt.isVisible = :rt_isvisible AND arRights.canOpen = 1";
+                . ' AND rt.isVisible = :rt_isvisible AND arRights.canOpen = 1';
 
             if ($i != 0) {
-                $dql .= " OR ".$condition;
+                $dql .= ' OR ' . $condition;
             } else {
                 $dql .= $condition;
                 $i++;
             }
         }
 
-        $dql .= "GROUP BY ar.id";
+        $dql .= 'GROUP BY ar.id';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('ar_parentid', $parentId);
@@ -232,94 +328,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
-     * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
-     *
-     * @param User $user Owner of the resources.
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
-     *
-     * @return an array of arrays or entities
-     */
-    public function listRootsForUser(User $user)
-    {
-        $dql = self::SELECT_FOR_ARRAY
-            . " FROM " . self::FROM_RESOURCES
-            . " WHERE ar.parent IS NULL"
-            . " AND " . self::WHERECONDITION_USER_WORKSPACE
-            . " ORDER BY ar.path";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('u_id', $user->getId());
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * Returns an array of all ancestors of a abstractResource
-     * (the resource itlsef is returned too).
-     *
-     * @param listDirectChildrenResourceInstances $resource The resource about which we want ancestors.
-     *
-     * @return array (name, id)
-     */
-    public function listAncestors(AbstractResource $resource)
-    {
-        // No need to access DB to get ancestors as they are given by the materialized path.
-        $regex = '/-(\d+)' . AbstractResource::PATH_SEPARATOR . '/';
-        $parts = preg_split($regex, $resource->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $ancestors = array();
-        $currentPath = '';
-
-        for ($i = 0, $count = count($parts); $i < $count; $i += 2) {
-            $ancestor = array();
-            $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
-            $ancestor['path'] = $currentPath;
-            $ancestor['name'] = $parts[$i];
-            $ancestor['id'] = $parts[$i + 1];
-            $ancestors[] = $ancestor;
-        }
-
-        return $ancestors;
-    }
-
-    /**
-     * Returns all resources owned by the user and filtered with given criterias.
-     *
-     * @param Array $criterias Array of criterias to use to build the filter.
-     * @param $roles as array of role (string)
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
-     *
-     * @return an array of arrays or entities
-     */
-    public function listResourcesForUserWithFilter($criterias, $user)
-    {
-        $dql = self::SELECT_FOR_ARRAY
-            . " FROM " . self::FROM_RESOURCES;
-
-        $dql .= "
-            JOIN ar.rights arRights
-            JOIN arRights.role rightRole WITH rightRole IN (
-                SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
-                JOIN currentUserRole.users currentUser
-                WHERE currentUser.id = {$user->getId()}
-            )";
-        $dql .= " WHERE rt.isVisible=1"
-            . " AND " . self::WHERECONDITION_USER_WORKSPACE;
-        $dql .= " AND arRights.canOpen = 1";
-
-        foreach ($criterias as $key => $value) {
-            $methodName = 'build' . ucfirst($key) . 'Filter';
-            $dql .= $this->$methodName($key, $value);
-        }
-
-        $dql .= " ORDER BY ar.path";
-
-        $query = $this->_em->createQuery($dql);
-        $this->bindFilter($query, $criterias, $user);
-
-        return $this->executeQuery($query);
-    }
-
-    /**
      * Build the Dql part of the filter about Types.
      *
      * @param string $key The name of the filter (eg. "types", "dateTo"...).
@@ -327,7 +335,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return string
      */
-    public function buildTypesFilter($key, $criteria)
+    private function buildTypesFilter($key, $criteria)
     {
         $dqlPart = "";
         $isFirst = true;
@@ -356,7 +364,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return string
      */
-    public function buildRootsFilter($key, $criteria)
+    private function buildRootsFilter($key, $criteria)
     {
         $dqlPart = "";
         $isFirst = true;
@@ -385,7 +393,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return string
      */
-    public function buildMimeTypesFilter($key, $criteria)
+    private function buildMimeTypesFilter($key, $criteria)
     {
         $dqlPart = "";
         $isFirst = true;
@@ -414,7 +422,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return string
      */
-    public function buildDateFromFilter($key, $criteria)
+    private function buildDateFromFilter($key, $criteria)
     {
         return " AND ar.creationDate >= :{$key}";
     }
@@ -427,7 +435,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return string
      */
-    public function buildDateToFilter($key, $criteria)
+    private function buildDateToFilter($key, $criteria)
     {
         return " AND ar.creationDate <= :{$key}";
     }
@@ -440,7 +448,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return string
      */
-    public function buildNameFilter($key, $criteria)
+    private function buildNameFilter($key, $criteria)
     {
         return " AND ar.name LIKE :{$key}";
     }
@@ -519,18 +527,22 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return array of arrays or array of entities
      */
-    private function executeQuery($query, $offset = null, $numrows = null)
+    private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
     {
         $query->setFirstResult($offset);
         $query->setMaxResults($numrows);
 
-        $res = $query->getArrayResult();
-        // Add a field "pathfordisplay" in each entity (as array) of the given array.
-        foreach ($res as &$r) {
-            $r["pathfordisplay"] = AbstractResource::convertPathForDisplay($r["path"]);
-            unset($r['path']);
+        if ($asArray) {
+            $res = $query->getArrayResult();
+            // Add a field "pathfordisplay" in each entity (as array) of the given array.
+            foreach ($res as &$r) {
+                $r['pathfordisplay'] = AbstractResource::convertPathForDisplay($r["path"]);
+                unset($r['path']);
+            }
+
+            return $res;
         }
 
-        return $res;
+        return $query->getResult();
     }
 }

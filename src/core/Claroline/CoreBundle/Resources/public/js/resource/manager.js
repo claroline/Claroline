@@ -373,14 +373,19 @@
                 },
                 'click a': function (event) {
                     event.preventDefault();
-                    if(($(event.currentTarget).attr('data-toggle') !== 'tab')){
+
+                    if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         $.ajax({
-                            url: event.currentTarget.href,
+                            url: event.currentTarget.getAttribute('href'),
                             type: 'POST',
                             processData: false,
                             contentType: false,
-                            success: function(form){
-                               this.views['form'].render(form, $(event.currentTarget).attr('data-resource-id'), 'edit-rights-creation');
+                            success: function (form) {
+                                this.views['form'].render(
+                                    form,
+                                    event.currentTarget.getAttribute('data-resource-id'),
+                                    'edit-rights-creation'
+                                );
                             }
                         });
                     }
@@ -488,10 +493,10 @@
 
                 this.displayResources(event.directoryId, event.isPickerMode ? 'picker' : 'main', event.parameters);
             },
-            'manage-rights': function(event){
+            'manage-rights': function (event) {
                 this.manageRights(event.action, event.data, event.resourceId);
             },
-            'edit-rights-creation': function(event){
+            'edit-rights-creation': function (event) {
                 this.editCreationRights(event.action, event.data);
             }
         },

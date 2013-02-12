@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceContext;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -113,7 +113,7 @@ class Creator
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceContext
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
      */
     private function createDefaultsResourcesRights(
         $canDelete,
@@ -127,29 +127,25 @@ class Creator
         AbstractWorkspace $workspace
     )
     {
-        $resourceContext = new ResourceContext();
-        $resourceContext->setCanCopy($canCopy);
-        $resourceContext->setCanDelete($canDelete);
-        $resourceContext->setCanEdit($canEdit);
-        $resourceContext->setCanOpen($canOpen);
-        $resourceContext->setCanExport($canExport);
-        $resourceContext->setRole($role);
-        $resourceContext->setResource($resource);
-        $resourceContext->setWorkspace($workspace);
+        $rights = new ResourceRights();
+        $rights->setCanCopy($canCopy);
+        $rights->setCanDelete($canDelete);
+        $rights->setCanEdit($canEdit);
+        $rights->setCanOpen($canOpen);
+        $rights->setCanExport($canExport);
+        $rights->setRole($role);
+        $rights->setResource($resource);
+        $rights->setWorkspace($workspace);
 
         if ($canCreate) {
-            $resourceTypes = $this->entityManager
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findBy(array('isVisible' => true));
-
-            foreach ($resourceTypes as $resourceType) {
-                $resourceContext->addResourceType($resourceType);
-            }
+            $resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findByIsVisible(true);
+            $rights->setCreatableResourceTypes($resourceTypes);
         }
 
-        $this->entityManager->persist($resourceContext);
+        $this->entityManager->persist($rights);
 
-        return $resourceContext;
+        return $rights;
     }
 
     /**

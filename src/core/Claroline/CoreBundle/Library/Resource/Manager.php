@@ -4,10 +4,11 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
-use Gedmo\Exception\UnexpectedValueException  ;
+use Gedmo\Exception\UnexpectedValueException;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceContext;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
@@ -43,24 +44,25 @@ class Manager
     }
 
     /**
-     * Creates a resource. If parentId is null, added to the root.
+     * Creates a resource. If the user is null, the creator of the resource is
+     * the user currently logged in.
      *
-     * @param integer          $parentId
-     * @param string           $resouceType
-     * @param AbstractResource $resource
-     * @param User             $user
+     * @param AbstractResource  $resource       The resource to be created
+     * @param integer           $parentId       The id of the parent resource
+     * @param string            $resourceType   The string identifier of the resource type
+     * @param User              $user           The creator of the resource (optional)
      *
-     * @return  Abstractesource
+     * @return  AbstractResource
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentId, $resourceType, $user = null)
+    public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null)
     {
         $resourceType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => $resourceType));
 
-        if ($user == null) {
+        if ($user === null) {
             $user = $this->sc->getToken()->getUser();
         }
 
@@ -76,8 +78,8 @@ class Manager
         $resource->setName($rename);
         $resource->setCreator($user);
 
-        if ($resource->getUserIcon() == null) {
-                $resource = $this->ic->setResourceIcon($resource);
+        if ($resource->getUserIcon() === null) {
+            $resource = $this->ic->setResourceIcon($resource);
         } else {
             //upload the icon
             $iconFile = $resource->getUserIcon();
@@ -88,11 +90,7 @@ class Manager
 
         $this->em->persist($resource);
         $this->setResourceRights($parent, $resource);
-
-        $event = new ResourceLogEvent(
-            $resource,
-            ResourceLogEvent::CREATE_ACTION
-        );
+        $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
         $this->ed->dispatch('log_resource', $event);
 
         return $resource;
@@ -158,7 +156,7 @@ class Manager
     }
 
     /**
-     * Copy a resource in a directory
+     * Copies a resource in a directory.
      *
      * @param AbstractResource $resource
      * @param AbstractResource $parent
@@ -205,7 +203,50 @@ class Manager
     }
 
     /**
-     *  Creates a resource copy with no name.
+     * Copies the resource rights from $parent to $children.
+     *
+     * @param AbstractResource $parent
+     * @param AbstractResource $children
+     *
+     * @todo This method should be (optionaly) recursive
+     */
+    public function setResourceRights(AbstractResource $parent, AbstractResource $children)
+    {
+        $resourceRights = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findBy(array('resource' => $parent));
+
+        foreach ($resourceRights as $resourceRight) {
+            $rc = new ResourceRights();
+            $rc->setRole($resourceRight->getRole());
+            $rc->setResource($children);
+            $rc->setRightsFrom($resourceRight);
+            $rc->setWorkspace($resourceRight->getWorkspace());
+
+            if ($children->getResourceType()->getName() === 'directory') {
+                $rc->setCreatableResourceTypes($resourceRight->getCreatableResourceTypes()->toArray());
+
+                /*
+                // TODO : must be parent instead of children...
+                $ownerCreationRights = $children->getResourceCreationRights();
+
+                foreach ($ownerCreationRights as $ownerCreationRight) {
+                    $children->addResourceTypeCreation($ownerCreationRight);
+                }
+                */
+            }
+
+            $this->em->persist($rc);
+        }
+
+        $children->setOwnerRights($parent->getOwnerRights());
+
+        $this->em->persist($children);
+        $this->em->flush();
+    }
+
+    /**
+     * Creates a resource copy with no name.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $originalResource
      *
