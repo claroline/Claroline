@@ -72,17 +72,14 @@ $(function() {
                     $('#form_end_day').val(pickedDate.getDate());
                     $('#form_end_month').val(pickedDate.getMonth()+1);
                     $('#form_end_year').val(pickedDate.getFullYear());         
-                }
-                else
-                {
+                } else {
                     $('#form_end_day').val(currentDate.getDate());
                     $('#form_end_month').val(currentDate.getMonth()+1);
                     $('#form_end_year').val(currentDate.getFullYear());     
                 }
                
                 $("#save").click(function() {
-                    if($('#form_title').val() !='')
-                    {
+                    if($('#form_title').val() !== '') {
                         $("#save").attr("disabled", "disabled");
                         data = new FormData($('#myForm')[0]);  
                         day = new Date(date);

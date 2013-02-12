@@ -7,22 +7,24 @@
         
         var dayClickWorkspace = function (date, allDay, jsEvent, view) {
             $('#deleteBtn').hide();
-            if (allDay) {
-                $('#myform').find('input:text, input:password, input:file, select, textarea').val('');
-                $('#myform').find('input:radio, input:checkbox')
-                .removeAttr('checked').removeAttr('selected');
+            $('#save').show();
+            $('#updateBtn').hide();
+            $('#calendar_form').find('input:text, input:password, input:file, select, textarea').val('');
+            $('#calendar_form').find('input:radio, input:checkbox')
+            .removeAttr('checked').removeAttr('selected');
+            if (allDay) {  
                 var  currentDate = new Date();
-                pickedDate = new Date(date); 
-                $('#divTitle').html('Sart date '+pickedDate.getDate()+'/'+(pickedDate.getMonth()+1)+'/'+pickedDate.getFullYear());
+                var pickedDate = new Date(date); 
+                $('#divTitle').html('Start date '+pickedDate.getDate()+'/'+(pickedDate.getMonth()+1)+'/'+pickedDate.getFullYear());
                 
                 if(pickedDate > currentDate ) {
-                    $('#form_end_day').val(pickedDate.getDate());
-                    $('#form_end_month').val(pickedDate.getMonth()+1);
-                    $('#form_end_year').val(pickedDate.getFullYear());         
+                    $('#calendar_form_end_day').val(pickedDate.getDate());
+                    $('#calendar_form_end_month').val(pickedDate.getMonth()+1);
+                    $('#calendar_form_end_year').val(pickedDate.getFullYear());         
                 } else {
-                    $('#form_end_day').val(currentDate.getDate());
-                    $('#form_end_month').val(currentDate.getMonth()+1);
-                    $('#form_end_year').val(currentDate.getFullYear());     
+                    $('#calendar_form_end_day').val(currentDate.getDate());
+                    $('#calendar_form_end_month').val(currentDate.getMonth()+1);
+                    $('#calendar_form_end_year').val(currentDate.getFullYear());     
                 }
 
                 $("#save").click(function() {
@@ -32,7 +34,7 @@
                         day = new Date(date);
                         data.append("date",day);
                         var url = $("#myForm").attr("action");
-                        $.ajax({
+                         $.ajax({
                             'url': url,
                             'type': 'POST',
                             'data': data ,
@@ -47,7 +49,8 @@
                                         title: data.title,
                                         start: data.start,
                                         end: data.end,
-                                        allDay: allDay
+                                        allDay: data.allDay,
+                                        color : data.color
                                     },
                                     true // make the event "stick"
                                     );
@@ -138,18 +141,29 @@
             eventClick: function(calEvent, jsEvent, view) {
                 var  url = null;
                 $('#deleteBtn').show();
+                $('#updateBtn').show();
+                $('#save').hide();
                 $('#myModalLabel').val('Modifier une entrée');
-                date = new Date(calEvent.end);
-                $('#form_title').attr('value', calEvent.title);
-                $('#form_end_day').val(date.getDay());
-                $('#form_end_month').val(date.getMonth());
-                $('#form_end_year').val(date.getFullYear());
+                $('#calendar_form_title').attr('value', calEvent.title);
+                var pickedDate = new Date(calEvent.start);
+                if( calEvent.end == null )
+                {
 
+                    $('#calendar_form_end_day').val(pickedDate.getDate());
+                    $('#calendar_form_end_month').val(pickedDate.getMonth()+1);
+                    $('#fcalendar_form_end_year').val(pickedDate.getFullYear());
+                }
+                else
+                { 
+                    var Enddate = new Date(calEvent.end);
+                    $('#calendar_form_end_day').val(Enddate.getDate());
+                    $('#calendar_form_end_month').val(Enddate.getMonth()+1);
+                    $('#fcalendar_form_end_year').val(Enddate.getFullYear());
+                }
+                
+                $('#divTitle').html('Start date '+pickedDate.getDate()+'/'+(pickedDate.getMonth()+1)+'/'+pickedDate.getFullYear());
                 $.ajaxSetup({
                     'type': 'POST',
-                    'data':{
-                        'id':  calEvent.id 
-                    },
                     'error':function(data,textStatus, xhr){
                         if(xhr.status == 500){//bad request
                             alert("An error occured"+textStatus);
@@ -157,28 +171,23 @@
                     }
                 });
 
-                $("#save").click(function() {
-                    $("#save").attr("disabled", "disabled");
+                $("#updateBtn").click(function() {
+                    $("#updateBtn").attr("disabled", "disabled");
+                    data = new FormData($('#myForm')[0]);
+                    data.append('id',calEvent.id);
                     url = $('a#update').attr('href');
                     $.ajax({
                         'url':url,
                         'type':'POST',
-                        'data':{
-                            'id':  calEvent.id 
-                        },
-                        'success':function(data){
-
-                            $('#save').removeAttr("disabled"); 
-                            $('#calendar').fullCalendar('renderEvent',
-                            {
-                                title: data.title,
-                                start: data.start,
-                                end: data.end,
-                                allDay: allDay
-                            },
-                            true // make the event "stick"
-                            );
-                            $('#calendar').fullCalendar('unselect');
+                        'data':data,
+                        'processData': false,
+                        'contentType': false,
+                        'success': function(data,textStatus,xhr) {
+                            if(xhr.status == 200)  { 
+                                $('#updateBtn').removeAttr("disabled"); 
+                                $('#calendar').fullCalendar( 'rerenderEvents' );
+                                $('#myModal').modal('hide');
+                            }
                         }
                     });
                 });
@@ -190,19 +199,16 @@
                         'data':{
                             'id':  calEvent.id 
                         },
-                        'success':function(data,textStatus, xhr){
-                            if(xhr.status == 200)
-                            {
+                        'success': function(data,textStatus, xhr){
+                            if(xhr.status == 200) {
                                 $('#deleteBtn').removeAttr("disabled"); 
                                 $('#calendar').fullCalendar( 'removeEvents',calEvent.id );
                                 $('#myModal').modal('hide') ;
                             }
-
-
                         }                 
                     });
                 });
-                $( "#myModal" ).modal();
+                $("#myModal").modal();
             }
         });
     };
