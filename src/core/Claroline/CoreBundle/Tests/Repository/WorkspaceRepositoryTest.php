@@ -32,7 +32,7 @@ class WorkspaceRepositoryTest extends FixtureTestCase
         $user->addRole(
             $this->getEntityManager()
                 ->getRepository('ClarolineCoreBundle:Role')
-                ->getCollaboratorRole($thirdWs)
+                ->findCollaboratorRole($thirdWs)
         );
         $this->getEntityManager()->flush();
         $userWs = $this->wsRepo->getWorkspacesOfUser($user);

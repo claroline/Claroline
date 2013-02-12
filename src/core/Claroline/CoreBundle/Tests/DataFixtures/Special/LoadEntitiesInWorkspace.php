@@ -91,7 +91,7 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
         $offset = rand(0, $maxOffset);
         $entity = $entities[$offset];
         $roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $wsRoles = $roleRepo->getWorkspaceRoles($workspace);
+        $wsRoles = $roleRepo->findByWorkspace($workspace);
         $isRegistered = false;
 
         if (get_class($entity) === 'Claroline\CoreBundle\Entity\Group') {
@@ -118,13 +118,13 @@ class LoadEntitiesInWorkspace extends LoggableFixture implements ContainerAwareI
             $this->addToWorkspace($entities, $workspace, $om);
         } else {
             $this->log("Entity whose class is ".get_class($entity)." and id is {$entity->getId()} added");
-            $entity->addRole($roleRepo->getCollaboratorRole($workspace));
+            $entity->addRole($roleRepo->findCollaboratorRole($workspace));
             $om->persist($entity);
             $om->flush();
             unset($entities[$offset]);
             $entities = array_values($entities);
             $this->log(
-                count($roleRepo->getCollaboratorRole($workspace)->getUsers())
+                count($roleRepo->findCollaboratorRole($workspace)->getUsers())
                 . ' collaborators added'
             );
         }

@@ -81,7 +81,7 @@ class ActivityListener extends ContainerAware
         $resourceActivities = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->getResourcesActivityForActivity($activity);
+            ->findActivities($activity);
 
         if ($this->container->get('security.context')->getToken()->getUser() == $activity->getCreator()) {
             $content = $this->container->get('templating')->render(

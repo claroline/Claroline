@@ -52,7 +52,7 @@ class MessageRepository extends NestedTreeRepository
         return $result[0][1];
     }
 
-    public function getUserReceivedMessages($user, $isRemoved = false, $offset = null, $limit = null)
+    public function getUserReceivedMessages(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $isRemoved = ($isRemoved) ? 1: 0;
         $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
@@ -70,7 +70,7 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function getSentMessages($user, $isRemoved = false, $offset = null, $limit = null)
+    public function getSentMessages(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $isRemoved = ($isRemoved) ? 1: 0;
         $dql = "SELECT m, u, um, umu FROM Claroline\CoreBundle\Entity\Message m
@@ -89,7 +89,7 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function searchUserReceivedMessages($search, $user, $isRemoved = false, $offset = null, $limit = null)
+    public function searchUserReceivedMessages($search, User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $search = strtoupper($search);
         $isRemoved = ($isRemoved) ? 1: 0;
@@ -114,7 +114,7 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function searchSentMessages($search, $user, $isRemoved = false, $offset = null, $limit = null)
+    public function searchSentMessages($search, User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $isRemoved = ($isRemoved) ? 1: 0;
         $search = strtoupper($search);

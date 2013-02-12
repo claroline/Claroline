@@ -21,17 +21,37 @@ claro_desktop:
     resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
     prefix: desktop
 
+claro_desktop_tool_calendar:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_calendar.yml"
+    prefix: desktop/tool/calendar
+
+claro_desktop_tool_home:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_home.yml"
+    prefix: desktop/tool/home
+
+claro_desktop_tool_properties:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_parameters.yml"
+    prefix: desktop/tool/properties
+
 claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
     prefix: workspaces
 
-claro_workspace_user:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_user.yml"
-    prefix: workspaces
+claro_workspace_tool_properties:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_parameters.yml"
+    prefix: workspaces/tool/properties
 
-claro_workspace_group:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_group.yml"
-    prefix: workspaces
+claro_workspace_tool_user:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_user.yml"
+    prefix: workspaces/tool/user_management
+
+claro_workspace_tool_group:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_group.yml"
+    prefix: workspaces/tool/group_management
+    
+claro_workspace_tool_calendar:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_calendar.yml"
+    prefix: workspaces/tool/calendar
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
@@ -59,7 +79,7 @@ claro_activity:
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-    
+
 claro_install:
     resource: "@ClarolineCoreBundle/Resources/config/routing/install.yml"
     prefix: install

@@ -109,7 +109,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->loadDirectoryData('john', array('john/dir1'));
         $directoryId = $this->getDirectory('dir1')->getId();
         $collaboratorRoleId = $this->em->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole($this->getWorkspace('john'))
+            ->findCollaboratorRole($this->getWorkspace('john'))
             ->getId();
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
@@ -125,13 +125,12 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $directoryId = $this->getDirectory('dir1')->getId();
         $collaboratorRoleId = $this->em->getRepository('ClarolineCoreBundle:Role')
-            ->getCollaboratorRole($this->getWorkspace('john'))
+            ->findCollaboratorRole($this->getWorkspace('john'))
             ->getId();
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByIsVisible(true);
         $this->logUser($this->getUser('john'));
 
-        // allow two creatable types recursively for collaborator role
         $this->client->request(
             'POST',
             "/resource/{$directoryId}/role/{$collaboratorRoleId}/right/creation/edit",

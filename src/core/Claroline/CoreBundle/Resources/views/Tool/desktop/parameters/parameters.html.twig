@@ -1,0 +1,24 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/administration/widgets.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block sectionContent %}
+   {% spaceless %}
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">{{ 'parameters'|trans({}, 'platform') }}</a>
+            </li>
+        </ul>
+    {% endspaceless %}
+    <ul>
+        <li class='li-user-parameters'>
+            <a href="{{ path('claro_widget_properties') }}">{{ 'widgets'|trans({}, 'platform') }}</a>
+        </li>
+        <li class='li-user-parameters'>
+            <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+{% endblock %}
