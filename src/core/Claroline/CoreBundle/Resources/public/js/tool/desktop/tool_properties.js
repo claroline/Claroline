@@ -51,5 +51,15 @@
             alert('you cannot move this row up');
         }
 	}
+
+    function MoveRowDown(index) {
+        var rows = $("tool-table tr");
+        var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
+
+            rows.eq(index);insertBefore(rows.eq(index - 1));
+            if (isCurrentRowChecked) {
+                
+            }
+    }
 })()
 

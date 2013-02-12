@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Workspace;
+namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
@@ -53,27 +53,25 @@ class Event
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
     /**
-     * @ORM\Column(name="allday", type="string" , nullable=true)
+     * @ORM\Column(name="allday", type="boolean" , nullable=true)
      */
-    private $allDay;
+    private $allDay = true;
+
      /**
      * @ORM\Column(name="color", type="string" , nullable=true)
      */
     private $color;
+
      /**
      * @ORM\Column(name="priority", type="string" , nullable=true)
      */
-     private $priority;
+    private $priority;
 
     public function getId()
     {
         return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getTitle()
@@ -155,7 +153,7 @@ class Event
 
     public function setAllDay($allDay)
     {
-        $this->allDay = $allDay;
+        $this->allDay = (bool)$allDay;
     }
 
     public function getColor()
