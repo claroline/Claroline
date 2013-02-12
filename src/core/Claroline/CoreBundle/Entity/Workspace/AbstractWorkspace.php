@@ -72,11 +72,7 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-<<<<<<< HEAD
-     *     targetEntity="Claroline\CoreBundle\Entity\Event",
-=======
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
->>>>>>> 88b6b16784f39380ffcab09b8756434d5d16f1d8
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
