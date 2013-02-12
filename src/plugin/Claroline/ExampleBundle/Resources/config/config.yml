@@ -1,0 +1,22 @@
+plugin:
+  has_options: false
+
+  widgets:
+    - name: claroline_mywidget1
+      is_configurable: false
+#    - name: claroline_mywidget2
+#      is_configurable: false
+
+  resources:
+    - class: Claroline\ExampleBundle\Entity\Example
+      name: claroline_example
+      is_visible: true
+      is_browsable: true
+      icon: res_text.png
+
+  tools:
+    - name: claroline_mytool
+      #icon: res_text.png
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: true
+

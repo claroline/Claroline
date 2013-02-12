@@ -1,46 +1,12 @@
-claro_desktop_index:
-    pattern: /
-    defaults: { _controller: ClarolineCoreBundle:Desktop:index }
-
-claro_desktop_info:
-    pattern: /info
-    defaults: { _controller: ClarolineCoreBundle:Desktop:info }
-
-claro_desktop_perso:
-    pattern: /perso
-    defaults: { _controller: ClarolineCoreBundle:Desktop:perso }
-
-claro_desktop_resources:
-    pattern: /resources
-    defaults: { _controller: ClarolineCoreBundle:Desktop:resourceManager }
-    options:
-        expose: true
-
 claro_desktop_widgets:
     pattern: /widgets
     defaults: { _controller: ClarolineCoreBundle:Desktop:widgets }
 
-claro_desktop_user_parameters:
-    pattern: /user/parameters
-    defaults: { _controller: ClarolineCoreBundle:Desktop:desktopUserParameters }
+claro_desktop_open_tool:
+  pattern: tool/open/{toolName}
+  defaults: { _controller: ClarolineCoreBundle:Desktop:openTool }
 
-claro_widget_properties:
-    pattern: /widget/properties
-    defaults: { _controller: ClarolineCoreBundle:Desktop:widgetProperties }
-
-claro_desktop_widget_invertvisible:
-    pattern: /config/{displayConfigId}/widget/{widgetId}/invertvisible
-    defaults: { _controller: ClarolineCoreBundle:Desktop:invertVisibleUserWidget }
-    requirements:
-      _method: POST
-    options:
-      expose: true
-
-claro_desktop_widget_configuration:
-  pattern: widget/{widgetId}/configuration/desktop
-  defaults: { _controller: ClarolineCoreBundle:Desktop:configureWidget }
-  requirements:
-    _method: GET
-  options:
-    expose: true
+claro_desktop_open:
+  pattern: /open
+  defaults: { _controller: ClarolineCoreBundle:Desktop:open }
 

@@ -49,8 +49,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         ar.workspace IN
         (
             SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
-            JOIN aw.rights workspace_rights
-            JOIN workspace_rights.role r
+            JOIN aw.roles r
             JOIN r.users u
             WHERE u.id = :u_id
         )

@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
         $this->addResourceSection($pluginSection);
+        $this->addToolSection($pluginSection);
 
         return $treeBuilder;
     }
@@ -134,6 +135,39 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('name')->isRequired()->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
+                        ->scalarNode('icon')
+                            ->validate()
+                            ->ifTrue(
+                                function ($v) use ($plugin) {
+                                    return !call_user_func_array(
+                                        __CLASS__ . '::isIconValid',
+                                        array($v, $plugin)
+                                    );
+                                }
+                            )
+                            ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()->end();
+    }
+
+    private function addToolSection($pluginSection)
+    {
+        $plugin = $this->plugin;
+        $pluginFqcn = get_class($plugin);
+        $imgFolder = $plugin->getImgFolder();
+        $ds = DIRECTORY_SEPARATOR;
+
+        $pluginSection
+            ->arrayNode('tools')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('name')->isRequired()->end()
+                        ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
+                        ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('icon')
                             ->validate()
                             ->ifTrue(

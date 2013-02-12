@@ -328,7 +328,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         );
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin/widgets');
-        //exampletext has 4 widgets
+        //example has 4 widgets
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
     }
 
@@ -344,7 +344,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => true, 'isDesktop' => false));
-        //exampletext has 4 widgets
+        //example has 4 widgets
         $this->assertGreaterThan(3, count($configs));
         $this->client->request('POST', "/admin/plugin/visible/{$configs[0]->getId()}");
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
@@ -367,7 +367,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isLocked' => false, 'isDesktop' => false));
-        //exampletext has 4 widgets
+        //example has 4 widgets
         $this->assertGreaterThan(3, count($configs));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
@@ -390,7 +390,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => true, 'isDesktop' => true));
-        $crawler = $this->client->request('GET', '/desktop/info');
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(count($crawler->filter('.widget')), count($configs));
     }
 

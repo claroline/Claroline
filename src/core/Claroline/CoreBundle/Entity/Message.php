@@ -100,7 +100,7 @@ class Message
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
+     *     targetEntity="Claroline\CoreBundle\Entity\Message",
      *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})

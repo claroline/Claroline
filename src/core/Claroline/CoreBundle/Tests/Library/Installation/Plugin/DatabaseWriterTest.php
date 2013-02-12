@@ -176,6 +176,21 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->assertContains('icon.gif', $pluginEntity[0]->getIcon());
     }
 
+    public function testPluginToolIsPersisted()
+    {
+        $pluginFqcn = 'Valid\WithTools\ValidWithTools';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+
+        $dql = "
+            SELECT t FROM Claroline\CoreBundle\Entity\Tool\Tool t
+            WHERE t.name = 'toolA'";
+
+        $pluginEntity = $this->em->createQuery($dql)->getResult();
+        $this->assertEquals(1, count($pluginEntity));
+    }
+
     public function pluginProvider()
     {
         return array(

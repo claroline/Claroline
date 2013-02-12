@@ -13,23 +13,17 @@ class WorkspaceVoter implements VoterInterface
 {
     private $em;
     private $translator;
-    private $validAttributes;
     private $ut;
 
     public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;
         $this->translator = $translator;
-        $this->validAttributes = array('VIEW', 'EDIT', 'DELETE', 'MANAGE');
         $this->ut = $ut;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if (!in_array($attributes[0], $this->validAttributes)) {
-            return VoterInterface::ACCESS_ABSTAIN;
-        }
-
         if ($object instanceof AbstractWorkspace) {
             return ($this->canDo($object, $token, $attributes[0])) ?
                 VoterInterface::ACCESS_GRANTED:
@@ -60,12 +54,23 @@ class WorkspaceVoter implements VoterInterface
      */
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
+        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($workspace);
 
-        $rights = $this->em
-            ->getRepository('ClarolineCoreBundle:Rights\WorkspaceRights')
-            ->getRights($this->ut->getRoles($token), $workspace);
-        $permission = 'can'.ucfirst(strtolower($action));
+        if ($action === 'DELETE') {
+            return $token->getUser()->hasRole($manager->getName()) ? true : false;
+        }
 
-        return $rights[$permission];
+        $tools = $this->em
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findByRolesAndWorkspace($this->ut->getRoles($token), $workspace, true);
+
+        foreach ($tools as $tool) {
+
+            if ($tool->getName() === $action) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

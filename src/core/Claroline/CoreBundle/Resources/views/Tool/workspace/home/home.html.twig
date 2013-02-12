@@ -1,0 +1,20 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block section_content %}
+<ul class="breadcrumb">
+    <li>
+        <li>
+            <a href="#" class="breadcrumb-link">
+                {{ 'home'|trans({}, 'tools') }}
+            </a>
+        </li>
+    </li>
+        </ul>
+<div class="welcome-home">
+     {% render "ClarolineCoreBundle:Workspace:widgets" with {'workspaceId': workspace.getId()} %}
+</div>
+{% endblock %}

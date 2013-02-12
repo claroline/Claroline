@@ -13,8 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 // TODO: Implements AdvancedUserInterface
 
 /**
@@ -122,7 +122,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $abstractResources;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     inversedBy="personalUser"
+     * )
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $personalWorkspace;
@@ -141,15 +144,23 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $userMessages;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     mappedBy="user"
+     * )
+     */
+    protected $desktopTools;
+
     public function __construct()
     {
         parent::__construct();
         $this->userMessages = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->workspaceRoles = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->desktopTools = new ArrayCollection();
     }
 
     public function getId()
@@ -344,6 +355,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
     }
 
+    /**
+     * Replace the old platform role of a user by a new one.
+     *
+     * @param Role $platformRole
+     */
     public function setPlatformRole($platformRole)
     {
         $roles = $this->getOwnedRoles();
@@ -361,8 +377,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
-    public function getUserMessages()
+    public function getDesktopTools()
     {
-        return $this->userMessages;
+        return $this->desktopTools;
     }
 }

@@ -11,6 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -143,12 +144,10 @@ class Role implements RoleInterface
     protected $resourceRights;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Rights\WorkspaceRights",
-     *     mappedBy="role"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
-    protected $workspaceRights;
+    protected $workspace;
 
     public function __construct()
     {
@@ -273,5 +272,15 @@ class Role implements RoleInterface
     public function getResourceRights()
     {
         return $this->resourceRights;
+    }
+
+    public function setWorkspace(AbstractWorkspace $ws)
+    {
+        $this->workspace = $ws;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 }
