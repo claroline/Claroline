@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Tool;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkpaceToolRoleRepository");
  * @ORM\Table(name="claro_workspace_tools_role")
  */
 class WorkspaceToolRole
@@ -19,25 +19,6 @@ class WorkspaceToolRole
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist"}, inversedBy="workspaceToolRoles"
-     * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
-     */
-    protected $tool;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     cascade={"persist"}, inversedBy="workspaceToolRoles"
-     * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
-     */
-    protected $workspace;
-
-
-    /**
-     * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     cascade={"persist"}
      * )
@@ -46,18 +27,17 @@ class WorkspaceToolRole
     protected $role;
 
     /**
-     * @ORM\Column(name="display_order", type="integer")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
+     *     cascade={"persist"}, inversedBy="workspaceToolRoles"
+     * )
+     * @ORM\JoinColumn(name="ordered_tool_id", referencedColumnName="id")
      */
-    protected $order;
+    protected $workspaceOrderedTool;
 
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getWorkspaceTool()
-    {
-        return $this->workspaceTool;
     }
 
     public function getRole()
@@ -65,38 +45,18 @@ class WorkspaceToolRole
         return $this->role;
     }
 
-    public function setTool($tool)
-    {
-        $this->tool = $tool;
-    }
-
-    public function getTool()
-    {
-        return $this->tool;
-    }
-
     public function setRole($role)
     {
         $this->role = $role;
     }
 
-    public function setWorkspace($ws)
+    public function setWorkspaceOrderedTool(WorkspaceOrderedTool $ot)
     {
-        $this->workspace = $ws;
+        $this->workspaceOrderedTool = $ot;
     }
 
-    public function getWorkspace()
+    public function getWorkspaceOrderedTool()
     {
-        return $this->workspace;
-    }
-
-    public function setOrder($order)
-    {
-        $this->order = $order;
-    }
-
-    public function getOrder()
-    {
-        return $this->order;
+        return $this->workspaceOrderedTool;
     }
 }

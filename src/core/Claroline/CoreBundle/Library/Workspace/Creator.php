@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceContext;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class Creator
@@ -234,6 +235,13 @@ class Creator
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
 
+            $wot = new WorkspaceOrderedTool();
+            $wot->setWorkspace($workspace);
+            $wot->setTool($tool);
+            $wot->setOrder($order);
+            $this->entityManager->persist($wot);
+            $this->entityManager->flush();
+
             foreach ($roles as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {
                      $role = $this->entityManager
@@ -245,7 +253,7 @@ class Creator
                         ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
                 }
 
-                $this->setWorkspaceToolRole($workspace, $tool, $role, $order);
+                $this->setWorkspaceToolRole($wot, $role);
             }
 
             $order++;
@@ -254,15 +262,12 @@ class Creator
         $this->entityManager->persist($workspace);
     }
 
-    private function setWorkspaceToolRole(AbstractWorkspace $workspace, Tool $tool, Role $role, $order)
+    private function setWorkspaceToolRole(WorkspaceOrderedTool $wot, Role $role)
     {
         $wtr = new WorkspaceToolRole();
         $wtr->setRole($role);
-        $wtr->setTool($tool);
-        $wtr->setWorkspace($workspace);
-        $wtr->setOrder($order);
-
+        $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
-
+        $this->entityManager->flush();
     }
 }

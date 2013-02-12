@@ -55,7 +55,7 @@ claro_tool_workspace_add:
     expose: true
 
 claro_tool_workspace_move:
-  pattern: /move/tool/{toolId}/position/{position}/workspace/{workspaceId}/role/{roleId}
+  pattern: /move/tool/{toolId}/position/{position}/workspace/{workspaceId}
   defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:workspaceMoveTool }
   requirements:
       _method: POST

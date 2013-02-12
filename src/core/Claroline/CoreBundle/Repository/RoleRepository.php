@@ -55,7 +55,7 @@ class RoleRepository extends NestedTreeRepository
     }
 
     /**
-     * Return the role of a user of a group in a workspace.
+     * Return the role of a user or a group in a workspace.
      *
      * @todo change this name or move this.
      * @param Group|User $entity
