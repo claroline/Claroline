@@ -126,7 +126,7 @@ class GroupRepository extends EntityRepository
             return $paginator;
         }
 
-        return $this->findAll();
+        return parent::findAll();
     }
 
     /**

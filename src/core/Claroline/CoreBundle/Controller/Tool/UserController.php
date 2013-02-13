@@ -206,7 +206,7 @@ class UserController extends Controller
             $this->checkRegistration($workspace);
 
             foreach ($params['userIds'] as $userId) {
-                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+                $user = $em->find('ClarolineCoreBundle:User', $userId);
                 $users[] = $user;
                 $user->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
@@ -317,7 +317,7 @@ class UserController extends Controller
             $this->checkRemoveManagerRoleIsValid($params['userIds'], $workspace);
             foreach ($params['userIds'] as $userId) {
 
-                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+                $user = $em->find('ClarolineCoreBundle:User', $userId);
 
                 if (null != $user) {
                     foreach ($roles as $role) {
@@ -349,7 +349,7 @@ class UserController extends Controller
             ->findManagerRole($workspace);
 
         foreach ($userIds as $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+            $user = $em->find('ClarolineCoreBundle:User', $userId);
 
             if (null !== $user) {
                 if ($workspace == $user->getPersonalWorkspace()) {
