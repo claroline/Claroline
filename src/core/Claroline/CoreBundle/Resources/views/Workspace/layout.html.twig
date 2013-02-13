@@ -2,24 +2,33 @@
 
 {% block sectionHeader %}
     {% if not is_path_mode %}
-        <div class="row-fluid">
+        &nbsp;<!--<div class="row-fluid">
             <div class="span12">
                 <h2 class="section-header">
                     {{ workspace.getName() }}
                     <span class="workspace-code">({{ workspace.getCode() }})</span>
                 </h2>
             </div>
-        </div>
+        </div>-->
     {% endif %}
 {% endblock %}
 
 {% block content %}
     {% if not is_path_mode %}
-        {% render "ClarolineCoreBundle:Workspace:renderToolList" with {'workspaceId': workspace.getId()} %}
+        <div class="span3">        
+            <ul class="nav nav-tabs nav-stacked">
+                <li class="disabled">
+                    <a><b>{{ workspace.getName() }} </b><em>({{ workspace.getCode() }})</em></a>
+                </li>
+                {% render "ClarolineCoreBundle:Workspace:renderToolList" with {'workspaceId': workspace.getId()} %}
+            </ul>
+        </div>
     {% endif %}
-    <div class="section-content">
-         {% block section_content %}{% endblock %}
+
+    <div class="span9 section-content border">
+        {% block section_content %}{% endblock %}
     </div>
+
 {% endblock %}
 
 {% block javascripts %}

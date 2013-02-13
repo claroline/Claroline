@@ -278,13 +278,23 @@ class DatabaseWriter
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
 
-        if (isset($tool['icon'])) {
+        /*if (isset($tool['icon'])) {
             $toolEntity->setIcon(
                 "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$tool['icon']}"
             );
         } else {
             $toolEntity->setIcon(
                 "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
+            );
+        }*/
+
+        if (isset($tool['class'])) {
+            $toolEntity->setClass(
+                "{$tool['icon']}"
+            );
+        } else {
+            $toolEntity->setClass(
+                "icon-wrench"
             );
         }
 

@@ -1,16 +1,25 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block sectionHeader %}
-    {{ macros.sectionHeader('desktop'|trans({}, 'platform')) }}
+    &nbsp;
 {% endblock %}
 
 {% block content %}
 
-{% render "ClarolineCoreBundle:Desktop:renderToolList" %}
+    <div class="span3">
+        <ul class="nav nav-tabs nav-stacked">
+            <li class="disabled">
+               <a><b>{{ 'desktop'|trans({}, 'platform') }}</b></a>
+            </li>
+        
+            {% render "ClarolineCoreBundle:Desktop:renderToolList" %}
+        </ul>
+    </div>
 
-<div class="section-content">
-    {% block sectionContent %}{% endblock %}
-</div>
+    <div class="span9 section-content border">
+        
+        {% block sectionContent %}{% endblock %}
+    </div>
 
 {% endblock %}
 

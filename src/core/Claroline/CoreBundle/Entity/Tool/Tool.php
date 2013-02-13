@@ -23,9 +23,9 @@ class Tool
     protected $name;
 
     /**
-     * @ORM\Column(name="icon", type="string")
+     * @ORM\Column(name="class", type="string")
      */
-    protected $icon;
+    protected $class;
 
     /**
      * @ORM\Column(name="is_workspace_required", type="boolean")
@@ -91,14 +91,14 @@ class Tool
         return $this->name;
     }
 
-    public function setIcon($icon)
+    public function setClass($class)
     {
-        $this->icon = $icon;
+        $this->class = $class;
     }
 
-    public function getIcon()
+    public function getClass()
     {
-        return $this->icon;
+        return $this->class;
     }
 
     public function setIsWorkspaceRequired($bool)
