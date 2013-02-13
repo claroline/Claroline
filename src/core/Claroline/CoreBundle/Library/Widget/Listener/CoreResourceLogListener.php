@@ -22,7 +22,7 @@ class CoreResourceLogListener extends ContainerAware
     private function renderForWorkspace($workspace)
     {
         $logs = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLog')
+            ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
             ->findLastLogs($this->container->get('security.context')->getToken()->getUser(), $workspace);
 
         return $this->container
@@ -33,7 +33,7 @@ class CoreResourceLogListener extends ContainerAware
     private function renderForDesktop()
     {
         $logs = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Logger\ResourceLog')
+            ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
             ->findLastLogs($this->container->get('security.context')->getToken()->getUser());
 
         return $this->container

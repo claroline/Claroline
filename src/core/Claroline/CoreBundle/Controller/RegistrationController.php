@@ -47,7 +47,7 @@ class RegistrationController extends Controller
 
         if ($form->isValid()) {
             $em = $this->get('doctrine.orm.entity_manager');
-            $userRole = $em->getRepository('Claroline\CoreBundle\Entity\Role')
+            $userRole = $em->getRepository('ClarolineCoreBundle:Role')
                 ->findOneByName(PlatformRoles::USER);
             $user->addRole($userRole);
             $user = $this->container->get('claroline.user.creator')->create($user);
@@ -67,7 +67,7 @@ class RegistrationController extends Controller
      * ie: if the self registration is disabled, he can't.
      *
      * @return Respone
-     * 
+     *
      * @throws AccessDeniedHttpException
      */
     private function checkAccess()

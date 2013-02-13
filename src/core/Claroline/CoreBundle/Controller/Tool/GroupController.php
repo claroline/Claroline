@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class GroupController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
+    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_GROUP_PER_ITERATION = 25;
 
     /**
@@ -129,7 +129,7 @@ class GroupController extends Controller
         if (isset($params['groupIds'])) {
             $this->checkRemoveManagerRoleIsValid($params['groupIds'], $workspace);
             foreach ($params['groupIds'] as $groupId) {
-                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+                $group = $em->find('ClarolineCoreBundle:Group', $groupId);
 
                 if (null != $group) {
                     foreach ($roles as $role) {
@@ -159,7 +159,7 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->unregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+            ->findWorkspaceOutsider($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
             'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
@@ -186,7 +186,7 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->registeredGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
+            ->findByWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
             'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
@@ -217,7 +217,7 @@ class GroupController extends Controller
 
         if (isset($params['groupIds'])) {
             foreach ($params['groupIds'] as $groupId) {
-                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+                $group = $em->find('ClarolineCoreBundle:Group', $groupId);
                 $groups[] = $group;
                 $group->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
@@ -254,9 +254,9 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->searchUnregisteredGroupsOfWorkspace(
-                $search,
+            ->findWorkspaceOutsiderByName(
                 $workspace,
+                $search,
                 $offset,
                 self::NUMBER_GROUP_PER_ITERATION
             );
@@ -288,9 +288,9 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->searchRegisteredGroupsOfWorkspace(
-                $search,
+            ->findByWorkspaceAndName(
                 $workspace,
+                $search,
                 $offset,
                 self::NUMBER_GROUP_PER_ITERATION
             );
@@ -322,7 +322,7 @@ class GroupController extends Controller
         $countRemovedManagers = 0;
 
         foreach ($groupIds as $groupId) {
-            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+            $group = $em->find('ClarolineCoreBundle:Group', $groupId);
 
             if (null !== $group) {
                 if ($group->hasRole($managerRole->getName())) {
@@ -331,7 +331,7 @@ class GroupController extends Controller
             }
         }
 
-        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        $userManagers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 

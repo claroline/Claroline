@@ -51,7 +51,7 @@ class IconCreatorTest extends FixtureTestCase
         $this->fileType = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'file'));
     }
 
@@ -161,7 +161,7 @@ class IconCreatorTest extends FixtureTestCase
         $dirType = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'directory'));
         $dir->setResourceType($dirType);
         $dir = $this->iconCreator->setResourceIcon($dir);

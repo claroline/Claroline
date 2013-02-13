@@ -10,7 +10,7 @@ class ExampleController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         //get the resource
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')->find($exampleId);
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exampleId);
         //get the current workspace.
         //if you only have the workspace id =>
         //$em->getRepository('Claroline\CoreBundle\Workspace\AbstractWorkspace')->find(...);

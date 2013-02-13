@@ -159,7 +159,7 @@ class ActivityController extends Controller
     public function showSetUpAction($activityId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
         $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
             ->find($activityId);

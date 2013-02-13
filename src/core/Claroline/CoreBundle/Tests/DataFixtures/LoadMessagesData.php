@@ -35,7 +35,7 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
     public function load(ObjectManager $manager)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $userRepository = $em->getRepository('Claroline\CoreBundle\Entity\User');
+        $userRepository = $em->getRepository('ClarolineCoreBundle:User');
         $users = $userRepository->findAll();
         $lipusmGenerator = $this->container->get('claroline.utilities.lipsum_generator');
         $count = count($users);

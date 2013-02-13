@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  */
 class CalendarController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
+    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
     public function addEventAction($workspaceId)
     {

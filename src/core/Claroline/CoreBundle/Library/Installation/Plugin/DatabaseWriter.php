@@ -69,7 +69,7 @@ class DatabaseWriter
             $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
         } else {
             $defaultIcon = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
             $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
         }
@@ -92,14 +92,14 @@ class DatabaseWriter
         // of the resource types the plugin might have declared
         // TODO : this should be covered by a test
         $resourceTypes = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByPlugin($plugin->getGeneratedId());
 
         foreach ($resourceTypes as $resourceType) {
             if (null !== $resourceType) {
                 if (null !== $parentType = $resourceType->getParent()) {
                     $resources = $this->em
-                        ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                        ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                         ->findByResourceType($resourceType->getId());
 
                     foreach ($resources as $resource) {
@@ -133,7 +133,7 @@ class DatabaseWriter
     private function getPluginEntity($pluginFqcn)
     {
         $entity = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+            ->getRepository('ClarolineCoreBundle:Plugin')
             ->findOneByBundleFQCN($pluginFqcn);
 
         return $entity;
@@ -159,10 +159,10 @@ class DatabaseWriter
         $resourceIcon = new ResourceIcon();
 
         $defaultIcon = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
             ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
         $defaultIconType = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+            ->getRepository('ClarolineCoreBundle:Resource\IconType')
             ->findOneBy(array('iconType' => 'type'));
         $resourceIcon->setIconType($defaultIconType);
         $resourceIcon->setType($resourceType->getName());
