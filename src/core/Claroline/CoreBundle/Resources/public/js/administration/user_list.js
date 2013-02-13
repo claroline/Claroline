@@ -17,14 +17,12 @@
 
     var standardRoute = function(){
         return Routing.generate('claro_admin_paginated_user_list', {
-            'offset' : $('.row-user').length,
-            'format': 'html'
+            'offset' : $('.row-user').length
         });
     }
 
     var searchRoute = function(){
         return Routing.generate('claro_admin_paginated_search_user_list', {
-            'format': 'html',
             'offset': $('.row-user').length,
             'search': document.getElementById('search-user-txt').value
         })

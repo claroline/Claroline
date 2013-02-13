@@ -47,7 +47,6 @@ class WorkspaceController extends Controller
      * Renders the registered workspace list for a user.
      *
      * @param integer $userId
-     * @param string $format the format
      *
      * @throws AccessDeniedHttpException
      *
