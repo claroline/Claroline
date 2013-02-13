@@ -9,20 +9,17 @@ class ParametersControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('admin'));
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('john' => 'user'));
     }
 
     public function testDesktopAddThenRemoveTool()
     {
-        $repo = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Tool\Tool');
-
-        $baseDisplayedTools = $repo->findByUser($this->getFixtureReference('user/admin'), true);
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $baseDisplayedTools = $repo->findByUser($this->getUser('john'), true);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $home = $repo->findOneBy(array('name' => 'calendar'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('john'));
 
         $this->client->request(
             'POST',
@@ -31,7 +28,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->findByUser($this->getFixtureReference('user/admin'), true))
+            count($repo->findByUser($this->getUser('john'), true))
         );
 
         $this->client->request(
@@ -41,27 +38,20 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->findByUser($this->getFixtureReference('user/admin'), true))
+            count($repo->findByUser($this->getUser('john'), true))
         );
     }
 
     public function testWorkspaceAddThenRemoveTool()
     {
-        $repo = $this->client
-           ->getContainer()
-           ->get('doctrine.orm.entity_manager')
-           ->getRepository('ClarolineCoreBundle:Tool\Tool');
-
-        $workspace = $this->getFixtureReference('user/admin')->getPersonalWorkspace();
-        $role = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')->findVisitorRole($workspace);
-
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $workspace = $this->getWorkspace('john');
+        $role = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findVisitorRole($workspace);
         $baseDisplayedTools = $repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $calendar = $repo->findOneBy(array('name' => 'calendar'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('john'));
 
         $toolId = $calendar->getId();
         $workspaceId = $workspace->getId();
@@ -90,84 +80,58 @@ class ParametersControllerTest extends FunctionalTestCase
 
     public function testMoveDesktopTool()
     {
-        $home = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findOneBy(array('name' => 'home'));
+        $toolRepo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $home = $toolRepo->findOneBy(array('name' => 'home'));
+        $parameters = $toolRepo->findOneBy(array('name' => 'parameters'));
+        $resources = $toolRepo->findOneBy(array('name' => 'resource_manager'));
+        $desktopToolRepo = $this->em->getRepository('ClarolineCoreBundle:Tool\DesktopTool');
 
-        $parameters = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findOneBy(array('name' => 'parameters'));
-
-        $this->logUser($this->getFixtureReference('user/admin'));
-
+        $this->logUser($this->getUser('john'));
         $this->client->request(
             'POST',
             "/desktop/tool/properties/move/tool/{$home->getId()}/position/2"
         );
 
-        $repo = $this->client
-             ->getContainer()
-             ->get('doctrine.orm.entity_manager')
-             ->getRepository('ClarolineCoreBundle:Tool\DesktopTool');
-
-         $this->assertEquals(
-             2,
-             $repo->findOneBy(array('tool' => $home, 'user' => $this->getFixtureReference('user/admin')))
-                 ->getOrder()
-         );
-
-         $this->assertEquals(
-             1,
-             $repo->findOneBy(array('tool' => $parameters, 'user' => $this->getFixtureReference('user/admin')))
+        $this->em->clear();
+        $this->assertEquals(
+            2,
+            $desktopToolRepo->findOneBy(array('tool' => $home, 'user' => $this->getUser('john')))
                 ->getOrder()
-         );
+        );
+        $this->assertEquals(
+            1,
+            $desktopToolRepo->findOneBy(array('tool' => $resources, 'user' => $this->getUser('john')))
+               ->getOrder()
+        );
+        $this->assertEquals(
+            3,
+            $desktopToolRepo->findOneBy(array('tool' => $parameters, 'user' => $this->getUser('john')))
+               ->getOrder()
+        );
     }
 
     public function testMoveWorkspaceTool()
     {
-        $home = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+        $home = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findOneBy(array('name' => 'home'));
-
-        $workspace = $this->getFixtureReference('user/admin')->getPersonalWorkspace();
-
-        $role = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')->findCollaboratorRole($workspace);
-
-        $this->logUser($this->getFixtureReference('user/admin'));
-
-        $workspaceId = $workspace->getId();
-        $toolId = $home->getId();
-        $resourceManager = $this->client
-           ->getContainer()
-           ->get('doctrine.orm.entity_manager')
-           ->getRepository('ClarolineCoreBundle:Tool\Tool')
+        $workspace = $this->getWorkspace('john');
+        $this->logUser($this->getUser('john'));
+        $resourceManager = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
            ->findOneBy(array('name' => 'resource_manager'));
 
         $this->client->request(
             'POST',
-            "/workspaces/tool/properties/move/tool/{$toolId}/position/2/workspace/{$workspaceId}"
+            "/workspaces/tool/properties/move/tool/{$home->getId()}/position/2/workspace/{$workspace->getId()}"
         );
 
-        $repo = $this->client
-           ->getContainer()
-           ->get('doctrine.orm.entity_manager')
-           ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool');
+        $this->em->clear();
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool');
 
         $this->assertEquals(
             2,
             $repo->findOneBy(array('tool' => $home, 'workspace' => $workspace))
                 ->getOrder()
         );
-
         $this->assertEquals(
             1,
             $repo->findOneBy(array('tool' => $resourceManager, 'workspace' => $workspace))
