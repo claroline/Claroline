@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class RssReaderController extends Controller
 {
@@ -38,16 +39,19 @@ class RssReaderController extends Controller
         }
 
         if ($config->getWorkspace() != null) {
-            $url = $this->generateUrl('claro_workspace_home', array('workspaceId' => $config->getWorkspace()->getId()));
+            $url = $this->generateUrl(
+                'claro_workspace_open',
+                array('workspaceId' => $config->getWorkspace()->getId())
+            );
 
             return new RedirectResponse($url);
-        } else {
-            if ($isDefault) {
-                return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
-            } else {
-                return new RedirectResponse($this->generateUrl('claro_desktop_index'));
-            }
         }
+
+        if ($isDefault) {
+            return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
+        }
+
+        return new RedirectResponse($this->generateUrl('claro_desktop_open'));
     }
 
     public function updateConfigAction($configId)
@@ -56,13 +60,11 @@ class RssReaderController extends Controller
         $rssConfig = $em->getRepository('Claroline\RssReaderBundle\Entity\Config')->find($configId);
 
         if ($rssConfig->getWorkspace() !== null) {
-            if (!$this->get('security.context')->isGranted('EDIT', $rssConfig->getWorkspace())) {
+            if (!$this->get('security.context')->isGranted('parameters', $rssConfig->getWorkspace())) {
                 throw new AccessDeniedHttpException();
             }
-        } else {
-            if (!$this->get('security.context')->isGranted('ROLE_ADMIN', $rssConfig->getWorkspace())) {
-                throw new AccessDeniedHttpException();
-            }
+        } elseif ($this->get('security.context')->getToken()->getUser() != $rssConfig->getUser()) {
+            throw new AccessDeniedHttpException();
         }
 
         $form = $this->get('form.factory')->create(new ConfigType(), $rssConfig);
@@ -83,11 +85,15 @@ class RssReaderController extends Controller
 
         if ($rssConfig->getWorkspace() != null) {
             $url = $this->generateUrl(
-                'claro_workspace_home',
+                'claro_workspace_open',
                 array('workspaceId' => $rssConfig->getWorkspace()->getId())
             );
 
             return new RedirectResponse($url);
+        }
+
+        if (!$rssConfig->isDefault() && $rssConfig->isDesktop()) {
+            return new RedirectResponse($this->generateUrl('claro_desktop_open'));
         }
 
         return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
