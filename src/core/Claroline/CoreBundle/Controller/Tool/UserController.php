@@ -136,7 +136,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -173,7 +173,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -217,7 +217,7 @@ class UserController extends Controller
         }
 
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -251,7 +251,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -285,7 +285,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
