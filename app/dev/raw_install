@@ -41,6 +41,5 @@ system("php {$rootDirectory}/app/console claroline:install --with-plugins --with
 
 system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
 system("php {$rootDirectory}/app/console claroline:user:create --admin John Doe admin admin");
-echo ("\nLoading demo fixtures...");
 system("php {$rootDirectory}/app/console claroline:fixture:demo");
 system("php {$rootDirectory}/app/console cache:clear");
