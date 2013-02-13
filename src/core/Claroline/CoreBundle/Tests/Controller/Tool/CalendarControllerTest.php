@@ -122,7 +122,7 @@ class CalendarControllerTest extends FunctionalTestCase
             "/workspaces/tool/calendar/{$workspaceId}/move",
             $dataForm
         );
-
+        //var_dump( $this->client->getResponse()->getContent());
         $contentUpdate = json_decode($this->client->getResponse()->getContent());
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
