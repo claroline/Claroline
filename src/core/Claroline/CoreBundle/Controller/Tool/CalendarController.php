@@ -31,9 +31,7 @@ class CalendarController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                /*if(is_null($event->getAllDay()) ) {
-                    $event->setAllDay(0); // allday equals false
-                }*/
+
                 $date = explode('(', $postData['date']);
                 $event->setStart(new \DateTime($date[0]));
 
@@ -122,8 +120,10 @@ class CalendarController extends Controller
                 array(
                     'id' => $event->getId(),
                     'title' => $event->getTitle(),
+                    'allDay' => $event->getAllDay(),
                     'start' => $event->getStart(),
-                    'end' => $event->getEnd()
+                    'end' => $event->getEnd(),
+                    'color' => $event->getPriority()
                     )
             ),
             200,
