@@ -175,7 +175,7 @@ class DatabaseWriterTest extends TransactionalTestCase
         ";
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
-        $this->assertContains('icon-wrench', $pluginEntity[0]->getClass());
+        $this->assertContains('icon.gif', $pluginEntity[0]->getIcon());
     }
 
     public function testPluginToolIsPersisted()
