@@ -9,8 +9,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceContext;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class Creator
@@ -112,7 +113,7 @@ class Creator
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceContext
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
      */
     private function createDefaultsResourcesRights(
         $canDelete,
@@ -126,29 +127,25 @@ class Creator
         AbstractWorkspace $workspace
     )
     {
-        $resourceContext = new ResourceContext();
-        $resourceContext->setCanCopy($canCopy);
-        $resourceContext->setCanDelete($canDelete);
-        $resourceContext->setCanEdit($canEdit);
-        $resourceContext->setCanOpen($canOpen);
-        $resourceContext->setCanExport($canExport);
-        $resourceContext->setRole($role);
-        $resourceContext->setResource($resource);
-        $resourceContext->setWorkspace($workspace);
+        $rights = new ResourceRights();
+        $rights->setCanCopy($canCopy);
+        $rights->setCanDelete($canDelete);
+        $rights->setCanEdit($canEdit);
+        $rights->setCanOpen($canOpen);
+        $rights->setCanExport($canExport);
+        $rights->setRole($role);
+        $rights->setResource($resource);
+        $rights->setWorkspace($workspace);
 
         if ($canCreate) {
-            $resourceTypes = $this->entityManager
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findBy(array('isVisible' => true));
-
-            foreach ($resourceTypes as $resourceType) {
-                $resourceContext->addResourceType($resourceType);
-            }
+            $resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findByIsVisible(true);
+            $rights->setCreatableResourceTypes($resourceTypes);
         }
 
-        $this->entityManager->persist($resourceContext);
+        $this->entityManager->persist($rights);
 
-        return $resourceContext;
+        return $rights;
     }
 
     /**
@@ -234,6 +231,13 @@ class Creator
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
 
+            $wot = new WorkspaceOrderedTool();
+            $wot->setWorkspace($workspace);
+            $wot->setTool($tool);
+            $wot->setOrder($order);
+            $this->entityManager->persist($wot);
+            $this->entityManager->flush();
+
             foreach ($roles as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {
                      $role = $this->entityManager
@@ -245,7 +249,7 @@ class Creator
                         ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
                 }
 
-                $this->setWorkspaceToolRole($workspace, $tool, $role, $order);
+                $this->setWorkspaceToolRole($wot, $role);
             }
 
             $order++;
@@ -254,15 +258,12 @@ class Creator
         $this->entityManager->persist($workspace);
     }
 
-    private function setWorkspaceToolRole(AbstractWorkspace $workspace, Tool $tool, Role $role, $order)
+    private function setWorkspaceToolRole(WorkspaceOrderedTool $wot, Role $role)
     {
         $wtr = new WorkspaceToolRole();
         $wtr->setRole($role);
-        $wtr->setTool($tool);
-        $wtr->setWorkspace($workspace);
-        $wtr->setOrder($order);
-
+        $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
-
+        $this->entityManager->flush();
     }
 }

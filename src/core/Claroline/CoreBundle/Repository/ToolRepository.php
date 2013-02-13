@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Role;
 
 class ToolRepository extends EntityRepository
 {
@@ -23,11 +25,9 @@ class ToolRepository extends EntityRepository
      */
     public function findByRolesAndWorkspace (array $roles, AbstractWorkspace $workspace, $isVisible)
     {
-        if ($isVisible) {
-            $dql = $this->getDisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
-        } else {
-            $dql = $this->getUndisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
-        }
+        $dql = $isVisible ?
+            $this->getDisplayedToolsForRolesInWorkspaceQuery($roles, $workspace):
+            $this->getUndisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
 
        $query = $this->_em->createQuery($dql);
 
@@ -50,8 +50,9 @@ class ToolRepository extends EntityRepository
             }
 
             $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-                JOIN tool.workspaceToolRoles wtr
-                JOIN wtr.workspace ws
+                JOIN tool.workspaceOrderedTools wot
+                JOIN wot.workspaceToolRoles wtr
+                JOIN wot.workspace ws
                 JOIN wtr.role role
                 WHERE role.name = '{$firstRole}' and ws.id = {$workspace->getId()}";
 
@@ -59,7 +60,7 @@ class ToolRepository extends EntityRepository
                 $dql .= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
             }
 
-            $dql .= " ORDER BY wtr.order";
+            $dql .= " ORDER BY wot.order";
 
             return $dql;
         }
@@ -127,9 +128,61 @@ class ToolRepository extends EntityRepository
     {
         return "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            WHERE tool NOT IN ( SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+            WHERE tool NOT IN (SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
                 JOIN tool_2.desktopTools desktopTool_2
                 JOIN desktopTool_2.user user_2
                 WHERE user_2.id = {$user->getId()} ) AND tool.isDisplayableInDesktop = true";
+    }
+
+    public function findByWorkspace(AbstractWorkspace $workspace, $isVisible)
+    {
+        $dql = $isVisible ?
+            $this->getWorkspaceDisplayedToolsQuery($workspace):
+            $this->getWorkspaceUndisplayedToolsQuery($workspace);
+
+       $query = $this->_em->createQuery($dql);
+
+       return $query->getResult();
+    }
+
+    private function getWorkspaceUndisplayedToolsQuery($workspace)
+    {
+        return "
+            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool NOT IN (SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+                JOIN tool_2.workspaceOrderedTools wot
+                JOIN wot.workspace ws
+                WHERE ws.id = {$workspace->getId()} AND tool.isDisplayableInWorkspace = true)
+            ";
+    }
+
+    private function getWorkspaceDisplayedToolsQuery($workspace)
+    {
+        return "
+            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            JOIN tool.workspaceOrderedTools wot
+            JOIN wot.workspace ws
+            JOIN wot.workspaceToolRoles wtr
+            WHERE ws.id = {$workspace->getId()}
+            ";
+    }
+
+    public function isToolVisibleForRoleInWorkspace(Tool $tool, Role $role, AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT tool FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace tool
+            JOIN tool.workspaceOrderedTools wot
+            JOIN wot.tool tool_2
+            JOIN wot.workspace ws
+            JOIN wot.workspaceToolRoles wtr
+            JOIN wtr.role r
+            WHERE tool_2.id = {$tool->getId()}
+            AND r.id = {$role->getId()}
+            AND ws.id = {$workspace->getId()}
+            ";
+
+         $query = $this->_em->createQuery($dql);
+
+         return ($query->getResult() == null) ? false: true;
     }
 }

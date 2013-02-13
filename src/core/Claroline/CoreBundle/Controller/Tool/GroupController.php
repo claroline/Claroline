@@ -32,7 +32,7 @@ class GroupController extends Controller
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
-        $role = $roleRepo->getEntityRoleForWorkspace($group, $workspace);
+        $role = $roleRepo->findWorkspaceRole($group, $workspace);
         $defaultData = array('role' => $role);
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(

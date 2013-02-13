@@ -27,4 +27,16 @@ class ResourceTypeRepository extends EntityRepository
             ->query($sql)
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    public function findByIds(array $resourceTypeIds)
+    {
+        $dql = '
+            SELECT rt
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+            WHERE rt.id IN (' . implode(',', $resourceTypeIds) . ')
+        ';
+
+        return $this->_em->createQuery($dql)
+            ->getResult();
+    }
 }

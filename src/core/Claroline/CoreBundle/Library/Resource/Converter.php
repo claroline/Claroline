@@ -56,8 +56,8 @@ class Converter
             $resourceArray['can_delete'] = true;
         } else {
             $rights = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceContext')
-                ->getRights($roles, $resource);
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceRights')
+                ->findMaximumRights($roles, $resource);
             $resourceArray['can_export'] = $rights['canExport'];
             $resourceArray['can_edit'] = $rights['canEdit'];
             $resourceArray['can_delete'] = $rights['canDelete'];

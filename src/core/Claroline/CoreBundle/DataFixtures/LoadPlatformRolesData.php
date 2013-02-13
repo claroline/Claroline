@@ -14,10 +14,11 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
-     * Loads three roles used within the platform :
-     * - simple user
-     * - workspace creator
-     * - administrator
+     * Loads the four base roles commonly used within the platform :
+     * - anonymous user         (fixture ref : role/anonymous)
+     * - registered user        (fixture ref : role/user)
+     *     - workspace creator  (fixture ref : role/ws_creator)
+     *     - administrator      (fixture ref : role/admin)
      *
      * @param ObjectManager $manager
      */
@@ -51,6 +52,7 @@ class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInt
         $manager->persist($adminRole);
         $manager->flush();
 
+        $this->addReference('role/anonymous', $anonymousRole);
         $this->addReference('role/user', $userRole);
         $this->addReference('role/ws_creator', $creatorRole);
         $this->addReference('role/admin', $adminRole);

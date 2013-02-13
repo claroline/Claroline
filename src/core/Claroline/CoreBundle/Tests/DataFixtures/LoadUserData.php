@@ -13,9 +13,9 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface, O
 {
     private $usernames;
 
-    public function __construct($usernames = null)
+    public function __construct(array $usernames = null)
     {
-        if ($usernames != null) {
+        if ($usernames !== null) {
             $this->usernames = $usernames;
         } else {
             $this->usernames = array('admin', 'ws_creator', 'user', 'user_2', 'user_3');

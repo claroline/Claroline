@@ -3,7 +3,8 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Entity\Workspace\Event;
+use Claroline\CoreBundle\Entity\Event;
+use Claroline\Corebundle\Form\CalendarType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ToolListener extends ContainerAware
@@ -72,7 +73,7 @@ class ToolListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($workspace)
+            ->findWorkspaceRoot($workspace)
             ->getId();
         $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
             ->findBy(array('isVisible' => true));
@@ -206,29 +207,8 @@ class ToolListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $event = new Event();
-        $formBuilder = $this->container->get('form.factory')->createBuilder('form', $event, array());
-        $formBuilder
-            ->add('title', 'text', array('required' => true))
-            ->add(
-                'end',
-                'date',
-                array(
-                    'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
-                    'data' => new \DateTime('now')
-                )
-            )
-            ->add(
-                'allDay',
-                'checkbox',
-                array(
-                'label' => 'all day ?',
-                )
-            )
-            ->add('description', 'textarea');
-        $form = $formBuilder->getForm();
-
+        $event = new Event(); 
+        $form = $this->container->get('form.factory')->create(new CalendarType());
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
             array('workspace' => $workspace, 'form' => $form->createView())

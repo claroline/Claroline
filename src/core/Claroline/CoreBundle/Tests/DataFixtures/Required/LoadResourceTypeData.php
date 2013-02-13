@@ -6,5 +6,4 @@ use Claroline\CoreBundle\DataFixtures\LoadResourceTypeData as BaseLoadResourceTy
 
 class LoadResourceTypeData extends BaseLoadResourceTypeData
 {
-
 }

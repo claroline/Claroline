@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -224,7 +225,7 @@ class ParametersController extends Controller
             $tool->setVisible(false);
         }
 
-        $tools = $this->claroArrayFill($orderedToolList, $undisplayedTools);
+        $tools = $this->arrayFill($orderedToolList, $undisplayedTools);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\desktop\parameters:tool_properties.html.twig',
@@ -332,13 +333,72 @@ class ParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
+
         $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findBy(array('isDisplayableInWorkspace' => true));
+        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $workspaceId));
+
+        /*
+         * Creates an easy to use array with tools visibility permissons.
+         * The array has the following structure:
+         *
+         * array[$order] => array(
+         *  'tool' => $tool'
+         *  'visibility' => array('
+         *      ROLE_1 => $bool,
+         *      ROLE_2 => $bool,
+         *      ROLE_3 => $bool)
+         * );
+         */
+
+        /*
+         * Loading all the datas from the WorkspaceToolRole entities
+         * so doctrine won't do a new request every time the isToolVisibleForRoleInWorkspace()
+         * is fired.
+         */
+        $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')->findByWorkspace($workspace);
+
+        foreach ($wot as $orderedTool) {
+            //creates the visibility array
+            foreach ($wsRoles as $role) {
+                $isVisible = false;
+                //is the tool visible for a role in a workspace ?
+                foreach ($wtr as $workspaceToolRole) {
+                    if ($workspaceToolRole->getRole() == $role
+                        && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
+                        && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
+                        $isVisible = true;
+                    }
+                }
+                $roleVisibility[$role->getId()] = $isVisible;
+            }
+            $toolsPermissions[$orderedTool->getOrder()] = array(
+                'tool' => $orderedTool->getTool(),
+                'visibility' => $roleVisibility
+            );
+        }
+
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByWorkspace($workspace, false);
+
+        //this is the missing part of the array
+        $toFill = array();
+        foreach ($undisplayedTools as $undisplayedTool) {
+            foreach ($wsRoles as $role) {
+                $roleVisibility[$role->getId()] = false;
+            }
+            $toFill[] = array('tool' => $undisplayedTool, 'visibility' => $roleVisibility);
+        }
+
+
+        $toolsPermissions = $this->arrayFill($toolsPermissions, $toFill);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:tool_roles.html.twig',
-            array('roles' => $wsRoles, 'workspace' => $workspace)
+            array('roles' => $wsRoles, 'workspace' => $workspace, 'workspaceTools' => $tools, 'toolPermissions' => $toolsPermissions)
         );
     }
 
@@ -369,7 +429,7 @@ class ParametersController extends Controller
             $tool->setVisible(false);
         }
 
-        $tools = $tools = $this->claroArrayFill($orderedToolList, $undisplayedTools);
+        $tools = $tools = $this->arrayFill($orderedToolList, $undisplayedTools);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:tool_parameters.html.twig',
@@ -397,8 +457,11 @@ class ParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
+        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
+
         $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
-            ->findOneBy(array('role' => $roleId, 'tool' => $toolId, 'workspace' => $workspaceId));
+            ->findOneBy(array('role' => $roleId, 'workspaceOrderedTool' => $wot));
         $em->remove($wtr);
         $em->flush();
 
@@ -427,18 +490,20 @@ class ParametersController extends Controller
         }
 
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
-            ->findOneBy(array('workspace' => $workspace, 'order' => $position, 'role' => $role));
+        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
 
-        if ($switchTool != null) {
-            throw new \RuntimeException('A tool already exists at this position');
+        if ($wot === null) {
+            $wot = new WorkspaceOrderedTool();
+            $wot->setOrder($position);
+            $wot->setTool($em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId));
+            $wot->setWorkspace($workspace);
+            $em->persist($wot);
         }
 
         $wtr = new WorkspaceToolRole();
         $wtr->setRole($role);
-        $wtr->setTool($em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId));
-        $wtr->setWorkspace($workspace);
-        $wtr->setOrder($position);
+        $wtr->setWorkspaceOrderedTool($wot);
         $em->persist($wtr);
         $em->flush();
 
@@ -453,8 +518,11 @@ class ParametersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function workspaceMoveToolAction($toolId, $position, $workspaceId, $roleId)
+    public function workspaceMoveToolAction($toolId, $position, $workspaceId)
     {
+        if (intval($position) == null) {
+            throw new \RuntimeException('The $position value must be an integer');
+        }
          $em = $this->get('doctrine.orm.entity_manager');
          $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
@@ -463,16 +531,22 @@ class ParametersController extends Controller
          }
 
          $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
 
-         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
-            ->findOneBy(array('role' => $role, 'tool' => $tool, 'workspace' => $workspace));
-         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
-            ->findOneBy(array('role' => $role, 'order' => $position, 'workspace' => $workspace));
+         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
+
+         if ($movingTool === null) {
+             throw new \RuntimeException("There is no WorkspaceOrderedTool for "
+                 . "{$tool->getName()} in {$workspace->getName()}");
+         }
+
+         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('order' => $position, 'workspace' => $workspace));
 
          //if a tool is already at this position, he must go "far away"
-        if ($switchTool !== null) {
+        if ($switchTool !== null && $movingTool !== null) {
             //go far away ! Integrety constraints.
+            $newPosition = $movingTool->getOrder();
             $switchTool->setOrder('99');
             $em->persist($switchTool);
         }
@@ -481,7 +555,6 @@ class ParametersController extends Controller
 
          //the tool must exists
         if ($movingTool !== null) {
-            $newPosition = $movingTool->getOrder();
             $movingTool->setOrder(intval($position));
             $em->persist($movingTool);
         }
@@ -497,7 +570,28 @@ class ParametersController extends Controller
         return new Response('<body>success</body>');
     }
 
-    public function claroArrayFill(array $fillable, array $array)
+    /**
+     * Fill the empty value on $fillable with $array and sort it.
+     *
+     * Ie:
+     * $fillable[4] = value4
+     * $fillable[1] = value1
+     * $fillable[2] = value2
+     *
+     * $array[] = value3
+     *
+     * One the function is fired the results is
+     * $fillable[1] = value1
+     * $fillable[2] = value2
+     * $fillable[3] = value3
+     * $fillable[4] = value4
+     *
+     * @param array $fillable
+     * @param array $array
+     *
+     * @return array
+     */
+    public function arrayFill(array $fillable, array $array)
     {
         ksort($fillable);
         $saveKey = 1;
