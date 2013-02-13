@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\Corebundle\Form\CalendarType;
+use Claroline\CoreBundle\Form\CalendarType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ToolListener extends ContainerAware
@@ -209,6 +209,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $event = new Event();
         $form = $this->container->get('form.factory')->create(new CalendarType());
+
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
             array('workspace' => $workspace, 'form' => $form->createView())

@@ -8,6 +8,9 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
+    <!--[if IE 9]>
+        <link rel="stylesheet" href='{{ asset('bundles/clarolinecore/css/font-awesome-ie7.min.css') }}'>
+    <![endif]-->
 {% endblock %}
 
 {% block favicon %}

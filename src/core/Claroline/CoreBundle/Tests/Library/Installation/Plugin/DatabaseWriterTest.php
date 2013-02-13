@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Entity\Plugin;
 
 class DatabaseWriterTest extends TransactionalTestCase
 {
@@ -124,7 +123,7 @@ class DatabaseWriterTest extends TransactionalTestCase
         $dql = "
             SELECT ri FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon ri
             WHERE ri.iconLocation LIKE '%validwithlargeicon%'
-            ";
+        ";
 
         $resourceIcon = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($resourceIcon));
@@ -144,7 +143,8 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $dql = "
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.name = 'ResourceXCustom'";
+            WHERE rt.name = 'ResourceXCustom'
+        ";
 
         $resourceType = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($resourceType));
@@ -153,7 +153,8 @@ class DatabaseWriterTest extends TransactionalTestCase
             SELECT ca FROM Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction ca,
             Claroline\CoreBundle\Entity\Resource\ResourceType rt
             WHERE rt.name = 'ResourceXCustom'
-            AND ca.resourceType = '{$resourceType[0]->getId()}'";
+            AND ca.resourceType = '{$resourceType[0]->getId()}'
+        ";
 
         $customAction = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($customAction));
@@ -170,7 +171,8 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $dql = "
             SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
-            WHERE p.bundleName LIKE '%Icon'";
+            WHERE p.bundleName LIKE '%Icon'
+        ";
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
         $this->assertContains('icon-wrench', $pluginEntity[0]->getClass());
@@ -185,7 +187,8 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $dql = "
             SELECT t FROM Claroline\CoreBundle\Entity\Tool\Tool t
-            WHERE t.name = 'toolA'";
+            WHERE t.name = 'toolA'
+        ";
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($pluginEntity));

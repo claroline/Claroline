@@ -333,7 +333,6 @@ class ParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-
         $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
@@ -393,12 +392,16 @@ class ParametersController extends Controller
             $toFill[] = array('tool' => $undisplayedTool, 'visibility' => $roleVisibility);
         }
 
-
         $toolsPermissions = $this->arrayFill($toolsPermissions, $toFill);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:tool_roles.html.twig',
-            array('roles' => $wsRoles, 'workspace' => $workspace, 'workspaceTools' => $tools, 'toolPermissions' => $toolsPermissions)
+            array(
+                'roles' => $wsRoles,
+                'workspace' => $workspace,
+                'workspaceTools' => $tools,
+                'toolPermissions' => $toolsPermissions
+            )
         );
     }
 
@@ -523,25 +526,27 @@ class ParametersController extends Controller
         if (intval($position) == null) {
             throw new \RuntimeException('The $position value must be an integer');
         }
-         $em = $this->get('doctrine.orm.entity_manager');
-         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
-         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
             throw new AccessDeniedHttpException();
-         }
+        }
 
-         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
+        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
 
-         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
+        $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+           ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
 
-         if ($movingTool === null) {
-             throw new \RuntimeException("There is no WorkspaceOrderedTool for "
-                 . "{$tool->getName()} in {$workspace->getName()}");
-         }
+        if ($movingTool === null) {
+            throw new \RuntimeException(
+                "There is no WorkspaceOrderedTool for {$tool->getName()} in {$workspace->getName()}"
+            );
+        }
 
-         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findOneBy(array('order' => $position, 'workspace' => $workspace));
+        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+           ->findOneBy(array('order' => $position, 'workspace' => $workspace));
 
          //if a tool is already at this position, he must go "far away"
         if ($switchTool !== null && $movingTool !== null) {
