@@ -811,7 +811,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_tools');
         $this->addId($table);
         $table->addColumn('name', 'string');
-        $table->addColumn('icon', 'string');
+        $table->addColumn('class', 'string');
         $table->addColumn('is_displayable_in_workspace', 'integer');
         $table->addColumn('is_displayable_in_desktop', 'integer');
         $table->addColumn('is_workspace_required', 'boolean');

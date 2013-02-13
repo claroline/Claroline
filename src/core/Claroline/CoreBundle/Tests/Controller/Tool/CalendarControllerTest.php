@@ -31,9 +31,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/agenda/add",
+            "/workspaces/tool/calendar/{$workspaceId}/add",
             array(
-                'form' => array(
+                'calendar_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -41,10 +41,13 @@ class CalendarControllerTest extends FunctionalTestCase
                         'month' => '1',
                         'year' => '2013'
                     ),
+                    'allDay' => TRUE,
+                    'priority' => '#000000'
                    ),
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
+
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
     }
@@ -55,9 +58,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/agenda/add",
+            "/workspaces/tool/calendar/{$workspaceId}/add",
             array(
-                'form' => array(
+                'calendar_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -65,6 +68,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'month' => '1',
                         'year' => '2013'
                     ),
+                    'allDay' => TRUE
                    ),
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
@@ -72,10 +76,9 @@ class CalendarControllerTest extends FunctionalTestCase
 
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
-
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/agenda/delete",
+            "/workspaces/tool/calendar/{$workspaceId}/delete",
             array(
                     'id' => $data['id']
                 )
@@ -92,9 +95,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/agenda/add",
+            "/workspaces/tool/calendar/{$workspaceId}/add",
             array(
-                'form' => array(
+                'calendar_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => array(
@@ -102,6 +105,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'month' => '1',
                         'year' => '2013'
                     ),
+                    'allDay' => TRUE
                    ),
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
@@ -115,13 +119,14 @@ class CalendarControllerTest extends FunctionalTestCase
                 );
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/agenda/move",
+            "/workspaces/tool/calendar/{$workspaceId}/move",
             $dataForm
         );
+        //var_dump( $this->client->getResponse()->getContent());
         $contentUpdate = json_decode($this->client->getResponse()->getContent());
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
-        $this->client->request('GET', "/workspaces/tool/calendar/{$workspaceId}/agenda/show");
+        $this->client->request('GET', "/workspaces/tool/calendar/{$workspaceId}/show");
         $listEvents = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(array($contentUpdate), $listEvents);
     }
