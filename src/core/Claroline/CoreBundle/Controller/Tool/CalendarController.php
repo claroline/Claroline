@@ -141,7 +141,6 @@ class CalendarController extends Controller
         //var_dump($postData);
         $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
 
-       // var_dump(get_class($event));
 
         $form = $this->createForm(new CalendarType , $event);
         if ($request->getMethod() === 'POST') {
