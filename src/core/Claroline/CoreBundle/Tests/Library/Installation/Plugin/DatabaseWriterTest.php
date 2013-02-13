@@ -173,7 +173,7 @@ class DatabaseWriterTest extends TransactionalTestCase
             WHERE p.bundleName LIKE '%Icon'";
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
-        $this->assertContains('icon.gif', $pluginEntity[0]->getIcon());
+        $this->assertContains('icon-wrench', $pluginEntity[0]->getClass());
     }
 
     public function testPluginToolIsPersisted()
