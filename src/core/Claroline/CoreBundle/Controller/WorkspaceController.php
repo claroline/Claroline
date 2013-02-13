@@ -60,7 +60,7 @@ class WorkspaceController extends Controller
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+        $user = $em->find('ClarolineCoreBundle:User', $userId);
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->findByUser($user);
 

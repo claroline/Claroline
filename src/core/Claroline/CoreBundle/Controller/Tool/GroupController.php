@@ -129,7 +129,7 @@ class GroupController extends Controller
         if (isset($params['groupIds'])) {
             $this->checkRemoveManagerRoleIsValid($params['groupIds'], $workspace);
             foreach ($params['groupIds'] as $groupId) {
-                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+                $group = $em->find('ClarolineCoreBundle:Group', $groupId);
 
                 if (null != $group) {
                     foreach ($roles as $role) {
@@ -217,7 +217,7 @@ class GroupController extends Controller
 
         if (isset($params['groupIds'])) {
             foreach ($params['groupIds'] as $groupId) {
-                $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+                $group = $em->find('ClarolineCoreBundle:Group', $groupId);
                 $groups[] = $group;
                 $group->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
@@ -322,7 +322,7 @@ class GroupController extends Controller
         $countRemovedManagers = 0;
 
         foreach ($groupIds as $groupId) {
-            $group = $em->find('Claroline\CoreBundle\Entity\Group', $groupId);
+            $group = $em->find('ClarolineCoreBundle:Group', $groupId);
 
             if (null !== $group) {
                 if ($group->hasRole($managerRole->getName())) {
@@ -331,7 +331,7 @@ class GroupController extends Controller
             }
         }
 
-        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        $userManagers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 
