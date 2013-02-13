@@ -23,7 +23,7 @@ class ResourcePropertiesController extends Controller
     {
         $resource = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
@@ -46,7 +46,7 @@ class ResourcePropertiesController extends Controller
     {
         $request = $this->get('request');
         $em = $this->getDoctrine()->getEntityManager();
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
@@ -79,7 +79,7 @@ class ResourcePropertiesController extends Controller
     {
         $resource = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
@@ -101,7 +101,7 @@ class ResourcePropertiesController extends Controller
     {
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
 
         if (!$this->get('security.context')->getToken()->getUser() === $resource->getCreator()) {

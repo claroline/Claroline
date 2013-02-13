@@ -27,7 +27,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $this->pwr = $this->resourceRepository
             ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
@@ -485,14 +485,14 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $user = $this->getFixtureReference('user/user');
         $rootDir = $this->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findWorkspaceRoot($user->getPersonalWorkspace());
         $fooDir = $this->createFolder($rootDir, 'Foo', $user);
         $barDir = $this->createFolder($fooDir, 'Bar', $user);
         $this->uploadFile($barDir, 'Baz', $user);
         $this->uploadFile($barDir, 'Bat', $user);
         $allVisibleResourceTypes = $this->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByIsVisible(true);
 
         $this->logUser($this->getFixtureReference('user/user'));
@@ -530,7 +530,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $user = $this->getFixtureReference('user/user');
         $rootDir = $this->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findWorkspaceRoot($user->getPersonalWorkspace());
         $file = $this->uploadFile($rootDir, 'Baz', $user);
         $this->logUser($this->getFixtureReference('user/user'));

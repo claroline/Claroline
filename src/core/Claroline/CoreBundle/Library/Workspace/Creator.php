@@ -52,10 +52,10 @@ class Creator
         $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rootDir->setCreator($manager);
         $directoryType = $this->entityManager
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'directory'));
         $directoryIcon = $this->entityManager
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
             ->findOneBy(array('type' => 'directory', 'iconType' => 1));
         $rootDir->setIcon($directoryIcon);
         $rootDir->setResourceType($directoryType);

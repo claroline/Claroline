@@ -16,7 +16,7 @@ class MessageRepository extends NestedTreeRepository
      *
      * @return type
      */
-    public function getAncestors(Message $message)
+    public function findAncestors(Message $message)
     {
         $dql = "SELECT m FROM Claroline\CoreBundle\Entity\Message m
             WHERE m.lft BETWEEN m.lft AND m.rgt
@@ -35,7 +35,7 @@ class MessageRepository extends NestedTreeRepository
      *
      * @return integer
      */
-    public function countUnreadMessage(User $user)
+    public function countUnread(User $user)
     {
         $dql = "SELECT Count(m) FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
@@ -52,7 +52,17 @@ class MessageRepository extends NestedTreeRepository
         return $result[0][1];
     }
 
-    public function getUserReceivedMessages(User $user, $isRemoved = false, $offset = null, $limit = null)
+    /**
+     * Warning. Returns UserMessage entities (the entities from the join table).
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param boolean $isRemoved
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function findReceivedByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $isRemoved = ($isRemoved) ? 1: 0;
         $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
@@ -70,7 +80,7 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function getSentMessages(User $user, $isRemoved = false, $offset = null, $limit = null)
+    public function findSentByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $isRemoved = ($isRemoved) ? 1: 0;
         $dql = "SELECT m, u, um, umu FROM Claroline\CoreBundle\Entity\Message m
@@ -89,7 +99,24 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function searchUserReceivedMessages($search, User $user, $isRemoved = false, $offset = null, $limit = null)
+    /**
+     * Warning. Returns UserMessage entities (the entities from the join table).
+     *
+     * @param string $search
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param boolean $isRemoved
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function findReceivedByUserAndObjectAndUsername(
+        User $user,
+        $search,
+        $isRemoved = false,
+        $offset = null,
+        $limit = null
+    )
     {
         $search = strtoupper($search);
         $isRemoved = ($isRemoved) ? 1: 0;
@@ -114,7 +141,13 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function searchSentMessages($search, User $user, $isRemoved = false, $offset = null, $limit = null)
+    public function findSentByUserAndObjectAndUsername(
+        User $user,
+        $search,
+        $isRemoved = false,
+        $offset = null,
+        $limit = null
+    )
     {
         $isRemoved = ($isRemoved) ? 1: 0;
         $search = strtoupper($search);
@@ -139,7 +172,7 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function getRemovedMessages($user, $offset = null, $limit = null)
+    public function findRemovedByUser(User $user, $offset = null, $limit = null)
     {
         $dql = "SELECT um, m, u, u FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
@@ -159,7 +192,22 @@ class MessageRepository extends NestedTreeRepository
         return $paginator;
     }
 
-    public function searchRemovedMessages($search, $user, $offset = null, $limit = null)
+    /**
+     * Warning. Returns UserMessage entities (the entities from the join table).
+     *
+     * @param string $search
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function findRemovedByUserAndObjectAndUsername(
+        User $user,
+        $search,
+        $offset = null,
+        $limit = null
+    )
     {
         $search = strtoupper($search);
 

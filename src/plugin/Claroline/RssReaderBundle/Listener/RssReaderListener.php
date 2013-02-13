@@ -15,7 +15,7 @@ class RssReaderListener extends ContainerAware
     {
         $repo = $this->container
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\RssReaderBundle\Entity\Config');
+            ->getRepository('ClarolineRssReaderBundle:Config');
         $widget = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Widget\Widget')
@@ -47,7 +47,7 @@ class RssReaderListener extends ContainerAware
     {
         $repo = $this->container
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\RssReaderBundle\Entity\Config');
+            ->getRepository('ClarolineRssReaderBundle:Config');
         $user = $this->container->get('security.context')->getToken()->getUser();
         $widget = $this->container
             ->get('doctrine.orm.entity_manager')
@@ -79,7 +79,7 @@ class RssReaderListener extends ContainerAware
     {
         $workspace = $event->getWorkspace();
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('Claroline\RssReaderBundle\Entity\Config');
+        $repo = $em->getRepository('ClarolineRssReaderBundle:Config');
 
         //find the correct config (if it exists)
 
@@ -119,7 +119,7 @@ class RssReaderListener extends ContainerAware
     {
         $user = $event->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('Claroline\RssReaderBundle\Entity\Config');
+        $repo = $em->getRepository('ClarolineRssReaderBundle:Config');
 
         if ($user != null) {
             $config = $repo->findOneBy(array('user' => $user->getId()));

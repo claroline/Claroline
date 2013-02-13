@@ -41,7 +41,6 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $rootWorkspaceAdmin = $this->getWorkspaceRoot($adminWorkspace);
         $dir = $this->createDirectory('Documents', $rootWorkspaceAdmin, $admin);
         $this->createFile('file.txt', $dir, $admin, 'file.txt');
-
         $user = $this->createMainTeacher($manager);
         $this->loadFixture(new LoadUsersData(30, 'user'));
         $this->loadFixture(new LoadUsersData(10, 'ws_creator'));
@@ -59,7 +58,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $user->setLastName('Doe');
         $user->setUsername('teacher');
         $user->setPlainPassword('teacher');
-        $roleRepo = $manager->getRepository('Claroline\CoreBundle\Entity\Role');
+        $roleRepo = $manager->getRepository('ClarolineCoreBundle:Role');
         $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
         $user->addRole($wsCreatorRole);
         $manager->persist($user);

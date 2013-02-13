@@ -30,7 +30,7 @@ class SiteListener extends FileListener
         $ds = DIRECTORY_SEPARATOR;
         $instance = $this->container
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
             ->find($event->getInstanceId());
         $resource = $instance->getResource();
         $hashName = $resource->getHashName();
