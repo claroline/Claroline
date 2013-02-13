@@ -60,6 +60,7 @@ group_form_ownedRoles: Rôles
 group_parameter: Paramètres du groupe
 group_form_platformRole: Role
 groups: Groupes
+home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
@@ -137,6 +138,7 @@ profile_form_phone: Téléphone
 profile_form_plainPassword_first: Mot de passe
 profile_form_plainPassword_second: Vérification
 profile_form_username: Nom d'utilisateur
+properties: Propriétés
 public: Publique
 recursive_dir_action: Appliquer au contenu du répertoire et aux sous-répertoires
 register: Inscription
