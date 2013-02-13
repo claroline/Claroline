@@ -18,8 +18,7 @@ class EventRepository extends EntityRepository
             WITH ws in (
                 SELECT w
                 FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-                JOIN w.rights wr
-                JOIN wr.role r
+                JOIN w.roles r
                 JOIN r.users u
                 WHERE u.id = :userId
             )
