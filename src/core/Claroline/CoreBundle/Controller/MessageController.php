@@ -168,7 +168,7 @@ class MessageController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->getUserReceivedMessages($user, false, $offset, self::MESSAGE_PER_PAGE);
+            ->findReceivedByUser($user, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_user_message.html.twig',
@@ -189,7 +189,7 @@ class MessageController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $messages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->getSentMessages($user, false, $offset, self::MESSAGE_PER_PAGE);
+            ->findSentByUser($user, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_message.html.twig',
@@ -224,7 +224,7 @@ class MessageController extends Controller
         $message = $msgRepo->find($messageId);
         $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
             ->findOneBy(array('message' => $message, 'user' => $user));
-        $ancestors = $msgRepo->getAncestors($message);
+        $ancestors = $msgRepo->findAncestors($message);
 
         if ($userMessage != null) {
             //was received by the current user
@@ -318,7 +318,7 @@ class MessageController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->searchUserReceivedMessages($search, $user, false, $offset, self::MESSAGE_PER_PAGE);
+            ->findReceivedByUserAndObjectAndUsername($user, $search, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_user_message.html.twig',
@@ -340,7 +340,7 @@ class MessageController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $messages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->searchSentMessages($search, $user, false, $offset, self::MESSAGE_PER_PAGE);
+            ->findSentByUserAndObjectAndUsername($user, $search, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_message.html.twig',
@@ -361,7 +361,7 @@ class MessageController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->getRemovedMessages($user, $offset, self::MESSAGE_PER_PAGE);
+            ->findRemovedByUser($user, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_user_removed_message.html.twig',
@@ -383,7 +383,7 @@ class MessageController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->searchRemovedMessages($search, $user, $offset, self::MESSAGE_PER_PAGE);
+            ->findRemovedByUserAndObjectAndUsername($user, $search, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_user_removed_message.html.twig',

@@ -35,7 +35,7 @@ class WorkspaceController extends Controller
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->getNonPersonnalWS();
+        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
@@ -62,7 +62,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->getWorkspacesOfUser($user);
+            ->findByUser($user);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
