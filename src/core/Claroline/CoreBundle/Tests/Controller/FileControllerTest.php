@@ -32,7 +32,7 @@ class FileControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
@@ -96,7 +96,7 @@ class FileControllerTest extends FunctionalTestCase
         $file = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($stdFile->getId());
         $event = new CopyResourceEvent($file);
         $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_file', $event);

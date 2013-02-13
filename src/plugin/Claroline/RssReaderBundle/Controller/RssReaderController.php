@@ -53,7 +53,7 @@ class RssReaderController extends Controller
     public function updateConfigAction($configId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $rssConfig = $em->getRepository('Claroline\RssReaderBundle\Entity\Config')->find($configId);
+        $rssConfig = $em->getRepository('ClarolineRssReaderBundle:Config')->find($configId);
 
         if ($rssConfig->getWorkspace() !== null) {
             if (!$this->get('security.context')->isGranted('EDIT', $rssConfig->getWorkspace())) {

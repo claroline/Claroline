@@ -50,11 +50,11 @@ class LayoutController extends Controller
 
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $wsRepo = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
 
         if ($user instanceof User) {
             $isLogged = true;
-            $countUnreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
+            $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
                 ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $workspaces = $wsRepo->findByUser($user);

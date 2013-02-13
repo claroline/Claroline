@@ -15,7 +15,7 @@ class WorkspaceRepositoryTest extends FixtureTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->wsRepo = $this->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
     }
 
     public function testfindByUserReturnsExpectedResults()

@@ -29,16 +29,16 @@ class ResourceExtenderTest extends FunctionalTestCase
         $this->createSpecificResources();
 
         $allRes = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findAll();
         $firstSpecRes = $this->em
-            ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource1')
+            ->getRepository('ClarolineCoreBundle\Tests\Stub:SpecificResource1')
             ->findAll();
         $secondSpecRes = $this->em
-            ->getRepository('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2')
+            ->getRepository('ClarolineCoreBundle\Tests\Stub:SpecificResource2')
             ->findAll();
         $dirRes = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\Directory')
+            ->getRepository('ClarolineCoreBundle:Resource\Directory')
             ->findAll();
 
         //there is also 1 directory for each workspace, wich mean 5 directories are added with fixtures
@@ -79,7 +79,7 @@ class ResourceExtenderTest extends FunctionalTestCase
     {
         $defaultIcon = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
             ->findOneBy(array ('type' => 'default'));
 
         $this->loadUserFixture();

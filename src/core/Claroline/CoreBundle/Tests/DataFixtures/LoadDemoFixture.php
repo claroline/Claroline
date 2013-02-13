@@ -59,7 +59,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $user->setLastName('Doe');
         $user->setUsername('teacher');
         $user->setPlainPassword('teacher');
-        $roleRepo = $manager->getRepository('Claroline\CoreBundle\Entity\Role');
+        $roleRepo = $manager->getRepository('ClarolineCoreBundle:Role');
         $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
         $user->addRole($wsCreatorRole);
         $manager->persist($user);

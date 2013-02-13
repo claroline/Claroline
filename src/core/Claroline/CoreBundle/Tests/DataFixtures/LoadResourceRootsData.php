@@ -47,7 +47,7 @@ class LoadResourceRootsData extends LoggableFixture implements ContainerAwareInt
     public function load(ObjectManager $manager)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('Claroline\CoreBundle\Entity\User')->findOneBy(array('username' => $this->username));
+        $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
 
         for ($i = 0; $i < $this->rootCount; $i++) {
             $config = new Configuration();

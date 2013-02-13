@@ -40,7 +40,7 @@ class MailController extends Controller
         if ($form->isValid()) {
             $data = $form->getData();
             $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('Claroline\CoreBundle\Entity\User')
+                ->getRepository('ClarolineCoreBundle:User')
                 ->find($userId);
             $message = \Swift_Message::newInstance()
                 ->setSubject($data['object'])

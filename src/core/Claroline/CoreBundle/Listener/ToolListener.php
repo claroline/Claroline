@@ -72,10 +72,10 @@ class ToolListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $directoryId = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findWorkspaceRoot($workspace)
             ->getId();
-        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
 
         return $this->container->get('templating')->render(
@@ -170,7 +170,7 @@ class ToolListener extends ContainerAware
     {
         $resourceTypes = $this->container
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
 
         return $this->container->get('templating')->render(
@@ -207,7 +207,7 @@ class ToolListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $event = new Event(); 
+        $event = new Event();
         $form = $this->container->get('form.factory')->create(new CalendarType());
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',

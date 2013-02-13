@@ -25,7 +25,7 @@ class MessageController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-        $users = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        $users = $em->getRepository('ClarolineCoreBundle:User')
             ->findByGroup($group);
         $urlParameters = '?';
 
@@ -105,7 +105,7 @@ class MessageController extends Controller
             $usernames = explode(';', $to);
 
             foreach ($usernames as $username) {
-                $user = $em->getRepository('ClarolineCoreBundle:user')
+                $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->findOneBy(array('username' => $username));
 
                 if ($user != null) {
@@ -268,7 +268,7 @@ class MessageController extends Controller
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
             foreach ($params['ids'] as $id) {
-                $message = $em->getRepository('Claroline\CoreBundle\Entity\Message')
+                $message = $em->getRepository('ClarolineCoreBundle:Message')
                     ->find($id);
                 $message->markAsRemoved();
                 $em->persist($message);
@@ -293,7 +293,7 @@ class MessageController extends Controller
             $em = $this->get('doctrine.orm.entity_manager');
 
             foreach ($params['ids'] as $id) {
-                $userMessage = $em->getRepository('Claroline\CoreBundle\Entity\UserMessage')
+                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
                 $userMessage->markAsRemoved();
                 $em->persist($userMessage);

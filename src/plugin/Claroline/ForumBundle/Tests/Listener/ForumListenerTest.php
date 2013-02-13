@@ -16,7 +16,7 @@ class ForumListenerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
     }
 
     public function testForumFormCreation()

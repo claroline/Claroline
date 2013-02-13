@@ -95,7 +95,7 @@ class ResourceController extends Controller
     public function openAction($resourceId, $resourceType)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         //If it's a link, the resource will be its target.
@@ -134,7 +134,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection();
 
         foreach ($ids as $id) {
-            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->find($id);
 
             if ($resource != null) {
@@ -162,14 +162,14 @@ class ResourceController extends Controller
     {
         $ids = $this->container->get('request')->query->get('ids', array());
         $em = $this->getDoctrine()->getEntityManager();
-        $resourceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
         $resourceManager = $this->get('claroline.resource.manager');
         $movedResources = array();
         $collection = new ResourceCollection();
 
         foreach ($ids as $id) {
-            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->find($id);
 
             if ($resource !== null) {
@@ -218,7 +218,7 @@ class ResourceController extends Controller
         $eventName = $this->get('claroline.resource.utilities')
             ->normalizeEventName($action, $resourceType);
         $em = $this->get('doctrine.orm.entity_manager');
-        $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         //$collection = new ResourceCollection(array($resource));
 
@@ -231,7 +231,7 @@ class ResourceController extends Controller
             );
         }
 
-        $ri = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $ri = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $logevent = new ResourceLogEvent($ri, $action);
         $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
@@ -254,7 +254,7 @@ class ResourceController extends Controller
 
         foreach ($ids as $id) {
             $resource = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->find($id);
 
             if ($resource != null) {
@@ -306,7 +306,7 @@ class ResourceController extends Controller
         $resources = array();
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.context')->getToken()->getUser();
-        $resourceRepo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $directoryId = (integer) $directoryId;
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
@@ -323,7 +323,7 @@ class ResourceController extends Controller
             $path = $resourceRepo->findAncestors($directory);
             $resources = $resourceRepo->findChildren($directory->getId(), $currentRoles, 0, true);
 
-            $creationRights = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceRights')
+            $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);
 
             if (count($creationRights) != 0) {
@@ -362,13 +362,13 @@ class ResourceController extends Controller
         $ids = $this->container->get('request')->query->get('ids', array());
         $token = $this->get('security.context')->getToken();
         $em = $this->getDoctrine()->getEntityManager();
-        $parent = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $parent = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceDestinationId);
         $newNodes = array();
         $resources = array();
 
         foreach ($ids as $id) {
-            $resource = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->find($id);
 
             if ($resource != null) {
@@ -409,7 +409,7 @@ class ResourceController extends Controller
 
         isset($criteria['roots']) || $criteria['roots'] = array();
         $resourceRepo = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $directoryId = (integer) $directoryId;
         $path = array();
 
@@ -442,7 +442,7 @@ class ResourceController extends Controller
     public function createShortcutAction($newParentId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $ids = $this->container->get('request')->query->get('ids', array());
         $parent = $repo->find($newParentId);
 

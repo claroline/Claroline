@@ -212,7 +212,7 @@ class InstallController extends Controller
 
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
+        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
         $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
         $user->addRole($adminRole);
         $user = $this->get('claroline.user.creator')->create($user);
