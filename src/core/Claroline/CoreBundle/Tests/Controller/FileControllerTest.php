@@ -33,7 +33,7 @@ class FileControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function tearDown()

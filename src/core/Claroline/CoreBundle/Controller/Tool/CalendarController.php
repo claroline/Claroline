@@ -5,7 +5,8 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Claroline\CoreBundle\Entity\Workspace\Event;
+use Claroline\CoreBundle\Entity\Event;
+use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
@@ -21,24 +22,7 @@ class CalendarController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
         $event = new Event();
-        $formBuilder = $this->createFormBuilder($event);
-        $formBuilder->add('title', 'text')
-            ->add(
-                'end',
-                'date',
-                array(
-                    'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
-                )
-            )
-            ->add(
-                'allDay',
-                'checkbox',
-                array(
-                    'label' => 'all day ?')
-            )
-            ->add('description', 'textarea');
-        $form = $formBuilder->getForm();
+        $form = $this->createForm(new CalendarType, $event);
         $request = $this->get('request');
 
         if ($request->getMethod() === 'POST') {
@@ -47,6 +31,7 @@ class CalendarController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+
                 $date = explode('(', $postData['date']);
                 $event->setStart(new \DateTime($date[0]));
 
@@ -60,7 +45,8 @@ class CalendarController extends Controller
                         'id' => $event->getId(),
                         'title' => $event->getTitle(),
                         'start' => date('Y-m-d', $event->getStart()),
-                        'end' => date('Y-m-d', $event->getEnd())
+                        'end' => date('Y-m-d', $event->getEnd()),
+                        'color' => $event->getPriority(),
                     );
 
                     return new Response(
@@ -93,10 +79,14 @@ class CalendarController extends Controller
         $data = array();
 
         foreach ($listEvents as $key => $object) {
+           
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
+            $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
+            $data[$key]['color'] = $object->getPriority();
+            
         }
 
         return new Response(
@@ -130,13 +120,52 @@ class CalendarController extends Controller
                 array(
                     'id' => $event->getId(),
                     'title' => $event->getTitle(),
+                    'allDay' => $event->getAllDay(),
                     'start' => $event->getStart(),
-                    'end' => $event->getEnd()
+                    'end' => $event->getEnd(),
+                    'color' => $event->getPriority()
                     )
             ),
             200,
             array('Content-Type' => 'application/json')
         );
+    }
+
+    public function updateAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('calendar', $workspace);
+        $request = $this->get('request');
+        $postData = $request->request->all();
+        //var_dump($postData);
+        $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
+
+       // var_dump(get_class($event));
+
+        $form = $this->createForm(new CalendarType , $event);
+        if ($request->getMethod() === 'POST') {
+
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($event);
+                $em->flush();
+            }
+            return new Response(
+                json_encode(
+                    array(
+                        'id' => $event->getId(),
+                        'title' => $event->getTitle(),
+                        'start' => $event->getStart(),
+                        'end' => $event->getEnd(),
+                        'color' => $event->getPriority()
+                        )
+                ),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        }
     }
 
     public function deleteAction($workspaceId)
@@ -160,15 +189,18 @@ class CalendarController extends Controller
 
     public function DesktopShowAction()
     {
-         $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $usr = $this-> get('security.context')-> getToken()-> getUser();
         $listEvents = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event')->getAllUserEvents($usr);
-
+        $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
+            $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
+            $data[$key]['color'] = $object->getPriority();
+            
         }
 
         return new Response(

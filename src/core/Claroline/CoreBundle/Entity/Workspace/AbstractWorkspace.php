@@ -72,12 +72,12 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
      */
-    protected $workspaceToolRoles;
+    protected $workspaceOrderedTools;
 
 
     /**
@@ -150,8 +150,8 @@ abstract class AbstractWorkspace
         return $this->code;
     }
 
-    public function getWorkspaceToolRoles()
+    public function getWorkspaceOrderedTools()
     {
-        return $this->workspaceToolRoles;
+        return $this->workspaceOrderedTools;
     }
 }

@@ -17,17 +17,17 @@
     <tbody id="widget-table-body">
         {% for tool in tools %}
             <tr class='row-tool-config' data-tool-id={{ tool.getId () }}>
-                <th>{{ tool.getName()|lower|trans({}, 'tools') }}</th>
-                <th>
+                <td>{{ tool.getName()|lower|trans({}, 'tools') }}</td>
+                <td>
                     <input type="checkbox"
                            class="chk-tool-visible"
                            value="1"
                            {% if tool.isDesktopRequired() %} disabled {% endif %}
-                           {% if tool.isVisible() %} checked {% endif %}
-                </th>
-                <th>
+                           {% if tool.isVisible() %} checked {% endif %}/>
+                </td>
+                <td>
                     <div class="icon-circle-arrow-up" style="cursor: pointer;" ></div>
-                </th>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

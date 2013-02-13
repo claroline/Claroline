@@ -52,6 +52,7 @@ class Utilities
         }
 
         $configs = array();
+
         foreach (array_keys($checks) as $key) {
             $arr = explode('-', $key);
             $configs[$arr[1]][$arr[0]] = true;
@@ -87,27 +88,26 @@ class Utilities
     }
 
     /**
-     * Given an array of rights permission, the method will add the missing rights
-     * and set them to false.
+     * Adds the missing permissions to an array of permissions, setting missing
+     * ones to false.
      *
-     * @param array $rights the right array ie(array('canDelete' => true))
-     * @param type $typeOfRight the type of right: currently 'resource' or 'workspace'
+     * @param array     $permissions    The array of permissions
+     * @param string    $target         The target of the right ('resource' or 'workspace')
      *
      * @return array
      */
-    private function addMissingRights(array $rights, $typeOfRight)
+    private function addMissingRights(array $permissions, $target)
     {
-        switch ($typeOfRight) {
-            case "resource": $expectedKeys = $this->expectedKeysForResource;
-            case "workspace": $expectedKeys = $this->expectedKeysForWorkspace;
-        }
+        $expectedKeys = $target === 'resource' ?
+            $this->expectedKeysForResource :
+            $this->expectedKeysForWorkspace;
 
         foreach ($expectedKeys as $expected) {
-            if (!isset($rights[$expected])) {
-                $rights[$expected] = false;
+            if (!isset($permissions[$expected])) {
+                $permissions[$expected] = false;
             }
         }
 
-        return $rights;
+        return $permissions;
     }
 }

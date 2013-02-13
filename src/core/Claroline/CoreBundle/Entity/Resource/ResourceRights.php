@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use \Exception;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -10,10 +11,10 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceContextRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
  * @ORM\Table(name="claro_resource_rights")
  */
-class ResourceContext
+class ResourceRights
 {
     /**
      * @ORM\Id
@@ -25,7 +26,7 @@ class ResourceContext
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="resourceContext"
+     *     inversedBy="resourceRights"
      * )
      */
     private $role;
@@ -33,14 +34,16 @@ class ResourceContext
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *     inversedBy="rights", cascade={"persist"}
+     *     inversedBy="rights",
+     *     cascade={"persist"}
      * )
      */
     private $resource;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     cascade={"persist"}
      * )
      */
     private $workspace;
@@ -117,6 +120,16 @@ class ResourceContext
         $this->resource = $resource;
     }
 
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
     public function canDelete()
     {
         return $this->canDelete;
@@ -167,91 +180,38 @@ class ResourceContext
         return $this->canExport;
     }
 
-    /**
-     * Sets every right to false
-     */
-    public function reset()
+    public function setRightsFrom(ResourceRights $originalRights)
     {
-        $this->canCopy = false;
-        $this->canDelete = false;
-        $this->canEdit = false;
-        $this->canOpen = false;
-        $this->canExport = false;
+        $this->setCanOpen($originalRights->canOpen());
+        $this->setCanEdit($originalRights->canEdit());
+        $this->setCanDelete($originalRights->canDelete());
+        $this->setCanCopy($originalRights->canCopy());
+        $this->setCanExport($originalRights->canExport());
+    }
+
+    public function getCreatableResourceTypes()
+    {
+        return $this->resourceTypes;
+    }
+
+    public function setCreatableResourceTypes(array $resourceTypes)
+    {
+        $this->resourceTypes = new ArrayCollection($resourceTypes);
     }
 
     /**
-     * Compares the current permission with an array of permission
-     *
-     * @param type $array
-     *
-     * @return boolean
+     * @todo rename to "addCreatableResourceType"
      */
-    public function isEquals($rights)
-    {
-        foreach ($this->getRights() as $key => $current) {
-            if ($current != $rights[$key]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Gets an array with the current permissions
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array(
-            'canCopy' => $this->canCopy,
-            'canDelete' => $this->canDelete,
-            'canEdit' => $this->canEdit,
-            'canOpen' => $this->canOpen,
-            'canExport' => $this->canExport
-        );
-    }
-
-    /**
-     * Sets the current permission from an array
-     *
-     * @param type array
-     */
-    public function setRights($rights)
-    {
-        foreach ($rights as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
     public function addResourceType(ResourceType $resourceType)
     {
         $this->resourceTypes->add($resourceType);
     }
 
+    /**
+     * @todo rename to "removeCreatableResourceType"
+     */
     public function removeResourceType(ResourceType $resourceType)
     {
         $this->resourceTypes->removeElement($resourceType);
-    }
-
-    public function getResourceTypes()
-    {
-        return $this->resourceTypes;
-    }
-
-    public function cleanResourceTypes()
-    {
-        $this->resourceTypes = new ArrayCollection();
-    }
-
-    public function setWorkspace(AbstractWorkspace $workspace)
-    {
-        $this->workspace = $workspace;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
     }
 }

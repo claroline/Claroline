@@ -45,6 +45,7 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceOwnerCreationRightsTable($schema);
         $this->createToolTable($schema);
         $this->createUserDesktopToolTable($schema);
+        $this->createWorkspaceOrderToolTable($schema);
         $this->createWorkspaceToolsRoleTable($schema);
     }
 
@@ -86,6 +87,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_list_type_creation');
         $schema->dropTable('claro_event');
         $schema->dropTable('claro_tools');
+        $schema->dropTable('claro_workspace_ordered_tool');
         $schema->dropTable('claro_workspace_tools_role');
         $schema->dropTable('claro_user_desktop_tool');
     }
@@ -786,7 +788,9 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('allDay', 'boolean', array('notnull' => false));
-
+        $table->addColumn('color', 'string', array('notnull' => false));
+        $table->addColumn('backgroundColor', 'string', array('notnull' => false));
+        $table->addColumn('priority', 'string', array('notnull' => false));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'),
             array('workspace_id'),
@@ -821,24 +825,17 @@ class Version20120119000000 extends BundleMigration
             array('onDelete' => 'CASCADE')
         );
 
+        $table->addUniqueIndex(array('name'));
         $this->storeTable($table);
     }
 
-    private function createWorkspaceToolsRoleTable(Schema $schema)
+    public function createWorkspaceOrderToolTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_workspace_tools_role');
+        $table = $schema->createTable('claro_workspace_ordered_tool');
         $this->addId($table);
-        $table->addColumn('workspace_id', 'integer');
-        $table->addColumn('role_id', 'integer');
-        $table->addColumn('display_order', 'integer');
         $table->addColumn('tool_id', 'integer');
-
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'),
-            array('workspace_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('display_order', 'integer');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_tools'),
@@ -848,14 +845,40 @@ class Version20120119000000 extends BundleMigration
         );
 
         $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addUniqueIndex(array('tool_id', 'workspace_id'));
+        $table->addUniqueIndex(array('workspace_id', 'display_order'));
+
+        $this->storeTable($table);
+    }
+
+    private function createWorkspaceToolsRoleTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_tools_role');
+        $this->addId($table);
+        $table->addColumn('role_id', 'integer');
+        $table->addColumn('ordered_tool_id', 'integer');
+
+        $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_role'),
             array('role_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );
 
-        $table->addUniqueIndex(array('role_id', 'tool_id', 'workspace_id'));
-        $table->addUniqueIndex(array('role_id', 'workspace_id', 'display_order'));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace_ordered_tool'),
+            array('ordered_tool_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addUniqueIndex(array('role_id', 'ordered_tool_id'));
     }
 
     private function createUserDesktopToolTable(Schema $schema)
