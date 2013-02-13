@@ -159,7 +159,7 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->unregisteredGroupsOfWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
+            ->findWorkspaceOutsider($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
             'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
@@ -186,7 +186,7 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->registeredGroupsOfWorkspace($workspaceId, $offset, self::NUMBER_GROUP_PER_ITERATION);
+            ->findByWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
             'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
@@ -254,9 +254,9 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->searchUnregisteredGroupsOfWorkspace(
-                $search,
+            ->findWorkspaceOutsiderByName(
                 $workspace,
+                $search,
                 $offset,
                 self::NUMBER_GROUP_PER_ITERATION
             );
@@ -288,9 +288,9 @@ class GroupController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->searchRegisteredGroupsOfWorkspace(
-                $search,
+            ->findByWorkspaceAndName(
                 $workspace,
+                $search,
                 $offset,
                 self::NUMBER_GROUP_PER_ITERATION
             );

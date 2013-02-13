@@ -239,7 +239,7 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $paginatorGroups = $em->getRepository('Claroline\CoreBundle\Entity\Group')
-            ->groups($offset, self::GROUP_PER_PAGE);
+            ->findAll($offset, self::GROUP_PER_PAGE);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig",
@@ -267,7 +267,7 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $paginatorGroups = $em->getRepository('Claroline\CoreBundle\Entity\Group')
-            ->searchGroups($search, $offset, self::GROUP_PER_PAGE);
+            ->findByName($search, $offset, self::GROUP_PER_PAGE);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
             "ClarolineCoreBundle:Administration:group_list.{$format}.twig",

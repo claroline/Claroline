@@ -4,45 +4,12 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Claroline\CoreBundle\Entity\Role;
 
 class GroupRepository extends EntityRepository
 {
-    /**
-     * Gets the groups of a workspace.
-     *
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param Role $role
-     *
-     * @return type
-     */
-    public function getGroupsOfWorkspace(AbstractWorkspace $workspace, $role = null)
-    {
-        $dql = "
-            SELECT g FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles rg
-            LEFT JOIN rg.workspace w
-            WHERE w.id = :id
-       ";
-
-        if ($role != null) {
-            $dql .= "AND wr.id = :roleId";
-        }
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId());
-
-        if ($role != null) {
-            $query->setParameter('roleId', $role->getId());
-        }
-
-        return $query->getResult();
-    }
-
-    public function unregisteredGroupsOfWorkspace(AbstractWorkspace $workspace, $offset, $limit)
+    public function findWorkspaceOutsider(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "
             SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
@@ -70,7 +37,7 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
-    public function searchUnregisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
+    public function findWorkspaceOutsiderByName(AbstractWorkspace $workspace, $search, $offset, $limit)
     {
         $search = strtoupper($search);
 
@@ -103,7 +70,7 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
-    public function searchRegisteredGroupsOfWorkspace($search, AbstractWorkspace $workspace, $offset, $limit)
+    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $offset, $limit)
     {
         $search = strtoupper($search);
 
@@ -143,19 +110,23 @@ class GroupRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function groups($offset, $limit)
+    public function findAll($offset = null, $limit = null)
     {
-        $dql = "
-            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-              LEFT JOIN g.roles r";
+        if ($offset !== null && $limit !== null) {
+            $dql = "
+                SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
+                  LEFT JOIN g.roles r";
 
-         $query = $this->_em->createQuery($dql)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+             $query = $this->_em->createQuery($dql)
+                ->setFirstResult($offset)
+                ->setMaxResults($limit);
 
-        $paginator = new Paginator($query, true);
+            $paginator = new Paginator($query, true);
 
-        return $paginator;
+            return $paginator;
+        }
+
+        return $this->findAll();
     }
 
     /**
@@ -167,7 +138,7 @@ class GroupRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function searchGroups($search, $offset, $limit)
+    public function findByName($search, $offset, $limit)
     {
         $search = strtoupper($search);
 
@@ -188,7 +159,7 @@ class GroupRepository extends EntityRepository
         return $paginator;
     }
 
-    public function registeredGroupsOfWorkspace($workspaceId, $offset, $limit)
+    public function findByWorkspace(AbstractWorkspace $workspace, $offset, $limit)
     {
         $dql = "
             SELECT g, wr
@@ -201,36 +172,12 @@ class GroupRepository extends EntityRepository
        ";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspaceId', $workspaceId);
+        $query->setParameter('workspaceId', $workspace->getId());
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
         $paginator = new Paginator($query, true);
 
         return $paginator;
-    }
-
-    /**
-     * Checks if a group is registered in a workspace.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     *
-     * @return boolean
-     */
-    public function isRegisteredInWorkspace(AbstractWorkspace $workspace, Group $group)
-    {
-        $dql = "
-            SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.workspace ws
-            JOIN r.groups g
-            WHERE g.id = {$group->getId()}
-            AND ws.id = {$workspace->getId()}
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $result = $query->getOneOrNullResult();
-
-        return ($result === null) ? true: false;
     }
 }
