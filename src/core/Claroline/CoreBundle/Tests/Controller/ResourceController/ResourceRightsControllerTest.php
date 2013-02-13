@@ -32,14 +32,14 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $userRights = $rightsRepo->findOneBy(
-                array(
-                    'resource' => $this->getDirectory('dir1'),
-                    'role' => $roleRepo->findWorkspaceRole(
-                        $this->getUser('john'),
-                        $this->getWorkspace('john')
-                    )
+            array(
+                'resource' => $this->getDirectory('dir1'),
+                'role' => $roleRepo->findWorkspaceRole(
+                    $this->getUser('john'),
+                    $this->getWorkspace('john')
                 )
-            );
+            )
+        );
 
         // set open and edit permissions to true recursively for user role
         $this->client->request(

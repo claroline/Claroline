@@ -1,18 +1,18 @@
 {# This template is only used in debug environments (dev, test) #}
 {# The error template for production is still "error.html.twig" from TwigBundle #}
-{# Indentation and spacing matters, as it could be displayed as raw text in the console #}
+{# In dev environment, the final template is -- almost -- the same as Symfony one #}
+{# In test environment, a simpler template in text format is used to ease reading in the console #}
 
 {% if app.environment == 'dev' %}
-    <h2>Exception</h2>
+    <html>
+        <head>
+            <link href="{{ asset('bundles/framework/css/exception_layout.css') }}" rel="stylesheet" type="text/css" media="all" />
+            <link href="{{ asset('bundles/framework/css/exception.css') }}" rel="stylesheet" type="text/css" media="all" />
+        </head>
+        <body>
+            {% include 'TwigBundle:Exception:exception.html.twig' %}
+        </body>
+    </html>
+{% else %}
+    {% include 'TwigBundle:Exception:exception_test.txt.twig' %}
 {% endif %}
-
-"{{ exception.class }}" thrown with message : "{{ exception.message }}" ({{ status_code }} {{ status_text }})
-
-{% for position, e in exception.toarray %}
-{% for i, trace in exception.trace %}
-{% if app.environment == 'dev' %}<li>{% endif %}
-{% if trace.function %}
-
-at {% autoescape false %}{{ trace.class ~ trace.type ~ trace.function }}{% endautoescape %}{% else %}at n/a{% endif %}{% if trace.file is defined and trace.line is defined %} in {{ trace.file }} line {{ trace.line }}{% endif %}
-{% endfor %}
-{% endfor %}

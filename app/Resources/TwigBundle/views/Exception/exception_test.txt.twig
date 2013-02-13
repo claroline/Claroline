@@ -1,0 +1,13 @@
+{# Exception template for test environment only #}
+{# Shows minimal info on exception in raw text format (indentation and spacing matter) #}
+
+"{{ exception.class }}" thrown with message : "{{ exception.message }}" ({{ status_code }} {{ status_text }})
+
+{% for position, e in exception.toarray %}
+{% for i, trace in exception.trace %}
+{% if app.environment == 'dev' %}<li>{% endif %}
+{% if trace.function %}
+
+at {% autoescape false %}{{ trace.class ~ trace.type ~ trace.function }}{% endautoescape %}{% else %}at n/a{% endif %}{% if trace.file is defined and trace.line is defined %} in {{ trace.file }} line {{ trace.line }}{% endif %}
+{% endfor %}
+{% endfor %}

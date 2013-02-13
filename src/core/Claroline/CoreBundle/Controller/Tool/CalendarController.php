@@ -79,14 +79,12 @@ class CalendarController extends Controller
         $data = array();
 
         foreach ($listEvents as $key => $object) {
-           
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
             $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
             $data[$key]['color'] = $object->getPriority();
-            
         }
 
         return new Response(
@@ -138,19 +136,17 @@ class CalendarController extends Controller
         $this->checkUserIsAllowed('calendar', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
-        //var_dump($postData);
         $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
+        $form = $this->createForm(new CalendarType(), $event);
 
-
-        $form = $this->createForm(new CalendarType , $event);
         if ($request->getMethod() === 'POST') {
-
             $form->bindRequest($request);
 
             if ($form->isValid()) {
                 $em->persist($event);
                 $em->flush();
             }
+
             return new Response(
                 json_encode(
                     array(
@@ -159,7 +155,7 @@ class CalendarController extends Controller
                         'start' => $event->getStart(),
                         'end' => $event->getEnd(),
                         'color' => $event->getPriority()
-                        )
+                    )
                 ),
                 200,
                 array('Content-Type' => 'application/json')
@@ -186,7 +182,7 @@ class CalendarController extends Controller
         );
     }
 
-    public function DesktopShowAction()
+    public function desktopShowAction()
     {
         $em = $this->getDoctrine()->getManager();
         $usr = $this-> get('security.context')-> getToken()-> getUser();
@@ -199,7 +195,7 @@ class CalendarController extends Controller
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
             $data[$key]['color'] = $object->getPriority();
-            
+
         }
 
         return new Response(
@@ -207,7 +203,6 @@ class CalendarController extends Controller
             200,
             array('Content-Type' => 'application/json')
         );
-
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
