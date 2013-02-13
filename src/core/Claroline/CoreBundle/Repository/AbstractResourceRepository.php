@@ -88,7 +88,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $includeStartNode = false,
         $asArray = true,
         $filterResourceType = null
-    ) {
+    )
+    {
         $select = $asArray ? self::SELECT_ARRAY : self::SELECT_ENTITY;
         $startNodeClause = $includeStartNode ? '' : 'AND ar.path <> :path';
         $filterClause = $filterResourceType ? 'AND rt.name = :filter' : '';
@@ -286,7 +287,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $roles,
         $resourceTypeId,
         $isVisible = true
-    ) {
+    )
+    {
          $dql = self::SELECT_ARRAY
              . ', MAX (arRights.canExport) as can_export'
              . ', MAX (arRights.canDelete) as can_delete'

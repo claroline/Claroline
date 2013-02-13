@@ -79,14 +79,12 @@ class CalendarController extends Controller
         $data = array();
 
         foreach ($listEvents as $key => $object) {
-           
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
             $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
             $data[$key]['color'] = $object->getPriority();
-            
         }
 
         return new Response(
@@ -103,7 +101,7 @@ class CalendarController extends Controller
         $this->checkUserIsAllowed('calendar', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
-        $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
+        $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
         // timestamp 1h = 3600
         $newStartDate = $event->getStart() + ((3600 * 24) * $postData['dayDelta']);
@@ -138,20 +136,17 @@ class CalendarController extends Controller
         $this->checkUserIsAllowed('calendar', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
-        //var_dump($postData);
         $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
+        $form = $this->createForm(new CalendarType(), $event);
 
-       // var_dump(get_class($event));
-
-        $form = $this->createForm(new CalendarType , $event);
         if ($request->getMethod() === 'POST') {
-
             $form->bindRequest($request);
 
             if ($form->isValid()) {
                 $em->persist($event);
                 $em->flush();
             }
+
             return new Response(
                 json_encode(
                     array(
@@ -160,7 +155,7 @@ class CalendarController extends Controller
                         'start' => $event->getStart(),
                         'end' => $event->getEnd(),
                         'color' => $event->getPriority()
-                        )
+                    )
                 ),
                 200,
                 array('Content-Type' => 'application/json')
@@ -173,7 +168,7 @@ class CalendarController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
-        $repository = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event');
+        $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $request = $this->get('request');
         $postData = $request->request->all();
         $event = $repository->find($postData['id']);
@@ -187,11 +182,11 @@ class CalendarController extends Controller
         );
     }
 
-    public function DesktopShowAction()
+    public function desktopShowAction()
     {
         $em = $this->getDoctrine()->getManager();
         $usr = $this-> get('security.context')-> getToken()-> getUser();
-        $listEvents = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\Event')->getAllUserEvents($usr);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->getAllUserEvents($usr);
         $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
@@ -200,7 +195,7 @@ class CalendarController extends Controller
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
             $data[$key]['color'] = $object->getPriority();
-            
+
         }
 
         return new Response(
@@ -208,7 +203,6 @@ class CalendarController extends Controller
             200,
             array('Content-Type' => 'application/json')
         );
-
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
