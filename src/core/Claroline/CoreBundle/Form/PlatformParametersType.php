@@ -35,4 +35,11 @@ class PlatformParametersType extends AbstractType
     {
         return 'platform_parameters_form';
     }
+    
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'platform'
+        );
+    }
 }

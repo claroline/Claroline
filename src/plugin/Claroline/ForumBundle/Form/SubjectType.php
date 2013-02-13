@@ -4,7 +4,6 @@ namespace Claroline\ForumBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Claroline\ForumBundle\Entity\Message;
 
 class SubjectType extends AbstractType
 {
@@ -19,9 +18,13 @@ class SubjectType extends AbstractType
 
     public function getName()
     {
-        return 'subject_forum_form';
+        return 'forum_subject_form';
     }
 
-
-
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'forum'
+        );
+    }
 }

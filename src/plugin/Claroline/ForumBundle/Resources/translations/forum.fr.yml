@@ -3,6 +3,11 @@ new_subject: Créer un sujet
 responses: Réponses
 author: Auteur
 forum: Forum
+forum_subject_form_title: Titre
+forum_subject_form_message: Message
+forum_subject_form_message_content: Contenu
+forum_message_form_content: Contenu
+forum_form_name: Nom
 subject: Sujet
 last_message: Dernier message
 started_by: Créé par
