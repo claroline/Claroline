@@ -89,9 +89,9 @@ class DesktopController extends Controller
             ->findByUser($this->get('security.context')->getToken()->getUser(), true);
 
         $route = $this->get('router')->generate(
-                'claro_desktop_open_tool',
-                array('toolName' => $openedTool[0]->getName())
-            );
+            'claro_desktop_open_tool',
+            array('toolName' => $openedTool[0]->getName())
+        );
 
         return new RedirectResponse($route);
     }

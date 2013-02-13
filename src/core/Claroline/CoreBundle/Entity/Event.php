@@ -153,7 +153,7 @@ class Event
 
     public function setAllDay($allDay)
     {
-        $this->allDay = (bool)$allDay;
+        $this->allDay = (bool) $allDay;
     }
 
     public function getColor()

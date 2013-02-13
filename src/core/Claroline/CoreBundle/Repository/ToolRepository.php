@@ -29,9 +29,9 @@ class ToolRepository extends EntityRepository
             $this->getDisplayedToolsForRolesInWorkspaceQuery($roles, $workspace):
             $this->getUndisplayedToolsForRolesInWorkspaceQuery($roles, $workspace);
 
-       $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-       return $query->getResult();
+        return $query->getResult();
     }
 
     private function getDisplayedToolsForRolesInWorkspaceQuery(array $roles, AbstractWorkspace $workspace)
@@ -109,9 +109,9 @@ class ToolRepository extends EntityRepository
             $dql = $this->getDesktopUndisplayedToolsQuery($user);
         }
 
-       $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-       return $query->getResult();
+        return $query->getResult();
     }
 
     private function getDesktopDisplayedToolsQuery(User $user)
@@ -121,17 +121,24 @@ class ToolRepository extends EntityRepository
             JOIN tool.desktopTools desktopTool
             JOIN desktopTool.user user
             WHERE user.id = {$user->getId()}
-            ORDER BY desktopTool.order";
+            ORDER BY desktopTool.order
+        ";
     }
 
     private function getDesktopUndisplayedToolsQuery(User $user)
     {
         return "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            WHERE tool NOT IN (SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool NOT IN (
+                SELECT tool_2
+                FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
                 JOIN tool_2.desktopTools desktopTool_2
                 JOIN desktopTool_2.user user_2
-                WHERE user_2.id = {$user->getId()} ) AND tool.isDisplayableInDesktop = true";
+                WHERE user_2.id = {$user->getId()}
+            )
+            AND tool.isDisplayableInDesktop = true
+        ";
     }
 
     public function findByWorkspace(AbstractWorkspace $workspace, $isVisible)
@@ -140,37 +147,43 @@ class ToolRepository extends EntityRepository
             $this->getWorkspaceDisplayedToolsQuery($workspace):
             $this->getWorkspaceUndisplayedToolsQuery($workspace);
 
-       $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-       return $query->getResult();
+        return $query->getResult();
     }
 
     private function getWorkspaceUndisplayedToolsQuery($workspace)
     {
         return "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            WHERE tool NOT IN (SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool NOT IN (
+                SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
                 JOIN tool_2.workspaceOrderedTools wot
                 JOIN wot.workspace ws
-                WHERE ws.id = {$workspace->getId()} AND tool.isDisplayableInWorkspace = true)
-            ";
+                WHERE ws.id = {$workspace->getId()}
+                AND tool.isDisplayableInWorkspace = true
+            )
+        ";
     }
 
     private function getWorkspaceDisplayedToolsQuery($workspace)
     {
         return "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.workspaceOrderedTools wot
             JOIN wot.workspace ws
             JOIN wot.workspaceToolRoles wtr
             WHERE ws.id = {$workspace->getId()}
-            ";
+        ";
     }
 
     public function isToolVisibleForRoleInWorkspace(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
         $dql = "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace tool
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace tool
             JOIN tool.workspaceOrderedTools wot
             JOIN wot.tool tool_2
             JOIN wot.workspace ws
@@ -179,10 +192,10 @@ class ToolRepository extends EntityRepository
             WHERE tool_2.id = {$tool->getId()}
             AND r.id = {$role->getId()}
             AND ws.id = {$workspace->getId()}
-            ";
+        ";
 
-         $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-         return ($query->getResult() == null) ? false: true;
+        return $query->getResult() !== null;
     }
 }
