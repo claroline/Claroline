@@ -432,7 +432,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     private function getUser($username)
     {
-        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')
+        $user = $this->em->getRepository('ClarolineCoreBundle:User')
             ->findOneByUsername($username);
 
         return $user;

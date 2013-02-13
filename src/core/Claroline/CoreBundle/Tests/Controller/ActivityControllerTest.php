@@ -16,7 +16,7 @@ class ActivityControllerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $this->pwr = $this->resourceRepository
             ->findWorkspaceRoot($this->getFixtureReference('user/admin')->getPersonalWorkspace());
 
@@ -37,7 +37,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $resourceActivity = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findOneBy(array('activity' => $activity->id));
         $this->assertEquals(1, count($resourceActivity));
         //the code below doesn't work: no idea why
@@ -49,7 +49,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $resourceActivity = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findOneBy(array('activity' => $activity->id));
         $this->assertEquals(0, count($resourceActivity));
     }
@@ -64,7 +64,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $activityEntity = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\Activity')
+            ->getRepository('ClarolineCoreBundle:Resource\Activity')
             ->find($activity->id);
         $this->client->request(
             'POST',
@@ -78,7 +78,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $resourceActivities = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findActivities($activityEntity);
 
         foreach ($resourceActivities as $resourceActivity) {
@@ -95,7 +95,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $reverseActivities = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceActivity')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findActivities($activityEntity);
 
         foreach ($reverseActivities as $reverseActivity) {

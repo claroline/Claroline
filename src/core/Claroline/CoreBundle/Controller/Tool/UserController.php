@@ -14,7 +14,7 @@ class UserController extends Controller
     /*******************/
     /* USER MANAGEMENT */
     /*******************/
-    const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
+    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
 
     /**
@@ -361,7 +361,7 @@ class UserController extends Controller
             }
         }
 
-        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        $userManagers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 

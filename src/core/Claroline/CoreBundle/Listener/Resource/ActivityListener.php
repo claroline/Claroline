@@ -75,7 +75,7 @@ class ActivityListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
         $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
         $activity = $event->getResource();
         $resourceActivities = $this->container

@@ -425,7 +425,7 @@ Where:
 Most listeners are working with resourceInsanceIds.
 If you want to retrieve the resource linked to this instance, get the ResourceInstanceRepository:
 
-    $instance = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceInstance')->find($resourceInsanceId);
+    $instance = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')->find($resourceInsanceId);
 
 Where $em is the EntityManager.
 You can get the resource from there:

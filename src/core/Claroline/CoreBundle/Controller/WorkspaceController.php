@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
  */
 class WorkspaceController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
+    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
     /**
      * Renders the workspace list page with its claroline layout.

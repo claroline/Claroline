@@ -89,7 +89,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setUsername($username);
         $user->setPlainPassword($password);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $roleRepo = $em->getRepository('Claroline\CoreBundle\Entity\Role');
+        $roleRepo = $em->getRepository('Claroline\CoreBundle:Role');
 
         if ($input->getOption('admin')) {
             $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
