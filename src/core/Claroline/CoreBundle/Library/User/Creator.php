@@ -55,6 +55,7 @@ class Creator
 
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
         $requiredTools[] = $repo->findOneBy(array('name' => 'home'));
+        $requiredTools[] = $repo->findOneBy(array('name' => 'resource_manager'));
         $requiredTools[] = $repo->findOneBy(array('name' => 'parameters'));
 
         $i = 1;
