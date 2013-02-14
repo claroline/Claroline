@@ -1,8 +1,6 @@
-file: Fichier
-directory: Répertoire
-text: Texte
-resource_shortcut: Raccourcis
 activity: Activité
-
-# action
+directory: Répertoire
+file: Fichier
 open: Ouvrir
+resource_shortcut: Raccourcis
+text: Texte
