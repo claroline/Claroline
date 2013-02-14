@@ -156,11 +156,6 @@ class Configuration implements ConfigurationInterface
 
     private function addToolSection($pluginSection)
     {
-        $plugin = $this->plugin;
-        $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
-
         $pluginSection
             ->arrayNode('tools')
                 ->prototype('array')

@@ -11,9 +11,11 @@ class IsRssValidator extends ConstraintValidator
     {
         try {
             file_get_contents($value);
+
             return true;
         } catch (\Exception $e) {
             $this->context->addViolation($constraint->message, array('%string%' => $value));
+
             return false;
         }
     }
