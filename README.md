@@ -1,6 +1,6 @@
 ## Project setup
 
-### Requirements :
+### Requirements
 
 * PHP >= 5.3.3
 * PHP extensions :
@@ -44,7 +44,9 @@ You can install or uninstall a plugin with :
   * `php app/console claroline:plugin:install [vendor] [bundle short name]`
   * `php app/console claroline:plugin:uninstall [vendor] [bundle short name]`
 
-### Test suite
+## Development tools
+
+### Testing
 
 In order to run the test suite you must have [phpunit][phpunit_website] installed on your system.
 
@@ -53,7 +55,7 @@ In order to run the test suite you must have [phpunit][phpunit_website] installe
 
 [phpunit_website]: http://www.phpunit.de/manual/current/en/index.html
 
-### Build tools
+### Build / Static analysis
 
 The *app/build/tools* directory gathers configuration files for various php tools (PHPMD,
 PHPCS, Ant, etc.). You can install and use them locally (see their respective documentation
@@ -61,7 +63,7 @@ for usage) or visit our continuous integration server [here][ci_website].
 
 [ci_website]: http://dev.claroline.net:8080/job/Claronext/
 
-### Other tools
+### Miscellaneous
 
 To have the core Less and TwigJs assets automatically processed and dumped when they have changed,
 you can run the provided [watchr][watchr_website] script :
@@ -70,7 +72,7 @@ you can run the provided [watchr][watchr_website] script :
 
 [watchr_website]: https://github.com/mynyml/watchr
 
-### Documentation
+## Documentation
 
 For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][doc_path].
 
