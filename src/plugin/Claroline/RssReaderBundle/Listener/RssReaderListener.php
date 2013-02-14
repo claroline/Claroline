@@ -157,16 +157,14 @@ class RssReaderListener extends ContainerAware
 
     private function getRssContent($rssconfig)
     {
-        require(__DIR__.'/../Resources/vendor/syndexport.php');
+        // TODO : handle feed format exception...
 
-        $rss = file_get_contents($rssconfig->getUrl());
-        $flux = new \SyndExport($rss);
-        $items = $flux->exportItems();
+        $items = $this->container->get('claroline.rss_reader.provider')
+            ->getReaderFor(file_get_contents($rssconfig->getUrl()))
+            ->getFeedItems();
 
-        foreach ($items as $index => $item) {
-            if (isset($items[$index]['description'])) {
-                $items[$index]['description'] = preg_replace('/<[^>]+>/i', '', $item['description']);
-            }
+        foreach ($items as $item) {
+            $item->setDescription(preg_replace('/<[^>]+>/i', '', $item->getDescription()));
         }
 
         return $this->container->get('templating')->render(
