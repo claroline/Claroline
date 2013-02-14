@@ -1,3 +1,7 @@
+[[Documentation index]][index_path]
+
+[index_path]: ../index.md
+
 #Resource plugin
 
 ## Database tables
