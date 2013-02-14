@@ -95,20 +95,21 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
+                'ClarolineRssReaderBundle::form_create.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
                 'isDefault' => $event->isDefault(),
                 'isDesktop' => false,
-                'userId' => 0
+                'userId' => 0,
                 )
             );
         } else {
             $form = $this->container->get('form.factory')->create(new ConfigType, $config);
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_workspace_update.html.twig', array(
+                'ClarolineRssReaderBundle::form_update.html.twig', array(
                 'form' => $form->createView(),
-                'rssConfig' => $config
+                'rssConfig' => $config,
+                'layout' => 'none'
                 )
             );
         }
@@ -133,20 +134,20 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
+                'ClarolineRssReaderBundle::form_create.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => 0,
                 'isDefault' => $event->isDefault(),
                 'isDesktop' => true,
-                'userId' => $userId
+                'userId' => $userId,
                 )
             );
         } else {
             $form = $this->container->get('form.factory')->create(new ConfigType, $config);
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_workspace_update.html.twig', array(
+                'ClarolineRssReaderBundle::form_update.html.twig', array(
                 'form' => $form->createView(),
-                'rssConfig' => $config
+                'rssConfig' => $config,
                 )
             );
         }
