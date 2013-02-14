@@ -146,7 +146,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
-            $this->persistTool($tool, $pluginEntity, $plugin);
+            $this->persistTool($tool, $pluginEntity);
         }
     }
 
@@ -262,10 +262,8 @@ class DatabaseWriter
         $this->em->flush();
     }
 
-    private function persistTool($tool, $pluginEntity, $plugin)
+    private function persistTool($tool, $pluginEntity)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
         $toolEntity = new Tool();
         $toolEntity->setName($tool['name']);
         $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
@@ -273,16 +271,6 @@ class DatabaseWriter
         $toolEntity->setIsDesktopRequired(false);
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
-
-        /*if (isset($tool['icon'])) {
-            $toolEntity->setIcon(
-                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$tool['icon']}"
-            );
-        } else {
-            $toolEntity->setIcon(
-                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
-            );
-        }*/
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
