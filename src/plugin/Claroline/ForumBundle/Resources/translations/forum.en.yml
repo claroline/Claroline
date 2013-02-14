@@ -2,6 +2,7 @@ new_message: New message
 new_subject: New subject
 responses: Responses
 author: Author
+field_content_required: The field content is required.
 forum: Forum
 forum_subject_form_title: Title
 forum_subject_form_message: Message

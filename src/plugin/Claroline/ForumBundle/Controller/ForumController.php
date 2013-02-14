@@ -9,6 +9,7 @@ use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormError;
 
 /**
  * ForumController
@@ -80,22 +81,29 @@ class ForumController extends Controller
         if ($form->isValid()) {
             $user = $this->get('security.context')->getToken()->getUser();
             $subject = $form->getData();
-            $dataMessage = $subject->getMessage();
-            $message = new Message();
-            $message->setContent($dataMessage['content']);
             $subject->setCreator($user);
-            $message->setCreator($user);
-            $message->setName($subject->getTitle() . '-' . date('m/d/Y h:i:m'));
             $subject->setName($subject->getTitle());
             $creator = $this->get('claroline.resource.manager');
             //instantiation of the new resources
             $subject = $creator->create($subject, $forum->getId(), 'claroline_subject');
-            $creator->create($message, $subject->getId(), 'claroline_message');
+            $dataMessage = $subject->getMessage();
 
-            return new RedirectResponse(
-                $this->generateUrl('claro_forum_open', array('resourceId' => $forum->getId()))
-            );
+            if ($dataMessage['content'] !== null) {
+                $message = new Message();
+                $message->setContent($dataMessage['content']);
+                $message->setCreator($user);
+                $message->setName($subject->getTitle() . '-' . date('m/d/Y h:i:m'));
+                $creator->create($message, $subject->getId(), 'claroline_message');
+
+                return new RedirectResponse(
+                    $this->generateUrl('claro_forum_open', array('resourceId' => $forum->getId()))
+                );
+            }
         }
+
+        $form->get('message')->addError(
+            new FormError($this->get('translator')->trans('field_content_required', array(), 'forum'))
+        );
 
         return $this->render(
             'ClarolineForumBundle::subject_form.html.twig',
