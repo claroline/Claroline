@@ -207,7 +207,6 @@ class ToolListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $event = new Event();
         $form = $this->container->get('form.factory')->create(new CalendarType());
 
         return $this->container->get('templating')->render(
