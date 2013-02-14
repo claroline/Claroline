@@ -1,3 +1,7 @@
+[[Documentation index]][index_path]
+
+[index_path]: ../index.md
+
 # Getting started with Claroline development
 
 This tutorial aims to explain how to develop on Claronext LMS.
@@ -89,4 +93,3 @@ the connexion form if no user is logged on when the request is sent.
 #### others
 
 ### Dev tools
-

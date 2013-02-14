@@ -1,3 +1,7 @@
+[[Documentation index]][index_path]
+
+[index_path]: ../index.md
+
 # Tools
 
 Each workspace and desktop is composed of tools. A plugin can define new tools.
