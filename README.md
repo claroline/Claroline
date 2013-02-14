@@ -1,42 +1,38 @@
 ## Project setup
 
+### Requirements :
+
+* PHP >= 5.3.3
+* PHP extensions :
+    * [ffmpeg][ffmpeg_php_site] (for icon creation)
+    * SQLite3 or PDO_SQLite (for the profiler)
+* A global installation of [less][less_install] as a [node][node_website] module (for the css file compilation)
+
+[ffmpeg_php_site]: http://ffmpeg-php.sourceforge.net/
+[less_install]: http://lesscss.org/#-server-side-usage
+[node_website]: http://nodejs.org/
+
 ### Quick start
 
 After cloning the project :
 
-* make sure the version of PHP you're running is >= 5.3.2 (required)
-
 * create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
   (currently only db settings are required)
-
 * install a local copy of [composer][composer_website] in the root directory of the project
-
-* you'll need to install ffmpeg for php (run apt-get install php5-ffmpeg on Ubuntu).
-
-* use the automatic install script (php must be in $PATH ) : `php app/dev/raw_install`
-
-* make the *app/cache*, *app/logs*, *app/config/local*, *files* and *test* directories
-  (and their children) writable from the webserver (for further explanation on common
-  permissions issues and solutions with Symfony, read [this][symfony_doc_install])
-
-* *For dev* :
-    * check that either the SQLite3 or PDO_SQLite extension are enabled in your
-      PHP configuration in order for the profiler to work
-    * make a global installation of [less][less_install] ([node][node_website] module)
-      in order to have the css files compiled (*src/core/Claroline/CoreBundle/Resources/public/css/themes*
-      must be writable)
-
+* make the *app/cache*, *app/logs*, *app/config/local*, *files*, *test* and
+  *src/core/Claroline/CoreBundle/Resources/public/css/themes* directories (and their children)
+  writable from the command line and the webserver (for further explanation on common permissions
+  issues and solutions with Symfony, read [this][symfony_doc_install])
+* use the automatic install script : `php app/dev/raw_install`
 * open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
 [composer_website]: http://getcomposer.org/download/
 [symfony_doc_install]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
-[less_install]: http://lesscss.org/#-server-side-usage
-[node_website]: http://nodejs.org/
 
 ### Quick update
 
-To update your installation to the last development state, you can use the installation script
-mentioned above :   `php app/dev/raw_install`
+To update your installation to the last development state after a `git pull`, you can use the
+installation script mentioned above : `php app/dev/raw_install`
 
 ***Warning*** : this is a quick dev tool, it will drop existing databases (both prod and test)
 and create new ones.
@@ -52,11 +48,10 @@ You can install or uninstall a plugin with :
 
 In order to run the test suite you must have [phpunit][phpunit_website] installed on your system.
 
-[phpunit_website]: http://www.phpunit.de/manual/current/en/index.html
-
 * Run the complete test suite with : `phpunit -c app`
-
 * Run the tests for a single directory with : `phpunit -c app src/core/Claroline/CoreBundle`
+
+[phpunit_website]: http://www.phpunit.de/manual/current/en/index.html
 
 ### Build tools
 
@@ -74,3 +69,9 @@ you can run the provided [watchr][watchr_website] script :
 `watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb`
 
 [watchr_website]: https://github.com/mynyml/watchr
+
+### Documentation
+
+For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][doc_path].
+
+[doc_path]: src/core/Claroline/CoreBundle/Resources/doc/index.md
