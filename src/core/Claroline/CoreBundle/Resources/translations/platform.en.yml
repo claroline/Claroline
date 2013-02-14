@@ -1,22 +1,22 @@
-account_created: Account created.
+account_created: 'Account created.'
 action: Action
-activity_form_name: Name
 activity_form_instructions: Instructions
+activity_form_name: Name
 add: Add
-add_group: Add group
-add_group_s_confirm_message: group(s) added
-add_resource: Add resource
-add_user: Add user
-add_user_s_confirm_message: users(s) added
+add_group: 'Add group'
+add_group_s_confirm_message: 'group(s) added'
+add_resource: 'Add resource'
+add_user: 'Add user'
+add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
 administration: Administration
-administrative_code: Administrative code
+administrative_code: 'Administrative code'
 agenda: Agenda
-all_workspaces: All workspaces
+all_workspaces: 'All workspaces'
 anonymous: Anonymous
 by: by
 cancel: Cancel
-choose_resource_form_type: Resource type
+choose_resource_form_type: 'Resource type'
 close: Close
 collaborator: Collaborator
 communication: Communication
@@ -24,9 +24,9 @@ configuration: Configuration
 configure: Configure
 copy: Copy
 create: Create
-create_group: Create group
-create_workspace: Create workspace
-creation_date: Creation date
+create_group: 'Create group'
+create_workspace: 'Create workspace'
+creation_date: 'Creation date'
 cut: Cut
 dashboard: Dashboard
 date: Date
@@ -35,77 +35,77 @@ desktop: Desktop
 directory: Directory
 directory_form_name: Name
 directory_form_shareType: Sharable
-display_options: Display options
-done_on: done on
+display_options: 'Display options'
+done_on: 'done on'
 download: Download
 edit: Edit
 export: Export
-fast_answer: Fast answer
+fast_answer: 'Fast answer'
 file: File
 file_form_file: File
-file_form_name: Name
 file_form_license: License
+file_form_name: Name
 file_form_shareType: Sharable
-file_form_shareType_0 : Yes
-file_form_shareType_1: False
+file_form_shareType_0: Yes
+file_form_shareType_1: false
 files: Files
-find_workspaces: Find workspaces
-first_name: First name
+find_workspaces: 'Find workspaces'
+first_name: 'First name'
 form_role: Role
 from: From
 general: General
 group: Group
 group_form_name: Name
 group_form_ownedRoles: Roles
-group_parameter: Group parameter
 group_form_platformRole: Role
+group_parameter: 'Group parameter'
 groups: Groups
 home: Home
 id: Id
 informations: Informations
 instructions: Instructions
-last_name: Last name
+last_name: 'Last name'
 link: Link
-list_groups: List groups
-list_users: List users
-list_workspaces: List workspaces
+list_groups: 'List groups'
+list_users: 'List users'
+list_workspaces: 'List workspaces'
 lock: Lock
+log_copy_verb: 'has copied'
+log_create_verb: 'has created'
+log_delete_verb: 'has deleted'
+log_export_verb: 'has exported'
+log_move_verb: 'has moved'
+log_open_verb: 'has opened'
 login: Login
-login_failure: Login has failed. Check your username and password are correct.
+login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
-log_copy_verb: has copied
-log_create_verb: has created
-log_delete_verb: has deleted
-log_move_verb: has moved
-log_open_verb: has opened
-log_export_verb: has exported
 mail: Mail
-mail_form_object: Object
 mail_form_content: Content
+mail_form_object: Object
+manage_rights: 'Manage rights'
 manager: Manager
-manage_rights: Manage rights
-misc: Miscellaneous
-move : Move
-message_form_object: Object
 message_form_content: Content
+message_form_object: Object
 message_form_to: To
 messages: Message
-messages_received: Messages received
-messages_removed: Messages removed
-messages_received_removed: Messages received removed
-messages_sent_removed: Messages sent removed
-messages_sent: Messages sent
-my_account: My account
-my_agenda: My agenda
-my_contacts: My contacts
-my_notes: My notes
-my_portfolio: My portfolio
-my_resources: My resources
-my_workspace: My workspace
-my_workspaces: My workspaces
+messages_received: 'Messages received'
+messages_received_removed: 'Messages received removed'
+messages_removed: 'Messages removed'
+messages_sent: 'Messages sent'
+messages_sent_removed: 'Messages sent removed'
+misc: Miscellaneous
+move: Move
+my_account: 'My account'
+my_agenda: 'My agenda'
+my_contacts: 'My contacts'
+my_notes: 'My notes'
+my_portfolio: 'My portfolio'
+my_resources: 'My resources'
+my_workspace: 'My workspace'
+my_workspaces: 'My workspaces'
 name: Name
-new_message_alert: You have %count% new message(s)
-no_search_results: Your search hasn't returned any result.
+new_message_alert: 'You have %count% new message(s)'
+no_search_results: 'Your search hasn''t returned any result.'
 note: Note
 object: Object
 ok: Ok
@@ -118,77 +118,75 @@ password: Password
 paste: Paste
 path: Path
 permissions: Permissions
-personal_workspace: Personal workspace
+personal_workspace: 'Personal workspace'
 phone: Phone
-platform_parameters: Platform parameters
+platform_parameters: 'Platform parameters'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
-platform_plugins: Platform plugins
-platform_widgets: Platform widgets
+platform_plugins: 'Platform plugins'
+platform_widgets: 'Platform widgets'
 private: Privée
-profile_form_administrativeCode: Administrative code
-profile_form_firstName: First name
-profile_form_lastName: Last name
+profile_form_administrativeCode: 'Administrative code'
+profile_form_firstName: 'First name'
+profile_form_lastName: 'Last name'
 profile_form_mail: Mail
-profile_form_note: Personnal note
+profile_form_note: 'Personnal note'
 profile_form_ownedRoles: Role(s)
-profile_form_platformRole: Role
 profile_form_phone: Phone
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
+profile_form_platformRole: Role
 profile_form_username: Username
 properties: Properties
 public: Public
-recursive_dir_action: Apply to the contents of the directory and its subdirectories
+recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 register: Register
-registered_groups: Registered groups
-registered_users: Registered users
-remove_group_s_confirm_message: group(s) removed
-remove_user_s_confirm_message: user(s) removed
+registered_groups: 'Registered groups'
+registered_users: 'Registered users'
+remove_group_s_confirm_message: 'group(s) removed'
+remove_user_s_confirm_message: 'user(s) removed'
 rename: Rename
 reset: Reset
 resource: Resource
-resource_action_denied_message: "The action %action% couldn't be done on '%path%': acces denied."
-resource_creation_wrong_type: "You don't have the permission to create a(n) %type% in the directory '%path%': access denied"
-resource_creation_denied: "You don't have the permission to create in the directory '%path': access denied"
-resource_properties_form_creationDate: Creation Date
-resource_properties_form_resourceType: Resource type
-resource_properties_form_creator: Creator
-resource_properties_form_shareType: Redistribution
-resource_properties_form_name: Nom
-resource_properties_form_userIcon: Icon
-resource_properties_form_shareType: Share type
-resource_properties_form_name: Name
-resource_properties_form_sharable: Share this resource
-resource_properties_form_editable: Edit
-resource_properties_form_deletable: Delete
-resource_properties_form_exportable: Export
+resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': acces denied.'
+resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
+resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
 resource_properties_form_copiable: Copy
+resource_properties_form_creationDate: 'Creation Date'
+resource_properties_form_creator: Creator
+resource_properties_form_deletable: Delete
+resource_properties_form_editable: Edit
+resource_properties_form_exportable: Export
+resource_properties_form_name: Name
+resource_properties_form_resourceType: 'Resource type'
+resource_properties_form_sharable: 'Share this resource'
+resource_properties_form_shareType: 'Share type'
+resource_properties_form_userIcon: Icon
 resources: Resources
-resources_rights: Resources rights
-resources_rights_form_canView: See
-resources_rights_form_canDelete: Selete
-resources_rights_form_canOpen: Open
-resources_rights_form_canEdit: Edit
+resources_rights: 'Resources rights'
 resources_rights_form_canCopy: Copy
+resources_rights_form_canDelete: Selete
+resources_rights_form_canEdit: Edit
+resources_rights_form_canOpen: Open
 resources_rights_form_canShare: Share
-rights: Rights
+resources_rights_form_canView: See
 results: Results
+rights: Rights
 role: Role
 roles: Roles
 save: Save
 search: Search
 see: Voir
-send_mail: Send a mail
-send_message: Send a message
+send_mail: 'Send a mail'
+send_message: 'Send a message'
 settings: Settings
 show: Show
-show_as_admin: Show as admin
-show_as_user: Show as user
+show_as_admin: 'Show as admin'
+show_as_user: 'Show as user'
 text_form_name: Name
-text_form_text: Text
 text_form_shareType: Sharable
+text_form_text: Text
 to: To
 today: Today
 tool: Tool
@@ -196,31 +194,31 @@ tools: Tools
 type: Type
 type_s: Type(s)
 unregister: Unregister
-unregistered_groups: Unregistered groups
-unregistered_users: Unregistered users
+unregistered_groups: 'Unregistered groups'
+unregistered_users: 'Unregistered users'
 user: User
-user_form_administrativeCode: Administrative code
-user_form_firstName: First name
-user_form_lastName: Last name
+user_form_administrativeCode: 'Administrative code'
+user_form_firstName: 'First name'
+user_form_lastName: 'Last name'
 user_form_mail: Mail
-user_form_note: Personnal note
+user_form_note: 'Personnal note'
 user_form_ownedRoles: Role(s)
 user_form_phone: Phone
 user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
-user_parameters: User parameters
+user_parameters: 'User parameters'
 username: Username
 users: Users
 validate: Validate
 view: View
 visible: Visible
 visitor: Visitor
+widget_settings: 'Widget settings'
 widgets: Widgets
-widget_settings: Widget settings
-workspace.create: Create a new workspace
-workspace.name_not_blank: The workspace's name is required.
 workspace: Workspace
+workspace.create: 'Create a new workspace'
+workspace.name_not_blank: 'The workspace''s name is required.'
 workspace_administration: Administration
 workspace_form_code: Code
 workspace_form_name: Name
@@ -229,4 +227,4 @@ workspace_resource: Resources
 workspace_tools: Tools
 workspace_welcome: Welcome
 workspaces: Workspaces
-ws_creator: Workspace creator
+ws_creator: 'Workspace creator'
