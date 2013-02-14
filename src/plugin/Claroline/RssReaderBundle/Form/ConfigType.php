@@ -16,4 +16,11 @@ class ConfigType extends AbstractType
     {
         return 'rss_form';
     }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'rss_reader'
+        );
+    }
 }

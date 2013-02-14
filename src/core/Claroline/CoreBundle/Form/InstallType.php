@@ -52,6 +52,7 @@ class InstallType extends AbstractType
     {
         return array(
             'data_class' => 'Claroline\CoreBundle\Entity\Install',
+            'translation_domain' => 'platform'
         );
     }
 }

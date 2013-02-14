@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\RssReaderBundle\Listeners;
+namespace Claroline\RssReaderBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
