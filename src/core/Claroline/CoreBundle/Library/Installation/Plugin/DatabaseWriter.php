@@ -23,7 +23,6 @@ use Symfony\Component\Filesystem\Filesystem;
 class DatabaseWriter
 {
     private $em;
-    private $yamlParser;
     private $im;
     private $fileSystem;
     private $kernelRootDir;
@@ -33,19 +32,16 @@ class DatabaseWriter
      *
      * @param SymfonyValidator  $validator
      * @param EntityManager     $em
-     * @param Yaml              $yamlParser
      * @param IconCreator       $im
      */
     public function __construct(
         EntityManager $em,
-        Yaml $yamlParser,
         IconCreator $im,
         Filesystem $fileSystem,
         $kernelRootDir
     )
     {
         $this->em = $em;
-        $this->yamlParser = $yamlParser;
         $this->im = $im;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernelRootDir;

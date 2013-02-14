@@ -5,3 +5,8 @@ services:
 
     claroline.utilities.paginator_parser:
         class: Claroline\CoreBundle\Library\Utilities\PaginatorParser
+
+    claroline.utilities.controller_name_parser:
+        class: %controller_name_converter.class%
+        arguments:
+          - "@kernel"

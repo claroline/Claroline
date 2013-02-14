@@ -150,33 +150,6 @@ class ActivityController extends Controller
     }
 
     /**
-     * Displays the activity set up wich allows you to add resource in an activity.
-     *
-     * @param type $activityId the activity id.
-     *
-     * @return Response.
-     */
-    public function showSetUpAction($activityId)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
-        $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
-            ->find($activityId);
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findActivities($activity);
-
-        return $this->render(
-            'ClarolineCoreBundle:Activity:index.html.twig', array(
-                'resourceTypes' => $resourceTypes,
-                'activity' => $activity,
-                'workspace' => $activity->getWorkspace(),
-                'resourceActivities' => $resourceActivities
-            )
-        );
-    }
-
-    /**
      * Show the instructions of an activity.
      *
      * @param type $activityId the activity id
