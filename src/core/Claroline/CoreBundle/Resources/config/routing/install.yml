@@ -1,33 +1,29 @@
-claro_setup:
-    pattern: /
-    defaults: { _controller: ClarolineCoreBundle:Install:index }
-claro_showDbForm:
-    pattern: /step_2
-    defaults: { _controller: ClarolineCoreBundle:Install:showDbForm }
-    
-claro_checkDbForm:
-    pattern: /step_check_2
-    defaults: { _controller: ClarolineCoreBundle:Install:checkDbForm }
-    requirements: { _method: post }
-    
-claro_showAdminForm:
-    pattern: /step_3
-    defaults: { _controller: ClarolineCoreBundle:Install:showAdminForm }
-    requirements: { _method: post }
-    
 claro_checkAdminForm:
     pattern: /step_check3
-    defaults: { _controller: ClarolineCoreBundle:Install:checkAdminForm }
+    defaults: { _controller: 'ClarolineCoreBundle:Install:checkAdminForm' }
     requirements: { _method: post }
-
-claro_summary:
-    pattern: /summary
-    defaults: { _controller: ClarolineCoreBundle:Install:summaryShow }
+claro_checkDbForm:
+    pattern: /step_check_2
+    defaults: { _controller: 'ClarolineCoreBundle:Install:checkDbForm' }
+    requirements: { _method: post }
 claro_execute:
     pattern: /execute
-    defaults: { _controller: ClarolineCoreBundle:Install:execute }
+    defaults: { _controller: 'ClarolineCoreBundle:Install:execute' }
     requirements: { _method: post }
+claro_setup:
+    pattern: /
+    defaults: { _controller: 'ClarolineCoreBundle:Install:index' }
+claro_showAdminForm:
+    pattern: /step_3
+    defaults: { _controller: 'ClarolineCoreBundle:Install:showAdminForm' }
+    requirements: { _method: post }
+claro_showDbForm:
+    pattern: /step_2
+    defaults: { _controller: 'ClarolineCoreBundle:Install:showDbForm' }
 claro_sucess:
     pattern: /sucess
-    defaults: { _controller: ClarolineCoreBundle:Install:success }
+    defaults: { _controller: 'ClarolineCoreBundle:Install:success' }
     requirements: { _method: post }
+claro_summary:
+    pattern: /summary
+    defaults: { _controller: 'ClarolineCoreBundle:Install:summaryShow' }

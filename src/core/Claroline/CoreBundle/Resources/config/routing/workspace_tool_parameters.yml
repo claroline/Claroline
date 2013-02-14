@@ -1,63 +1,33 @@
-claro_workspace_widget_properties:
-  pattern: /{workspaceId}/widget
-  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceWidgetsProperties }
-  requirements:
-    _method: GET
-
-claro_workspace_widget_invertvisible:
-  pattern: /{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible
-  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceInvertVisibleWidget }
-  requirements:
-    _method: POST
-  options:
-    expose: true
-
-claro_workspace_widget_configuration:
-  pattern: /{workspaceId}/widget/{widgetId}/configuration
-  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceConfigureWidget }
-  requirements:
-    _method: GET
-  options:
-    expose: true
-
-claro_workspace_tools_roles:
-  pattern: /{workspaceId}/tools
-  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceToolsRoles }
-  requirements:
-    _method: GET
-
-claro_workspace_tool_parameters:
-  pattern: /{workspaceId}/{roleName}/tool/parameters
-  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceToolsParameters }
-  requirements:
-    _method: GET
-
-claro_workspace_resources_properties:
-  pattern: /{workspaceId}/resources
-  defaults: { _controller: ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsForm }
-  requirements:
-    _method: GET
-
-claro_tool_workspace_remove:
-  pattern: /remove/tool/{toolId}/workspace/{workspaceId}/role/{roleId}
-  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:workspaceRemoveTool }
-  requirements:
-      _method: POST
-  options:
-    expose: true
-
 claro_tool_workspace_add:
-  pattern: /add/tool/{toolId}/position/{position}/workspace/{workspaceId}/role/{roleId}
-  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:workspaceAddTool }
-  requirements:
-      _method: POST
-  options:
-    expose: true
-
+    pattern: '/add/tool/{toolId}/position/{position}/workspace/{workspaceId}/role/{roleId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool/Parameters:workspaceAddTool' }
+    requirements: { _method: POST }
+    options: { expose: true }
 claro_tool_workspace_move:
-  pattern: /move/tool/{toolId}/position/{position}/workspace/{workspaceId}
-  defaults: { _controller: ClarolineCoreBundle:Tool/Parameters:workspaceMoveTool }
-  requirements:
-      _method: POST
-  options:
-    expose: true
+    pattern: '/move/tool/{toolId}/position/{position}/workspace/{workspaceId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool/Parameters:workspaceMoveTool' }
+    requirements: { _method: POST }
+    options: { expose: true }
+claro_tool_workspace_remove:
+    pattern: '/remove/tool/{toolId}/workspace/{workspaceId}/role/{roleId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool/Parameters:workspaceRemoveTool' }
+    requirements: { _method: POST }
+    options: { expose: true }
+claro_workspace_tools_roles:
+    pattern: '/{workspaceId}/tools'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceToolsRoles' }
+    requirements: { _method: GET }
+claro_workspace_widget_configuration:
+    pattern: '/{workspaceId}/widget/{widgetId}/configuration'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceConfigureWidget' }
+    requirements: { _method: GET }
+    options: { expose: true }
+claro_workspace_widget_invertvisible:
+    pattern: '/{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceInvertVisibleWidget' }
+    requirements: { _method: POST }
+    options: { expose: true }
+claro_workspace_widget_properties:
+    pattern: '/{workspaceId}/widget'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceWidgetsProperties' }
+    requirements: { _method: GET }

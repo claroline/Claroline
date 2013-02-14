@@ -1,11 +1,9 @@
-claro_text_history:
-   pattern: /history/{textId}
-   defaults: { _controller: ClarolineCoreBundle:Text:history }
-
-claro_text_edit_form:
-   pattern: /form/edit/{textId}
-   defaults: { _controller: ClarolineCoreBundle:Text:editForm }
-
 claro_text_edit:
-   pattern: /edit/{textId}
-   defaults: { _controller: ClarolineCoreBundle:Text:edit }
+    pattern: '/edit/{textId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Text:edit' }
+claro_text_edit_form:
+    pattern: '/form/edit/{textId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Text:editForm' }
+claro_text_history:
+    pattern: '/history/{textId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Text:history' }

@@ -1,5 +1,0 @@
-claro_home_index:
-    pattern: /
-    defaults: { _controller: ClarolineCoreBundle:Home:index }
-    options:
-        expose: true

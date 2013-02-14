@@ -1,13 +1,9 @@
 claro_security_login:
     pattern: /login
-    defaults: { _controller: ClarolineCoreBundle:Authentication:login }
-    options:
-       expose: true
-
+    defaults: { _controller: 'ClarolineCoreBundle:Authentication:login' }
+    options: { expose: true }
 claro_security_login_check:
     pattern: /login_check
-    options:
-       expose: true
-
+    options: { expose: true }
 claro_security_logout:
     pattern: /logout
