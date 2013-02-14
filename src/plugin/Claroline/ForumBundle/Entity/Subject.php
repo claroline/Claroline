@@ -20,6 +20,9 @@ class Subject extends AbstractResource
      */
     protected $title;
 
+    /**
+     * @Assert\NotBlank()
+     */
     protected $message;
 
     public function getTitle()

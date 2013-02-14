@@ -122,13 +122,13 @@ class SyndExport
 			/****Start Enclosure****/
 			 	if(!empty($this->p_feed->channel->item[$i]->enclosure['url']))
 				{
-			  		$items[$i]["media"]["url"] =(string)$this->p_feed->channel->item[$i]->enclosure[url];
+			  		$items[$i]["media"]["url"] =(string)$this->p_feed->channel->item[$i]->enclosure['url'];
 
-					if(!empty($this->p_feed->channel->item[$i]->enclosure[type])){
-			  			$items[$i]["media"]["type"]=(string)$this->p_feed->channel->item[$i]->enclosure[type]; }
+					if(!empty($this->p_feed->channel->item[$i]->enclosure['type'])){
+			  			$items[$i]["media"]["type"]=(string)$this->p_feed->channel->item[$i]->enclosure['type']; }
 
-					if(!empty($this->p_feed->channel->item[$i]->enclosure[length])){
-			  			$items[$i]["media"]["length"]=(int)$this->p_feed->channel->item[$i]->enclosure[length]; }
+					if(!empty($this->p_feed->channel->item[$i]->enclosure['length'])){
+			  			$items[$i]["media"]["length"]=(int)$this->p_feed->channel->item[$i]->enclosure['length']; }
 				}
 			/****End Enclosure****/
 			if(!empty($this->p_feed->channel->item[$i]->guid))		$items[$i]["guid"] = (string)$this->p_feed->channel->item[$i]->guid;
@@ -165,7 +165,7 @@ class SyndExport
 			elseif($this->p_type == "ATOM") return $this->extractAtomItems($max,$other);
 		}
 	}
-	
+
 	public function exportOtherInfo($info)
 	{
 		if($this->p_type == "RSS")
