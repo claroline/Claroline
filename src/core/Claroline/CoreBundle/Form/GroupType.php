@@ -16,7 +16,7 @@ class GroupType extends AbstractType
     {
         return 'group_form';
     }
-    
+
     public function getDefaultOptions(array $options)
     {
         return array(

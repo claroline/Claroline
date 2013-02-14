@@ -17,7 +17,6 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testWorkspaceUserCanSeeTheAgenda()
     {
-
         $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request('GET', "/workspaces/{$workspaceId}/open/tool/calendar");
@@ -41,7 +40,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'month' => '1',
                         'year' => '2013'
                     ),
-                    'allDay' => TRUE,
+                    'allDay' => true,
                     'priority' => '#000000'
                    ),
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
@@ -68,7 +67,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'month' => '1',
                         'year' => '2013'
                     ),
-                    'allDay' => TRUE
+                    'allDay' => true
                    ),
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
@@ -105,7 +104,7 @@ class CalendarControllerTest extends FunctionalTestCase
                         'month' => '1',
                         'year' => '2013'
                     ),
-                    'allDay' => TRUE
+                    'allDay' => true
                    ),
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
