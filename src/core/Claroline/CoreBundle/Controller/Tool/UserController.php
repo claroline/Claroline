@@ -50,7 +50,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkIfAdmin($workspace);
+        $this->checkRegistration($workspace);
         $user = $em->getRepository('ClarolineCoreBundle:User')
             ->find($userId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
@@ -198,12 +198,12 @@ class UserController extends Controller
     {
         $params = $this->get('request')->query->all();
         $users = array();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
+            ->find($workspaceId);
+        $this->checkRegistration($workspace);
 
         if (isset($params['userIds'])) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-                ->find($workspaceId);
-            $this->checkRegistration($workspace);
 
             foreach ($params['userIds'] as $userId) {
                 $user = $em->find('ClarolineCoreBundle:User', $userId);
@@ -308,7 +308,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkIfAdmin($workspace);
+        $this->checkRegistration($workspace);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
@@ -387,24 +387,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Checks if the current user is the admin of a workspace.
-     *
-     * @param AbstractWorkspace $workspace
-     *
-     * @throws AccessDeniedHttpException
-     */
-    private function checkIfAdmin($workspace)
-    {
-        $managerRoleName = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findManagerRole($workspace)
-            ->getName();
-
-        if (!$this->get('security.context')->isGranted($managerRoleName)) {
-            throw new AccessDeniedHttpException();
-        }
-    }
     /**
      * Most dql request required by this controller are paginated.
      * This function transform the results of the repository in an array.
