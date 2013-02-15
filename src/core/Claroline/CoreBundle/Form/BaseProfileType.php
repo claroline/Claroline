@@ -19,4 +19,11 @@ class BaseProfileType extends AbstractType
     {
         return 'profile_form';
     }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'platform'
+        );
+    }
 }

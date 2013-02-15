@@ -25,41 +25,49 @@
         MoveRowUp(rowIndex);
     })
 
+    $('.icon-circle-arrow-down').on('click', function(e){
+        var rowIndex = e.target.parentElement.parentElement.rowIndex;
+        MoveRowDown(rowIndex);
+    })
+
 	function MoveRowUp(index) {
         var rows = $("#tool-table tr");
-        var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
-
         if (index !== 1) {
-
             rows.eq(index).insertBefore(rows.eq(index - 1));
+            var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
             if (isCurrentRowChecked) {
                 var toolId = $(rows.eq(index)[0]).attr('data-tool-id');
-                var route = Routing.generate(
-                    'claro_tool_desktop_move',
-                    { 'toolId': toolId, 'position': index - 1 }
-                );
+                index = index - 1;
             } else {
                 var toolId = $(rows.eq(index - 1)[0]).attr('data-tool-id');
-                var route = Routing.generate(
-                    'claro_tool_desktop_move',
-                    { 'toolId': toolId, 'position': index }
-                );
             }
+            var route = Routing.generate(
+                'claro_tool_desktop_move',
+                { 'toolId': toolId, 'position': index }
+            );
             Claroline.Utilities.ajax({url:route, type:'POST'});
-
-        } else {
-            alert('you cannot move this row up');
         }
 	}
 
     function MoveRowDown(index) {
-        var rows = $("tool-table tr");
-        var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
+        var rows = $("#tool-table tr");
+        rows.eq(index).insertAfter(rows.eq(index + 1));
+        var size = $("#tool-table tr").length;
 
-            rows.eq(index);insertBefore(rows.eq(index - 1));
+        if (index !== size) {
+            var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
             if (isCurrentRowChecked) {
-                
+                var toolId = $(rows.eq(index)[0]).attr('data-tool-id');
+                index = index + 1;
+            } else {
+                var toolId = $(rows.eq(index + 1)[0]).attr('data-tool-id');
             }
+            var route = Routing.generate(
+                'claro_tool_desktop_move',
+                { 'toolId': toolId, 'position': index }
+            );
+        }
+        Claroline.Utilities.ajax({url:route, type:'POST'});
     }
 })()
 

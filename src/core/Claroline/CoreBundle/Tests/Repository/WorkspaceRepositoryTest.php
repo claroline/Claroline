@@ -15,13 +15,13 @@ class WorkspaceRepositoryTest extends FixtureTestCase
         parent::setUp();
         $this->loadUserFixture();
         $this->wsRepo = $this->getEntityManager()
-            ->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
     }
 
-    public function testGetWorkspacesOfUserReturnsExpectedResults()
+    public function testfindByUserReturnsExpectedResults()
     {
         $user = $this->getFixtureReference('user/user');
-        $ws = $this->wsRepo->getWorkspacesOfUser($user);
+        $ws = $this->wsRepo->findByUser($user);
 
         $this->assertEquals(1, count($ws));
         $this->assertEquals($user->getPersonalWorkspace(), $ws[0]);
@@ -35,7 +35,7 @@ class WorkspaceRepositoryTest extends FixtureTestCase
                 ->findCollaboratorRole($thirdWs)
         );
         $this->getEntityManager()->flush();
-        $userWs = $this->wsRepo->getWorkspacesOfUser($user);
+        $userWs = $this->wsRepo->findByUser($user);
         $this->assertEquals(4, count($userWs));
         $this->assertEquals('Workspace 1', $userWs[1]->getName());
         $this->assertEquals('Workspace 2', $userWs[2]->getName());

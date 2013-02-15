@@ -68,7 +68,7 @@ class Manager
 
         $resource->setCreator($user);
         $parent = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($parentId);
 
         $resource->setParent($parent);
@@ -259,7 +259,7 @@ class Manager
         if ($originalResource->getResourceType()->getName() === 'directory') {
             $resourceCopy = new Directory();
             $dirType = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                 ->findOneByName('directory');
             $resourceCopy->setResourceType($dirType);
         } else {
@@ -292,7 +292,7 @@ class Manager
         }
 
         $children = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->getChildren($resource, false);
         foreach ($children as $child) {
             $event = new DeleteResourceEvent($child);

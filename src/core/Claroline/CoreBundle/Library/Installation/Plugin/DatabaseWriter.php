@@ -23,7 +23,6 @@ use Symfony\Component\Filesystem\Filesystem;
 class DatabaseWriter
 {
     private $em;
-    private $yamlParser;
     private $im;
     private $fileSystem;
     private $kernelRootDir;
@@ -33,19 +32,16 @@ class DatabaseWriter
      *
      * @param SymfonyValidator  $validator
      * @param EntityManager     $em
-     * @param Yaml              $yamlParser
      * @param IconCreator       $im
      */
     public function __construct(
         EntityManager $em,
-        Yaml $yamlParser,
         IconCreator $im,
         Filesystem $fileSystem,
         $kernelRootDir
     )
     {
         $this->em = $em;
-        $this->yamlParser = $yamlParser;
         $this->im = $im;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernelRootDir;
@@ -69,7 +65,7 @@ class DatabaseWriter
             $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
         } else {
             $defaultIcon = $this->em
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
             $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
         }
@@ -92,14 +88,14 @@ class DatabaseWriter
         // of the resource types the plugin might have declared
         // TODO : this should be covered by a test
         $resourceTypes = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByPlugin($plugin->getGeneratedId());
 
         foreach ($resourceTypes as $resourceType) {
             if (null !== $resourceType) {
                 if (null !== $parentType = $resourceType->getParent()) {
                     $resources = $this->em
-                        ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+                        ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                         ->findByResourceType($resourceType->getId());
 
                     foreach ($resources as $resource) {
@@ -133,7 +129,7 @@ class DatabaseWriter
     private function getPluginEntity($pluginFqcn)
     {
         $entity = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+            ->getRepository('ClarolineCoreBundle:Plugin')
             ->findOneByBundleFQCN($pluginFqcn);
 
         return $entity;
@@ -150,7 +146,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
-            $this->persistTool($tool, $pluginEntity, $plugin);
+            $this->persistTool($tool, $pluginEntity);
         }
     }
 
@@ -159,10 +155,10 @@ class DatabaseWriter
         $resourceIcon = new ResourceIcon();
 
         $defaultIcon = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
             ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
         $defaultIconType = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+            ->getRepository('ClarolineCoreBundle:Resource\IconType')
             ->findOneBy(array('iconType' => 'type'));
         $resourceIcon->setIconType($defaultIconType);
         $resourceIcon->setType($resourceType->getName());
@@ -266,10 +262,8 @@ class DatabaseWriter
         $this->em->flush();
     }
 
-    private function persistTool($tool, $pluginEntity, $plugin)
+    private function persistTool($tool, $pluginEntity)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
         $toolEntity = new Tool();
         $toolEntity->setName($tool['name']);
         $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
@@ -277,16 +271,6 @@ class DatabaseWriter
         $toolEntity->setIsDesktopRequired(false);
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
-
-        /*if (isset($tool['icon'])) {
-            $toolEntity->setIcon(
-                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$tool['icon']}"
-            );
-        } else {
-            $toolEntity->setIcon(
-                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
-            );
-        }*/
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(

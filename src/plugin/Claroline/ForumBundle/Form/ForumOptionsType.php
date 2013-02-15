@@ -15,6 +15,13 @@ class ForumOptionsType extends AbstractType
 
     public function getName()
     {
-        return 'forum_form';
+        return 'forum_options_form';
+    }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'forum'
+        );
     }
 }

@@ -1,27 +1,19 @@
 claro_workspace_agenda_add_event:
-  pattern: /{workspaceId}/add
-  defaults: { _controller: ClarolineCoreBundle:Tool\Calendar:addEvent }
-
-claro_workspace_agenda_show:
-  pattern: /{workspaceId}/show
-  defaults: { _controller: ClarolineCoreBundle:Tool\Calendar:show }
-  requirements:
-    _method: GET
-
-claro_workspace_agenda_move:
-  pattern: /{workspaceId}/move
-  defaults: { _controller: ClarolineCoreBundle:Tool\Calendar:move }
-  requirements:
-    _method: POST
-
+    pattern: '/{workspaceId}/add'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:addEvent' }
 claro_workspace_agenda_delete:
-  pattern: /{workspaceId}/delete
-  defaults: { _controller: ClarolineCoreBundle:Tool\Calendar:delete }
-  requirements:
-    _method: POST
+    pattern: '/{workspaceId}/delete'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:delete' }
+    requirements: { _method: POST }
+claro_workspace_agenda_move:
+    pattern: '/{workspaceId}/move'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:move' }
+    requirements: { _method: POST }
+claro_workspace_agenda_show:
+    pattern: '/{workspaceId}/show'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:show' }
+    requirements: { _method: GET }
 claro_workspace_agenda_update:
-  pattern: /{workspaceId}/update
-  defaults: { _controller: ClarolineCoreBundle:Tool\Calendar:update }
-  requirements:
-    _method: POST
-
+    pattern: '/{workspaceId}/update'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:update' }
+    requirements: { _method: POST }

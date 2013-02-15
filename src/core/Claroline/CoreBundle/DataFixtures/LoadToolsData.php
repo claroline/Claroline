@@ -21,9 +21,6 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
 
     public function load(ObjectManager $manager)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        //$basePath = "bundles{$ds}clarolinecore{$ds}images{$ds}workspace{$ds}tools{$ds}";
-
         $tools = array(
             array('home', 'icon-home', false, false, true, true),
             array('parameters', 'icon-cog', false, false, true, true),

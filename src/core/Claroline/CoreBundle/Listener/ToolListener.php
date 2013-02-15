@@ -72,14 +72,14 @@ class ToolListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $directoryId = $em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $directoryId = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findWorkspaceRoot($workspace)
             ->getId();
-        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\resource_manager\resources.html.twig', array(
+            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes
@@ -100,7 +100,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\parameters\parameters.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -118,7 +118,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\user_management\user_management.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\user_management:user_management.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -136,7 +136,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group_management.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group_management.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -156,7 +156,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\home\home.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\home:home.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -170,7 +170,7 @@ class ToolListener extends ContainerAware
     {
         $resourceTypes = $this->container
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
 
         return $this->container->get('templating')->render(
@@ -207,11 +207,10 @@ class ToolListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $event = new Event();
         $form = $this->container->get('form.factory')->create(new CalendarType());
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
+            'ClarolineCoreBundle:Tool/workspace/calendar:calendar.html.twig',
             array('workspace' => $workspace, 'form' => $form->createView())
         );
     }
@@ -238,7 +237,7 @@ class ToolListener extends ContainerAware
             ->add('description', 'textarea');
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:desktop/calendar/calendar.html.twig',
+            'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
             array('form' => $formBuilder-> getForm()-> createView())
         );
     }

@@ -18,7 +18,7 @@ class RoleDelegate implements SubjectDelegateInterface
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->roleRepository = $this->em->getRepository('Claroline\CoreBundle\Entity\Role');
+        $this->roleRepository = $this->em->getRepository('ClarolineCoreBundle:Role');
     }
 
     public function buildSecurityIdentity($subject)

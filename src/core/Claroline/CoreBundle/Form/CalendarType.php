@@ -51,7 +51,7 @@ class CalendarType extends AbstractType
     {
         return array(
             'data_class' => 'Claroline\CoreBundle\Entity\Event',
+            'translation_domain' => 'platform'
         );
     }
-
 }

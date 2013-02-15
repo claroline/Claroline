@@ -90,7 +90,6 @@ services:
         class: Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@symfony.yaml"
             - "@claroline.resource.icon_creator"
             - "@filesystem"
             - %kernel.root_dir%

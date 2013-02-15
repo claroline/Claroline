@@ -1,6 +1,6 @@
 calendar: Calendar
+group_management: 'Group management'
 home: Home
 parameters: Parameters
-group_management: Group management
-resource_manager: Resource manager
-user_management: User management
+resource_manager: 'Resource manager'
+user_management: 'User management'

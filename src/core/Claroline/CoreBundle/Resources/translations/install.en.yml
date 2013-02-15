@@ -1,15 +1,15 @@
-parameters: Parameters
-step : Etape
-minimum value: minimum value
-of: of
-current value: current value
-permission: Can I read or write folders ?
-hint : hints and tips
-next: next
 back: back
+current_value: 'current value'
+db_name: 'database name'
 folders: folders
-hint 1: If your value are higher than the minimum requier that's mean your are on the right track.
-server: server
-db name: database name
-username: username
+hint: 'hints and tips'
+hint_1: 'If your value are higher than the minimum requier that''s mean your are on the right track.'
+minimum_value: 'minimum value'
+next: next
+of: of
+parameters: Parameters
 password: password
+permission: 'Can I read or write folders ?'
+server: server
+step: Etape
+username: username

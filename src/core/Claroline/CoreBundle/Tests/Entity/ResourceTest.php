@@ -20,7 +20,7 @@ class ResourceTest extends FixtureTestCase
         $resource->setIcon(
             $this->client->getContainer()
                 ->get('doctrine.orm.entity_manager')
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneBy(array ('type' => 'default'))
         );
         $resource->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());

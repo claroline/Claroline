@@ -114,7 +114,7 @@ class ActivityController extends Controller
         $items = array('resource' => $activity, 'step' => 1, 'resources' => $this->getItems($activity));
 
         return $this->render(
-            'ClarolineCoreBundle:Activity:player/left_menu.html.twig',
+            'ClarolineCoreBundle:Activity/player:left_menu.html.twig',
             array(
                 'resourceActivities' => $resourceActivities,
                 'activity' => $activity,
@@ -141,37 +141,10 @@ class ActivityController extends Controller
             ->findActivities($activity);
 
         return $this->render(
-            'ClarolineCoreBundle:Activity:player/activity.html.twig',
+            'ClarolineCoreBundle:Activity/player:activity.html.twig',
             array(
                 'activity' => $activity,
                 'resource' => $resourceActivities[0]->getResource()
-            )
-        );
-    }
-
-    /**
-     * Displays the activity set up wich allows you to add resource in an activity.
-     *
-     * @param type $activityId the activity id.
-     *
-     * @return Response.
-     */
-    public function showSetUpAction($activityId)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resourceTypes = $em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
-        $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
-            ->find($activityId);
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findActivities($activity);
-
-        return $this->render(
-            'ClarolineCoreBundle:Activity:index.html.twig', array(
-                'resourceTypes' => $resourceTypes,
-                'activity' => $activity,
-                'workspace' => $activity->getWorkspace(),
-                'resourceActivities' => $resourceActivities
             )
         );
     }
@@ -190,7 +163,7 @@ class ActivityController extends Controller
             ->find($activityId);
 
         return $this->render(
-            'ClarolineCoreBundle:Activity:player\instructions.html.twig',
+            'ClarolineCoreBundle:Activity\player:instructions.html.twig',
             array('instructions' => $activity)
         );
     }

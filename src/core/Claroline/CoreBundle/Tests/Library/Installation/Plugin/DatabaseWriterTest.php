@@ -38,7 +38,7 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->validator->validate($plugin);
         $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
         $pluginEntity = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+            ->getRepository('ClarolineCoreBundle:Plugin')
             ->findOneByBundleFQCN($fqcn);
 
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
@@ -53,7 +53,7 @@ class DatabaseWriterTest extends TransactionalTestCase
         $this->dbWriter->delete('Valid\Simple\ValidSimple');
 
         $plugins = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Plugin')
+            ->getRepository('ClarolineCoreBundle:Plugin')
             ->findOneByBundleFQCN('Valid\Simple\ValidSimple');
 
         $this->assertEquals(0, count($plugins));

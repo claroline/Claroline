@@ -89,7 +89,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
     {
         $roleRepo = $this->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Role');
+            ->getRepository('ClarolineCoreBundle:Role');
 
         if ($role == 'admin') {
             return $roleRepo->findOneByName(PlatformRoles::ADMIN);

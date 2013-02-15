@@ -19,7 +19,7 @@ class ResourceExtender implements EventSubscriber
 
         if ($classMetadata->getName() == 'Claroline\CoreBundle\Entity\Resource\AbstractResource') {
             $pluginTypes = $event->getEntityManager()
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                 ->findPluginResourceNameFqcns();
 
             foreach ($pluginTypes as $pluginType) {

@@ -75,7 +75,7 @@ class ActivityListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
         $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findBy(array('isVisible' => true));
         $activity = $event->getResource();
         $resourceActivities = $this->container
@@ -95,7 +95,7 @@ class ActivityListener extends ContainerAware
             );
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Activity:player/activity.html.twig',
+                'ClarolineCoreBundle:Activity/player:activity.html.twig',
                 array(
                     'activity' => $activity,
                     'resource' => $resourceActivities[0]->getResource()

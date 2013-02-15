@@ -194,7 +194,7 @@ class IconCreator
                 $iconName = "thumbnails/{$thumbnailName}";
                 $icon = new ResourceIcon();
                 $generatedIconType = $this->em
-                    ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+                    ->getRepository('ClarolineCoreBundle:Resource\IconType')
                     ->find(IconType::GENERATED);
                 $icon->setIconType($generatedIconType);
                 $icon->setIconLocation($newPath);
@@ -221,7 +221,7 @@ class IconCreator
      */
     public function getTypeIcon(ResourceType $type)
     {
-        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
         $icon = $repo->findOneBy(array('type' => $type->getName(), 'iconType' => IconType::TYPE));
 
         if ($icon === null) {
@@ -242,7 +242,7 @@ class IconCreator
     public function searchFileIcon($mimeType)
     {
         $mimeElements = explode('/', $mimeType);
-        $repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
 
         $icon = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
 
@@ -322,7 +322,7 @@ class IconCreator
         $icon->setIconLocation("{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$hashName}");
         $icon->setRelativeUrl("thumbnails{$ds}{$hashName}");
         $customType = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\IconType')
+            ->getRepository('ClarolineCoreBundle:Resource\IconType')
             ->find(IconType::CUSTOM_ICON);
         $icon->setIconType($customType);
         $icon->setType('custom');

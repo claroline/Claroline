@@ -14,7 +14,7 @@ class UserController extends Controller
     /*******************/
     /* USER MANAGEMENT */
     /*******************/
-    const ABSTRACT_WS_CLASS = 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace';
+    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
 
     /**
@@ -31,7 +31,7 @@ class UserController extends Controller
         $this->checkRegistration($workspace);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\user_management\unregistered_user_list_layout.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\user_management:unregistered_user_list_layout.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -99,7 +99,7 @@ class UserController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\user_management\user_parameters.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\user_management:user_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'user' => $user,
@@ -136,7 +136,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -173,7 +173,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -206,7 +206,7 @@ class UserController extends Controller
             $this->checkRegistration($workspace);
 
             foreach ($params['userIds'] as $userId) {
-                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+                $user = $em->find('ClarolineCoreBundle:User', $userId);
                 $users[] = $user;
                 $user->addRole(
                     $em->getRepository('ClarolineCoreBundle:Role')
@@ -217,7 +217,7 @@ class UserController extends Controller
         }
 
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -251,7 +251,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -285,7 +285,7 @@ class UserController extends Controller
             );
         $users = $this->paginatorToArray($paginatorUsers);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Administration:user_list.json.twig',
+            'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
         $response = new Response($content);
@@ -317,7 +317,7 @@ class UserController extends Controller
             $this->checkRemoveManagerRoleIsValid($params['userIds'], $workspace);
             foreach ($params['userIds'] as $userId) {
 
-                $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+                $user = $em->find('ClarolineCoreBundle:User', $userId);
 
                 if (null != $user) {
                     foreach ($roles as $role) {
@@ -349,7 +349,7 @@ class UserController extends Controller
             ->findManagerRole($workspace);
 
         foreach ($userIds as $userId) {
-            $user = $em->find('Claroline\CoreBundle\Entity\User', $userId);
+            $user = $em->find('ClarolineCoreBundle:User', $userId);
 
             if (null !== $user) {
                 if ($workspace == $user->getPersonalWorkspace()) {
@@ -361,7 +361,7 @@ class UserController extends Controller
             }
         }
 
-        $userManagers = $em->getRepository('Claroline\CoreBundle\Entity\User')
+        $userManagers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 

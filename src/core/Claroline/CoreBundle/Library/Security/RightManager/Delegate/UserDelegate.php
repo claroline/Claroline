@@ -17,7 +17,7 @@ class UserDelegate implements SubjectDelegateInterface
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->userRepository = $this->em->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->userRepository = $this->em->getRepository('ClarolineCoreBundle:User');
     }
 
     public function buildSecurityIdentity($subject)
