@@ -34,7 +34,7 @@ class ParametersController extends Controller
             ->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\parameters\widget_properties.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\parameters:widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
     }
@@ -114,7 +114,7 @@ class ParametersController extends Controller
 
         if ($event->getContent() !== '') {
             return $this->render(
-                'ClarolineCoreBundle:Tool:workspace\parameters\widget_configuration.html.twig',
+                'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',
                 array('content' => $event->getContent(), 'workspace' => $workspace)
             );
         }

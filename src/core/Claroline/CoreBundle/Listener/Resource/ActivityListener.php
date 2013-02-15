@@ -95,7 +95,7 @@ class ActivityListener extends ContainerAware
             );
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Activity:player/activity.html.twig',
+                'ClarolineCoreBundle:Activity/player:activity.html.twig',
                 array(
                     'activity' => $activity,
                     'resource' => $resourceActivities[0]->getResource()

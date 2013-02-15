@@ -161,7 +161,7 @@ class AdministrationController extends Controller
         );
 
         $response = new Response($content);
-        
+
         return $response;
     }
 

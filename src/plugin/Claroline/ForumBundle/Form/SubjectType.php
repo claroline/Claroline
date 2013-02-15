@@ -13,7 +13,6 @@ class SubjectType extends AbstractType
         $builder->add('title', 'text')
             ->add('name', 'hidden', array('data' => 'tmp'))
             ->add('message', new MessageType());
-
     }
 
     public function getName()

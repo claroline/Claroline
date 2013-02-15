@@ -3,6 +3,8 @@
 namespace Claroline\RssReaderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\RssReaderBundle\Validator\Constraints as CustomAssert;
 
 /**
  * @ORM\Entity
@@ -30,6 +32,8 @@ class Config
     protected $user;
 
     /**
+     * @Assert\NotBlank()
+     * @CustomAssert\IsRss()
      * @ORM\Column(type="string", name="url")
      */
     protected $url;

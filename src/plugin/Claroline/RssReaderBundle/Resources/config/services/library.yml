@@ -1,0 +1,9 @@
+services:
+  claroline.rss_reader.provider:
+    class: Claroline\RssReaderBundle\Library\ReaderProvider
+    arguments:
+      - ["@claroline.rss_reader.rss_reader", "@claroline.rss_reader.atom_reader"]
+  claroline.rss_reader.rss_reader:
+    class: Claroline\RssReaderBundle\Library\Reader\RssReader
+  claroline.rss_reader.atom_reader:
+    class: Claroline\RssReaderBundle\Library\Reader\AtomReader
