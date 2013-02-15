@@ -88,3 +88,18 @@ You can translate your widget names here.
 
 Where mywidgetname is the name you defined in your config file.
 
+## Right management
+
+Both workspace and desktop are an aggregation of tools.
+A user can order the displayed toolbar and the "index" will always be the
+first tool.
+
+There is a Voter wich will determine wich user can access wich tool in a workspace.
+(Currently a user can access every tools in its desktop)
+When you must know if a user has access to a tool, you can use
+
+        if (!$this->get('security.context')->isGranted($toolName, $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+*Where $toolName is your tool name and $workspace is the current workspace.*
