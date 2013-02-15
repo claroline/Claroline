@@ -1,15 +1,15 @@
-parameters: paramètres
-step 1: Etape 1 Configuration requise
-minimum value: Valeur minimum
-of: sur
-current value: valeur actuelle
-permission: Permission lectures et écritures
-hint : hints and tips
-next: suivant
 back: retour
+current_value: 'valeur actuelle'
+db_name: 'Nom de la base de données'
 folders: Dossiers
-hint 1: Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.
+hint: 'hints and tips'
+hint_1: 'Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.'
+minimum value: 'Valeur minimum'
+next: suivant
+of: sur
+parameters: paramètres
+password: 'Mot de passe'
+permission: 'Permission lectures et écritures'
 server: serveur
-db name: Nom de la base de données
-username: Nom de l'utilisateur
-password: Mot de passe
+step_1: 'Etape 1 Configuration requise'
+username: 'Nom de l''utilisateur'

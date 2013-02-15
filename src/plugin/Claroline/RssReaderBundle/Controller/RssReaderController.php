@@ -27,15 +27,26 @@ class RssReaderController extends Controller
             $em->persist($config);
             $em->flush();
         } else {
+            if ($workspaceId === 0) {
+                $template = 'ClarolineRssReaderBundle::desktop_form_create.html.twig';
+                $workspace = null;
+            } else {
+                $template = 'ClarolineRssReaderBundle::workspace_form_create.html.twig';
+                $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                    ->find($workspaceId);
+            }
+
             return $this->render(
-                'ClarolineRssReaderBundle::form_workspace_create.html.twig', array(
+                $template, array(
+                'workspace' => $workspace,
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
                 'isDesktop' => $isDesktop,
                 'isDefault' => $isDefault,
-                'userId' => $userId
+                'userId' => $userId,
                 )
             );
+
         }
 
         if ($config->getWorkspace() != null) {
@@ -48,6 +59,7 @@ class RssReaderController extends Controller
         }
 
         if ($isDefault) {
+
             return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
         }
 
@@ -75,10 +87,17 @@ class RssReaderController extends Controller
             ($config->getUrl() == '') ? $em->remove($config): $em->persist($config);
             $em->flush();
         } else {
+            if ($rssConfig->getWorkspace() === null) {
+                $template = 'ClarolineRssReaderBundle::desktop_form_update.html.twig';
+            } else {
+                $template = 'ClarolineRssReaderBundle::workspace_form_update.html.twig';
+            }
+
             return $this->render(
-                'ClarolineRssReaderBundle::form_workspace_update.html.twig', array(
+                $template, array(
                 'form' => $form->createView(),
-                'rssConfig' => $rssConfig
+                'rssConfig' => $rssConfig,
+                'workspace' => $rssConfig->getWorkspace()
                 )
             );
         }
