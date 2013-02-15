@@ -339,3 +339,38 @@ Otherwise, they'll be removed.
 
 There is no predefined event for this action.
 If you want to implement it, you must create some custom actions (see plugin configuration file).
+
+## Right management (They're going to change soon)
+
+### Database
+
+ResourceRights are stored in the entity Resource\ResourceRights.
+This table has a reliation to a role, a resource and a workspace.
+It has several booleans defining the current permissions:
+canCopy, canDeleten canEdit, canOpen, canExport.
+
+It also has a N-N relation with the ResourceType table. This relation indicate with
+ResourceType can be created has children in the current Resource (if it's a directory).
+
+### Voter
+
+The ResourceVoter will grant permissions to a user to execute an action.
+He's called when the method "$this->get('security.context')->isGranted($action, $object);" is fired.
+Possible $actions are 'MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN'.
+The $object parameters is a Library\Resource\ResourceCollection class
+This object can take an array of parameters (setParameters) where keys are 'parent' and 'type'.
+
+'parent' is the parent entity in wich the action is done.
+'type' the the resource type of the soon to be created resource.
+
+Theses parameters may be required in some case ('CREATE', 'MOVE', 'COPY').
+
+CREATE => type is required
+MOVE => parent is required
+COPY => parent is required
+
+### Creation
+
+Rights are defined for the first time at the workspace root at the workspace creation.
+When a resource is created, the parent rights are copied to the children rights (same when a resource is moved
+or copied).

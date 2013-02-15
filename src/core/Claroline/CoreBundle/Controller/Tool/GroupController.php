@@ -79,7 +79,7 @@ class GroupController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group_parameters.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'group' => $group,
@@ -102,7 +102,7 @@ class GroupController extends Controller
         $this->checkRegistration($workspace);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\group_management\unregistered_group_list_layout.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:unregistered_group_list_layout.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -162,7 +162,7 @@ class GroupController extends Controller
             ->findWorkspaceOutsider($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -189,7 +189,7 @@ class GroupController extends Controller
             ->findByWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -228,7 +228,7 @@ class GroupController extends Controller
         }
 
         $content = $this->renderView(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -262,7 +262,7 @@ class GroupController extends Controller
             );
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);
@@ -296,7 +296,7 @@ class GroupController extends Controller
             );
         $groups = $this->paginatorToArray($paginatorGroups);
         $content = $this->renderView(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group.json.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
             array('groups' => $groups)
         );
         $response = new Response($content);

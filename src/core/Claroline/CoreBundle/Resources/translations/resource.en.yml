@@ -1,8 +1,6 @@
-file: File
-directory: Directory
-text: Text
-resource_shortcut: Shortcut
 activity: Activity
-
-# action
+directory: Directory
+file: File
 open: Open
+resource_shortcut: Shortcut
+text: Text
