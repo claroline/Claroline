@@ -172,18 +172,24 @@ class Configuration implements ConfigurationInterface
 
     public static function isResourceLocationValid($v)
     {
-        return class_exists($v);
+        if (!class_exists($v)) {
+            // the autoloader doesn't know the resource namespace
+            $classFile = __DIR__ . '/../../../../../../plugin/' . str_replace('\\', '/', $v) . '.php';
+
+            if (!file_exists($classFile)) {
+                return false;
+            }
+
+            // force class loading (needed for next check)
+            require_once $classFile;
+        }
+
+        return true;
     }
 
     public static function isAbstractResourceExtended($v)
     {
-        if (class_exists($v)) {
-            $classInstance = new $v;
-
-            return $classInstance instanceof AbstractResource;
-        }
-
-        return false;
+        return (new $v) instanceof AbstractResource;
     }
 
     public static function isResourceIconValid($v, $plugin)
