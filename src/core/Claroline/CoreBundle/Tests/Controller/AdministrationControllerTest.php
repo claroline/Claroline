@@ -99,23 +99,10 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
-    public function testAdminCannotDeleteHimself()
+    public function testUserCannotDeleteUsers()
     {
-        $this->markTestSkipped();
-        $admin = $this->getFixtureReference('user/admin');
-        $crawler = $this->logUser($admin);
-        $crawler = $this->client->request('GET', '/admin/users/0');
-        $this->assertEquals(5, $crawler->filter('.row-user')->count());
-        $this->assertEquals(0, count($crawler->filter('.link-delete-user')->eq(4)));
-        $this->client->request('DELETE', "/admin/user/{$admin->getId()}");
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCannotDeleteHimself()
-    {
-        $this->markTestSkipped();
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('DELETE', "/admin/user/{$this->getFixtureReference('user/user')->getId()}");
+        $this->client->request('DELETE', "/admin/users?ids[]={$this->getFixtureReference('user/user')->getId()}");
         $this->assertEquals($this->client->getResponse()->getStatusCode(), 403);
     }
 

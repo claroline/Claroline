@@ -20,8 +20,8 @@ class ResourceLogRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT rl, res, rt FROM Claroline\CoreBundle\Entity\Logger\ResourceLog rl
             JOIN rl.workspace ws
-            JOIN rl.resource res
-            JOIN res.resourceType rt
+            LEFT JOIN rl.resource res
+            LEFT JOIN res.resourceType rt
             JOIN ws.roles r";
 
         if ($workspace !== null) {
