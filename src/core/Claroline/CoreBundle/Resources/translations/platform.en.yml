@@ -210,6 +210,7 @@ user_form_username: Username
 user_parameters: 'User parameters'
 username: Username
 users: Users
+unwritable_file_exception: "The file %path% is not writable."
 validate: Validate
 view: View
 visible: Visible
