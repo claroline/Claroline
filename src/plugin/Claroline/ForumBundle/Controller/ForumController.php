@@ -219,9 +219,8 @@ class ForumController extends Controller
         }
 
         return $this->render(
-            'ClarolineForumBundle::plugin_options_form.html.twig', array(
-            'form' => $form->createView()
-            )
+            'ClarolineForumBundle::plugin_options_form.html.twig',
+            array('form' => $form->createView())
         );
     }
 }
