@@ -245,14 +245,14 @@ class WorkspaceControllerTest extends FunctionalTestCase
             ->findAll();
         $countConfigs = count($configs);
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
-        $countVisibleWidgets = count($crawler->filter('.widget-content'));
+        $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
             'POST',
             "/workspaces/tool/properties/{$pwuId}/widget/{$configs[0]->getWidget()->getId()}/baseconfig"
             . "/{$configs[0]->getId()}/invertvisible"
         );
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
-        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget-content')));
+        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
         $this->assertEquals(++$countConfigs, count($configs));
@@ -260,7 +260,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
-        $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget-content')));
+        $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
     }
 
     private function registerStubPlugins(array $pluginFqcns)

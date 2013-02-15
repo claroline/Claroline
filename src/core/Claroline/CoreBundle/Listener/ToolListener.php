@@ -79,7 +79,7 @@ class ToolListener extends ContainerAware
             ->findBy(array('isVisible' => true));
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\resource_manager\resources.html.twig', array(
+            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes
@@ -100,7 +100,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\parameters\parameters.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -118,7 +118,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\user_management\user_management.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\user_management:user_management.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -136,7 +136,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\group_management\group_management.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\group_management:group_management.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -156,7 +156,7 @@ class ToolListener extends ContainerAware
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace\home\home.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\home:home.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -210,7 +210,7 @@ class ToolListener extends ContainerAware
         $form = $this->container->get('form.factory')->create(new CalendarType());
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
+            'ClarolineCoreBundle:Tool/workspace/calendar:calendar.html.twig',
             array('workspace' => $workspace, 'form' => $form->createView())
         );
     }
@@ -237,7 +237,7 @@ class ToolListener extends ContainerAware
             ->add('description', 'textarea');
 
         return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool:desktop/calendar/calendar.html.twig',
+            'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
             array('form' => $formBuilder-> getForm()-> createView())
         );
     }
