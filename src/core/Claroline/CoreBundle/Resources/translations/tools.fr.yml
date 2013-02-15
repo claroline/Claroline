@@ -1,6 +1,6 @@
 calendar: Calendrier
-group_management: 'Gestion des groupes'
+group_management: Groupes
 home: Accueil
 parameters: Paramètres
-resource_manager: 'Gestionnaire de ressources'
-user_management: 'Gestion des utilisateurs'
+resource_manager: Ressources
+user_management: Utilisateurs
