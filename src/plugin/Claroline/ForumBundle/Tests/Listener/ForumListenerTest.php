@@ -60,11 +60,11 @@ class ForumListenerTest extends FunctionalTestCase
         $this->loadFixture(new LoadOptionsData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', "/admin/plugin/clarolineforum/options");
-        $this->assertEquals(1, count($crawler->filter('#forum_form')));
+        $this->assertEquals(1, count($crawler->filter('#forum_options_form')));
         $this->client->request(
             'POST',
             '/forum/options/edit',
-            array('forum_form' => array('subjects' => 20, 'messages' => 20))
+            array('forum_options_form' => array('subjects' => 20, 'messages' => 20))
         );
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $options = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
