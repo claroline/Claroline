@@ -560,7 +560,7 @@ class AdministrationController extends Controller
     {
         $platformConfig = $this->get('claroline.config.platform_config_handler')
             ->getPlatformConfig();
-        $form = $this->createForm(new PlatformParametersType(), $platformConfig);
+        $form = $this->createForm(new PlatformParametersType($this->getThemes()), $platformConfig);
 
         return $this->render(
             'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
@@ -577,7 +577,7 @@ class AdministrationController extends Controller
     {
         $request = $this->get('request');
         $configHandler = $this->get('claroline.config.platform_config_handler');
-        $form = $this->get('form.factory')->create(new PlatformParametersType());
+        $form = $this->get('form.factory')->create(new PlatformParametersType($this->getThemes()));
         $form->bindRequest($request);
 
         if ($form->isValid()) {
@@ -632,5 +632,29 @@ class AdministrationController extends Controller
     {
         return $this->get('claroline.utilities.paginator_parser')
             ->paginatorToArray($paginator);
+    }
+
+    /**
+     *  Get the list of themes availables.
+     *  @TODO use directory iterator
+     *
+     *  @param $path string The path of the themes.
+     *  @return array with a list of the themes availables.
+     */
+    private function getThemes($path = "/../Resources/less/themes/")
+    {
+        $themes = array();
+
+        if ($handle = opendir(__DIR__.$path)) {
+            while (false !== ($entry = readdir($handle))) {
+                if(strpos($entry, ".") !== 0) {
+                    $themes[$entry] = "$entry";
+                }
+            }
+
+            closedir($handle);
+        }
+
+        return $themes;
     }
 }
