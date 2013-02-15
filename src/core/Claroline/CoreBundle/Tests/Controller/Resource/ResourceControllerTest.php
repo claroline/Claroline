@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller\ResourceController;
+namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
