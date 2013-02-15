@@ -114,7 +114,7 @@ class ActivityController extends Controller
         $items = array('resource' => $activity, 'step' => 1, 'resources' => $this->getItems($activity));
 
         return $this->render(
-            'ClarolineCoreBundle:Activity:player/left_menu.html.twig',
+            'ClarolineCoreBundle:Activity/player:left_menu.html.twig',
             array(
                 'resourceActivities' => $resourceActivities,
                 'activity' => $activity,
@@ -141,7 +141,7 @@ class ActivityController extends Controller
             ->findActivities($activity);
 
         return $this->render(
-            'ClarolineCoreBundle:Activity:player/activity.html.twig',
+            'ClarolineCoreBundle:Activity/player:activity.html.twig',
             array(
                 'activity' => $activity,
                 'resource' => $resourceActivities[0]->getResource()
@@ -163,7 +163,7 @@ class ActivityController extends Controller
             ->find($activityId);
 
         return $this->render(
-            'ClarolineCoreBundle:Activity:player\instructions.html.twig',
+            'ClarolineCoreBundle:Activity\player:instructions.html.twig',
             array('instructions' => $activity)
         );
     }

@@ -43,6 +43,10 @@ class TemplateCheckerCommand extends ContainerAwareCommand
         foreach ($errors as $error) {
             $output->writeln("<bg=red>{$error}<bg=red>");
         }
+
+        if (count($errors) == 0) {
+            $output->writeln("<bg=green>No useless template found<bg=green>");
+        }
     }
 
     /**
@@ -52,40 +56,32 @@ class TemplateCheckerCommand extends ContainerAwareCommand
 
         $ds = DIRECTORY_SEPARATOR;
         $toCut = str_replace('/app', '/src', $this->getContainer()->getParameter('kernel.root_dir'))."{$ds}core/";
-        $found = false;
         $shortName = str_replace($toCut, '', $viewFile->getRealPath());
-        $fullName = $shortName;
-        $reverseFullName = str_replace('/', '\\', $fullName);
-        $shortName = str_replace('/Resources/views', '', $shortName);
         $parts = explode('/', $shortName);
-        $shortName = array_shift($parts).array_shift($parts);
-        $withoutColon = $shortName;
-        $withoutColon.= '/Resources/views';
-        foreach ($parts as $part) {
+        $withoutColon = array_shift($parts).array_shift($parts);
+        foreach($parts as $part) {
             $withoutColon.='/'.$part;
         }
         $reverseWithoutColon = str_replace('/', '\\', $withoutColon);
+        $shortName = str_replace('/Resources/views', '', $shortName);
+        $parts = explode('/', $shortName);
+        $shortName = array_shift($parts).array_shift($parts);
         $shortName.=":";
-        if (count($parts)  >= 2) {
-            $shortName .= array_shift($parts).':';
+        if (count($parts) > 1) {
+            $shortName.= array_shift($parts);
+            $end = ":".array_pop($parts);
         } else {
             $shortName .= ':'.array_shift($parts);
-        };
-        $shortName.= array_shift($parts);
+            $end = '';
+        }
 
         foreach ($parts as $part) {
-            $shortName.='/'.$part;
+            $shortName.= "/".$part;
         }
+        $shortName.= $end;
 
         $reverseShortName = str_replace('/', '\\', $shortName);
-        $halfShortParts = explode('/', str_replace(':', '/', $shortName));
-        $halfShortName = array_shift($halfShortParts).':'.array_shift($halfShortParts);
-
-        foreach ($halfShortParts as $part) {
-            $halfShortName.='/'.$part;
-        }
-
-        $reverseHalfShortName = str_replace('/', '\\', $halfShortName);
+        $escapedShortName = str_replace('\\', '\\\\', $reverseShortName);
 
         foreach ($projectIterator as $item) {
             if ($item->isFile()) {
@@ -96,41 +92,24 @@ class TemplateCheckerCommand extends ContainerAwareCommand
                 if (strpos($file, $reverseShortName)) {
                     return null;
                 }
-                if (strpos($file, $halfShortName)) {
-                    return null;
-                }
-                if (strpos($file, $reverseHalfShortName)) {
-                    return null;
-                }
-                if (strpos($file, $fullName)) {
-                    return null;
-                }
-                if (strpos($file, $reverseFullName)) {
-                    return null;
-                }
                 if (strpos($file, $withoutColon)) {
                     return null;
                 }
                 if (strpos($file, $reverseWithoutColon)) {
                     return null;
                 }
+                if (strpos($file, $escapedShortName)) {
+                    return null;
+                }
             }
-        }
-
-        if ($found) {
-
-            return null;
         }
 
         return "No occurences of
         {$shortName}
         {$reverseShortName}
-        {$halfShortName}
-        {$reverseHalfShortName}
-        {$fullName}
-        {$reverseFullName}
         {$withoutColon}
         {$reverseWithoutColon}
+        {$escapedShortName}
         were found";
     }
 }

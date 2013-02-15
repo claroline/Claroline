@@ -29,7 +29,7 @@
         </div>
     </div>
  <div id="grid" class="container-fluid">
-    <div class="row">        
+    <div class="row">
         <div class="span12">
             <ul class="nav nav-tabs">
             </ul>
@@ -39,8 +39,8 @@
   {% block content %}
             <div class="span3">
         <ol class="nav nav-list">
-             {%block naviguation %}           
-            {% include 'steps.html.twig' %}
+             {% block naviguation %}
+             {% include 'ClarolineCoreBundle:Install:steps.html.twig' %}
                 {%endblock %}
                   </ol>
             <p>  Progression</p>
@@ -49,7 +49,7 @@
             </div>
     </div>
              <div class="span6">
-                  {%block data %}                   
+                  {%block data %}
                   {%endblock data %}
     {% endblock %}
 {%endblock %}
