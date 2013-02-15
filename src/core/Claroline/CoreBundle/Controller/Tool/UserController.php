@@ -31,7 +31,7 @@ class UserController extends Controller
         $this->checkRegistration($workspace);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\user_management\unregistered_user_list_layout.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\user_management:unregistered_user_list_layout.html.twig',
             array('workspace' => $workspace)
         );
     }
@@ -99,7 +99,7 @@ class UserController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\user_management\user_parameters.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\user_management:user_parameters.html.twig',
             array(
                 'workspace' => $workspace,
                 'user' => $user,
