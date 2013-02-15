@@ -11,7 +11,9 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Symfony\Component\Form\FormError;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -581,12 +583,25 @@ class AdministrationController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
-            $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
-            $configHandler->setParameter('theme', $form['theme']->getData());
+            try {
+                $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
+                $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
+                $configHandler->setParameter('theme', $form['theme']->getData());
+            } catch (UnwritableException $e) {
+                $form->addError(
+                    new FormError(
+                        $this->get('translator')
+                        ->trans('unwritable_file_exception', array('%path%' => $e->getPath()), 'platform')
+                    )
+                );
+
+                return $this->render(
+                    'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
+                    array('form_settings' => $form->createView())
+                );
+            }
         }
 
-        //this form can't be invalid
         return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
     }
 
@@ -647,7 +662,7 @@ class AdministrationController extends Controller
 
         if ($handle = opendir(__DIR__.$path)) {
             while (false !== ($entry = readdir($handle))) {
-                if(strpos($entry, ".") !== 0) {
+                if (strpos($entry, ".") !== 0) {
                     $themes[$entry] = "$entry";
                 }
             }

@@ -35,9 +35,16 @@ class PlatformConfigurationHandler
 
     public function setParameter($parameter, $value)
     {
+        $fileInfo = new \SplFileInfo($this->configFile);
+        if (!$fileInfo->isWritable()) {
+            $exception = new UnwritableException();
+            $exception->setPath($this->configFile);
+            throw $exception;
+        }
         $this->checkParameter($parameter);
         $this->options[$parameter] = $value;
         file_put_contents($this->configFile, Yaml::dump($this->options));
+
     }
 
     protected function checkParameter($parameter)
