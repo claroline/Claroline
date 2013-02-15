@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 
 class WorkspaceRepository extends EntityRepository
 {
-    public function getWorkspacesOfUser(User $user)
+    public function findByUser(User $user)
     {
         $dql = "
             SELECT w, r FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
@@ -21,7 +21,7 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getNonPersonnalWS()
+    public function findNonPersonal()
     {
         $dql = "
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
@@ -36,7 +36,7 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getVisibleWorkspaceForAnonymous()
+    public function findByAnonymous()
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w

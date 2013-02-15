@@ -64,14 +64,14 @@ class LoadResourceTreeData extends LoggableFixture implements ContainerAwareInte
         $numTot = (( 1 - pow($this->directoryCount, $this->depth + 1) ) / (1 - $this->directoryCount) ) - 1;
         $this->log('Number of directories that will be generated: ' . $numTot);
         $this->log('Number of files that will be generated: ' . $numTot * $this->fileCount);
-        $this->user = $manager->getRepository('Claroline\CoreBundle\Entity\User')
+        $this->user = $manager->getRepository('ClarolineCoreBundle:User')
             ->findOneBy(array('username' => $this->username));
         $this->workspace = $this->user->getPersonalWorkspace();
-        $this->userRootDirectory = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+        $this->userRootDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findOneBy(array('parent' => null, 'workspace' => $this->user->getPersonalWorkspace()->getId()));
-        $this->dirType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+        $this->dirType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'directory'));
-        $this->fileType = $manager->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+        $this->fileType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('name' => 'file'));
         $nextId = $manager
             ->createQuery('SELECT MAX(i.id) + 1 FROM Claroline\CoreBundle\Entity\Resource\AbstractResource i')

@@ -1,6 +1,6 @@
 services:
   claroline.listener.rssreader_widget:
-    class: Claroline\RssReaderBundle\Listeners\RssReaderListener
+    class: Claroline\RssReaderBundle\Listener\RssReaderListener
     calls:
       - [setContainer, ["@service_container"]]
     tags:

@@ -50,18 +50,18 @@ class LayoutController extends Controller
 
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $wsRepo = $em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
 
         if ($user instanceof User) {
             $isLogged = true;
-            $countUnreadMessages = $em->getRepository('Claroline\CoreBundle\Entity\Message')
-                ->countUnreadMessage($user);
+            $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
+                ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
-            $workspaces = $wsRepo->getWorkspacesOfUser($user);
+            $workspaces = $wsRepo->findByUser($user);
             $personalWs = $user->getPersonalWorkspace();
         } else {
             $username = $this->get('translator')->trans('anonymous', array(), 'platform');
-            $workspaces = $wsRepo->getVisibleWorkspaceForAnonymous();
+            $workspaces = $wsRepo->findByAnonymous();
             $configHandler = $this->get('claroline.config.platform_config_handler');
 
             if (true === $configHandler->getParameter('allow_self_registration')) {

@@ -4,10 +4,8 @@ namespace Claroline\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\ForumBundle\Entity\Message;
-use Claroline\ForumBundle\Entity\Forum;
 
 /**
  * @ORM\Entity
@@ -22,6 +20,9 @@ class Subject extends AbstractResource
      */
     protected $title;
 
+    /**
+     * @Assert\NotBlank()
+     */
     protected $message;
 
     public function getTitle()

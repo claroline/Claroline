@@ -18,7 +18,7 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $this->repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
     }
 
     public function testFindPluginResourceTypes()

@@ -9,7 +9,7 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
 
-{% block sectionContent %}
+{% block section_content %}
     <div id="output"></div>
     <div id='calendar'></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -39,9 +39,7 @@
     {{ parent() }}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
-    <script type='text/javascript'src='{{ asset('/src/core/Claroline/CoreBundle/Resources/public/js/tool/calendar.js') }}'></script>
-    {#<script type='text/javascript'src='{{ asset('/src/core/Claroline/CoreBundle/Resources/public/js/workspace/calendarprocess.js') }}'></script> #}
-
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
     <script type='text/javascript'>
         $(function () {
             Claroline.Calendar.initialize('desktop');

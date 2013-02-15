@@ -26,7 +26,7 @@ class Manager
      */
     public function generateWorkspaceDisplayConfig($workspaceId)
     {
-        $workspace = $this->em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
         $configRepo = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
         $workspaceConfigs = $this->setEntitiesArrayKeysAsIds(
@@ -51,7 +51,7 @@ class Manager
      */
     public function generateDesktopDisplayConfig($userId)
     {
-        $user = $this->em->getRepository('Claroline\CoreBundle\Entity\User')->find($userId);
+        $user = $this->em->getRepository('ClarolineCoreBundle:User')->find($userId);
         $configRepo = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
         $userConfigs = $this->setEntitiesArrayKeysAsIds(
             $configRepo->findBy(array('user' => $user))

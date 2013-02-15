@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,7 +34,7 @@ class ParametersController extends Controller
             ->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool:workspace\parameters\widget_properties.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\parameters:widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs)
         );
     }
@@ -113,7 +114,7 @@ class ParametersController extends Controller
 
         if ($event->getContent() !== '') {
             return $this->render(
-                'ClarolineCoreBundle:Tool:workspace\parameters\widget_configuration.html.twig',
+                'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',
                 array('content' => $event->getContent(), 'workspace' => $workspace)
             );
         }

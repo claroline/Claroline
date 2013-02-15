@@ -84,7 +84,7 @@ class RegistrationControllerTest extends FunctionalTestCase
         // ($this->getEntityManager() doesn't work)
         $user = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\User')
+            ->getRepository('ClarolineCoreBundle:User')
             ->findOneByUsername($username);
 
         return $user;

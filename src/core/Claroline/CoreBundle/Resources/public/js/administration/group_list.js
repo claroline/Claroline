@@ -19,14 +19,12 @@
 
     var standardRoute = function(){
         return Routing.generate('claro_admin_paginated_group_list', {
-            'format': 'html',
             'offset': $('.row-group').length
         })
     }
 
     var searchRoute = function(){
         return Routing.generate('claro_admin_paginated_search_group_list', {
-            'format': 'html',
             'offset': $('.row-group').length,
             'search': document.getElementById('search-group-txt').value
         })

@@ -11,7 +11,7 @@ class AbstractResourceRepositoryTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->repo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $this->repo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
     }
 
     public function testFindDescendants()

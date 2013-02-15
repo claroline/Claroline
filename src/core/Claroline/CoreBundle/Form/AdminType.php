@@ -4,6 +4,10 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Form used to collect minimal information on the administrator in the plaform
+ * installation process.
+ */
 class AdminType extends BaseProfileType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -21,6 +25,7 @@ class AdminType extends BaseProfileType
     {
         return array(
             'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'translation_domain' => 'platform'
         );
     }
 }
