@@ -9,6 +9,8 @@ forum_subject_form_message: Message
 forum_subject_form_message_content: Contenu
 forum_message_form_content: Contenu
 forum_form_name: Nom
+forum_options_form_subjects: Sujets par page
+forum_options_form_messages: Messages par page
 subject: Sujet
 last_message: Dernier message
 started_by: Créé par
