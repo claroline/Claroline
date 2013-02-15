@@ -28,7 +28,7 @@ class GroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkIfAdmin($workspace);
+        $this->checkRegistration($workspace);
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
@@ -121,7 +121,7 @@ class GroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkIfAdmin($workspace);
+        $this->checkRegistration($workspace);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
@@ -213,6 +213,7 @@ class GroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
+        $this->checkRegistration($workspace);
         $groups = array();
 
         if (isset($params['groupIds'])) {
@@ -353,25 +354,6 @@ class GroupController extends Controller
     private function checkRegistration($workspace)
     {
         if (!$this->get('security.context')->isGranted('group_management', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-    }
-
-    /**
-     * Checks if the current user is the admin of a workspace.
-     *
-     * @param AbstractWorkspace $workspace
-     *
-     * @throws AccessDeniedHttpException
-     */
-    private function checkIfAdmin($workspace)
-    {
-        $managerRoleName = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findManagerRole($workspace)
-            ->getName();
-
-        if (!$this->get('security.context')->isGranted($managerRoleName)) {
             throw new AccessDeniedHttpException();
         }
     }

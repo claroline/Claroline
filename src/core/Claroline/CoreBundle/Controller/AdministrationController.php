@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormError;
 
 /**
@@ -88,6 +89,10 @@ class AdministrationController extends Controller
      */
     public function deleteUsersAction()
     {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new \AccessDeniedException();
+        }
+
         $params = $this->get('request')->query->all();
 
         if (isset($params['ids'])) {
