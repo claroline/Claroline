@@ -55,7 +55,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testMultiAddUserIsProtected()
     {
-       $this->loadUserFixture(array('user', 'user_2'));
+        $this->loadUserFixture(array('user', 'user_2'));
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->client->request(
