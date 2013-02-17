@@ -23,7 +23,7 @@ class LogListener extends ContainerAware
         } else {
             $user = $token->getUser();
         }
-        
+
         $rs->setCreator($event->getResource()->getCreator());
         $rs->setUpdator($user);
         $rs->setAction($event->getAction());
