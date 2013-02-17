@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -78,16 +80,20 @@ class ResourceVoter implements VoterInterface
                 $this->checkAction($attributes[0], $object->getResources(), $token)
             );
 
-            if (count($errors) == 0) {
+            if (count($errors) === 0) {
                 return VoterInterface::ACCESS_GRANTED;
-            } else {
-                $object->setErrors($errors);
-
-                return VoterInterface::ACCESS_DENIED;
             }
-        } else {
-             return VoterInterface::ACCESS_ABSTAIN;
+
+            if ($token instanceof AnonymousToken) {
+                throw new AuthenticationException('Insufficient permissions : authentication required');
+            }
+
+            $object->setErrors($errors);
+
+            return VoterInterface::ACCESS_DENIED;
         }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function supportsAttribute($attribute)
