@@ -5,7 +5,6 @@
 <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
         <fieldset>
             <legend>{{ 'add_user'|trans({}, 'platform') }} :</legend>
-            {{ form_errors(form_complete_user) }}
             {{ form_widget(form_complete_user) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
