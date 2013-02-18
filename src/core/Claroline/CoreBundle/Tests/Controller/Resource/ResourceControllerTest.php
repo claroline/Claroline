@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 class ResourceControllerTest extends FunctionalTestCase
 {
@@ -152,57 +153,66 @@ class ResourceControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @todo Unskip this test, taking changes to the filter action into account
-     * @todo Test the exception if the directory id parameter doesn't match any directory
+     * @todo Test the exception if the directory id parameter doesn't match any directory.
+     * @todo Refactoring the repository.
+     * @todo Test the date filter.
+     * @todo Test if not in the Desktop (workspaceId != 0).
      */
     public function testFilters()
     {
-        $this->markTestSkipped();
+        //$this->loadFixture(new LoadWorkspaceData(array('ws_e')));
         $this->logUser($this->getFixtureReference('user/user'));
         $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
         $this->createBigTree($this->pwr, $user);
         $this->logUser($this->getFixtureReference('user/admin'));
         $creationTimeAdminTreeOne = new \DateTime();
+        $admin = $this->getFixtureReference('user/admin');
+
         $adminpwr = $this->resourceRepository
             ->findWorkspaceRoot($this->getFixtureReference('user/admin')->getPersonalWorkspace());
-        $this->createBigTree($adminpwr->getId());
-        //sleep(2); // Pause to allow us to filter on creation date
-        //$creationTimeAdminTreeTwo = new \DateTime();
+        $admin = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $this->createBigTree($adminpwr, $admin);
+        sleep(2); // Pause to allow us to filter on creation date
         //$wsEroot = $this->resourceRepository->findWorkspaceRoot($this->getFixtureReference('workspace/ws_e'));
-        //$this->createBigTree($wsEroot->getId());
-        //$now = new \DateTime();
+        //$this->createBigTree($wsEroot, $admin);
+        $now = new \DateTime();
+        $this->logUser($this->getFixtureReference('user/user'));
         //filter by types (1)
-        $crawler = $this->client->request('GET', '/resource/filter?types[]=file');
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent(), true)));
-
-        //filter by types (2)
-        $crawler = $this->client->request('GET', '/resource/filter?types[]=file&types[]=text');
-        $this->assertEquals(3, count(json_decode($this->client->getResponse()->getContent(), true)));
-
-        //filter by root (1)
-        $crawler = $this->client->request('GET', "/resource/filter?roots[]={$adminpwr->getPath()}");
-        $this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent(), true)));
-
+        $crawler = $this->client->request('GET', '/resource/filter/0?types[]=file');
+        $result = json_decode($this->client->getResponse()->getContent());
+        $resources = $result->resources;
+        $this->assertEquals(3, count($resources));
+        /*
         //filter by datecreation
         $crawler = $this->client->request(
             'GET',
-            "/resource/filter?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}"
+            "/resource/filter/0?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}"
         );
-        $this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent(), true)));
+        $result = json_decode($this->client->getResponse()->getContent());
+        $resources = $result->resources;
+        var_dump($this->client->getResponse()->getContent());
+        $this->assertEquals(5, count($resources));
 
-        //$crawler = $this->client->request('GET', "/resource/filter?dateTo={$now->format('Y-m-d H:i:s')}");
-        //$this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent(), true)));
+        $crawler = $this->client->request('GET', "/resource/filter/0?dateTo={$now->format('Y-m-d H:i:s')}");
+        $result = json_decode($this->client->getResponse()->getContent());
+        $resources = $result->resources;
+        $this->assertEquals(6, count($resources));
 
-        //$crawler = $this->client->request(
-        //  'GET',
-        //  "/resource/filter?dateFrom={$creationTimeAdminTreeTwo->format('Y-m-d H:i:s')}
-        //  &dateTo={$now->format('Y-m-d H:i:s')}
-        //");
-        //$this->assertEquals(5, count(json_decode($this->client->getResponse()->getContent(), true)));
+        $crawler = $this->client->request(
+          'GET',
+          "/resource/filter/0?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}
+          &dateTo={$now->format('Y-m-d H:i:s')}
+        ");
 
+        $result = json_decode($this->client->getResponse()->getContent());
+        $resources = $result->resources;
+        $this->assertEquals(5, count($resources));
+        */
         //filter by name
-        $crawler = $this->client->request('GET', "/resource/filter?name=firstFile");
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $crawler = $this->client->request('GET', "/resource/filter/0?name=firstFile");
+        $result = json_decode($this->client->getResponse()->getContent());
+        $resources = $result->resources;
+        $this->assertEquals(1, count($resources));
 
         //filter by mime
         /* This filter is not active for now (see ResourceController::filterAction's todo)
@@ -495,7 +505,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
-
+    //! When using these functions, the $user must be first logged in. Otherwise
+    //doctrine will try to persists entities it doesn't already know.
     private function createFolder($parent, $name, User $user)
     {
         $directory = new Directory();
