@@ -136,8 +136,9 @@ class Manager
      */
     public function delete(AbstractResource $resource)
     {
-        //If it's a link, the link is removed.
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
+            $this->ed->dispatch('log_resource', $logEvent);
             $this->em->remove($resource);
         } else {
             if ($resource->getResourceType()->getName() !== 'directory') {
@@ -147,6 +148,9 @@ class Manager
 
                 $event = new DeleteResourceEvent($resource);
                 $this->ed->dispatch($eventName, $event);
+                $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
+                $this->ed->dispatch('log_resource', $logEvent);
+
             } else {
                 $this->deleteDirectory($resource);
             }
@@ -297,9 +301,13 @@ class Manager
         foreach ($children as $child) {
             $event = new DeleteResourceEvent($child);
             $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
+            $logEvent = new ResourceLogEvent($child, ResourceLogEvent::DELETE_ACTION);
+            $this->ed->dispatch('log_resource', $logEvent);
             $this->em->flush();
         }
 
         $this->em->remove($resource);
+        $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
+        $this->ed->dispatch('log_resource', $logEvent);
     }
 }

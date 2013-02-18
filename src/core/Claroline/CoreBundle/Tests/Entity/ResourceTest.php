@@ -49,10 +49,25 @@ class ResourceTest extends FixtureTestCase
 
     public function testModificationDateIsUpdatedWhenUpdatingAnExistentResource()
     {
-        $this->markTestSkipped('irrelevant for now');
         $resource = new Directory();
         $resource->setName('Test');
+        $resource->setIcon(
+            $this->client->getContainer()
+                ->get('doctrine.orm.entity_manager')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneBy(array ('type' => 'default'))
+        );
+        $resource->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
         $resource->setCreator($this->getFixtureReference('user/admin'));
+        $resource->setOwnerRights(
+            array(
+                'sharable' => true,
+                'editable' => true,
+                'exportable' => true,
+                'deletable' => true,
+                'copiable' => true
+            )
+        );
         $this->getEntityManager()->persist($resource);
         $this->getEntityManager()->flush();
 

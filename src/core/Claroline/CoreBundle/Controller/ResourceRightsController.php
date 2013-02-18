@@ -133,8 +133,9 @@ class ResourceRightsController extends Controller
             $resourceRepo->findDescendants($resource, true, false) :
             array($resource);
         $resourceTypeIds = isset($parameters['resourceTypes']) ?
-            $parameters['resourceTypes'] :
+            array_keys($parameters['resourceTypes']) :
             array();
+
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByIds($resourceTypeIds);
 

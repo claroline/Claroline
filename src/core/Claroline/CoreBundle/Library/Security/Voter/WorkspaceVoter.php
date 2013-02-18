@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\Translator;
 use Doctrine\ORM\EntityManager;
 
@@ -29,6 +31,8 @@ class WorkspaceVoter implements VoterInterface
                 VoterInterface::ACCESS_GRANTED:
                 VoterInterface::ACCESS_DENIED;
         }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function supportsAttribute($attribute)
@@ -69,6 +73,10 @@ class WorkspaceVoter implements VoterInterface
             if ($tool->getName() === $action) {
                 return true;
             }
+        }
+
+        if ($token instanceof AnonymousToken) {
+            throw new AuthenticationException('Insufficient permissions : authentication required');
         }
 
         return false;

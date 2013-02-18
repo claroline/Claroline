@@ -8,12 +8,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 class PlatformParametersType extends AbstractType
 {
     protected $themes;
-        
+
     public function __construct($themes)
     {
-        $this->themes=$themes;
+        $this->themes = $themes;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -30,7 +30,7 @@ class PlatformParametersType extends AbstractType
                 'choice',
                 array(
                     'choices' => $this->themes
-                )                
+                )
             );
     }
 

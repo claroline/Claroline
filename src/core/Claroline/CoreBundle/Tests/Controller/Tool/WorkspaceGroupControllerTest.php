@@ -7,16 +7,10 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
 class WorkspaceGroupControllerTest extends FunctionalTestCase
 {
-
     protected function setUp()
     {
         parent::setUp();
         $this->client->followRedirects();
-    }
-
-    public function testAddGroupIsProtected()
-    {
-        $this->markTestSkipped('not implemented yet');
     }
 
     public function testMultiAddGroup()
@@ -46,7 +40,14 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testMultiAddGroupIsProtected()
     {
-        $this->markTestSkipped('not implemented yet');
+        $this->loadUserFixture(array('user', 'user_2'));
+        $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getFixtureReference('user/user_2'));
+        $this->client->request(
+            'PUT',
+            "/workspaces/tool/group_management/{$pwu}/add/group?groupIds[]=1"
+        );
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     //222222222222222222222222

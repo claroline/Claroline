@@ -6,25 +6,42 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class AjaxAuthenticationListenerTest extends FunctionalTestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
-        $this->loadWorkspaceFixture();
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('john' => 'user'));
         $this->client->followRedirects();
     }
 
-    public function testAjaxAuthenticationListenerExceptionThrowsError()
+    public function testANotAllowedResponseIsReturnedOnAccessDeniedException()
     {
-        $this->markTestSkipped('No firewall anymore');
+        $this->loadUserData(array('jane' => 'user'));
+        $this->logUser($this->getUser('jane'));
         $this->client->request(
             'GET',
-            "/workspaces/{$this->getFixtureReference('workspace/ws_a')->getId()}/users/0/unregistered",
+            "/workspaces/{$this->getWorkspace('john')->getId()}/open/tool/home",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
-
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals('Not allowed', $this->client->getResponse()->getContent());
+    }
+
+    public function testAnonymousUserIsInvitedToAuthenticateOnAuthenticationException()
+    {
+        $this->client->request(
+            'GET',
+            "/workspaces/{$this->getWorkspace('john')->getId()}/open/tool/home",
+            array(),
+            array(),
+            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        );
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertContains(
+            'refresh the page to proceed to authentication',
+            $this->client->getResponse()->getContent()
+        );
     }
 }
