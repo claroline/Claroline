@@ -16,7 +16,7 @@ class ForumListenerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
     }
 
     public function testForumFormCreation()
@@ -30,7 +30,7 @@ class ForumListenerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->client->request(
             'POST',
             "/resource/create/claroline_forum/{$userRoot->getId()}",
@@ -44,7 +44,7 @@ class ForumListenerTest extends FunctionalTestCase
         $this->loadFixture(new LoadOptionsData());
         $this->logUser($this->getFixtureReference('user/user'));
         $userRoot = $this->resourceRepository
-            ->getRootForWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->client->request(
             'POST',
             "/resource/create/claroline_forum/{$userRoot->getId()}",
@@ -60,11 +60,11 @@ class ForumListenerTest extends FunctionalTestCase
         $this->loadFixture(new LoadOptionsData());
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', "/admin/plugin/clarolineforum/options");
-        $this->assertEquals(1, count($crawler->filter('#forum_form')));
+        $this->assertEquals(1, count($crawler->filter('#forum_options_form')));
         $this->client->request(
             'POST',
             '/forum/options/edit',
-            array('forum_form' => array('subjects' => 20, 'messages' => 20))
+            array('forum_options_form' => array('subjects' => 20, 'messages' => 20))
         );
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $options = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();

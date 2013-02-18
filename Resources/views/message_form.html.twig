@@ -12,11 +12,10 @@ tinyMCE.init({
 {% endblock %}
 
 {% block section_content %}
-<form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'forumId':forumId}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
-   {{ form_errors(form) }}
-   {{ form_widget(form) }}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-    </div>
-</form>
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form novalidate="novalidate" action="{{path('claro_forum_create_message',{'subjectId':subjectId})}}" method="post" {{ form_enctype(form) }} id="message_form">
+       {{ form_errors(form) }}
+       {{ form_widget(form) }}
+       <input type="submit" />
+    </form>
 {% endblock %}

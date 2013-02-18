@@ -5,16 +5,22 @@ namespace Claroline\ForumBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class MessageType extends AbstractType
+class ForumType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('content', 'textarea');
-        $builder->add('name', 'hidden', array('data' => 'tmp'));
+        $builder->add('name');
     }
 
     public function getName()
     {
-        return 'message_forum_form';
+        return 'forum_form';
+    }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'forum'
+        );
     }
 }
