@@ -1,0 +1,8 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block section_content %}
+<h3> {{ image.getName }} </h3>
+<div><img src="{{ asset('') }}/../../files/{{ image.getHashName() }}"/></div>
+
+<a href="{{ path('claro_resource_export') }}?ids[]={{ image.getId() }}">{{ 'download'|trans({}, 'platform') }} </a>
+{% endblock %}
