@@ -1,0 +1,21 @@
+[submodule "src/plugin/Claroline/ForumBundle"]
+	path = src/plugin/Claroline/ForumBundle
+	url = git@github.com:claroline/ForumBundle.git
+[submodule "src/plugin/Claroline/ExampleBundle"]
+	path = src/plugin/Claroline/ExampleBundle
+	url = git@github.com:claroline/ExampleBundle.git
+[submodule "src/plugin/Claroline/ImagePlayerBundle"]
+	path = src/plugin/Claroline/ImagePlayerBundle
+	url = git@github.com:claroline/ImagePlayerBundle.git
+[submodule "src/plugin/Claroline/PdfPlayerBundle"]
+	path = src/plugin/Claroline/PdfPlayerBundle
+	url = git@github.com:claroline/PdfPlayerBundle.git
+[submodule "src/plugin/Claroline/RssReaderBundle"]
+	path = src/plugin/Claroline/RssReaderBundle
+	url = git@github.com:claroline/RssReaderBundle.git
+[submodule "src/plugin/Claroline/SiteBundle"]
+	path = src/plugin/Claroline/SiteBundle
+	url = git@github.com:claroline/SiteBundle.git
+[submodule "src/plugin/Claroline/VideoPlayerBundle"]
+	path = src/plugin/Claroline/VideoPlayerBundle
+	url = git@github.com:claroline/VideoPlayerBundle.git
