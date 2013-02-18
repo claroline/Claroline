@@ -211,7 +211,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return an array of arrays or entities
      */
-    public function finderUserResourcesByCriteria(User $user, array $criteria)
+    public function findUserResourcesByCriteria(User $user, array $criteria)
     {
         $dql = self::SELECT_ARRAY . self::FROM_RESOURCES;
 

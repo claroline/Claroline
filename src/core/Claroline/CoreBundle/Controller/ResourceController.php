@@ -424,7 +424,7 @@ class ResourceController extends Controller
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $resourceRepo->findUserResourceByCriteria($user, $criteria);
+        $resources = $resourceRepo->findUserResourcesByCriteria($user, $criteria);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
