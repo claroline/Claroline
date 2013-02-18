@@ -52,23 +52,24 @@ class TemplateCheckerCommand extends ContainerAwareCommand
     /**
      * @todo: use regex (it's going to be a complex one)
      */
-    private function check($projectIterator, \SplFileInfo $viewFile) {
+    private function check($projectIterator, \SplFileInfo $viewFile)
+    {
 
         $ds = DIRECTORY_SEPARATOR;
         $toCut = str_replace('/app', '/src', $this->getContainer()->getParameter('kernel.root_dir'))."{$ds}core/";
         $shortName = str_replace($toCut, '', $viewFile->getRealPath());
         $parts = explode('/', $shortName);
         $withoutColon = array_shift($parts).array_shift($parts);
-        foreach($parts as $part) {
-            $withoutColon.='/'.$part;
+        foreach ($parts as $part) {
+            $withoutColon .= '/'.$part;
         }
         $reverseWithoutColon = str_replace('/', '\\', $withoutColon);
         $shortName = str_replace('/Resources/views', '', $shortName);
         $parts = explode('/', $shortName);
         $shortName = array_shift($parts).array_shift($parts);
-        $shortName.=":";
+        $shortName .= ":";
         if (count($parts) > 1) {
-            $shortName.= array_shift($parts);
+            $shortName .= array_shift($parts);
             $end = ":".array_pop($parts);
         } else {
             $shortName .= ':'.array_shift($parts);
@@ -76,9 +77,9 @@ class TemplateCheckerCommand extends ContainerAwareCommand
         }
 
         foreach ($parts as $part) {
-            $shortName.= "/".$part;
+            $shortName .= "/".$part;
         }
-        $shortName.= $end;
+        $shortName .= $end;
 
         $reverseShortName = str_replace('/', '\\', $shortName);
         $escapedShortName = str_replace('\\', '\\\\', $reverseShortName);

@@ -22,6 +22,8 @@ services:
 
     claroline.listener.ajax_authentication:
         class: Claroline\CoreBundle\Listener\AjaxAuthenticationListener
+        calls:
+            - [setContainer, ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1 }
 

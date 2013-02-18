@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Security;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class Utilities
 {
@@ -74,7 +75,9 @@ class Utilities
      */
     public function getRoles(TokenInterface $token)
     {
-        if ($token->getUser() === 'anon.') {
+        $roles = array();
+
+        if ($token instanceof AnonymousToken) {
             foreach ($token->getRoles() as $role) {
                 $roles[] = $role->getRole();
             }

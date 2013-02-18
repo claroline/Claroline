@@ -19,7 +19,6 @@ class ValidatorTest extends WebTestCase
 
     public function testValidatorCollectsValidationErrorsFromCheckers()
     {
-        $this->markTestSkipped('something is broken');
         $firstChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
         $secondChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
         $thirdChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
@@ -65,9 +64,6 @@ class ValidatorTest extends WebTestCase
         $validator = $container->get('claroline.plugin.validator');
         $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
-
-        //$pluginFqcn = 'Valid\Basic\ValidBasic';
-
         $plugin = $loader->load($pluginFqcn);
         $errors = $validator->validate($plugin);
 

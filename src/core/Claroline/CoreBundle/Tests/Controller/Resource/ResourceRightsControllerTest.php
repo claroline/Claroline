@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller\ResourceController;
+namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -136,8 +136,8 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             "/resource/{$directoryId}/role/{$collaboratorRoleId}/right/creation/edit",
             array(
                 'resourceTypes' => array(
-                    $resourceTypes[0]->getId(),
-                    $resourceTypes[1]->getId()
+                    $resourceTypes[0]->getId() => 'on',
+                    $resourceTypes[1]->getId() => 'on'
                 ),
                 'isRecursive' => 'on'
             )
@@ -166,9 +166,9 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             "/resource/{$directoryId}/role/{$collaboratorRoleId}/right/creation/edit",
             array(
                 'resourceTypes' => array(
-                    $resourceTypes[1]->getId(),
-                    $resourceTypes[2]->getId(),
-                    $resourceTypes[3]->getId()
+                    $resourceTypes[1]->getId() => 'on',
+                    $resourceTypes[2]->getId() => 'on',
+                    $resourceTypes[3]->getId() => 'on'
                 )
             )
         );

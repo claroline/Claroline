@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller\ResourceController;
+namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -121,40 +121,12 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testExport()
     {
-        $this->markTestSkipped("streamedResponse broke this one");
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('GET', "/resource/export?0={$this->pwr->getId()}");
+        ob_start();
+        $this->client->request('GET', "/resource/export?ids[]={$this->pwr->getId()}");
+        ob_end_clean();
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
-        //with a full dir
-        $theBigTree = $this->createBigTree($this->pwr->getId());
-        $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
-        $this->client->request('GET', "/resource/multiexport?0={$theBigTree[0]->id}&1={$theLoneFile->id}");
-        $headers = $this->client->getResponse()->headers;
-        $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
-        $filename = $this->client
-            ->getContainer()
-            ->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . "testMultiExportClassic.zip";
-        ob_start(null);
-        $this->client->getResponse()->send();
-        $content = ob_get_contents();
-        ob_clean();
-        file_put_contents($filename, $content);
-        // Check the archive content
-        $zip = new \ZipArchive();
-        $zip->open($filename);
-        $neededFiles = array(
-            "wsA - Workspace_A/rootDir/",
-            "wsA - Workspace_A/theLoneFile.txt",
-            "wsA - Workspace_A/rootDir/secondfile",
-            "wsA - Workspace_A/rootDir/firstfile",
-            "wsA - Workspace_A/rootDir/childDir/thirdFile");
-        $foundFiles = array();
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $stat = $zip->statIndex($i);
-            array_push($foundFiles, $stat['name']);
-        }
-        $this->assertEquals(0, count(array_diff($neededFiles, $foundFiles)));
     }
 
     public function testMultiExportThrowsAnExceptionWithoutParameters()
@@ -266,25 +238,9 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
     }
 
-    public function testDeleteUserRemovesHisPersonnalDataTree()
-    {
-        $this->markTestSkipped("Can't make it work.");
-        $this->logUser($this->getFixtureReference('user/user'));
-        $theBigTree = $this->createBigTree($this->pwr->getId());
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('GET', "admin/user/delete/{$this->getFixtureReference('user/user')->getId()}");
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $userRoot = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
-            ->find($this->pwr->getId());
-        $this->assertEquals($userRoot, null);
-        $tbg = $em->getRepository('ClarolineCoreBundle:Resource\ResourceInstance')
-            ->find($theBigTree[0]->getId());
-        $this->assertEquals($tbg, null);
-    }
-
     public function testCustomActionLogsEvent()
     {
-        $this->markTestSkipped('not custom action defined yet');
+        $this->markTestSkipped('no custom action defined yet');
         $this->logUser($this->getFixtureReference('user/user'));
         $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
         $file = $this->uploadFile($this->pwr, 'txt.txt', $user);
@@ -341,10 +297,10 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteActionLogsEvent()
     {
-        $this->markTestSkipped("Doesn't work during the test (onLogResource method not fired during the delete)");
         $this->logUser($this->getFixtureReference('user/user'));
-        $theBigTree = $this->createBigTree($this->pwr->getId());
-        $theLoneFile = $this->uploadFile($this->pwr->getId(), 'theLoneFile.txt');
+        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $theBigTree = $this->createBigTree($this->pwr, $user);
+        $theLoneFile = $this->uploadFile($this->pwr, 'theLoneFile.txt', $user);
         $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
@@ -355,14 +311,15 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
             ->findAll();
         $this->client->request(
-            'GET', "/resource/delete?0={$theBigTree[0]->id}&1={$theLoneFile->id}"
+            'GET', "/resource/delete?ids[]={$theBigTree[0]->getId()}&ids[]={$theLoneFile->getId()}"
         );
+
         $postEvents = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
             ->findAll();
-        $this->assertEquals(2, count($postEvents) - count($preEvents));
+        $this->assertEquals(6, count($postEvents) - count($preEvents));
     }
 
     public function testMultiMoveLogsEvent()
