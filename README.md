@@ -14,6 +14,9 @@
 
 ### Quick start
 
+Use `git clone --recursive git://github.com/claroline/Claroline.git` to clone this repository
+and its associated plugins (git submodules).
+
 After cloning the project :
 
 * create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
@@ -31,8 +34,11 @@ After cloning the project :
 
 ### Quick update
 
-To update your installation to the last development state after a `git pull`, you can use the
-installation script mentioned above : `php app/dev/raw_install`
+To update your installation to the last development state after, use :
+`git pull`
+`git submodule update --recursive`
+
+Then launch the installation script mentioned above : `php app/dev/raw_install`
 
 ***Warning*** : this is a quick dev tool, it will drop existing databases (both prod and test)
 and create new ones.
