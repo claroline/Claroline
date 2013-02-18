@@ -34,7 +34,7 @@ After cloning the project :
 
 ### Quick update
 
-To update your installation to the last development state after, use :
+To update your installation to the last development state, use :
 `git pull`
 `git submodule update --recursive`
 
@@ -49,6 +49,10 @@ You can install or uninstall a plugin with :
 
   * `php app/console claroline:plugin:install [vendor] [bundle short name]`
   * `php app/console claroline:plugin:uninstall [vendor] [bundle short name]`
+
+A new plugin can be added to the module list with :
+
+`git submodule add git@github.com:vendor/SomeBundle.git src/plugin/Vendor/SomeBundle`
 
 ## Development tools
 
