@@ -5,3 +5,6 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@claroline.security.right_manager"
+
+parameters:
+    claroline.workspace_template.directory: "%kernel.root_dir%/../src/core/Claroline/CoreBundle/Resources/config/workspace/"
