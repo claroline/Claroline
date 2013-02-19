@@ -15,7 +15,7 @@
 $rootDirectory = realpath(__DIR__ . "/../..");
 
 function refreshFile($file) {
-     file_put_contents($file, '');
+    file_put_contents($file, '');
 }
 
 refreshFile("{$rootDirectory}/app/config/local/plugin/bundles");
