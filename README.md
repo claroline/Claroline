@@ -18,23 +18,22 @@
 
 * Clone the project and its associated plugins with `git clone --recursive git://github.com/claroline/Claroline.git`
 * Checkout the master branch of each plugin with `git submodule foreach git checkout master`
-* create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
+* Create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
   (currently only db settings are required)
-* Install a local copy of [composer][composer_website] in the root directory of the project
+* Use the automatic install script : `php app/dev/raw_install`
 * Make the *app/cache*, *app/logs*, *app/config/local*, *files*, *test* and
   *src/core/Claroline/CoreBundle/Resources/public/css/themes* directories (and their children)
   writable from the command line and the webserver (for further explanation on common permissions
   issues and solutions with Symfony, read [this][symfony_doc_install])
-* Use the automatic install script : `php app/dev/raw_install`
 * Open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
-[composer_website]: http://getcomposer.org/download/
 [symfony_doc_install]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
 
 ### Quick update
 
 To update your installation to the last development state, use :
 `git pull`
+
 `git submodule update --recursive`
 
 Then launch the installation script mentioned above : `php app/dev/raw_install`
