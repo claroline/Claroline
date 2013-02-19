@@ -6,28 +6,27 @@
 * PHP extensions :
     * [ffmpeg][ffmpeg_php_site] (for icon creation)
     * SQLite3 or PDO_SQLite (for the profiler)
-* A global installation of [less][less_install] as a [node][node_website] module (for the css file compilation)
+* A global installation of [composer][composer_site] (for the dependency management)
+* A global installation of [less][less_install] as a [node][node_site] module (for the less files compilation)
 
 [ffmpeg_php_site]: http://ffmpeg-php.sourceforge.net/
 [less_install]: http://lesscss.org/#-server-side-usage
-[node_website]: http://nodejs.org/
+[composer_site]: http://getcomposer.org/doc/00-intro.md
+[node_site]: http://nodejs.org/
 
 ### Quick start
 
-Use `git clone --recursive git://github.com/claroline/Claroline.git` to clone this repository
-and its associated plugins (git submodules).
-
-After cloning the project :
-
+* Clone the project and its associated plugins with `git clone --recursive git://github.com/claroline/Claroline.git`
+* Checkout the master branch of each plugin with `git submodule foreach git checkout master`
 * create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
   (currently only db settings are required)
-* install a local copy of [composer][composer_website] in the root directory of the project
-* make the *app/cache*, *app/logs*, *app/config/local*, *files*, *test* and
+* Install a local copy of [composer][composer_website] in the root directory of the project
+* Make the *app/cache*, *app/logs*, *app/config/local*, *files*, *test* and
   *src/core/Claroline/CoreBundle/Resources/public/css/themes* directories (and their children)
   writable from the command line and the webserver (for further explanation on common permissions
   issues and solutions with Symfony, read [this][symfony_doc_install])
-* use the automatic install script : `php app/dev/raw_install`
-* open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
+* Use the automatic install script : `php app/dev/raw_install`
+* Open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
 [composer_website]: http://getcomposer.org/download/
 [symfony_doc_install]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
