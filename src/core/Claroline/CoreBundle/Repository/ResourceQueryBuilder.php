@@ -231,18 +231,6 @@ class ResourceQueryBuilder
 
         return $this;
     }
-/*
-    public function whereResourceType($resourceType)
-    {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= ' rt.name = :rt_name ';
-        $this->preparedStatementValue[':rt_name'] = $resourceType;
-
-        return $this;
-    }*/
 
     public function getDql()
     {
@@ -389,7 +377,8 @@ class ResourceQueryBuilder
         return $this;
     }
 
-    public function wherePath($path, $includeFirstNode) {
+    public function wherePath($path, $includeFirstNode)
+    {
         if (!$this->isFirstWhereClause) {
             $this->dql .= ' AND ';
         }
@@ -419,7 +408,8 @@ class ResourceQueryBuilder
         return $this;
     }
 
-    public function setQueryParameters(\Doctrine\ORM\Query $query) {
+    public function setQueryParameters(\Doctrine\ORM\Query $query)
+    {
         foreach ($this->preparedStatementValue as $key => $value) {
             $query->setParameter($key, $value);
         }
