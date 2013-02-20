@@ -1,3 +1,0 @@
-parameters:
-
-   claroline.site.directory: "%kernel.root_dir%/../web/HTMLPage"

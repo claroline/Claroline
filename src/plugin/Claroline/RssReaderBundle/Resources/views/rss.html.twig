@@ -1,7 +1,0 @@
-{% for item in rss %}
-    <h4> {{ item.getTitle() }}</h4>
-    <div class="wrapper">
-        <h5>{{ item.getDate() }} <a href="{{ item.getLink() }}">{{ item.getTitle() }}</a></h5>
-        {{ item.getDescription()|raw }}
-    </div>
-{% endfor %}
