@@ -321,7 +321,7 @@ class ResourceController extends Controller
             }
 
             $path = $resourceRepo->findAncestors($directory);
-            $resources = $resourceRepo->findChildren($directory->getId(), $currentRoles, 0, true);
+            $resources = $resourceRepo->findChildren($directory, $currentRoles, true);
 
             $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);

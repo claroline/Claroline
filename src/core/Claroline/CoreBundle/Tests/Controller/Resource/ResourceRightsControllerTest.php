@@ -195,7 +195,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
     {
         $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $resources = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findDescendants($resource, true, false);
+            ->findDescendants($resource, true);
 
         for ($i = 0, $resourceCount = count($resources); $i < $resourceCount; ++$i) {
             $expectedPermissions = $i === 0 ? $expectedPermissionsOnResource : $expectedPermissionsOnDescendants;
