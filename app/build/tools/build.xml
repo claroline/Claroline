@@ -33,8 +33,7 @@
         <touch file="${appdir}/config/local/plugin/bundles"/>
         <touch file="${appdir}/config/local/plugin/namespaces"/>
         <touch file="${appdir}/config/local/plugin/routing.yml"/>
-        <exec executable="php" failonerror="true">
-            <arg path="${basedir}/composer.phar" />
+        <exec executable="composer" failonerror="true">
             <arg value="install" />
         </exec>
         <exec executable="php" failonerror="true">
