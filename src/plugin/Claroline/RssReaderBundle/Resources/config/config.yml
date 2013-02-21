@@ -1,6 +1,0 @@
-plugin:
-  has_options: false
-
-  widgets:
-    - name: claroline_rssreader
-      is_configurable: true
