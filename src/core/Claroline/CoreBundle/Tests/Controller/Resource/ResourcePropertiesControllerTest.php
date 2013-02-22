@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -11,14 +10,9 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
-        $this->pwr = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
         $this->thumbsDir = $this->client->getContainer()->getParameter('claroline.thumbnails.directory');
     }
 
@@ -31,8 +25,9 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testRenameFormCanBeDisplayed()
     {
+        $this->loadDirectoryData('user', array('user/testDir'));
+        $dir = $this->getDirectory('testDir');
         $this->logUser($this->getFixtureReference('user/user'));
-        $dir = $this->createDirectory($this->pwr, 'testDir');
         $crawler = $this->client->request('GET', "/resource/rename/form/{$dir->getId()}");
         $form = $crawler->filter('#resource_name_form');
         $this->assertEquals(count($form), 1);
@@ -40,8 +35,9 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testRenameFormErrorsAreDisplayed()
     {
+        $this->loadDirectoryData('user', array('user/testDir'));
+        $dir = $this->getDirectory('testDir');
         $this->logUser($this->getFixtureReference('user/user'));
-        $dir = $this->createDirectory($this->pwr, 'testDir');
         $crawler = $this->client->request(
             'POST', "/resource/rename/{$dir->getId()}",
             array('resource_name_form' => array('name' => ''))
@@ -52,8 +48,9 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testPropertiesFormCanBeDisplayed()
     {
+        $this->loadDirectoryData('user', array('user/testDir'));
+        $dir = $this->getDirectory('testDir');
         $this->logUser($this->getFixtureReference('user/user'));
-        $dir = $this->createDirectory($this->pwr, 'testDir');
         $crawler = $this->client->request('GET', "/resource/properties/form/{$dir->getId()}");
         $form = $crawler->filter('#resource-properties-form');
         $this->assertEquals(count($form), 1);
@@ -61,8 +58,9 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testRename()
     {
+        $this->loadDirectoryData('user', array('user/testDir'));
+        $dir = $this->getDirectory('testDir');
         $this->logUser($this->getFixtureReference('user/user'));
-        $dir = $this->createDirectory($this->pwr, 'testDir');
         $this->client->request(
             'POST', "/resource/properties/edit/{$dir->getId()}",
             array('resource_properties_form' => array('name' => 'new_name'))
@@ -73,12 +71,13 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testChangeIcon()
     {
+        $this->loadDirectoryData('user', array('user/testDir'));
+        $dir = $this->getDirectory('testDir');
         $ds = DIRECTORY_SEPARATOR;
         $png = __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}icon.png";
         copy($png, __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $dir = $this->createDirectory($this->pwr, 'testDir');
         $file = new UploadedFile(
             __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png",
             'image.png',
@@ -102,13 +101,14 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testEditShortcutIcon()
     {
+        $this->loadDirectoryData('user', array('user/testDir'));
+        $dir = $this->getDirectory('testDir');
         $ds = DIRECTORY_SEPARATOR;
         $png = __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}icon.png";
         copy($png, __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $dir = $this->createDirectory($this->pwr, 'testDir');
-        $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$dir->getId()}");
+        $this->client->request('GET', "/resource/shortcut/{$this->getDirectory('user')->getId()}/create?ids[]={$dir->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
 
         $file = new UploadedFile(
@@ -138,16 +138,6 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
             ->findOneBy(array('relativeUrl' => $jsonResponse->icon));
 
         $this->assertTrue($icon->isShortcut());
-    }
-
-    private function createDirectory($parent, $name)
-    {
-        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
-        $manager = $this->client->getContainer()->get('claroline.resource.manager');
-        $directory = new Directory();
-        $directory->setName($name);
-
-        return $manager->create($directory, $parent->getId(), 'directory', $user);
     }
 
     private function getUploadedFiles($dir)
