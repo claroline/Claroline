@@ -12,7 +12,8 @@ class CreatorTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('user' => 'user'));
         $this->creator = $this->client->getContainer()->get('claroline.workspace.creator');
     }
 

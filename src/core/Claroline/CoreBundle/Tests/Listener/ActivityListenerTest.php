@@ -18,14 +18,10 @@ class ActivityListenerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user'));
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('user' => 'user'));
         $this->client->followRedirects();
-        $this->pwr = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $this->pwr = $this->getDirectory('user');
     }
 
     public function testCreationFormCanBeDisplayed()
