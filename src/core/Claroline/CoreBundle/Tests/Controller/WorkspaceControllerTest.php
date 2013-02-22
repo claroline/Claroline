@@ -16,7 +16,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSCreatorcanViewHisWorkspaces()
     {
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
@@ -26,11 +26,11 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testAdmincanViewHisWorkspaces()
     {
         $this->loadUserData(array('admin' => 'admin'));
-        $this->loadWorkspaceFixture(array('ws_e' => 'admin'));
+        $this->loadWorkspaceData(array('ws_e' => 'admin'));
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
+        $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
     }
 
     public function testWSCreatorCanCreateWS()
