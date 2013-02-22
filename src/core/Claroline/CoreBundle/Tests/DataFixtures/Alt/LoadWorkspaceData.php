@@ -42,7 +42,7 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     {
         $workspaceCreator = $this->container->get('claroline.workspace.creator');
 
-        foreach($this->workspaces as $name => $username) {
+        foreach ($this->workspaces as $name => $username) {
             $config = new Configuration();
             $config->setWorkspaceName($name);
             $config->setWorkspaceCode($name);

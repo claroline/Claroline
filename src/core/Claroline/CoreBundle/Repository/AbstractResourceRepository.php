@@ -248,7 +248,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
              ->leftJoinOnRightsAndRole()
              ->where();
 
-        for ($i = 0; $i < count($roles); $i++) {
+        for ($i = 0, $count = count($roles); $i < $count; $i++) {
             if ($i != 0) {
                 $builder = $builder->addClause('or');
             }
