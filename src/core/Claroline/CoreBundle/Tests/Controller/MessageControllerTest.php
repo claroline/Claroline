@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
 
 class MessageControllerTest extends FunctionalTestCase
 {
@@ -11,11 +10,12 @@ class MessageControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->client->followRedirects();
+        $this->loadPlatformRolesFixture();
     }
 
     public function testMessageForm()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/message/form");
         $form = $crawler->filter('#message_form');
@@ -24,8 +24,8 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testMessageGroupForm()
     {
-        $this->loadUserFixture(array('user'));
-        $this->loadGroupFixture(array('group_a'));
+        $this->loadUserData(array('user' => 'user'));
+        $this->loadGroupData(array('group_a' => array('user')));
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request(
             'GET',
@@ -39,7 +39,7 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testSendMessage()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'POST',
@@ -56,7 +56,7 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testSendMessageReturnsFormOnError()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request(
             'POST',
@@ -69,7 +69,7 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testAnswerMessage()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'POST',
@@ -100,16 +100,16 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testAlertOnReceivedMessage()
     {
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->loadFixture(new LoadMessagesData(array('to' => 'user'), 1));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array('to' => 'user'), 1);
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $this->assertEquals(1, count($crawler->filter('.badge-important')));
     }
 
     public function testShowMessageMarkAsRead()
     {
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->loadFixture(new LoadMessagesData(array('to' => 'user'), 1));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array('to' => 'user'), 1);
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/message/list/received/0');
         $this->assertEquals(1, count($crawler->filter('.icon-warning-sign')));
@@ -127,8 +127,8 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testRemoveMessageFromUser()
     {
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->loadFixture(new LoadMessagesData(array('from' => 'user'), 1));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array('from' => 'user'), 1);
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $messages = $this->client
             ->getContainer()
@@ -143,8 +143,8 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testRemoveMessageToUser()
     {
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->loadFixture(new LoadMessagesData(array('to' => 'user'), 1));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array('to' => 'user'), 1);
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $userMessages = $this->client
             ->getContainer()
@@ -159,7 +159,7 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testSearchSendMessage()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'POST',
@@ -178,7 +178,7 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testSearchReceivedMessage()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'POST',
@@ -198,8 +198,8 @@ class MessageControllerTest extends FunctionalTestCase
 
     public function testSearchRemovedMessage()
     {
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->loadFixture(new LoadMessagesData(array('to' => 'user'), 1));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array('to' => 'user'), 1);
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $userMessages = $this->client
             ->getContainer()

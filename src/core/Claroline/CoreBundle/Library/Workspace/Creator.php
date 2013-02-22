@@ -12,7 +12,6 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class Creator
 {
@@ -224,9 +223,8 @@ class Creator
     private function addMandatoryTools(AbstractWorkspace $workspace, Configuration $config)
     {
         $tools = $config->getTools();
-
         $order = 1;
-        foreach ($tools as $name => $roles) {
+        foreach ($tools as $name) {
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
@@ -237,7 +235,12 @@ class Creator
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
             $this->entityManager->flush();
+            $order++;
+        }
 
+        $toolsPermissions = $config->getToolsPermissions();
+
+        foreach ($toolsPermissions as $name => $roles) {
             foreach ($roles as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {
                      $role = $this->entityManager
@@ -249,10 +252,13 @@ class Creator
                         ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
                 }
 
+                $tool = $this->entityManager
+                    ->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array('name' => $name));
+                $wot = $this->entityManager->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+                    ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
+
                 $this->setWorkspaceToolRole($wot, $role);
             }
-
-            $order++;
         }
 
         $this->entityManager->persist($workspace);

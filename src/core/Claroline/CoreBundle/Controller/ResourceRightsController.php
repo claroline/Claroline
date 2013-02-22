@@ -55,7 +55,7 @@ class ResourceRightsController extends Controller
         $permissions = array('open', 'copy', 'delete', 'edit', 'export');
         $referenceRights = array();
         $targetResources = isset($parameters['isRecursive']) ?
-            $resourceRepo->findDescendants($resource, true, false) :
+            $resourceRepo->findDescendants($resource, true) :
             array($resource);
 
         for ($i = 0, $targetCount = count($targetResources); $i < $targetCount; ++$i) {
@@ -130,7 +130,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $parameters = $this->get('request')->request->all();
         $targetResources = isset($parameters['isRecursive']) ?
-            $resourceRepo->findDescendants($resource, true, false) :
+            $resourceRepo->findDescendants($resource, true) :
             array($resource);
         $resourceTypeIds = isset($parameters['resourceTypes']) ?
             array_keys($parameters['resourceTypes']) :

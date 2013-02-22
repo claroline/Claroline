@@ -1,0 +1,58 @@
+name: default
+description: This is the default template
+creator_role: ROLE_WS_MANAGER
+roles:
+    ROLE_WS_VISITOR: 'visitor'
+    ROLE_WS_COLLABORATOR: 'collaborator'
+    ROLE_WS_MANAGER: 'manager'
+tools:
+   - 'home'
+   - 'resource_manager'
+   - 'parameters'
+   - 'calendar'
+   - 'user_management'
+   - 'group_management'
+tools_permissions:
+    home:
+       - 'ROLE_WS_VISITOR'
+       - 'ROLE_WS_COLLABORATOR'
+       - 'ROLE_WS_MANAGER'
+    resource_manager:
+       - 'ROLE_WS_COLLABORATOR'
+       - 'ROLE_WS_MANAGER'
+    calendar:
+       - 'ROLE_WS_COLLABORATOR'
+       - 'ROLE_WS_MANAGER'
+    parameters:
+       - 'ROLE_WS_MANAGER'
+    group_management:
+       - 'ROLE_WS_MANAGER'
+    user_management:
+       - 'ROLE_WS_MANAGER'
+resources_permissions:
+    ROLE_WS_VISITOR:
+       'canCopy': false
+       'canOpen': false
+       'canEdit': false
+       'canDelete': false
+       'canExport': false
+       'canCreate': false
+    ROLE_WS_COLLABORATOR:
+       'canCopy': false
+       'canOpen': true
+       'canEdit': false
+       'canDelete': false
+       'canExport': true
+       'canCreate': false
+    ROLE_WS_MANAGER:
+       'canCopy': true
+       'canOpen': true
+       'canEdit': true
+       'canDelete': true
+       'canExport': true
+       'canCreate': true
+
+
+
+
+

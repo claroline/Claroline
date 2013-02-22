@@ -10,6 +10,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->client->followRedirects();
+        $this->loadPlatformRoleData();
     }
 
     //1111111111111111111
@@ -19,8 +20,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testMultiAddAndDeleteUser()
     {
-        $this->loadUserFixture(array('user', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $userId = $this->getFixtureReference('user/user')->getId();
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
 
@@ -55,7 +56,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testMultiAddUserIsProtected()
     {
-        $this->loadUserFixture(array('user', 'user_2'));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->client->request(
@@ -72,8 +73,18 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testCantMultiremoveLastManager()
     {
-        $this->loadUserFixture();
-        $this->loadWorkspaceFixture();
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'user_3' => 'user',
+                'ws_creator' => 'ws_creator',
+                'admin' => 'admin'
+            )
+        );
+
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
+
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
@@ -87,8 +98,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteUserFromWorkspaceIsProtected()
     {
-        $this->loadUserFixture(array('ws_creator', 'user'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $userId = $this->getFixtureReference('user/user')->getId();
@@ -107,8 +118,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testCantMultiremoveManagerPersonal()
     {
-        $this->loadUserFixture(array('user', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/user'));
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $userId = $this->getFixtureReference('user/user')->getId();
@@ -139,7 +150,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testUserPropertiesCanBeEdited()
     {
-        $this->loadUserFixture(array('user', 'ws_creator'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/user'));
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
@@ -180,7 +191,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     //only admins can edit properties
     public function testUserPropertiesIsProtected()
     {
-        $this->loadUserFixture(array('user', 'ws_creator'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $pwcId = $this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId();
@@ -209,8 +220,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testLastManagerCantEditHisRole()
     {
-        $this->loadUserFixture(array('ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $creatorId = $this->getFixtureReference('user/ws_creator')->getId();
@@ -229,7 +240,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testPersonalWsOrignalManagerCantEditHisRole()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
@@ -253,7 +264,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testUnregisteredUserList()
     {
-        $this->loadUserFixture();
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $users = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -269,13 +280,13 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $response = $this->client->getResponse()->getContent();
         $users = json_decode($response);
-        $this->assertEquals(4, count($users));
+        $this->assertEquals(1, count($users));
     }
 
     public function testUnregisteredUserListIsProtected()
     {
-        $this->loadUserFixture(array('ws_creator', 'user'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/user'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
@@ -289,8 +300,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testRegisteredUsersOfWorkspace()
     {
-        $this->loadUserFixture(array('ws_creator', 'user'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
@@ -305,8 +316,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testRegisteredUsersOfWorkspaceIsProtected()
     {
-        $this->loadUserFixture(array('user', 'ws_creator'));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $pwcId = $this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET', "/workspaces/tool/user_management/{$pwcId}/users/0/registered",
@@ -319,8 +330,8 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testSearchUnregisteredUsers()
     {
-        $this->loadUserFixture();
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator', 'admin' => 'admin'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->client->request(
@@ -331,22 +342,12 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $response = $this->client->getResponse()->getContent();
         $users = json_decode($response);
-        $this->assertEquals(4, count($users));
-
-        $this->client->request(
-            'GET', "/workspaces/tool/user_management/{$wsAId}/user/search/bob/unregistered/0",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $response = $this->client->getResponse()->getContent();
-        $users = json_decode($response);
-        $this->assertEquals(1, count($users));
+        $this->assertEquals(2, count($users));
     }
 
     public function testSearchUnregisteredUsersIsProtected()
     {
-        $this->loadUserFixture(array('user', 'ws_creator'));
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwcId = $this->getFixtureReference('user/ws_creator')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -360,7 +361,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testSearchRegisteredUsers()
     {
-        $this->loadUserFixture(array('admin'));
+        $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -376,7 +377,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testSearchRegisteredUsersIsProtected()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(

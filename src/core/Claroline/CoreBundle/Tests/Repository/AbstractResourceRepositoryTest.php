@@ -39,13 +39,10 @@ class AbstractResourceRepositoryTest extends FixtureTestCase
         );
         $this->assertEquals(
             3,
-            count($this->repo->findDescendants($this->getDirectory('dir1'), true, false, 'directory'))
+            count($this->repo->findDescendants($this->getDirectory('dir1'), true, 'directory'))
         );
 
-        $arrayDirs = $this->repo->findDescendants($this->getDirectory('dir1'));
-        $this->assertTrue(is_array($arrayDirs[0]));
-
-        $entityDirs = $this->repo->findDescendants($this->getDirectory('dir1'), false, false);
+        $entityDirs = $this->repo->findDescendants($this->getDirectory('dir1'), false);
         $this->assertInstanceOf(
             'Claroline\CoreBundle\Entity\Resource\AbstractResource',
             $entityDirs[0]
