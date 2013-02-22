@@ -258,7 +258,7 @@ class ResourceQueryBuilder
         $isFirst = true;
         $dqlPart = "";
 
-        for ($i = 0; $i < count($types); $i++) {
+        for ($i = 0, $count = count($types); $i < $count; $i++) {
             if ($isFirst) {
                 $dqlPart .= " (rt.name = :types{$i}";   // eg. "types0"
                 $isFirst = false;
@@ -294,7 +294,7 @@ class ResourceQueryBuilder
         $dqlPart = "";
         $isFirst = true;
 
-        for ($i = 0; $i < count($roots); $i++) {
+        for ($i = 0, $count = count($roots); $i < $count; $i++) {
             if ($isFirst) {
                 $dqlPart .= " AND (ar.path like :roots{$i} ";
                 $isFirst = false;

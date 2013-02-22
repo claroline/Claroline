@@ -106,9 +106,10 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $ds = DIRECTORY_SEPARATOR;
         $png = __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}icon.png";
         copy($png, __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
+        $pwr = $this->getDirectory('user');
 
         $this->logUser($this->getFixtureReference('user/user'));
-        $this->client->request('GET', "/resource/shortcut/{$this->getDirectory('user')->getId()}/create?ids[]={$dir->getId()}");
+        $this->client->request('GET', "/resource/shortcut/{$pwr->getId()}/create?ids[]={$dir->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
 
         $file = new UploadedFile(

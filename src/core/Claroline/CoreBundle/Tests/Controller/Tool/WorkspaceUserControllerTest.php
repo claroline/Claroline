@@ -73,12 +73,13 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
     public function testCantMultiremoveLastManager()
     {
-        $this->loadUserData(array(
-            'user' => 'user',
-            'user_2' => 'user',
-            'user_3' => 'user',
-            'ws_creator' => 'ws_creator',
-            'admin' => 'admin'
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'user_3' => 'user',
+                'ws_creator' => 'ws_creator',
+                'admin' => 'admin'
             )
         );
 

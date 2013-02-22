@@ -103,11 +103,13 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteCantRemoveLastManager()
     {
-        $this->loadUserData(array(
-            'user' => 'user',
-            'user_2' => 'user',
-            'ws_creator' => 'ws_creator',
-            'admin' => 'admin')
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'ws_creator' => 'ws_creator',
+                'admin' => 'admin'
+             )
         );
         $this->loadGroupData(array('group_a' => array('user', 'user_2')));
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
@@ -177,11 +179,13 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testLastGroupManagerCantBeEdited()
     {
-        $this->loadUserData(array(
-            'user' => 'user',
-            'user_2' => 'user',
-            'ws_creator' => 'ws_creator',
-            'admin' => 'admin')
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'ws_creator' => 'ws_creator',
+                'admin' => 'admin'
+             )
         );
         $this->loadGroupData(array('group_a' => array('user', 'user_2')));
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
@@ -251,10 +255,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testPaginatedGroupsOfWorkspace()
     {
-        $this->loadUserData(array(
-            'user' => 'user',
-            'user_2' => 'user',
-            'ws_creator' => 'ws_creator',
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'ws_creator' => 'ws_creator'
             )
         );
         $this->loadGroupData(array('group_a' => array('user', 'user_2')));

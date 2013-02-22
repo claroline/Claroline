@@ -51,12 +51,14 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSCreatorCanDeleteHisWS()
     {
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $this->loadWorkspaceData(array(
-            'ws_a' => 'ws_creator',
-            'ws_b' => 'ws_creator',
-            'ws_c' => 'ws_creator',
-            'ws_d' => 'ws_creator',
-        ));
+        $this->loadWorkspaceData(
+            array(
+                'ws_a' => 'ws_creator',
+                'ws_b' => 'ws_creator',
+                'ws_c' => 'ws_creator',
+                'ws_d' => 'ws_creator',
+            )
+        );
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request(
             'DELETE',
@@ -72,12 +74,14 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSManagercanViewHisWS()
     {
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $this->loadWorkspaceData(array(
-            'ws_a' => 'ws_creator',
-            'ws_b' => 'ws_creator',
-            'ws_c' => 'ws_creator',
-            'ws_d' => 'ws_creator',
-        ));
+        $this->loadWorkspaceData(
+            array(
+                'ws_a' => 'ws_creator',
+                'ws_b' => 'ws_creator',
+                'ws_c' => 'ws_creator',
+                'ws_d' => 'ws_creator',
+            )
+        );
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request(
             'GET',
@@ -92,10 +96,12 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUsercanViewWSList()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadWorkspaceData(array(
+        $this->loadWorkspaceData(
+            array(
             'ws_e' => 'admin',
             'ws_f' => 'admin'
-        ));
+            )
+        );
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
