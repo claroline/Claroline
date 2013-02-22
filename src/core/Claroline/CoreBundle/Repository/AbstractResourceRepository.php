@@ -48,13 +48,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
     {
 
         $builder = new ResourceQueryBuilder('SELECT ar');
-        $builder = $builder->from()
+        $builder->from()
             ->where()
             ->whereIsVisible(1)
             ->wherePath($resource->getPath(), $includeStartNode);
 
         if ($filterResourceType) {
-            $builder = $builder->whereTypes(array($filterResourceType));
+            $builder->whereTypes(array($filterResourceType));
         }
 
         $dql = $builder->getDql();
@@ -131,7 +131,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             ->getDql();
 
         $query = $this->_em->createQuery($dql);
-        $query = $builder->setQueryParameters($query);
+        $builder->setQueryParameters($query);
 
         return $this->executeQuery($query);
     }
@@ -176,7 +176,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
     public function findUserResourcesByCriteria(User $user, array $criteria)
     {
         $builder = new ResourceQueryBuilder();
-        $builder = $builder->select()
+        $builder->select()
             ->from()
             ->joinRightsForUser($user)
             ->where()
@@ -192,7 +192,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
         $dql = $builder->orderByPath()->getDql();
         $query = $this->_em->createQuery($dql);
-        $query = $builder->setQueryParameters($query);
+        $builder->setQueryParameters($query);
 
         return $this->executeQuery($query);
     }
@@ -210,7 +210,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
     private function buildAdminChildrenQuery(AbstractResource $parent, $isVisible)
     {
         $builder = new ResourceQueryBuilder();
-        $builder = $builder->select()
+        $builder->select()
             ->from()
             ->where()
             ->whereParent($parent)
@@ -218,7 +218,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         $dql = $builder->getDql();
         $query = $this->_em->createQuery($dql);
-        $query = $builder->setQueryParameters($query);
+        $builder->setQueryParameters($query);
 
         return $query;
     }
@@ -242,7 +242,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
     {
 
          $builder = new ResourceQueryBuilder();
-         $builder = $builder->select()
+         $builder->select()
              ->selectPermissions()
              ->from()
              ->leftJoinOnRightsAndRole()
@@ -253,15 +253,15 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 $builder = $builder->addClause('or');
             }
 
-            $builder = $builder->whereParent($parent)
-                ->whereIsVisible(1)
+            $builder->whereParent($parent)
+                ->whereIsVisible($isVisible)
                 ->whereCanOpen()
                 ->whereRole($roles[$i]);
         }
 
         $dql = $builder->groupById()->getDql();
         $query = $this->_em->createQuery($dql);
-        $query = $builder->setQueryParameters($query);
+        $builder->setQueryParameters($query);
 
         return $query;
     }
