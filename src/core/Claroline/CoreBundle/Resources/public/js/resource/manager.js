@@ -30,8 +30,8 @@
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
                 this.subViews.areAppended || this.wrapper.append(
-                    this.subViews.breadcrumbs.el,
                     this.subViews.actions.el,
+                    this.subViews.breadcrumbs.el,
                     this.subViews.resources.el
                 ) && (this.subViews.areAppended = true);
             }
@@ -59,41 +59,45 @@
             }
         }),
         Actions: Backbone.View.extend({
-            className: 'actions clearfix',
+            className: 'navbar navbar-static-top',
             events: {
-                'click button.create': function () {
+                'click ul.create li a': function (event) {
+                    event.preventDefault();
+                    
+                    //alert(event.currentTarget.getAttribute('id'));
+
                     this.dispatcher.trigger('display-form', {
                         type: 'create',
                         resource: {
-                            type: this.$('.create-resource select').val(),
+                            type: event.currentTarget.getAttribute('id'),
                             id: this.currentDirectory.id
                         }
                     });
                 },
-                'click button.delete': function () {
+                'click a.delete': function () {
                     this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
                     this.checkedResources.resources = {};
                 },
-                'click button.download': function () {
+                'click a.download': function () {
                     this.dispatcher.trigger('download', {ids: _.keys(this.checkedResources.resources)});
                 },
-                'click button.copy': function () {
+                'click a.copy': function () {
                     _.size(this.checkedResources.resources) > 0 && this.setPasteBinState(true, false);
                 },
-                'click button.cut': function () {
+                'click a.cut': function () {
                     _.size(this.checkedResources.resources) > 0 && this.setPasteBinState(true, true);
                 },
-                'click button.paste': function () {
+                'click a.paste': function () {
                     this.dispatcher.trigger('paste', {
                         ids:  _.keys(this.checkedResources.resources),
                         isCutMode: this.isCutMode,
                         directoryId: this.currentDirectory.id
                     });
                 },
-                'click button.open-picker': function () {
+                'click a.open-picker': function () {
                     this.dispatcher.trigger('picker', {action: 'open'});
                 },
-                'click button.search-panel': function () {
+                'click a.search-panel': function () {
                     if (!this.filters) {
                         this.filters = new manager.Views.Filters(this.parameters, this.dispatcher, this.currentDirectory);
                         this.filters.render(this.resourceTypes);
@@ -102,7 +106,7 @@
 
                     this.filters.toggle();
                 },
-                'click button.add': function () {
+                'click a.add': function () {
                     if (this.parameters.isPickerOnly){
                         this.parameters.pickerCallback(this.checkedResources.resources, this.currentDirectory.id)
                     } else {
@@ -153,25 +157,25 @@
                 }, this);
             },
             setButtonEnabledState: function (jqButton, isEnabled) {
-                return isEnabled ? jqButton.removeAttr('disabled') : jqButton.attr('disabled', 'disabled');
+                return isEnabled ? jqButton.removeClass('disabled') : jqButton.addClass('disabled');
             },
             setActionsEnabledState: function (isPickerMode) {
                 var isSelectionNotEmpty = _.size(this.checkedResources.resources) > 0;
                 isPickerMode // enable picker "add" button on non-root directories if selection is not empty
                     && (this.currentDirectory.id != 0 || this.isSearchMode)
-                    && this.setButtonEnabledState(this.$('button.add'), isSelectionNotEmpty);
+                    && this.setButtonEnabledState(this.$('a.add'), isSelectionNotEmpty);
                 !isPickerMode // enable main actions if selection is not empty
-                    && this.setButtonEnabledState(this.$('button.download'), isSelectionNotEmpty)
+                    && this.setButtonEnabledState(this.$('a.download'), isSelectionNotEmpty)
                     && (this.currentDirectory.id != 0 // following actions are only available on non-root directories
                         || this.isSearchMode) // and roots are not displayed in search mode
-                    && this.setButtonEnabledState(this.$('button.cut'), isSelectionNotEmpty)
-                    && this.setButtonEnabledState(this.$('button.copy'), isSelectionNotEmpty)
-                    && this.setButtonEnabledState(this.$('button.delete'), isSelectionNotEmpty);
+                    && this.setButtonEnabledState(this.$('a.cut'), isSelectionNotEmpty)
+                    && this.setButtonEnabledState(this.$('a.copy'), isSelectionNotEmpty)
+                    && this.setButtonEnabledState(this.$('a.delete'), isSelectionNotEmpty);
             },
             setPasteBinState: function (isReadyToPaste, isCutMode) {
                 this.isReadyToPaste = isReadyToPaste;
                 this.isCutMode = isCutMode;
-                this.setButtonEnabledState(this.$('button.paste'), isReadyToPaste && !this.isSearchMode);
+                this.setButtonEnabledState(this.$('a.paste'), isReadyToPaste && !this.isSearchMode);
             },
             render: function (directory, creatableTypes, isSearchMode) {
                 this.currentDirectory = directory;
