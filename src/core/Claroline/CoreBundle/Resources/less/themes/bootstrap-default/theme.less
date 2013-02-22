@@ -116,3 +116,51 @@ div.border {
     color:@grayDark;
     background:@grayLighter;
 }
+
+/** content **/
+
+.section-content .breadcrumb
+{
+    margin:5px;
+}
+
+.section-content .navbar
+{
+    padding:0;
+    margin:0;    
+}
+
+.section-content .navbar .navbar-inner
+{
+    -webkit-border-top-left-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+            border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topright: 5px;
+            border-top-right-radius: 5px;
+
+    padding-left:5px;
+    padding-right:5px;
+    margin:0;
+}
+
+.section-content .navbar .navbar-inner a
+{
+    color:@navbarLinkColorActive;
+    cursor:pointer;
+}
+
+.section-content .navbar .navbar-inner .dropdown-menu a:hover
+{
+    color:@white;
+}
+
+.section-content .navbar .navbar-inner a.disabled
+{
+    color:@grayLight;
+}
+
+.section-content .navbar .navbar-inner a.disabled .caret
+{
+    visibility:hidden;
+}

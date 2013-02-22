@@ -9,6 +9,6 @@
         {% endif %}
     </a>
     {% if not loop.last %}
-        <span class="divider"> / </span>
+        <span class="divider"> <i class="icon-angle-right"></i> </span>
     {% endif %}
 {% endfor %}

@@ -26,6 +26,18 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $('[rel=tooltip]').tooltip();
+
+        /** 
+         * delay cause backbone crap 
+         *
+         * @TODO do something better
+         */
+        var t = setTimeout(
+                function()
+                {
+                    $("[data-toggle=tooltip]").tooltip();
+                }
+                ,1000);
+
     </script>
 {% endblock %}
