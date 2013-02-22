@@ -111,7 +111,6 @@ class ParametersController extends Controller
         $event = new ConfigureWidgetWorkspaceEvent($workspace);
         $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
         $this->get('event_dispatcher')->dispatch($eventName, $event);
-
         if ($event->getContent() !== '') {
             return $this->render(
                 'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',

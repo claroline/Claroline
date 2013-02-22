@@ -1,0 +1,32 @@
+name: default
+description: This is the default personal workspace template
+creator_role: ROLE_WS_MANAGER
+roles:
+    ROLE_WS_VISITOR: 'visitor'
+    ROLE_WS_MANAGER: 'manager'
+tools:
+   - 'home'
+   - 'resource_manager'
+   - 'parameters'
+   - 'calendar'
+   - 'user_management'
+   - 'group_management'
+tools_permissions:
+    home:
+       - 'ROLE_WS_VISITOR'
+       - 'ROLE_WS_MANAGER'
+resources_permissions:
+    ROLE_WS_VISITOR:
+       'canCopy': false
+       'canOpen': false
+       'canEdit': false
+       'canDelete': false
+       'canExport': false
+       'canCreate': false
+    ROLE_WS_MANAGER:
+       'canCopy': true
+       'canOpen': true
+       'canEdit': true
+       'canDelete': true
+       'canExport': true
+       'canCreate': true

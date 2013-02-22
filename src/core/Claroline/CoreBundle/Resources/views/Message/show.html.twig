@@ -45,7 +45,6 @@ tinyMCE.init({
               method="post" {{ form_enctype(form) }}
               id="generic-form"
               class="form-horizontal">
-           {{ form_errors(form) }}
            {{ form_widget(form) }}
            {{ form_rest(form) }}
             <div class="form-actions">

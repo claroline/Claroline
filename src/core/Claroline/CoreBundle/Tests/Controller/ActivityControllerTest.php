@@ -3,30 +3,27 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
 
 class ActivityControllerTest extends FunctionalTestCase
 {
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('admin'));
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('admin' => 'admin'));
         $this->resourceRepository = $this
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $this->pwr = $this->resourceRepository
-            ->findWorkspaceRoot($this->getFixtureReference('user/admin')->getPersonalWorkspace());
 
     }
 
     public function testAddThenRemoveResource()
     {
+        $this->loadFileData('admin', 'admin', array('foo.txt'));
+        $file = $this->getFile('foo.txt');
         $this->logUser($this->getFixtureReference('user/admin'));
-        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
-        $file = $this->createFile($this->pwr, 'file', $user);
         $activity = $this->createActivity('name', 'instruction');
         $this->client->request(
             'POST',
@@ -56,10 +53,11 @@ class ActivityControllerTest extends FunctionalTestCase
 
     public function testSequenceOrder()
     {
+        $this->loadFileData('admin', 'admin', array('foo.txt'));
+        $this->loadFileData('admin', 'admin', array('bar.txt'));
+        $fileOne = $this->getFile('foo.txt');
+        $fileTwo = $this->getFile('bar.txt');
         $this->logUser($this->getFixtureReference('user/admin'));
-        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
-        $fileOne = $this->createFile($this->pwr, 'file1', $user);
-        $fileTwo = $this->createFile($this->pwr, 'file2', $user);
         $activity = $this->createActivity('name', 'instruction');
         $activityEntity = $this->client
             ->getContainer()
@@ -110,20 +108,12 @@ class ActivityControllerTest extends FunctionalTestCase
     {
         $this->client->request(
             'POST',
-            "/resource/create/activity/{$this->pwr->getId()}",
+            "/resource/create/activity/{$this->getFile('foo.txt')->getId()}",
             array('activity_form' => array('name' => $name, 'instructions' => $instruction))
         );
 
         $obj = json_decode($this->client->getResponse()->getContent());
 
         return $obj[0];
-    }
-
-    private function createFile($parent, $name, User $user)
-    {
-        $fileData = new LoadFileData($name, $parent, $user, tempnam(sys_get_temp_dir(), 'FormTest'));
-        $this->loadFixture($fileData);
-
-        return $fileData->getLastFileCreated();
     }
 }

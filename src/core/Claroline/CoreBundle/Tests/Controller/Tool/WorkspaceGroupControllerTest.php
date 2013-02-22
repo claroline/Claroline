@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
 
 class WorkspaceGroupControllerTest extends FunctionalTestCase
 {
@@ -11,12 +10,13 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->client->followRedirects();
+        $this->loadPlatformRoleData();
     }
 
     public function testMultiAddGroup()
     {
-        $this->loadUserFixture(array('user', 'user_2'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
         $groupAId = $this->getFixtureReference('group/group_a')->getId();
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
@@ -35,12 +35,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-        ;
     }
 
     public function testMultiAddGroupIsProtected()
     {
-        $this->loadUserFixture(array('user', 'user_2'));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->client->request(
@@ -57,9 +56,9 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteGroupFromWorkspace()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->addGroupAToWsA();
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
@@ -88,9 +87,9 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteGroupFromWorkspaceIsProtected()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->addGroupAToWsA();
         $this->logUser($this->getFixtureReference('user/user'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
@@ -104,9 +103,16 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteCantRemoveLastManager()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator', 'admin'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'ws_creator' => 'ws_creator',
+                'admin' => 'admin'
+             )
+        );
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->addGroupAToWsA();
         $this->logUser($this->getFixtureReference('user/admin'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
@@ -139,9 +145,9 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testGroupPropertiesCanBeEdited()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->addGroupAToWsA();
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $this->logUser($this->getFixtureReference('user/ws_creator'));
@@ -173,9 +179,16 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testLastGroupManagerCantBeEdited()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator', 'admin'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'ws_creator' => 'ws_creator',
+                'admin' => 'admin'
+             )
+        );
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->addGroupAToWsA();
         $this->logUser($this->getFixtureReference('user/admin'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
@@ -209,8 +222,8 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testLimitedGroupList()
     {
-        $this->loadUserFixture(array('user', 'user_2'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user'));
+        $this->loadGroupData(array('group_a' => array('user')));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -220,7 +233,6 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
-
         $response = $this->client->getResponse()->getContent();
         $groups = json_decode($response);
         $this->assertEquals(1, count($groups));
@@ -228,7 +240,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testLimitedGroupListIsProtected()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -243,9 +255,15 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testPaginatedGroupsOfWorkspace()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'ws_creator' => 'ws_creator'
+            )
+        );
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->addGroupAToWsA();
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
@@ -261,7 +279,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testPaginatedGroupsOfWorkspaceIsProtected()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -276,8 +294,8 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testSearchUnregisteredGroupsByNameWithAjax()
     {
-        $this->loadUserFixture(array('user', 'user_2'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -295,7 +313,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testSearchUnregisteredGroupsByNameWithAjaxIsProtected()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -310,9 +328,9 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testSearchRegisteredGroupsByNameWithAjax()
     {
-        $this->loadUserFixture(array('user', 'user_2', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
-        $this->loadFixture(new LoadGroupData(array('group_a')));
+        $this->loadUserData(array('user' => 'user', 'user_2' => 'user', 'ws_creator' => 'ws_creator'));
+        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $grAId = $this->getFixtureReference('group/group_a')->getId();
@@ -336,7 +354,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
     public function testSearchRegisteredGroupsByNameWithAjaxIsProtected()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(

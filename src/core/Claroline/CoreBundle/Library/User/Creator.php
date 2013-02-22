@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 
@@ -16,18 +15,21 @@ class Creator
     private $trans;
     private $ch;
     private $wsCreator;
+    private $personalWsTemplateFile;
 
     public function __construct(
         EntityManager $em,
         Translator $trans,
         PlatformConfigurationHandler $ch,
-        WsCreator $wsCreator
+        WsCreator $wsCreator,
+        $personalWsTemplateFile
     )
     {
         $this->em = $em;
         $this->trans = $trans;
         $this->ch = $ch;
         $this->wsCreator = $wsCreator;
+        $this->personalWsTemplateFile = $personalWsTemplateFile."personal.yml";
     }
 
     /**
@@ -42,6 +44,8 @@ class Creator
     {
         $this->em->persist($user);
         $config = new Configuration();
+        //$config = Configuration::fromTemplate($this->personalWsTemplateFile);
+        //uncomment this line when the templating system is working
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $locale = $this->ch->getParameter('locale_language');
         $this->trans->setLocale($locale);
