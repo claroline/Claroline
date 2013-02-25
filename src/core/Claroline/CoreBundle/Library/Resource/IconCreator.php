@@ -269,27 +269,39 @@ class IconCreator
     public function createShortcutIcon(ResourceIcon $icon)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $basepath = $icon->getIconLocation();
-        $extension = pathinfo($icon->getIconLocation(), PATHINFO_EXTENSION);
-        $stampPath = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}bundles{$ds}"
-            . "clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
+        $webDir = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web";
+        $shortcutLocation = '';
+        $shortcutRelativeUrl = '';
 
-        if (function_exists($funcname = "imagecreatefrom{$extension}")) {
-            $im = $funcname($basepath);
+        if ($this->hasGdExtension) {
+            $basepath = $icon->getIconLocation();
+            $extension = pathinfo($icon->getIconLocation(), PATHINFO_EXTENSION);
+            $stampPath = "{$webDir}{$ds}bundles{$ds}"
+                . "clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
+
+            if (function_exists($funcname = "imagecreatefrom{$extension}")) {
+                $im = $funcname($basepath);
+            } else {
+                throw new \RuntimeException(
+                    "Couldn't create a image from {$basepath} (function '{$funcname}' is not defined)"
+                );
+            }
+            $stamp = imagecreatefrompng($stampPath);
+            imagesavealpha($im, true);
+            imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
+            $name = "{$this->container->get('claroline.resource.utilities')->generateGuid()}.{$extension}";
+            imagepng($im, $this->container->getParameter('claroline.thumbnails.directory').$ds.$name);
+            imagedestroy($im);
+            $shortcutLocation = "{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$name}";
+            $shortcutRelativeUrl = "thumbnails{$ds}{$name}";
         } else {
-            throw new \RuntimeException("Couldn't create a image from {$basepath}");
+            $shortcutRelativeUrl = 'bundles/clarolinecore/images/resources/icons/shortcut-default.png';
+            $shortcutLocation = "{$webDir}{$ds}{$shortcutRelativeUrl}";
         }
-        $stamp = imagecreatefrompng($stampPath);
-        imagesavealpha($im, true);
-        imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
-        $name = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        imagepng($im, $this->container->getParameter('claroline.thumbnails.directory').$ds.$name);
-        imagedestroy($im);
 
         $shortcutIcon = new ResourceIcon();
-        $location = "{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$name}";
-        $shortcutIcon->setIconLocation($location);
-        $shortcutIcon->setRelativeUrl("thumbnails{$ds}{$name}");
+        $shortcutIcon->setIconLocation($shortcutLocation);
+        $shortcutIcon->setRelativeUrl($shortcutRelativeUrl);
         $shortcutIcon->setIconType($icon->getIconType());
         $shortcutIcon->setType($icon->getType());
         $shortcutIcon->setShortcut(true);
