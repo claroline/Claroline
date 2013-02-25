@@ -187,7 +187,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         foreach ($criteria as $key => $value) {
             if ($value != null) {
                 $methodName = 'where' . ucfirst($key);
-                $builder = $builder->$methodName($value);
+                $builder->$methodName($value);
             }
         }
         $dql = $builder->orderByPath()->getDql();
@@ -250,7 +250,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         for ($i = 0, $count = count($roles); $i < $count; $i++) {
             if ($i != 0) {
-                $builder = $builder->addClause('or');
+                $builder->addClause('or');
             }
 
             $builder->whereParent($parent)

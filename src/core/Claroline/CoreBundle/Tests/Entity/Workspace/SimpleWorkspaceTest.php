@@ -9,16 +9,17 @@ class SimpleWorkspaceTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('admin', 'ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_d', 'ws_f'));
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('admin' => 'admin', 'ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_d' => 'ws_creator', 'ws_f' => 'admin'));
     }
 
     public function testPublicWorkspaceCannotBeASubWorkspaceOfAPrivateWorkspace()
     {
         $this->setExpectedException('RuntimeException');
 
-        $wsD = $this->getFixtureReference('workspace/ws_d');
-
+        $wsD = $this->getWorkspace('ws_d');
+        $wsD->setPublic(false);
         $wsX = new SimpleWorkspace();
         $wsX->setName('Workspace X');
         $wsX->setParent($wsD);
@@ -26,7 +27,7 @@ class SimpleWorkspaceTest extends FixtureTestCase
 
     public function testSubWorkspaceOfAPrivateWorkspaceCannotBeMadePublic()
     {
-        $this->loadWorkspaceFixture(array('ws_e'));
+        $this->loadWorkspaceData(array('ws_e' => 'admin'));
         $wsF = $this->getFixtureReference('workspace/ws_f');
         $wsE = $this->getFixtureReference('workspace/ws_e');
         $wsE->setPublic(true);
