@@ -12,7 +12,8 @@ class ForumControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator', 'admin' => 'admin'));
         $this->client->followRedirects();
     }
 
