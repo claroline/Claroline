@@ -16,7 +16,7 @@
             <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">{{ 'tools'|trans({}, 'platform') }}</a>
         </li>
         <li>
-            <a href="#">{{ 'resources'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_workspace_resource_rights_form', {'workspaceId': workspace.getId()}) }}">{{ 'resources'|trans({}, 'platform') }}</a>
         </li>
     </ul>
 {% endblock %}

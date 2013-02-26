@@ -84,6 +84,7 @@ class ResourceRightsRepository extends EntityRepository
             WHERE resource.id = {$resource->getId()}
             AND role.name != 'ROLE_ADMIN'
             AND resource.workspace = workspace
+            ORDER BY role.name
         ";
 
         return $this->_em->createQuery($dql)->getResult();

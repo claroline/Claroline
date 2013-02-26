@@ -28,6 +28,7 @@ claro_workspace_open_tool:
     pattern: '/{workspaceId}/open/tool/{toolName}'
     defaults: { _controller: 'ClarolineCoreBundle:Workspace:openTool' }
     requirements: { _method: GET }
+    options: { expose: true }
 claro_workspace_widgets:
     pattern: '/{workspaceId}/widgets'
     defaults: { _controller: 'ClarolineCoreBundle:Workspace:widgets' }
