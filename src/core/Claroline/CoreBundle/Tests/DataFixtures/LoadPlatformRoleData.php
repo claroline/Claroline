@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\DataFixtures\Alt;
+namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
 

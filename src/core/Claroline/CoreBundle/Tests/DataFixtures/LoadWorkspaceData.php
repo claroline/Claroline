@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\DataFixtures\Alt;
+namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\Common\DataFixtures\AbstractFixture;
