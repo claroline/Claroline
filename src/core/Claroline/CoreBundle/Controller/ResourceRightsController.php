@@ -25,6 +25,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
+
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
             'ClarolineCoreBundle:Resource:rights_form_resource.html.twig';

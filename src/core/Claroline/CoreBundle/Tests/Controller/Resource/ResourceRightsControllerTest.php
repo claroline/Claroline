@@ -34,7 +34,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $userRights = $rightsRepo->findOneBy(
             array(
                 'resource' => $this->getDirectory('dir1'),
-                'role' => $roleRepo->findWorkspaceRole(
+                'role' => $roleRepo->findWorkspaceRoleForUser(
                     $this->getUser('john'),
                     $this->getWorkspace('john')
                 )
