@@ -30,8 +30,8 @@
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
                 this.subViews.areAppended || this.wrapper.append(
-                    this.subViews.actions.el,
                     this.subViews.breadcrumbs.el,
+                    this.subViews.actions.el,
                     this.subViews.resources.el
                 ) && (this.subViews.areAppended = true);
             }
