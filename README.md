@@ -7,10 +7,11 @@ Requirements
 - PHP >= 5.3.3
 - PHP extensions :
     - SQLite3 or PDO_SQLite (for the profiler)
+    - file_info (for mime type detection)
     - Optionaly :
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
-- A global installation of [composer][3] (for the dependency management)
+- A global installation of [composer][3] (for dependency management)
 - A global installation of [less][4] as a [node][5] module (for the less files compilation)
 
 Quick start
