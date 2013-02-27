@@ -37,7 +37,7 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         foreach ($this->roles as $roles) {
-            foreach($roles as $roleName => $parentName) {
+            foreach ($roles as $roleName => $parentName) {
                 $role = new Role();
                 $role->setName('ROLE_'.$roleName);
                 $role->setTranslationKey($roleName);
