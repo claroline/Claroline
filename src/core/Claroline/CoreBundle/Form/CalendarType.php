@@ -16,7 +16,7 @@ class CalendarType extends AbstractType
                 'date',
                 array(
                     'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
+                    'widget' => 'single_text',
                     'data' => new \DateTime('now')
                 )
             )

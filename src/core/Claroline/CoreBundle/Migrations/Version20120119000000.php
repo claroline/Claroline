@@ -788,7 +788,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('allDay', 'boolean', array('notnull' => false));
-        $table->addColumn('color', 'string', array('notnull' => false));
         $table->addColumn('backgroundColor', 'string', array('notnull' => false));
         $table->addColumn('priority', 'string', array('notnull' => false));
         $table->addForeignKeyConstraint(
