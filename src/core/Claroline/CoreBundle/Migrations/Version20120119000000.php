@@ -330,7 +330,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_resource_type'),
             array('resource_type_id'),
             array('id'),
-            array('onDelete' => 'SET NULL')
+            array('onDelete' => 'CASCADE')
         );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),

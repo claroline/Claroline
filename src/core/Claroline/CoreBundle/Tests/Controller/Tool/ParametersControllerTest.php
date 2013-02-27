@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
 
 class ParametersControllerTest extends FunctionalTestCase
 {
@@ -137,5 +138,106 @@ class ParametersControllerTest extends FunctionalTestCase
             $repo->findOneBy(array('tool' => $resourceManager, 'workspace' => $workspace))
                ->getOrder()
         );
+    }
+
+    public function testWorkspaceManagercanViewWidgetProperties()
+    {
+        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
+        $pwuId = $this->getFixtureReference('user/john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getFixtureReference('user/john'));
+        $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
+        $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
+    }
+
+    public function testDisplayWidgetConfigurationFormPage()
+    {
+        $this->markTestSkipped("event is not catched");
+        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
+        $pwuId = $this->getFixtureReference('user/john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getFixtureReference('user/john'));
+        $widget = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneByName('claroline_testwidget1');
+        $crawler = $this->client
+            ->request('GET', "/workspaces/tool/properties/{$pwuId}/widget/{$widget->getId()}/configuration");
+    }
+
+
+    public function testWorkspaceManagerCanInvertWidgetVisible()
+    {
+        $this->loadUserData(array('admin' => 'admin'));
+        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
+        $pwuId = $this->getFixtureReference('user/john')->getPersonalWorkspace()->getId();
+        //admin must unlock first
+        $this->logUser($this->getFixtureReference('user/john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findAll();
+        $countConfigs = count($configs);
+        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
+        $countVisibleWidgets = count($crawler->filter('.widget'));
+        $this->client->request(
+            'POST',
+            "/workspaces/tool/properties/{$pwuId}/widget/{$configs[0]->getWidget()->getId()}/baseconfig"
+            . "/{$configs[0]->getId()}/invertvisible"
+        );
+        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
+        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findAll();
+        $this->assertEquals(++$countConfigs, count($configs));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
+        $this->logUser($this->getFixtureReference('user/john'));
+        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
+        $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
+    }
+
+    public function testDesktopManagerCanInvertWidgetVisible()
+    {
+        $this->loadUserData(array('admin' => 'admin'));
+        //admin must unlock first
+        $this->logUser($this->getFixtureReference('user/john'));
+        $configs = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findBy(array('isDesktop' => true));
+        $countConfigs = count($configs);
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
+        $countVisibleWidgets = count($crawler->filter('.widget'));
+        $this->client->request(
+            'POST',
+            "/desktop/tool/properties/config/{$configs[0]->getId()}"
+            . "/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
+        );
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
+        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
+        $configs = $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findBy(array('isDesktop' => true));
+        $this->assertEquals(++$countConfigs, count($configs));
+        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
+        $this->logUser($this->getFixtureReference('user/john'));
+        $crawler = $this->client->request('GET', '/desktop/tool/open/home');
+        $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
+    }
+
+    private function registerStubPlugins(array $pluginFqcns)
+    {
+        $container = $this->client->getContainer();
+        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $loader = new Loader($pluginDirectory);
+        $validator = $container->get('claroline.plugin.validator');
+
+        foreach ($pluginFqcns as $pluginFqcn) {
+            $plugin = $loader->load($pluginFqcn);
+            $validator->validate($plugin);
+            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
+        }
     }
 }

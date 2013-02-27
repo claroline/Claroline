@@ -63,7 +63,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
         $user->addRole($wsCreatorRole);
         $manager->persist($user);
         $user = $this->getContainer()->get('claroline.user.creator')->create($user);
-
+        
         return $user;
     }
 

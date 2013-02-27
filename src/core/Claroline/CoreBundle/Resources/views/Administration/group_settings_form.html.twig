@@ -5,7 +5,6 @@
     <form class="form-horizontal" action="{{ path('claro_admin_update_group_settings', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
         <fieldset>
             <legend>{{ 'settings'|trans({}, 'platform') }} :</legend>
-            {{ form_errors(form_settings) }}
             {{ form_widget(form_settings) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

@@ -10,18 +10,19 @@ class AdminSecurityTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->client->followRedirects();
+        $this->loadPlatformRolesFixture();
     }
 
     public function testAdminSectionRequiresAuthenticatedUser()
     {
-        $this->loadUserFixture(array('admin'));
+        $this->loadUserData(array('admin' => 'admin'));
         $crawler = $this->client->request('GET', '/admin');
         $this->assertTrue($crawler->filter('#login-form')->count() > 0);
     }
 
     public function testAccessToAdminSectionIsDeniedToSimpleUsers()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', '/admin');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
@@ -29,7 +30,7 @@ class AdminSecurityTest extends FunctionalTestCase
 
     public function testAccessToAdminSectionIsAllowedToAdminUsers()
     {
-        $this->loadUserFixture(array('admin'));
+        $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/admin'));
         $crawler = $this->client->request('GET', '/admin');
         $this->assertTrue($crawler->filter('.administration')->count() > 0);

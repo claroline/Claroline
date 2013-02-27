@@ -13,8 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 // TODO: Implements AdvancedUserInterface
 
 /**

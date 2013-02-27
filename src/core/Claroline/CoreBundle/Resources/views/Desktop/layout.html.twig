@@ -26,6 +26,10 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $('[rel=tooltip]').tooltip();
+
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        })
+
     </script>
 {% endblock %}

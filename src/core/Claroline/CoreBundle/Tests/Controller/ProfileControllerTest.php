@@ -9,12 +9,13 @@ class ProfileControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->loadPlatformRolesFixture();
         $this->client->followRedirects();
     }
 
     public function testLoggedUserCanEditHisProfile()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $user = $this->getFixtureReference('user/user');
         $this->logUser($user);
         $crawler = $this->client->request('GET', '/profile/form');
@@ -45,12 +46,12 @@ class ProfileControllerTest extends FunctionalTestCase
 
     public function testPublicProfileCanBeSeenByOtherUsers()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $adminId = $this->getFixtureReference('user/admin')->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/profile/view/{$adminId}");
         $this->assertRegExp(
-            '/John.+Doe.+admin/s', $this->client->getResponse()->getContent()
+            '/Admin.+Doe.+admin/s', $this->client->getResponse()->getContent()
         );
     }
 }

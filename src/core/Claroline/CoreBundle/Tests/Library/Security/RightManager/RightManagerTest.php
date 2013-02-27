@@ -19,8 +19,15 @@ class RightManagerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
-        $this->loadRoleFixture();
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(
+            array(
+                'user' => 'user',
+                'user_2' => 'user',
+                'user_3' => 'user',
+                'ws_creator' => 'ws_creator'
+            )
+        );
         $this->rightManager = $this->client->getContainer()->get('claroline.security.right_manager');
     }
 
@@ -79,6 +86,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testPermissionCanBeGrantedThroughRoleAndUser()
     {
+        $this->loadRoleData(array(array('role_a' => null)));
         $entity = $this->createEntity();
         $jane = $this->getFixtureReference('user/user');
         $roleA = $this->getFixtureReference('role/role_a');
@@ -96,6 +104,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testRemovePermissionsForRoleRemovesPermissionsForAllUsersWhoHaveThatRole()
     {
+        $this->loadRoleData(array(array('role_d' => null)));
         $entity = $this->createEntity();
         $roleD = $this->getFixtureReference('role/role_d');
         $jane = $this->getFixtureReference('user/user');
@@ -270,6 +279,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testGiveRightsForRoleGrantsPermissionsToAllUsersWhoHaveThatRole()
     {
+        $this->loadRoleData(array(array('role_c' => null)));
         $entity = $this->createEntity();
 
         $jane = $this->getFixtureReference('user/user');

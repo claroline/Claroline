@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use \RuntimeException;
+use Symfony\Component\Yaml\Yaml;
 
 class Configuration
 {
@@ -20,7 +21,9 @@ class Configuration
      */
     private $roles;
     private $tools;
+    private $toolsPermissions;
     private $rootPermissions;
+    private $creatorRole;
 
     public function __construct()
     {
@@ -32,6 +35,14 @@ class Configuration
             'ROLE_WS_MANAGER' => 'manager'
         );
         $this->tools = array(
+            'home',
+            'resource_manager',
+            'calendar',
+            'parameters',
+            'group_management',
+            'user_management'
+        );
+        $this->toolsPermissions = array(
             'home' => array(
                 'ROLE_WS_VISITOR',
                 'ROLE_WS_COLLABORATOR',
@@ -75,11 +86,21 @@ class Configuration
                 'canCreate' => true
             )
         );
+        $this->creatorRole = 'ROLE_WS_MANAGER';
     }
 
     public static function fromTemplate($templateFile)
     {
-        throw new \Exception('Not implemented yet');
+        $config = new Configuration();
+        $parsedFile = Yaml::parse($templateFile);
+        $config->validate($parsedFile);
+        $config->setCreatorRole($parsedFile['creator_role']);
+        $config->setRoles($parsedFile['roles']);
+        $config->setTools($parsedFile['tools']);
+        $config->setToolsPermissions($parsedFile['tools_permissions']);
+        $config->setRootPermissions($parsedFile['resources_permissions']);
+
+        return $config;
     }
 
     public function setWorkspaceType($type)
@@ -153,6 +174,16 @@ class Configuration
         $this->tools = $tools;
     }
 
+    public function getToolsPermissions()
+    {
+        return $this->toolsPermissions;
+    }
+
+    public function setToolsPermissions(array $toolsPermissions)
+    {
+        $this->toolsPermissions = $toolsPermissions;
+    }
+
     public function getRootPermissions()
     {
         return $this->rootPermissions;
@@ -161,5 +192,20 @@ class Configuration
     public function setRootPermissions(array $rootPermissions)
     {
         $this->rootPermissions = $rootPermissions;
+    }
+
+    public function setCreatorRole($role)
+    {
+        $this->creatorRole = $role;
+    }
+
+    public function getCreatorRole()
+    {
+        return $this->creatorRole;
+    }
+
+    private function validate($parsedFile)
+    {
+        return true;
     }
 }

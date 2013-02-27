@@ -42,10 +42,10 @@ class ResourceExtenderTest extends FunctionalTestCase
             ->findAll();
 
         //there is also 1 directory for each workspace, wich mean 5 directories are added with fixtures
-        $this->assertEquals(9, count($allRes));
+        $this->assertEquals(7, count($allRes));
         $this->assertEquals(1, count($firstSpecRes));
         $this->assertEquals(2, count($secondSpecRes));
-        $this->assertEquals(6, count($dirRes));
+        $this->assertEquals(4, count($dirRes));
     }
 
     /**
@@ -82,7 +82,8 @@ class ResourceExtenderTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
             ->findOneBy(array ('type' => 'default'));
 
-        $this->loadUserFixture();
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin', 'ws_creator' => 'ws_creator'));
 
         $firstRes = new SpecificResource1();
         $firstRes->setSomeField('Test');
