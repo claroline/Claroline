@@ -1,0 +1,9 @@
+{% extends 'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' %}
+{% block createCell %}
+    <td>
+        <a data-resource-id="{{ resource.getId() }}"
+           href="{{ path('claro_workspace_resource_rights_creation_form', {'workspaceId': workspace.getId(), 'roleId': permissions.getRole().getId() }) }}">
+            {{ 'options'|trans({}, 'platform') }}
+        </a>
+    </td>
+{% endblock %}
