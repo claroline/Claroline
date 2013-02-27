@@ -8,14 +8,14 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadUserData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadGroupData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadDirectoryData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadFileData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadTextData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadWorkspaceData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadMessagesData;
-use Claroline\CoreBundle\Tests\DataFixtures\Alt\LoadActivityData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadDirectoryData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadTextData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
 
 class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 {
