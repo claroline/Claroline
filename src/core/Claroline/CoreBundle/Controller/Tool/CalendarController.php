@@ -61,12 +61,12 @@ class CalendarController extends Controller
                         array('Content-Type' => 'application/json')
                     );
                 }
+            } else {
+                $error = $form->getErrors();
+                foreach ($error as $value) {
+                    echo $value;
+                 }
             }
-
-            return $this->render(
-                'ClarolineCoreBundle:Tool:workspace/calendar/calendar.html.twig',
-                array('workspace' => $workspace, 'form' => $form->createView())
-            );
         }
     }
 
@@ -75,16 +75,17 @@ class CalendarController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
-        $listEvents = $workspace->getEvents();
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findbyWorkspaceId($workspaceId, false);
         $data = array();
-
         foreach ($listEvents as $key => $object) {
-            $data[$key]['id'] = $object->getId();
-            $data[$key]['title'] = $object->getTitle();
-            $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart();
-            $data[$key]['end'] = $object->getEnd();
-            $data[$key]['color'] = $object->getPriority();
+
+                $data[$key]['id'] = $object->getId();
+                $data[$key]['title'] = $object->getTitle();
+                $data[$key]['allDay'] = $object->getAllDay();
+                $data[$key]['start'] = $object->getStart();
+                $data[$key]['end'] = $object->getEnd();
+                $data[$key]['color'] = $object->getPriority();
+
         }
 
         return new Response(
@@ -186,11 +187,12 @@ class CalendarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $usr = $this-> get('security.context')-> getToken()-> getUser();
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->getAllUserEvents($usr);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr);
         $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
-            $data[$key]['title'] = $object->getTitle();
+            $workspace = $object->getWorkspace();
+            $data[$key]['title'] = $workspace->getName().': '.$object->getTitle();
             $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();

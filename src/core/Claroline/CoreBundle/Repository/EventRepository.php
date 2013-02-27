@@ -9,7 +9,7 @@ class EventRepository extends EntityRepository
     /*
     * Get all the user's events by collecting all the workspace where is allowed to write
     */
-    public function getAllUserEvents(User $user)
+    public function findByUser(User $user )
     {
         $dql = "
             SELECT e 
@@ -22,9 +22,26 @@ class EventRepository extends EntityRepository
                 JOIN r.users u
                 WHERE u.id = :userId
             )
+            WHERE e.allDay = 1
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
+
+
+    public function findByWorkspaceId($workspaceId,$allDay)
+    {
+        $dql = "
+            SELECT e 
+            FROM Claroline\CoreBundle\Entity\Event e
+            WHERE e.workspace = :workspaceId
+            AND e.allDay = :allDay
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+        $query->setParameter('allDay', $allDay);
 
         return $query->getResult();
     }

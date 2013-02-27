@@ -60,11 +60,6 @@ class Event
     private $allDay = true;
 
      /**
-     * @ORM\Column(name="color", type="string" , nullable=true)
-     */
-    private $color;
-
-     /**
      * @ORM\Column(name="priority", type="string" , nullable=true)
      */
     private $priority;
@@ -116,15 +111,6 @@ class Event
         $this->description = $description;
     }
 
-    public function getWorkspaceId()
-    {
-        return $this->workspaceId;
-    }
-
-    public function setWorkspaceId($workspaceId)
-    {
-        $this->workspaceId = $workspaceId;
-    }
 
     public function getWorkspace()
     {
@@ -154,16 +140,6 @@ class Event
     public function setAllDay($allDay)
     {
         $this->allDay = (bool) $allDay;
-    }
-
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    public function setColor($color)
-    {
-        $this->color = $color;
     }
 
     public function getPriority()
