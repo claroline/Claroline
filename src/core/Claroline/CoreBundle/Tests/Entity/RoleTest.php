@@ -3,14 +3,13 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
-use Claroline\CoreBundle\DataFixtures\LoadPlatformRolesData;
 
 class RoleTest extends FixtureTestCase
 {
     protected function setUp()
     {
         parent::setUp();
-        $this->loadFixture(new LoadPlatformRolesData());
+        $this->loadPlatformRolesFixture();
     }
 
     public function testRoleNamesMustFollowTheSymfonyConvention()

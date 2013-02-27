@@ -5,7 +5,6 @@
     <form class="form-horizontal" action="{{ path('claro_admin_create_group') }}" method="post" {{ form_enctype(form_group) }} id="form_group">
         <fieldset>
             <legend>{{ 'create_group'|trans({}, 'platform') }} :</legend>
-            {{ form_errors(form_group) }}
             {{ form_widget(form_group) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

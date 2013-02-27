@@ -5,7 +5,6 @@
     <form class="form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
         <fieldset>
             <legend>{{ 'my_account'|trans({}, 'platform') }} :</legend>
-            {{ form_errors(profile_form) }}
             {{ form_widget(profile_form) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

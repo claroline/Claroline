@@ -25,6 +25,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
+
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
             'ClarolineCoreBundle:Resource:rights_form_resource.html.twig';
@@ -55,7 +56,7 @@ class ResourceRightsController extends Controller
         $permissions = array('open', 'copy', 'delete', 'edit', 'export');
         $referenceRights = array();
         $targetResources = isset($parameters['isRecursive']) ?
-            $resourceRepo->findDescendants($resource, true, false) :
+            $resourceRepo->findDescendants($resource, true) :
             array($resource);
 
         for ($i = 0, $targetCount = count($targetResources); $i < $targetCount; ++$i) {
@@ -130,11 +131,12 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $parameters = $this->get('request')->request->all();
         $targetResources = isset($parameters['isRecursive']) ?
-            $resourceRepo->findDescendants($resource, true, false) :
+            $resourceRepo->findDescendants($resource, true) :
             array($resource);
         $resourceTypeIds = isset($parameters['resourceTypes']) ?
-            $parameters['resourceTypes'] :
+            array_keys($parameters['resourceTypes']) :
             array();
+
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByIds($resourceTypeIds);
 

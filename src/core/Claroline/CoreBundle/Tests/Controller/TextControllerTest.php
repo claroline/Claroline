@@ -9,27 +9,22 @@ class TextControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user'));
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('user' => 'user'));
         $this->client->followRedirects();
-        $this->pwr = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
     }
 
     public function testAdd()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
+        $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $this->assertEquals('This is a text', $text->name);
     }
 
     public function testDefaultAction()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
+        $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
         $node = $crawler->filter('#text_content');
         $this->assertTrue(strpos($node->text(), 'hello world') !== false);
@@ -38,7 +33,7 @@ class TextControllerTest extends FunctionalTestCase
     public function testEditByRefAction()
     {
         $this->logUser($this->getFixtureReference('user/user'));
-        $text = $this->addText('This is a text', 'hello world', $this->pwr->getId());
+        $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
         $form = $crawler->filter('button[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
@@ -63,7 +58,7 @@ class TextControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request(
-            'POST', "/resource/create/text/{$this->pwr->getId()}"
+            'POST', "/resource/create/text/{$this->getDirectory('user')->getId()}"
         );
 
         $form = $crawler->filter('#text_form');

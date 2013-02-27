@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
 
 class WorkspaceControllerTest extends FunctionalTestCase
 {
@@ -11,12 +10,13 @@ class WorkspaceControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->client->followRedirects();
+        $this->loadPlatformRolesFixture();
     }
 
     public function testWSCreatorcanViewHisWorkspaces()
     {
-        $this->loadUserFixture(array('ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a'));
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
@@ -25,8 +25,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testAdmincanViewHisWorkspaces()
     {
-        $this->loadUserFixture(array('admin'));
-        $this->loadWorkspaceFixture(array('ws_e'));
+        $this->loadUserData(array('admin' => 'admin'));
+        $this->loadWorkspaceData(array('ws_e' => 'admin'));
         $crawler = $this->logUser($this->getFixtureReference('user/admin'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
@@ -35,7 +35,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testWSCreatorCanCreateWS()
     {
-        $this->loadUserFixture(array('ws_creator'));
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
         $link = $crawler->filter('#link-create-ws-form')->link();
         $crawler = $this->client->click($link);
@@ -50,8 +50,15 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testWSCreatorCanDeleteHisWS()
     {
-        $this->loadUserFixture(array('ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a', 'ws_b', 'ws_c', 'ws_d'));
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(
+            array(
+                'ws_a' => 'ws_creator',
+                'ws_b' => 'ws_creator',
+                'ws_c' => 'ws_creator',
+                'ws_d' => 'ws_creator',
+            )
+        );
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request(
             'DELETE',
@@ -66,8 +73,15 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testWSManagercanViewHisWS()
     {
-        $this->loadUserFixture(array('ws_creator'));
-        $this->loadWorkspaceFixture(array('ws_a', 'ws_b', 'ws_c', 'ws_d'));
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(
+            array(
+                'ws_a' => 'ws_creator',
+                'ws_b' => 'ws_creator',
+                'ws_c' => 'ws_creator',
+                'ws_d' => 'ws_creator',
+            )
+        );
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $crawler = $this->client->request(
             'GET',
@@ -81,8 +95,13 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUsercanViewWSList()
     {
-        $this->loadUserFixture(array('user', 'admin'));
-        $this->loadWorkspaceFixture(array('ws_e', 'ws_f'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadWorkspaceData(
+            array(
+            'ws_e' => 'admin',
+            'ws_f' => 'admin'
+            )
+        );
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
@@ -95,7 +114,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredResource()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwuId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -107,7 +126,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayHome()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwsId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -119,7 +138,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredHome()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request(
@@ -131,7 +150,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayUserManagement()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/user_management");
@@ -140,7 +159,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredUserManagement()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/user_management");
@@ -149,7 +168,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayUnregisteredUserList()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwuId}/users/unregistered");
@@ -158,7 +177,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredUserList()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/users/unregistered");
@@ -167,7 +186,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayUserParameters()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
@@ -179,7 +198,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredUserParameters()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $userId = $this->getFixtureReference('user/user')->getId();
         $this->logUser($this->getFixtureReference('user/user'));
@@ -189,7 +208,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayGroupManagement()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/group_management");
@@ -198,7 +217,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredGroupManagement()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/group_management");
@@ -207,7 +226,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testDisplayUnregisteredGroupList()
     {
-        $this->loadUserFixture(array('user'));
+        $this->loadUserData(array('user' => 'user'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
         $this->client->request('GET', "/workspaces/tool/group_management/{$pwuId}/groups/unregistered");
@@ -216,65 +235,10 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testUserCantAccessUnregisteredGroupList()
     {
-        $this->loadUserFixture(array('user', 'admin'));
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getFixtureReference('user/user'));
         $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
         $this->client->request('GET', "/workspaces/tool/group_management/{$pwaId}/groups/unregistered");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testManagercanViewWidgetProperties()
-    {
-        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $this->loadUserFixture(array('user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
-        $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
-    }
-
-    public function testManagerCanInvertWidgetVisible()
-    {
-        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $this->loadUserFixture(array('user', 'admin'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        //admin must unlock first
-        $this->logUser($this->getFixtureReference('user/user'));
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findAll();
-        $countConfigs = count($configs);
-        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
-        $countVisibleWidgets = count($crawler->filter('.widget'));
-        $this->client->request(
-            'POST',
-            "/workspaces/tool/properties/{$pwuId}/widget/{$configs[0]->getWidget()->getId()}/baseconfig"
-            . "/{$configs[0]->getId()}/invertvisible"
-        );
-        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
-        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
-        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findAll();
-        $this->assertEquals(++$countConfigs, count($configs));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
-        $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
-        $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
-    }
-
-    private function registerStubPlugins(array $pluginFqcns)
-    {
-        $container = $this->client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $validator = $container->get('claroline.plugin.validator');
-
-        foreach ($pluginFqcns as $pluginFqcn) {
-            $plugin = $loader->load($pluginFqcn);
-            $validator->validate($plugin);
-            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
-        }
     }
 }

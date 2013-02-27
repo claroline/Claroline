@@ -1,7 +1,6 @@
 !placeholder
 !.gitempty
 catalog.xml
-composer.phar
 nbproject/*
 app/cache/*
 app/logs/*

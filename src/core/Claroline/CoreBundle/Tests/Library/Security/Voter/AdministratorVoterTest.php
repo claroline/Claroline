@@ -11,7 +11,8 @@ class AdministratorVoterTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('admin' => 'admin'));
     }
 
     public function testAdministrorIsAlwaysGranted()

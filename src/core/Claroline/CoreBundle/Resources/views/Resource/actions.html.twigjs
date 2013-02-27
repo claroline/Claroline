@@ -1,36 +1,95 @@
 {% twig_js name="resource_actions_template" %}
 
-{% if isPickerMode == false %}
-    <div class="create-resource input-prepend pull-left">
-        {% if resourceTypes|length > 0 %}
-            <button class="create btn" {% if isCreateAllowed == false %} disabled="disabled" {% endif %} >{{ 'create'|trans({}, 'platform') }} :</button>
-            <select class="input-medium">
-                {% for resourceType, name in creatableTypes %}
-                    <option value="{{ resourceType }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-        {% endif %}
-        <button class="open-picker btn" {% if isAddAllowed == false %} disabled="disabled" {% endif %}>{{ 'add'|trans({}, 'platform') }}...</button>
-    </div>
-    <div class="btn-group pull-left">
-        <button class="cut btn" disabled="disabled" rel="tooltip" title="{{ 'cut'|trans({}, 'platform') }}">
-            <i class="icon-cut"></i>
-        </button>
-        <button class="copy btn" disabled="disabled rel="tooltip" title="{{ 'copy'|trans({}, 'platform') }}">
-            <i class="icon-copy"></i>
-        </button>
-        <button class="paste btn" {% if isPasteAllowed == false %} disabled="disabled" {% endif %} rel="tooltip" title="{{ 'paste'|trans({}, 'platform') }}">
-            <i class="icon-paste"></i>
-        </button>
-        <button class="delete btn" disabled="disabled rel="tooltip" title="{{ 'delete'|trans({}, 'platform') }}">
-            <i class="icon-remove-sign"></i>
-        </button>
-        <button class="download btn" disabled="disabled rel="tooltip" title="{{ 'download'|trans({}, 'platform') }}">
-            <i class="icon-download-alt"></i>
-        </button>
-    </div>
-{% else %}
-    <button class="add btn pull-left" {% if isAddAllowed == false or isPasteAllowed == false %} disabled="disabled" {% endif %}>{{ 'add'|trans({}, 'platform') }}</button>
-{% endif %}
+<div class="navbar-inner">
 
-<button class="search-panel btn pull-left">{{ 'search'|trans({}, 'platform') }}...</button>
+    {% if isPickerMode == false %}
+
+        <ul class="nav">
+
+            {% if resourceTypes|length > 0 %}
+                <li class="dropdown">
+                    <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
+                        <i class="icon-edit"></i>
+                        {{ 'create'|trans({}, 'platform') }} 
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu create">
+                        {% for resourceType, name in creatableTypes %}
+                            <li><a id='{{ resourceType }}'>{{ name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endif %}
+
+            <li>
+                <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
+                   <i class="icon-plus"></i>
+                   {{ 'add'|trans({}, 'platform') }}
+               </a>
+            </li>
+    
+            <li class="divider-vertical"></li>
+                
+        </ul>
+
+        <ul class="nav">
+            <li>
+                <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
+                    <i class="icon-cut"></i>
+                </a>
+            </li>
+            <li>
+                <a class="copy disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'copy'|trans({}, 'platform') }}">
+                    <i class="icon-copy"></i>
+                </a>
+            </li>
+            <li>
+               <a class="paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'paste'|trans({}, 'platform') }}">
+                    <i class="icon-paste"></i>
+                </a>
+            </li>
+            <li>
+                <a class="delete disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'delete'|trans({}, 'platform') }}">
+                    <i class="icon-remove-sign"></i>
+                </a>
+            </li>
+            <li>
+                <a class="download disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'download'|trans({}, 'platform') }}">
+                    <i class="icon-download-alt"></i>
+                </a>
+            </li>
+            
+        </ul>
+        <ul class="nav pull-right">
+            
+            <li class="divider-vertical"></li>
+            
+            <li>
+                <a class="search-panel">
+                    <i class="icon-search"></i>
+                    {{ 'search'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
+
+    {% else %}
+        <ul class='nav'>
+            <li>
+                <a class="add" {% if isAddAllowed == false or isPasteAllowed == false %} disabled="disabled" {% endif %}>
+                    <i class="icon-plus"></i>
+                    {{ 'add'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li>
+                <a class="search-panel">
+                    <i class="icon-search"></i>
+                    {{ 'search'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
+
+    {% endif %}
+
+</div>
+
+

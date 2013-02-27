@@ -5,20 +5,20 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class ResourceVoterTest extends FunctionalTestCase
 {
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture(array('user', 'ws_creator'));
+        $this->loadPlatformRolesFixture();
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
         $this->manager = $this->getFixtureReference('user/ws_creator');
         $em = $this->getEntityManager();
         $this->roleWsManager = $em->getRepository('ClarolineCoreBundle:Role')
             ->findOneBy(array('name' => 'ROLE_WS_MANAGER_'.$this->manager->getPersonalWorkspace()->getId()));
-        $this->root = $em
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findWorkspaceRoot($this->manager->getPersonalWorkspace());
+        $this->root = $this->getDirectory('ws_creator');
         $this->rootRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $this->root, 'role' => $this->roleWsManager));
     }
@@ -159,10 +159,8 @@ class ResourceVoterTest extends FunctionalTestCase
     public function testCopyResource()
     {
         $em = $this->getEntityManager();
-        $resourceManager = $this->client->getContainer()->get('claroline.resource.manager');
-        $directory = new Directory();
-        $directory->setName('NEWDIR');
-        $directory = $resourceManager->create($directory, $this->root->getId(), 'directory', $this->manager);
+        $this->loadDirectoryData('user', array('ws_creator/directory'));
+        $directory = $this->getDirectory('directory');
 
         $this->logUser($this->manager);
         $this->assertTrue(
@@ -227,5 +225,14 @@ class ResourceVoterTest extends FunctionalTestCase
         $collection = new ResourceCollection(array($directory), array('parent' => $this->root));
         $this->assertFalse($this->getSecurityContext()->isGranted('MOVE', $collection));
         $this->assertEquals(3, count($collection->getErrors()));
+    }
+
+    public function testAnAuthenticationExceptionIsThrownIfAnonymousUserHasInsufficientPermissionsOnResource()
+    {
+        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AuthenticationException');
+        $context = $this->getSecurityContext();
+        $context->setToken(new AnonymousToken('some_key', 'anon.', array('ROLE_ANONYMOUS')));
+        // this could/should be tested for each resource permission
+        $this->getSecurityContext()->isGranted('OPEN', new ResourceCollection(array($this->root)));
     }
 }

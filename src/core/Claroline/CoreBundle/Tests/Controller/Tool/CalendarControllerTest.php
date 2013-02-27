@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 
 class CalendarControllerTest extends FunctionalTestCase
 {
@@ -11,8 +10,9 @@ class CalendarControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
-        $this->loadFixture(new LoadWorkspaceData);
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
     }
 
     public function testWorkspaceUserCanSeeTheAgenda()
