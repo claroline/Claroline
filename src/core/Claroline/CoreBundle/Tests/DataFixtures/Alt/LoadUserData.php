@@ -14,9 +14,9 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     private $container;
 
     /**
-     * Constructor. Expects an associative array where each key is an unique username
-     * and each value a role name (e.g. 'john' => 'admin'). Roles must have been loaded
-     * and referenced in a previous fixtures with a 'role/[role name]' label.
+     * Constructor. Expects an associative array where each key are a firstname and
+     * a lastname separated by a space and each value a role name (e.g. 'John Doe' => 'admin').
+     * Roles must have been loaded and referenced in a previous fixtures with a 'role/[role name]' label.
      *
      * Users will be created with the following properties :
      *
@@ -53,22 +53,28 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         $userCreator = $this->container->get('claroline.user.creator');
         $resourceRepo = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
 
-        foreach ($this->users as $username => $role) {
+        foreach ($this->users as $names => $role) {
+            $namesArray = explode(' ', $names);
+            $firstName = $namesArray[0];
+            $lastName = (isset($namesArray[1])) ? $namesArray[1]: '';
+            $username = $firstName.ucfirst($lastName);
             $user = new User();
-            $user->setFirstName(ucfirst($username));
-            $user->setLastName('Doe');
+            $user->setAdministrativeCode('UCL-'.$username.'-'.rand(0, 1000));
+            $user->setFirstName($firstName);
+            $lastName = ($lastName == '') ? 'Doe': $lastName;
+            $user->setLastName($lastName);
             $user->setUserName($username);
             $user->setPlainPassword($username);
             $user->addRole($this->getReference("role/{$role}"));
             $userCreator->create($user);
-            $this->addReference("user/{$username}", $user);
-            $this->addReference("workspace/{$username}", $user->getPersonalWorkspace());
+            $this->addReference("user/{$names}", $user);
+            $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
             $this->addReference(
-                "directory/{$username}",
+                "directory/{$names}",
                 $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
             );
-        }
 
-        $manager->flush();
+            $manager->flush();
+        }
     }
 }

@@ -101,7 +101,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testAlertOnReceivedMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadMessagesData(array('to' => 'user'), 1);
+        $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $this->assertEquals(1, count($crawler->filter('.badge-important')));
     }
@@ -109,7 +109,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testShowMessageMarkAsRead()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadMessagesData(array('to' => 'user'), 1);
+        $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/message/list/received/0');
         $this->assertEquals(1, count($crawler->filter('.icon-warning-sign')));
@@ -128,7 +128,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testRemoveMessageFromUser()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadMessagesData(array('from' => 'user'), 1);
+        $this->loadMessagesData(array(array('from' => 'user', 'to' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $messages = $this->client
             ->getContainer()
@@ -144,7 +144,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testRemoveMessageToUser()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadMessagesData(array('to' => 'user'), 1);
+        $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $userMessages = $this->client
             ->getContainer()
@@ -199,7 +199,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testSearchRemovedMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadMessagesData(array('to' => 'user'), 1);
+        $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $userMessages = $this->client
             ->getContainer()

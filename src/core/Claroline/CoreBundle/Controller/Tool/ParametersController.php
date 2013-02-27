@@ -587,7 +587,7 @@ class ParametersController extends Controller
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
         $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
-        
+
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:resources_rights.html.twig',
             array('workspace' => $workspace, 'resource' => $resource, 'roleRights' => $roleRights)
