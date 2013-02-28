@@ -2,7 +2,7 @@
 
 namespace Claroline\VideoPlayerBundle\Listener;
 
-use Claroline\CoreBundle\Library\Resource\Event\PlayFileEvent;
+use Claroline\CoreBundle\Library\Event\PlayFileEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
