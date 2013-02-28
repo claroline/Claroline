@@ -1,20 +1,15 @@
-name: default
-description: This is the default personal workspace template
+name: Depôt de ressources
+description: Cet espace est un depôt de ressources.
 creator_role: ROLE_WS_MANAGER
 roles:
     ROLE_WS_VISITOR: 'visitor'
+    ROLE_WS_COLLABORATOR: 'collaborator'
     ROLE_WS_MANAGER: 'manager'
-tools:
-   - 'home'
-   - 'resource_manager'
-   - 'parameters'
-   - 'calendar'
-   - 'user_management'
-   - 'group_management'
 tools_permissions:
-    home:
-       - 'ROLE_WS_VISITOR'
+    resource_manager:
+       - 'ROLE_WS_COLLABORATOR'
        - 'ROLE_WS_MANAGER'
+       - 'ROLE_WS_VISITOR'
 resources_permissions:
     ROLE_WS_VISITOR:
        'canCopy': false
@@ -23,6 +18,13 @@ resources_permissions:
        'canDelete': false
        'canExport': false
        'canCreate': false
+    ROLE_WS_COLLABORATOR:
+       'canCopy': false
+       'canOpen': true
+       'canEdit': false
+       'canDelete': false
+       'canExport': true
+       'canCreate': false
     ROLE_WS_MANAGER:
        'canCopy': true
        'canOpen': true
@@ -30,3 +32,8 @@ resources_permissions:
        'canDelete': true
        'canExport': true
        'canCreate': true
+
+
+
+
+

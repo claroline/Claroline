@@ -96,7 +96,7 @@ class Configuration
         $config->validate($parsedFile);
         $config->setCreatorRole($parsedFile['creator_role']);
         $config->setRoles($parsedFile['roles']);
-        $config->setTools($parsedFile['tools']);
+        $config->setTools(array_keys($parsedFile['tools_permissions']));
         $config->setToolsPermissions($parsedFile['tools_permissions']);
         $config->setRootPermissions($parsedFile['resources_permissions']);
 
