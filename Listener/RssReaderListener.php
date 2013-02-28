@@ -3,9 +3,9 @@
 namespace Claroline\RssReaderBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
 
