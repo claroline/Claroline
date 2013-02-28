@@ -2,11 +2,11 @@
 
 namespace Claroline\ForumBundle\Listener;
 
-use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\ForumBundle\Form\ForumType;
