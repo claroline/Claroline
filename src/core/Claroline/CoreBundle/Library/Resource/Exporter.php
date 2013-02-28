@@ -6,8 +6,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\Utilities;
-use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
 use Symfony\Component\Security\Core\SecurityContext;
 
 class Exporter

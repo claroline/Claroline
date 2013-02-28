@@ -42,7 +42,7 @@ This example will show you the main files of a basic HTML5 video player.
 
     namespace Claroline\VideoPlayerBundle\Listener;
 
-    use Claroline\CoreBundle\Library\Resource\Event\PlayFileEvent;
+    use Claroline\CoreBundle\Library\Event\PlayFileEvent;
     use Symfony\Component\DependencyInjection\ContainerAware;
     use Symfony\Component\HttpFoundation\Response;
 

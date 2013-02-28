@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 use Symfony\Component\DependencyInjection\ContainerAware;

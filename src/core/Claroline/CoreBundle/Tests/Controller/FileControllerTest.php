@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
 
 class FileControllerTest extends FunctionalTestCase
