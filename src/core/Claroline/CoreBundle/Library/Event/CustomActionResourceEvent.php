@@ -1,11 +1,15 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Resource\Event;
+namespace Claroline\CoreBundle\Library\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
-class PlayFileEvent extends Event
+/**
+ * Event dispatched by the resource controller when a custom action is asked on a resource.
+ */
+class CustomActionResourceEvent extends Event
 {
     private $resource;
     private $response;
@@ -13,17 +17,17 @@ class PlayFileEvent extends Event
     /**
      * Constructor.
      *
-     * @param integer $resourceId
+     * @param AbstractResource $resource
      */
-    public function __construct($resource)
+    public function __construct(AbstractResource $resource)
     {
         $this->resource = $resource;
     }
 
     /**
-     * Returns the resource on which the action is to be taken.
+     * Returns the id of the resource on which the action is to be taken.
      *
-     * @return Claroline\CoreBundle\Entity\Resource\AbstractResource
+     * @return integer
      */
     public function getResource()
     {

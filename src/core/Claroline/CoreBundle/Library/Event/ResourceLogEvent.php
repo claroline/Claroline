@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Logger\Event;
+namespace Claroline\CoreBundle\Library\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
