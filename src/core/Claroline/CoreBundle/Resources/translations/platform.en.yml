@@ -224,6 +224,7 @@ workspace.name_not_blank: 'The workspace''s name is required.'
 workspace_administration: Administration
 workspace_form_code: Code
 workspace_form_name: Name
+workspace_form_template: Template
 workspace_form_type: Type
 workspace_resource: Resources
 workspace_tools: Tools
