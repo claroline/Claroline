@@ -24,6 +24,7 @@ configuration: Configuration
 configure: Configurer
 copy: Copier
 create: Créer
+creation: Création
 create_group: 'Créer un groupe'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'

@@ -11,7 +11,13 @@
 {% endblock %}
 
 {% block section_content %}
-
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">
+               {{ 'agenda'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -44,7 +50,7 @@
            <ul>
                 <li data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}} </li>
                 <li > {{ e.end|date("d/m/Y") }} </li>
-                <li>{{ e.description }}</li>  
+                <li>{{ e.description }}</li>
                 <li class="hidden"> {{e.priority}}</li>
                   <a href="#myModal" class="update-task" role="button">modifier</a> </p>
             </ul>
@@ -53,7 +59,7 @@
         <li>No event found</li>
         {% endfor %}
     </div>
-   
+
 {% endblock %}
 
 {% block javascripts %}
