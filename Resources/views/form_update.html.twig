@@ -1,7 +1,6 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form class="form-horizontal" id="rss-reader-form" action="{{ path('claro_rss_config_update', {'configId': rssConfig.getId()})}} " method="post" {{ form_enctype(form) }}>
     <fieldset>
-        {{ form_errors(form) }}
         {{ form_widget(form) }}
     </fieldset>
     <div class="form-actions">
