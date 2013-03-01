@@ -15,7 +15,9 @@
                 <th>{{ 'date'|trans({}, 'platform') }}</th>
                 <th>{{ 'to'|trans({}, 'platform') }}</th>
                 <th>{{ 'object'|trans({}, 'platform') }}</th>
-                <th>{{ 'delete'|trans({}, 'platform') }}</th>
+                <th>{{ 'delete'|trans({}, 'platform') }} {{'all'|trans({}, 'plateform')}} 
+                    <input type="checkbox" name="all" id="allChecked"/>
+                </th>
             </tr>
         </thead>
         <tbody id="message-table-body">
