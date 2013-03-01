@@ -111,4 +111,15 @@
             }
         })
     }
+    
+     $('#allChecked').click(function(){
+        if($('#allChecked').is(':checked')){
+             $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', true);
+             $('.delete-msg').removeAttr('disabled');
+         }
+         else {
+            $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', false);     
+            $('.delete-msg').attr('disabled', 'disabled'); 
+         }
+    });
 })();
