@@ -38,7 +38,7 @@ class FileListener extends ContainerAware
 
         if ($form->isValid()) {
             $file = $form->getData();
-            $tmpFile = $file->getFile();
+            $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
