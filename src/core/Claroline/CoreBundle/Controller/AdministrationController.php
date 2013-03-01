@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
-use Claroline\CoreBundle\Library\Plugin\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

@@ -29,7 +29,7 @@ class Creator
         $this->trans = $trans;
         $this->ch = $ch;
         $this->wsCreator = $wsCreator;
-        $this->personalWsTemplateFile = $personalWsTemplateFile."personal.yml";
+        $this->personalWsTemplateFile = $personalWsTemplateFile."default.yml";
     }
 
     /**
@@ -43,8 +43,8 @@ class Creator
     public function create(User $user)
     {
         $this->em->persist($user);
-        $config = new Configuration();
-        //$config = Configuration::fromTemplate($this->personalWsTemplateFile);
+//        $config = new Configuration();
+        $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         //uncomment this line when the templating system is working
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $locale = $this->ch->getParameter('locale_language');

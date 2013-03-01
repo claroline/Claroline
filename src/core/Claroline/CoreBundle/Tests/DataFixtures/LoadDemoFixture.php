@@ -2,26 +2,39 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\Text;
-use Claroline\CoreBundle\Entity\Resource\Revision;
-use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Tests\DataFixtures\Special\LoadEntitiesInWorkspace;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadDirectoryData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadTextData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
 
 class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 {
     /** @var ContainerInterface $container */
     protected $container;
+
+    protected $filepath;
+
+    const NB_USERS = 20;
+    const NB_GROUPS = 10;
+    const USER_PER_GROUP = 5;
+    const GROUP_PER_WORKSPACE = 2;
+    const USER_PER_WORKSPACE = 5;
+
+    public function __construct()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $this->filepath = __DIR__."{$ds}DemoFiles{$ds}";
+    }
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -35,201 +48,328 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
 
     public function load(ObjectManager $manager = null)
     {
-        // TODO : following lines were added quickly -- we cannot suppose the admin exists...
-        $admin = $manager->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => 'admin'));
-        $adminWorkspace = $admin->getPersonalWorkspace();
-        $rootWorkspaceAdmin = $this->getWorkspaceRoot($adminWorkspace);
-        $dir = $this->createDirectory('Documents', $rootWorkspaceAdmin, $admin);
-        $this->createFile('file.txt', $dir, $admin, 'file.txt');
-        $user = $this->createMainTeacher($manager);
-        $this->loadFixture(new LoadUsersData(30, 'user'));
-        $this->loadFixture(new LoadUsersData(10, 'ws_creator'));
-        $this->loadFixture(new LoadUsersData(5, 'admin'));
-        $this->loadFixture(new LoadGroupsData(20));
-        $this->createDemoResources($user, $manager);
-        $this->loadFixture(new LoadMessagesData(array('from' => $user->getUsername()), 20));
-        $this->loadFixture(new LoadMessagesData(array('to' => $user->getUsername()), 20));
-    }
-
-    private function createMainTeacher($manager)
-    {
-        $user = new User();
-        $user->setFirstName('Jane');
-        $user->setLastName('Doe');
-        $user->setUsername('teacher');
-        $user->setPlainPassword('teacher');
-        $roleRepo = $manager->getRepository('ClarolineCoreBundle:Role');
-        $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
-        $user->addRole($wsCreatorRole);
-        $manager->persist($user);
-        $user = $this->getContainer()->get('claroline.user.creator')->create($user);
-
-        return $user;
-    }
-
-    private function loadFixture($fixture)
-    {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $referenceRepo = new ReferenceRepository($em);
-        $fixture->setReferenceRepository($referenceRepo);
-        $fixture->setContainer($this->getContainer());
-        $fixture->load($em);
-    }
-
-    private function createDemoResources($user)
-    {
-        $accItems = array();
-        $ws = $this->createWorkspace('Cours 1', $user, 'C1');
-        $this->loadFixture(new LoadEntitiesInWorkspace(10, 'user', null, $ws));
-        $this->loadFixture(new LoadEntitiesInWorkspace(2, 'group', null, $ws));
-        $dir = $this->createDirectory('Premier semestre', $this->getWorkspaceRoot($ws), $user);
-        $this->createFile('test.txt', $dir, $user, 'file.txt');
-        $dir = $this->createDirectory('Second semestre', $this->getWorkspaceRoot($ws), $user);
-        $this->createFile('file.txt', $dir, $user, 'file.txt');
-        $this->createText('Infos', $dir, $user, 50);
-
-        $ws = $this->createWorkspace('Cours 2', $user, 'C2');
-        $this->loadFixture(new LoadEntitiesInWorkspace(10, 'user', null, $ws));
-        $this->loadFixture(new LoadEntitiesInWorkspace(2, 'group', null, $ws));
-        $accItems[] = $this->createText('Description du cours', $this->getWorkspaceRoot($ws), $user, 200);
-        $this->createFile('Axes de Claronext.odt', $this->getWorkspaceRoot($ws), $user, 'claronext.odt');
-        $this->createDirectory('Travaux', $this->getWorkspaceRoot($ws), $user);
-        $this->loadFixture(new LoadForumData('Forum 1', $user->getUsername(), 5, 5, $this->getWorkspaceRoot($ws)));
-
-        $ws = $this->createWorkspace('Cours 3', $user, 'C3');
-        $this->createDirectory('Groupe 1', $this->getWorkspaceRoot($ws), $user);
-        $this->createDirectory('Groupe 2', $this->getWorkspaceRoot($ws), $user);
-        $this->createDirectory('Groupe 3', $this->getWorkspaceRoot($ws), $user);
-
-        //personnalWs
-        $dir = $this->createDirectory('Documents', $this->getWorkspaceRoot($user->getPersonalWorkspace()), $user);
-        $this->loadFixture(new LoadEntitiesInWorkspace(10, 'user', null, $user->getPersonalWorkspace()));
-        $this->loadFixture(new LoadEntitiesInWorkspace(2, 'group', null, $user->getPersonalWorkspace()));
-        $accItems[] = $this->createFile('Axes de Claronext.odt', $dir, $user, 'claronext.odt');
-        $accItems[] = $this->createFile('Symfony 2.0 ebook.pdf', $dir, $user, 'symfony.pdf');
-        $accItems[] = $this->createFile('lorem.pdf', $dir, $user, 'lorem.pdf');
-        $accItems[] = $this->createFile('sample.pdf', $dir, $user, 'sample.pdf');
-        $accItems[] = $this->loadFixture(new LoadForumData('Forum Docs', $user->getUsername(), 5, 5, $dir));
-        $accDir = $this->createDirectory('Activities', $dir, $user);
-        $dir = $this->createDirectory(
-            'Images et vidéos',
-            $this->getWorkspaceRoot($user->getPersonalWorkspace()),
-            $user
+        $this->referenceRepo = new ReferenceRepository($manager);
+        $this->manager = $manager;
+        $this->setReferenceRepository($this->referenceRepo);
+        $this->setReferences($manager);
+        $this->createUsers();
+        $this->createGroups();
+        //main users
+        $this->loadFixture(
+            new LoadUserData(array('John Doe' => 'admin', 'Jane Doe' => 'ws_creator'))
         );
-        $accItems[] = $this->createFile('big_buck_bunny_480.webm', $dir, $user, 'bigbuck.webm');
-        $accItems[] = $this->createFile('wallpaper.jpg', $dir, $user, 'wallpaper.jpg');
-
-        //create an Activity
-        $activityWs = $this->createWorkspace('Cours 4', $user, 'C4');
-        $this->loadFixture(new LoadEntitiesInWorkspace(10, 'user', null, $activityWs));
-        $this->loadFixture(new LoadEntitiesInWorkspace(2, 'group', null, $activityWs));
-
-        $accItems[] = $this->createActivity('Chapitre 1', $accDir, $user, array($accItems[0], $accItems[1]));
-        $accItems[] = $this->createActivity('Chapitre 2', $accDir, $user, array($accItems[2], $accItems[3]));
-
-        $this->createActivity(
-            'Activité principale',
-            $this->getWorkspaceRoot($activityWs),
-            $user,
-            array(
-                $accItems[4],
-                $accItems[5],
-                $accItems[6],
-                $accItems[7],
-                $accItems[8],
-                $accItems[9]
+        //admin
+        $this->loadFixture(
+            new LoadDirectoryData('John Doe', array('John Doe/Documents/Projets'))
+        );
+        $this->loadFixture(
+            new LoadFileData('John Doe', 'Documents', array($this->filepath.'foo.txt'))
+        );
+        //teacher
+        $this->loadDemoResources();
+        $this->loadFixture(
+            new LoadMessagesData(
+                array(
+                    array('from' => 'John Doe', 'to' => 'Jane Doe', 'object' => 'Welcome !'),
+                    array('to' => 'John Doe', 'from' => 'Jane Doe', 'object' => 'I have a problem.')
+                )
             )
         );
     }
 
-    private function createWorkspace($name, $user, $code)
+    public function loadDemoResources()
     {
-        $config = new Configuration();
-        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-        $config->setWorkspaceName($name);
-        $config->setWorkspaceCode($code);
-        $wsCreator = $this->getContainer()->get('claroline.workspace.creator');
-        $ws = $wsCreator->createWorkspace($config, $user);
-
-        return $ws;
-    }
-
-    private function createFile($name, $parent, $user, $fileName)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $filepath = __DIR__."{$ds}DemoFiles{$ds}{$fileName}";
-        $fileData = new LoadFileData($name, $parent, $user, $filepath);
-        $this->loadFixture($fileData);
-
-        return $fileData->getLastFileCreated();
-    }
-
-    private function createText($name, $parent, $user, $nbWords)
-    {
-        $lipsumGenerator = $this->getContainer()->get('claroline.utilities.lipsum_generator');
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $revision = new Revision();
-        $revision->setContent($lipsumGenerator->generateLipsum($nbWords));
-        $revision->setUser($user);
-        $em->persist($revision);
-        $em->flush();
-        $text = new Text();
-        $text->setLastRevision($revision);
-        $text->setName($name);
-        $em->persist($text);
-        $revision->setText($text);
-        $this->getContainer()->get('claroline.resource.manager')->create($text, $parent->getId(), 'text', $user);
-
-        return $text;
-    }
-
-    private function createDirectory($name, $parent, $user)
-    {
-        $manager = $this->getContainer()->get('claroline.resource.manager');
-        $directory = new Directory();
-        $directory->setName($name);
-        $dir = $manager->create($directory, $parent->getId(), 'directory', $user);
-
-        return $dir;
-    }
-
-    private function getWorkspaceRoot($workspace)
-    {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findOneBy(array('workspace' => $workspace, 'parent' => null));
-
-        return $root;
-    }
-
-    private function createActivity($name, $parent, $user, $resources)
-    {
-        $activity = new Activity();
-        $activity->setName($name);
-        $activity->setInstructions(
-            $this->getContainer()
-                ->get('claroline.utilities.lipsum_generator')
-                ->generateLipsum(100)
+        $this->loadFixture(
+            new LoadWorkspaceData(
+                array(
+                    'Cours 1' => 'Jane Doe',
+                    'Cours 2' => 'Jane Doe',
+                    'Cours 3' => 'Jane Doe',
+                    'Cours 4' => 'Jane Doe'
+                )
+            )
         );
-        $activity = $this->getContainer()
-            ->get('claroline.resource.manager')
-            ->create($activity, $parent->getId(), 'activity', $user);
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $i = 0;
 
-        foreach ($resources as $resource) {
-            if (null != $resource) {
-                $i++;
-                $rs = new ResourceActivity;
-                $rs->setActivity($activity);
-                $rs->setResource($resource);
-                $rs->setSequenceOrder($i);
-                $em->persist($rs);
-            }
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 1'));
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 2'));
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 3'));
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 4'));
+
+        $this->loadFixture(
+            new LoadDirectoryData(
+                'Jane Doe',
+                array(
+                    'Cours 1/Premier semestre',
+                    'Cours 1/Second semestre',
+                    'Cours 2/Travaux',
+                    'Cours 3/Groupe 1',
+                    'Cours 3/Groupe 2',
+                    'Cours 3/Groupe 3',
+                    'Jane Doe/Images et vidéos',
+                    'Jane Doe/Docs/Activities'
+                )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadFileData('Jane Doe', 'Premier semestre', array($this->filepath.'bar.txt'))
+        );
+
+        $this->loadFixture(
+            new LoadFileData('Jane Doe', 'Second semestre', array($this->filepath.'file.txt'))
+        );
+
+        $this->loadFixture(
+            new LoadTextData('Jane Doe', 'Second semestre', 200, array('Infos'))
+        );
+
+        $this->loadFixture(
+            new LoadTextData('Jane Doe', 'Cours 2', 200, array('Description du cours'))
+        );
+
+        $this->loadFixture(
+            new LoadFileData('Jane Doe', 'Second semestre', array($this->filepath.'claronext.odt'))
+        );
+
+        $this->loadFixture(
+            new LoadFileData(
+                'Jane Doe',
+                'Docs',
+                array(
+                    $this->filepath.'lorem.pdf',
+                    $this->filepath.'sample.pdf',
+                    $this->filepath.'symfony2.pdf'
+                 )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadFileData(
+                'Jane Doe',
+                'Images et vidéos',
+                array(
+                    $this->filepath.'bigbuck.webm',
+                    $this->filepath.'wallpaper.jpg'
+                 )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadForumData('Forum 1', 'JaneDoe', 5, 5, $this->getReference('directory/Cours 1'))
+        );
+
+        $this->loadFixture(
+            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Docs'))
+        );
+
+        $this->loadFixture(
+            new LoadActivityData(
+                'Chapitre 1',
+                'Activities',
+                'Jane Doe',
+                array(
+                    $this->getReference('file/bigbuck.webm')->getId(),
+                    $this->getReference('file/wallpaper.jpg')->getId()
+                )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadActivityData(
+                'Chapitre 2',
+                'Activities',
+                'Jane Doe',
+                array(
+                    $this->getReference('file/lorem.pdf')->getId(),
+                    $this->getReference('file/symfony2.pdf')->getId()
+                )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadActivityData(
+                'Activité',
+                'Jane Doe',
+                'Jane Doe',
+                array(
+                    $this->getReference('activity/Chapitre 1')->getId(),
+                    $this->getReference('activity/Chapitre 2')->getId()
+                )
+            )
+        );
+    }
+
+    private function loadFixture($fixture)
+    {
+        $fixture->setReferenceRepository($this->referenceRepo);
+        $fixture->setContainer($this->getContainer());
+        $fixture->load($this->manager);
+    }
+
+    private function setReferences(ObjectManager $manager)
+    {
+        $roleRepo = $manager->getRepository('ClarolineCoreBundle:Role');
+        $userRole = $roleRepo->findOneByName('ROLE_USER');
+        $wsCreatorRole = $roleRepo->findOneByName('ROLE_WS_CREATOR');
+        $adminRole = $roleRepo->findOneByName('ROLE_ADMIN');
+        $this->addReference('role/user', $userRole);
+        $this->addReference('role/ws_creator', $wsCreatorRole);
+        $this->addReference('role/admin', $adminRole);
+    }
+
+    private function addUsersToWorkspace($workspace)
+    {
+        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAll();
+        $groups = $this->manager->getRepository('ClarolineCoreBundle:Group')->findAll();
+        $userKeys = array_rand($users, self::USER_PER_WORKSPACE);
+        $groupsKey = array_rand($groups, self::GROUP_PER_WORKSPACE);
+        $collaboratorRole = $this->manager
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findCollaboratorRole($workspace);
+
+        foreach ($userKeys as $key) {
+            $users[$key]->addRole($collaboratorRole);
+            $this->manager->persist($users[$key]);
         }
 
-        $em->flush();
+        foreach ($groupsKey as $key) {
+            $groups[$key]->addRole($collaboratorRole);
+            $this->manager->persist($groups[$key]);
+        }
 
-        return $activity;
+         $this->manager->flush();
+    }
+
+    public function createUsers()
+    {
+        $firstNames = $this->getFirstNames();
+        $lastNames = $this->getLastNames();
+
+        for ($i = 0; $i < self::NB_USERS; $i++) {
+            $names[] = $firstNames[array_rand($firstNames)] . ' ' . $lastNames[array_rand($lastNames)];
+        }
+        $names = array_flip(array_unique($names));
+        $keys = array_keys($names);
+        foreach ($keys as $key) {
+            $names[$key] = 'user';
+        }
+
+        $this->loadFixture(
+            new LoadUserData($names)
+        );
+    }
+
+    public function createGroups()
+    {
+        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAll();
+        $loadGroupDataParameters = array();
+        $groupClasses = $this->getGroupClass();
+        $groupNames = $this->getGroupNames();
+
+        for ($i = 0; $i < self::NB_GROUPS; $i++) {
+            $names[] = $groupClasses[array_rand($groupClasses)]." - "
+                . $groupNames[array_rand($groupNames)];
+        }
+
+        $names = array_unique($names);
+        foreach ($names as $name) {
+            $groupUsersKeys = array_rand($users, self::USER_PER_GROUP);
+            $userArray = array();
+            foreach ($groupUsersKeys as $key) {
+                $userArray[] = $users[$key]->getFirstName().' '.$users[$key]->getLastName();
+            }
+            $loadGroupDataParameters[$name] = $userArray;
+        }
+        $this->loadFixture(
+            new LoadGroupData($loadGroupDataParameters)
+        );
+    }
+
+    private function getFirstNames()
+    {
+        return array(
+            "Mary", "Amanda", "James", "Patricia", "Michael", "Sarah", "Patrick", "Homer", "Bart", "Marge", "Lisa",
+            "John", "Stan", "Stéphane", "Emmanuel", "Nicolas", "Frédéric", "Luke", "Luc", "Kenneth", "Stanley",
+            "Kyle", "Léopold", "Eric", "Cécile", "Marie", "Caterine", "Jessica", "Matthieu", "Aurélie", "Elisabeth",
+            "Louis", "Jérome", "Ned", "Ralph", "Charles-Montgomery",
+            "Waylon", "Carl", "Timothy", "Kirk", "Milhouse", "Todd", "Maude", "Benjamen", "ObiWan", "George",
+            "Barack","Alfred", "Paul", "Gabriel", "Anne", "Théophile", "Bill", "Claudia", "Silva", "Ford",
+            "Rodney", "Greg", "Bob", "Robert","Jean-Kévin", "Charles-Henry", "Douglas", "Arthur", "Marvin",
+            "Bruce", "William", "Jason", "Mélanie", "Sophie","Dominique", "Coralie", "Camille", "Claudia",
+            "Margareth", "Antonio", "Scarlett", "Marie", "Robert", "Hélène", "Toto","Frank",
+            "Mélissa", "Elio", "Fabienne", "Thomas", "Jean-Kevin", "Emilie", "Marion", "Perinne", "Corinne",
+            "Chloé"
+        );
+    }
+
+    private function getLastNames()
+    {
+        return array(
+            "Johnson", "Miller", "Brown", "Williams", "Davis", "Simpson", "Smith", "Doe", "Klein", "Godfraind",
+            "Gervy", "Fervaille","Minne", "Skywalker", "Marsh", "Broflovski", "Cartman", "Stotch", "McCormick",
+            "McLane", "Bourne", "Yates", "Marilyn","McElroy", "Flanders", "Wiggum", "Burns", "Smithers",
+            "Carlson", "LoveJoy", "VanHouten", "Gates", "Braconier", "Kenobi","Lucas", "Clooney", "Harisson",
+            "Obama", "Bush", "Black", "Hogan", "Anderson", "McKay", "Fields", "Bruel", "Kottick","Dupond",
+            "Leloux", "Miller", "Adams", "Dent", "Accroc", "Prefect", "Escort", "Sheridan", "William", "Willis",
+            "Lee","Devos", "Tatcher", "Gilbert", "Casilli", "Wilson", "Cantor", "Descartes", "Carlyle", "Ford",
+            "Tortelloni", "Pizza", "Garcia", "Martinez", "Thomas", "Lefebvre", "Fournier", "Gauthier", "Lemoine",
+            "Bernard", "Petit", "Fontaine", "Vincent", "Henry", 'Patate', 'Tomate', 'Courgette', 'Potiron', 'Fougère',
+            'Lucas', 'Henry', 'Lacroix', 'Renaud', 'Cabron'
+        );
+    }
+
+    private function getGroupNames()
+    {
+        return array(
+            "History",
+            "Linguistics",
+            "Literature",
+            "Performing arts",
+            "Philosophy",
+            "Religion",
+            "Visual arts",
+            "Anthropology",
+            "Archaeology",
+            "Area studies",
+            "Cultural and ethnic studies",
+            "Economics",
+            "Gender and sexuality",
+            "Geography",
+            "Political science",
+            "Psychology",
+            "Sociology",
+            "Space science",
+            "Earth sciences",
+            "Life sciences",
+            "Chemistry",
+            "Physics",
+            "Computer sciences",
+            "Logic",
+            "Mathematics",
+            "Statistics",
+            "Systems science",
+            "Agriculture",
+            "Architecture and Design",
+            "Business", "Education",
+            "Engineering",
+            "Environmental studies and Forestry",
+            "Family and consumer science",
+            "Health science",
+            "Human physical performance and recreation",
+            "Journalism, media studies and communication",
+            "Law",
+            "Library and museum studies",
+            "Military sciences",
+            "Public administration",
+            "Social work",
+            "Transportation"
+        );
+    }
+
+    private function getGroupClass()
+    {
+        return array(
+            "Bachelor 1", "Bachelor 2", "Bachelor 3", "Master 1", "Master 2", "Doctorate 1", "Doctorate 2"
+        );
     }
 }

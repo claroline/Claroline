@@ -1,0 +1,25 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% block javascripts %}
+   {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/resource_rights_creation_form.js') }}" type="text/javascript"></script>
+{% endblock %}
+{% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_workspace_open_tool',
+               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+               {{ 'parameters'|trans({}, 'platform') }}
+            </a>
+        </li>
+         <span class="divider"> / </span>
+        <li>
+            <a href="{{ path('claro_workspace_resource_rights_form', {'workspaceId': workspace.getId()}) }}">{{ 'resources'|trans({}, 'platform') }}</a>
+        </li>
+         <span class="divider"> / </span>
+        <li>
+            <a href="#">{{ 'creation'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+    <div id="data" data-workspace-id="{{ workspace.getId() }}"></div>
+    {% include 'ClarolineCoreBundle:Resource:rights_creation.html.twig' %}
+{% endblock %}

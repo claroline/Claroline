@@ -7,8 +7,8 @@ use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -573,6 +573,54 @@ class ParametersController extends Controller
         $em->flush();
 
         return new Response('<body>success</body>');
+    }
+
+    public function workspaceResourceRightsFormAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
+        $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findNonAdminRights($resource);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:resources_rights.html.twig',
+            array('workspace' => $workspace, 'resource' => $resource, 'roleRights' => $roleRights)
+        );
+    }
+
+    public function workspaceResourceRightsCreationFormAction($workspaceId, $roleId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->find($roleId);
+        $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findOneBy(array('resource' => $resource, 'role' => $role));
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findBy(array('isVisible' => true));
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:resource_rights_creation.html.twig',
+            array(
+                'workspace' => $workspace,
+                'configs' => array($config),
+                'resourceTypes' => $resourceTypes,
+                'resourceId' => $resource->getId(),
+                'roleId' => $roleId
+            )
+        );
     }
 
     /**

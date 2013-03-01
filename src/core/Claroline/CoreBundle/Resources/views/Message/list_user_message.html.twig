@@ -4,7 +4,7 @@
             {% if userMessage.isRead() %}
                 <div style="color: green" class="icon-ok-sign"></div>
             {% else %}
-                <a href="{{ path('claro_message_mark_as_read', {'userMessageId': userMessage.getId()}) }}" style="color: red;" class="mark-as-read icon-warning-sign"></a>
+                <a href="{{ path('claro_message_mark_as_read', {'userMessageId': userMessage.getId()}) }}" class="mark-as-read"><i class="icon-envelope"></i></a>
             {% endif %}
         </td>
         <td>{{ userMessage.getMessage().getDate()|date('d-m-Y') }}</td>

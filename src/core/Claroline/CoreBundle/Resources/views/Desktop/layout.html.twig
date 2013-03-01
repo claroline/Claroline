@@ -27,17 +27,9 @@
     {{ parent() }}
     <script type="text/javascript">
 
-        /** 
-         * delay cause backbone crap 
-         *
-         * @TODO do something better
-         */
-        var t = setTimeout(
-                function()
-                {
-                    $("[data-toggle=tooltip]").tooltip();
-                }
-                ,1000);
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        })
 
     </script>
 {% endblock %}

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -208,11 +208,15 @@ class ToolListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $form = $this->container->get('form.factory')->create(new CalendarType());
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool/workspace/calendar:calendar.html.twig',
-            array('workspace' => $workspace, 'form' => $form->createView())
+            array('workspace' => $workspace,
+                'form' => $form->createView(),
+                'listEvents' => $listEvents )
         );
+
     }
 
     public function desktopCalendar()

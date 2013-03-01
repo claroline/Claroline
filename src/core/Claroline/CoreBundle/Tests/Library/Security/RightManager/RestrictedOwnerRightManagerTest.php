@@ -15,7 +15,8 @@ class RestrictedOwnerManagerTest extends FixtureTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->loadUserFixture();
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator', 'admin' => 'admin'));
         $this->rightManager = $this->client->getContainer()
             ->get('claroline.security.restricted_owner_right_manager');
     }

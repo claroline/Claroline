@@ -10,6 +10,13 @@
 {% endblock %}
 
 {% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">
+               {{ 'agenda'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
     <div id="output"></div>
     <div id='calendar'></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
