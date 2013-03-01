@@ -35,7 +35,6 @@ class ProfileControllerTest extends FunctionalTestCase
             'profile_form[plainPassword][second]' => 'new_password'
             )
         );
-
         // log with new credentials
         $this->client->request('GET', '/logout');
         $user->setUsername('new_username');
@@ -51,7 +50,7 @@ class ProfileControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request('GET', "/profile/view/{$adminId}");
         $this->assertRegExp(
-            '/Admin.+Doe.+admin/s', $this->client->getResponse()->getContent()
+            '/admin/s', $this->client->getResponse()->getContent()
         );
     }
 }

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class WorkspaceType extends AbstractType
 {
@@ -21,6 +22,26 @@ class WorkspaceType extends AbstractType
                 ),
                 'multiple' => false,
                 'required' => true
+            )
+        );
+
+        $templates = array();
+        $ds = DIRECTORY_SEPARATOR;
+        foreach (new \DirectoryIterator(__DIR__."{$ds}..{$ds}Resources{$ds}config{$ds}workspace") as $fileInfo) {
+            if ($fileInfo->isFile()) {
+                $parsedFile = Yaml::parse($fileInfo->getRealPath());
+                $templates[$fileInfo->getRealPath()] = $parsedFile['name'];
+            }
+        }
+
+        $builder->add(
+            'template',
+            'choice',
+            array(
+                'choices' => $templates,
+                'multiple' => false,
+                'required' => true,
+                'mapped' => false
             )
         );
     }
