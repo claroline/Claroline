@@ -5,9 +5,9 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DirectoryListener extends ContainerAware

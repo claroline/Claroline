@@ -8,8 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 
 /**
  * This controller is able to:
@@ -108,7 +108,7 @@ class WorkspaceController extends Controller
             $type = $form->get('type')->getData() == 'simple' ?
                 Configuration::TYPE_SIMPLE :
                 Configuration::TYPE_AGGREGATOR;
-            $config = new Configuration();
+            $config = Configuration::fromTemplate($form->get('template')->getData());
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());

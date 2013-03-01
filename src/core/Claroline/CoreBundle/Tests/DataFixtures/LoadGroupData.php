@@ -2,68 +2,65 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
 
-class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
+class LoadGroupData extends AbstractFixture implements ContainerAwareInterface
 {
-    protected $groupsName;
+    private $groups;
+    private $container;
 
-    public function __construct($groupsName = null)
+    /**
+     * Constructor. Expects an associative array where each key is an unique group name
+     * and each value is an array of username). Users must have been loaded
+     * and referenced in a previous fixtures with a 'user/[username]' label.
+     *
+     * For each group, 1 fixture reference will be added:
+     * - role/[group's name] (group's role)
+     *
+     * @param array $users
+     */
+    public function __construct(array $groups)
     {
-        if ($groupsName !== null) {
-            $this->groupsName = $groupsName;
-        } else {
-            $this->groupsName = array('group_a', 'group_b', 'group_c');
-        }
+        $this->groups = $groups;
     }
 
     /**
-     * Loads three groups with the following roles :
-     *
-     * Group A : ROLE_A
-     * Group B : ROLE_D (i.e. ROLE_C -> ROLE_D)
-     * Group C : ROLE_F (i.e. ROLE_C -> ROLE_E -> ROLE_F)
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
-        $groups = array(
-            'group_a' => array('Group A', array('user', 'user_2'), 'role_a'),
-            'group_b' => array('Group B', array('user_3'), 'role_d'),
-            'group_c' => array('Group C', null, 'role_f')
-        );
+        foreach ($this->groups as $name => $users) {
+            $role = new Role();
+            $role->setName('ROLE_'.$name);
+            $role->setTranslationKey('ROLE_'.$name);
+            $group = new Group();
+            $group->setName($name);
+            $group->addRole($role);
 
-        foreach ($this->groupsName as $groupName) {
-            if (array_key_exists($groupName, $groups)) {
-                $group = new Group();
-                $group->setName($groups[$groupName][0]);
-
-                if ($this->hasReference('role/'.$groups[$groupName][2])) {
-                    $group->addRole($this->getReference('role/'.$groups[$groupName][2]));
-                }
-
-                $usernames = $groups[$groupName][1];
-
-                if (null !== $usernames) {
-                    foreach ($usernames as $username) {
-                        if ($this->hasReference('user/'.$username)) {
-                            $group->addUser($this->getReference('user/'.$username));
-                        }
-                    }
-                }
-
-                $manager->persist($group);
-                $this->addReference('group/'.$groupName, $group);
+            foreach ($users as $username) {
+                $user = $this->getReference('user/'.$username);
+                $group->addUser($user);
             }
+
+            $manager->persist($role);
+            $manager->persist($group);
+            $this->addReference('role/'.$name, $role);
+            $this->addReference('group/'.$name, $group);
         }
 
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 4;
     }
 }

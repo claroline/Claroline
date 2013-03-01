@@ -31,3 +31,11 @@ claro_workspace_widget_properties:
     pattern: '/{workspaceId}/widget'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceWidgetsProperties' }
     requirements: { _method: GET }
+claro_workspace_resource_rights_form:
+    pattern: '/{workspaceId}/resource/rights/form'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsForm' }
+    requirements: { _method: GET }
+claro_workspace_resource_rights_creation_form:
+    pattern: '/{workspaceId}/resource/rights/form/role/{roleId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsCreationForm' }
+    requirements: { _method: GET }

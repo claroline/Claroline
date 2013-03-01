@@ -54,7 +54,7 @@ class UserController extends Controller
         $user = $em->getRepository('ClarolineCoreBundle:User')
             ->find($userId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
-        $role = $roleRepo->findWorkspaceRole($user, $workspace);
+        $role = $roleRepo->findWorkspaceRoleForUser($user, $workspace);
         $defaultData = array('role' => $role);
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(

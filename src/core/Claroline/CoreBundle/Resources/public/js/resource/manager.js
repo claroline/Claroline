@@ -30,8 +30,8 @@
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
                 this.subViews.areAppended || this.wrapper.append(
-                    this.subViews.actions.el,
                     this.subViews.breadcrumbs.el,
+                    this.subViews.actions.el,
                     this.subViews.resources.el
                 ) && (this.subViews.areAppended = true);
             }
@@ -63,9 +63,6 @@
             events: {
                 'click ul.create li a': function (event) {
                     event.preventDefault();
-
-                    //alert(event.currentTarget.getAttribute('id'));
-
                     this.dispatcher.trigger('display-form', {
                         type: 'create',
                         resource: {
@@ -723,7 +720,9 @@
             console.debug(jqXHR);
             console.debug(event);
             console.debug(thrownError);
-            alert(jqXHR.responseText);
+            if (jqXHR.status !== 0 && jqXHR.readyState !== 0) {
+                alert(jqXHR.responseText);
+            }
         });
     };
 

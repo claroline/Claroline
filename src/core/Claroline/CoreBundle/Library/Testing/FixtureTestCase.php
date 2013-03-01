@@ -138,7 +138,7 @@ abstract class FixtureTestCase extends TransactionalTestCase
             return $this->getFixtureReference("{$target}/{$arguments[0]}");
         }
 
-        $fixtureClass = 'Claroline\CoreBundle\Tests\DataFixtures\Alt\\' . ucfirst($name);
+        $fixtureClass = 'Claroline\CoreBundle\Tests\DataFixtures\\' . ucfirst($name);
 
         if (!class_exists($fixtureClass)) {
             throw new \Exception("Cannot call {$name} : fixture class {$fixtureClass} doesn't exist");

@@ -6,71 +6,75 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\User;
 
-class LoadUserData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadUserData extends AbstractFixture implements ContainerAwareInterface
 {
-    private $usernames;
-
-    public function __construct(array $usernames = null)
-    {
-        if ($usernames !== null) {
-            $this->usernames = $usernames;
-        } else {
-            $this->usernames = array('admin', 'ws_creator', 'user', 'user_2', 'user_3');
-        }
-    }
-
-    /** @var ContainerInterface $container */
+    private $users;
     private $container;
 
+    /**
+     * Constructor. Expects an associative array where each key are a firstname and
+     * a lastname separated by a space and each value a role name (e.g. 'John Doe' => 'admin').
+     * Roles must have been loaded and referenced in a previous fixtures with a 'role/[role name]' label.
+     *
+     * Users will be created with the following properties :
+     *
+     * Username = username
+     * Password = username
+     * First name = ucfirst(username)
+     * Last name = Doe
+     *
+     * For each user, three fixture references will be added :
+     * - 'user/[username]'      (user)
+     * - 'workspace/[username]' (user's personal workspace)
+     * - 'directory/[username]' (user's workspace resource directory)
+     *
+     * @param array $users
+     */
+    public function __construct(array $users)
+    {
+        $this->users = $users;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
     /**
-     * Loads five users with the following roles :
-     *
-     * Jane Doe  : ROLE_USER
-     * Bob Doe   : ROLE_USER
-     * Bill Doe  : ROLE_USER
-     * Henry Doe : ROLE_WS_CREATOR (i.e. ROLE_USER -> ROLE_WS_CREATOR)
-     * John Doe  : ROLE_ADMIN (i.e. ROLE_USER -> ROLE_WS_CREATOR -> ROLE_ADMIN)
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
-        $userRole = $this->getReference('role/user');
-        $wsCreatorRole = $this->getReference('role/ws_creator');
-        $adminRole = $this->getReference('role/admin');
+        $userCreator = $this->container->get('claroline.user.creator');
+        $resourceRepo = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
 
-        $users = array(
-            'user' => array('Jane', 'Doe', 'user', '123', $userRole),
-            'user_2' => array('Bob', 'Doe', 'user_2', '123', $userRole),
-            'user_3' => array('Bill', 'Doe', 'user_3', '123', $userRole),
-            'ws_creator' => array('Henry', 'Doe', 'ws_creator', '123', $wsCreatorRole),
-            'admin' => array('John', 'Doe', 'admin', '123', $adminRole)
-        );
+        foreach ($this->users as $names => $role) {
+            $namesArray = explode(' ', $names);
+            $firstName = $namesArray[0];
+            $lastName = (isset($namesArray[1])) ? $namesArray[1]: '';
+            $username = $firstName.ucfirst($lastName);
+            $user = new User();
+            $user->setAdministrativeCode('UCL-'.$username.'-'.rand(0, 1000));
+            $user->setFirstName($firstName);
+            $lastName = ($lastName == '') ? 'Doe': $lastName;
+            $user->setLastName($lastName);
+            $user->setUserName($username);
+            $user->setPlainPassword($username);
+            $user->addRole($this->getReference("role/{$role}"));
+            $userCreator->create($user);
+            $this->addReference("user/{$names}", $user);
+            $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
+            $this->addReference(
+                "directory/{$names}",
+                $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
+            );
 
-        foreach ($this->usernames as $username) {
-            if (array_key_exists($username, $users)) {
-                $user = new User();
-                $user->setFirstName($users[$username][0]);
-                $user->setLastName($users[$username][1]);
-                $user->setUserName($users[$username][2]);
-                $user->setPlainPassword($users[$username][3]);
-                $user->addRole($users[$username][4]);
-                $user = $this->container->get('claroline.user.creator')->create($user);
-                $this->addReference("user/{$users[$username][2]}", $user);
-            }
+            $manager->flush();
         }
-
-        $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 2;
     }
 }
