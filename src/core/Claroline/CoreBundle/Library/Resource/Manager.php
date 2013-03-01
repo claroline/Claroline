@@ -9,9 +9,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
+use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
 
 class Manager
 {

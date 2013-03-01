@@ -4,13 +4,13 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Form\FileType;
-use Claroline\CoreBundle\Library\Resource\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\ExportResourceEvent;
-use Claroline\CoreBundle\Library\Resource\Event\PlayFileEvent;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Event\PlayFileEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 

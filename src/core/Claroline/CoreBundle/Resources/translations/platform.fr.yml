@@ -25,6 +25,7 @@ configuration: Configuration
 configure: Configurer
 copy: Copier
 create: Créer
+creation: Création
 create_group: 'Créer un groupe'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'
@@ -224,6 +225,7 @@ workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace_administration: Administration
 workspace_form_code: Code
 workspace_form_name: Nom
+workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_resource: Ressources
 workspace_tools: Outils

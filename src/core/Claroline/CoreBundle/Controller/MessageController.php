@@ -80,7 +80,7 @@ class MessageController extends Controller
      * @param integer $parentId the parent message (in a discussion, you can answer
      * to a message wich is the parent). The entity Message is a nested tree.
      * By default (no parent) $parentId = 0 (defined in the message.yml file).
-     *
+     * @todo: add success/error message 
      * @return Response
      */
     public function sendAction($parentId)
@@ -107,7 +107,6 @@ class MessageController extends Controller
             foreach ($usernames as $username) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->findOneBy(array('username' => $username));
-
                 if ($user != null) {
                     $userMessage = new UserMessage();
                     $userMessage->setUser($user);
@@ -127,7 +126,6 @@ class MessageController extends Controller
                 array('form' => $form->createView())
             );
         } else {
-            // add success/error message...
 
             return $this->render(
                 'ClarolineCoreBundle:Message:message_form.html.twig', array('form' => $form->createView())

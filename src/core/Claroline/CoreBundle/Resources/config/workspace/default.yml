@@ -1,17 +1,10 @@
-name: default
+name: Standard
 description: This is the default template
 creator_role: ROLE_WS_MANAGER
 roles:
     ROLE_WS_VISITOR: 'visitor'
     ROLE_WS_COLLABORATOR: 'collaborator'
     ROLE_WS_MANAGER: 'manager'
-tools:
-   - 'home'
-   - 'resource_manager'
-   - 'parameters'
-   - 'calendar'
-   - 'user_management'
-   - 'group_management'
 tools_permissions:
     home:
        - 'ROLE_WS_VISITOR'
