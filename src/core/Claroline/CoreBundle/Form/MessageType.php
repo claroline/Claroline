@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
 
 class MessageType extends AbstractType
 {
@@ -13,8 +15,8 @@ class MessageType extends AbstractType
      * @param string $username
      * @param string $object
      * @param boolean $isFast indicate if the message is an answer of a previous message
-     * (no need to show the object nor the username)
-     * .
+     * (no need to show the object nor the username).
+     *
      * @throws \Exception
      */
     public function __construct($username = '', $object = '', $isFast = false)
@@ -37,15 +39,40 @@ class MessageType extends AbstractType
     {
         if (!$this->isFast) {
             $builder
-                ->add('to', 'text', array('data' => $this->username, 'required' => true))
-                ->add('object', 'text', array('data' => $this->object, 'required' => true))
-                ->add('content', 'textarea', array('required' => true));
+                ->add(
+                    'to',
+                    'text',
+                    array(
+                        'data' =>
+                        $this->username,
+                        'required' => true,
+                        'mapped' => false,
+                        'constraints' => array(
+                            new NotBlank(),
+                            new SendToUsernames()
+                            )
+                        )
+                    );
+
         } else {
             $builder
-                ->add('to', 'hidden', array('data' => $this->username, 'required' => true))
-                ->add('object', 'hidden', array('data' => $this->object, 'required' => true))
-                ->add('content', 'textarea', array('required' => true));
+                ->add(
+                    'to',
+                    'hidden',
+                    array(
+                        'data' => $this->username,
+                        'required' => true,
+                        'mapped' => false,
+                        'constraints' => array(
+                            new NotBlank(),
+                            new SendToUsernames()
+                            )
+                        )
+                    );
         }
+
+        $builder->add('object', 'text', array('data' => $this->object, 'required' => true))
+                ->add('content', 'textarea', array('required' => true));
     }
 
     public function getName()
