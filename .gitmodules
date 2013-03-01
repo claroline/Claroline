@@ -19,3 +19,6 @@
 [submodule "src/plugin/Claroline/VideoPlayerBundle"]
 	path = src/plugin/Claroline/VideoPlayerBundle
 	url = http://github.com/claroline/VideoPlayerBundle.git
+[submodule "src/plugin/UJM/ExoBundle"]
+	path = src/plugin/UJM/ExoBundle
+	url = https://github.com/UJM-dev/ExoBundle.git
