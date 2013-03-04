@@ -12,7 +12,6 @@ admin: Administrateur
 administration: Administration
 administrative_code: 'Code administratif'
 agenda: Agenda
-all: Tous
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
 by: par
@@ -181,6 +180,7 @@ roles: Rôles
 save: Sauvegarder
 search: Rechercher
 see: Voir
+select all: Tous sélectionner
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 settings: Paramètres
