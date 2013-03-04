@@ -7,11 +7,18 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block section_content %}
-    <div id="output"></div>
-    <div id='calendar'></div>
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">
+               {{ 'agenda'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
+    <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -34,6 +41,25 @@
              <button class="btn btn-info" id="updateBtn" > Update</button>
         </div>
     </div>
+
+    <div class="span3"><h4> <u>Taches non plannifiées </u></h4>
+        {% for e in listEvents  %}
+       <div class="border">
+            <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
+           <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
+           <ul>
+                <li data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}} </li>
+                <li > {{ e.end|date("d/m/Y") }} </li>
+                <li>{{ e.description }}</li>
+                <li class="hidden"> {{e.priority}}</li>
+                  <a href="#myModal" class="update-task" role="button">modifier</a> </p>
+            </ul>
+        </div>
+        {% else %}
+        <li>No event found</li>
+        {% endfor %}
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}

@@ -198,7 +198,6 @@
     }
 
     utilities.ajax = function(ajaxOptions){
-
         ajaxOptions.error = function(xhr, e, errorThrown){
             if (xhr.status == 403){
                 ajaxAuthenticationErrorHandler(function () {
@@ -212,11 +211,12 @@
                     alert(title);
                 }
                 else {
-                    alert(xhr.responseText);
+                    if (xhr.status !== 0 && xhr.readyState!== 0) {
+                        alert('Erreur '+xhr.status);
+                    }
                 }
             }
         }
-
         $.ajax(ajaxOptions);
     }
 

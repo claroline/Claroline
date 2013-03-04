@@ -63,9 +63,6 @@
             events: {
                 'click ul.create li a': function (event) {
                     event.preventDefault();
-                    
-                    //alert(event.currentTarget.getAttribute('id'));
-
                     this.dispatcher.trigger('display-form', {
                         type: 'create',
                         resource: {
@@ -583,7 +580,7 @@
                 success: function (data, textStatus, jqXHR) {
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
                         this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close()) :
-                        this.views['form'].render(data, parentDirectoryId);
+                        this.views['form'].render(data, parentDirectoryId, 'create');
                 }
             });
         },
@@ -723,7 +720,9 @@
             console.debug(jqXHR);
             console.debug(event);
             console.debug(thrownError);
-            alert(jqXHR.responseText);
+            if (jqXHR.status !== 0 && jqXHR.readyState !== 0) {
+                alert(jqXHR.responseText);
+            }
         });
     };
 
