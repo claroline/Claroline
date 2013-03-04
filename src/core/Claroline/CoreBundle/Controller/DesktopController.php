@@ -3,10 +3,10 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Library\Widget\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Library\Tool\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 
 /**
  * Controller of the user's desktop.

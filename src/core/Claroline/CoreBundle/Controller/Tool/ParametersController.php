@@ -7,8 +7,8 @@ use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Widget\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -587,7 +587,7 @@ class ParametersController extends Controller
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
         $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
-        
+
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:resources_rights.html.twig',
             array('workspace' => $workspace, 'resource' => $resource, 'roleRights' => $roleRights)

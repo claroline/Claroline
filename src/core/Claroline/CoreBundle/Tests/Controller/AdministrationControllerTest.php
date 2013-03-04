@@ -184,7 +184,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $grpAId = $this->getFixtureReference('group/group_a')->getId();
         $this->client->request(
             'GET',
-            "/admin/group/{$grpAId}/unregistered/users/0/search/doe"
+            "/admin/group/{$grpAId}/unregistered/users/0/search/admin"
         );
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
@@ -195,7 +195,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request(
             'GET',
-            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/search/doe/users/0"
+            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/search/john/users/0"
         );
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
@@ -236,7 +236,6 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
         $this->logUser($this->getFixtureReference('user/admin'));
         $originalRoleId = $this->getFixtureReference('role/group_a')->getId();
-        var_dump($originalRoleId);
         $adminRoleId = $this->getFixtureReference('role/admin')->getId();
         $crawler = $this->client->request(
             'GET',

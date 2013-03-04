@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Library\Logger\Event\ResourceLogEvent;
+use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
 use Claroline\CoreBundle\Entity\Logger\ResourceLog;
 
 class LogListener extends ContainerAware

@@ -24,6 +24,7 @@ configuration: Configuration
 configure: Configure
 copy: Copy
 create: Create
+creation: Creation
 create_group: 'Create group'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
@@ -178,6 +179,7 @@ roles: Roles
 save: Save
 search: Search
 see: Voir
+select all: select all
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 settings: Settings
@@ -223,6 +225,7 @@ workspace.name_not_blank: 'The workspace''s name is required.'
 workspace_administration: Administration
 workspace_form_code: Code
 workspace_form_name: Name
+workspace_form_template: Template
 workspace_form_type: Type
 workspace_resource: Resources
 workspace_tools: Tools
