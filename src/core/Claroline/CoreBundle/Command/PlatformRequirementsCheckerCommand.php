@@ -19,15 +19,15 @@ class PlatformRequirementsCheckerCommand extends ContainerAwareCommand
 
         $requirements = $this->getContainer()->get('claroline.installation.requirements_checker')->check();
 
-        foreach($requirements['errors'] as $error) {
+        foreach ($requirements['errors'] as $error) {
             $output->writeln("<bg=red>{$error}</bg=red>");
         }
 
-        foreach($requirements['warning'] as $warning) {
+        foreach ($requirements['warning'] as $warning) {
              $output->writeln("<bg=yellow>{$warning}<bg=yellow>");
         }
 
-        foreach($requirements['valid'] as $valid) {
+        foreach ($requirements['valid'] as $valid) {
              $output->writeln("<bg=green>{$valid}<bg=green>");
         }
 
