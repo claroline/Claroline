@@ -33,9 +33,9 @@ class CalendarType extends AbstractType
                 'choice',
                 array(
                     'choices' => array(
-                        '#FF0000' => 'High',
-                        '#01A9DB' => 'Medium',
-                        '#848484' => 'Low',
+                        '#FF0000' => 'high',
+                        '#01A9DB' => 'medium',
+                        '#848484' => 'low',
                     )
                // 'preferred_choices' => array('#01A9DB')
                 )
@@ -51,7 +51,7 @@ class CalendarType extends AbstractType
     {
         return array(
             'data_class' => 'Claroline\CoreBundle\Entity\Event',
-            'translation_domain' => 'platform'
+            'translation_domain' => 'calendar'
         );
     }
 }
