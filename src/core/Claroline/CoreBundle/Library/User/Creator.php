@@ -43,7 +43,6 @@ class Creator
     public function create(User $user)
     {
         $this->em->persist($user);
-//        $config = new Configuration();
         $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         //uncomment this line when the templating system is working
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);

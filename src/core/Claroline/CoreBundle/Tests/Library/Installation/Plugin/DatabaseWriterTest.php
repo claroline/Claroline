@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
-class DatabaseWriterTest extends TransactionalTestCase
+class DatabaseWriterTest extends FunctionalTestCase
 {
     /** @var DatabaseWriter */
     private $dbWriter;
@@ -15,18 +15,14 @@ class DatabaseWriterTest extends TransactionalTestCase
     /** @var Validator */
     private $validator;
 
-    /** @var Doctrine\ORM\EntityManager */
-    private $em;
-
     protected function setUp()
     {
         parent::setUp();
-        $container = $this->client->getContainer();
-        $this->dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $this->container = $this->client->getContainer();
+        $this->dbWriter = $this->container->get('claroline.plugin.recorder_database_writer');
+        $pluginDirectory = $this->container->getParameter('claroline.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
-        $this->validator = $container->get('claroline.plugin.validator');
-        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->validator = $this->container->get('claroline.plugin.validator');
     }
 
     /**
@@ -191,6 +187,36 @@ class DatabaseWriterTest extends TransactionalTestCase
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($pluginEntity));
+    }
+
+    public function testInsertThenDeleteFileExtension()
+    {
+        $this->loadPlatformRoleData();
+        $this->loadUserData(array('user' => 'user'));
+
+        $pluginFqcn = 'Valid\WithFileExtension\ValidWithFileExtension';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $this->em->clear();
+        $resourceA = new \Claroline\CoreBundle\Entity\Resource\File();
+        $resourceA->setSize(42);
+        $resourceA->setName('resourceA');
+        $resourceA->setHashName('azerty123');
+        $resourceA->setMimeType('foo/bar');
+
+        $manager = $this->container->get('claroline.resource.manager');
+        $manager->create($resourceA, $this->getDirectory('user')->getId(), 'ResourceA', $this->getUser('user'));
+        $resource = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findOneByName('resourceA');
+        $this->assertEquals($resource->getResourceType()->getName(), 'resourceA');
+
+        $this->dbWriter->delete('Valid\WithFileExtension\ValidWithFileExtension');
+        $resource = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findOneByName('resourceA');
+        $this->assertEquals($resource->getResourceType()->getName(), 'file');
     }
 
     public function pluginProvider()

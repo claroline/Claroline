@@ -190,10 +190,6 @@ class UserController extends Controller
      *
      * @return Response
      */
-    //TODO: detach($user)
-    //TODO: flush outsite the loop
-    //TODO: check is the user isn't already registered
-    //TODO: change the userIds into ids
     public function addUsersAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
@@ -202,18 +198,20 @@ class UserController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace);
+        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
 
-        if (isset($params['userIds'])) {
+        if (isset($params['ids'])) {
 
-            foreach ($params['userIds'] as $userId) {
+            foreach ($params['ids'] as $userId) {
                 $user = $em->find('ClarolineCoreBundle:User', $userId);
-                $users[] = $user;
-                $user->addRole(
-                    $em->getRepository('ClarolineCoreBundle:Role')
-                        ->findCollaboratorRole($workspace)
-                );
-                $em->flush();
+                //We only add the role if the user isn't already registered.
+                $userRole = $roleRepo->findWorkspaceRoleForUser($user, $workspace);
+                if ($userRole === null) {
+                    $users[] = $user;
+                    $user->addRole($roleRepo->findCollaboratorRole($workspace));
+                }
             }
+            $em->flush();
         }
 
         $content = $this->renderView(
@@ -302,7 +300,6 @@ class UserController extends Controller
      *
      * @return Response
      */
-    //TODO: change userIds into ids
     public function removeUsersAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -313,9 +310,9 @@ class UserController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
-        if (isset($params['userIds'])) {
-            $this->checkRemoveManagerRoleIsValid($params['userIds'], $workspace);
-            foreach ($params['userIds'] as $userId) {
+        if (isset($params['ids'])) {
+            $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);
+            foreach ($params['ids'] as $userId) {
 
                 $user = $em->find('ClarolineCoreBundle:User', $userId);
 

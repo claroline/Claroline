@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\MetaType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 
 /**
@@ -36,9 +35,6 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
      */
     public function load(ObjectManager $manager)
     {
-        $documentMetatype = new MetaType();
-        $documentMetatype->setName('document');
-        $manager->persist($documentMetatype);
         // resource type attributes : name, listable, navigable, class
         $resourceTypes = array(
             array('file', true, false, 'Claroline\CoreBundle\Entity\Resource\File'),
@@ -56,7 +52,6 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->setVisible($attributes[1]);
             $type->setBrowsable($attributes[2]);
             $type->setClass($attributes[3]);
-            $type->addMetaType($documentMetatype);
             $manager->persist($type);
 
             if (isset($customActions[$i])) {
