@@ -26,10 +26,11 @@ refreshFile("{$rootDirectory}/app/logs/test.log");
 
 require_once __DIR__.'/delete_files';
 
+system("composer install");
 system("php {$rootDirectory}/app/console claroline:requirements", $var);
 
 if ($var === 0) {
-    system("composer install");
+    
     system("php {$rootDirectory}/app/console claroline:themes:compile");
 
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
