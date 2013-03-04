@@ -27,7 +27,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
 
         $this->logUser($this->getFixtureReference('user/ws_creator'));
         $this->client->request(
-            'PUT', "/workspaces/tool/user_management/{$wsAId}/add/user?userIds[]={$userId}"
+            'PUT', "/workspaces/tool/user_management/{$wsAId}/add/user?ids[]={$userId}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -42,7 +42,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
         $this->client->request(
             'DELETE',
-            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$userId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?ids[]={$userId}"
         );
         $this->client->request(
             'GET',
@@ -61,7 +61,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->client->request(
             'PUT',
-            "/workspaces/tool/user_management/{$pwu}/add/user?userIds[]=1"
+            "/workspaces/tool/user_management/{$pwu}/add/user?ids[]=1"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -90,7 +90,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $wsAId = $this->getFixtureReference('workspace/ws_a')->getId();
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?ids[]={$creatorId}"
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
@@ -111,7 +111,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
             'DELETE',
-            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?ids[]={$creatorId}"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -127,7 +127,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request(
             'PUT',
-            "/workspaces/tool/user_management/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/add/user?ids[]={$creatorId}"
         );
         $this->client->request(
             'POST',
@@ -137,7 +137,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/tool/user_management/{$pwu->getId()}/users?userIds[]={$userId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/users?ids[]={$userId}"
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
@@ -157,7 +157,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $pwu = $this->getFixtureReference('user/user')->getPersonalWorkspace();
         $this->client->request(
             'PUT',
-            "/workspaces/tool/user_management/{$pwu->getId()}/add/user?userIds[]={$creatorId}"
+            "/workspaces/tool/user_management/{$pwu->getId()}/add/user?ids[]={$creatorId}"
         );
         $this->client->request(
             'GET',
