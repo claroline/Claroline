@@ -60,10 +60,9 @@
 
     $('.mark-as-read').live('click', function(e){
         e.preventDefault();
-        console.debug($(e.target).attr('href'));
         Claroline.Utilities.ajax({
             type: 'GET',
-            url: $(e.target).attr('href'),
+            url: $(e.currentTarget).attr('href'),
             success: function(){
                $(e.target).css('color', 'green');
                $(e.target).attr('class', 'icon-ok-sign');
@@ -125,4 +124,14 @@
             }
         })
     }
+    $('#allChecked').click(function(){
+        if($('#allChecked').is(':checked')){
+             $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', true);
+             $('.delete-msg').removeAttr('disabled');
+         }
+         else {
+            $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', false);     
+            $('.delete-msg').attr('disabled', 'disabled'); 
+         }
+    });
 })();

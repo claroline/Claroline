@@ -580,7 +580,7 @@
                 success: function (data, textStatus, jqXHR) {
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
                         this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close()) :
-                        this.views['form'].render(data, parentDirectoryId);
+                        this.views['form'].render(data, parentDirectoryId, 'create');
                 }
             });
         },
@@ -722,7 +722,7 @@
             console.debug(thrownError);
             if (jqXHR.status !== 0 && jqXHR.readyState !== 0) {
                 alert(jqXHR.responseText);
-            } 
+            }
         });
     };
 
