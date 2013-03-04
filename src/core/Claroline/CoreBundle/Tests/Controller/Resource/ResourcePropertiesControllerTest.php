@@ -128,7 +128,8 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $images = $this->getUploadedFiles($this->thumbsDir);
         $this->assertEquals(2, count($images));
-        $name = str_replace("thumbnails{$ds}", "", $jsonResponse->icon);
+        $name = $jsonResponse->icon;
+        $name = substr($name, ($pos = strpos($name, 'thumbnail')) !== false ? $pos + 11 : 0);
         $this->assertContains($name, $images);
 
         //is it the "shortcut" icon ?
