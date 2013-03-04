@@ -96,14 +96,6 @@ class FileControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($event->getCopy()));
     }
 
-    private function createFile($parent, $name, User $user)
-    {
-        $fileData = new LoadFileData($name, $parent, $user, tempnam(sys_get_temp_dir(), 'FormTest'));
-        $this->loadFixture($fileData);
-
-        return $fileData->getLastFileCreated();
-    }
-
     private function getUploadedFiles()
     {
         $iterator = new \DirectoryIterator($this->upDir);

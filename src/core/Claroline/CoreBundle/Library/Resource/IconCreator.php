@@ -9,134 +9,20 @@ use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 class IconCreator
 {
-    /** @var string */
-    private $dir;
-    /** @var bool */
-    private $hasGdExtension;
-    /** @var bool */
-    private $hasFfmpegExtension;
-    /** @var ContainerInterface */
     private $container;
     /** @var EntityManager */
     private $em;
 
-    public function __construct($dir, ContainerInterface $container)
+    private $ic;
+
+    public function __construct(ContainerInterface $container)
     {
-        $this->dir = $dir;
         $this->container = $container;
-        $this->hasGdExtension = extension_loaded('gd');
-        $this->hasFfmpegExtension = extension_loaded('ffmpeg');
         $this->em = $container->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * Create an thumbnail from a file (video or image) wich will be resized and displayed as a resource icon.
-     *
-     * @param string  $originalPath    the path of the orignal image or video
-     * @param string  $destinationPath the path were the thumbnail will be copied
-     * @param integer $newWidth        the width of the thumbnail
-     * @param integer $newHeight       the width of the thumbnail
-     *
-     * @return string|null
-     */
-    private function createThumbNail($originalPath, $destinationPath, $newWidth, $newHeight)
-    {
-        $mimeElements = explode('/', MimeTypeGuesser::getInstance()->guess($originalPath));
-        $baseMime = $mimeElements[0];
-        $mimeExtension = $mimeElements[1];
-
-        if ($this->hasGdExtension) {
-            if ($baseMime == 'image' && function_exists($funcname = "imagecreatefrom{$mimeExtension}")) {
-                $srcImg = $funcname($originalPath);
-            } else {
-                switch ($mimeExtension) {
-                    case 'jpg':
-                        $srcImg = imagecreatefromjpeg($originalPath);
-                        break;
-                    case 'mov':
-                        $srcImg = $this->createMpegGDI($originalPath);
-                        break;
-                    case 'mp4':
-                        $srcImg = $this->createMpegGDI($originalPath);
-                        break;
-                    default:
-                        return null;
-                }
-            }
-
-            if ($srcImg == null) {
-                return null;
-            }
-
-            $this->resize($newWidth, $newHeight, $srcImg, $destinationPath);
-            imagedestroy($srcImg);
-
-            return $destinationPath;
-        }
-
-        return null;
-    }
-
-    /**
-     * Create a copy of a resized image according to the parameters.
-     *
-     * @param string $newWidth  the new width
-     * @param string $newHeight the new heigth
-     * @param string $srcImg    the path of the source
-     * @param string $filename  the path of the copy
-     */
-    private function resize($newWidth, $newHeight, $srcImg, $filename)
-    {
-        $oldX = imagesx($srcImg);
-        $oldY = imagesy($srcImg);
-
-        if ($oldX > $oldY) {
-            $thumbWidth = $newWidth;
-            $thumbHeight = $oldY * ($newHeight / $oldX);
-        } else {
-            if ($oldX <= $oldY) {
-                $thumbWidth = $oldX * ($newWidth / $oldY);
-                $thumbHeight = $newHeight;
-            }
-        }
-
-        //white background
-        $dstImg = imagecreatetruecolor($thumbWidth, $thumbHeight);
-        $bg = imagecolorallocate($dstImg, 255, 255, 255);
-        imagefill($dstImg, 0, 0, $bg);
-
-        //resizing
-        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $oldX, $oldY);
-        $srcImg = imagepng($dstImg, $filename);
-
-        //free memory
-        imagedestroy($dstImg);
-    }
-
-    /**
-     * Create an mpeg image from a video.
-     *
-     * @param string $originalPath
-     *
-     * @return string
-     */
-    private function createMpegGDI($originalPath)
-    {
-        $image = null;
-
-        if ($this->hasFfmpegExtension) {
-            $media = new \ffmpeg_movie($originalPath);
-            $frameCount = $media->getFrameCount();
-            $frame = $media->getFrame(round($frameCount / 2));
-            $image = $frame->toGDImage();
-
-        }
-
-        return $image;
+        $this->ic = $container->get('claroline.utilities.thumbnail_creator');
     }
 
     /**
@@ -187,7 +73,25 @@ class IconCreator
             $newPath = $this->container->getParameter('claroline.thumbnails.directory')
                 . DIRECTORY_SEPARATOR
                 . $this->container->get('claroline.resource.utilities')->generateGuid() . ".png";
-            $thumbnailPath = $this->createThumbNail($originalPath, $newPath, 100, 100);
+
+            $thumbnailPath = null;
+            if ($mimeElements[0] === 'video') {
+                try {
+                    $thumbnailPath = $this->ic->fromVideo($originalPath, $newPath, 100, 100);
+                } catch (\Exception $e) {
+                    $thumbnailPath = null;
+                    //error handling ? $thumbnailPath = null
+                }
+            }
+
+            if ($mimeElements[0] === 'image') {
+                try {
+                    $thumbnailPath = $this->ic->fromImage($originalPath, $newPath, 100, 100);
+                } catch (\Exception $e) {
+                    $thumbnailPath = null;
+                    //error handling ? $thumbnailPath = null
+                }
+            }
 
             if ($thumbnailPath !== null) {
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
@@ -269,39 +173,21 @@ class IconCreator
     public function createShortcutIcon(ResourceIcon $icon)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $webDir = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web";
-        $shortcutLocation = '';
-        $shortcutRelativeUrl = '';
-
-        if ($this->hasGdExtension) {
-            $basepath = $icon->getIconLocation();
-            $extension = pathinfo($icon->getIconLocation(), PATHINFO_EXTENSION);
-            $stampPath = "{$webDir}{$ds}bundles{$ds}"
-                . "clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
-
-            if (function_exists($funcname = "imagecreatefrom{$extension}")) {
-                $im = $funcname($basepath);
-            } else {
-                throw new \RuntimeException(
-                    "Couldn't create a image from {$basepath} (function '{$funcname}' is not defined)"
-                );
-            }
-            $stamp = imagecreatefrompng($stampPath);
-            imagesavealpha($im, true);
-            imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
-            $name = "{$this->container->get('claroline.resource.utilities')->generateGuid()}.{$extension}";
-            imagepng($im, $this->container->getParameter('claroline.thumbnails.directory').$ds.$name);
-            imagedestroy($im);
-            $shortcutLocation = "{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$name}";
-            $shortcutRelativeUrl = "thumbnails{$ds}{$name}";
-        } else {
-            $shortcutRelativeUrl = 'bundles/clarolinecore/images/resources/icons/shortcut-default.png';
-            $shortcutLocation = "{$webDir}{$ds}{$shortcutRelativeUrl}";
+        try {
+            $shortcutLocation = $this->ic->shortcutThumbnail($icon->getIconLocation());
+        } catch (\Exception $e) {
+            $shortcutLocation = "{$this->container->getParameter('kernel.root_dir')}{$ds}.."
+            . "{$ds}web{$ds}bundles/clarolinecore/images/resources/icons/shortcut-default.png";
         }
 
         $shortcutIcon = new ResourceIcon();
         $shortcutIcon->setIconLocation($shortcutLocation);
-        $shortcutIcon->setRelativeUrl($shortcutRelativeUrl);
+        $relativeUrl = substr(
+            $shortcutLocation,
+            ($pos = strpos($shortcutLocation, "web{$ds}bundles")
+            ) !== false ? $pos + 1 : 0
+        );
+        $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setIconType($icon->getIconType());
         $shortcutIcon->setType($icon->getType());
         $shortcutIcon->setShortcut(true);
@@ -312,6 +198,7 @@ class IconCreator
         $this->em->flush();
 
         return $shortcutIcon;
+
     }
 
     /**
