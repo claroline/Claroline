@@ -22,7 +22,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user'));
         $this->client->request(
             'PUT',
-            "/workspaces/tool/group_management/{$pwu}/add/group?groupIds[]={$groupAId}"
+            "/workspaces/tool/group_management/{$pwu}/add/group?ids[]={$groupAId}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
@@ -44,7 +44,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->logUser($this->getFixtureReference('user/user_2'));
         $this->client->request(
             'PUT',
-            "/workspaces/tool/group_management/{$pwu}/add/group?groupIds[]=1"
+            "/workspaces/tool/group_management/{$pwu}/add/group?ids[]=1"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -73,7 +73,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $grAId = $this->getFixtureReference('group/group_a')->getId();
         $this->client->request(
             'DELETE',
-            "/workspaces/tool/group_management/{$wsAId}/groups?groupIds[]={$grAId}"
+            "/workspaces/tool/group_management/{$wsAId}/groups?ids[]={$grAId}"
         );
         $this->client->request(
             'GET',
@@ -96,7 +96,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $grAId = $this->getFixtureReference('group/group_a')->getId();
         $this->client->request(
             'DELETE',
-            "/workspaces/tool/group_management/{$wsAId}/groups?groupIds[]={$grAId}"
+            "/workspaces/tool/group_management/{$wsAId}/groups?ids[]={$grAId}"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -127,12 +127,12 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $this->client->request(
             'DELETE',
-            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$wsCreatorId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?ids[]={$wsCreatorId}"
         );
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/tool/group_management/{$wsAId}/groups?groupIds[]={$grAId}"
+            "/workspaces/tool/group_management/{$wsAId}/groups?ids[]={$grAId}"
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
@@ -203,7 +203,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $this->client->request(
             'DELETE',
-            "/workspaces/tool/user_management/{$wsAId}/users?userIds[]={$wsCreatorId}"
+            "/workspaces/tool/user_management/{$wsAId}/users?ids[]={$wsCreatorId}"
         );
         $crawler = $this->client->request(
             'POST',
@@ -336,7 +336,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $grAId = $this->getFixtureReference('group/group_a')->getId();
         $this->client->request(
             'PUT',
-            "/workspaces/tool/group_management/{$wsAId}/add/group?groupIds[]={$grAId}",
+            "/workspaces/tool/group_management/{$wsAId}/add/group?ids[]={$grAId}",
             array(),
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')

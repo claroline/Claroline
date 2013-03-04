@@ -1,0 +1,8 @@
+plugin:
+  has_options: true
+
+  resources:
+    - class: Claroline\CoreBundle\Entity\Resource\File
+      name: resourceA
+      is_visible: true
+      is_browsable: false
