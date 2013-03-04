@@ -10,9 +10,9 @@ class SendToUsernamesValidator extends ConstraintValidator
 {
     public function isValid($value, Constraint $constraint)
     {
-        $to = preg_replace( '/\s+/', '', $value );
-        if (substr($to, -1 ,1) === ';') {
-            $to = substr_replace($to ,"",-1);
+        $to = preg_replace('/\s+/', '', $value);
+        if (substr($to, -1, 1) === ';') {
+            $to = substr_replace($to, "", -1);
         }
         $usernames = explode(';', $to);
         foreach ($usernames as $username) {
@@ -21,6 +21,7 @@ class SendToUsernamesValidator extends ConstraintValidator
                 $this->context->addViolation($constraint->message, array('{{ username }}' => $username));
             }
         }
+
         return true;
     }
 

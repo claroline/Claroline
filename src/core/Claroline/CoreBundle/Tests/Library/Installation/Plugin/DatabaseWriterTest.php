@@ -198,9 +198,6 @@ class DatabaseWriterTest extends FunctionalTestCase
         $plugin = $this->loader->load($pluginFqcn);
         $this->validator->validate($plugin);
         $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
-        $type = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findPluginResourceNameFqcns();
         $this->em->clear();
         $resourceA = new \Claroline\CoreBundle\Entity\Resource\File();
         $resourceA->setSize(42);

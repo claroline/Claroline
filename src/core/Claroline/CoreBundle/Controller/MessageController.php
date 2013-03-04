@@ -101,10 +101,12 @@ class MessageController extends Controller
                 $message->setParent($parent);
             }
 
-            $to = preg_replace( '/\s+/', '', $form->get('to')->getData());
-            if (substr($to, -1 ,1) === ';') {
-                $to = substr_replace($to ,"",-1);
+            $to = preg_replace('/\s+/', '', $form->get('to')->getData());
+
+            if (substr($to, -1, 1) === ';') {
+                $to = substr_replace($to, "", -1);
             }
+
             $usernames = explode(';', $to);
             foreach ($usernames as $username) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')

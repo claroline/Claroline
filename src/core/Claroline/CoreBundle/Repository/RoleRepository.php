@@ -73,6 +73,7 @@ class RoleRepository extends NestedTreeRepository
                 }
             }
         }
+
         return null;
     }
 
