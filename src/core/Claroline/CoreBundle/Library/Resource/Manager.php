@@ -212,7 +212,6 @@ class Manager
      * @param AbstractResource $parent
      * @param AbstractResource $children
      *
-     * @todo This method should be (optionaly) recursive
      */
     public function setResourceRights(AbstractResource $parent, AbstractResource $children)
     {
@@ -229,15 +228,6 @@ class Manager
 
             if ($children->getResourceType()->getName() === 'directory') {
                 $rc->setCreatableResourceTypes($resourceRight->getCreatableResourceTypes()->toArray());
-
-                /*
-                // TODO : must be parent instead of children...
-                $ownerCreationRights = $children->getResourceCreationRights();
-
-                foreach ($ownerCreationRights as $ownerCreationRight) {
-                    $children->addResourceTypeCreation($ownerCreationRight);
-                }
-                */
             }
 
             $this->em->persist($rc);
