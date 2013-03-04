@@ -121,7 +121,7 @@ class Interaction
     {
         $this->documents = new \Doctrine\Common\Collections\ArrayCollection;
         $this->hints = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->setLockedExpertise(FALSE);
+        $this->setLockedExpertise(false);
     }
 
     /**
@@ -225,7 +225,7 @@ class Interaction
     }
 
     /**
-     * Get locked_expertise
+     * Get lockedExpertise
      *
      * @return boolean
      */
@@ -272,21 +272,18 @@ class Interaction
     public function addHint(\UJM\ExoBundle\Entity\Hint $hint)
     {
         $this->hints[] = $hint;
-        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut aussi lié l'interactionqcm
-        //double travail avec les relations bidirectionnelles avec lesquelles il faut bien faire attention à garder les données cohérentes
-        //dans un autre script il faudra exécuter $interaction->addHint() qui garde la cohérence entre les deux entités,
-        //il ne faudra pas exécuter $hint->setInteraction(), car lui ne garde pas la cohérence
+        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut
+        //aussi lier l'interactionqcm double travail avec les relations bidirectionnelles avec
+        //lesquelles il faut bien faire attention à garder les données cohérentes dans un autre
+        //script il faudra exécuter $interaction->addHint() qui garde la cohérence entre les
+        //deux entités, il ne faudra pas exécuter $hint->setInteraction(), car lui ne garde pas
+        // la cohérence
         $hint->setInteraction($this);
     }
 
-    public function removeHint(\UJM\ExoBundle\Entity\Hint $hint)
+    public function setHints($hints)
     {
-    }
-
-    public function setHints ($hints)
-    {
-        foreach($hints as $hint)
-        {
+        foreach ($hints as $hint) {
             $this->addHint($hint);
         }
     }

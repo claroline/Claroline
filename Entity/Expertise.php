@@ -171,20 +171,20 @@ class Expertise
     /**
      * Gets an array of Users.
      *
-     * @return array An array of Users objects
+     * @return array An array of User objects
      */
     public function getUsers()
     {
-        return $this->Users;
+        return $this->users;
     }
 
     /**
      * Add User
      *
-     * @param Claroline\CoreBundle\Entity\User $User
+     * @param Claroline\CoreBundle\Entity\User $user
      */
-    public function addUser(\UJM\ExoBundle\Entity\Groupes $User)
+    public function addUser(\UJM\ExoBundle\Entity\Groupes $user)
     {
-        $this->Users[] = $User;
+        $this->users[] = $user;
     }
 }

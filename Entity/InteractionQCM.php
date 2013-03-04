@@ -228,56 +228,50 @@ class InteractionQCM
     public function addChoice(\UJM\ExoBundle\Entity\Choice $choice)
     {
         $this->choices[] = $choice;
-        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut aussi lié l'interactionqcm
-        //double travail avec les relations bidirectionnelles avec lesquelles il faut bien faire attention à garder les données cohérentes
-        //dans un autre script il faudra exécuter $interactionqcm->addChoice() qui garde la cohérence entre les deux entités,
-        //il ne faudra pas exécuter $choice->setInteractionQCM(), car lui ne garde pas la cohérence
+        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut
+        //aussi lié l'interactionqcm double travail avec les relations bidirectionnelles avec
+        //lesquelles il faut bien faire attention à garder les données cohérentes dans un autre
+        //script il faudra exécuter $interactionqcm->addChoice() qui garde la cohérence entre les
+        //deux entités, il ne faudra pas exécuter $choice->setInteractionQCM(), car lui ne garde
+        //pas la cohérence
         $choice->setInteractionQCM($this);
-    }
-
-    public function removeChoice(\UJM\ExoBundle\Entity\Choice $choice)
-    {
-
     }
 
     public function shuffleChoices()
     {
         $this->sortChoices();
-        $i=0;
+        $i = 0;
         $tabShuffle = array();
         $tabFixed   = array();
         $tab        = array();
         $choices = new \Doctrine\Common\Collections\ArrayCollection;
-        while($i<count($this->choices))
-        {
-            if ($this->choices[$i]->getPositionForce() == false)
-            {
+        $choiceCount = count($this->choices);
+
+        while ($i < $choiceCount) {
+            if ($this->choices[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
-            }
-            else
-            {
+            } else {
                 $tabFixed[] = $i;
             }
+
             $i++;
         }
         shuffle($tabShuffle);
 
-
         $i = 0;
-        while($i<count($this->choices))
-        {
-            if($tabFixed[$i] != -1)
-            {
+        $choiceCount = count($this->choices);
+
+        while ($i < $choiceCount) {
+            if ($tabFixed[$i] != -1) {
                 $choices[] = $this->choices[$i];
-            }
-            else
-            {
+            } else {
                 $index = $tabShuffle[0];
                 $choices[] = $this->choices[$index];
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
+
             $i++;
         }
 
@@ -286,20 +280,19 @@ class InteractionQCM
 
     public function sortChoices()
     {
-
         $tab = array();
         $choices = new \Doctrine\Common\Collections\ArrayCollection;
+
         foreach ($this->choices as $choice) {
             $tab[] = $choice->getOrdre();
         }
-        //shuffle($tab);
-        //asort($tab, SORT_NUMERIC);
+
         asort($tab);
-        foreach($tab as $indice => $valeur)
-        {
+
+        foreach ($tab as $indice => $valeur) {
             $choices[] = $this->choices[$indice];
         }
+
         $this->choices = $choices;
     }
-
 }

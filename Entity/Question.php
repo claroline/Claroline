@@ -134,8 +134,8 @@ class Question
     public function __construct()
     {
         $this->documents = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->setLocked(FALSE);
-        $this->setModel(FALSE);
+        $this->setLocked(false);
+        $this->setModel(false);
     }
 
     /**
