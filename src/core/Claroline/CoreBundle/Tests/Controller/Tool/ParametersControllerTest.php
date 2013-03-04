@@ -158,8 +158,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $widget = $this->em
             ->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName('claroline_testwidget1');
-        $crawler = $this->client
-            ->request('GET', "/workspaces/tool/properties/{$pwuId}/widget/{$widget->getId()}/configuration");
     }
 
 

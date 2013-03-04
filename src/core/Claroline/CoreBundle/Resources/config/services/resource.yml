@@ -8,7 +8,6 @@ services:
     claroline.resource.icon_creator:
         class: Claroline\CoreBundle\Library\Resource\IconCreator
         arguments:
-          - %claroline.files.directory%
           - "@service_container"
 
     claroline.resource.manager:

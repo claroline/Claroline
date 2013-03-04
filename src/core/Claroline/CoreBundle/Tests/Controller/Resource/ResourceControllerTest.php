@@ -219,7 +219,9 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(2, count($dir->resources));
         $this->client->request(
-            'GET', "/resource/delete?ids[]={$this->getDirectory('treeRoot')->getId()}&ids[]={$this->getFile('file.txt')->getId()}"
+            'GET',
+            "/resource/delete?ids[]={$this->getDirectory('treeRoot')->getId()}&"
+            . "ids[]={$this->getFile('file.txt')->getId()}"
         );
         $crawler = $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());

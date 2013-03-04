@@ -81,7 +81,7 @@ services:
            - { name: kernel.event_listener, event: log_resource, method: onLogResource }
 
     claroline.listener.core_resource_logger:
-      class: Claroline\CoreBundle\Library\Widget\Listener\CoreResourceLogListener
+      class:  Claroline\CoreBundle\Listener\CoreResourceLogListener
       calls:
         - [setContainer, ["@service_container"]]
       tags:

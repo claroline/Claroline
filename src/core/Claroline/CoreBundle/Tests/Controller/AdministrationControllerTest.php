@@ -235,7 +235,6 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
         $this->logUser($this->getFixtureReference('user/admin'));
-        $originalRoleId = $this->getFixtureReference('role/group_a')->getId();
         $adminRoleId = $this->getFixtureReference('role/admin')->getId();
         $crawler = $this->client->request(
             'GET',
