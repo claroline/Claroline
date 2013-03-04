@@ -31,10 +31,10 @@ class ThumbnailCreator
         if (!$this->isGdLoaded && !$this->isFfmpegLoaded) {
             $message = '';
             if (!$this->isGdLoaded) {
-                $message.= 'The GD extension is missing \n';
+                $message .= 'The GD extension is missing \n';
             }
             if (!$this->isFfmegLoaded) {
-                $message.= 'The Ffmpeg extension is missing \n';
+                $message .= 'The Ffmpeg extension is missing \n';
             }
             throw new UnloadedExtensionException($message);
         }
@@ -66,7 +66,7 @@ class ThumbnailCreator
      */
     public function fromImage($originalPath, $destinationPath, $newWidth, $newHeight)
     {
-        if(!$this->isGdLoaded) {
+        if (!$this->isGdLoaded) {
              throw new UnloadedExtensionException('The GD extension is missing \n');
         }
 
@@ -126,7 +126,7 @@ class ThumbnailCreator
 
     public function shortcutThumbnail($srcImg)
     {
-        if(!$this->isGdLoaded) {
+        if (!$this->isGdLoaded) {
              throw new UnloadedExtensionException('The GD extension is missing \n');
         }
 

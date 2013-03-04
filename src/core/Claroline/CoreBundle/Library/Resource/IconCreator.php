@@ -76,17 +76,19 @@ class IconCreator
 
             $thumbnailPath = null;
             if ($mimeElements[0] === 'video') {
-                try{
+                try {
                     $thumbnailPath = $this->ic->fromVideo($originalPath, $newPath, 100, 100);
                 } catch (\Exception $e) {
+                    $thumbnailPath = null;
                     //error handling ? $thumbnailPath = null
                 }
             }
 
             if ($mimeElements[0] === 'image') {
-                try{
+                try {
                     $thumbnailPath = $this->ic->fromImage($originalPath, $newPath, 100, 100);
                 } catch (\Exception $e) {
+                    $thumbnailPath = null;
                     //error handling ? $thumbnailPath = null
                 }
             }
@@ -180,7 +182,11 @@ class IconCreator
 
         $shortcutIcon = new ResourceIcon();
         $shortcutIcon->setIconLocation($shortcutLocation);
-        $relativeUrl = substr($shortcutLocation, ($pos = strpos($shortcutLocation, "web{$ds}bundles")) !== false ? $pos + 1 : 0);
+        $relativeUrl = substr(
+            $shortcutLocation,
+            ($pos = strpos($shortcutLocation, "web{$ds}bundles")
+            ) !== false ? $pos + 1 : 0
+        );
         $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setIconType($icon->getIconType());
         $shortcutIcon->setType($icon->getType());

@@ -52,8 +52,7 @@ class MessageType extends AbstractType
                             new SendToUsernames()
                             )
                         )
-                    );
-
+                );
         } else {
             $builder
                 ->add(
@@ -68,7 +67,7 @@ class MessageType extends AbstractType
                             new SendToUsernames()
                             )
                         )
-                    );
+                );
         }
 
         $builder->add('object', 'text', array('data' => $this->object, 'required' => true))
