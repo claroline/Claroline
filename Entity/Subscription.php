@@ -112,8 +112,6 @@ class Subscription
 
     /**
      * Get creator
-     *
-     * @return boolean
      */
     public function getCreator()
     {
@@ -132,8 +130,6 @@ class Subscription
 
     /**
      * Get admin
-     *
-     * @return boolean
      */
     public function getAdmin()
     {

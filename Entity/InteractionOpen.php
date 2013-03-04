@@ -113,8 +113,6 @@ class InteractionOpen
 
     /**
      * Get orthographyCorrect
-     *
-     * @return boolean
      */
     public function getOrthographyCorrect()
     {

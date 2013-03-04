@@ -217,8 +217,6 @@ class Paper
 
     /**
      * Get archive
-     *
-     * @return boolean
      */
     public function getArchive()
     {
@@ -257,8 +255,6 @@ class Paper
 
     /**
      * Get interupt
-     *
-     * @return boolean
      */
     public function getInterupt()
     {

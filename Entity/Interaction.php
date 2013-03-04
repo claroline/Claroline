@@ -226,8 +226,6 @@ class Interaction
 
     /**
      * Get lockedExpertise
-     *
-     * @return boolean
      */
     public function getLockedExpertise()
     {

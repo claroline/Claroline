@@ -104,8 +104,6 @@ class LinkHintPaper
 
     /**
      * Get view
-     *
-     * @return boolean
      */
     public function getView()
     {

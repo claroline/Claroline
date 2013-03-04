@@ -259,8 +259,6 @@ class Exercise
 
     /**
      * Get shuffle
-     *
-     * @return boolean
      */
     public function getShuffle()
     {
@@ -359,8 +357,6 @@ class Exercise
 
     /**
      * Get doprint
-     *
-     * @return boolean
      */
     public function getDoprint()
     {
@@ -479,8 +475,6 @@ class Exercise
 
     /**
      * Get useDateEnd
-     *
-     * @return boolean
      */
     public function getUseDateEnd()
     {
@@ -519,8 +513,6 @@ class Exercise
 
     /**
      * Get dispButtonInterrupt
-     *
-     * @return boolean
      */
     public function getDispButtonInterrupt()
     {
@@ -539,8 +531,6 @@ class Exercise
 
     /**
      * Get lockAttempt
-     *
-     * @return boolean
      */
     public function getLockAttempt()
     {

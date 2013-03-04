@@ -240,8 +240,6 @@ class Question
 
     /**
      * Get locked
-     *
-     * @return boolean
      */
     public function getLocked()
     {
@@ -260,8 +258,6 @@ class Question
 
     /**
      * Get model
-     *
-     * @return boolean
      */
     public function getModel()
     {

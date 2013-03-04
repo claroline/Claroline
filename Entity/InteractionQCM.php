@@ -152,8 +152,6 @@ class InteractionQCM
 
     /**
      * Get shuffle
-     *
-     * @return boolean
      */
     public function getShuffle()
     {
@@ -212,8 +210,6 @@ class InteractionQCM
 
     /**
      * Get weightResponse
-     *
-     * @return boolean
      */
     public function getWeightResponse()
     {
@@ -243,7 +239,6 @@ class InteractionQCM
         $i = 0;
         $tabShuffle = array();
         $tabFixed   = array();
-        $tab        = array();
         $choices = new \Doctrine\Common\Collections\ArrayCollection;
         $choiceCount = count($this->choices);
 
@@ -289,7 +284,7 @@ class InteractionQCM
 
         asort($tab);
 
-        foreach ($tab as $indice => $valeur) {
+        foreach (array_keys($tab) as $indice) {
             $choices[] = $this->choices[$indice];
         }
 

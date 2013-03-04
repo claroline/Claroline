@@ -217,8 +217,6 @@ class Choice
 
     /**
      * Get rightResponse
-     *
-     * @return boolean
      */
     public function getRightResponse()
     {
@@ -237,8 +235,6 @@ class Choice
 
     /**
      * Get positionForce
-     *
-     * @return boolean
      */
     public function getPositionForce()
     {

@@ -172,8 +172,6 @@ class Hole
 
     /**
      * Get orthography
-     *
-     * @return boolean
      */
     public function getOrthography()
     {
