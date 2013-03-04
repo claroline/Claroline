@@ -24,7 +24,8 @@
         "friendsofsymfony/jsrouting-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
         "mikey179/vfsStream": "dev-master",
-        "claroline/front-end-bundle": "dev-master"
+        "claroline/front-end-bundle": "dev-master",
+        "stfalcon/tinymce-bundle": "dev-master"
     },
     "repositories": [
         {

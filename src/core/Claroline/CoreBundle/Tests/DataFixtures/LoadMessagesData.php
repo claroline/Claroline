@@ -13,18 +13,7 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
 {
     /** @var ContainerInterface $container */
     private $container;
-
     private $messages;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
-    }
 
     /**
      * Constructor. Expects an array. Each elements of the array is an array whose keys are
@@ -37,6 +26,11 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
     public function __construct(array $messages)
     {
         $this->messages = $messages;
+    }
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)

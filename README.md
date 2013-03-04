@@ -34,7 +34,7 @@ Quick update
 To update your installation to the last development state, use :
 
     git pull
-    git submodule update --recursive
+    git submodule update --init --recursive
 
 Then launch the installation script mentioned above : `php app/dev/raw_install`
 
