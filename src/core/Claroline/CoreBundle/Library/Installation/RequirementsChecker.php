@@ -50,7 +50,7 @@ class RequirementsChecker
         (is_writable($themePath)) ?
             $valid[] = "The {$themePath} folder is writable":
             $errors[] = "The {$themePath} folder is not writable";
-        $errors[] = 'stop';
+            
         $requirements['errors'] = $errors;
         $requirements['warning'] = $warning;
         $requirements['valid'] = $valid;

@@ -31,8 +31,6 @@ class PlatformRequirementsCheckerCommand extends ContainerAwareCommand
              $output->writeln("<bg=green>{$valid}<bg=green>");
         }
 
-
-
         if (count($requirements['errors']) > 0) {
             exit(1);
         }
