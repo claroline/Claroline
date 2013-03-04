@@ -2,9 +2,6 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\ClassLoader\DebugUniversalClassLoader;
-use Symfony\Component\HttpKernel\Debug\ErrorHandler;
-use Symfony\Component\HttpKernel\Debug\ExceptionHandler;
 
 class AppKernel extends Kernel
 {
@@ -27,7 +24,8 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
-            new Claroline\Bundle\FrontEndBundle\FrontEndBundle()
+            new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
+            new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle()
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {
