@@ -12,7 +12,6 @@ admin: Administrateur
 administration: Administration
 administrative_code: 'Code administratif'
 agenda: Agenda
-all: Tous
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
 by: par
@@ -66,6 +65,7 @@ home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
+The username {{ username }} does not exist.: L'utilisateur {{ username }} n'existe pas.
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'
@@ -180,6 +180,7 @@ roles: Rôles
 save: Sauvegarder
 search: Rechercher
 see: Voir
+select all: Tous sélectionner
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 settings: Paramètres

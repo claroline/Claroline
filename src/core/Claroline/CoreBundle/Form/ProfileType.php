@@ -5,8 +5,6 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
 
-//TODO: phone verification
-
 class ProfileType extends BaseProfileType
 {
     private $grantRole;

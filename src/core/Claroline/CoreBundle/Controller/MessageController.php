@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Form\MessageType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
 
 class MessageController extends Controller
 {
@@ -80,20 +81,19 @@ class MessageController extends Controller
      * @param integer $parentId the parent message (in a discussion, you can answer
      * to a message wich is the parent). The entity Message is a nested tree.
      * By default (no parent) $parentId = 0 (defined in the message.yml file).
-     * @todo: add success/error message 
+     * @todo: add success/error message
      * @return Response
      */
     public function sendAction($parentId)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $request = $this->get('request');
+        $em = $this->get('doctrine.orm.entity_manager');
         $form = $this->get('form.factory')->create(new MessageType(), new Message());
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
             $message = $form->getData();
-            $usernamesNotFound = array();
             $message->setUser($user);
             $parent = $em->getRepository('ClarolineCoreBundle:Message')->find($parentId);
 
@@ -101,21 +101,21 @@ class MessageController extends Controller
                 $message->setParent($parent);
             }
 
-            $to = str_replace(' ', '', $message->getTo());
-            $usernames = explode(';', $to);
+            $to = preg_replace('/\s+/', '', $form->get('to')->getData());
 
+            if (substr($to, -1, 1) === ';') {
+                $to = substr_replace($to, "", -1);
+            }
+
+            $usernames = explode(';', $to);
             foreach ($usernames as $username) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->findOneBy(array('username' => $username));
-                if ($user != null) {
-                    $userMessage = new UserMessage();
-                    $userMessage->setUser($user);
-                    $userMessage->setMessage($message);
-                    $em->persist($userMessage);
-                    $em->persist($message);
-                } else {
-                    $usernamesNotFound[] = $username;
-                }
+                $userMessage = new UserMessage();
+                $userMessage->setUser($user);
+                $userMessage->setMessage($message);
+                $em->persist($userMessage);
+                $em->persist($message);
             }
 
             $em->flush();

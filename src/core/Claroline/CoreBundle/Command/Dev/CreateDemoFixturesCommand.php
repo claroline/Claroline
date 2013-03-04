@@ -8,9 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadDemoFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
-/**
- * Creates an group, optionaly with a specific role (default to simple group).
- */
 class CreateDemoFixturesCommand extends ContainerAwareCommand
 {
     protected function configure()
