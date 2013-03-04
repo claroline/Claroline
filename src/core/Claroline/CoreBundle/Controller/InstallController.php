@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Install;
-use Claroline\Corebundle\Form\InstallType;
-use Claroline\Corebundle\Form\AdminType;
+use Claroline\CoreBundle\Library\Installation\Install;
+use Claroline\CoreBundle\Form\InstallType;
+use Claroline\CoreBundle\Form\AdminType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Symfony\Component\Yaml\Dumper;

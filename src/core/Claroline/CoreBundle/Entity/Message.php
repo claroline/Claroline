@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\CoreBundle\Validator\Constraints as CustomAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\MessageRepository")
@@ -106,11 +107,6 @@ class Message
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     protected $children;
-
-    /**
-     * @Assert\NotBlank()
-     */
-    protected $to;
 
     public function __construct()
     {
