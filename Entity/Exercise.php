@@ -38,6 +38,7 @@
 namespace UJM\ExoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * UJM\ExoBundle\Entity\Exercise
@@ -45,17 +46,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="ujm_exercise")
  */
-class Exercise
+class Exercise extends AbstractResource
 {
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
     /**
      * @var string $title
      *

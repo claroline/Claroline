@@ -10,4 +10,9 @@ class UJMExoBundle extends PluginBundle
     {
         return 'exercise';
     }
+
+    public function getContainerExtension()
+    {
+        return new DependencyInjection\UJMExoExtension();
+    }
 }

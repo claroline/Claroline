@@ -98,6 +98,12 @@ class Version20130227000000 extends BundleMigration
         $table->addColumn('end_date', 'datetime', array('notnull' => false));
         $table->addColumn('disp_button_interrupt', 'boolean', array('notnull' => false));
         $table->addColumn('lock_attempt', 'boolean', array('notnull' => false));
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_resource'),
+            array('id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
         $this->storeTable($table);
     }
 
