@@ -180,7 +180,7 @@ roles: Rôles
 save: Sauvegarder
 search: Rechercher
 see: Voir
-select all: Tous sélectionner
+select all: 'Tout sélectionner'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 settings: Paramètres
