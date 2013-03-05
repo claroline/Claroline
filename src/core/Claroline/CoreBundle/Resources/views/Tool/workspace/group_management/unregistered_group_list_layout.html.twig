@@ -35,7 +35,7 @@
         <p>
         <input type="button" id="search-button" value="{{'search'|trans({},'platform') }}" class="btn btn-secondary search-group-button pull-right"/>
         <input type="text" id="search-group-txt" class="search-query input-small pull-right" value="" />
-        <input type="button" class="btn btn-secondary btn-save-groups" id="btn-save-groups" value="{{ 'add'|trans({}, 'platform') }}"/>
+        <input type="button" class="btn btn-secondary add-groups-button" value="{{ 'add'|trans({}, 'platform') }}"/>
         <p/>
     </div>
 
@@ -49,15 +49,18 @@
         <tbody id="group-table-body">
         </tbody>
     </table>
-
+    <div id="loading" class="loading"></div>
     <p>
-        <input type="button" class="btn btn-secondary btn-save-groups" id="btn-save-groups" value="{{ 'add'|trans({}, 'platform') }}"/>
+        <input type="button" class="btn btn-secondary add-groups-button" value="{{ 'add'|trans({}, 'platform') }}"/>
     </p>
-
+<!--- modal box --------------------------------------------------------------->
+<!----------------------------------------------------------------------------->
     <div id="validation-box" class="modal hide fade">
         <div class="modal-header">
         </div>
-        <div id="validation-box-body" class="modal-body" id="modal-body">
+        <div class="modal-body" id="modal-body">
+            <div id="validation-box-body"></div>
+            <div id="adding" class="loading"></div>
         </div>
         <div class="modal-footer">
             <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({},'platform') }}"/>

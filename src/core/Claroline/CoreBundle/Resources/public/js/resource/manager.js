@@ -1,6 +1,7 @@
 (function () {
     this.Claroline = this.Claroline || {};
     var manager = this.Claroline.ResourceManager = {};
+    var stackedRequests = 0;
 
     manager.Views = {
         Master: Backbone.View.extend({
@@ -516,7 +517,17 @@
             }, this);
             $.ajaxSetup({
                 headers: {'X_Requested_With': 'XMLHttpRequest'},
-                context: this
+                context: this,
+                beforeSend: function() {
+                    stackedRequests++;
+                    $('.please-wait').show();
+                },
+                complete: function() {
+                    stackedRequests--;
+                    if (stackedRequests === 0) {
+                        $('.please-wait').hide();
+                    }
+                }
             });
 
             if (!parameters.isPickerOnly) {
@@ -734,4 +745,6 @@
     manager.picker = function (action) {
         manager.Controller.picker(action == 'open' ? action : 'close');
     }
+
+
 })();

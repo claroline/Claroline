@@ -128,6 +128,7 @@ platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
 platform_plugins: 'Platform plugins'
 platform_widgets: 'Platform widgets'
+please_wait: 'Please wait...'
 private: Privée
 profile_form_administrativeCode: 'Administrative code'
 profile_form_firstName: 'First name'
