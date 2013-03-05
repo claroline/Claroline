@@ -7,8 +7,7 @@
     $('html, body').animate({
         scrollTop: 0
     }, 0);
-    $('#loading').hide();
-
+    $('.loading').hide();
     $('.add-users-button').attr('disabled', 'disabled');
 
     $('.chk-user').live('change', function(){
@@ -60,7 +59,12 @@
         }
     });
 
-    $('.add-users-button').on('click', function(event){
+    $('.add-users-button').click(function(){
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html(Twig.render(add_user_confirm, { 'nbUsers' :$('.chk-user:checked').length} ));
+    });
+
+    $('#modal-valid-button').on('click', function(event){
         var parameters = {};
         var i = 0;
         var array = new Array();
@@ -71,15 +75,22 @@
         parameters.userIds = array;
         var route = Routing.generate('claro_admin_multiadd_user_to_group', {'groupId': groupId});
         route+='?'+$.param(parameters);
+        $('#adding').show();
         Claroline.Utilities.ajax({
             url: route,
-            success: function(users){alert(Twig.render(add_user_confirm, {'nbUsers': users.length}))},
+            success: function(){
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
+                $('.delete-users-button').attr('disabled', 'disabled');
+                $('#deleting').hide();
+                $('.add-users-button').attr('disabled', 'disabled');
+                $('.chk-user:checked').each(function(index, element){
+                    $(element).parent().parent().remove();
+                })
+                $('#adding').hide();
+            },
             type: 'PUT'
         })
-        $('.chk-user:checked').each(function(index, element){
-             $(element).parent().parent().remove();
-        })
-        $('.add-users-button').attr('disabled', 'disabled');
     });
 
     function lazyloadUsers(route){

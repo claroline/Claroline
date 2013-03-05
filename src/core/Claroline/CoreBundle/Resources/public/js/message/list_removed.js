@@ -1,5 +1,19 @@
 (function () {
 
+    var stackedRequests = 0;
+    $.ajaxSetup({
+        beforeSend: function() {
+            stackedRequests++;
+            $('.please-wait').show();
+        },
+        complete: function() {
+            stackedRequests--;
+            if (stackedRequests === 0) {
+                $('.please-wait').hide();
+            }
+        }
+    });
+    
     var loading = false;
     var stop = false;
     var mode = 0; //0 = standard || 1 = search

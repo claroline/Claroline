@@ -20,6 +20,7 @@
 
 {% block layout %}
     <div id="wrapper">
+        <span class="label please-wait"> {{ 'please_wait'|trans({}, 'platform') }} </span>
         {% if not is_path_mode %}
             {% render 'ClarolineCoreBundle:Layout:topBar' %}
         {% endif %}
@@ -29,7 +30,7 @@
                     <div class="span12"></div>
                 </div>
             {% endblock %}
-            
+
             <div class="row-fluid content">
                 {% block content %}{% endblock %}
             </div>

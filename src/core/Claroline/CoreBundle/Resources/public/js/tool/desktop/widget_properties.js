@@ -1,4 +1,18 @@
 (function(){
+    
+    var stackedRequests = 0;
+    $.ajaxSetup({
+        beforeSend: function() {
+            stackedRequests++;
+            $('.please-wait').show();
+        },
+        complete: function() {
+            stackedRequests--;
+            if (stackedRequests === 0) {
+                $('.please-wait').hide();
+            }
+        }
+    });
 
     $('.chk-config-visible').on('change', function(e){
         var displayConfigId = e.currentTarget.parentNode.parentNode.dataset.id;
