@@ -1,5 +1,5 @@
 (function () {
-
+    $('.loading').hide();
     var stackedRequests = 0;
     $.ajaxSetup({
         beforeSend: function() {
@@ -13,15 +13,12 @@
             }
         }
     });
-    
+
     var loading = false;
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
     $('html, body').animate({scrollTop: 0}, 0);
-    $('#loading').hide();
-
     $('.delete-msg').attr('disabled', 'disabled');
-
     $('.chk-delete').live('change', function(){
         if ($('.chk-delete:checked').length){
            $('.delete-msg').removeAttr('disabled');
@@ -43,14 +40,14 @@
         });
     }
 
-    layloadUserMessage(standardRoute);
+    lazyloadUserMessage(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
             if(mode == 0){
-                layloadUserMessage(standardRoute);
+                lazyloadUserMessage(standardRoute);
             } else {
-                layloadUserMessage(searchRoute);
+                lazyloadUserMessage(searchRoute);
             }
         }
     });
@@ -60,10 +57,10 @@
         stop = false;
         if (document.getElementById('search-msg-txt').value != ''){
             mode = 1;
-            layloadUserMessage(searchRoute);
+            lazyloadUserMessage(searchRoute);
         } else {
             mode = 0;
-            layloadUserMessage(standardRoute);
+            lazyloadUserMessage(standardRoute);
         }
     });
 
@@ -98,6 +95,7 @@
 
         var route = Routing.generate('claro_message_delete_to');
         route+= '?'+$.param(parameters);
+        $('#deleting').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(){
@@ -107,6 +105,7 @@
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
                 $('.delete-users-button').attr('disabled', 'disabled');
+                $('#deleting').hide();
             },
             type: 'DELETE'
         });
@@ -117,7 +116,7 @@
         $('#validation-box-body').empty();
     });
 
-    function layloadUserMessage(route){
+    function lazyloadUserMessage(route){
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
@@ -130,10 +129,15 @@
                 if (messages.length == 0) {
                     stop = true;
                 }
+                stackedRequests--;
+                if (stackedRequests === 0) {
+                    $('.please-wait').hide();
+                }
+
             },
             complete: function(){
                 if($(window).height() >= $(document).height() && stop == false){
-                    layloadUserMessage(route)
+                    lazyloadUserMessage(route)
                 }
             }
         })
