@@ -4,7 +4,7 @@
         e.preventDefault();
         var formAction = $(e.currentTarget.parentElement).attr('action');
         var form = document.getElementById('resource-rights-form');
-        var formData = new FormData(form)
+        var formData = new FormData(form);
         $.ajax({
             url: formAction,
             data: formData,
@@ -15,6 +15,6 @@
                 window.location.href = Routing.generate('claro_workspace_open_tool',
                 {'toolName': 'parameters', 'workspaceId': $('#data').attr('data-workspace-id') });
             }
-        })
+        });
     });
 })();
