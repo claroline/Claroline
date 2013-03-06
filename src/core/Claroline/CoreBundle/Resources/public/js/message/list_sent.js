@@ -28,26 +28,26 @@
         } else {
            $('.delete-msg').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_message_list_sent', {
             'offset' : $('.row-message').length
         });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_message_list_sent_search', {
             'offset' : $('.row-message').length,
             'search': document.getElementById('search-msg-txt').value
-        })
-    }
+        });
+    };
 
     lazyloadMessage(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadMessage(standardRoute);
             } else {
                 lazyloadMessage(searchRoute);
@@ -58,7 +58,7 @@
    $('#search-msg').click(function(){
         $('#message-table-body').empty();
         stop = false;
-        if (document.getElementById('search-msg-txt').value != ''){
+        if (document.getElementById('search-msg-txt').value !== ''){
             mode = 1;
             lazyloadMessage(searchRoute);
         } else {
@@ -73,10 +73,9 @@
     });
 
     $('#modal-valid-button').click(function(){
-        var parameters = {
-        }
+        var parameters = {};
         var i = 0;
-        var array = new Array()
+        var array = [];
         $('.chk-delete:checked').each(function(index, element){
             array[i] = element.value;
             i++;
@@ -116,7 +115,7 @@
                 $('#message-table-body').append(messages);
                 loading = false;
                 $('#loading').hide();
-                if (messages.length == 0) {
+                if (messages.length === 0) {
                     stop = true;
                 }
                 stackedRequests--;
@@ -125,11 +124,11 @@
                 }
                 },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadMessage(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadMessage(route);
                 }
             }
-        })
+        });
     }
 
      $('#allChecked').click(function(){

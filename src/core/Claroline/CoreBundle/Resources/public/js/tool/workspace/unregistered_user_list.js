@@ -17,28 +17,28 @@
         } else {
            $('.add-users-button').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_workspace_unregistered_users_paginated', {
             'workspaceId': twigWorkspaceId,
             'offset': $('.row-user').length
         });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_workspace_search_unregistered_users', {
                 'search': document.getElementById('search-user-txt').value,
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
-    }
+            });
+    };
 
     lazyloadUsers(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadUsers(standardRoute);
             } else {
                 lazyloadUsers(searchRoute);
@@ -50,7 +50,7 @@
         $('.chk-user').remove();
         $('#user-table-checkboxes-body').empty();
         stop = false;
-        if (document.getElementById('search-user-txt').value != ''){
+        if (document.getElementById('search-user-txt').value !== ''){
             mode = 1;
             lazyloadUsers(searchRoute);
         } else {
@@ -67,11 +67,11 @@
     $('#modal-valid-button').on('click', function(event){
         var parameters = {};
         var i = 0;
-        var array = new Array();
+        var array = [];
         $('.chk-user:checked').each(function(index, element){
             array[i] = element.value;
             i++;
-        })
+        });
         parameters.ids = array;
         var route = Routing.generate('claro_workspace_multiadd_user', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
@@ -84,11 +84,11 @@
                 $('.add-users-button').attr('disabled', 'disabled');
                 $('.chk-user:checked').each(function(index, element){
                     $(element).parent().parent().remove();
-                })
+                });
                 $('#adding').hide();
             },
             type: 'PUT'
-        })
+        });
     });
 
     function createUsersChkBoxes(JSONString)
@@ -96,12 +96,12 @@
         var i=0;
         while (i<JSONString.length)
         {
-            var list = '<tr class="row-user">'
-            +'<td align="center">'+JSONString[i].username+'</td>'
-            +'<td align="center">'+JSONString[i].lastname+'</td>'
-            +'<td align="center">'+JSONString[i].firstname+'</td>'
-            +'<td align="center"><input class="chk-user" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>'
-            +'</tr>';
+            var list = '<tr class="row-user">';
+            list += '<td align="center">'+JSONString[i].username+'</td>';
+            list += '<td align="center">'+JSONString[i].lastname+'</td>';
+            list += '<td align="center">'+JSONString[i].firstname+'</td>';
+            list += '<td align="center"><input class="chk-user" id="checkbox-user-'+JSONString[i].id+'" type="checkbox" value="'+JSONString[i].id+'" id="checkbox-user-'+JSONString[i].id+'"></input></td>';
+            list += '</tr>';
             $('#user-table-checkboxes-body').append(list);
             i++;
         }
@@ -116,13 +116,13 @@
                 createUsersChkBoxes(users);
                 loading = false;
                 $('#loading').hide();
-                if(users.length == 0) {
+                if(users.length === 0) {
                     stop = true;
                 }
             },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadUsers(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadUsers(route);
                 }
             },
             type: 'GET'
