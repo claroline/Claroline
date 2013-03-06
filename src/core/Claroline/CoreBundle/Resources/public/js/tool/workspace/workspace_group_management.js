@@ -9,6 +9,7 @@
     var mode = 0; //0 = standard || 1 = search
 
     $('.delete-groups-button').attr('disabled', 'disabled');
+    $('.loading').hide();
 
     $('.chk-group').live('change', function(){
         if ($('.chk-group:checked').length){
@@ -62,6 +63,7 @@
         parameters.ids = array;
         var route = Routing.generate('claro_workspace_delete_groups', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
+        $('#deleting').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(){
@@ -71,6 +73,7 @@
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
                 $('.delete-groups-button').attr('disabled', 'disabled');
+                $('#deleting').hide();
             },
             type: 'DELETE'
         });

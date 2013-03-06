@@ -1,4 +1,18 @@
 (function(){
+    var stackedRequests = 0;
+    $.ajaxSetup({
+        beforeSend: function() {
+            stackedRequests++;
+            $('.please-wait').show();
+        },
+        complete: function() {
+            stackedRequests--;
+            if (stackedRequests === 0) {
+                $('.please-wait').hide();
+            }
+        }
+    });
+
     $('.chk-tool-visible').on('change', function(e){
         var toolId = $(e.target.parentElement.parentElement).attr('data-tool-id');
         var rowIndex = e.target.parentElement.parentElement.rowIndex;

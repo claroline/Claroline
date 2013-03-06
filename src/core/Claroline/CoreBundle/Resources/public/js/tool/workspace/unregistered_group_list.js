@@ -8,13 +8,14 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
 
-   $('.btn-save-groups').attr('disabled', 'disabled');
+    $('.loading').hide();
+    $('.add-groups-button').attr('disabled', 'disabled');
 
-    $('.checkbox-group-name').live('change', function(){
-        if ($('.checkbox-group-name:checked').length){
-           $('.btn-save-groups').removeAttr('disabled');
+    $('.chk-grp').live('change', function(){
+        if ($('.chk-grp:checked').length){
+           $('.add-groups-button').removeAttr('disabled');
         } else {
-           $('.btn-save-groups').attr('disabled', 'disabled');
+           $('.add-groups-button').attr('disabled', 'disabled');
         }
     })
 
@@ -47,32 +48,42 @@
         }
     });
 
-    $('.btn-save-groups').on('click', function(event){
+    $('.add-groups-button').on('click', function(event) {
+        $('#validation-box').modal('show');
+        $('#validation-box-body').html(Twig.render(add_group_confirm, { 'nbGroups' :$('.chk-grp:checked').length} ));
+    });
+
+    $('#modal-valid-button').on('click', function(event) {
         var parameters = {};
         var array = new Array();
         var i = 0;
-        $('.checkbox-group-name:checked').each(function(index, element){
+        $('.chk-grp:checked').each(function(index, element){
             array[i] = element.value;
             i++;
         })
         parameters.ids = array;
         var route = Routing.generate('claro_workspace_multiadd_group', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
+        $('#adding').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(groups){
-                alert(Twig.render(add_group_confirm, {'nbGroups':groups.length }))
+                $('#validation-box').modal('hide');
+                $('#validation-box-body').empty();
+                $('.add-groups-button').attr('disabled', 'disabled');
+                $('#adding').hide();
+                $('.chk-grp:checked').each(function(index, element){
+                    $(element).parent().parent().remove();
+                })
+                $('.add-groups-button').attr('disabled', 'disabled');
                 },
             type: 'PUT'
         })
-        $('.checkbox-group-name:checked').each(function(index, element){
-            $(element).parent().parent().remove();
-            $('.btn-save-groups').attr('disabled', 'disabled');
-        })
+
     });
 
     $('.search-group-button').click(function(){
-        $('.checkbox-group-name').remove();
+        $('.chk-grp').remove();
         $('#group-table-body').empty();
         stop = false;
         if (document.getElementById('search-group-txt').value != ''){
@@ -92,7 +103,7 @@
         {
             var row = '<tr class="row-group">'
             +'<td align="center">'+JSONObject[i].name+'</td>'
-            +'<td align="center"><input class="checkbox-group-name" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
+            +'<td align="center"><input class="chk-grp" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
             +'</tr>';
             $('#group-table-body').append(row);
             i++;
