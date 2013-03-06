@@ -94,6 +94,11 @@ services:
             - "@filesystem"
             - %kernel.root_dir%
 
+    claroline.installation.requirements_checker:
+        class: Claroline\CoreBundle\Library\Installation\RequirementsChecker
+        arguments:
+            - %kernel.root_dir%
+
     # symfony class used as service argument
     symfony.yaml:
         class: Symfony\Component\Yaml\Yaml

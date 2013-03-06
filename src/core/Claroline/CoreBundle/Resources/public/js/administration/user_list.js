@@ -3,8 +3,7 @@
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
     $('html, body').animate({scrollTop: 0}, 0);
-    $('#loading').hide();
-
+    $('#deleting').hide();
     $('.delete-users-button').attr('disabled', 'disabled');
 
     $('.chk-user').live('change', function(){
@@ -13,26 +12,26 @@
         } else {
            $('.delete-users-button').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_admin_paginated_user_list', {
             'offset' : $('.row-user').length
         });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_admin_paginated_search_user_list', {
             'offset': $('.row-user').length,
             'search': document.getElementById('search-user-txt').value
-        })
-    }
+        });
+    };
 
     lazyloadUsers(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadUsers(standardRoute);
             } else {
                 lazyloadUsers(searchRoute);
@@ -43,7 +42,7 @@
    $('#search-user-button').click(function(){
         $('#user-table-body').empty();
         stop = false;
-        if (document.getElementById('search-user-txt').value != ''){
+        if (document.getElementById('search-user-txt').value !== ''){
             mode = 1;
             lazyloadUsers(searchRoute);
         } else {
@@ -58,10 +57,9 @@
     });
 
     $('#modal-valid-button').click(function(){
-        var parameters = {
-        }
+        var parameters = {};
         var i = 0;
-        var array = new Array()
+        var array = [];
         $('.chk-user:checked').each(function(index, element){
             array[i] = element.value;
             i++;
@@ -70,6 +68,7 @@
 
         var route = Routing.generate('claro_admin_multidelete_user');
         route+= '?'+$.param(parameters);
+        $('#deleting').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(){
@@ -79,6 +78,7 @@
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
                 $('.delete-users-button').attr('disabled', 'disabled');
+                $('#deleting').hide();
             },
             type: 'DELETE'
         });
@@ -99,15 +99,15 @@
                 $('#user-table-body').append(users);
                 loading = false;
                 $('#loading').hide();
-                if (users.length == 0) {
+                if (users.length === 0) {
                     stop = true;
                 }
             },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadUsers(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadUsers(route);
                 }
             }
-        })
+        });
     }
 })();

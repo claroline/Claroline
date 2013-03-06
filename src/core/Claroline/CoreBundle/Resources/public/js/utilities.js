@@ -64,7 +64,7 @@
     utilities.renderPager = function (nbPage, activePage, type, appendTo){
 
         var paginator = '';
-        paginator += '<div id="'+type+'-paginator" class="pagination"><ul><li><a class="'+type+'-paginator-prev-item" href="#">Prev</a></li>'
+        paginator += '<div id="'+type+'-paginator" class="pagination"><ul><li><a class="'+type+'-paginator-prev-item" href="#">Prev</a></li>';
         for (var i = 0; i < nbPage;) {
             i++;
             paginator += '<li data-page="'+i+'"><a class="'+type+'-paginator-item" href="#">'+i+'</a></li>';
@@ -83,7 +83,7 @@
                     if($(this)[0].offsetTop == prev.offsetTop){
                         maxSize++;
                     }
-                })
+                });
             }
 
             var resizeFromLeft = function (){
@@ -98,10 +98,10 @@
                         pagerItems.first().remove();
                         reduceLeft($('.'+type+'-paginator-item'));
                     }
-                }
+                };
 
                 reduceLeft($('.'+type+'-paginator-item'));
-            }
+            };
 
             var resizeFromRight = function(){
                 var iremove = maxSize;
@@ -115,18 +115,18 @@
                         pagerItems.last().remove();
                         reduceRight($('.'+type+'-paginator-item'));
                     }
-                }
+                };
                 reduceRight($('.'+type+'-paginator-item'));
-            }
+            };
 
             var resizeFromCenter = function(){
-                var offset = Math.floor(maxSize/2)+parseInt(activePage); //lol
+                var offset = Math.floor(maxSize/2)+parseInt(activePage, 10);
                 while (offset < pagerItems.length) {
                     $(pagerItems[offset]).remove();
                     offset++;
                 }
 
-                var start = parseInt(activePage)-Math.floor(maxSize/2);
+                var start = parseInt(activePage, 10)-Math.floor(maxSize/2);
                 start-=2;
                 while (start >= 0) {
 
@@ -140,12 +140,12 @@
                         pagerItems.last().remove();
                         reduceBothSide($('.'+type+'-paginator-item'));
                     }
-                }
+                };
 
                 reduceBothSide($('.'+type+'-paginator-item'));
-            }
+            };
 
-            if(maxSize != 0){
+            if(maxSize !== 0){
                 if(activePage <= Math.floor(maxSize/2)) {
                     resizeFromRight();
                 } else  {
@@ -157,19 +157,19 @@
                 }
             }
 
-        }
+        };
 
-        resizePager($('.'+type+'-paginator-item'), $('.'+type+'-paginator-prev-item')[0],  $('.'+type+'-paginator-next-item')[0], activePage)
+        resizePager($('.'+type+'-paginator-item'), $('.'+type+'-paginator-prev-item')[0],  $('.'+type+'-paginator-next-item')[0], activePage);
 
         $('.instance-paginator-item').each(function(index, element){
             element.parentElement.className = '';
-        })
+        });
 
         var searched = $('li[data-page="'+activePage+'"]');
         searched.first().addClass('active');
 
         return $('#'+type+'-paginator');
-    }
+    };
 
     /**
      * Returns the checked value of a combobox form.
@@ -181,7 +181,7 @@
 
         var radioLength = radioObj.length;
 
-        if (radioLength == undefined) {
+        if (radioLength === undefined) {
             if (radioObj.checked) {
                 return radioObj.value;
             } else {
@@ -195,18 +195,20 @@
             }
         }
         return '';
-    }
+    };
 
     utilities.ajax = function(ajaxOptions){
         ajaxOptions.error = function(xhr, e, errorThrown){
             if (xhr.status == 403){
                 ajaxAuthenticationErrorHandler(function () {
-                    'function' == typeof successHandler ?
-                        utilities.ajax(ajaxOptions) :
-                        window.location.reload();
-                })
+                    if ('function' == typeof successHandler) {
+                        utilities.ajax(ajaxOptions);
+                    } else {
+                         window.location.reload();
+                    }
+                });
             } else {
-                var title = utilities.getTitle(xhr.responseText)
+                var title = utilities.getTitle(xhr.responseText);
                 if(title !== '') {
                     alert(title);
                 }
@@ -216,9 +218,9 @@
                     }
                 }
             }
-        }
+        };
         $.ajax(ajaxOptions);
-    }
+    };
 
     /* Gets the <title> of a document
     http://www.devnetwork.net/viewtopic.php?f=13&t=117065
@@ -243,18 +245,17 @@
 
     console.log(title);  // => jQuery: The Write Less, Do More, JavaScript Library
     return title;
-    }
+    };
 
     var createModal = function() {
-        var html = '';
-        var html= '<div id="bootstrap-modal" class="modal hide fade">'
-            html+= '<div id="modal-header" class="modal-header"/>'
-            html+= '<div id="modal-body" class="modal-body"/>'
-            html+= '<div id= "modal-footer" class="modal-footer"/>'
+        var html= '<div id="bootstrap-modal" class="modal hide fade">';
+            html+= '<div id="modal-header" class="modal-header"/>';
+            html+= '<div id="modal-body" class="modal-body"/>';
+            html+= '<div id= "modal-footer" class="modal-footer"/>';
             html+= '</div>';
 
             $('body').append(html);
-    }
+    };
 
     var ajaxAuthenticationErrorHandler = function (callBack) {
         $.ajax({
@@ -281,5 +282,5 @@
                 });
             }
         });
-    }
+    };
 })();

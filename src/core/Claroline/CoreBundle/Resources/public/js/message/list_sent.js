@@ -1,10 +1,24 @@
 (function () {
 
+    var stackedRequests = 0;
+    $.ajaxSetup({
+        beforeSend: function() {
+            stackedRequests++;
+            $('.please-wait').show();
+        },
+        complete: function() {
+            stackedRequests--;
+            if (stackedRequests === 0) {
+                $('.please-wait').hide();
+            }
+        }
+    });
+
     var loading = false;
     var stop = false;
     var mode = 0; //0 = standard || 1 = search
     $('html, body').animate({scrollTop: 0}, 0);
-    $('#loading').hide();
+    $('.loading').hide();
 
     $('.delete-msg').attr('disabled', 'disabled');
 
@@ -14,29 +28,29 @@
         } else {
            $('.delete-msg').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_message_list_sent', {
             'offset' : $('.row-message').length
         });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_message_list_sent_search', {
             'offset' : $('.row-message').length,
             'search': document.getElementById('search-msg-txt').value
-        })
-    }
+        });
+    };
 
-    layloadMessage(standardRoute);
+    lazyloadMessage(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
-                layloadMessage(standardRoute);
+            if(mode === 0){
+                lazyloadMessage(standardRoute);
             } else {
-                layloadMessage(searchRoute);
+                lazyloadMessage(searchRoute);
             }
         }
     });
@@ -44,12 +58,12 @@
    $('#search-msg').click(function(){
         $('#message-table-body').empty();
         stop = false;
-        if (document.getElementById('search-msg-txt').value != ''){
+        if (document.getElementById('search-msg-txt').value !== ''){
             mode = 1;
-            layloadMessage(searchRoute);
+            lazyloadMessage(searchRoute);
         } else {
             mode = 0;
-            layloadMessage(standardRoute);
+            lazyloadMessage(standardRoute);
         }
     });
 
@@ -59,10 +73,9 @@
     });
 
     $('#modal-valid-button').click(function(){
-        var parameters = {
-        }
+        var parameters = {};
         var i = 0;
-        var array = new Array()
+        var array = [];
         $('.chk-delete:checked').each(function(index, element){
             array[i] = element.value;
             i++;
@@ -71,6 +84,7 @@
 
         var route = Routing.generate('claro_message_delete_from');
         route+= '?'+$.param(parameters);
+        $('#deleting').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(){
@@ -80,6 +94,7 @@
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
                 $('.delete-users-button').attr('disabled', 'disabled');
+                 $('#deleting').hide();
             },
             type: 'DELETE'
         });
@@ -90,7 +105,7 @@
         $('#validation-box-body').empty();
     });
 
-    function layloadMessage(route){
+    function lazyloadMessage(route){
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
@@ -100,26 +115,30 @@
                 $('#message-table-body').append(messages);
                 loading = false;
                 $('#loading').hide();
-                if (messages.length == 0) {
+                if (messages.length === 0) {
                     stop = true;
                 }
-            },
+                stackedRequests--;
+                if (stackedRequests === 0) {
+                    $('.please-wait').hide();
+                }
+                },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    layloadMessage(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadMessage(route);
                 }
             }
-        })
+        });
     }
-    
+
      $('#allChecked').click(function(){
         if($('#allChecked').is(':checked')){
              $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', true);
              $('.delete-msg').removeAttr('disabled');
          }
          else {
-            $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', false);     
-            $('.delete-msg').attr('disabled', 'disabled'); 
+            $(" INPUT[@class=" + 'chk-delete' + "][type='checkbox']").attr('checked', false);
+            $('.delete-msg').attr('disabled', 'disabled');
          }
     });
 })();

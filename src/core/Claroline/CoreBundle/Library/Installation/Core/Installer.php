@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Core;
 
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\CoreBundle\Library\Installation\BundleMigrator;
 
 class Installer
