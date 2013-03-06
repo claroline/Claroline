@@ -95,6 +95,6 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
 
         $manager->flush();
 
-        $this->addReference("forum_instance/forum", $forum);
+        $this->addReference("forum/{$this->forumName}", $forum);
     }
 }

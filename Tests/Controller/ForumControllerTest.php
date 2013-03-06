@@ -5,15 +5,19 @@ namespace Claroline\ForumBundle\Controller;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 use Claroline\ForumBundle\DataFixtures\LoadOptionsData;
-use Claroline\CoreBundle\Tests\DataFixtures\Special\LoadEntitiesInWorkspace;
 
 class ForumControllerTest extends FunctionalTestCase
 {
+    private $userWsCollaboratorRole;
+
     public function setUp()
     {
         parent::setUp();
         $this->loadPlatformRoleData();
         $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator', 'admin' => 'admin'));
+        $this->userWsCollaboratorRole = $this->em
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findCollaboratorRole($this->getWorkspace('user'));
         $this->client->followRedirects();
     }
 
@@ -23,35 +27,38 @@ class ForumControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadForumData('test', 'user', 0, 0));
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client
-            ->request('GET', "/forum/form/subject/{$this->getFixtureReference('forum_instance/forum')->getId()}");
+            ->request('GET', "/forum/form/subject/{$this->getFixtureReference('forum/test')->getId()}");
         $this->assertEquals(1, count($crawler->filter('#forum_subject_form')));
         $form = $crawler->filter('button[type=submit]')->form();
         $form['forum_subject_form[title]'] = 'title';
         $form['forum_subject_form[message][content]'] = 'content';
         $this->client->submit($form);
         $crawler = $this->client
-            ->request('GET', "/forum/{$this->getFixtureReference('forum_instance/forum')->getId()}/offset/0");
+            ->request('GET', "/forum/{$this->getFixtureReference('forum/test')->getId()}/offset/0");
         $this->assertEquals(1, count($crawler->filter('.row-subject')));
     }
 
     public function testMessages()
     {
         $this->loadFixture(new LoadOptionsData());
-        $fix = new LoadEntitiesInWorkspace(2, 'user', 'user');
-        $this->loadFixture($fix);
-        $ffix = new LoadForumData('test', 'user', 2, 2);
-        $this->loadFixture($ffix);
-
+        $creator = $this->getUser('ws_creator');
+        $creator->addRole($this->userWsCollaboratorRole);
+        $admin = $this->getUser('admin');
+        $admin->addRole($this->userWsCollaboratorRole);
+        $this->em->persist($creator);
+        $this->em->persist($admin);
+        $this->em->flush();
+        $this->loadFixture(new LoadForumData('test', 'user', 2, 2));
         $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client
-            ->request('GET', "/forum/{$this->getFixtureReference('forum_instance/forum')->getId()}/offset/0");
+            ->request('GET', "/forum/{$this->getFixtureReference('forum/test')->getId()}/offset/0");
         $link = $crawler->filter('.link-subject')->first()->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(1, count($crawler->filter('#messages_table')));
         $subjects = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($this->getFixtureReference('forum_instance/forum')->getId())
+            ->find($this->getFixtureReference('forum/test')->getId())
             ->getChildren();
 
         $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/offset/0");
