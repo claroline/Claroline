@@ -174,7 +174,7 @@ class DatabaseWriter
             );
             $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
             $resourceIcon->setRelativeUrl(
-                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}"
+                "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
             );
         } else {
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());

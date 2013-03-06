@@ -95,14 +95,14 @@ class IconCreator
 
             if ($thumbnailPath !== null) {
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
-                $iconName = "thumbnails/{$thumbnailName}";
+                $relativeUrl = "thumbnails/{$thumbnailName}";
                 $icon = new ResourceIcon();
                 $generatedIconType = $this->em
                     ->getRepository('ClarolineCoreBundle:Resource\IconType')
                     ->find(IconType::GENERATED);
                 $icon->setIconType($generatedIconType);
                 $icon->setIconLocation($newPath);
-                $icon->setRelativeUrl($iconName);
+                $icon->setRelativeUrl($relativeUrl);
                 $icon->setType('generated');
                 $icon->setShortcut(false);
                 $this->createShortcutIcon($icon);
@@ -177,16 +177,17 @@ class IconCreator
             $shortcutLocation = $this->ic->shortcutThumbnail($icon->getIconLocation());
         } catch (\Exception $e) {
             $shortcutLocation = "{$this->container->getParameter('kernel.root_dir')}{$ds}.."
-            . "{$ds}web{$ds}bundles/clarolinecore/images/resources/icons/shortcut-default.png";
+            . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
         }
 
         $shortcutIcon = new ResourceIcon();
         $shortcutIcon->setIconLocation($shortcutLocation);
-        $relativeUrl = substr(
+        $tmpRelativeUrl = substr(
             $shortcutLocation,
             ($pos = strpos($shortcutLocation, "web{$ds}bundles")
             ) !== false ? $pos + 1 : 0
         );
+        $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
         $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setIconType($icon->getIconType());
         $shortcutIcon->setType($icon->getType());
@@ -219,7 +220,7 @@ class IconCreator
         //entity creation
         $icon = new ResourceIcon();
         $icon->setIconLocation("{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$hashName}");
-        $icon->setRelativeUrl("thumbnails{$ds}{$hashName}");
+        $icon->setRelativeUrl("thumbnails/{$hashName}");
         $customType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\IconType')
             ->find(IconType::CUSTOM_ICON);
