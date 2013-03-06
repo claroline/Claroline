@@ -65,9 +65,15 @@
                 'click button.filter': function () {
                     var searchParameters = {};
                     var name = this.$('.name').val().trim();
-                    var dateFrom = this.$('.date-from').first().val();
-                    var dateTo = this.$('.date-to').first().val();
-                    var types = this.$('.resource-types').val();
+                    var dateFrom = $('input.date-from').first().val();
+                    var dateTo = $('input.date-to').first().val();
+                    var types = $('select.resource-types').val();
+
+                    //if(name!=undefined){name=""}
+                    if(dateFrom==undefined){dateFrom=""}
+                    if(dateTo==undefined){dateTo=""}
+                    if(types==undefined){types=""}
+
                     name != '' && (searchParameters.name = name);
                     dateFrom != '' && (searchParameters.dateFrom = dateFrom + ' 00:00:00');
                     dateTo != '' && (searchParameters.dateTo = dateTo + ' 23:59:59');
@@ -232,13 +238,9 @@
             },
             toggle: function () {
                 $(this.el).css('display', !this.isVisible ? 'block' : 'none');
-                this.isVisible = !this.isVisible;
-                !this.parameters.isPickerMode && this.dispatcher.trigger('filter-view-change', {
-                    isVisible: this.isVisible
-                });
+                this.isVisible = !this.isVisible; 
             },
             render: function () {
-                //!this.parameters.isPickerMode && this.$el.addClass('span3');
                 $(this.el).html(Twig.render(resource_filters_template, this.parameters));
             }
         }),
@@ -285,14 +287,6 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.directoryId = parameters.directoryId;
-                /*!this.parameters.isPickerMode && this.$el.addClass('span12');
-                this.dispatcher.on('filter-view-change', function (event) {
-                    if (!this.parameters.isPickerMode) {
-                        event.isVisible ?
-                            this.$el.removeClass('span12') && this.$el.addClass('span9') :
-                            this.$el.removeClass('span9') && this.$el.addClass('span12');
-                    }
-                }, this);*/
             },
             addThumbnails: function (resources, successHandler) {
                 _.each(resources, function (resource) {

@@ -66,7 +66,7 @@
             
             <li>
                 <div class="input-append" width="500">
-                    <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" width="100%">
+                    <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ parameters.name }}">
                     <button class="filter btn" type="button"><i class="icon-search"></i></button>
                     <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
                 </div>
