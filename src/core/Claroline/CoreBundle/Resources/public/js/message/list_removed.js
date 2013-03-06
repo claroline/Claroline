@@ -1,5 +1,4 @@
 (function () {
-
     var stackedRequests = 0;
     $.ajaxSetup({
         beforeSend: function() {
@@ -28,26 +27,26 @@
         } else {
            $('.delete-msg').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_message_list_removed', {
             'offset' : $('.row-user-message').length
         });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_message_list_removed_search', {
             'offset' : $('.row-user-message').length,
             'search': document.getElementById('search-msg-txt').value
-        })
-    }
+        });
+    };
 
     lazyloadUserMessage(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadUserMessage(standardRoute);
             } else {
                 lazyloadUserMessage(searchRoute);
@@ -58,7 +57,7 @@
    $('#search-msg').click(function(){
         $('#message-table-body').empty();
         stop = false;
-        if (document.getElementById('search-msg-txt').value != ''){
+        if (document.getElementById('search-msg-txt').value !== ''){
             mode = 1;
             lazyloadUserMessage(searchRoute);
         } else {
@@ -73,10 +72,9 @@
     });
 
     $('#modal-valid-button').click(function(){
-        var parameters = {
-        }
+        var parameters = {};
         var i = 0;
-        var array = new Array()
+        var array = [];
         $('.chk-delete:checked').each(function(index, element){
             array[i] = element.value;
             i++;
@@ -114,7 +112,7 @@
                 $('#message-table-body').append(messages);
                 loading = false;
                 $('#loading').hide();
-                if (messages.length == 0) {
+                if (messages.length === 0) {
                     stop = true;
                 }
                 stackedRequests--;
@@ -123,10 +121,10 @@
                 }
             },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadUserMessage(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadUserMessage(route);
                 }
             }
-        })
+        });
     }
 })();
