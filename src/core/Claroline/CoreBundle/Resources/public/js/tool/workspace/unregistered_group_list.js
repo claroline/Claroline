@@ -17,7 +17,7 @@
         } else {
            $('.add-groups-button').attr('disabled', 'disabled');
         }
-    })
+    });
 
 
 
@@ -26,7 +26,7 @@
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-group').length
             });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_workspace_search_unregistered_groups', {
@@ -34,13 +34,13 @@
                 'offset': $('.row-group').length,
                 'search': document.getElementById('search-group-txt').value
             });
-    }
+    };
 
     lazyloadGroups(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadGroups(standardRoute);
             } else {
                 lazyloadGroups(searchRoute);
@@ -55,12 +55,12 @@
 
     $('#modal-valid-button').on('click', function(event) {
         var parameters = {};
-        var array = new Array();
+        var array = [];
         var i = 0;
         $('.chk-grp:checked').each(function(index, element){
             array[i] = element.value;
             i++;
-        })
+        });
         parameters.ids = array;
         var route = Routing.generate('claro_workspace_multiadd_group', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
@@ -74,11 +74,11 @@
                 $('#adding').hide();
                 $('.chk-grp:checked').each(function(index, element){
                     $(element).parent().parent().remove();
-                })
+                });
                 $('.add-groups-button').attr('disabled', 'disabled');
                 },
             type: 'PUT'
-        })
+        });
 
     });
 
@@ -86,7 +86,7 @@
         $('.chk-grp').remove();
         $('#group-table-body').empty();
         stop = false;
-        if (document.getElementById('search-group-txt').value != ''){
+        if (document.getElementById('search-group-txt').value !== '') {
             mode = 1;
             lazyloadGroups(searchRoute);
         } else {
@@ -101,10 +101,10 @@
 
         while (i<JSONObject.length)
         {
-            var row = '<tr class="row-group">'
-            +'<td align="center">'+JSONObject[i].name+'</td>'
-            +'<td align="center"><input class="chk-grp" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>'
-            +'</tr>';
+            var row = '<tr class="row-group">';
+            row += '<td align="center">'+JSONObject[i].name+'</td>';
+            row += '<td align="center"><input class="chk-grp" id="checkbox-group-'+JSONObject[i].id+'" type="checkbox" value="'+JSONObject[i].id+'" id="checkbox-group-'+JSONObject[i].id+'"></input></td>';
+            row += '</tr>';
             $('#group-table-body').append(row);
             i++;
         }
@@ -119,17 +119,17 @@
                 createGroupsChkBoxes(groups);
                 loading = false;
                 $('#loading').hide();
-                if (groups.length == 0){
+                if (groups.length === 0){
                     stop = true;
                 }
             },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadGroups(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadGroups(route);
                 }
             },
             type: 'GET'
 
-        })
+        });
     }
 })();

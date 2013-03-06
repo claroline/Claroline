@@ -1,5 +1,5 @@
 (function(){
-    
+
     var stackedRequests = 0;
     $.ajaxSetup({
         beforeSend: function() {
@@ -19,7 +19,7 @@
         var widgetId = e.currentTarget.parentNode.parentNode.dataset.widgetId;
         var route = Routing.generate('claro_desktop_widget_invertvisible', {'displayConfigId': displayConfigId, 'widgetId': widgetId });
         Claroline.Utilities.ajax({url:route, type:'POST'});
-    })
+    });
 
-})()
+})();
 

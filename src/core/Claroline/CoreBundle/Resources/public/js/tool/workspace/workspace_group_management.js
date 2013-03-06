@@ -17,14 +17,14 @@
         } else {
            $('.delete-groups-button').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_workspace_registered_groups_paginated', {
                     'workspaceId':twigWorkspaceId,
                     'offset': $('.row-group').length
                 });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_workspace_search_registered_groups', {
@@ -32,13 +32,13 @@
                     'offset': $('.row-group').length,
                     'search': document.getElementById('search-group-txt').value
                 });
-    }
+    };
 
     lazyloadGroups(standardRoute);
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadGroups(standardRoute);
             } else {
                 lazyloadGroups(searchRoute);
@@ -53,7 +53,7 @@
 
    $('#modal-valid-button').click(function(){
         var parameters = {};
-        var array = new Array();
+        var array = [];
         var i = 0;
         $('.chk-group:checked').each(function(index, element){
             array[i] = element.value;
@@ -88,7 +88,7 @@
         $('.checkbox-group-name').remove();
         $('#group-table-body').empty();
         stop = false;
-        if (document.getElementById('search-group-txt').value != ''){
+        if (document.getElementById('search-group-txt').value !== ''){
             mode = 1;
             lazyloadGroups(searchRoute);
         } else {
@@ -108,17 +108,17 @@
                 }));
                 loading = false;
                 $('#loading').hide();
-                if(groups.lenght == 0){
+                if(groups.lenght === 0){
                     stop = true;
                 }
             },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadGroups(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadGroups(route);
                 }
             },
             type: 'GET'
-        })
+        });
     }
 
     $('.button-parameters-group').live('click', function(e){
@@ -128,5 +128,5 @@
         );
 
         window.location.href = route;
-    })
-})()
+    });
+})();

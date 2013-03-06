@@ -1,7 +1,7 @@
 describe('The utilities', function () {
     beforeEach(function () {
         this.utilities = Claroline.Utilities;
-    })
+    });
 
     describe('#formatText method', function () {
         it('replaces exceeding text with dots', function () {
