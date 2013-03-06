@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
 
     var stackedRequests = 0;
     $.ajaxSetup({
@@ -24,19 +25,19 @@
 
     $('.chk-delete').live('change', function(){
         if ($('.chk-delete:checked').length){
-           $('.delete-msg').removeAttr('disabled');
+            $('.delete-msg').removeAttr('disabled');
         } else {
-           $('.delete-msg').attr('disabled', 'disabled');
+            $('.delete-msg').attr('disabled', 'disabled');
         }
     });
 
-    var standardRoute = function(){
+    var standardRoute = function() {
         return Routing.generate('claro_message_list_sent', {
             'offset' : $('.row-message').length
         });
     };
 
-    var searchRoute = function(){
+    var searchRoute = function() {
         return Routing.generate('claro_message_list_sent_search', {
             'offset' : $('.row-message').length,
             'search': document.getElementById('search-msg-txt').value
@@ -45,9 +46,10 @@
 
     lazyloadMessage(standardRoute);
 
-    $(window).scroll(function(){
-        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode === 0){
+    $(window).scroll(function() {
+        if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) &&
+            loading === false && stop === false){
+            if(mode === 0) {
                 lazyloadMessage(standardRoute);
             } else {
                 lazyloadMessage(searchRoute);
