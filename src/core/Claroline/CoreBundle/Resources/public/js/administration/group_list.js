@@ -5,7 +5,7 @@
     var mode = 0; //0 = standard || 1 = search
 
     $('html, body').animate({scrollTop: 0}, 0);
-    $('#loading').hide();
+    $('.loading').hide();
 
     $('.delete-groups-button').attr('disabled', 'disabled');
 
@@ -58,6 +58,7 @@
         parameters.ids = array;
         var route = Routing.generate('claro_admin_multidelete_group');
         route+= '?'+$.param(parameters);
+        $('#deleting').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(){
@@ -67,6 +68,7 @@
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
                 $('.delete-groups-button').attr('disabled', 'disabled');
+                $('#deleting').hide();
             },
             type: 'DELETE'
         });

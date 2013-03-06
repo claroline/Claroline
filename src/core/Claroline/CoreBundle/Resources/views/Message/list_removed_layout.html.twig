@@ -20,16 +20,6 @@
         <tbody id="message-table-body">
         </tbody>
     </table>
+    <div id="loading" class="loading"></div>
     <button class="btn btn-secondary delete-msg" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
-    <!-------------- modal box ------------------------------------------------>
-    <div id="validation-box" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div id="validation-box-body" class="modal-body" id="modal-body">
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-        </div>
-    </div>
 {% endblock %}
