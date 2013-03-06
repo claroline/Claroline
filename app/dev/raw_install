@@ -27,18 +27,23 @@ refreshFile("{$rootDirectory}/app/logs/test.log");
 require_once __DIR__.'/delete_files';
 
 system("composer install");
-system("php {$rootDirectory}/app/console claroline:themes:compile");
+system("php {$rootDirectory}/app/console claroline:requirements", $var);
 
-system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
-system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
-system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
-system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=dev");
+if ($var === 0) {
+    
+    system("php {$rootDirectory}/app/console claroline:themes:compile");
 
-system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
-system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
-system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
-system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
+    system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
+    system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
+    system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
+    system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=dev");
 
-system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
-system("php {$rootDirectory}/app/console claroline:fixture:demo");
-system("php {$rootDirectory}/app/console cache:clear");
+    system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
+    system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
+    system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
+    system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=test");
+
+    system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
+    system("php {$rootDirectory}/app/console claroline:fixture:demo");
+    system("php {$rootDirectory}/app/console cache:clear");
+}

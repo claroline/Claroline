@@ -18,35 +18,35 @@
                 .removeAttr('checked')
                 .removeAttr('selected');
 
-            if (allDay) {  
+            if (allDay) {
                 var  currentDate = new Date();
-                var pickedDate = new Date(date); 
+                var pickedDate = new Date(date);
                 $('#divTitle').html('Start date '+pickedDate.getDate()+'/'+(pickedDate.getMonth()+1)+'/'+pickedDate.getFullYear());
-                
+
                 if (pickedDate > currentDate ) {
                     $('#calendar_form_end_day').val(pickedDate.getDate());
                     $('#calendar_form_end_month').val(pickedDate.getMonth()+1);
-                    $('#calendar_form_end_year').val(pickedDate.getFullYear());         
+                    $('#calendar_form_end_year').val(pickedDate.getFullYear());
                 } else {
                     $('#calendar_form_end_day').val(currentDate.getDate());
                     $('#calendar_form_end_month').val(currentDate.getMonth()+1);
-                    $('#calendar_form_end_year').val(currentDate.getFullYear());     
+                    $('#calendar_form_end_year').val(currentDate.getFullYear());
                 }
 
-                $("#myModal").modal(); 
+                $("#myModal").modal();
             }
         };
-        
+
         var dayClickDesktop = function () {
             alert('Not implemented yet');
         };
-        
+
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
-        
+
         $("#save").click(function() {
             if ($('#calendar_form_title').val() !== '') {
                 $("#save").attr("disabled", "disabled");
-                data = new FormData($('#myForm')[0]); 
+                data = new FormData($('#myForm')[0]);
                 data.append("date", new Date(clickedDate));
                 var url = $("#myForm").attr("action");
                 $.ajax({
@@ -56,9 +56,9 @@
                     'processData': false,
                     'contentType': false,
                     'success': function (data, textStatus, xhr) {
-                        if (xhr.status == 200 ) {           
+                        if (xhr.status == 200 ) {
                             $('#myModal').modal('hide') ;
-                            $('#save').removeAttr("disabled"); 
+                            $('#save').removeAttr("disabled");
                             $('#calendar').fullCalendar('renderEvent',
                             {
                                 title: data.title,
@@ -75,14 +75,14 @@
                     'error': function (xhr, textStatus) {
                         if(xhr.status == 400){//bad request
                             alert(" Start date is bigger thand end date");
-                            $('#save').removeAttr("disabled"); 
+                            $('#save').removeAttr("disabled");
                             $('#output').html(textStatus);
                         } else{
                             //if we got to this point we know that the controller
-                            //did not return a json_encoded array. We can assume that           
+                            //did not return a json_encoded array. We can assume that
                             //an unexpected PHP error occured
                             alert("An unexpeded error occured.");
-                            $('#save').removeAttr("disabled"); 
+                            $('#save').removeAttr("disabled");
                             //if you want to print the error:
                             $('#output').html(data);
                         }
@@ -92,7 +92,7 @@
                 alert('title can not be empty');
             }
         });
-        
+
         $("#updateBtn").click(function() {
         $("#updateBtn").attr("disabled", "disabled");
         var data = new FormData($('#myForm')[0]);
@@ -105,16 +105,16 @@
             'processData': false,
             'contentType': false,
             'success': function(data,textStatus,xhr) {
-                if(xhr.status == 200)  { 
+                if(xhr.status == 200)  {
                     $('#myModal').modal('hide');
-                    $('#updateBtn').removeAttr("disabled"); 
-                    $('#calendar').fullCalendar( 'rerenderEvents' );   
+                    $('#updateBtn').removeAttr("disabled");
+                    $('#calendar').fullCalendar( 'rerenderEvents' );
                  }
              }
          });
      });
-     
-   
+
+
     var deleteClick = function(id) {
     $("#deleteBtn").attr("disabled", "disabled");
     url = $('a#delete').attr('href');
@@ -122,31 +122,31 @@
         'type':'POST',
         'url':url,
         'data':{
-            'id': id 
+            'id': id
         },
         'success': function(data,textStatus, xhr){
             if(xhr.status == 200) {
-                $('#deleteBtn').removeAttr("disabled"); 
+                $('#deleteBtn').removeAttr("disabled");
                 $('#calendar').fullCalendar( 'removeEvents',id );
                 $('#myModal').modal('hide') ;
                 }
-            }                 
+            }
         });
     };
     /*
-    * function to delete a task 
+    * function to delete a task
     currentTarget = the object clicked
     */
     $(".delete-task").on("click", function(e){
         var id = $(e.currentTarget).attr('data-event-id');
         deleteClick(id);
     });
-    
+
     $(".update-task").on("click",function(e)
-    { 
+    {
         var list = e.target.parentElement.children;
         $('#myModal').modal('show');
-        Event = new Object();
+        Event = {};
         Event.start = $(list[0])[0].innerHTML;
         Event.end = $(list[1])[0].innerHTML;
         Event.title = $(e.target.parentElement.parentElement.children)[1].innerHTML;
@@ -168,8 +168,8 @@
                     'success':function(data, textStatus, xhr){
                         //the response is in the data variable
 
-                        if(xhr.status  == 200 ){           
-                            alert('event update');             
+                        if(xhr.status  == 200 ){
+                            alert('event update');
                         }
                         else if(xhr.status == 500){//internal server error
                             alert("An error occured"+data.greeting);
@@ -177,7 +177,7 @@
                         }
                         else{
                             //if we got to this point we know that the controller
-                            //did not return a json_encoded array. We can assume that           
+                            //did not return a json_encoded array. We can assume that
                             //an unexpected PHP error occured
                             alert("An unexpeded error occured.");
 
@@ -186,7 +186,7 @@
                         }
                     }
                   });
-            
+
         if (!confirm("Are you sure about this change?")) {
             revertFunc();
         }
@@ -202,7 +202,7 @@
         $('#calendar_form_description').val(calEvent.description);
         $("#calendar_form_priority option[value="+calEvent.color+"]").attr('selected','selected');
         var pickedDate = new Date(calEvent.start);
-        if( calEvent.end == null )
+        if( calEvent.end === null )
         {
 
             $('#calendar_form_end_day').val(pickedDate.getDate());
@@ -210,13 +210,13 @@
             $('#fcalendar_form_end_year').val(pickedDate.getFullYear());
         }
         else
-        { 
+        {
             var Enddate = new Date(calEvent.end);
             $('#calendar_form_end_day').val(Enddate.getDate());
             $('#calendar_form_end_month').val(Enddate.getMonth()+1);
             $('#fcalendar_form_end_year').val(Enddate.getFullYear());
         }
-        
+
         $('#divTitle').html('Start date '+pickedDate.getDate()+'/'+(pickedDate.getMonth()+1)+'/'+pickedDate.getFullYear());
         $.ajaxSetup({
             'type': 'POST',
@@ -245,7 +245,7 @@
             agenda: 'h:mm{ - h:mm}',
             allDayText: 'all-day',
             allDaySlot: true,
-            eventDrop: function (event,dayDelta,minuteDelta,allDay,revertFunc) {    
+            eventDrop: function (event,dayDelta,minuteDelta,allDay,revertFunc) {
 
               dropEvent(event,dayDelta,minuteDelta);
 
@@ -271,12 +271,12 @@
                 'success':function(data, textStatus, xhr){
                     //the response is in the data variable
 
-                    if(xhr.status  == 200 ){           
-                        alert('event update');             
+                    if(xhr.status  == 200 ){
+                        alert('event update');
                     }
                     else{
                         //if we got to this point we know that the controller
-                        //did not return a json_encoded array. We can assume that           
+                        //did not return a json_encoded array. We can assume that
                         //an unexpected PHP error occured
                         alert("An unexpeded error occured.");
 

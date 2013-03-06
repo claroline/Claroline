@@ -7,7 +7,7 @@ Requirements
 - PHP >= 5.3.3
 - PHP extensions :
     - SQLite3 or PDO_SQLite (for the profiler)
-    - file_info (for mime type detection)
+    - fileinfo (for mime type detection)
     - Optionaly :
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
@@ -67,9 +67,9 @@ In order to run the test suite you must have [phpunit][7] installed on your syst
 Build / Static analysis
 -----------------------
 
-The *app/build/tools* directory gathers configuration files for various php tools (PHPMD,
-PHPCS, Ant, etc.). You can install and use them locally (see their respective documentation
-for usage) or visit our continuous integration server [here][8].
+The *app/build/tools* directory gathers configuration files for various analysis and build tools
+(PHPMD, PHPCS, JSHint, Ant, etc.). You can install and use them locally (see their respective
+documentation for usage) or visit our continuous integration server [here][8].
 
 Miscellaneous
 -------------

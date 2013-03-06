@@ -296,13 +296,12 @@ class ResourceQueryBuilder
 
         for ($i = 0, $count = count($roots); $i < $count; $i++) {
             if ($isFirst) {
-                $dqlPart .= " AND (ar.path like :roots{$i} ";
+                $dqlPart .= "(ar.path like :roots{$i} ";
                 $isFirst = false;
             } else {
                 $dqlPart .= " OR ar.path like :roots{$i} ";
             }
-
-            $this->preparedStatementValue[":roots{$i}"] = $roots[$i];
+            $this->preparedStatementValue[":roots{$i}"] = "{$roots[$i]}%";
         }
         if (strlen($dqlPart) > 0) {
             $dqlPart .= ')';
