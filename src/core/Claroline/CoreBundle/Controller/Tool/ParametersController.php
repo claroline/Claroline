@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Form\WorkspaceEditType;
 
 class ParametersController extends Controller
 {
@@ -670,6 +671,40 @@ class ParametersController extends Controller
         }
 
         return $filledArray;
+     }
+     
+     public function workspaceEditFormAction($workspaceId)
+     {
+         $em = $this->get('doctrine.orm.entity_manager');
+         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        
+         $form = $this->createForm(new WorkspaceEditType(), $workspace);
+         
+         $request = $this->getRequest();
+         
+         if($request->getMethod() === 'POST')
+         {
+             $form->bind($request);
+             if($form->isValid())
+             {
+                 $em->persist($workspace);
+                 $em->flush();
+                 
+                 return $this->redirect($this->generateUrl( 
+                    'claro_workspace_open_tool',
+                    array( 
+                        'workspaceId' => $workspaceId,
+                        'toolName' => 'parameters'
+                    ) 
+                ));
+             }
+         }
+         
+         return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:workspace_edit.html.twig',
+            array('form' => $form->createView(),
+                  'workspace' => $workspace)
+         );
      }
 }
 
