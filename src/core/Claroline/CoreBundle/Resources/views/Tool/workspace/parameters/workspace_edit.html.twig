@@ -1,0 +1,89 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_workspace_open_tool',
+               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+               {{ 'parameters'|trans({}, 'platform') }}
+            </a>
+        </li>
+         <span class="divider"> / </span>
+        <li>
+            <a href="#">{{ 'general'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+
+    <div>
+        {% if is_granted('DELETE', workspace ) %}
+        <a href="{{ path('claro_workspace_list') }}" class="workspace-delete-confirmation">
+            {{ 'workspace_delete'|trans({}, 'platform') }}
+        </a>
+        {% endif %}
+    </div>
+
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal" action="#" method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('.workspace-delete-confirmation').click(function () {
+            var href = $(this).attr('href');
+            var confirmMessage = "{% autoescape false %}{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}{% endautoescape %}";
+            var confirmTitle = "{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}";
+            var okButtonLabel = "{{ 'ok'|trans({}, 'platform') }}";
+            var cancelButtonLabel = "{{ 'cancel'|trans({}, 'platform') }}";
+            var closeButtonLabel = "×";
+            if (!$('#dataConfirmModal').length) {
+                $('body').append(
+                    '<div id="dataConfirmModal"' +
+                         'class="modal"' +
+                         'role="dialog"' +
+                         'aria-labelledby="dataConfirmLabel"' +
+                         'aria-hidden="true">' +
+                        '<div class="modal-header">' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
+                                closeButtonLabel +
+                            '</button>' +
+                            '<h3 id="dataConfirmLabel">' +
+                                confirmTitle +
+                            '</h3>' +
+                        '</div>' +
+                        '<div class="modal-body"></div>' +
+                        '<div class="modal-footer">' +
+                            '<button class="btn" data-dismiss="modal" aria-hidden="true">' +
+                                cancelButtonLabel +
+                            '</button>' +
+                            '<a class="btn btn-primary" id="dataConfirmOK">' +
+                                okButtonLabel +
+                            '</a>' +
+                        '</div>' +
+                    '</div>'
+                );
+            } 
+            $('#dataConfirmModal').find('.modal-body').text(confirmMessage);
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmOK').click(function(){
+                Claroline.Utilities.ajax({
+                    url: '{{ path('claro_workspace_delete', {'workspaceId': workspace.getId()}) }}',
+                    type: 'DELETE',
+                    async: false
+                });
+            });
+            $('#dataConfirmModal').modal({show:true});
+            return false;
+        });
+    </script>
+{% endblock %}
