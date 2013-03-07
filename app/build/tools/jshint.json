@@ -1,3 +1,13 @@
+/*
+ * JSHint configuration.
+ *
+ * See http://www.jshint.com/docs for options details.
+ *
+ * We follow the Douglas Crockford's coding style ("white" option) :
+ *
+ * See http://javascript.crockford.com/code.html
+ */
+
 {
     "browser": true,
     "globals": {
