@@ -1,5 +1,5 @@
 /* global sinon */
-
+alert('ok')
 (function () {
     'use strict';
     window.Claroline = this.Claroline || {};

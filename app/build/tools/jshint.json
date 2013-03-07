@@ -16,9 +16,15 @@
         "Claroline": false,
         "Routing": false,
         "Twig": false,
+        "Backbone": false,
         "alert": false,
         "console": false,
-        "confirm": false
+        "confirm": false,
+        "it": false,
+        "describe": false,
+        "expect": false,
+        "beforeEach": false,
+        "afterEach": false
     },
     "bitwise": true,
     "camelcase": true,
