@@ -32,19 +32,19 @@
         $('#item-'+item).css('font-weight', 'bold');
         var route =  $('#item-'+item).attr('href');
         window.parent.document.getElementById('right-frame').src = route;
-    }
+    };
 
     $('.activity-step').on('click', function(e){
         e.preventDefault();
         var itemId = e.target.id;
         loadRightFrame(itemId.replace('item-', ''));
-    })
+    });
 
     $('.activity-instruction').on('click', function(e){
         e.preventDefault();
         var itemId = e.target.id;
         loadRightFrame(itemId.replace('item-', ''));
-    })
+    });
 })();
 
 

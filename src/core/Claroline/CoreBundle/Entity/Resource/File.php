@@ -28,14 +28,6 @@ class File extends AbstractResource
     private $mimeType;
 
     /**
-     * Unmapped var used for the File form.
-     * This var will contain the Sf2 UploadedFile object.
-     *
-     * @var file
-     */
-    private $file;
-
-    /**
      * Returns the file size.
      *
      * @return integer
@@ -107,15 +99,5 @@ class File extends AbstractResource
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
-    }
-
-    public function setFile($file)
-    {
-        $this->file = $file;
-    }
-
-    public function getFile()
-    {
-        return $this->file;
     }
 }

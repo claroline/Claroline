@@ -13,8 +13,6 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the tools list for an array of role for a workspace.
      *
-     * @todo removing the array of role and do it for a single role instead ?
-     * rename findByWorkspaceAndRoles + param.
      * @param array $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      * @param boolean $isVisible is the tool visible

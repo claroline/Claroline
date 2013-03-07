@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Library\Resource\IconCreator;
@@ -86,7 +85,6 @@ class DatabaseWriter
 
         // code below is for "re-parenting" the resources which depend on one
         // of the resource types the plugin might have declared
-        // TODO : this should be covered by a test
         $resourceTypes = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByPlugin($plugin->getGeneratedId());
@@ -176,7 +174,7 @@ class DatabaseWriter
             );
             $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
             $resourceIcon->setRelativeUrl(
-                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$resource['icon']}"
+                "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
             );
         } else {
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());

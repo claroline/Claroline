@@ -1,0 +1,7 @@
+services:
+    claroline.validator.validator_to:
+         class: Claroline\CoreBundle\Validator\Constraints\SendToUsernamesValidator
+         calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
+         tags:
+             - { name: validator.constraint_validator, alias: send_to_username_validator}

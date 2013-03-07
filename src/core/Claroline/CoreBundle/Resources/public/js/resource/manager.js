@@ -1,6 +1,7 @@
 (function () {
     this.Claroline = this.Claroline || {};
     var manager = this.Claroline.ResourceManager = {};
+    var stackedRequests = 0;
 
     manager.Views = {
         Master: Backbone.View.extend({
@@ -61,6 +62,29 @@
         Actions: Backbone.View.extend({
             className: 'navbar navbar-static-top',
             events: {
+                'click button.filter': function () {
+                    var searchParameters = {};
+                    var name = this.$('.name').val().trim();
+                    var dateFrom = $('input.date-from').first().val();
+                    var dateTo = $('input.date-to').first().val();
+                    var types = $('select.resource-types').val();
+
+                    //if(name!=undefined){name=""}
+                    if(dateFrom==undefined){dateFrom=""}
+                    if(dateTo==undefined){dateTo=""}
+                    if(types==undefined){types=""}
+
+                    name != '' && (searchParameters.name = name);
+                    dateFrom != '' && (searchParameters.dateFrom = dateFrom + ' 00:00:00');
+                    dateTo != '' && (searchParameters.dateTo = dateTo + ' 23:59:59');
+                    types != null && (searchParameters.types = types);
+                    this.currentDirectory.id != 0 && (searchParameters.roots = [this.currentDirectory.path]);
+                    this.dispatcher.trigger('filter', {
+                        isPickerMode: this.parameters.isPickerMode,
+                        directoryId: this.currentDirectory.id,
+                        parameters: searchParameters
+                    });
+                },
                 'click ul.create li a': function (event) {
                     event.preventDefault();
                     this.dispatcher.trigger('display-form', {
@@ -94,7 +118,7 @@
                 'click a.open-picker': function () {
                     this.dispatcher.trigger('picker', {action: 'open'});
                 },
-                'click a.search-panel': function () {
+                'click button.config-search-panel': function () {
                     if (!this.filters) {
                         this.filters = new manager.Views.Filters(this.parameters, this.dispatcher, this.currentDirectory);
                         this.filters.render(this.resourceTypes);
@@ -190,25 +214,8 @@
             }
         }),
         Filters: Backbone.View.extend({
-            className: 'filters form-horizontal',
+            className: 'filters container-fluid',
             events: {
-                'click button.filter': function () {
-                    var searchParameters = {};
-                    var name = this.$('.name').val().trim();
-                    var dateFrom = this.$('.date-from').first().val();
-                    var dateTo = this.$('.date-to').first().val();
-                    var types = this.$('.resource-types').val();
-                    name != '' && (searchParameters.name = name);
-                    dateFrom != '' && (searchParameters.dateFrom = dateFrom + ' 00:00:00');
-                    dateTo != '' && (searchParameters.dateTo = dateTo + ' 23:59:59');
-                    types != null && (searchParameters.types = types);
-                    this.currentDirectory.id != 0 && (searchParameters.roots = [this.currentDirectory.path]);
-                    this.dispatcher.trigger('filter', {
-                        isPickerMode: this.parameters.isPickerMode,
-                        directoryId: this.currentDirectory.id,
-                        parameters: searchParameters
-                    });
-                },
                 'click button.close-panel': function () {
                     this.toggle();
                 },
@@ -231,13 +238,9 @@
             },
             toggle: function () {
                 $(this.el).css('display', !this.isVisible ? 'block' : 'none');
-                this.isVisible = !this.isVisible;
-                !this.parameters.isPickerMode && this.dispatcher.trigger('filter-view-change', {
-                    isVisible: this.isVisible
-                });
+                this.isVisible = !this.isVisible; 
             },
             render: function () {
-                !this.parameters.isPickerMode && this.$el.addClass('span3');
                 $(this.el).html(Twig.render(resource_filters_template, this.parameters));
             }
         }),
@@ -284,14 +287,6 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.directoryId = parameters.directoryId;
-                !this.parameters.isPickerMode && this.$el.addClass('span12');
-                this.dispatcher.on('filter-view-change', function (event) {
-                    if (!this.parameters.isPickerMode) {
-                        event.isVisible ?
-                            this.$el.removeClass('span12') && this.$el.addClass('span9') :
-                            this.$el.removeClass('span9') && this.$el.addClass('span12');
-                    }
-                }, this);
             },
             addThumbnails: function (resources, successHandler) {
                 _.each(resources, function (resource) {
@@ -516,7 +511,17 @@
             }, this);
             $.ajaxSetup({
                 headers: {'X_Requested_With': 'XMLHttpRequest'},
-                context: this
+                context: this,
+                beforeSend: function() {
+                    stackedRequests++;
+                    $('.please-wait').show();
+                },
+                complete: function() {
+                    stackedRequests--;
+                    if (stackedRequests === 0) {
+                        $('.please-wait').hide();
+                    }
+                }
             });
 
             if (!parameters.isPickerOnly) {
@@ -580,7 +585,7 @@
                 success: function (data, textStatus, jqXHR) {
                     jqXHR.getResponseHeader('Content-Type') === 'application/json' ?
                         this.views['main'].subViews.resources.addThumbnails(data, this.views['form'].close()) :
-                        this.views['form'].render(data, parentDirectoryId);
+                        this.views['form'].render(data, parentDirectoryId, 'create');
                 }
             });
         },
@@ -722,7 +727,7 @@
             console.debug(thrownError);
             if (jqXHR.status !== 0 && jqXHR.readyState !== 0) {
                 alert(jqXHR.responseText);
-            } 
+            }
         });
     };
 
@@ -734,4 +739,6 @@
     manager.picker = function (action) {
         manager.Controller.picker(action == 'open' ? action : 'close');
     }
+
+
 })();

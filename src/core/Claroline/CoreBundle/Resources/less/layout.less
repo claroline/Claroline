@@ -15,7 +15,7 @@ html, body {
 }
 
 #grid {
-    overflow: auto;
+    /*overflow: auto;*/
     padding-bottom: @navbarHeight; /* Reserves a space for the footer */
 }
 
@@ -152,36 +152,83 @@ footer {
     margin: 0;
 }
 
-.resource-manager .filters,
+.section-content .navbar
+{
+    padding:0;
+    margin:0;    
+}
+
+.section-content .navbar .navbar-inner
+{
+    padding-left:5px;
+    padding-right:5px;
+    margin:0;
+}
+
+.section-content .navbar .navbar-inner a
+{
+    cursor:pointer;
+}
+
+.section-content .navbar .input-append
+{
+    margin:5px 0 0 0;
+}
+
+.section-content .navbar .navbar-inner a.disabled .caret
+{
+    visibility:hidden;
+}
+
+.resource-manager .filters .row-fluid
+{
+    position:relative;
+}
+
+.filters-arrow-border
+{
+    border-color: transparent transparent @grayLight transparent;
+    border-style: solid;
+    border-width: 10px;
+    height:0;
+    width:0;
+    position:absolute;
+    top:-24px;
+    right:7px;
+}
+
+.filters-arrow
+{
+    border-color: transparent transparent @white transparent;
+    border-style: solid;
+    border-width: 10px;
+    height:0;
+    width:0;
+    position:absolute;
+    top:-23px;
+    right:7px;
+}
+
+.resource-manager .filters
+{
+    background:@white;
+    border:1px solid @grayLight;
+    .box-shadow(0 1px 3px rgba(0,0,0,.25));
+    margin:5px;
+    padding:5px;
+    .border-radius(5px);
+}
+
+.resource-manager .filters label
+{
+    float:left;
+    padding:0 5px 0 0;
+    display:block;
+}
+
 .resource-manager .resources {
-    margin: 16px 0 80px 0 !important;
-}
-
-.resource-manager .filters {
-    padding-top: 18px;
-    border: 1px solid @widgetBorder;
-    border-radius: 5px;
-}
-
-.resource-manager .filters .form-actions {
-    margin-bottom: 0;
-}
-
-.resource-manager .filters .control-group label {
-
-}
-.resource-manager .filters .controls {
-    margin-left: 76px;
-}
-
-.resource-manager .filters .control-group select[multiple=multiple] {
+    margin: 15px 0 15px 0 !important;
     
-}
-
-.resource-manager .filters .form-actions {
-    margin: 0;
-    padding: 16px;
-    text-align: center;
 }
 
 .resource-thumbnail {
@@ -277,6 +324,21 @@ footer {
 .icon-new-msg {
     color: red !important;
 }
+
+.please-wait {
+    position: absolute;
+    z-index: 1031;
+    top: 10px;
+    display: none;
+    margin-left: 50%;
+}
+
+.loading {
+    background: transparent url("../../../images/loading.gif") no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
 
 /************/
 /* MESSAGES */

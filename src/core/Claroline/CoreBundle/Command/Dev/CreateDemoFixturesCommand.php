@@ -8,9 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadDemoFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
-/**
- * Creates an group, optionaly with a specific role (default to simple group).
- */
 class CreateDemoFixturesCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -21,12 +18,13 @@ class CreateDemoFixturesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Loading demo fixtures');
+        $output->writeln('Loading demo fixtures...');
         $fixture = new LoadDemoFixture();
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);
         $fixture->setContainer($this->getContainer());
         $fixture->load($em);
+        $output->writeln('Done');
     }
 }

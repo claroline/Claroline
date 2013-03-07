@@ -73,11 +73,12 @@ class RoleRepository extends NestedTreeRepository
                 }
             }
         }
+
         return null;
     }
 
     /**
-     * Returns the unique role of a user a workspace.
+     * Returns the unique role of a user in a workspace.
      *
      * @param User              $user The subject of the role
      * @param AbstractWorkspace $workspace  The workspace the role should be bound to
@@ -96,6 +97,6 @@ class RoleRepository extends NestedTreeRepository
 
         $query = $this->_em->createQuery($dql);
 
-        return $query->getSingleResult();
+        return $query->getOneOrNullResult();
     }
 }
