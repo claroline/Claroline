@@ -25,10 +25,10 @@
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
             },
-            render: function (resources, path, creatableTypes, isSearchMode) {
+            render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
                 this.subViews.breadcrumbs.render(path);
-                this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode);
+                this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
                 this.subViews.areAppended || this.wrapper.append(
                     this.subViews.breadcrumbs.el,
@@ -62,23 +62,11 @@
         Actions: Backbone.View.extend({
             className: 'navbar navbar-static-top',
             events: {
-                'click button.filter': function () {
-                    var searchParameters = {};
-                    var name = this.$('.name').val().trim();
-                    var dateFrom = this.$('.date-from').first().val();
-                    var dateTo = this.$('.date-to').first().val();
-                    var types = this.$('.resource-types').val();
-                    name != '' && (searchParameters.name = name);
-                    dateFrom != '' && (searchParameters.dateFrom = dateFrom + ' 00:00:00');
-                    dateTo != '' && (searchParameters.dateTo = dateTo + ' 23:59:59');
-                    types != null && (searchParameters.types = types);
-                    this.currentDirectory.id != 0 && (searchParameters.roots = [this.currentDirectory.path]);
-                    this.dispatcher.trigger('filter', {
-                        isPickerMode: this.parameters.isPickerMode,
-                        directoryId: this.currentDirectory.id,
-                        parameters: searchParameters
-                    });
+                'keypress input.name': function (e) {
+                    if (e.keyCode != 13) return;
+                    this.filter();
                 },
+                'click button.filter': 'filter',
                 'click ul.create li a': function (event) {
                     event.preventDefault();
                     this.dispatcher.trigger('display-form', {
@@ -138,6 +126,28 @@
                     this.dispatcher.trigger('picker', {action: 'close'});
                 }
             },
+            filter: function() {
+                var searchParameters = {};
+                var name = this.$('.name').val().trim();
+                var dateFrom = $('input.date-from').first().val();
+                var dateTo = $('input.date-to').first().val();
+                var types = $('select.resource-types').val();
+
+                if (dateFrom === undefined) { dateFrom=""; }
+                if (dateTo === undefined) { dateTo=""; }
+                if (types === undefined) { types=""; }
+
+                name != '' && (searchParameters.name = name);
+                dateFrom != '' && (searchParameters.dateFrom = dateFrom + ' 00:00:00');
+                dateTo != '' && (searchParameters.dateTo = dateTo + ' 23:59:59');
+                types != null && (searchParameters.types = types);
+                this.currentDirectory.id != 0 && (searchParameters.roots = [this.currentDirectory.path]);
+                this.dispatcher.trigger('filter', {
+                    isPickerMode: this.parameters.isPickerMode,
+                    directoryId: this.currentDirectory.id,
+                    parameters: searchParameters
+                });
+            },
             initialize: function (parameters, dispatcher) {
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
@@ -192,7 +202,7 @@
                 this.isCutMode = isCutMode;
                 this.setButtonEnabledState(this.$('a.paste'), isReadyToPaste && !this.isSearchMode);
             },
-            render: function (directory, creatableTypes, isSearchMode) {
+            render: function (directory, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = directory;
                 isSearchMode && !this.isSearchMode
                     && (this.checkedResources.resources = {})
@@ -200,6 +210,7 @@
                 this.isSearchMode = isSearchMode;
                 this.filters && (this.filters.currentDirectory = directory);
                 var parameters = _.extend({}, this.parameters);
+                parameters.searchedName = searchParameters ? searchParameters.name : null;
                 parameters.creatableTypes = creatableTypes;
                 parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode&& directory.id != 0;
                 parameters.isCreateAllowed = parameters.isAddAllowed =
@@ -232,13 +243,9 @@
             },
             toggle: function () {
                 $(this.el).css('display', !this.isVisible ? 'block' : 'none');
-                this.isVisible = !this.isVisible;
-                !this.parameters.isPickerMode && this.dispatcher.trigger('filter-view-change', {
-                    isVisible: this.isVisible
-                });
+                this.isVisible = !this.isVisible; 
             },
             render: function () {
-                //!this.parameters.isPickerMode && this.$el.addClass('span3');
                 $(this.el).html(Twig.render(resource_filters_template, this.parameters));
             }
         }),
@@ -285,14 +292,6 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.directoryId = parameters.directoryId;
-                /*!this.parameters.isPickerMode && this.$el.addClass('span12');
-                this.dispatcher.on('filter-view-change', function (event) {
-                    if (!this.parameters.isPickerMode) {
-                        event.isVisible ?
-                            this.$el.removeClass('span12') && this.$el.addClass('span9') :
-                            this.$el.removeClass('span9') && this.$el.addClass('span12');
-                    }
-                }, this);*/
             },
             addThumbnails: function (resources, successHandler) {
                 _.each(resources, function (resource) {
@@ -546,7 +545,7 @@
                 success: function (data) {
                     isSearchMode && (data.creatableTypes = {});
                     (this.parameters.directoryId == 0 || view == 'picker') && data.path.unshift({id: 0});
-                    this.views[view].render(data.resources, data.path, data.creatableTypes, isSearchMode);
+                    this.views[view].render(data.resources, data.path, data.creatableTypes, isSearchMode, searchParameters);
                     this.views[view].isAppended ||
                         this.parameters.parentElement.append(this.views[view].el)
                         && (this.views[view].isAppended = true);
