@@ -13,11 +13,11 @@
         );
 
     $.ajaxSetup({
-        beforeSend: function() {
+        beforeSend: function () {
             stackedRequests++;
             $('.please-wait').show();
         },
-        complete: function() {
+        complete: function () {
             stackedRequests--;
             if (stackedRequests === 0) {
                 $('.please-wait').hide();
@@ -31,7 +31,7 @@
         Claroline.Utilities.ajax({
             type: 'GET',
             url: route,
-            success: function(messages) {
+            success: function (messages) {
                 $('#message-table-body').append(messages);
                 loading = false;
                 $('#loading').hide();
@@ -44,8 +44,8 @@
                 }
 
             },
-            complete: function(){
-                if($(window).height() >= $(document).height() && stop === false) {
+            complete: function () {
+                if ($(window).height() >= $(document).height() && stop === false) {
                     lazyloadUserMessage(route);
                 }
             }
@@ -53,7 +53,7 @@
     }
 
     function initEvents() {
-        $('.chk-delete').live('change', function() {
+        $('.chk-delete').live('change', function () {
             if ($('.chk-delete:checked').length) {
                 $('.delete-msg').removeAttr('disabled');
             } else {
@@ -61,8 +61,8 @@
             }
         });
 
-        $(window).scroll(function() {
-            if (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) &&
+        $(window).scroll(function () {
+            if (($(window).scrollTop() + 100 >= $(document).height() - $(window).height()) &&
                 loading === false && stop === false) {
                 if (mode === 0) {
                     lazyloadUserMessage(standardRoute);
@@ -72,7 +72,7 @@
             }
         });
 
-        $('#search-msg').click(function() {
+        $('#search-msg').click(function () {
             $('#message-table-body').empty();
             stop = false;
             if (document.getElementById('search-msg-txt').value !== '') {
@@ -84,41 +84,41 @@
             }
         });
 
-        $('.delete-msg').click(function(){
+        $('.delete-msg').click(function () {
             $('#validation-box').modal('show');
             $('#validation-box-body').html('delete');
         });
 
-        $('.mark-as-read').live('click', function(e) {
+        $('.mark-as-read').live('click', function (e) {
             e.preventDefault();
             Claroline.Utilities.ajax({
                 type: 'GET',
                 url: $(e.currentTarget).attr('href'),
-                success: function() {
+                success: function () {
                     $(e.target).css('color', 'green');
                     $(e.target).attr('class', 'icon-ok-sign');
                 }
             });
         });
 
-        $('#modal-valid-button').click(function(){
+        $('#modal-valid-button').click(function () {
             var parameters = {},
                 i = 0,
                 array = [],
                 route =  Routing.generate('claro_message_delete_to');
 
-            $('.chk-delete:checked').each(function(index, element){
+            $('.chk-delete:checked').each(function (index, element) {
                 array[i] = element.value;
                 i++;
             });
             parameters.ids = array;
 
-            route+= '?'+$.param(parameters);
+            route += '?' + $.param(parameters);
             $('#deleting').show();
             Claroline.Utilities.ajax({
                 url: route,
-                success: function(){
-                    $('.chk-delete:checked').each(function(index, element) {
+                success: function () {
+                    $('.chk-delete:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
                     $('#validation-box').modal('hide');
@@ -130,13 +130,13 @@
             });
         });
 
-        $('#modal-cancel-button').click(function(){
+        $('#modal-cancel-button').click(function () {
             $('#validation-box').modal('hide');
             $('#validation-box-body').empty();
         });
 
-        $('#allChecked').click(function(){
-            if ($('#allChecked').is(':checked')){
+        $('#allChecked').click(function () {
+            if ($('#allChecked').is(':checked')) {
                 $(' INPUT[@class=' + 'chk-delete' + '][type="checkbox"]').attr('checked', true);
                 $('.delete-msg').removeAttr('disabled');
             }
