@@ -54,7 +54,7 @@ find_workspaces: 'Tous les espaces'
 first_name: Prénom
 form_role: Rôle
 from: Depuis
-general: General
+general: Général
 group: Groupe
 group_form_name: Nom
 group_form_ownedRoles: Rôles
@@ -222,6 +222,11 @@ workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace_administration: Administration
+workspace_delete: 'Supprimer l''espace d''activités'
+workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
+workspace_delete_confirm_title: 'Confirmation de suppression'
+workspace_edit_form_code: Code
+workspace_edit_form_name: Nom
 workspace_form_code: Code
 workspace_form_name: Nom
 workspace_form_type: Type
