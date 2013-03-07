@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Widget\Listener;
+namespace  Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;

@@ -8,7 +8,7 @@
 {% block section_content %}
     <button class="btn btn-secondary delete-msg" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
     <button class="btn btn-secondary pull-right" id="search-msg">{{ 'search'|trans({}, 'platform') }}</button>
-    <input id="search-msg-txt" type="text" class="pull-right  search-query input-medium"/>
+    <input id="search-msg-txt" type="text" class="pull-right  search-query input-medium"/> {{'select all'|trans({}, 'platform')}} <input type="checkbox" name="all" id="allChecked"/>
     <table class="table table-striped table-bordered table-condensed" id="messages-table">
         <thead>
             <tr>
@@ -16,18 +16,21 @@
                 <th>{{ 'date'|trans({}, 'platform') }}</th>
                 <th>{{ 'from'|trans({}, 'platform') }}</th>
                 <th>{{ 'object'|trans({}, 'platform') }}</th>
-                <th>{{ 'delete'|trans({}, 'platform') }}</th>
+                <th>{{ 'delete'|trans({}, 'platform') }} </th>
             </tr>
         </thead>
         <tbody id="message-table-body">
         </tbody>
     </table>
+    <div id="loading" class="loading"></div>
     <button class="btn btn-secondary delete-msg" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
     <!-------------- modal box ------------------------------------------------>
     <div id="validation-box" class="modal hide fade">
         <div class="modal-header">
         </div>
-        <div id="validation-box-body" class="modal-body" id="modal-body">
+        <div class="modal-body" id="modal-body">
+            <div id="validation-box-body"></div>
+            <div id="deleting" class="loading"></div>
         </div>
         <div class="modal-footer">
             <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>

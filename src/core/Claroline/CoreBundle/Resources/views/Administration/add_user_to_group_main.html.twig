@@ -36,8 +36,23 @@
         <tbody id="user-table-body">
         </tbody>
     </table>
+    <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="loading" class="loading"/><br/>
     <p>
         <button class="btn btn-secondary add-users-button">{{ 'add'|trans({}, 'platform') }}</button>
     </p>
     <div id="twig-attributes" data-group-id="{{ group.getId() }}"></div>
+
+     <!-------------- modal box ------------------------------------------------>
+    <div id="validation-box" class="modal hide fade">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body" id="modal-body">
+            <div id="validation-box-body"></div>
+            <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" id="adding" class="loading"/><br/>
+        </div>
+        <div class="modal-footer">
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+        </div>
+    </div>
 {% endblock %}

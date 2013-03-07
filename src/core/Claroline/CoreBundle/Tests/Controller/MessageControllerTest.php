@@ -112,7 +112,8 @@ class MessageControllerTest extends FunctionalTestCase
         $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getFixtureReference('user/user'));
         $crawler = $this->client->request('GET', '/message/list/received/0');
-        $this->assertEquals(1, count($crawler->filter('.icon-warning-sign')));
+        // var_dump($this->client->getResponse()->getContent());
+        $this->assertEquals(1, count($crawler->filter('.mark-as-read')));
         $messages = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')

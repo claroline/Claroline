@@ -115,7 +115,6 @@ class GroupController extends Controller
      *
      * @return Response
      */
-    //TODO: change groupsId into ids
     public function removeGroupsAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -126,9 +125,9 @@ class GroupController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
-        if (isset($params['groupIds'])) {
-            $this->checkRemoveManagerRoleIsValid($params['groupIds'], $workspace);
-            foreach ($params['groupIds'] as $groupId) {
+        if (isset($params['ids'])) {
+            $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);
+            foreach ($params['ids'] as $groupId) {
                 $group = $em->find('ClarolineCoreBundle:Group', $groupId);
 
                 if (null != $group) {
@@ -206,7 +205,6 @@ class GroupController extends Controller
      *
      * @return Response
      */
-    //TODO: change groupsId into ids
     public function addGroupsAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
@@ -216,8 +214,8 @@ class GroupController extends Controller
         $this->checkRegistration($workspace);
         $groups = array();
 
-        if (isset($params['groupIds'])) {
-            foreach ($params['groupIds'] as $groupId) {
+        if (isset($params['ids'])) {
+            foreach ($params['ids'] as $groupId) {
                 $group = $em->find('ClarolineCoreBundle:Group', $groupId);
                 $groups[] = $group;
                 $group->addRole(

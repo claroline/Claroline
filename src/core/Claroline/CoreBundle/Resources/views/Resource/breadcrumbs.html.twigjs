@@ -3,7 +3,7 @@
 {% for resource in resources %}
     <a href="#" data-resource-id="{{ resource.id }}">
         {% if loop.first %}
-            <i class="icon-home"></i>
+            <i class="icon-home"></i> {{ 'home'|trans({}, 'platform') }}
         {% else %}
             {{ resource.name }}
         {% endif %}

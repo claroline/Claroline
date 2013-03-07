@@ -9,6 +9,7 @@
     var mode = 0; //0 = standard || 1 = search
 
     $('.delete-users-button').attr('disabled', 'disabled');
+    $('.loading').hide();
 
     $('.chk-delete-user').live('change', function(){
         if ($('.chk-delete-user:checked').length){
@@ -16,14 +17,14 @@
         } else {
            $('.delete-users-button').attr('disabled', 'disabled');
         }
-    })
+    });
 
     var standardRoute = function(){
         return Routing.generate('claro_workspace_registered_users_paginated', {
                 'workspaceId':twigWorkspaceId,
                 'offset': $('.row-user').length
             });
-    }
+    };
 
     var searchRoute = function(){
         return Routing.generate('claro_workspace_search_registered_users', {
@@ -31,14 +32,13 @@
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
             });
-    }
+    };
 
     lazyloadUsers(standardRoute);
-    $('#user-loading').hide();
 
     $(window).scroll(function(){
         if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) && loading === false && stop === false){
-            if(mode == 0){
+            if(mode === 0){
                 lazyloadUsers(standardRoute);
             } else {
                 lazyloadUsers(searchRoute);
@@ -53,13 +53,13 @@
         );
 
         window.location.href = route;
-    })
+    });
 
     $('#search-user-button').click(function(){
         $('.chk-delete-user').remove();
         $('#user-table-body').empty();
         stop = false;
-        if (document.getElementById('search-user-txt').value != ''){
+        if (document.getElementById('search-user-txt').value !== ''){
             mode = 1;
             lazyloadUsers(searchRoute);
         } else {
@@ -75,15 +75,16 @@
 
     $('#modal-valid-button').click(function(){
         var parameters = {};
-        var array = new Array();
+        var array = [];
         var i = 0;
         $('.chk-delete-user:checked').each(function(index, element){
             array[i] = element.value;
             i++;
         });
-        parameters.userIds = array;
+        parameters.ids = array;
         var route = Routing.generate('claro_workspace_delete_users', {'workspaceId': twigWorkspaceId});
         route+='?'+$.param(parameters);
+        $('#deleting').show();
         Claroline.Utilities.ajax({
             url: route,
             success: function(){
@@ -93,6 +94,7 @@
                 $('#validation-box').modal('hide');
                 $('#validation-box-body').empty();
                 $('.delete-users-button').attr('disabled', 'disabled');
+                $('#deleting').hide();
             },
             type: 'DELETE'
         });
@@ -105,23 +107,24 @@
 
     function lazyloadUsers(route) {
         loading = true;
-        $('#user-loading').show();
+        $('#loading').show();
         Claroline.Utilities.ajax({
             url: route(),
             type: 'GET',
             success: function(users){
+                $('#loading').hide();
                 $('#user-table-body').append(Twig.render(user_list, {'users': users}));
                 loading = false;
                 $('#user-loading').hide();
-                if(users.length == 0) {
+                if(users.length === 0) {
                     stop = true;
                 }
             },
             complete: function(){
-                if($(window).height() >= $(document).height() && stop == false){
-                    lazyloadUsers(route)
+                if($(window).height() >= $(document).height() && stop === false){
+                    lazyloadUsers(route);
                 }
             }
         });
     }
-})()
+})();

@@ -1,10 +1,7 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Library\Installation;
 
-/**
- * @todo : this is not an entity -> to be moved to, e.g., library
- */
 class Install
 {
     private $dbHost;

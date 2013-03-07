@@ -199,18 +199,12 @@ class ResourceRights
         $this->resourceTypes = new ArrayCollection($resourceTypes);
     }
 
-    /**
-     * @todo rename to "addCreatableResourceType"
-     */
-    public function addResourceType(ResourceType $resourceType)
+    public function addCreatableResourceType(ResourceType $resourceType)
     {
         $this->resourceTypes->add($resourceType);
     }
 
-    /**
-     * @todo rename to "removeCreatableResourceType"
-     */
-    public function removeResourceType(ResourceType $resourceType)
+    public function removeCreatableResourceType(ResourceType $resourceType)
     {
         $this->resourceTypes->removeElement($resourceType);
     }

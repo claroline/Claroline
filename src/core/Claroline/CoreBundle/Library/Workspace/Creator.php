@@ -239,7 +239,6 @@ class Creator
         }
 
         $toolsPermissions = $config->getToolsPermissions();
-
         foreach ($toolsPermissions as $name => $roles) {
             foreach ($roles as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {

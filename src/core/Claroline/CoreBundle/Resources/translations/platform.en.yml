@@ -65,6 +65,7 @@ home: Home
 id: Id
 informations: Informations
 instructions: Instructions
+invalid_{{ username }}: The user {{ username }} does not exist.
 last_name: 'Last name'
 link: Link
 list_groups: 'List groups'
@@ -127,6 +128,7 @@ platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
 platform_plugins: 'Platform plugins'
 platform_widgets: 'Platform widgets'
+please_wait: 'Please wait...'
 private: Privée
 profile_form_administrativeCode: 'Administrative code'
 profile_form_firstName: 'First name'
@@ -179,6 +181,7 @@ roles: Roles
 save: Save
 search: Search
 see: Voir
+select all: Select all
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 settings: Settings
@@ -229,6 +232,7 @@ workspace_edit_form_code: Code
 workspace_edit_form_name: Name
 workspace_form_code: Code
 workspace_form_name: Name
+workspace_form_template: Template
 workspace_form_type: Type
 workspace_resource: Resources
 workspace_tools: Tools

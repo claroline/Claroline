@@ -38,7 +38,7 @@ class FileListener extends ContainerAware
 
         if ($form->isValid()) {
             $file = $form->getData();
-            $tmpFile = $file->getFile();
+            $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
@@ -66,7 +66,6 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    // TODO : add error handling (exceptions)
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');

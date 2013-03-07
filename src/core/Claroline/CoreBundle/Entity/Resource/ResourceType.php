@@ -65,23 +65,6 @@ class ResourceType
     protected $plugin;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\MetaType",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinTable(
-     *     name="claro_meta_type_resource_type",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="meta_type_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $metaTypes;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     inversedBy="children"
@@ -122,7 +105,6 @@ class ResourceType
     public function __construct()
     {
         $this->abstractResources = new ArrayCollection();
-        $this->metaTypes = new ArrayCollection();
         $this->customActions = new ArrayCollection();
     }
 
@@ -194,16 +176,6 @@ class ResourceType
     public function setClass($class)
     {
         $this->class = $class;
-    }
-
-    public function addMetaType($metaType)
-    {
-        $this->metaTypes->add($metaType);
-    }
-
-    public function removeMetaType($metaType)
-    {
-        $this->metaTypes->removeElement($metaType);
     }
 
     public function getMetaTypes()

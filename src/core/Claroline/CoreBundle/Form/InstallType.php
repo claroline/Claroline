@@ -51,7 +51,7 @@ class InstallType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Install',
+            'data_class' => 'Claroline\CoreBundle\Library\Installation\Install',
             'translation_domain' => 'platform'
         );
     }

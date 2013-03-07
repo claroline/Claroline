@@ -65,6 +65,7 @@ home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
+The username {{ username }} does not exist.: L'utilisateur {{ username }} n'existe pas.
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'
@@ -127,6 +128,7 @@ platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème
 platform_plugins: 'Plugins de la plateforme'
 platform_widgets: 'Widgets de la plateforme'
+please_wait: 'Veuillez patienter...'
 private: Privée
 profile_form_administrativeCode: 'Code administratif'
 profile_form_firstName: Prénom
@@ -179,6 +181,7 @@ roles: Rôles
 save: Sauvegarder
 search: Rechercher
 see: Voir
+select all: 'Tout sélectionner'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 settings: Paramètres
@@ -229,6 +232,7 @@ workspace_edit_form_code: Code
 workspace_edit_form_name: Nom
 workspace_form_code: Code
 workspace_form_name: Nom
+workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_resource: Ressources
 workspace_tools: Outils
