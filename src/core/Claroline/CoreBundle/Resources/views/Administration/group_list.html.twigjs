@@ -1,4 +1,4 @@
-{% twig_js name="group_list" %}
+{% twig_js name="groupList" %}
 
 {% for group in groups %}
 <tr class="row-group" data-group-id={{ group.id }}>

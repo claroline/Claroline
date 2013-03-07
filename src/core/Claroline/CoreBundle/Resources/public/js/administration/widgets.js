@@ -1,7 +1,9 @@
 (function () {
+    'use strict';
+
     var stackedRequests = 0;
 
-    $('.chk-admin-lock').on('change', function(e){
+    $('.chk-admin-lock').on('change', function (e) {
         var id = e.currentTarget.parentNode.parentNode.dataset.id;
         var route = Routing.generate('claro_admin_invert_widgetconfig_lock', {'displayConfigId': id});
         stackedRequests++;
@@ -9,7 +11,7 @@
         Claroline.Utilities.ajax({
             url: route,
             type: 'POST',
-            success: function(){
+            success: function () {
                 stackedRequests--;
                 if (stackedRequests === 0) {
                     $('.please-wait').hide();
@@ -18,7 +20,7 @@
         });
     });
 
-    $('.chk-config-visible').on('change', function(e){
+    $('.chk-config-visible').on('change', function (e) {
         var id = e.currentTarget.parentNode.parentNode.dataset.id;
         var route = Routing.generate('claro_admin_invert_widgetconfig_visible', {'displayConfigId': id});
         stackedRequests++;
@@ -26,7 +28,7 @@
         Claroline.Utilities.ajax({
             url: route,
             type: 'POST',
-            success: function(){
+            success: function () {
                 stackedRequests--;
                 if (stackedRequests === 0) {
                     $('.please-wait').hide();

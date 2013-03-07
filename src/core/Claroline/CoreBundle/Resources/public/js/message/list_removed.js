@@ -13,11 +13,11 @@
         );
 
     $.ajaxSetup({
-        beforeSend: function() {
+        beforeSend: function () {
             stackedRequests++;
             $('.please-wait').show();
         },
-        complete: function() {
+        complete: function () {
             stackedRequests--;
             if (stackedRequests === 0) {
                 $('.please-wait').hide();
@@ -25,13 +25,13 @@
         }
     });
 
-    function lazyloadUserMessage(route){
+    function lazyloadUserMessage(route) {
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
             type: 'GET',
             url: route,
-            success: function(messages){
+            success: function (messages) {
                 $('#message-table-body').append(messages);
                 loading = false;
                 $('#loading').hide();
@@ -43,8 +43,8 @@
                     $('.please-wait').hide();
                 }
             },
-            complete: function(){
-                if($(window).height() >= $(document).height() && stop === false){
+            complete: function () {
+                if ($(window).height() >= $(document).height() && stop === false) {
                     lazyloadUserMessage(route);
                 }
             }
@@ -52,18 +52,18 @@
     }
 
     function initEvents() {
-        $('.chk-delete').live('change', function(){
-            if ($('.chk-delete:checked').length){
+        $('.chk-delete').live('change', function () {
+            if ($('.chk-delete:checked').length) {
                 $('.delete-msg').removeAttr('disabled');
             } else {
                 $('.delete-msg').attr('disabled', 'disabled');
             }
         });
 
-        $(window).scroll(function(){
-            if  (($(window).scrollTop()+100 >= $(document).height() - $(window).height()) &&
+        $(window).scroll(function () {
+            if  (($(window).scrollTop() + 100 >= $(document).height() - $(window).height()) &&
                 loading === false && stop === false) {
-                if(mode === 0){
+                if (mode === 0) {
                     lazyloadUserMessage(standardRoute);
                 } else {
                     lazyloadUserMessage(searchRoute);
@@ -71,10 +71,10 @@
             }
         });
 
-        $('#search-msg').click(function(){
+        $('#search-msg').click(function () {
             $('#message-table-body').empty();
             stop = false;
-            if (document.getElementById('search-msg-txt').value !== ''){
+            if (document.getElementById('search-msg-txt').value !== '') {
                 mode = 1;
                 lazyloadUserMessage(searchRoute);
             } else {
@@ -83,27 +83,27 @@
             }
         });
 
-        $('.delete-msg').click(function(){
+        $('.delete-msg').click(function () {
             $('#validation-box').modal('show');
             $('#validation-box-body').html('delete');
         });
 
-        $('#modal-valid-button').click(function(){
+        $('#modal-valid-button').click(function () {
             var parameters = {};
             var i = 0;
             var array = [];
-            $('.chk-delete:checked').each(function(index, element){
+            $('.chk-delete:checked').each(function (index, element) {
                 array[i] = element.value;
                 i++;
             });
             parameters.ids = array;
 
             var route = Routing.generate('claro_message_delete_to');
-            route+= '?'+$.param(parameters);
+            route +=  '?' + $.param(parameters);
             Claroline.Utilities.ajax({
                 url: route,
-                success: function() {
-                    $('.chk-delete:checked').each(function(index, element) {
+                success: function () {
+                    $('.chk-delete:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
                     $('#validation-box').modal('hide');
@@ -114,7 +114,7 @@
             });
         });
 
-        $('#modal-cancel-button').click(function(){
+        $('#modal-cancel-button').click(function () {
             $('#validation-box').modal('hide');
             $('#validation-box-body').empty();
         });
