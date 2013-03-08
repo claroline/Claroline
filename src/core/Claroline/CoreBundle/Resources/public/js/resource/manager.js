@@ -243,7 +243,7 @@
             },
             toggle: function () {
                 $(this.el).css('display', !this.isVisible ? 'block' : 'none');
-                this.isVisible = !this.isVisible; 
+                this.isVisible = !this.isVisible;
             },
             render: function () {
                 $(this.el).html(Twig.render(resource_filters_template, this.parameters));
@@ -727,9 +727,6 @@
         parameters.webPath = parameters.webPath || '';
         manager.Controller.initialize(parameters);
         $('body').ajaxError(function(event, jqXHR, thrownError){
-            console.debug(jqXHR);
-            console.debug(event);
-            console.debug(thrownError);
             if (jqXHR.status !== 0 && jqXHR.readyState !== 0) {
                 alert(jqXHR.responseText);
             }
