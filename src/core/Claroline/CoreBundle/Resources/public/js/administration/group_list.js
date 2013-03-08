@@ -6,19 +6,23 @@
     var loading = false,
         stop = false,
         mode = 0,
-        standardRoute = Routing.generate('claro_admin_paginated_group_list', {
-            'offset': $('.row-group').length
-        }),
-        searchRoute = Routing.generate('claro_admin_paginated_search_group_list', {
-            'offset': $('.row-group').length,
-            'search': document.getElementById('search-group-txt').value
-        });
+        standardRoute = function () {
+            return Routing.generate('claro_admin_paginated_group_list', {
+                'offset': $('.row-group').length
+            })
+        },
+        searchRoute = function () {
+            return Routing.generate('claro_admin_paginated_search_group_list', {
+                'offset': $('.row-group').length,
+                'search': document.getElementById('search-group-txt').value
+            })
+        };
 
     function lazyloadGroups(route) {
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
-            url: route,
+            url: route(),
             type: 'GET',
             success: function (groups) {
                 $('#group-table-body').append(groups);
