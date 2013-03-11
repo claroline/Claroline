@@ -28,7 +28,7 @@ class ThumbnailCreator
      */
     public function fromVideo($originalPath, $destinationPath, $newWidth, $newHeight)
     {
-        if (!$this->isGdLoaded && !$this->isFfmpegLoaded) {
+        if (!$this->isGdLoaded || !$this->isFfmpegLoaded) {
             $message = '';
             if (!$this->isGdLoaded) {
                 $message .= 'The GD extension is missing \n';
@@ -36,8 +36,10 @@ class ThumbnailCreator
             if (!$this->isFfmegLoaded) {
                 $message .= 'The Ffmpeg extension is missing \n';
             }
+            
             throw new UnloadedExtensionException($message);
         }
+
         $media = new \ffmpeg_movie($originalPath);
         $frameCount = $media->getFrameCount();
         $frame = $media->getFrame(round($frameCount / 2));

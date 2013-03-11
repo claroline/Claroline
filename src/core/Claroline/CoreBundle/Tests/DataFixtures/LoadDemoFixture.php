@@ -138,7 +138,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
                 array(
                     $this->filepath.'lorem.pdf',
                     $this->filepath.'sample.pdf',
-                    $this->filepath.'symfony2.pdf'
+                    $this->filepath.'symfony.pdf'
                  )
             )
         );
@@ -181,7 +181,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
                 'Jane Doe',
                 array(
                     $this->getReference('file/lorem.pdf')->getId(),
-                    $this->getReference('file/symfony2.pdf')->getId()
+                    $this->getReference('file/symfony.pdf')->getId()
                 )
             )
         );

@@ -406,8 +406,7 @@ class ResourceController extends Controller
     {
         $queryParameters = $this->container->get('request')->query->all();
         $criteria = $this->buildSearchArray($queryParameters);
-
-        isset($criteria['roots']) || $criteria['roots'] = array();
+        $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
         $resourceRepo = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $directoryId = (integer) $directoryId;

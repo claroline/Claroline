@@ -1,4 +1,4 @@
-{% twig_js name="user_list" %}
+{% twig_js name="userList" %}
 
 {% for user in users %}
     <tr id="row-{{ user.id }}" class="row-user">
