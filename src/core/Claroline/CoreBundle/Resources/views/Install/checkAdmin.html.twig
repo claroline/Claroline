@@ -1,10 +1,12 @@
 {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 {% block content %}
 <div class="span3">
          <h3> Progression</h3>
         <ol class="nav nav-list">
          {%block naviguation %}
-            {%endblock %}
+            {{ parent() }}
+        {%endblock %}
            </ol>
             <p>  Progression</p>
             <div class="progress">
@@ -12,23 +14,22 @@
             </div>
     </div>
              <div class="span6">
-                 <h3>Etape 3 : Paramètre de l'administration</h3>
+                 <h3>{{ 'step_3'|trans({}, 'install') }}</h3>
                   {%block data %}
 <form action="{{ path('claro_checkAdminForm') }}" method="post" >
 {{ form_widget(form) }}
-<input type="submit" value="suivant" />
+<input type="submit" value="{{ 'next'|trans({}, 'install') }}" class="btn btn-primary"/>
 </form>
-<form action="{{ path('claro_showDbForm') }}" method="post" >
 
-<input type="submit" name="submit" value="retour" />
-</form>
+<a href="{{ path('claro_showDbForm', {'lg':version} ) }}" class="btn"> {{ 'back'|trans({},'install') }} </a>
+
 
 {%endblock data %}
         </div>
             <div class="span2">
-                <h3> Astuces/Aides</h3>
+                <h3> {{ 'hint'|trans({}, 'install') }}</h3>
                 <div class="action">
-                    Si vous avez des versions supérieures à celle du tableau, cela ne peut aller que mieux pour vous.
+                   <div class="well">{{'hint_4'|trans({},'install')}} </div>
                     </div>
                 </div>
             <div class="span12">

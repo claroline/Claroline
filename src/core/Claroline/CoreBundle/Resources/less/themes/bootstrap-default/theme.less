@@ -18,10 +18,6 @@ footer {
     max-height: 100%;
 }
 
-form fieldset>div:first-of-type {
-    padding-top: 20px;
-}
-
 #login-form, #login-error {
     width: 420px;
     margin: auto;
@@ -43,36 +39,6 @@ h3.sub-section-header {
     margin-bottom: 16px;
     border-bottom: solid @grayLighter 1px;
 }
-
-form {
-    max-width: 600px;
-}
-
-/* WIDGETS */
-.widget {
-    margin: 0 10px 22px 10px;
-}
-
-.widget a
-{
-    -webkit-border-top-left-radius: 4px;
-        -moz-border-radius-topleft: 4px;
-            border-top-left-radius: 4px;
-    -webkit-border-top-right-radius: 4px;
-        -moz-border-radius-topright: 4px;
-            border-top-right-radius: 4px;
-}
-
-.widget a:hover
-{
-    background:@grayLighter;
-    text-decoration:none;    
-}
-
-/*body
-{
-	padding-top:40px;
-}*/
 
 .brand
 {
@@ -106,24 +72,6 @@ form {
 	height:auto;
 }
 
-
-
-
-
-div.border {
-    border:1px solid @grayLight;
-    .border-radius( 5px );
-    margin-bottom:10px;
-}
-
-/** tabs **/
-
-.tabs.nav.nav-tabs
-{
-    margin-top:5px;
-    padding: 0 5px 0 5px;
-}
-
 /** tools **/
 
 .nav.nav-tabs.nav-stacked li.active a
@@ -140,12 +88,6 @@ div.border {
 
 /** content **/
 
-.section-content .breadcrumb
-{
-    margin:5px;
-}
-
-
 .section-content .navbar .navbar-inner a
 {
     color:@navbarLinkColorActive;
@@ -156,7 +98,13 @@ div.border {
     color:@white;
 }
 
-.section-content .navbar .navbar-inner a.disabled
+.nav.nav-tabs.nav-stacked
 {
-    color:@grayLight;
+   .border-radius(5px); 
+}
+
+.nav.nav-tabs.nav-stacked, .border
+{
+    background-color:@white;
+    .box-shadow(0 1px 10px rgba(0,0,0,.2));
 }

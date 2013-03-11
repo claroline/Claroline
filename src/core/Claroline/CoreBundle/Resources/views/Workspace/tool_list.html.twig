@@ -1,9 +1,6 @@
 {% for tool in tools %}
     <li{% if path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': tool.getName()}) == app.request.requesturi %} class="active"{% endif %}>
-    <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': tool.getName()}) }}"
-        id="{{ tool.getName() }}-link"
-        data-original-title="{{ tool.getName()|trans({}, 'tools') }}"
-        data-placement="right">
+    <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': tool.getName()}) }}">
         <i class="{{ tool.getClass() }}"></i>
         <span>{{ tool.getName()|trans({}, 'tools') }}</span>
         <i class="icon-chevron-right pull-right"></i>
