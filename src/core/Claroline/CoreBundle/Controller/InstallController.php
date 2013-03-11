@@ -18,8 +18,8 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 
 /**
- * @todo Remove lang strings / find a way to translate
  * @todo Remove all echos !
+*  @todo Remove test fiels from createParamatersYml method when Claronext will be ready
  */
 class InstallController extends Controller
 {
@@ -28,38 +28,61 @@ class InstallController extends Controller
 
     public function indexAction()
     {
-        $ourFileHandle = fopen(self::PATH, 'w');
-        fclose($ourFileHandle);
-        $permission = 'Verifier les permissions en écritures et lecture du dossier [app/config/local]';
-
-        $config = array(
-            'php' => phpversion(),
-            'mysql' => mysqli_get_client_version(),
-            'chmod' => $permission,
-            'local' => (is_writable('../app/config/local') ? 'OK' : 'KO'),
-            'file' => (is_writable('../files') ? 'OK' : 'KO'),
-            'web' => (is_writable('../web') ? 'OK' : 'KO')
-        );
+        $this->get('translator')->setlocale('en');
 
         return $this->render(
-            'ClarolineCoreBundle:Install:index.html.twig',
-            array('version' => $config)
+            'ClarolineCoreBundle:Install:index.html.twig'
         );
     }
 
-    public function showDbFormAction()
+    public function permissionAction()
     {
+        $request = $this->get('request');
+        if ($request->getMethod() == 'GET') {
+            $lg = $_GET['lg'];
+        } else {
+            $lg = 'en';
+        }
+
+        $this->get('translator')->setlocale($lg);
+        $version = array(
+            'php' => phpversion(),
+            'mysql' => mysqli_get_client_version(),
+            'local' => (is_writable('../app/config/local') ? 'OK' : 'KO'),
+            'file' => (is_writable('../files') ? 'OK' : 'KO'),
+            'web' => (is_writable('../web') ? 'OK' : 'KO'),
+            'lg' => $lg
+
+        );
+
+        return $this->render(
+            'ClarolineCoreBundle:Install:permission.html.twig',
+            array('version' => $version )
+        );
+    }
+
+    public function showDbFormAction($lg)
+    {
+        $ourFileHandle = fopen(self::PATH, 'w'); //where all the data from the forms will be store
+        fclose($ourFileHandle);
+        $locale = array('locale' => $lg);
+        $this->putInYml($locale);
+        $this->get('translator')->setlocale($lg);
         $install = new Install();
         $form = $this->createForm(new InstallType, $install);
 
         return $this->render(
             'ClarolineCoreBundle:Install:checkupDb.html.twig',
-            array('form' => $form->createView())
+            array(
+                'version' => $lg,
+                'form' => $form->createView())
         );
     }
 
     public function checkDbFormAction()
     {
+        $value = $this->readYml(self::PATH);
+        $this->get('translator')->setlocale($value['locale']);
         $install = new Install();
         $form = $this->createForm(new InstallType(), $install);
         $request = $this->get('request');
@@ -79,7 +102,8 @@ class InstallController extends Controller
                     ";
                     $count = $db->query($query)->fetch();
 
-                    if (!is_null($count['0']) && !isset($postData['exist'])) {
+                    $exist = $request->request->all();
+                    if (!is_null($count['0']) && !isset($exist['exist'])) {
                         $this->get('session')->setFlash('warning', 'La base de donnée existe deja');
 
                         return $this->render(
@@ -87,11 +111,20 @@ class InstallController extends Controller
                             array(
                                 'form' => $form->createView(),
                                 'exist' => 1,
+                                'version' => $value['locale']
                             )
                         );
                     }
                     if ($this->putInYml($postData, $form->getName(), 'install_form') == 1) {
-                        return $this->showAdminFormAction();
+                        $user = new User();
+                        $form = $this->createForm(new AdminType, $user);
+
+                        return $this->render(
+                            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
+                            array(
+                                'version' => $value['locale'],
+                                'form' => $form->createView())
+                        );
                     } else {
                         $this->get('session')->setFlash('error', 'Erreur lors de l ecriture des données');
                     }
@@ -114,19 +147,11 @@ class InstallController extends Controller
         }
     }
 
-    public function showAdminFormAction()
-    {
-        $user = new User();
-        $form = $this->createForm(new AdminType, $user);
-
-        return $this->render(
-            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-            array('form' => $form->createView())
-        );
-    }
 
     public function checkAdminFormAction()
     {
+        $value = $this->readYml(self::PATH);
+        $this->get('translator')->setlocale($value['locale']);
         $user = new User();
         $request = $this->get('request');
         $form = $this->createForm(new AdminType, $user);
@@ -159,7 +184,9 @@ class InstallController extends Controller
 
             return $this->render(
                 'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-                array('form' => $form->createView())
+                array(
+                    'form' => $form->createView()
+                )
             );
         }
     }
@@ -167,6 +194,7 @@ class InstallController extends Controller
     public function summaryShowAction()
     {
         $value = $this->readYml(self::PATH);
+        $this->get('translator')->setlocale($value['locale']);
 
         return $this->render(
             'ClarolineCoreBundle:Install:execute.html.twig',
@@ -183,7 +211,7 @@ class InstallController extends Controller
             'user' => $db['dbUser'],
             'password' => $db['dbPassword'],
             'host' => $db['dbHost'],
-            'driver' => 'pdo_mysql',
+            'driver' => $db['dbDriver'],
         );
 
         $tmpConnection = DriverManager::getConnection($connectionParams, $config);
@@ -232,7 +260,7 @@ class InstallController extends Controller
     /**
      * @param $array the array to put in the yml file
      */
-    private function putInYml($array)
+    private function putInYml(array $array)
     {
         $parser = new Parser();
 
@@ -286,19 +314,25 @@ class InstallController extends Controller
         $fromFile = $this->readYml(self::PATH);
         $parameters = array(
             'parameters' => array(
-                'database_driver' => 'pdo_mysql',
+                'database_driver' => $fromFile['dbDriver'],
                 'database_host' => $fromFile['dbHost'],
                 'database_port' => null,
                 'database_name' => $fromFile['dbName'],
                 'database_user' => $fromFile['dbUser'],
                 'database_password' => $fromFile['dbPassword'],
+                'test_database_driver' => $fromFile['dbDriver'],
+                'test_database_host' => $fromFile['dbHost'],
+                'test_database_port' => null,
+                'test_database_name' => $fromFile['dbName'],
+                'test_database_user' => $fromFile['dbUser'],
+                'test_database_password' => $fromFile['dbPassword'],
                 'mailer_transport' => 'smtp',
                 'mailer_host' => 'localhost',
                 'mailer_user' => null,
                 'mailer_password' => null,
                 'mailer_encryption' => null,
                 'mailer_auth_mode' => null,
-                'locale' => 'fr',
+                'locale' => $fromFile['locale'],
                 'secret' => 'ThisTokenIsNotSoSecretChangeIt')
         );
 
@@ -377,12 +411,9 @@ class InstallController extends Controller
 
     public function successAction()
     {
-        //todo: FIX ME
-        $config = 'FIX ME';
 
         return $this->render(
-            'ClarolineCoreBundle:Install:index.html.twig',
-            array('version' => $config)
+            'ClarolineCoreBundle:Install:sucess.html.twig'
         );
     }
 }

@@ -189,6 +189,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 $builder->$methodName($value);
             }
         }
+        
         $dql = $builder->orderByPath()->getDql();
         $query = $this->_em->createQuery($dql);
         $builder->setQueryParameters($query);

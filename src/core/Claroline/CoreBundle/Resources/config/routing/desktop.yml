@@ -4,6 +4,7 @@ claro_desktop_open:
 claro_desktop_open_tool:
     pattern: 'tool/open/{toolName}'
     defaults: { _controller: 'ClarolineCoreBundle:Desktop:openTool' }
+    options: { expose: true }
 claro_desktop_widgets:
     pattern: /widgets
     defaults: { _controller: 'ClarolineCoreBundle:Desktop:widgets' }

@@ -6,19 +6,16 @@
 {% endblock %}
 
 {% block section_content %}
-   {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-                <a href="#">{{ 'parameters'|trans({}, 'platform') }}</a>
-            </li>
-        </ul>
-    {% endspaceless %}
-    <ul>
-        <li class='li-user-parameters'>
+    <div class="margin">
+        <h3 class='sub-section-header'>{{ 'parameters'|trans({}, 'platform') }}</h3>
+
+        <ul>
+            <li class='li-user-parameters'>
             <a href="{{ path('claro_widget_properties') }}">{{ 'widgets'|trans({}, 'platform') }}</a>
-        </li>
-        <li class='li-user-parameters'>
+            </li>
+            <li class='li-user-parameters'>
             <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
-        </li>
-    </ul>
+            </li>
+        </ul>    
+    </div>
 {% endblock %}

@@ -74,7 +74,7 @@
     </target>
 
     <target name="parallelTasks"
-            description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc and phploc tasks in parallel using a maximum of 2 threads.">
+            description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc, phploc, jshint and jslint tasks in parallel using a maximum of 2 threads.">
         <parallel threadCount="2">
             <sequential>
                 <antcall target="pdepend"/>
@@ -84,6 +84,8 @@
             <antcall target="phpcs"/>
             <antcall target="phpdoc"/>
             <antcall target="phploc"/>
+            <antcall target="jshint"/>
+            <antcall target="jslint"/>
         </parallel>
     </target>
 
@@ -161,4 +163,23 @@
         </exec>
     </target>
 
+    <target name="jshint"
+         description="Generate checkstyle-jshint.xml using JSHint">
+        <exec executable="jshint" output="${builddir}/logs/checkstyle-jshint.xml">
+            <arg value="--reporter=checkstyle" />
+            <arg value="--config" />
+            <arg path="${appdir}/build/tools/jshint.json" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="jslint"
+         description="Generate jslint.xml using JSHint">
+        <exec executable="jshint" output="${builddir}/logs/jslint.xml">
+            <arg value="--reporter=jslint" />
+            <arg value="--config" />
+            <arg path="${appdir}/build/tools/jshint.json" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
 </project>

@@ -1,5 +1,10 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/tool/workspace/workspace_parameters_edit.js') }}' type="text/javascript"></script>
+{% endblock %}
+
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
@@ -16,7 +21,7 @@
 
     <div>
         {% if is_granted('DELETE', workspace ) %}
-        <a href="{{ path('claro_workspace_list') }}" class="workspace-delete-confirmation">
+        <a href="#" class="workspace-delete-confirmation">
             {{ 'workspace_delete'|trans({}, 'platform') }}
         </a>
         {% endif %}
@@ -26,7 +31,7 @@
     </div>
 
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form class="form-horizontal" action="#" method="post" {{ form_enctype(form) }}>
+    <form class="form-horizontal" action="{{ path('claro_workspace_edit_form', {'workspaceId': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}
             <div class="form-actions">
@@ -37,56 +42,21 @@
             </div>
         </fieldset>
     </form>
-{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $('.workspace-delete-confirmation').click(function () {
-            var href = $(this).attr('href');
-            var confirmMessage = "{% autoescape false %}{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}{% endautoescape %}";
-            var confirmTitle = "{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}";
-            var okButtonLabel = "{{ 'ok'|trans({}, 'platform') }}";
-            var cancelButtonLabel = "{{ 'cancel'|trans({}, 'platform') }}";
-            var closeButtonLabel = "×";
-            if (!$('#dataConfirmModal').length) {
-                $('body').append(
-                    '<div id="dataConfirmModal"' +
-                         'class="modal"' +
-                         'role="dialog"' +
-                         'aria-labelledby="dataConfirmLabel"' +
-                         'aria-hidden="true">' +
-                        '<div class="modal-header">' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
-                                closeButtonLabel +
-                            '</button>' +
-                            '<h3 id="dataConfirmLabel">' +
-                                confirmTitle +
-                            '</h3>' +
-                        '</div>' +
-                        '<div class="modal-body"></div>' +
-                        '<div class="modal-footer">' +
-                            '<button class="btn" data-dismiss="modal" aria-hidden="true">' +
-                                cancelButtonLabel +
-                            '</button>' +
-                            '<a class="btn btn-primary" id="dataConfirmOK">' +
-                                okButtonLabel +
-                            '</a>' +
-                        '</div>' +
-                    '</div>'
-                );
-            }
-            $('#dataConfirmModal').find('.modal-body').text(confirmMessage);
-            $('#dataConfirmOK').attr('href', href);
-            $('#dataConfirmOK').click(function(){
-                Claroline.Utilities.ajax({
-                    url: '{{ path('claro_workspace_delete', {'workspaceId': workspace.getId()}) }}',
-                    type: 'DELETE',
-                    async: false
-                });
-            });
-            $('#dataConfirmModal').modal({show:true});
-            return false;
-        });
-    </script>
+    <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
+    </div>
+
+    <div id="delete-ws-validation-box" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
+        </div>
+        <div class="modal-footer">
+            <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+        </div>
+    </div>
 {% endblock %}
