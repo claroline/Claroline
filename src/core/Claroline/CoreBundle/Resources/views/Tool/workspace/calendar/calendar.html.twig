@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
 {% block stylesheets %}
@@ -22,11 +24,11 @@
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel"> Nouvelle entrée</h3>
+            <h3 id="myModalLabel"> {{ 'Nouvelle entrée'|trans({}, 'calendar') }}</h3>
         </div>
         <div class="modal-body">
             <div id="divTitle" class="alert alert-info"></div>
-                <button class="btn btn-danger" id="deleteBtn" > delete</button>
+                <button class="btn btn-danger" id="deleteBtn" > {{ 'delete'|trans({}, 'platform') }}</button>
             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
             </form>
@@ -36,13 +38,13 @@
             <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
         </div>
         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button class="btn btn-primary" id="save">Add an Event</button>
-             <button class="btn btn-info" id="updateBtn" > Update</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'calendar') }}</button>
+            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'calendar') }}</button>
+             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'calendar') }}</button>
         </div>
     </div>
 
-    <div class="span3"><h4> <u>Taches non plannifiées </u></h4>
+    <div class="span2"><h4> <u>{{'non plan task'|trans({}, 'calendar') }} </u></h4>
         {% for e in listEvents  %}
        <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
@@ -56,7 +58,7 @@
             </ul>
         </div>
         {% else %}
-        <li>No event found</li>
+        <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
         {% endfor %}
     </div>
 
