@@ -1,6 +1,9 @@
+/* global sinon */
+alert('ok')
 (function () {
-    this.Claroline = this.Claroline || {};
-    var server = this.Claroline.FakeServer = {};
+    'use strict';
+    window.Claroline = this.Claroline || {};
+    var server = window.Claroline.FakeServer = {};
 
     server.create = function () {
         var sinonServer = sinon.fakeServer.create();

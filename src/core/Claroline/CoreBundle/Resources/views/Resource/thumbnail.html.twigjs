@@ -1,4 +1,4 @@
-{% twig_js name="resource_thumbnail_template" %}
+{% twig_js name="ResourceManagerThumbnail" %}
 
 <div>
     <input type="checkbox"
@@ -47,7 +47,7 @@
                     </a>
                 {% endif %}
                 {% if resource.can_edit == true %}
-                    <a class="resource-menu-action" data-action="manage-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    <a class="resource-menu-action" data-action="edit-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
                         {{ 'manage_rights'|trans({}, 'platform') }}
                     </a>
                 {% else %}
