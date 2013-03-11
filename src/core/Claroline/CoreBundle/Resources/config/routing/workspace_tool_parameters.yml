@@ -39,10 +39,14 @@ claro_workspace_resource_rights_creation_form:
     pattern: '/{workspaceId}/resource/rights/form/role/{roleId}'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsCreationForm' }
     requirements: { _method: GET }
-claro_workspace_edit_form:
+claro_workspace_edit:
     pattern: '/{workspaceId}/edit'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEdit' }
+    requirements: { _method: GET }
+claro_workspace_edit_form:
+    pattern: '/{workspaceId}/editform'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEditForm' }
-    requirements: { _method: GET|POST }
+    requirements: { _method: POST }
 claro_workspace_export_form:
     pattern: '/{workspaceId}/form/export'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExportForm' }
@@ -50,4 +54,5 @@ claro_workspace_export_form:
 claro_workspace_export:
     pattern: '/{workspaceId}/export'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExport' }
-    requirements: { _method: POST|GET }
+    requirements: { _method: POST }
+

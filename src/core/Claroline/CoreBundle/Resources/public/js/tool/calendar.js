@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    this.Claroline = this.Claroline || {};
-    var calendar = this.Claroline.Calendar = {};
+    window.Claroline = window.Claroline || {};
+    var calendar = window.Claroline.Calendar = {};
 
     calendar.initialize = function (context) {
         context = context || 'desktop';
@@ -244,6 +244,10 @@
                 center: 'title',
                 right: 'month,basicWeek,basicDay'
             },
+            monthNames:['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+            monthNamesShort:['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'],
+            dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+            dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
             editable: true,
             events: $('a#link').attr('href'),
             timeFormat: 'H(:mm)',

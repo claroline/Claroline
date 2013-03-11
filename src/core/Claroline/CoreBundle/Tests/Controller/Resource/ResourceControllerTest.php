@@ -5,10 +5,13 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 
+/**
+ * @todo Test the exception if a directory id parameter doesn't match any directory.
+ * @todo Test filters when not in the Desktop (workspaceId != 0).
+ */
 class ResourceControllerTest extends FunctionalTestCase
 {
     private $resourceRepository;
-    private $upDir;
     private $pwr;
 
     public function setUp()
@@ -17,24 +20,8 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadPlatformRoleData();
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
-        $ds = DIRECTORY_SEPARATOR;
-        $this->originalPath = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}originalFile.txt";
-        $this->copyPath = __DIR__ . "{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}copy.txt";
-        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
-        $this->thumbsDir = $this->client->getContainer()->getParameter('claroline.thumbnails.directory');
-        $this->resourceRepository = $this
-            ->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->resourceRepository = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $this->pwr = $this->getDirectory('user');
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        $this->cleanDirectory($this->upDir);
-        $this->cleanDirectory($this->thumbsDir);
     }
 
     public function testDirectoryCreationFormCanBeDisplayed()
@@ -151,62 +138,61 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('html:contains("return any Response")')));
     }
 
-    /**
-     * @todo Test the exception if the directory id parameter doesn't match any directory.
-     * @todo Refactoring the repository.
-     * @todo Test the date filter.
-     * @todo Test if not in the Desktop (workspaceId != 0).
-     */
-    public function testFilters()
+    public function testNameFilter()
     {
         $this->createBigTree('user');
-        $this->logUser($this->getFixtureReference('user/user'));
-        //sleep(2); // Pause to allow us to filter on creation date
-        //$wsEroot = $this->resourceRepository->findWorkspaceRoot($this->getFixtureReference('workspace/ws_e'));
-        //$this->createBigTree($wsEroot, $admin);
-        $now = new \DateTime();
-        //filter by types (1)
-        $crawler = $this->client->request('GET', '/resource/filter/0?types[]=file');
+        $this->logUser($this->getUser('user'));
+        $this->client->request('GET', "/resource/filter/0?name=file1");
         $result = json_decode($this->client->getResponse()->getContent());
-        $resources = $result->resources;
-        $this->assertEquals(3, count($resources));
-        /*
-        //filter by datecreation
-        $crawler = $this->client->request(
+        $this->assertEquals(1, count($result->resources));
+    }
+
+    public function testTypeFilter()
+    {
+        $this->createBigTree('user');
+        $this->logUser($this->getUser('user'));
+        $this->client->request('GET', '/resource/filter/0?types[]=file');
+        $result = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(3, count($result->resources));
+    }
+
+    public function testDateFilter()
+    {
+        sleep(1);
+        $timeOne = new \DateTime();
+        sleep(1);
+        $this->createBigTree('user');
+        sleep(1);
+        $timeTwo = new \DateTime();
+        sleep(1);
+        $this->loadFileData('user', 'dir2', array('file4.pdf'));
+        $this->logUser($this->getUser('user'));
+
+        $this->client->request(
             'GET',
-            "/resource/filter/0?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}"
+            "/resource/filter/0?dateFrom={$timeOne->format('Y-m-d H:i:s')}"
         );
         $result = json_decode($this->client->getResponse()->getContent());
-        $resources = $result->resources;
-        var_dump($this->client->getResponse()->getContent());
-        $this->assertEquals(5, count($resources));
+        $this->assertEquals(6, count($result->resources));
 
-        $crawler = $this->client->request('GET', "/resource/filter/0?dateTo={$now->format('Y-m-d H:i:s')}");
+        $this->client->request(
+            'GET',
+            "/resource/filter/0?dateFrom={$timeTwo->format('Y-m-d H:i:s')}"
+        );
         $result = json_decode($this->client->getResponse()->getContent());
-        $resources = $result->resources;
-        $this->assertEquals(6, count($resources));
+        $this->assertEquals(1, count($result->resources));
 
-        $crawler = $this->client->request(
-          'GET',
-          "/resource/filter/0?dateFrom={$creationTimeAdminTreeOne->format('Y-m-d H:i:s')}
-          &dateTo={$now->format('Y-m-d H:i:s')}
-        ");
-
+        $this->client->request(
+            'GET',
+            "/resource/filter/0?dateFrom={$timeOne->format('Y-m-d H:i:s')}&dateTo={$timeTwo->format('Y-m-d H:i:s')}"
+        );
         $result = json_decode($this->client->getResponse()->getContent());
-        $resources = $result->resources;
-        $this->assertEquals(5, count($resources));
-        */
-        //filter by name
-        $crawler = $this->client->request('GET', "/resource/filter/0?name=file1");
-        $result = json_decode($this->client->getResponse()->getContent());
-        $resources = $result->resources;
-        $this->assertEquals(1, count($resources));
+        $this->assertEquals(5, count($result->resources));
+    }
 
-        //filter by mime
-        /* This filter is not active for now (see ResourceController::filterAction's todo)
-        $crawler = $this->client->request('GET', "/resource/filter?mimeTypes[]=text");
-        $this->assertEquals(6, count(json_decode($this->client->getResponse()->getContent())));
-        */
+    public function testMimeFilter()
+    {
+        $this->markTestSkipped('This filter is not active for now (see ResourceController::filterAction\'s todo)');
     }
 
     public function testDelete()
@@ -276,24 +262,20 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
+    /**
+     * @todo Move this test in a resource manager test case (controller isn't involved)
+     */
     public function testCreateActionLogsEventWithResourceManager()
     {
         $this->logUser($this->getFixtureReference('user/user'));
         $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
-        $preEvents = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
-            ->findAll();
+        $logRepo = $this->em->getRepository('ClarolineCoreBundle:Logger\ResourceLog');
+        $preEvents = $logRepo->findAll();
         $manager = $this->client->getContainer()->get('claroline.resource.manager');
         $directory = new Directory();
         $directory->setName('dir');
         $manager->create($directory, $this->pwr->getId(), 'directory', $user);
-        $postEvents = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
-            ->findAll();
+        $postEvents = $logRepo->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
@@ -499,20 +481,5 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadFileData($userReferenceName, 'treeRoot', array('file1.pdf'));
         $this->loadFileData($userReferenceName, 'treeRoot', array('file2.pdf'));
         $this->loadFileData($userReferenceName, 'dir2', array('file3.pdf'));
-    }
-
-    private function cleanDirectory($dir)
-    {
-        $iterator = new \DirectoryIterator($dir);
-
-        foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getFilename() !== 'placeholder'
-                && $file->getFilename() !== 'originalFile.txt'
-                && $file->getFilename() !== 'originalZip.zip'
-            ) {
-                chmod($file->getPathname(), 0777);
-                unlink($file->getPathname());
-            }
-        }
     }
 }

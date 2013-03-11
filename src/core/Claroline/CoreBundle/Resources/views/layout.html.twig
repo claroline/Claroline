@@ -20,15 +20,15 @@
 
 {% block layout %}
     <div id="wrapper">
-        <span class="label please-wait"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+        <div class="please-wait">
+            <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+        </div>
         {% if not is_path_mode %}
             {% render 'ClarolineCoreBundle:Layout:topBar' %}
         {% endif %}
         <div id="grid" class="container container-fluid">
             {% block sectionHeader %}
-                <div class="row-fluid section-header">
-                    <div class="span12"></div>
-                </div>
+            &nbsp;
             {% endblock %}
 
             <div class="row-fluid content">
