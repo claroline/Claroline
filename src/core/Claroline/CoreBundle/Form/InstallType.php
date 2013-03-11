@@ -14,8 +14,7 @@ class InstallType extends AbstractType
                 'dbHost',
                 'text',
                 array(
-                    'label' => 'Serveur',
-                    'attr' => array('placeholder' => 'localhost')
+                    'label' => 'Serveur'
                 )
             )
             ->add(
@@ -37,9 +36,15 @@ class InstallType extends AbstractType
                 )
             )
             ->add(
-                'exist',
-                'checkbox',
-                array('required' => false)
+                'dbDriver',
+                'choice',
+                array(
+                    'choices' => array(
+                        'pdo_mysql' => 'pdo_mysql',
+                        'pdo_pgsql' => 'pdo_pgsql',
+                         'pdo_sqlsrv' => 'pdo_sqlsrv'
+                    )
+                )
             );
     }
 
@@ -52,7 +57,7 @@ class InstallType extends AbstractType
     {
         return array(
             'data_class' => 'Claroline\CoreBundle\Library\Installation\Install',
-            'translation_domain' => 'platform'
+            'translation_domain' => 'install'
         );
     }
 }
