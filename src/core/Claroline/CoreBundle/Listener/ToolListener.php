@@ -3,7 +3,16 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Event\ExportWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
 use Claroline\CoreBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\CalendarType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -57,6 +66,124 @@ class ToolListener extends ContainerAware
     public function onDisplayDesktopCalendar(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopCalendar());
+    }
+
+    public function onExportHome(ExportWorkspaceEvent $event)
+    {
+        $perms = array();
+        $workspace = $event->getWorkspace();
+        $configs = $this->container->get('claroline.widget.manager')
+            ->generateWorkspaceDisplayConfig($workspace->getId());
+
+        foreach ($configs as $config) {
+            $perms[$config->getWidget()->getName()] = $config->isVisible();
+        }
+
+        $event->setConfig($perms);
+    }
+
+    public function onExportResource(ExportWorkspaceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $config = array();
+        $workspace = $event->getWorkspace();
+        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $root = $resourceRepo->findWorkspaceRoot($workspace);
+
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
+
+        foreach ($roles as $role) {
+            $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findMaximumRights(array($role->getName()), $root);
+            //temporary: no creation rights export for now
+            $perms['canCreate'] = 1;
+            $config['perms'][rtrim(str_replace(range(0,9),'', $role->getName()), '_')] = $perms;
+        }
+
+        $ed = $this->container->get('event_dispatcher');
+        $children = $resourceRepo->findChildren($root, array('ROLE_ADMIN'));
+
+        foreach ($children as $child) {
+            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']));
+            $ed->dispatch("export_{$child['type']}_array", $newEvent);
+            $dataChildren = $newEvent->getConfig();
+            if ($dataChildren !== null) {
+                $config['resources'][] = $dataChildren;
+            }
+        }
+
+        $event->setConfig($config);
+    }
+
+    public function onImportHome(ImportWorkspaceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        $config = $event->getConfig();
+
+        foreach ($config as $widgetName => $value) {
+            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName($widgetName);
+            $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
+            $displayConfig = new DisplayConfig();
+            $displayConfig->setParent($parent);
+            $displayConfig->setVisible($value);
+            $displayConfig->setWidget($widget);
+            $displayConfig->setDesktop(false);
+            $displayConfig->isLocked(true);
+            $displayConfig->setWorkspace($event->getWorkspace());
+            $em->persist($displayConfig);
+        }
+
+    }
+
+    public function onImportResource(ImportWorkspaceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
+        $config = $event->getConfig();
+        $workspace = $event->getWorkspace();
+        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findWorkspaceRoot($workspace);
+
+        foreach ($config['perms'] as $role => $permission) {
+            $this->createDefaultsResourcesRights(
+                $permission['canDelete'],
+                $permission['canOpen'],
+                $permission['canEdit'],
+                $permission['canCopy'],
+                $permission['canExport'],
+                $permission['canCopy'],
+                $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId())),
+                $root,
+                $workspace
+            );
+        }
+
+        $this->createDefaultsResourcesRights(
+            false, false, false, false, false, false,
+            $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $root,
+            $workspace
+        );
+
+        $this->createDefaultsResourcesRights(
+            true, true, true, true, true, true,
+            $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            $root,
+            $workspace
+        );
+
+        $em->flush();
+        $ed = $this->container->get('event_dispatcher');
+
+        if (isset($config['resources'])) {
+            foreach ($config['resources'] as $resource) {
+                $newEvent = new ImportResourceArrayEvent($resource, $root);
+                $ed->dispatch("import_{$resource['type']}_array", $newEvent);
+            }
+        }
+
     }
 
     /**
@@ -244,6 +371,52 @@ class ToolListener extends ContainerAware
             'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
             array('form' => $formBuilder-> getForm()-> createView())
         );
+    }
+
+    /**
+     * Create default permissions for a role and a resource.
+     *
+     * @param boolean $canDelete
+     * @param boolean $canOpen
+     * @param boolean $canEdit
+     * @param boolean $canCopy
+     * @param boolean $canExport
+     * @param boolean $canCreate
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     */
+    private function createDefaultsResourcesRights(
+        $canDelete,
+        $canOpen,
+        $canEdit,
+        $canCopy,
+        $canExport,
+        $canCreate,
+        Role $role,
+        AbstractResource $resource,
+        AbstractWorkspace $workspace
+    )
+    {
+        $rights = new ResourceRights();
+        $rights->setCanCopy($canCopy);
+        $rights->setCanDelete($canDelete);
+        $rights->setCanEdit($canEdit);
+        $rights->setCanOpen($canOpen);
+        $rights->setCanExport($canExport);
+        $rights->setRole($role);
+        $rights->setResource($resource);
+        $rights->setWorkspace($workspace);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        if ($canCreate) {
+            $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findByIsVisible(true);
+            $rights->setCreatableResourceTypes($resourceTypes);
+        }
+
+        $em->persist($rights);
     }
 }
 

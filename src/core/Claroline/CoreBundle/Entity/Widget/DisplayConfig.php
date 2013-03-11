@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_widget_dispay")
+ * @ORM\Table(name="claro_widget_display")
  */
 class DisplayConfig
 {

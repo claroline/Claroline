@@ -75,7 +75,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_resource_type_custom_action');
         $schema->dropTable('claro_resource_log');
         $schema->dropTable('claro_widget');
-        $schema->dropTable('claro_widget_dispay');
+        $schema->dropTable('claro_widget_display');
         $schema->dropTable('claro_resource_link');
         $schema->dropTable('claro_activity');
         $schema->dropTable('claro_resource_activity');
@@ -593,7 +593,7 @@ class Version20120119000000 extends BundleMigration
 
     private function createAdminWidgetConfig(Schema $schema)
     {
-        $table = $schema->createTable('claro_widget_dispay');
+        $table = $schema->createTable('claro_widget_display');
         $this->addId($table);
         $table->addColumn('user_id', 'integer', array('notnull' => false));
         $table->addColumn('widget_id', 'integer');
@@ -611,7 +611,8 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'),
             array('workspace_id'),
-            array('id')
+            array('id'),
+            array('onDelete' => 'CASCADE')
         );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_widget'),

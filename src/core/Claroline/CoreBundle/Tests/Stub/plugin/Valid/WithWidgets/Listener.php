@@ -13,7 +13,6 @@ class Listener
 
     public function onConfigure($event)
     {
-        var_dump('je passe');
         $event->setContent('configure stub widget form');
     }
 }

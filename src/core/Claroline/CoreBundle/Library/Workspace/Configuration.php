@@ -22,71 +22,19 @@ class Configuration
     private $roles;
     private $tools;
     private $toolsPermissions;
-    private $rootPermissions;
     private $creatorRole;
+    private $toolsConfig;
 
     public function __construct()
     {
         $this->workspaceType = self::TYPE_SIMPLE;
-        $this->isPublic = true;
-        $this->roles = array(
-            'ROLE_WS_VISITOR' => 'visitor',
-            'ROLE_WS_COLLABORATOR' => 'collaborator',
-            'ROLE_WS_MANAGER' => 'manager'
-        );
-        $this->tools = array(
-            'home',
-            'resource_manager',
-            'calendar',
-            'parameters',
-            'group_management',
-            'user_management'
-        );
-        $this->toolsPermissions = array(
-            'home' => array(
-                'ROLE_WS_VISITOR',
-                'ROLE_WS_COLLABORATOR',
-                'ROLE_WS_MANAGER'
-            ),
-            'resource_manager' => array(
-                'ROLE_WS_COLLABORATOR',
-                'ROLE_WS_MANAGER'
-            ),
-            'calendar' => array(
-                'ROLE_WS_COLLABORATOR',
-                'ROLE_WS_MANAGER'
-            ),
-            'parameters' => array('ROLE_WS_MANAGER'),
-            'group_management' => array('ROLE_WS_MANAGER'),
-            'user_management' => array('ROLE_WS_MANAGER')
-        );
-        $this->rootPermissions = array(
-            'ROLE_WS_VISITOR' => array(
-                'canCopy' => false,
-                'canOpen' => false,
-                'canEdit' => false,
-                'canDelete' => false,
-                'canExport' => false,
-                'canCreate' => false
-             ),
-            'ROLE_WS_COLLABORATOR' => array(
-                'canCopy' => false,
-                'canOpen' => true,
-                'canEdit' => false,
-                'canDelete' => false,
-                'canExport' => true,
-                'canCreate' => false
-            ),
-            'ROLE_WS_MANAGER' => array(
-                'canCopy' => true,
-                'canOpen' => true,
-                'canEdit' => true,
-                'canDelete' => true,
-                'canExport' => true,
-                'canCreate' => true
-            )
-        );
-        $this->creatorRole = 'ROLE_WS_MANAGER';
+        $ds = DIRECTORY_SEPARATOR;
+        $parsedFile = Yaml::parse(__DIR__."{$ds}..{$ds}..{$ds}Resources{$ds}config{$ds}workspace{$ds}default.yml");
+        $this->setCreatorRole($parsedFile['creator_role']);
+        $this->setRoles($parsedFile['roles']);
+        $this->setTools(array_keys($parsedFile['tools_permissions']));
+        $this->setToolsPermissions($parsedFile['tools_permissions']);
+        $this->setToolsConfiguration($parsedFile['tools']);
     }
 
     public static function fromTemplate($templateFile)
@@ -98,7 +46,7 @@ class Configuration
         $config->setRoles($parsedFile['roles']);
         $config->setTools(array_keys($parsedFile['tools_permissions']));
         $config->setToolsPermissions($parsedFile['tools_permissions']);
-        $config->setRootPermissions($parsedFile['resources_permissions']);
+        $config->setToolsConfiguration($parsedFile['tools']);
 
         return $config;
     }
@@ -184,14 +132,14 @@ class Configuration
         $this->toolsPermissions = $toolsPermissions;
     }
 
-    public function getRootPermissions()
+    public function getToolsConfiguration()
     {
-        return $this->rootPermissions;
+        return $this->toolsConfig;
     }
 
-    public function setRootPermissions(array $rootPermissions)
+    public function setToolsConfiguration(array $toolsConfig)
     {
-        $this->rootPermissions = $rootPermissions;
+        $this->toolsConfig = $toolsConfig;
     }
 
     public function setCreatorRole($role)

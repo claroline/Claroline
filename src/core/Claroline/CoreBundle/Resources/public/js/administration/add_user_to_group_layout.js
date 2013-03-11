@@ -8,21 +8,25 @@
         stop = false,
         mode = 0,
         groupId = document.getElementById('twig-attributes').getAttribute('data-group-id'),
-        standardRoute = Routing.generate('claro_admin_groupless_users', {
-            'offset' : $('.row-user').length,
-            'groupId': groupId
-        }),
-        searchRoute = Routing.generate('claro_admin_search_groupless_users', {
-            'offset' : $('.row-user').length,
-            'groupId': groupId,
-            'search':  document.getElementById('search-user-txt').value
-        });
+        standardRoute = function() {
+            return Routing.generate('claro_admin_groupless_users', {
+                'offset' : $('.row-user').length,
+                'groupId': groupId
+            })
+        },
+        searchRoute = function() {
+            return Routing.generate('claro_admin_search_groupless_users', {
+                'offset' : $('.row-user').length,
+                'groupId': groupId,
+                'search':  document.getElementById('search-user-txt').value
+            })
+        };
 
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
-            url: route,
+            url: route(),
             type: 'GET',
             success: function (users) {
                 $('#user-table-body').append(Twig.render(userListShort, {

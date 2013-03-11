@@ -11,21 +11,25 @@
         loading = false,
         stop = false,
         mode = 0,
-        standardRoute = Routing.generate('claro_workspace_unregistered_users_paginated', {
-            'workspaceId': twigWorkspaceId,
-            'offset': $('.row-user').length
-        }),
-        searchRoute = Routing.generate('claro_workspace_search_unregistered_users', {
-            'search': document.getElementById('search-user-txt').value,
-            'workspaceId': twigWorkspaceId,
-            'offset': $('.row-user').length
-        });
+        standardRoute = function () {
+            return Routing.generate('claro_workspace_unregistered_users_paginated', {
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-user').length
+            })
+        },
+        searchRoute = function () {
+            return Routing.generate('claro_workspace_search_unregistered_users', {
+                'search': document.getElementById('search-user-txt').value,
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-user').length
+            })
+        };
 
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
-            url: route,
+            url: route(),
             success: function (users) {
                 createUsersChkBoxes(users);
                 loading = false;

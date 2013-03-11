@@ -25,6 +25,9 @@
             {{ 'workspace_delete'|trans({}, 'platform') }}
         </a>
         {% endif %}
+            <a href="{{ path('claro_workspace_export_form', {'workspaceId': workspace.getId() }) }}">
+                {{ 'workspace_export'|trans({}, 'platform') }}
+            </a>
     </div>
 
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
@@ -42,7 +45,7 @@
 
     <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
     </div>
-    
+
     <div id="delete-ws-validation-box" class="modal hide fade">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
