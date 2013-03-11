@@ -16,6 +16,12 @@
         {%block data %}
             <h3> {{ 'step_4'|trans({}, 'install') }} </h3>
             <form action="{{ path('claro_execute') }}" method="post" >
+                <fieldset>
+                    <legend> {{'general'|trans({},'install')}}</legend>
+                    <ul>
+                        <li><strong> {{ 'language'|trans({}, 'install') }}</strong> :{{ value.locale }} </li>
+                    </ul>
+                </fieldset>
                 <fieldset> 
                     <legend> {{ 'database'|trans({}, 'install') }} </legend>
                     <ul>        
@@ -36,10 +42,10 @@
                         <li><strong>Adresse E-mail</strong> :{{ value.mail }}</li>
                     </ul>
                 </fieldset>      
-                <input type="submit" value="suivant" class="btn btn-primary"/>
+                <input type="submit" value="{{ 'next'|trans({}, 'install') }}" class="btn btn-primary"/>
             </form>
             <form action="{{ path('claro_showAdminForm') }}" method="post" >
-                <input type="submit" name="submit" value="retour" class="btn"/>
+                <input type="submit" name="submit" value="{{ 'back'|trans({}, 'install') }}" class="btn"/>
             </form>  
         </form>
 
@@ -47,9 +53,9 @@
         {%endblock data %}
 </div>
 <div class="span2">
-    <h3> <i class="icon-info-sign"></i></h3>
+    <h3> {{ 'hint'|trans({}, 'install') }}</h3>
     <div class="action">
-        Notez précieusement ces informations et gardez les dans un endroit sécurisé
+       <div class="well"> {{ 'hint_5'|trans({}, 'install') }}</div>
     </div>
 </div>
 <div class="span12">
