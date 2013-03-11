@@ -48,12 +48,15 @@
         <tbody id="user-table-body">
         </tbody>
     </table>
+    <div id="loading" class="loading"></div>
     <input type="button" id="delete-user-button" value="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-secondary delete-users-button"/>
 
     <div id="validation-box" class="modal hide fade">
         <div class="modal-header">
         </div>
-        <div id="validation-box-body" class="modal-body" id="modal-body">
+        <div class="modal-body" id="modal-body">
+            <div id="validation-box-body"></div>
+            <div id="deleting" class="loading"></div>
         </div>
         <div class="modal-footer">
             <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>

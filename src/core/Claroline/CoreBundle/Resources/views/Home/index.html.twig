@@ -6,20 +6,27 @@
 
 {% block content %}
     <div class="row-fluid">
-        <div align="center" id="home">
+        <div id="home" class="hero-unit">
             {% block section_content %}
-
-                <p>Se connecter en tant qu'admin: </p>
+                <h3 class="text-warning" style="text-decoration: underline">
+                    <em>Utilisateurs par défaut</em>
+                </h3>
                 <ul>
-                    <li>Login: JohnDoe</li>
-                    <li>Password: JohnDoe</li>
+                    <li>
+                        <strong>Administrateur</strong>
+                        <ul>
+                            <li>Nom d'utilisateur : <em class="text-info">JohnDoe</em></li>
+                            <li>Mot de passe : <em class="text-info">JohnDoe</em></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Professeur</strong>
+                        <ul>
+                            <li>Nom d'utilisateur : <em class="text-info">JaneDoe</em></li>
+                            <li>Mot de passe : <em class="text-info">JaneDoe</em></li>
+                        </ul>
+                    </li>
                 </ul>
-                <p>Se connecter en tant que professeur: </p>
-                <ul>
-                    <li>Login: JaneDoe</li>
-                    <li>Password: JaneDoe</li>
-                </ul>
-
             {% endblock %}
         </div>
     </div>

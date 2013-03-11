@@ -1,5 +1,5 @@
 {
-    "hash": "2abfb5721455962b6fa6b5c66e394c36",
+    "hash": "6fe703e18e14296153fc70972cdbe41f",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -1322,6 +1322,64 @@
             "description": "This bundle generates code for you"
         },
         {
+            "name": "stfalcon/tinymce-bundle",
+            "version": "dev-master",
+            "target-dir": "Stfalcon/Bundle/TinymceBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stfalcon/TinymceBundle.git",
+                "reference": "f7422a4dc860641d57805a99705f5f32c4fb10d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/f7422a4dc860641d57805a99705f5f32c4fb10d5",
+                "reference": "f7422a4dc860641d57805a99705f5f32c4fb10d5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/symfony": ">=2.1"
+            },
+            "time": "2013-02-21 12:21:06",
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stfalcon\\Bundle\\TinymceBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stepan Tanasiychuk",
+                    "email": "ceo@stfalcon.com",
+                    "homepage": "http://blog.stfalcon.com"
+                },
+                {
+                    "name": "Igor Negrutsa",
+                    "email": "progi2007@gmail.com",
+                    "homepage": "http://igor-negrutsa.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/stfalcon/TinymceBundle/contributors"
+                }
+            ],
+            "description": "This Bundle integrates TinyMCE WYSIWYG editor into a Symfony2 project.",
+            "keywords": [
+                "editor",
+                "tinymce",
+                "wysiwyg"
+            ]
+        },
+        {
             "name": "stof/doctrine-extensions-bundle",
             "version": "dev-master",
             "target-dir": "Stof/DoctrineExtensionsBundle",
@@ -1798,6 +1856,7 @@
         "friendsofsymfony/jsrouting-bundle": 20,
         "jms/twig-js-bundle": 20,
         "mikey179/vfsstream": 20,
-        "claroline/front-end-bundle": 20
+        "claroline/front-end-bundle": 20,
+        "stfalcon/tinymce-bundle": 20
     }
 }

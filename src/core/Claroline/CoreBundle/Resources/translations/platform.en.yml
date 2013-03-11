@@ -134,6 +134,7 @@ platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
 platform_plugins: 'Platform plugins'
 platform_widgets: 'Platform widgets'
+please_wait: 'Please wait...'
 private: Privée
 profile_form_administrativeCode: 'Administrative code'
 profile_form_firstName: 'First name'
@@ -186,7 +187,7 @@ roles: Roles
 save: Save
 search: Search
 see: Voir
-select all: select all
+select all: Select all
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 settings: Settings
@@ -230,6 +231,11 @@ workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace_administration: Administration
+workspace_delete: 'Delete the workspace'
+workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
+workspace_delete_confirm_title: 'Delete Confirm'
+workspace_edit_form_code: Code
+workspace_edit_form_name: Name
 workspace_form_code: Code
 workspace_form_name: Name
 workspace_form_template: Template
