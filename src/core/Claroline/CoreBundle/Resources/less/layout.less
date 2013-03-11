@@ -74,67 +74,25 @@ footer {
 /***********/
 /* WIDGETS */
 /***********/
+
 .widget {
-    margin-bottom: 22px;
+    margin: 0 10px 22px 10px;
 }
 
-.widget-header {
-    height: 26px;
-    line-height: 26px;
-    #gradient > .vertical(@widgetHeaderVariantDark, @widgetHeaderVariantLight);
-    /* Rounded corners */
-    border: 1px solid @widgetBorder;
+.widget a.accordion-toggle
+{
     -webkit-border-top-left-radius: 4px;
-        -moz-border-radius-topleft: 4px;
+       -moz-border-radius-topleft: 4px;
             border-top-left-radius: 4px;
     -webkit-border-top-right-radius: 4px;
-        -moz-border-radius-topright: 4px;
+       -moz-border-radius-topright: 4px;
             border-top-right-radius: 4px;
 }
 
-.widget-header h3 {
-    position: relative;
-    top: 2px;
-    left: 10px;
-    display: inline;
-    font-size: 14px;
-    font-weight: 800;
-    color: @widgetHeaderColor;
-    line-height: 14px;
-}
-
-.widget-commands {
-    float: right;
-    margin-right: 13px;
-    vertical-align: middle;
-}
-
-.widget-commands a {
-    text-decoration: none;
-}
-
-.widget-header [class^="icon-"], .widget-header [class*=" icon-"] {
-    color: @widgetHeaderColor;
-    font-size: 14px;
-    margin-left: 13px;
-    vertical-align: middle;
-}
-
-.widget-content {
-    max-height: 300px;
-    overflow: auto;
-    padding: 15px 15px 15px;
-    background: @widgetContentBackground;
-    color:  @widgetContentColor;
-    border: 1px solid @widgetBorder;
-    border-top: none;
-    -webkit-border-bottom-left-radius: 5px;
-        -moz-border-radius-bottomleft: 5px;
-            border-bottom-left-radius: 5px;
-    -webkit-border-bottom-right-radius: 5px;
-        -moz-border-radius-bottomright: 5px;
-            border-bottom-right-radius: 5px;
-    zoom:1; /* For IE 6/7 (trigger hasLayout) */
+.widget a.accordion-toggle:hover
+{
+    background:@grayLighter;
+    text-decoration:none;    
 }
 
 .notification-date {
@@ -145,6 +103,26 @@ footer {
 /*****************/
 /* RESOURCES MGR */
 /*****************/
+
+
+.resource-manager .breadcrumb
+{
+    margin: 0;
+
+    -webkit-border-bottom-left-radius: 0;
+       -moz-border-radius-bottomleft: 0;
+            border-bottom-left-radius: 0;
+    
+    -webkit-border-bottom-right-radius: 0;
+       -moz-border-radius-bottomright: 0;
+            border-bottom-right-radius: 0;
+}
+
+.section-content .navbar .navbar-inner a.disabled
+{
+    color:@grayLight;
+}
+
 
 .resource-manager .actions .btn,
 .resource-manager .actions select {
@@ -284,7 +262,7 @@ footer {
 
 .workspace-left-toolbox {
     margin-bottom: 18px;
-    border: 1px solid @widgetBorder;
+    border: 1px solid @grayLighter;
     -webkit-border-bottom-left-radius: 5px;
         -moz-border-radius-bottomleft: 5px;
             border-bottom-left-radius: 5px;
@@ -317,35 +295,12 @@ footer {
     text-align:center;
 }
 
-/********/
-/* MISC */
-/********/
-
-.icon-new-msg {
-    color: red !important;
-}
-
-.please-wait {
-    position: absolute;
-    z-index: 1031;
-    top: 10px;
-    display: none;
-    margin-left: 50%;
-}
-
-.loading {
-    background: transparent url("../../../images/loading.gif") no-repeat;
-    width: 16px;
-    height: 16px;
-}
-
-
 /************/
 /* MESSAGES */
 /************/
 
 .user-information {
-    border: 1px solid @widgetBorder;
+    border: 1px solid @grayLighter;
     padding: 5px;
     -webkit-border-bottom-left-radius: 5px;
         -moz-border-radius-bottomleft: 5px;
@@ -383,4 +338,87 @@ a.dropdown-menu-item-disabled:hover {
     cursor: default;
     background-color: white;
   }
+}
+
+
+/**********/
+/* Tabs */
+/**********/
+
+.tabs.nav.nav-tabs
+{
+    margin-top:5px;
+    padding: 0 5px 0 5px;
+}
+
+
+/********/
+/* MISC */
+/********/
+
+.icon-new-msg {
+    color: red !important;
+}
+
+.please-wait {
+    position: absolute;
+    z-index: 1031;
+    top: 10px;
+    display: none;
+    margin-left: 50%;
+}
+
+.loading {
+    background: transparent url("../../../images/loading.gif") no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.border {
+    border:1px solid @grayLight;
+    .border-radius( 5px );
+    margin-bottom:10px;
+}
+
+.margin
+{
+    margin:0 10px 10px 10px;
+}
+
+.nav.nav-tabs.nav-stacked .icon-chevron-right.pull-right
+{
+    position:relative;
+    top:4px;
+}
+
+.sub-section-header
+{
+    margin:0;
+    padding:0 0 10px 0;
+    font-size:21px;
+}
+
+.search-bar
+{
+    overflow:auto;margin-bottom:5px;
+}
+
+/*********/
+/* Forms */
+/*********/
+
+.section-content form
+{
+    margin: 0 10px;
+}
+
+.form-actions
+{
+    margin:11px 0;
+}
+
+form legend
+{
+    margin:0 0 10px 0;
+    font-weight:bold;
 }
