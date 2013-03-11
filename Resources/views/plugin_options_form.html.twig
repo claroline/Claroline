@@ -2,6 +2,9 @@
 
 {% block section_content %}
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+<div class="margin">       
+    <h3 class="sub-section-header">{{ 'forum_settings'|trans({}, 'forum') }}</h3>
+</div>
 <form action="{{ _path('claro_forum_edit_options') }}"
       method="post" {{ form_enctype(form) }}
       class="form-horizontal">

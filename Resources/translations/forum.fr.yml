@@ -4,6 +4,7 @@ responses: Réponses
 author: Auteur
 field_content_required: Le champ contenu est requis.
 forum: Forum
+forum_settings: Paramètres du forum
 forum_subject_form_title: Titre
 forum_subject_form_message: Message
 forum_subject_form_message_content: Contenu
