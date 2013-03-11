@@ -19,6 +19,7 @@ claro_workspace_delete:
 claro_workspace_list:
     pattern: /
     defaults: { _controller: 'ClarolineCoreBundle:Workspace:list' }
+    options: { expose: true }
     requirements: { _method: GET }
 claro_workspace_open:
     pattern: '/{workspaceId}/open'
