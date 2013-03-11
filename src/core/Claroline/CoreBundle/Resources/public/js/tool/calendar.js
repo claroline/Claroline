@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    this.Claroline = this.Claroline || {};
-    var calendar = this.Claroline.Calendar = {};
+    window.Claroline = window.Claroline || {};
+    var calendar = window.Claroline.Calendar = {};
 
     calendar.initialize = function (context) {
         context = context || 'desktop';
