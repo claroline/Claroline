@@ -20,6 +20,9 @@
             {{ 'workspace_delete'|trans({}, 'platform') }}
         </a>
         {% endif %}
+            <a href="{{ path('claro_workspace_export_form', {'workspaceId': workspace.getId() }) }}">
+                {{ 'workspace_export'|trans({}, 'platform') }}
+            </a>
     </div>
 
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
@@ -72,7 +75,7 @@
                         '</div>' +
                     '</div>'
                 );
-            } 
+            }
             $('#dataConfirmModal').find('.modal-body').text(confirmMessage);
             $('#dataConfirmOK').attr('href', href);
             $('#dataConfirmOK').click(function(){

@@ -70,14 +70,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * The admin has every rights no matter what.
      *
      * @param AbstractResource $parent Parent ID of children that we request.
-     * @param int $resourceTypeId ResourceType ID to filter on.
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     * @param string ResourceType ID to filter on.
      * @param boolean $isVisible if true, returns only resources that are visible.
      * @param array roles an array of role (string)
      *
      * @return an array of arrays or entities
      */
-    public function findChildren(AbstractResource $parent, $roles, $resourceType = null, $isVisible = true)
+    public function findChildren(AbstractResource $parent, $roles, $isVisible = true)
     {
         $isAdmin = false;
 
@@ -201,7 +200,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * The children query for the admin (every resource is shown).
      *
      * @param AbstractResource $parent
-     * @param ResourceType $resourceType
      * @param boolean $asArray
      * @param boolean $isVisible
      *

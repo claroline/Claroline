@@ -6,6 +6,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class RoleRepository extends NestedTreeRepository
 {
@@ -98,5 +99,30 @@ class RoleRepository extends NestedTreeRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getOneOrNullResult();
+    }
+
+    /**
+     * Returns the list of role for a workspace and a tool
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     */
+    public function findByWorkspaceAndTool(AbstractWorkspace $workspace, Tool $tool)
+    {
+        $dql = "
+            SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.workspace ws
+            JOIN ws.workspaceOrderedTools wot
+            JOIN wot.workspaceToolRoles wtr
+            JOIN wtr.role r_2
+            JOIN wot.tool tool
+            WHERE ws.id = {$workspace->getId()}
+            AND tool.id = {$tool->getId()}
+            AND r.id = r_2.id
+            AND r.name != 'ROLE_ADMIN'";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
     }
 }

@@ -1,0 +1,24 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_workspace_open_tool',
+               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+               {{ 'parameters'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
+
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal"
+          action="{{ path('claro_workspace_export', {'workspaceId': workspace.getId() }) }}"
+          method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}
