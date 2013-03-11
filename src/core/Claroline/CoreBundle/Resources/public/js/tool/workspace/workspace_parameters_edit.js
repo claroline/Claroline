@@ -9,7 +9,6 @@
             Claroline.Utilities.ajax({
                 url: Routing.generate('claro_workspace_delete', {'workspaceId': twigWorkspaceId}),
                 type: 'DELETE',
-                async: false,
                 success: function() {
                     window.location = Routing.generate('claro_desktop_open_tool', {'toolName': 'home'});
                 }
