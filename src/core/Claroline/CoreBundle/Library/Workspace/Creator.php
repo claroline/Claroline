@@ -3,13 +3,13 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
 use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 
@@ -18,12 +18,14 @@ class Creator
     private $entityManager;
     private $rightManager;
     private $roleRepo;
+    private $ed;
 
-    public function __construct(EntityManager $em, RightManager $rm)
+    public function __construct(EntityManager $em, RightManager $rm, $ed)
     {
         $this->entityManager = $em;
         $this->rightManager = $rm;
         $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
+        $this->ed = $ed;
     }
 
     /**
@@ -61,35 +63,13 @@ class Creator
         $rootDir->setWorkspace($workspace);
         $this->setResourceOwnerRights(true, true, true, true, true, $rootDir);
         $this->entityManager->persist($rootDir);
+        $this->entityManager->flush();
+        $toolsConfig = $config->getToolsConfiguration();
 
-        //default resource rights
-        foreach ($config->getRootPermissions() as $role => $permission) {
-            $this->createDefaultsResourcesRights(
-                $permission['canDelete'],
-                $permission['canOpen'],
-                $permission['canEdit'],
-                $permission['canCopy'],
-                $permission['canExport'],
-                $permission['canCopy'],
-                $this->roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId())),
-                $rootDir,
-                $workspace
-            );
+        foreach ($toolsConfig as $name => $conf) {
+            $event = new ImportWorkspaceEvent($workspace, $conf);
+            $this->ed->dispatch('import_workspace_'.$name, $event);
         }
-
-        $this->createDefaultsResourcesRights(
-            false, false, false, false, false, false,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $rootDir,
-            $workspace
-        );
-
-        $this->createDefaultsResourcesRights(
-            true, true, true, true, true, true,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
-            $rootDir,
-            $workspace
-        );
 
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
         $this->addMandatoryTools($workspace, $config);
@@ -98,53 +78,6 @@ class Creator
         $this->entityManager->flush();
 
         return $workspace;
-    }
-
-    /**
-     * Create default permissions for a role and a resource.
-     *
-     * @param boolean $canDelete
-     * @param boolean $canOpen
-     * @param boolean $canEdit
-     * @param boolean $canCopy
-     * @param boolean $canExport
-     * @param boolean $canCreate
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
-     */
-    private function createDefaultsResourcesRights(
-        $canDelete,
-        $canOpen,
-        $canEdit,
-        $canCopy,
-        $canExport,
-        $canCreate,
-        Role $role,
-        AbstractResource $resource,
-        AbstractWorkspace $workspace
-    )
-    {
-        $rights = new ResourceRights();
-        $rights->setCanCopy($canCopy);
-        $rights->setCanDelete($canDelete);
-        $rights->setCanEdit($canEdit);
-        $rights->setCanOpen($canOpen);
-        $rights->setCanExport($canExport);
-        $rights->setRole($role);
-        $rights->setResource($resource);
-        $rights->setWorkspace($workspace);
-
-        if ($canCreate) {
-            $resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findByIsVisible(true);
-            $rights->setCreatableResourceTypes($resourceTypes);
-        }
-
-        $this->entityManager->persist($rights);
-
-        return $rights;
     }
 
     /**
@@ -187,31 +120,6 @@ class Creator
         return $baseRole;
     }
 
-    private function setResourceOwnerRights(
-        $isSharable,
-        $isEditable,
-        $isDeletable,
-        $isExportable,
-        $isCopiable,
-        AbstractResource $resource
-    )
-    {
-        $resource->setSharable($isSharable);
-        $resource->setEditable($isEditable);
-        $resource->setDeletable($isDeletable);
-        $resource->setExportable($isExportable);
-        $resource->setCopiable($isCopiable);
-        $resourceTypes = $this->entityManager
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
-
-        foreach ($resourceTypes as $resourceType) {
-            $resource->addResourceTypeCreation($resourceType);
-        }
-
-        return $resource;
-    }
-
     /**
      * Adds the tools for a workspace.
      *
@@ -224,6 +132,7 @@ class Creator
     {
         $tools = $config->getTools();
         $order = 1;
+
         foreach ($tools as $name) {
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
@@ -239,6 +148,7 @@ class Creator
         }
 
         $toolsPermissions = $config->getToolsPermissions();
+
         foreach ($toolsPermissions as $name => $roles) {
             foreach ($roles as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {
@@ -270,5 +180,30 @@ class Creator
         $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
         $this->entityManager->flush();
+    }
+
+    private function setResourceOwnerRights(
+        $isSharable,
+        $isEditable,
+        $isDeletable,
+        $isExportable,
+        $isCopiable,
+        AbstractResource $resource
+    )
+    {
+        $resource->setSharable($isSharable);
+        $resource->setEditable($isEditable);
+        $resource->setDeletable($isDeletable);
+        $resource->setExportable($isExportable);
+        $resource->setCopiable($isCopiable);
+        $resourceTypes = $this->entityManager
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findBy(array('isVisible' => true));
+
+        foreach ($resourceTypes as $resourceType) {
+            $resource->addResourceTypeCreation($resourceType);
+        }
+
+        return $resource;
     }
 }
