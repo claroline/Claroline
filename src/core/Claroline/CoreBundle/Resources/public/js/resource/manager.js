@@ -5,9 +5,6 @@
 /* global ResourceManagerThumbnail */
 /* global ResourceManagerResults */
 
-test; // fake global to test jshint on jenkins
-if(true){}; // fake statements to test jshint checkstyle on jenkins
-
 (function () {
     'use strict';
 
