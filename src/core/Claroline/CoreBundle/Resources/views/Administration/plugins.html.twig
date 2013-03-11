@@ -1,6 +1,9 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
+    <div class="margin">
+        <h3 id='user-list-block' class="sub-section-header">{{ 'Plugins'|trans({}, 'platform') }}</h3>
+    </div>
     {% for plugin in plugins %}
         <span class="plugin-item">
             <figure>
