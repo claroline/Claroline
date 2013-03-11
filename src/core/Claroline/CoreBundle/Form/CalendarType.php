@@ -37,7 +37,6 @@ class CalendarType extends AbstractType
                         '#01A9DB' => 'medium',
                         '#848484' => 'low',
                     )
-               // 'preferred_choices' => array('#01A9DB')
                 )
             );
     }

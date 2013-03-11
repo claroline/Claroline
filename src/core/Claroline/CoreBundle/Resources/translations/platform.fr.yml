@@ -11,6 +11,12 @@ add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 admin: Administrateur
 administration: Administration
 administrative_code: 'Code administratif'
+admin_form_firstName : 'Prenom'
+admin_form_lastName : 'Nom de famille'
+admin_form_plainPassword_first : 'Mot de passe'
+admin_form_plainPassword_second : 'Répétez votre mot de passe'
+admin_form_mail : 'Email adress'
+admin_form_username : 'Username'
 agenda: Agenda
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
