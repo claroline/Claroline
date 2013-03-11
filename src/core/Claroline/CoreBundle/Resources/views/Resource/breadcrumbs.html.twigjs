@@ -1,4 +1,4 @@
-{% twig_js name="resource_breadcrumbs_template" %}
+{% twig_js name="ResourceManagerBreadcrumbs" %}
 
 {% for resource in resources %}
     <a href="#" data-resource-id="{{ resource.id }}">

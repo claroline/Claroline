@@ -1,4 +1,4 @@
-{% twig_js name="resource_filters_template" %}
+{% twig_js name="ResourceManagerFilters" %}
 <div class="row-fluid">
     <!--<div class="span3">
         <label>{{ 'name'|trans({}, 'platform') }} : </label>
