@@ -20,7 +20,9 @@
 
 {% block layout %}
     <div id="wrapper">
-        <span class="label please-wait"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+        <div class="please-wait">
+            <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+        </div>
         {% if not is_path_mode %}
             {% render 'ClarolineCoreBundle:Layout:topBar' %}
         {% endif %}
