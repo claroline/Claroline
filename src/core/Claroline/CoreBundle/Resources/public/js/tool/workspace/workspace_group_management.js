@@ -12,15 +12,19 @@
         loading = false,
         stop = false,
         mode = 0,
-        standardRoute = Routing.generate('claro_workspace_registered_groups_paginated', {
-            'workspaceId': twigWorkspaceId,
-            'offset': $('.row-group').length
-        }),
-        searchRoute = Routing.generate('claro_workspace_search_registered_groups', {
-            'workspaceId': twigWorkspaceId,
-            'offset': $('.row-group').length,
-            'search': document.getElementById('search-group-txt').value
-        });
+        standardRoute = function() {
+            return Routing.generate('claro_workspace_registered_groups_paginated', {
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-group').length
+            })
+        },
+        searchRoute = function () {
+            return Routing.generate('claro_workspace_search_registered_groups', {
+                'workspaceId': twigWorkspaceId,
+                'offset': $('.row-group').length,
+                'search': document.getElementById('search-group-txt').value
+            })
+        };
 
     function lazyloadGroups(route) {
         loading = true;

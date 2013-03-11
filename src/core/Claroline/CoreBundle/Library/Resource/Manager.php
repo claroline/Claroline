@@ -218,7 +218,6 @@ class Manager
         $resourceRights = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findBy(array('resource' => $parent));
-
         foreach ($resourceRights as $resourceRight) {
             $rc = new ResourceRights();
             $rc->setRole($resourceRight->getRole());

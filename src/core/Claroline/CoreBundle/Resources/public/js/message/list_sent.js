@@ -5,12 +5,14 @@
         stop = false,
         mode = 0,
         stackedRequests = 0,
-        standardRoute = Routing.generate('claro_message_list_sent',
-            {'offset' : $('.row-message').length}
-        ),
-        searchRoute = Routing.generate('claro_message_list_sent_search',
-            {'offset' : $('.row-message').length, 'search': document.getElementById('search-msg-txt').value}
-        );
+        standardRoute = function () {
+            return Routing.generate('claro_message_list_sent',
+                {'offset' : $('.row-message').length}
+        )},
+        searchRoute = function () {
+            return Routing.generate('claro_message_list_sent_search',
+                {'offset' : $('.row-message').length, 'search': document.getElementById('search-msg-txt').value}
+        )};
 
     $.ajaxSetup({
         beforeSend: function () {
@@ -30,7 +32,7 @@
         $('#loading').show();
         Claroline.Utilities.ajax({
             type: 'GET',
-            url: route,
+            url: route(),
             success: function (messages) {
                 $('#message-table-body').append(messages);
                 loading = false;
