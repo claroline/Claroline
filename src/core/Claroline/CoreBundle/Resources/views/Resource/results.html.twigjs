@@ -1,4 +1,4 @@
-{% twig_js name="resource_results_template" %}
+{% twig_js name="ResourceManagerResults" %}
 
 <div class="results">
     {% if resources.length > 0 %}

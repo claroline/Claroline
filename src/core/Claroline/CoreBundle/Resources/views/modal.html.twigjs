@@ -1,4 +1,4 @@
-{% twig_js name="modal_template" %}
+{% twig_js name="ModalWindow" %}
 
 <div class="modal">
     <div class="modal-header">
