@@ -18,8 +18,8 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 
 /**
- * @todo Remove lang strings / find a way to translate
  * @todo Remove all echos !
+*  @todo Remove test fiels from createParamatersYml method when Claronext will be ready
  */
 class InstallController extends Controller
 {
@@ -39,7 +39,7 @@ class InstallController extends Controller
     {
         $request = $this->get('request');
         if ($request->getMethod() == 'GET') {
-            $lg = $_GET['language'];
+            $lg = $_GET['lg'];
         } else {
             $lg = 'en';
         }
@@ -73,7 +73,9 @@ class InstallController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Install:checkupDb.html.twig',
-            array('form' => $form->createView())
+            array(
+                'version' => $lg,
+                'form' => $form->createView())
         );
     }
 
@@ -101,7 +103,7 @@ class InstallController extends Controller
                     $count = $db->query($query)->fetch();
 
                     $exist = $request->request->all();
-                    if (!is_null($count['0']) && !isset($exist['exist'])) { 
+                    if (!is_null($count['0']) && !isset($exist['exist'])) {
                         $this->get('session')->setFlash('warning', 'La base de donnée existe deja');
 
                         return $this->render(
@@ -109,6 +111,7 @@ class InstallController extends Controller
                             array(
                                 'form' => $form->createView(),
                                 'exist' => 1,
+                                'version' => $value['locale']
                             )
                         );
                     }
@@ -144,22 +147,6 @@ class InstallController extends Controller
         }
     }
 
-    public function showAdminFormAction()
-    {
-        /*$value = $this->readYml(self::PATH);
-        $this->get('translator')->setlocale($value['locale']);
-        $user = new User();
-        $form = $this->createForm(new AdminType, $user);
-        var_dump($value);
-        return $this->render(
-            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-            array(
-                 'version' => $value['lg'],
-                'form' => $form->createView()
-            )
-        );
-        */
-    }
 
     public function checkAdminFormAction()
     {
@@ -333,6 +320,12 @@ class InstallController extends Controller
                 'database_name' => $fromFile['dbName'],
                 'database_user' => $fromFile['dbUser'],
                 'database_password' => $fromFile['dbPassword'],
+                'test_database_driver' => $fromFile['dbDriver'],
+                'test_database_host' => $fromFile['dbHost'],
+                'test_database_port' => null,
+                'test_database_name' => $fromFile['dbName'],
+                'test_database_user' => $fromFile['dbUser'],
+                'test_database_password' => $fromFile['dbPassword'],
                 'mailer_transport' => 'smtp',
                 'mailer_host' => 'localhost',
                 'mailer_user' => null,

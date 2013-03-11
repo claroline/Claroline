@@ -53,8 +53,8 @@
             </tbody>
         </table>
         <p>
-          <a href="{{path('claro_showDbForm',{lg:version.lg})}}" class="btn btn-primary" > suivant </a>
-           <a href="{{path('claro_setup')}}" class="btn" > retour </a>
+          <a href="{{path('claro_showDbForm',{lg:version.lg})}}" class="btn btn-primary" >{{ 'next'|trans({}, 'install') }} </a>
+           <a href="{{path('claro_setup')}}" class="btn" > {{ 'back'|trans({}, 'install') }} </a>
           </p>
 
 {%endblock data %}
@@ -74,4 +74,3 @@
    </div>
 
 {% endblock %}
-
