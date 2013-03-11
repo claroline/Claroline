@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block layout %}
-    <div id="top_bar" class="navbar navbar-fixed-top">
+    {#<div id="top_bar" class="navbar navbar-inverse navbar-fixed-top"> 
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -22,19 +22,19 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="{{ path('claro_index')}}">
-                <img src="{{ asset('bundles/clarolinecore/images/logo/claroline-logo-bulles-14x16.png') }}"/>
                 Claroline
             </a>
-            </div>
+            </div>#}
         </div>
     </div>
- <div id="grid" class="container-fluid">
+    <div class="container">
+ <div id="grid" class="span12">
     <div class="row">
         <div class="span12">
             <ul class="nav nav-tabs">
             </ul>
-        <h2>Bienvenu dans l'installation de ClaroConnect</h2>
-            <p> Ce processus vous guidera à travers les différentes étapes de l'installation de la plateforme </p>
+        <h2>{{ 'welcome'|trans({}, 'install') }}</h2>
+            <p> {{'this_process'|trans({} ,'install') }} </p>
             </div>
   {% block content %}
             <div class="span3">
@@ -43,7 +43,6 @@
              {% include 'ClarolineCoreBundle:Install:steps.html.twig' %}
                 {%endblock %}
                   </ol>
-            <p>  Progression</p>
             <div class="progress">
               <div class="bar" style="width: 30%;"></div>
             </div>
@@ -51,5 +50,5 @@
              <div class="span6">
                   {%block data %}
                   {%endblock data %}
-    {% endblock %}
+    {% endblock %} 
 {%endblock %}
