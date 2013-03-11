@@ -8,7 +8,7 @@ class Install
     private $dbUser;
     private $dbName;
     private $dbPassword;
-    private $exist;
+    private $dbDriver;
 
     public function setDbHost($dbHost)
     {
@@ -49,14 +49,16 @@ class Install
     {
         return $this->dbPassword;
     }
-
-    public function setExist($exist)
+    public function getDbDriver()
     {
-        $this->exist = $exist;
+        return $this->dbDriver;
     }
 
-    public function getExist()
+    public function setDbDriver($dbDriver)
     {
-        return $this->exist;
+        $this->dbDriver = $dbDriver;
     }
+
+    
+
 }

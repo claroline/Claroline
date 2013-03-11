@@ -1,9 +1,11 @@
 {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 {% block content %} 
 <div class="span3">
     <h3> Progression</h3>
     <ol class="nav nav-list">
-           {%block naviguation %}        
+           {%block naviguation %}    
+           {{ parent()}}    
             {%endblock %}
         </ol>
         <p>  Progression</p>
@@ -13,39 +15,36 @@
     </div>
     <div class="span6">
 
-                  {%block data %}
-        <h3> Etape 2 : Configuration de la base de donnée </h3>
+    {%block data %}
+        <h3> {{ 'step_2'|trans({}, 'install') }}</h3>
 
         <form action="{{ path('claro_checkDbForm') }}" method="post" >
-           
-                {{ form_label(form.dbHost, "Serveur") }}
-               {{ form_widget(form.dbHost) }} <em><span class="muted"> ex : localhost</span> <em>
-                {{ form_label(form.dbName, "Nom de la basse de données") }}
-               {{ form_widget(form.dbName) }} <em><span class="muted"> ex : Claroline</span> <em>
-                {{ form_label(form.dbUser, "Nom d'utilisateur") }}
-               {{ form_widget(form.dbUser) }} <em><span class="muted"> ex : root</span> <em>
-                {{ form_label(form.dbPassword, "Mot de passe") }}
-               {{ form_widget(form.dbPassword) }} <em><span class="muted"> ex : secret</span> <em>
-                       {% if exist is defined %}
-            {{ form_label(form.exist, "voulez vous ecraser la base existante") }}{{ form_widget(form.exist)}}  
-                {% endif %}
+            {{ form_label(form.dbHost) }}
+            {{ form_widget(form.dbHost) }} <em><span class="muted"> ex : localhost</span> <em>
+            {{ form_label(form.dbName) }}
+            {{ form_widget(form.dbName) }} <em><span class="muted"> ex : Claroline</span> <em>
+            {{ form_label(form.dbUser, "Nom d'utilisateur") }}
+            {{ form_widget(form.dbUser) }} <em><span class="muted"> ex : root</span> <em>
+            {{ form_label(form.dbPassword, "Mot de passe") }}
+            {{ form_widget(form.dbPassword) }} <em><span class="muted"> ex : secret</span> <em>
             <br />
             {{ form_rest(form) }}    
-            
+             {% if exist is defined %}
+                   {{ 'exist'|trans({}, 'install') }} <input type="checkbox" name="exist" value="0"/> 
+                {% endif %}
             <input type="submit" name="submit" value="suivant" class="btn btn-primary"/>
             </form>
-            <form action="{{ path('claro_setup') }}" method="post" >
-                <input type="submit" name="submit" value="retour" />
+            <form action="{{ path('claro_permission') }}" method="post" >
+                <input type="submit" name="submit" value="retour" class="btn"/>
             </form>
 
-{%endblock data %}
+    {%endblock data %}
         </div>
-        <div class="span2">
-            <h3> <i class="icon-info-sign"></i> Astuces/Aides</h3>
+        <div class="span3">
+             <h3> {{ 'hint'|trans({}, 'install') }}</h3>
             <div class="action">
-            <div class="well">Utilisez les informations fournies par votre hébergement internet </div> 
-            <div class="well">Si vous voulez utiliser Claronext en local, et que vous n'avez pas de mot de passe
-            laissez le champs vide</div> 
+            <div class="well">{{ 'hint_2'|trans({}, 'install') }}</div> 
+            <div class="well">{{ 'hint_3'|trans({}, 'install') }}</div> 
             </div>
         </div>
                {% if app.session.getFlashes() is defined %}

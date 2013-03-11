@@ -15,7 +15,10 @@
         "_": false,
         "Claroline": false,
         "Routing": false,
-        "Twig": false
+        "Twig": false,
+        "alert": false,
+        "console": false,
+        "confirm": false
     },
     "bitwise": true,
     "camelcase": true,
