@@ -15,4 +15,4 @@ services:
             - "@event_dispatcher"
 
 parameters:
-    claroline.workspace_template.directory: "%kernel.root_dir%/../src/core/Claroline/CoreBundle/Resources/config/workspace/"
+    claroline.workspace_template.directory: "%kernel.root_dir%/../workspaces/"

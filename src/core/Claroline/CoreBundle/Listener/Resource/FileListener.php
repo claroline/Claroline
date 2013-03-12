@@ -11,6 +11,8 @@ use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
 use Claroline\CoreBundle\Library\Event\PlayFileEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -82,22 +84,10 @@ class FileListener extends ContainerAware
 
     public function onCopy(CopyResourceEvent $event)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $resource = $event->getResource();
-        $newFile = new File();
-        $newFile->setSize($resource->getSize());
-        $newFile->setName($resource->getName());
-        $newFile->setMimeType($resource->getMimeType());
-        $hashName = $this->container
-            ->get('claroline.resource.utilities')
-            ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
-        $newFile->setHashName($hashName);
-        $filePath = $this->container->getParameter('claroline.files.directory') . $ds . $resource->getHashName();
-        $newPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
-        copy($filePath, $newPath);
+        $newFile = $this->copy($event->getResource());
+        $event->setCopy($newFile);
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($newFile);
-        $event->setCopy($newFile);
         $event->stopPropagation();
     }
 
@@ -159,5 +149,48 @@ class FileListener extends ContainerAware
 
         $event->setResponse($response);
         $event->stopPropagation();
+    }
+
+    public function onExportArray(ExportResourceArrayEvent $event)
+    {
+        $resource = $event->getResource();
+        $config['type'] = 'file';
+        $config['id'] = $resource->getId();
+        $event->setConfig($config);
+        $event->stopPropagation();
+    }
+
+    public function onImportArray(ImportResourceArrayEvent $event)
+    {
+        $config = $event->getConfig();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $file = $em->getRepository('ClarolineCoreBundle:Resource\File')->find($config['id']);
+        $newFile = $this->copy($file);
+        $manager = $this->container->get('claroline.resource.manager');
+        $manager->create($newFile, $event->getParent()->getId(), 'file');
+        $event->stopPropagation();
+    }
+
+    /**
+     * Copy a file (no persistence).
+     * @param \Claroline\CoreBundle\Listener\Resource\AbstractResource $resource
+     * @return \Claroline\CoreBundle\Entity\Resource\File
+     */
+    private function copy(File $resource)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $newFile = new File();
+        $newFile->setSize($resource->getSize());
+        $newFile->setName($resource->getName());
+        $newFile->setMimeType($resource->getMimeType());
+        $hashName = $this->container
+            ->get('claroline.resource.utilities')
+            ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+        $newFile->setHashName($hashName);
+        $filePath = $this->container->getParameter('claroline.files.directory') . $ds . $resource->getHashName();
+        $newPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
+        copy($filePath, $newPath);
+
+        return $newFile;
     }
 }

@@ -30,7 +30,7 @@
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
-            url: route,
+            url: route(),
             success: function (groups) {
                 $('#group-table-body').append(Twig.render(groupList, {
                     'groups': groups

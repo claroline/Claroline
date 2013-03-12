@@ -30,7 +30,7 @@
         loading = true;
         $('#loading').show();
         Claroline.Utilities.ajax({
-            url: route,
+            url: route(),
             type: 'GET',
             success: function (users) {
                 $('#loading').hide();
