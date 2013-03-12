@@ -34,7 +34,7 @@
                 { 'toolId' : toolId, 'workspaceId': wsId, 'roleId': roleId }
             );
         }
-        Claroline.Utilities.ajax({url: route, type: 'POST'});
+        $.ajax({url: route, type: 'POST'});
     });
 
     $('.icon-circle-arrow-up').on('click', function (e) {
@@ -68,7 +68,7 @@
                 'claro_tool_workspace_move',
                 { 'toolId': toolId, 'position': index, 'workspaceId': wsId }
             );
-            Claroline.Utilities.ajax({url: route, type: 'POST'});
+            $.ajax({url: route, type: 'POST'});
         }
 	}
 
@@ -96,7 +96,7 @@
                 'claro_tool_workspace_move',
                 { 'toolId': toolId, 'position': index, 'workspaceId': wsId }
             );
-            Claroline.Utilities.ajax({url: route, type: 'POST'});
+            $.ajax({url: route, type: 'POST'});
         }
     }
 })();
