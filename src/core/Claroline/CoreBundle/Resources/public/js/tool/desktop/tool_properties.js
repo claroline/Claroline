@@ -35,7 +35,7 @@
             );
         }
 
-        Claroline.Utilities.ajax({url: route, type: 'POST'});
+        $.ajax({url: route, type: 'POST'});
     });
 
     $('.icon-circle-arrow-up').on('click', function (e) {
@@ -64,7 +64,7 @@
                 'claro_tool_desktop_move',
                 { 'toolId': toolId, 'position': index }
             );
-            Claroline.Utilities.ajax({url: route, type: 'POST'});
+            $.ajax({url: route, type: 'POST'});
         }
 	}
 
@@ -88,7 +88,7 @@
             'claro_tool_desktop_move',
             { 'toolId': toolId, 'position': index }
         );
-        Claroline.Utilities.ajax({url: route, type: 'POST'});
+        $.ajax({url: route, type: 'POST'});
     }
 })();
 
