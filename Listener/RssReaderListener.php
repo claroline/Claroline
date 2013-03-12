@@ -6,6 +6,8 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
+use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
 
@@ -153,6 +155,44 @@ class RssReaderListener extends ContainerAware
         }
 
         $event->setContent($content);
+    }
+
+    public function onExportConfig(ExportWidgetConfigEvent $event)
+    {
+        $repo = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineRssReaderBundle:Config');
+        $rssconfig = $repo->findOneBy(array('workspace' => $event->getWorkspace()->getId()));
+
+        $isDefaultConfig = $this->container
+            ->get('claroline.widget.manager')
+            ->isWorkspaceDefaultConfig($event->getWidget()->getId(), $event->getWorkspace()->getId());
+
+        if ($isDefaultConfig || $rssconfig == null) {
+            $rssconfig = $repo->findOneBy(array('isDefault' => true, 'isDesktop' => false));
+        }
+
+        if ($rssconfig !== null) {
+            $config['url'] = $rssconfig->getUrl();
+            $event->setConfig($config);
+        }
+
+        $event->stopPropagation();
+    }
+
+    public function onImportConfig(ImportWidgetConfigEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $data = $event->getConfig();
+        $config = new Config();
+        $config->setWorkspace($event->getWorkspace());
+        $config->setUrl($data['url']);
+        $config->setDesktop(false);
+        $config->setDefault(false);
+        $config->setUser(null);
+        $em->persist($config);
+        $em->flush();
+        $event->stopPropagation();
     }
 
     private function getRssContent($rssconfig)

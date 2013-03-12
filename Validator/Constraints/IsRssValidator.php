@@ -14,7 +14,7 @@ class IsRssValidator extends ConstraintValidator
 
             return true;
         } catch (\Exception $e) {
-            $this->context->addViolation($constraint->message, array('%string%' => $value));
+            $this->context->addViolation($constraint->message, array('{{ username }}' => $value));
 
             return false;
         }
