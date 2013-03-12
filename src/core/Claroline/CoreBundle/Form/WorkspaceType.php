@@ -8,6 +8,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class WorkspaceType extends AbstractType
 {
+    private $templateDir;
+
+    public function __construct($templateDir)
+    {
+        $this->templateDir = $templateDir;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('required' => true));
@@ -26,8 +33,7 @@ class WorkspaceType extends AbstractType
         );
 
         $templates = array();
-        $ds = DIRECTORY_SEPARATOR;
-        foreach (new \DirectoryIterator(__DIR__."{$ds}..{$ds}Resources{$ds}config{$ds}workspace") as $fileInfo) {
+        foreach (new \DirectoryIterator($this->templateDir) as $fileInfo) {
             if ($fileInfo->isFile()) {
                 $parsedFile = Yaml::parse($fileInfo->getRealPath());
                 $templates[$fileInfo->getRealPath()] = $parsedFile['name'];

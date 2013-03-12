@@ -666,7 +666,7 @@ class ParametersController extends Controller
             $yaml = Yaml::dump($config, 10);
             $ds = DIRECTORY_SEPARATOR;
             file_put_contents(
-                $this->container->getParameter('kernel.root_dir')."{$ds}..{$ds}workspaces{$ds}{$name}.yml", $yaml
+                $this->container->getParameter('claroline.workspace_template.directory')."{$name}.yml", $yaml
             );
             $route = $this->get('router')->generate(
                 'claro_workspace_open_tool',
