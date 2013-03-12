@@ -16,14 +16,14 @@
             return Routing.generate('claro_workspace_registered_users_paginated', {
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
+            });
         },
         searchRoute = function () {
             return Routing.generate('claro_workspace_search_registered_users', {
                 'search': document.getElementById('search-user-txt').value,
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
+            });
         };
 
     function lazyloadUsers(route) {

@@ -8,18 +8,18 @@
         stop = false,
         mode = 0,
         groupId = document.getElementById('twig-attributes').getAttribute('data-group-id'),
-        standardRoute = function() {
+        standardRoute = function () {
             return Routing.generate('claro_admin_groupless_users', {
                 'offset' : $('.row-user').length,
                 'groupId': groupId
-            })
+            });
         },
-        searchRoute = function() {
+        searchRoute = function () {
             return Routing.generate('claro_admin_search_groupless_users', {
                 'offset' : $('.row-user').length,
                 'groupId': groupId,
                 'search':  document.getElementById('search-user-txt').value
-            })
+            });
         };
 
     function lazyloadUsers(route) {

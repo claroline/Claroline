@@ -15,14 +15,14 @@
             return Routing.generate('claro_workspace_unregistered_users_paginated', {
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
+            });
         },
         searchRoute = function () {
             return Routing.generate('claro_workspace_search_unregistered_users', {
                 'search': document.getElementById('search-user-txt').value,
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
+            });
         };
 
     function lazyloadUsers(route) {

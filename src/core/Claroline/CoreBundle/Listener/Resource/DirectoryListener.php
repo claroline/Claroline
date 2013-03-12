@@ -102,20 +102,20 @@ class DirectoryListener extends ContainerAware
         $event->stopPropagation();
     }
 
-     public function onImportArray(ImportResourceArrayEvent $event)
-     {
-         $config = $event->getConfig();
-         $manager = $this->container->get('claroline.resource.manager');
-         $directory = new Directory();
-         $directory->setName($config['name']);
-         $manager->create($directory, $event->getParent()->getId(), 'directory');
-         $ed = $this->container->get('event_dispatcher');
+    public function onImportArray(ImportResourceArrayEvent $event)
+    {
+        $config = $event->getConfig();
+        $manager = $this->container->get('claroline.resource.manager');
+        $directory = new Directory();
+        $directory->setName($config['name']);
+        $manager->create($directory, $event->getParent()->getId(), 'directory');
+        $ed = $this->container->get('event_dispatcher');
 
-         if (isset($config['children'])) {
-             foreach ($config['children'] as $child) {
-                 $newEvent = new ImportResourceArrayEvent($child, $directory);
-                 $ed->dispatch("import_{$child['type']}_array", $newEvent);
-             }
-         }
-     }
+        if (isset($config['children'])) {
+            foreach ($config['children'] as $child) {
+                $newEvent = new ImportResourceArrayEvent($child, $directory);
+                $ed->dispatch("import_{$child['type']}_array", $newEvent);
+            }
+        }
+    }
 }

@@ -97,7 +97,7 @@ class ToolListener extends ContainerAware
                 ->findMaximumRights(array($role->getName()), $root);
             //temporary: no creation rights export for now
             $perms['canCreate'] = 1;
-            $config['perms'][rtrim(str_replace(range(0,9),'', $role->getName()), '_')] = $perms;
+            $config['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
         }
 
         $ed = $this->container->get('event_dispatcher');
