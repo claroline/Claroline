@@ -6,7 +6,7 @@
     $('.workspace-delete-confirmation').click(function () {
         $('#delete-ws-validation-box').modal('show');
         $('#delete-confirm-ok').click(function () {
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: Routing.generate('claro_workspace_delete', {'workspaceId': twigWorkspaceId}),
                 type: 'DELETE',
                 success: function () {

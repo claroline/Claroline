@@ -33,7 +33,7 @@
     function lazyloadMessage(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             type: 'GET',
             url: route(),
             success: function (messages) {
@@ -106,7 +106,7 @@
             var route = Routing.generate('claro_message_delete_from');
             route += '?' + $.param(parameters);
             $('#deleting').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-delete:checked').each(function (index, element) {

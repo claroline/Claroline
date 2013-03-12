@@ -25,7 +25,7 @@
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             type: 'GET',
             success: function (users) {
@@ -103,7 +103,7 @@
             var route = Routing.generate('claro_admin_multidelete_user_from_group', {'groupId': groupId});
             route += '?' + $.param(parameters);
             $('#deleting').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-user:checked').each(function (index, element) {
