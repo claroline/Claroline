@@ -80,7 +80,8 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $form = $this->get('form.factory')->create(new WorkspaceType());
+        $form = $this->get('form.factory')
+            ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig',
@@ -101,7 +102,8 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $form = $this->get('form.factory')->create(new WorkspaceType());
+        $form = $this->get('form.factory')
+            ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
         $form->bindRequest($this->getRequest());
 
         if ($form->isValid()) {
