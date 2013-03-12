@@ -8,7 +8,7 @@
         var route = Routing.generate('claro_admin_invert_widgetconfig_lock', {'displayConfigId': id});
         stackedRequests++;
         $('.please-wait').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route,
             type: 'POST',
             success: function () {
@@ -25,7 +25,7 @@
         var route = Routing.generate('claro_admin_invert_widgetconfig_visible', {'displayConfigId': id});
         stackedRequests++;
         $('.please-wait').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route,
             type: 'POST',
             success: function () {
