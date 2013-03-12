@@ -6,18 +6,16 @@
         stop = false,
         mode = 0,
         standardRoute = function () {
-            return Routing.generate('claro_message_list_received',
-                {'offset' : $('.row-user-message').length}
-            );
+            return Routing.generate('claro_message_list_received', {
+                'offset' : $('.row-user-message').length
+            });
         },
         searchRoute = function () {
-            return Routing.generate('claro_message_list_received_search',
-                {
-                    'offset' : $('.row-user-message').length,
-                    'search': document.getElementById('search-msg-txt').value
-                }
-            );
-        }
+            return Routing.generate('claro_message_list_received_search', {
+                'offset' : $('.row-user-message').length,
+                'search': document.getElementById('search-msg-txt').value
+            });
+        };
 
     $.ajaxSetup({
         beforeSend: function () {

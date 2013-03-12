@@ -9,13 +9,13 @@
         standardRoute = function () {
             return Routing.generate('claro_admin_paginated_group_list', {
                 'offset': $('.row-group').length
-            })
+            });
         },
         searchRoute = function () {
             return Routing.generate('claro_admin_paginated_search_group_list', {
                 'offset': $('.row-group').length,
                 'search': document.getElementById('search-group-txt').value
-            })
+            });
         };
 
     function lazyloadGroups(route) {
