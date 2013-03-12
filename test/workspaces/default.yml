@@ -1,15 +1,8 @@
 tools:
     home:
-        widget:
-            -
-                name: core_resource_logger
-                is_visible: true
-            -
-                name: claroline_rssreader
-                is_visible: true
-            -
-                name: claroline_mywidget1
-                is_visible: true
+        core_resource_logger: false
+        claroline_rssreader: true
+        claroline_mywidget1: true
     resource_manager:
         perms:
             ROLE_WS_VISITOR:
