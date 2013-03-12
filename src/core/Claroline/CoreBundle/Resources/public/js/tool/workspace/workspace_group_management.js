@@ -29,7 +29,7 @@
     function lazyloadGroups(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             success: function (groups) {
                 $('#group-table-body').append(Twig.render(groupList, {
@@ -91,7 +91,7 @@
             var route = Routing.generate('claro_workspace_delete_groups', {'workspaceId': twigWorkspaceId});
             route += '?' + $.param(parameters);
             $('#deleting').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-group:checked').each(function (index, element) {

@@ -734,7 +734,7 @@ class ParametersController extends Controller
 
     }
 
-    public function workspaceEditAction($workspaceId)
+    public function workspaceEditFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
@@ -748,7 +748,7 @@ class ParametersController extends Controller
         );
     }
 
-    public function workspaceEditFormAction($workspaceId)
+    public function workspaceEditAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);

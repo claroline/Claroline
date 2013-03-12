@@ -25,7 +25,7 @@
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             type: 'GET',
             success: function (users) {
@@ -100,7 +100,7 @@
             var route = Routing.generate('claro_admin_multiadd_user_to_group', {'groupId': groupId});
             route += '?' + $.param(parameters);
             $('#adding').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('#validation-box').modal('hide');
