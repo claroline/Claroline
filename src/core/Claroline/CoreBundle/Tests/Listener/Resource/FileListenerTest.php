@@ -1,14 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
 
-class FileControllerTest extends FunctionalTestCase
+class FileListenerTest extends FunctionalTestCase
 {
     /** @var string */
     private $upDir;
