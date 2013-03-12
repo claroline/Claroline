@@ -29,8 +29,8 @@
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
-            url: route(),
+        $.ajax({
+            url: route,
             type: 'GET',
             success: function (users) {
                 $('#loading').hide();
@@ -111,7 +111,7 @@
             var route = Routing.generate('claro_workspace_delete_users', {'workspaceId': twigWorkspaceId});
             route += '?' + $.param(parameters);
             $('#deleting').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-delete-user:checked').each(function (index, element) {

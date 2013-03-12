@@ -6,7 +6,7 @@
             update: function () {
                 stackedRequests++;
                 $('.please-wait').show();
-                Claroline.Utilities.ajax({
+                $.ajax({
                     url: Routing.generate('claro_activity_set_sequence', {
                         'activityId': document.getElementById('twig-attributes').getAttribute('data-activity-id')
                     }),

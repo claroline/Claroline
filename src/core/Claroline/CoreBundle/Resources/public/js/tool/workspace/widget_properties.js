@@ -21,7 +21,7 @@
         var route = Routing.generate('claro_workspace_widget_invertvisible',
             {'displayConfigId': displayConfigId, 'widgetId': widgetId, 'workspaceId': workspaceId}
         );
-        Claroline.Utilities.ajax({url: route, type: 'POST'});
+        $.ajax({url: route, type: 'POST'});
     });
 
 })();
