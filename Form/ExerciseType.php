@@ -45,6 +45,7 @@ class ExerciseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('name', 'hidden', array('data' => 'exercise'))
             ->add('title', 'text', array('label' => 'Title'))
             ->add('description', 'textarea', array('label' => 'Description', 'attr' => array('class' => 'tinymce', 'data-theme' => 'medium'), 'required' => false ))
             ->add('shuffle', 'checkbox', array('required' => false, 'label' => 'Random order of questions'))
