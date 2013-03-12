@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use DirectoryIterator;
 
-class DirectoryControllerTest extends FunctionalTestCase
+class DirectoryListenerTest extends FunctionalTestCase
 {
     /** @var string */
     private $upDir;
