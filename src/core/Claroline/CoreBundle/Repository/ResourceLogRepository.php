@@ -29,7 +29,7 @@ class ResourceLogRepository extends EntityRepository
         }
 
         if ($user !== 'anon.' && $workspace === null) {
-            "WHERE rl.workspace IN (
+            $dql .= " WHERE rl.workspace IN (
                     SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
                     JOIN w.roles wr
                     JOIN wr.users ur
@@ -38,7 +38,6 @@ class ResourceLogRepository extends EntityRepository
         }
 
         $dql .= ' ORDER by rl.dateLog DESC';
-
         $query = $this->_em->createQuery($dql);
         $query->setMaxResults(5);
 
