@@ -183,7 +183,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
-        $this->assertEquals($countConfigs, count($configs));
         $this->logUser($this->getFixtureReference('user/admin'));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
         $this->logUser($this->getFixtureReference('user/john'));
