@@ -135,24 +135,26 @@ class ToolListener extends ContainerAware
         $config = $event->getConfig();
         $ed = $this->container->get('event_dispatcher');
 
-        foreach ($config['widget'] as $widgetConfig) {
-            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName($widgetConfig['name']);
-            $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
-            $displayConfig = new DisplayConfig();
-            $displayConfig->setParent($parent);
-            $displayConfig->setVisible($widgetConfig['is_visible']);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setDesktop(false);
-            $displayConfig->isLocked(true);
-            $displayConfig->setWorkspace($event->getWorkspace());
+        if (isset($config['widget'])) {
+            foreach ($config['widget'] as $widgetConfig) {
+                $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName($widgetConfig['name']);
+                $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+                    ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
+                $displayConfig = new DisplayConfig();
+                $displayConfig->setParent($parent);
+                $displayConfig->setVisible($widgetConfig['is_visible']);
+                $displayConfig->setWidget($widget);
+                $displayConfig->setDesktop(false);
+                $displayConfig->isLocked(true);
+                $displayConfig->setWorkspace($event->getWorkspace());
 
-            if (isset($widgetConfig['config'])) {
-                $newEvent = new ImportWidgetConfigEvent($widgetConfig['config'], $event->getWorkspace());
-                $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
+                if (isset($widgetConfig['config'])) {
+                    $newEvent = new ImportWidgetConfigEvent($widgetConfig['config'], $event->getWorkspace());
+                    $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
+                }
+
+                $em->persist($displayConfig);
             }
-
-            $em->persist($displayConfig);
         }
     }
 

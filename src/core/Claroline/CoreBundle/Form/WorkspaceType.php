@@ -10,7 +10,8 @@ class WorkspaceType extends AbstractType
 {
     private $templateDir;
 
-    public function __construct($templateDir) {
+    public function __construct($templateDir)
+    {
         $this->templateDir = $templateDir;
     }
 
