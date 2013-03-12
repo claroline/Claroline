@@ -253,7 +253,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $wsBId = $this->getFixtureReference('workspace/ws_b')->getId();
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/properties/{$wsBId}/edit"
+            "/workspaces/tool/properties/{$wsBId}/editform"
         );
         $form = $crawler->filter('button[type=submit]')->form();
         $form['workspace_edit_form[name]'] = 'modified_name';
@@ -268,7 +268,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/properties/{$wsBId}/edit"
+            "/workspaces/tool/properties/{$wsBId}/editform"
         );
         $this->assertEquals('modified_name', $crawler->filter('#workspace_edit_form_name')->attr('value'));
         $this->assertEquals('modified_code', $crawler->filter('#workspace_edit_form_code')->attr('value'));
