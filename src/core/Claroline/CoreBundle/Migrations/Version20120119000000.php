@@ -800,6 +800,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('tool_id', 'integer');
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('display_order', 'integer');
+        $table->addColumn('translation_key', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_tools'),

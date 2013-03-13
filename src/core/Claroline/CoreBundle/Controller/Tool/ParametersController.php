@@ -505,6 +505,7 @@ class ParametersController extends Controller
             $wot->setOrder($position);
             $wot->setTool($em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId));
             $wot->setWorkspace($workspace);
+            $wot->setTranslationKey($tool->getName());
             $em->persist($wot);
         }
 

@@ -38,21 +38,33 @@ roles:
     ROLE_WS_COLLABORATOR: collaborator
     ROLE_WS_MANAGER: manager
 creator_role: ROLE_WS_MANAGER
-tools_permissions:
+tools_infos:
     home:
-        - ROLE_WS_VISITOR
-        - ROLE_WS_COLLABORATOR
-        - ROLE_WS_MANAGER
+        perms:
+            - ROLE_WS_VISITOR
+            - ROLE_WS_COLLABORATOR
+            - ROLE_WS_MANAGER
+        translation_key: home
     resource_manager:
-        - ROLE_WS_COLLABORATOR
-        - ROLE_WS_MANAGER
+        perms:
+            - ROLE_WS_COLLABORATOR
+            - ROLE_WS_MANAGER
+        translation_key: 'resource_manager'
     calendar:
-        - ROLE_WS_COLLABORATOR
-        - ROLE_WS_MANAGER
+        perms:
+            - ROLE_WS_COLLABORATOR
+            - ROLE_WS_MANAGER
+        translation_key: calendar
     parameters:
-        - ROLE_WS_MANAGER
+        perms:
+            - ROLE_WS_MANAGER
+        translation_key: parameters
     group_management:
-        - ROLE_WS_MANAGER
+        perms:
+            - ROLE_WS_MANAGER
+        translation_key: group_management
     user_management:
-        - ROLE_WS_MANAGER
+        perms:
+            - ROLE_WS_MANAGER
+        translation_key: user_management
 name: default
