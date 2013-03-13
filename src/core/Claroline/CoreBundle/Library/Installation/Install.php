@@ -58,7 +58,4 @@ class Install
     {
         $this->dbDriver = $dbDriver;
     }
-
-    
-
 }

@@ -36,7 +36,7 @@ class ThumbnailCreator
             if (!$this->isFfmegLoaded) {
                 $message .= 'The Ffmpeg extension is missing \n';
             }
-            
+
             throw new UnloadedExtensionException($message);
         }
 

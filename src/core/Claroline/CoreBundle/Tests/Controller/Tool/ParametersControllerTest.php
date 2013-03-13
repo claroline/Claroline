@@ -143,8 +143,8 @@ class ParametersControllerTest extends FunctionalTestCase
     public function testWorkspaceManagercanViewWidgetProperties()
     {
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $pwuId = $this->getFixtureReference('user/john')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/john'));
+        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
     }
@@ -153,8 +153,8 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $this->markTestSkipped("event is not catched");
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $pwuId = $this->getFixtureReference('user/john')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/john'));
+        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('john'));
         $widget = $this->em
             ->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName('claroline_testwidget1');
@@ -165,9 +165,9 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('admin' => 'admin'));
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $pwuId = $this->getFixtureReference('user/john')->getPersonalWorkspace()->getId();
+        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
         //admin must unlock first
-        $this->logUser($this->getFixtureReference('user/john'));
+        $this->logUser($this->getUser('john'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
@@ -183,10 +183,9 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
-        $this->assertEquals($countConfigs, count($configs));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
-        $this->logUser($this->getFixtureReference('user/john'));
+        $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
     }
@@ -195,7 +194,7 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('admin' => 'admin'));
         //admin must unlock first
-        $this->logUser($this->getFixtureReference('user/john'));
+        $this->logUser($this->getUser('john'));
         $configs = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -217,9 +216,9 @@ class ParametersControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isDesktop' => true));
         $this->assertEquals(++$countConfigs, count($configs));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request('POST', "/admin/plugin/lock/{$configs[0]->getId()}");
-        $this->logUser($this->getFixtureReference('user/john'));
+        $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
     }
@@ -248,12 +247,12 @@ class ParametersControllerTest extends FunctionalTestCase
                 'ws_b' => 'ws_creator',
             )
         );
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
-        $wsBId = $this->getFixtureReference('workspace/ws_b')->getId();
+        $this->logUser($this->getUser('ws_creator'));
+        $wsCreatorId = $this->getUser('ws_creator')->getId();
+        $wsBId = $this->getWorkspace('ws_b')->getId();
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/properties/{$wsBId}/edit"
+            "/workspaces/tool/properties/{$wsBId}/editform"
         );
         $form = $crawler->filter('button[type=submit]')->form();
         $form['workspace_edit_form[name]'] = 'modified_name';
@@ -268,7 +267,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/properties/{$wsBId}/edit"
+            "/workspaces/tool/properties/{$wsBId}/editform"
         );
         $this->assertEquals('modified_name', $crawler->filter('#workspace_edit_form_name')->attr('value'));
         $this->assertEquals('modified_code', $crawler->filter('#workspace_edit_form_code')->attr('value'));

@@ -32,7 +32,7 @@
     <br>
 
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form class="form-horizontal" action="{{ path('claro_workspace_edit_form', {'workspaceId': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
+    <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspaceId': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}
             <div class="form-actions">

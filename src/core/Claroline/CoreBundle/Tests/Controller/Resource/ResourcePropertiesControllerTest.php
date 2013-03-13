@@ -27,7 +27,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
     {
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/rename/form/{$dir->getId()}");
         $form = $crawler->filter('#resource_name_form');
         $this->assertEquals(count($form), 1);
@@ -37,7 +37,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
     {
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request(
             'POST', "/resource/rename/{$dir->getId()}",
             array('resource_name_form' => array('name' => ''))
@@ -50,7 +50,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
     {
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/properties/form/{$dir->getId()}");
         $form = $crawler->filter('#resource-properties-form');
         $this->assertEquals(count($form), 1);
@@ -60,7 +60,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
     {
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request(
             'POST', "/resource/properties/edit/{$dir->getId()}",
             array('resource_properties_form' => array('name' => 'new_name'))
@@ -77,7 +77,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $png = __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}icon.png";
         copy($png, __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $file = new UploadedFile(
             __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png",
             'image.png',
@@ -108,7 +108,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         copy($png, __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}iconcopy.png");
         $pwr = $this->getDirectory('user');
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/shortcut/{$pwr->getId()}/create?ids[]={$dir->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
 

@@ -12,20 +12,20 @@
             return Routing.generate('claro_admin_paginated_group_user_list', {
                 'offset' : $('.row-user').length,
                 'groupId': groupId
-            })
+            });
         },
         searchRoute = function () {
             return Routing.generate('claro_admin_paginated_search_group_user_list', {
                 'offset' : $('.row-user').length,
                 'groupId': groupId,
                 'search':  document.getElementById('search-user-txt').value
-            })
+            });
         };
 
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             type: 'GET',
             success: function (users) {
@@ -103,7 +103,7 @@
             var route = Routing.generate('claro_admin_multidelete_user_from_group', {'groupId': groupId});
             route += '?' + $.param(parameters);
             $('#deleting').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-user:checked').each(function (index, element) {

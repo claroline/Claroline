@@ -15,20 +15,20 @@
             return Routing.generate('claro_workspace_unregistered_users_paginated', {
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
+            });
         },
         searchRoute = function () {
             return Routing.generate('claro_workspace_search_unregistered_users', {
                 'search': document.getElementById('search-user-txt').value,
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-user').length
-            })
+            });
         };
 
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             success: function (users) {
                 createUsersChkBoxes(users);
@@ -105,7 +105,7 @@
             var route = Routing.generate('claro_workspace_multiadd_user', {'workspaceId': twigWorkspaceId});
             route += '?' + $.param(parameters);
             $('#adding').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('#validation-box').modal('hide');

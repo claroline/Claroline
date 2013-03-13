@@ -1,14 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
 
-class FileControllerTest extends FunctionalTestCase
+class FileListenerTest extends FunctionalTestCase
 {
     /** @var string */
     private $upDir;
@@ -35,7 +33,7 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testUpload()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $file = new UploadedFile(tempnam(sys_get_temp_dir(), 'FormTest'), 'file.txt', 'text/plain', null, null, true);
         $this->client->request(
             'POST',
@@ -55,7 +53,7 @@ class FileControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('foo.txt'));
         $node = $this->getFile('foo.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/delete?ids[]={$node->getId()}");
         $this->client->request('POST', "/resource/directory/{$this->getDirectory('user')->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
@@ -66,7 +64,7 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testCreationFormCanBeDisplayed()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', 'resource/form/file');
         $form = $crawler->filter('#file_form');
         $this->assertEquals(count($form), 1);
@@ -74,7 +72,7 @@ class FileControllerTest extends FunctionalTestCase
 
     public function testFormErrorsAreDisplayed()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request(
             'POST',
             "/resource/create/file/{$this->getDirectory('user')->getId()}",
@@ -89,7 +87,7 @@ class FileControllerTest extends FunctionalTestCase
     public function testCopy()
     {
         $this->loadFileData('user', 'user', array('foo.txt'));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $file = $this->getFile('foo.txt');
         $event = new CopyResourceEvent($file);
         $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_file', $event);

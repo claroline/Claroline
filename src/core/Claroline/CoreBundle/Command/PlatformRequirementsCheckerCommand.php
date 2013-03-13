@@ -15,7 +15,8 @@ class PlatformRequirementsCheckerCommand extends ContainerAwareCommand
             ->setDescription('Checks the platform requirements.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
 
         $requirements = $this->getContainer()->get('claroline.installation.requirements_checker')->check();
 

@@ -44,7 +44,7 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'instanceId': '_instanceId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_resourceId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}
@@ -60,7 +60,7 @@
 
         var callBack = function(resources){
             console.debug(resources);
-            Claroline.Utilities.ajax({
+            $.ajax({
             url: Routing.generate('claro_activity_add_resource', {'activityId':{{ activity.getId() }}, 'resourceId': _.keys(resources)[0]}),
             type: 'GET',
             success: function(resources){
@@ -77,7 +77,7 @@
 
         $('.close').live('click', function(e){
             e.preventDefault();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: e.target.href,
                 type: 'DELETE',
                 success: function(){

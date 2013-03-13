@@ -26,15 +26,12 @@ class RequirementsChecker
         (extension_loaded('gd')) ?
             $valid[] = 'The php gd extension is loaded.':
             $warning[] = 'The php gd extension is missing.';
-        /*(extension_loaded('ffmpeg')) ?
+        (extension_loaded('ffmpeg')) ?
             $valid[] = 'The php ffmpeg extension is loaded.':
-            $warning[] = 'The php ffmpeg extension is missing.';*/
+            $warning[] = 'The php ffmpeg extension is missing.';
         (extension_loaded('fileinfo')) ?
             $valid[] = 'The php fileinfo extension is loaded.':
             $errors[] = 'The php fileinfo extension is missing.';
-        /*(extension_loaded('sqlite3')||extension_loaded('pdo_sqlite')) ?
-            $valid[] = 'The extension SQLite3 or PDO_SQLite is loaded.':
-            $errors[] = 'You need either the php SQLite3 or PDO_SQLite extension.';*/
         (file_exists($parametersPath)) ?
             $valid[] = "The {$parametersPath} file exists.":
             $errors[] = "The {$parametersPath} is missing.";
@@ -50,7 +47,7 @@ class RequirementsChecker
         (is_writable($themePath)) ?
             $valid[] = "The {$themePath} folder is writable":
             $errors[] = "The {$themePath} folder is not writable";
-            
+
         $requirements['errors'] = $errors;
         $requirements['warning'] = $warning;
         $requirements['valid'] = $valid;
@@ -58,4 +55,3 @@ class RequirementsChecker
         return $requirements;
     }
 }
-

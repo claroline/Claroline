@@ -6,16 +6,15 @@
         stop = false,
         mode = 0,
         standardRoute =  function () {
-            return Routing.generate('claro_message_list_removed',
-                {'offset' : $('.row-user-message').length}
-        )},
-        searchRoute = function() {
-            return Routing.generate('claro_message_list_removed_search',
-                {
-                    'offset' : $('.row-user-message').length,
-                    'search': document.getElementById('search-msg-txt').value
-                }
-            );
+            return Routing.generate('claro_message_list_removed', {
+                'offset' : $('.row-user-message').length
+            });
+        },
+        searchRoute = function () {
+            return Routing.generate('claro_message_list_removed_search', {
+                'offset' : $('.row-user-message').length,
+                'search': document.getElementById('search-msg-txt').value
+            });
         };
 
     $.ajaxSetup({
@@ -34,7 +33,7 @@
     function lazyloadUserMessage(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             type: 'GET',
             url: route(),
             success: function (messages) {
@@ -106,7 +105,7 @@
 
             var route = Routing.generate('claro_message_delete_to');
             route +=  '?' + $.param(parameters);
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-delete:checked').each(function (index, element) {

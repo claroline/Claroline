@@ -25,16 +25,16 @@ class Exporter
         $roles = $roleRepo->findByWorkspace($workspace);
 
         foreach ($roles as $role) {
-            $name = rtrim(str_replace(range(0,9),'', $role->getName()), '_');
+            $name = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
             $arRole[$name] = $role->getTranslationKey();
         }
 
-        foreach($tools as $tool) {
+        foreach ($tools as $tool) {
             $roles = $roleRepo->findByWorkspaceAndTool($workspace, $tool);
             $arToolRoles = array();
 
             foreach ($roles as $role) {
-                $arToolRoles[] = rtrim(str_replace(range(0,9),'', $role->getName()), '_');;
+                $arToolRoles[] = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
             }
 
             $arTools[$tool->getName()] = $arToolRoles;
@@ -50,7 +50,7 @@ class Exporter
         $description['roles'] = $arRole;
         $description['creator_role'] = 'ROLE_WS_MANAGER';
         $description['tools_permissions'] = $arTools;
-        
+
         return $description;
     }
 }
