@@ -1,5 +1,6 @@
 !placeholder
 !.gitempty
+!workspaces/default.yml
 catalog.xml
 nbproject/*
 app/cache/*
@@ -25,3 +26,4 @@ test/thumbnails/*
 web/thumbnails/*
 test/files/tmp/*
 src/core/Claroline/CoreBundle/Resources/public/css/themes/*
+workspaces/*
