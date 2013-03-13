@@ -3,12 +3,12 @@
 {% for resource in resources %}
     <a href="#" data-resource-id="{{ resource.id }}">
         {% if loop.first %}
-            <i class="icon-home"></i> {{ 'home'|trans({}, 'platform') }}
+            <i class="icon-folder-open-alt"></i> {{ 'resources'|trans({}, 'platform') }}
         {% else %}
             {{ resource.name }}
         {% endif %}
     </a>
     {% if not loop.last %}
-        <span class="divider"> <i class="icon-angle-right"></i> </span>
+        <span class="divider"> / </span>
     {% endif %}
 {% endfor %}
