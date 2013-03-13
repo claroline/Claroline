@@ -25,7 +25,7 @@ class ForumControllerTest extends FunctionalTestCase
     {
         $this->loadFixture(new LoadOptionsData());
         $this->loadFixture(new LoadForumData('test', 'user', 0, 0));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client
             ->request('GET', "/forum/form/subject/{$this->getFixtureReference('forum/test')->getId()}");
         $this->assertEquals(1, count($crawler->filter('#forum_subject_form')));
@@ -49,7 +49,7 @@ class ForumControllerTest extends FunctionalTestCase
         $this->em->persist($admin);
         $this->em->flush();
         $this->loadFixture(new LoadForumData('test', 'user', 2, 2));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client
             ->request('GET', "/forum/{$this->getFixtureReference('forum/test')->getId()}/offset/0");
         $link = $crawler->filter('.link-subject')->first()->link();

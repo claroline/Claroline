@@ -22,16 +22,16 @@ class ForumListenerTest extends FunctionalTestCase
 
     public function testForumFormCreation()
     {
-         $this->logUser($this->getFixtureReference('user/user'));
+         $this->logUser($this->getUser('user'));
          $crawler = $this->client->request('GET', 'resource/form/claroline_forum');
          $this->assertEquals(1, count($crawler->filter('#forum_form')));
     }
 
     public function testForumCreation()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $userRoot = $this->resourceRepository
-            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getUser('user')->getPersonalWorkspace());
         $this->client->request(
             'POST',
             "/resource/create/claroline_forum/{$userRoot->getId()}",
@@ -43,9 +43,9 @@ class ForumListenerTest extends FunctionalTestCase
     public function testForumIndex()
     {
         $this->loadFixture(new LoadOptionsData());
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $userRoot = $this->resourceRepository
-            ->findWorkspaceRoot($this->getFixtureReference('user/user')->getPersonalWorkspace());
+            ->findWorkspaceRoot($this->getUser('user')->getPersonalWorkspace());
         $this->client->request(
             'POST',
             "/resource/create/claroline_forum/{$userRoot->getId()}",
@@ -59,7 +59,7 @@ class ForumListenerTest extends FunctionalTestCase
     public function testForumAdministration()
     {
         $this->loadFixture(new LoadOptionsData());
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', "/admin/plugin/clarolineforum/options");
         $this->assertEquals(1, count($crawler->filter('#forum_options_form')));
         $this->client->request(
