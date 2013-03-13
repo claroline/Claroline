@@ -17,7 +17,7 @@ class AuthenticationControllerTest extends FunctionalTestCase
     public function testLoginWithValidCredentialsDoesntReturnFailureMsg()
     {
         $this->loadUserData(array('user' => 'user'));
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->logUser($this->getUser('user'));
         $this->assertEquals(0, $crawler->filter('#login-error')->count());
     }
 

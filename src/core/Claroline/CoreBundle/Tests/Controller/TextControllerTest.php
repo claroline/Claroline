@@ -16,7 +16,7 @@ class TextControllerTest extends FunctionalTestCase
 
     public function testEditByRefAction()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
         $form = $crawler->filter('button[type=submit]')->form();
