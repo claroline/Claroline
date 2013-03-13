@@ -1,7 +1,13 @@
 services:
     claroline.validator.validator_to:
-         class: Claroline\CoreBundle\Validator\Constraints\SendToUsernamesValidator
-         calls:
+        class: Claroline\CoreBundle\Validator\Constraints\SendToUsernamesValidator
+        calls:
             - [setEntityManager, ["@doctrine.orm.entity_manager"]]
-         tags:
-             - { name: validator.constraint_validator, alias: send_to_username_validator}
+        tags:
+            - { name: validator.constraint_validator, alias: send_to_username_validator}
+    claroline.validator.validator_ws_unique_code:
+        class: Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCodeValidator
+        calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
+        tags:
+            - { name: validator.constraint_validator, alias: workspace_unique_code_validator}
