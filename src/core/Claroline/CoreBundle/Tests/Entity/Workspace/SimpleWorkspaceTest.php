@@ -28,8 +28,8 @@ class SimpleWorkspaceTest extends FixtureTestCase
     public function testSubWorkspaceOfAPrivateWorkspaceCannotBeMadePublic()
     {
         $this->loadWorkspaceData(array('ws_e' => 'admin'));
-        $wsF = $this->getFixtureReference('workspace/ws_f');
-        $wsE = $this->getFixtureReference('workspace/ws_e');
+        $wsF = $this->getWorkspace('ws_f');
+        $wsE = $this->getWorkspace('ws_e');
         $wsE->setPublic(true);
         $wsF->setParent($wsE);
         $wsE->setPublic(false);

@@ -17,8 +17,8 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testWorkspaceUserCanSeeTheAgenda()
     {
-        $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $workspaceId = $this->getWorkspace('ws_a')->getId();
+        $this->logUser($this->getUser('ws_creator'));
         $this->client->request('GET', "/workspaces/{$workspaceId}/open/tool/calendar");
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
@@ -26,8 +26,8 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testShowWorkspaceCalendar()
     {
-        $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $workspaceId = $this->getWorkspace('ws_a')->getId();
+        $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
             "/workspaces/tool/calendar/{$workspaceId}/add",
@@ -49,8 +49,8 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testAddEventCalendar()
     {
-        $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $workspaceId = $this->getWorkspace('ws_a')->getId();
+        $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
             "/workspaces/tool/calendar/{$workspaceId}/add",
@@ -72,8 +72,8 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testDeleteEventCalendar()
     {
-        $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $workspaceId = $this->getWorkspace('ws_a')->getId();
+        $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
             "/workspaces/tool/calendar/{$workspaceId}/add",
@@ -105,8 +105,8 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testMoveEventCalendar()
     {
-        $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $workspaceId = $this->getWorkspace('ws_a')->getId();
+        $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
             "/workspaces/tool/calendar/{$workspaceId}/add",
@@ -139,8 +139,8 @@ class CalendarControllerTest extends FunctionalTestCase
 
     public function testUpdateEvent()
     {
-        $workspaceId = $this->getFixtureReference('workspace/ws_a')->getId();
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $workspaceId = $this->getWorkspace('ws_a')->getId();
+        $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
             "/workspaces/tool/calendar/{$workspaceId}/add",

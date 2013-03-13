@@ -21,7 +21,7 @@ class WorkspaceRepositoryTest extends FixtureTestCase
 
     public function testfindByUserReturnsExpectedResults()
     {
-        $user = $this->getFixtureReference('user/user');
+        $user = $this->getUser('user');
         $ws = $this->wsRepo->findByUser($user);
 
         $this->assertEquals(1, count($ws));
