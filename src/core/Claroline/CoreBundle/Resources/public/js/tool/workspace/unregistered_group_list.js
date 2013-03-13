@@ -104,7 +104,7 @@
             });
         });
 
-        $('.search-group-button').click(function () {
+        $('#search-group-button').click(function () {
             $('.chk-grp').remove();
             $('#group-table-body').empty();
             stop = false;

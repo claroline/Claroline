@@ -1,33 +1,70 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block sectionHeader %}
-    {{ macros.sectionHeader('home'|trans({}, 'platform')) }}
-{% endblock %}
-
 {% block content %}
-    <div class="row-fluid">
-        <div id="home" class="hero-unit">
-            {% block section_content %}
-                <h3 class="text-warning" style="text-decoration: underline">
-                    <em>Utilisateurs par défaut</em>
-                </h3>
-                <ul>
-                    <li>
-                        <strong>Administrateur</strong>
-                        <ul>
-                            <li>Nom d'utilisateur : <em class="text-info">JohnDoe</em></li>
-                            <li>Mot de passe : <em class="text-info">JohnDoe</em></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <strong>Professeur</strong>
-                        <ul>
-                            <li>Nom d'utilisateur : <em class="text-info">JaneDoe</em></li>
-                            <li>Mot de passe : <em class="text-info">JaneDoe</em></li>
-                        </ul>
-                    </li>
-                </ul>
-            {% endblock %}
+
+<div class="homespans span4">
+    <div class="homeicons">
+        <i class='icon-github'></i>
+    </div>
+    <div class="border">
+        <div class="margin">
+            <h3 class="sub-section-header">GitHub</h3>
+            <p>
+                <a href="http://www.claroline.net/" target="_blank"><b>Claroline</b></a> {{ 'is an open source LMS (Learning management system) that promotes a free redistribution and access to the implementation and details of our code, we use'|trans({}, 'home') }} <a href="https://github.com/" target="_blank">GitHub</a> {{ 'to manage our project'|trans({}, 'home') }}.</p>
+            <a href="https://github.com/claroline/Claroline" class="btn btn-primary" target="_blank">Claroline @ GitHub &raquo;</a>
         </div>
     </div>
+</div>
+
+<div class="homespans span4">
+    <div class="homeicons">
+        <i class='size1 icon-desktop'></i>
+        <i class='size2 icon-tablet'></i>
+        <i class='size3 icon-mobile-phone'></i>
+    </div>
+    <div class="border">
+        <div class="margin">
+            <h3 class="sub-section-header">{{ 'Responsive CSS'|trans({}, 'home')}}</h3>
+            <p>
+            {{ 'We use'|trans({}, 'home')}} <a href="http://twitter.github.com/bootstrap/index.html" target="_blank">Bootstrap</a> {{ 'in our project in order to have a design that is usefull in all computers and devices, as smartphones and tablets'|trans({}, 'home')}}.
+            </p>
+
+            <a href="http://twitter.github.com/bootstrap/scaffolding.html#responsive" class="btn btn-primary" target="_blank">Learn More &raquo;</a>
+        </div>
+    </div>
+</div>
+
+<div class="homespans span4">
+    <div class="homeicons">
+        <i class='icon-globe'></i>
+    </div>
+     <div class="border">
+        <div class="margin">
+            <h3 class="sub-section-header">{{ 'Try our demo'|trans({}, 'home')}}</h3>
+
+            <table>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td rowspan="3">&nbsp;&nbsp;</td>
+                    <td>{{ 'admin'|trans({}, 'platform')}}</td>
+                    <td rowspan="3">&nbsp;&nbsp;&nbsp;</td>
+                    <td>{{ 'teacher'|trans({}, 'platform')}}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'username'|trans({}, 'platform')}}:</th>
+                    <td><em class="text-info">JohnDoe</em></td>
+                    <td><em class="text-info">JaneDoe</em></td>
+                </tr>
+                <tr>
+                    <th>{{ 'password'|trans({}, 'platform')}}:</th>
+                    <td><em class="text-info">JohnDoe</em></td>
+                    <td><em class="text-info">JaneDoe</em></td>
+                </tr>
+            </table>
+            
+            <a href="{{ path('claro_security_login') }}" class="btn btn-primary">{{ 'login'|trans({}, 'platform')}} &raquo;</a>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
