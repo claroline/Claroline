@@ -16,7 +16,7 @@ class ProfileControllerTest extends FunctionalTestCase
     public function testLoggedUserCanEditHisProfile()
     {
         $this->loadUserData(array('user' => 'user'));
-        $user = $this->getFixtureReference('user/user');
+        $user = $this->getUser('user');
         $this->logUser($user);
         $crawler = $this->client->request('GET', '/profile/form');
 
@@ -46,8 +46,8 @@ class ProfileControllerTest extends FunctionalTestCase
     public function testPublicProfileCanBeSeenByOtherUsers()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $adminId = $this->getFixtureReference('user/admin')->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $adminId = $this->getUser('admin')->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/profile/view/{$adminId}");
         $this->assertRegExp(
             '/admin/s', $this->client->getResponse()->getContent()

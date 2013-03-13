@@ -23,7 +23,7 @@ class AdminSecurityTest extends FunctionalTestCase
     public function testAccessToAdminSectionIsDeniedToSimpleUsers()
     {
         $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', '/admin');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -31,7 +31,7 @@ class AdminSecurityTest extends FunctionalTestCase
     public function testAccessToAdminSectionIsAllowedToAdminUsers()
     {
         $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin');
         $this->assertTrue($crawler->filter('.administration')->count() > 0);
     }

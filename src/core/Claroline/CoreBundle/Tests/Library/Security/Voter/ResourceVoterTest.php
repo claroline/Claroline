@@ -14,7 +14,7 @@ class ResourceVoterTest extends FunctionalTestCase
         parent::setUp();
         $this->loadPlatformRolesFixture();
         $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
-        $this->manager = $this->getFixtureReference('user/ws_creator');
+        $this->manager = $this->getUser('ws_creator');
         $em = $this->getEntityManager();
         $this->roleWsManager = $em->getRepository('ClarolineCoreBundle:Role')
             ->findOneBy(array('name' => 'ROLE_WS_MANAGER_'.$this->manager->getPersonalWorkspace()->getId()));
@@ -33,7 +33,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('OPEN', new ResourceCollection(array($this->root)))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('OPEN', new ResourceCollection(array($this->root)))
@@ -60,7 +60,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('EDIT', new ResourceCollection(array($this->root)))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('EDIT', new ResourceCollection(array($this->root)))
@@ -86,7 +86,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('DELETE', new ResourceCollection(array($this->root)))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('DELETE', new ResourceCollection(array($this->root)))
@@ -112,7 +112,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('EXPORT', new ResourceCollection(array($this->root)))
@@ -138,7 +138,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('CREATE', new ResourceCollection(array($this->root), array('type' => 'directory')))
@@ -168,7 +168,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root)))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('COPY', new ResourceCollection(array($directory), array('parent' => $this->root)))
@@ -204,7 +204,7 @@ class ResourceVoterTest extends FunctionalTestCase
                 ->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root)))
         );
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->assertFalse(
             $this->getSecurityContext()
                 ->isGranted('MOVE', new ResourceCollection(array($directory), array('parent' => $this->root)))

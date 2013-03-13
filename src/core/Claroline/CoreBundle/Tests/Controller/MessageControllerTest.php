@@ -16,7 +16,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testMessageForm()
     {
         $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/message/form");
         $form = $crawler->filter('#message_form');
         $this->assertEquals(count($form), 1);
@@ -26,21 +26,21 @@ class MessageControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user'));
         $this->loadGroupData(array('group_a' => array('user')));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request(
             'GET',
-            "/message/form/group/{$this->getFixtureReference('group/group_a')->getId()}"
+            "/message/form/group/{$this->getGroup('group_a')->getId()}"
         );
         $form = $crawler->filter('#message_form');
         $this->assertEquals(count($form), 1);
         $parameters = $this->client->getRequest()->query->all();
-        $this->assertEquals($parameters['ids'][0], $this->getFixtureReference('user/user')->getId());
+        $this->assertEquals($parameters['ids'][0], $this->getUser('user')->getId());
     }
 
     public function testSendMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'POST',
             "/message/send/0",
@@ -49,7 +49,7 @@ class MessageControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request('GET', '/message/list/sent/0');
         $this->assertEquals(1, count($crawler->filter('.row-message')));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', '/message/list/received/0');
         $this->assertEquals(1, count($crawler->filter('.row-user-message')));
     }
@@ -57,7 +57,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testSendMessageReturnsFormOnError()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request(
             'POST',
             "/message/send/0",
@@ -70,13 +70,13 @@ class MessageControllerTest extends FunctionalTestCase
     public function testAnswerMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'POST',
             "/message/send/0",
             array('message_form' => array('content' => 'content', 'object' => 'object', 'to' => 'user'))
         );
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $msgId = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -88,7 +88,7 @@ class MessageControllerTest extends FunctionalTestCase
             "/message/send/{$msgId}",
             array('message_form' => array('content' => 'content', 'object' => 'answer', 'to' => 'admin'))
         );
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $msgId = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -102,7 +102,7 @@ class MessageControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->logUser($this->getUser('user'));
         $this->assertEquals(1, count($crawler->filter('.badge-important')));
     }
 
@@ -110,7 +110,7 @@ class MessageControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', '/message/list/received/0');
         // var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($crawler->filter('.mark-as-read')));
@@ -130,7 +130,7 @@ class MessageControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->loadMessagesData(array(array('from' => 'user', 'to' => 'admin', 'object' => 'foo')));
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->logUser($this->getUser('user'));
         $messages = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -146,7 +146,7 @@ class MessageControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->logUser($this->getUser('user'));
         $userMessages = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -161,7 +161,7 @@ class MessageControllerTest extends FunctionalTestCase
     public function testSearchSendMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'POST',
             "/message/send/0",
@@ -180,13 +180,13 @@ class MessageControllerTest extends FunctionalTestCase
     public function testSearchReceivedMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'POST',
             "/message/send/0",
             array('message_form' => array('content' => 'content', 'object' => 'object', 'to' => 'user'))
         );
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         //search by name
         $crawler = $this->client->request('GET', '/message/list/received/search/admin/offset/0');
         $this->assertEquals(1, count($crawler->filter('.row-user-message')));
@@ -201,7 +201,7 @@ class MessageControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
-        $crawler = $this->logUser($this->getFixtureReference('user/user'));
+        $crawler = $this->logUser($this->getUser('user'));
         $userMessages = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
