@@ -20,7 +20,6 @@ class Configuration
      * @var array
      */
     private $roles;
-    private $tools;
     private $toolsPermissions;
     private $creatorRole;
     private $toolsConfig;
@@ -32,8 +31,7 @@ class Configuration
         $parsedFile = Yaml::parse(__DIR__."{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}workspaces{$ds}default.yml");
         $this->setCreatorRole($parsedFile['creator_role']);
         $this->setRoles($parsedFile['roles']);
-        $this->setTools(array_keys($parsedFile['tools_permissions']));
-        $this->setToolsPermissions($parsedFile['tools_permissions']);
+        $this->setToolsPermissions($parsedFile['tools_infos']);
         $this->setToolsConfiguration($parsedFile['tools']);
     }
 
@@ -44,8 +42,7 @@ class Configuration
         $config->validate($parsedFile);
         $config->setCreatorRole($parsedFile['creator_role']);
         $config->setRoles($parsedFile['roles']);
-        $config->setTools(array_keys($parsedFile['tools_permissions']));
-        $config->setToolsPermissions($parsedFile['tools_permissions']);
+        $config->setToolsPermissions($parsedFile['tools_infos']);
         $config->setToolsConfiguration($parsedFile['tools']);
 
         return $config;
@@ -110,16 +107,6 @@ class Configuration
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
-    }
-
-    public function getTools()
-    {
-        return $this->tools;
-    }
-
-    public function setTools(array $tools)
-    {
-        $this->tools = $tools;
     }
 
     public function getToolsPermissions()
