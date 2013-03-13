@@ -8,24 +8,24 @@
         stop = false,
         mode = 0,
         groupId = document.getElementById('twig-attributes').getAttribute('data-group-id'),
-        standardRoute = function() {
+        standardRoute = function () {
             return Routing.generate('claro_admin_groupless_users', {
                 'offset' : $('.row-user').length,
                 'groupId': groupId
-            })
+            });
         },
-        searchRoute = function() {
+        searchRoute = function () {
             return Routing.generate('claro_admin_search_groupless_users', {
                 'offset' : $('.row-user').length,
                 'groupId': groupId,
                 'search':  document.getElementById('search-user-txt').value
-            })
+            });
         };
 
     function lazyloadUsers(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             type: 'GET',
             success: function (users) {
@@ -100,7 +100,7 @@
             var route = Routing.generate('claro_admin_multiadd_user_to_group', {'groupId': groupId});
             route += '?' + $.param(parameters);
             $('#adding').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('#validation-box').modal('hide');

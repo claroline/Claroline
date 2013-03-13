@@ -205,31 +205,6 @@
         return '';
     };
 
-    utilities.ajax = function (ajaxOptions) {
-        ajaxOptions.error = function (xhr) {
-            if (xhr.status === 403) {
-                ajaxAuthenticationErrorHandler(function () {
-                    if ('function' === typeof successHandler) {
-                        utilities.ajax(ajaxOptions);
-                    } else {
-                        window.location.reload();
-                    }
-                });
-            } else {
-                var title = utilities.getTitle(xhr.responseText);
-                if (title !== '') {
-                    alert(title);
-                }
-                else {
-                    if (xhr.status !== 0 && xhr.readyState !== 0) {
-                        alert('Erreur ' + xhr.status);
-                    }
-                }
-            }
-        };
-        $.ajax(ajaxOptions);
-    };
-
     /* Gets the <title> of a document
     http://www.devnetwork.net/viewtopic.php?f=13&t=117065
     */

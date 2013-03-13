@@ -23,7 +23,7 @@ class CreatorTest extends FunctionalTestCase
     public function testWorkspaceConfigurationIsCheckedBeforeCreation($invalidConfig)
     {
         $this->setExpectedException('RuntimeException');
-        $user = $this->getFixtureReference('user/user');
+        $user = $this->getUser('user');
 
         $this->creator->createWorkspace($invalidConfig, $user);
     }
@@ -33,7 +33,7 @@ class CreatorTest extends FunctionalTestCase
         $config = new Configuration();
         $config->setWorkspaceName('Workspace Foo');
         $config->setWorkspaceCode('WFOO');
-        $user = $this->getFixtureReference('user/user');
+        $user = $this->getUser('user');
 
         $workspace = $this->creator->createWorkspace($config, $user);
 

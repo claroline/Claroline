@@ -42,11 +42,11 @@ claro_workspace_resource_rights_creation_form:
 claro_workspace_edit:
     pattern: '/{workspaceId}/edit'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEdit' }
-    requirements: { _method: GET }
+    requirements: { _method: POST }
 claro_workspace_edit_form:
     pattern: '/{workspaceId}/editform'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEditForm' }
-    requirements: { _method: POST }
+    requirements: { _method: GET }
 claro_workspace_export_form:
     pattern: '/{workspaceId}/form/export'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExportForm' }

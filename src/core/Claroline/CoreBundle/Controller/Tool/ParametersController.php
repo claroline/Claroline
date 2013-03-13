@@ -627,60 +627,62 @@ class ParametersController extends Controller
         );
     }
 
-     public function workspaceExportFormAction($workspaceId)
-     {
-         $em = $this->get('doctrine.orm.entity_manager');
-         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+    public function workspaceExportFormAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
-         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-             throw new AccessDeniedHttpException();
-         }
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
 
-         $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
+        $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
 
-         return $this->render(
-             'ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig',
-             array(
-                 'form' => $form->createView(),
-                 'workspace' => $workspace)
-         );
-     }
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig',
+            array(
+                'form' => $form->createView(),
+                'workspace' => $workspace)
+        );
+    }
 
-     public function workspaceExportAction($workspaceId)
-     {
-         $em = $this->get('doctrine.orm.entity_manager');
-         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+    public function workspaceExportAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
-         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-             throw new AccessDeniedHttpException();
-         }
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
 
-         $request = $this->getRequest();
-         $form = $this->createForm(new WorkspaceTemplateType());
-         $form->bind($request);
+        $request = $this->getRequest();
+        $form = $this->createForm(new WorkspaceTemplateType());
+        $form->bind($request);
 
-         if ($form->isValid()) {
-             $name = $form->get('name')->getData();
-             $config = $this->get('claroline.workspace.exporter')->export($workspace);
-             $config['name'] = $name;
-             $yaml = Yaml::dump($config, 10);
-             $ds = DIRECTORY_SEPARATOR;
-             file_put_contents(
-                 $this->container->getParameter('kernel.root_dir')."{$ds}..{$ds}workspaces{$ds}{$name}.yml", $yaml
-             );
-             $route = $this->get('router')->generate('claro_workspace_open_tool',
-                 array('toolName' => 'parameters', 'workspaceId' => $workspace->getId()));
+        if ($form->isValid()) {
+            $name = $form->get('name')->getData();
+            $config = $this->get('claroline.workspace.exporter')->export($workspace);
+            $config['name'] = $name;
+            $yaml = Yaml::dump($config, 10);
+            $ds = DIRECTORY_SEPARATOR;
+            file_put_contents(
+                $this->container->getParameter('claroline.workspace_template.directory')."{$name}.yml", $yaml
+            );
+            $route = $this->get('router')->generate(
+                'claro_workspace_open_tool',
+                array('toolName' => 'parameters', 'workspaceId' => $workspace->getId())
+            );
 
-             return new RedirectResponse($route);
-         }
+            return new RedirectResponse($route);
+        }
 
-         return $this->render(
-             'ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig',
-             array(
-                 'form' => $form->createView(),
-                 'workspace' => $workspace)
-         );
-     }
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig',
+            array(
+                'form' => $form->createView(),
+                'workspace' => $workspace)
+        );
+    }
 
     /**
      * Fill the empty value on $fillable with $array and sort it.
@@ -732,7 +734,7 @@ class ParametersController extends Controller
 
     }
 
-    public function workspaceEditAction($workspaceId)
+    public function workspaceEditFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
@@ -746,7 +748,7 @@ class ParametersController extends Controller
         );
     }
 
-    public function workspaceEditFormAction($workspaceId)
+    public function workspaceEditAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);

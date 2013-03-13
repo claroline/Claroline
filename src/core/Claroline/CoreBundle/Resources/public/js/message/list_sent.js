@@ -6,13 +6,16 @@
         mode = 0,
         stackedRequests = 0,
         standardRoute = function () {
-            return Routing.generate('claro_message_list_sent',
-                {'offset' : $('.row-message').length}
-        )},
+            return Routing.generate('claro_message_list_sent', {
+                'offset' : $('.row-message').length
+            });
+        },
         searchRoute = function () {
-            return Routing.generate('claro_message_list_sent_search',
-                {'offset' : $('.row-message').length, 'search': document.getElementById('search-msg-txt').value}
-        )};
+            return Routing.generate('claro_message_list_sent_search', {
+                'offset' : $('.row-message').length,
+                'search': document.getElementById('search-msg-txt').value
+            });
+        };
 
     $.ajaxSetup({
         beforeSend: function () {
@@ -30,7 +33,7 @@
     function lazyloadMessage(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             type: 'GET',
             url: route(),
             success: function (messages) {
@@ -103,7 +106,7 @@
             var route = Routing.generate('claro_message_delete_from');
             route += '?' + $.param(parameters);
             $('#deleting').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('.chk-delete:checked').each(function (index, element) {

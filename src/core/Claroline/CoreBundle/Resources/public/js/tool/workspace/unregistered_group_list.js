@@ -15,20 +15,20 @@
             return Routing.generate('claro_workspace_unregistered_groups_paginated', {
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-group').length
-            })
+            });
         },
         searchRoute = function () {
             return Routing.generate('claro_workspace_search_unregistered_groups', {
                 'workspaceId': twigWorkspaceId,
                 'offset': $('.row-group').length,
                 'search': document.getElementById('search-group-txt').value
-            })
+            });
         };
 
     function lazyloadGroups(route) {
         loading = true;
         $('#loading').show();
-        Claroline.Utilities.ajax({
+        $.ajax({
             url: route(),
             success: function (groups) {
                 createGroupsChkBoxes(groups);
@@ -88,7 +88,7 @@
             var route = Routing.generate('claro_workspace_multiadd_group', {'workspaceId': twigWorkspaceId});
             route += '?' + $.param(parameters);
             $('#adding').show();
-            Claroline.Utilities.ajax({
+            $.ajax({
                 url: route,
                 success: function () {
                     $('#validation-box').modal('hide');
