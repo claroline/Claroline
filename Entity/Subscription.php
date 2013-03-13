@@ -38,6 +38,7 @@
 namespace UJM\ExoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * UJM\ExoBundle\Entity\Subscription
@@ -48,13 +49,20 @@ use Doctrine\ORM\Mapping as ORM;
 class Subscription
 {
     /**
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
     private $user;
 
     /**
-     * @ORM\Id
+     *
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Exercise")
      */
     private $exercise;
@@ -73,32 +81,31 @@ class Subscription
      */
     private $admin;
 
-    public function __construct(\Claroline\CoreBundle\Entity\User $user, \UJM\ExoBundle\Entity\Exercise $exercise)
+    public function __construct(User $user, Exercise $exercise)
     {
         $this->user = $user;
         $this->exercise = $exercise;
     }
 
-    public function setuser(\Claroline\CoreBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
 
-    public function getuser()
+    public function getUser()
     {
         return $this->user;
     }
 
-    public function setexercise(\UJM\ExoBundle\Entity\Exercise $exercise)
+    public function setExercise(Exercise $exercise)
     {
         $this->produit = $exercise;
     }
 
-    public function getexercise()
+    public function getExercise()
     {
         return $this->exercise;
     }
-
 
     /**
      * Set creator

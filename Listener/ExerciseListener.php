@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\ExerciseType;
+use UJM\ExoBundle\Entity\Subscription;
 
 class ExerciseListener extends ContainerAware
 {
@@ -31,41 +32,46 @@ class ExerciseListener extends ContainerAware
         );
         $event->setResponseContent($content);
     }
-    
+
     public function onCreate(CreateResourceEvent $event)
     {
-        
         $request = $this->container->get('request');
-        //the form you defined with the symfony2 form component
         $form = $this->container
             ->get('form.factory')
             ->create(new ExerciseType, new Exercise());
         $form->bindRequest($request);
 
         if ($form->isValid()) {
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            $user = $this->container->get('security.context')->getToken()->getUser();
+
             $exercise = $form->getData();
             $exercise->setName($exercise->getTitle());
             $exercise->setDateCreate(new \Datetime());
             $exercise->setNbQuestionPage(1);
-            //give it back to the event.
+
+            $subscription = new Subscription($user, $exercise);
+            $subscription->setAdmin(true);
+            $subscription->setCreator(true);
+
+            $em->persist($exercise);
+            $em->persist($subscription);
+
             $event->setResource($exercise);
             $event->stopPropagation();
 
             return;
         }
-        
-        //if the form is invalid, renders the form with its errors.
+
         $content = $this->container->get('templating')->render(
             'UJMExoBundle:Exercise:new.html.twig',
             array(
                 'resourceType' => 'ujm_exercise',
-                //'entity' => $entity,
                 'form'   => $form->createView()
             )
         );
-        //give it back to the event.
+
         $event->setErrorFormContent($content);
         $event->stopPropagation();
-        
     }
 }

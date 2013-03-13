@@ -110,6 +110,7 @@ class Version20130227000000 extends BundleMigration
     private function createSubscriptionTable(Schema $schema)
     {
         $table = $schema->createTable('ujm_subscription');
+        $this->addId($table);
         $table->addColumn('creator', 'boolean');
         $table->addColumn('admin', 'boolean');
         $table->addColumn('user_id', 'integer');
@@ -126,7 +127,7 @@ class Version20130227000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
-        $table->setPrimaryKey(array('user_id', 'exercise_id'));
+        $table->addUniqueIndex(array('user_id', 'exercise_id'));
     }
 
     private function createGroupTable(Schema $schema)
