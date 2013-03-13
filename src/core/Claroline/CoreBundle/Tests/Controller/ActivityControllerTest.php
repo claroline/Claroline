@@ -23,7 +23,7 @@ class ActivityControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('admin', 'admin', array('foo.txt'));
         $file = $this->getFile('foo.txt');
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $activity = $this->createActivity('name', 'instruction');
         $this->client->request(
             'POST',
@@ -57,7 +57,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $this->loadFileData('admin', 'admin', array('bar.txt'));
         $fileOne = $this->getFile('foo.txt');
         $fileTwo = $this->getFile('bar.txt');
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $activity = $this->createActivity('name', 'instruction');
         $activityEntity = $this->client
             ->getContainer()

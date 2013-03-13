@@ -30,7 +30,7 @@ class RegistrationControllerTest extends FunctionalTestCase
 
     public function testUserCannotBeRegisteredByUnauthorizedUser()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', '/register/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -38,7 +38,7 @@ class RegistrationControllerTest extends FunctionalTestCase
     public function testUserCanBeRegisteredByAuthorizedUser()
     {
         $rm = $this->client->getContainer()->get('claroline.security.right_manager');
-        $user = $this->getFixtureReference('user/user');
+        $user = $this->getUser('user');
         $rm->addRight('Claroline\CoreBundle\Entity\User', $user, MaskBuilder::MASK_CREATE);
         $this->logUser($user);
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');

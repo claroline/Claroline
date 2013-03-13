@@ -26,7 +26,7 @@ class ActivityListenerTest extends FunctionalTestCase
 
     public function testCreationFormCanBeDisplayed()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', 'resource/form/activity');
         $form = $crawler->filter('#activity_form');
         $this->assertEquals(count($form), 1);
@@ -34,7 +34,7 @@ class ActivityListenerTest extends FunctionalTestCase
 
     public function testFormErrorsAreDisplayed()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request(
             'POST',
             "/resource/create/activity/{$this->pwr->getId()}",
@@ -47,7 +47,7 @@ class ActivityListenerTest extends FunctionalTestCase
 
     public function testCreateActivity()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->createActivity('name', 'instruction');
         $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());

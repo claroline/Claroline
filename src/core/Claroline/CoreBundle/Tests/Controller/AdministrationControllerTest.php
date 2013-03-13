@@ -30,7 +30,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdmincanViewGroups()
     {
         $this->loadGroupData(array ('group_a' => array('john', 'admin')));
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/groups/0');
         $this->assertEquals(1, $crawler->filter('.row-group')->count());
     }
@@ -38,14 +38,14 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanSearchGroups()
     {
         $this->loadGroupData(array('group_A' => array('john', 'admin')));
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/groups/search/A/0');
         $this->assertEquals(1, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanSearchUsers()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/users/search/john/0');
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
@@ -53,14 +53,14 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdmincanViewUsersFromGroup()
     {
         $this->loadGroupData(array('group_a' => array('john')));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('GET', "admin/group/{$this->getFixtureReference('group/group_a')->getId()}/users/0");
+        $this->logUser($this->getUser('admin'));
+        $this->client->request('GET', "admin/group/{$this->getGroup('group_a')->getId()}/users/0");
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
 
     public function testAdminCanCreateUser()
     {
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_add_user')->link();
@@ -71,7 +71,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['profile_form[username]'] = 'tototata';
         $form['profile_form[plainPassword][first]'] = 'abc';
         $form['profile_form[plainPassword][second]'] = 'abc';
-        $form['profile_form[platformRole]'] = $this->getFixtureReference('role/user')->getId();
+        $form['profile_form[platformRole]'] = $this->getRole('user')->getId();
         $this->client->submit($form);
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
@@ -82,7 +82,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testUserCreationFormIsDisplayedWithErrors()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('POST', '/admin/user');
         $form = $crawler->filter('button[type=submit]')->form();
         $form['profile_form[firstName]'] = '';
@@ -92,25 +92,25 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testmultiDeleteUsers()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/users/0');
         $this->assertEquals(2, $crawler->filter('.row-user')->count());
-        $this->client->request('DELETE', "/admin/users?ids[]={$this->getFixtureReference('user/john')->getId()}");
+        $this->client->request('DELETE', "/admin/users?ids[]={$this->getUser('john')->getId()}");
         $crawler = $this->client->request('GET', '/admin/users/0');
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testUserCannotDeleteUsers()
     {
-        $this->logUser($this->getFixtureReference('user/john'));
-        $this->client->request('DELETE', "/admin/users?ids[]={$this->getFixtureReference('user/john')->getId()}");
+        $this->logUser($this->getUser('john'));
+        $this->client->request('DELETE', "/admin/users?ids[]={$this->getUser('john')->getId()}");
         $this->assertEquals($this->client->getResponse()->getStatusCode(), 403);
     }
 
     public function testAdminCanCreateGroups()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
         $link = $crawler->filter('#link_group_create_form')->link();
@@ -125,7 +125,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testGroupCreationFormIsDisplayedWithErrors()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/group/form');
         $form = $crawler->filter('button[type=submit]')->form();
         $this->client->submit($form);
@@ -135,9 +135,9 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanMultiAddUserToGroup()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $grpAId = $this->getFixtureReference('group/group_a')->getId();
-        $adminId = $this->getFixtureReference('user/admin')->getId();
+        $this->logUser($this->getUser('admin'));
+        $grpAId = $this->getGroup('group_a')->getId();
+        $adminId = $this->getUser('admin')->getId();
         $this->client->request(
             'PUT',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
@@ -149,9 +149,9 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanMultiDeleteUsersFromGroup()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $grpAId = $this->getFixtureReference('group/group_a')->getId();
-        $adminId = $this->getFixtureReference('user/admin')->getId();
+        $this->logUser($this->getUser('admin'));
+        $grpAId = $this->getGroup('group_a')->getId();
+        $adminId = $this->getUser('admin')->getId();
         $this->client->request(
             'PUT',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
@@ -168,8 +168,8 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testPaginatedGrouplessUsersAction()
     {
         $this->loadGroupData(array('group_a' => array('john')));
-         $this->logUser($this->getFixtureReference('user/admin'));
-         $grpAId = $this->getFixtureReference('group/group_a')->getId();
+         $this->logUser($this->getUser('admin'));
+         $grpAId = $this->getGroup('group_a')->getId();
          $this->client->request(
              'GET',
              "/admin/group/{$grpAId}/unregistered/users/0"
@@ -180,8 +180,8 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testSearchPaginatedGrouplessUsersAction()
     {
         $this->loadGroupData(array('group_a' => array('john')));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $grpAId = $this->getFixtureReference('group/group_a')->getId();
+        $this->logUser($this->getUser('admin'));
+        $grpAId = $this->getGroup('group_a')->getId();
         $this->client->request(
             'GET',
             "/admin/group/{$grpAId}/unregistered/users/0/search/admin"
@@ -192,10 +192,10 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testSearchPaginatedUserOfGroups()
     {
         $this->loadGroupData(array('group_a' => array('john')));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'GET',
-            "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}/search/john/users/0"
+            "/admin/group/{$this->getGroup('group_a')->getId()}/search/john/users/0"
         );
         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
     }
@@ -203,10 +203,10 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAddUserToGroupLayoutAction()
     {
         $this->loadGroupData(array('group_a' => array('john')));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'GET',
-            "/admin/group/add/{$this->getFixtureReference('group/group_a')->getId()}"
+            "/admin/group/add/{$this->getGroup('group_a')->getId()}"
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -214,18 +214,18 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testUserGroupListLayout()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $this->client->request('GET', "/admin/group/{$this->getFixtureReference('group/group_a')->getId()}");
+        $this->logUser($this->getUser('admin'));
+        $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testMultiDeleteGroups()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request(
             'DELETE',
-            "/admin/groups?ids[]={$this->getFixtureReference('group/group_a')->getId()}"
+            "/admin/groups?ids[]={$this->getGroup('group_a')->getId()}"
         );
         $crawler = $this->client->request('GET', '/admin/groups/0');
         $this->assertEquals(0, $crawler->filter('.row-group')->count());
@@ -234,18 +234,18 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testAdminCanEditGroupSettings()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
-        $adminRoleId = $this->getFixtureReference('role/admin')->getId();
+        $this->logUser($this->getUser('admin'));
+        $adminRoleId = $this->getRole('admin')->getId();
         $crawler = $this->client->request(
             'GET',
-            "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}"
+            "/admin/group/settings/form/{$this->getGroup('group_a')->getId()}"
         );
         $form = $crawler->filter('button[type=submit]')->form();
-        $form['group_form[platformRole]'] = $this->getFixtureReference('role/admin')->getId();
+        $form['group_form[platformRole]'] = $this->getRole('admin')->getId();
         $this->client->submit($form);
         $crawler = $this->client->request(
             'GET',
-            "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}"
+            "/admin/group/settings/form/{$this->getGroup('group_a')->getId()}"
         );
         $selected = $crawler->filter("option[value={$adminRoleId}]")->attr('selected');
         $this->assertEquals('selected', $selected);
@@ -254,10 +254,10 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testGroupSettingsFormWithErrorsIsRendered()
     {
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request(
             'GET',
-            "/admin/group/settings/form/{$this->getFixtureReference('group/group_a')->getId()}"
+            "/admin/group/settings/form/{$this->getGroup('group_a')->getId()}"
         );
         $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[name]'] = '';
@@ -270,7 +270,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->configHandler->setParameter('allow_self_registration', false);
         $crawler = $this->client->request('GET', '/');
         $this->assertEquals(0, $crawler->filter("#link-registration")->count());
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin');
         $link = $crawler->filter("#link_platform_parameters")->link();
         $crawler = $this->client->click($link);
@@ -284,7 +284,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testEditLanguageParameter()
     {
         $this->configHandler->setParameter('locale_language', 'en');
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $this->assertEquals('Logout', trim($crawler->filter("#link-logout")->text()));
 
         $crawler = $this->client->request('GET', '/admin/platform/settings/form');
@@ -297,7 +297,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testPluginParametersActionThrowsEvent()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request('GET', '/admin/plugins');
         $this->client->request('GET', '/admin/plugin/plugin/options');
         $this->assertContains('plugin_options_plugin', $this->client->getResponse()->getContent());
@@ -311,7 +311,7 @@ class AdministrationControllerTest extends FunctionalTestCase
                 'Valid\WithWidgets\ValidWithWidgets'
             )
         );
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/widgets');
         //example has 4 widgets
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
@@ -325,7 +325,7 @@ class AdministrationControllerTest extends FunctionalTestCase
                 'Valid\WithWidgets\ValidWithWidgets'
             )
         );
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => true, 'isDesktop' => false));
@@ -348,7 +348,7 @@ class AdministrationControllerTest extends FunctionalTestCase
                 'Valid\WithWidgets\ValidWithWidgets'
             )
         );
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isLocked' => false, 'isDesktop' => false));
@@ -371,7 +371,7 @@ class AdministrationControllerTest extends FunctionalTestCase
                 'Valid\WithWidgets\ValidWithWidgets'
             )
         );
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => true, 'isDesktop' => true));
@@ -381,7 +381,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testConfigureWorkspaceWidgetActionThrowsEvent()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $widget = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneBy(array('name' => 'claroline_rssreader'));
@@ -391,7 +391,7 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testConfigureDesktopWidgetActionThrowsEvent()
     {
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $widget = $this->client->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Widget\Widget')

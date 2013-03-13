@@ -23,14 +23,14 @@ class UserTest extends FunctionalTestCase
         $group = $this->getGroup('group_c');
         $group->addRole($this->getRole('role_f'));
 
-        $wsCreator = $this->getFixtureReference('user/ws_creator');
+        $wsCreator = $this->getUser('ws_creator');
 
         $this->logUser($wsCreator);
         $securityContext = $this->getSecurityContext();
         $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));
         $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
 
-        $groupC = $this->getFixtureReference('group/group_c');
+        $groupC = $this->getGroup('group_c');
         $securityContext->getToken()->setUser($wsCreator); // refresh session info
 
         $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));

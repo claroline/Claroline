@@ -22,12 +22,12 @@ class RoleTest extends FixtureTestCase
     public function testPlatformRoleCannotBeModified()
     {
         $this->setExpectedException('RuntimeException');
-        $this->getFixtureReference('role/admin')->setName('ROLE_FOO');
+        $this->getRole('admin')->setName('ROLE_FOO');
     }
 
     public function testPlatformRoleCannotBeDeleted()
     {
-        $roleUser = $this->getFixtureReference('role/user');
+        $roleUser = $this->getRole('user');
         $this->assertTrue($roleUser->isReadOnly());
 
         $this->setExpectedException('RuntimeException');

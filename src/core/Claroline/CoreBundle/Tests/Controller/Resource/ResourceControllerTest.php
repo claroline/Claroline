@@ -26,7 +26,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testDirectoryCreationFormCanBeDisplayed()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', 'resource/form/directory');
         $form = $crawler->filter('#directory_form');
         $this->assertEquals(count($form), 1);
@@ -34,7 +34,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testDirectoryFormErrorsAreDisplayed()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request(
             'POST',
             "/resource/create/directory/{$this->pwr->getId()}",
@@ -50,7 +50,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->loadDirectoryData('user', array('user/container'));
         $this->createBigTree('user');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $treeRoot = $this->getDirectory('treeRoot');
         $loneFile = $this->getFile('file.txt');
         $container = $this->getDirectory('container');
@@ -68,7 +68,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->createBigTree('user');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $treeRoot = $this->getDirectory('treeRoot');
         $loneFile = $this->getFile('file.txt');
         $this->client->request(
@@ -85,7 +85,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->createBigTree('user');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $toExport = $this->client
             ->getContainer()
             ->get('claroline.resource.exporter')
@@ -108,7 +108,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testExport()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         ob_start();
         $this->client->request('GET', "/resource/export?ids[]={$this->pwr->getId()}");
         ob_end_clean();
@@ -118,7 +118,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMultiExportThrowsAnExceptionWithoutParameters()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/export");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(
@@ -129,7 +129,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testCustomActionThrowExceptionOnUknownAction()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request(
             'GET',
             "resource/custom/directory/thisactiondoesntexist/{$this->pwr->getId()}"
@@ -199,7 +199,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->createBigTree('user');
         $this->loadFileData('user', 'user', array('file.txt'));
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
@@ -217,7 +217,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testDeleteRootThrowsAnException()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/delete?ids[]={$this->pwr->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
@@ -228,7 +228,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->markTestSkipped('no custom action defined yet');
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $preEvents = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -247,7 +247,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $preEvents = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -267,7 +267,7 @@ class ResourceControllerTest extends FunctionalTestCase
      */
     public function testCreateActionLogsEventWithResourceManager()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
         $logRepo = $this->em->getRepository('ClarolineCoreBundle:Logger\ResourceLog');
         $preEvents = $logRepo->findAll();
@@ -285,7 +285,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadFileData('user', 'user', array('file.txt'));
         $treeRoot = $this->getDirectory('treeRoot');
         $loneFile = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
@@ -315,7 +315,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $container = $this->getDirectory('container');
         $treeRoot = $this->getDirectory('treeRoot');
         $loneFile = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $preEvents = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -339,7 +339,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadFileData('user', 'user', array('file.txt'));
         $treeRoot = $this->getDirectory('treeRoot');
         $loneFile = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $preEvents = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
@@ -363,7 +363,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->getId()}");
         $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
@@ -375,7 +375,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->client->request('GET', "/resource/open/file/{$file->getId()}");
@@ -389,7 +389,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->createBigTree('user');
         $rootDir = $this->getDirectory('treeRoot');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$rootDir->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->client->request('GET', "/resource/directory/{$jsonResponse[0]->id}");
@@ -403,7 +403,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->client->request('GET', "/resource/delete?ids[]={$jsonResponse[0]->id}");
@@ -417,7 +417,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/shortcut/{$this->pwr->getId()}/create?ids[]={$file->getId()}");
         $this->client->request('GET', "/resource/delete?ids[]={$file->getId()}");
         $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
@@ -435,7 +435,7 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByIsVisible(true);
 
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/{$this->getDirectory('Bar')->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('path', $jsonResponse);
@@ -448,7 +448,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testOpenDirectoryReturnsTheRootDirectoriesIfDirectoryIdIsZero()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/0");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('path', $jsonResponse);
@@ -461,7 +461,7 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testOpenDirectoryThrowsAnExceptionIfDirectoryDoesntExist()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/123456");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
@@ -470,7 +470,7 @@ class ResourceControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('user', 'user', array('Bar'));
         $file = $this->getFile('Bar');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/{$file->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
