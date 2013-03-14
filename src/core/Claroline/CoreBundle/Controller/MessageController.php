@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Form\MessageType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
 
 class MessageController extends Controller
 {
